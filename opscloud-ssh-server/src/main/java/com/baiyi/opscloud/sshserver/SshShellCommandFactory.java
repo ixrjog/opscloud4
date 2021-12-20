@@ -53,25 +53,25 @@ public class SshShellCommandFactory implements Command {
 
     public static final ThreadLocal<SshContext> SSH_THREAD_CONTEXT = ThreadLocal.withInitial(() -> null);
 
-    private SshShellProperties properties;
+    private final SshShellProperties properties;
 
-    private SshShellListenerService shellListenerService;
+    private final SshShellListenerService shellListenerService;
 
-    private Banner shellBanner;
+    private final Banner shellBanner;
 
-    private PromptProvider promptProvider;
+    private final PromptProvider promptProvider;
 
-    private Shell shell;
+    private final Shell shell;
 
-    private JLineShellAutoConfiguration.CompleterAdapter completerAdapter;
+    private final JLineShellAutoConfiguration.CompleterAdapter completerAdapter;
 
     private final Parser parser;
 
-    private Environment environment;
+    private final Environment environment;
 
     public static final ThreadLocal<SshIO> SSH_IO_CONTEXT = ThreadLocal.withInitial(SshIO::new);
 
-    private Map<ChannelSession, Thread> threads = new ConcurrentHashMap<>();
+    private final Map<ChannelSession, Thread> threads = new ConcurrentHashMap<>();
 
 //    @Resource
 //    private SshShellHelper helper;

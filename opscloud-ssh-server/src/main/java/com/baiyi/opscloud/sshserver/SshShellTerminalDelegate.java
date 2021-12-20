@@ -39,7 +39,7 @@ import static com.baiyi.opscloud.sshserver.SshShellCommandFactory.SSH_THREAD_CON
  */
 public class SshShellTerminalDelegate implements Terminal {
 
-    private Terminal delegate;
+    private final Terminal delegate;
 
     /**
      * Constructor

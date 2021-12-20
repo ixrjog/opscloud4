@@ -146,7 +146,6 @@ public class ExtendedShell extends Shell {
 
     @FunctionalInterface
     public interface ShellNotifier {
-
         boolean shouldStop();
     }
 }

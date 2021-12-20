@@ -34,7 +34,7 @@ public class ExtendedInput
 
     public static final List<String> KEY_CHARS = Arrays.asList(PIPE, ARROW);
 
-    private Input base;
+    private final Input base;
 
     /**
      * Default constructor

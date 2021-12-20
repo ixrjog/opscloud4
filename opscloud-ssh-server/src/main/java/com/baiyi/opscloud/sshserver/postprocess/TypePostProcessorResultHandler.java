@@ -36,9 +36,9 @@ public class TypePostProcessorResultHandler
 
     public static final ThreadLocal<Throwable> THREAD_CONTEXT = ThreadLocal.withInitial(() -> null);
 
-    private ResultHandler<Object> resultHandler;
+    private final ResultHandler<Object> resultHandler;
 
-    private Map<String, PostProcessor> postProcessorMap = new HashMap<>();
+    private final Map<String, PostProcessor> postProcessorMap = new HashMap<>();
 
     public TypePostProcessorResultHandler(ResultHandler<Object> resultHandler, List<PostProcessor> postProcessorList) {
         this.resultHandler = resultHandler;

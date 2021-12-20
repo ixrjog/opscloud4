@@ -38,13 +38,13 @@ import java.io.IOException;
 @Configuration
 public class SshShellConfiguration {
 
-    private SshShellProperties properties;
+    private final SshShellProperties properties;
 
-    private SshShellCommandFactory shellCommandFactory;
+    private final SshShellCommandFactory shellCommandFactory;
 
-    private PasswordAuthenticator passwordAuthenticator;
+    private final PasswordAuthenticator passwordAuthenticator;
 
-    private PublickeyAuthenticator publickeyAuthenticator;
+    private final PublickeyAuthenticator publickeyAuthenticator;
 
     public SshShellConfiguration(SshShellProperties properties,
                                  SshShellCommandFactory shellCommandFactory,

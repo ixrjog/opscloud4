@@ -13,13 +13,13 @@ import java.util.Map;
  */
 public class SessionCommandContext {
 
-    private static ThreadLocal<Map<Integer, Integer>> idMapper = new ThreadLocal<>();
+    private static final ThreadLocal<Map<Integer, Integer>> idMapper = new ThreadLocal<>();
 
-    private static ThreadLocal<Map<Integer, PodContext>> podMapper = new ThreadLocal<>();
+    private static final ThreadLocal<Map<Integer, PodContext>> podMapper = new ThreadLocal<>();
 
-    private static ThreadLocal<Map<Integer, EventContext>> eventMapper = new ThreadLocal<>();
+    private static final ThreadLocal<Map<Integer, EventContext>> eventMapper = new ThreadLocal<>();
 
-    private static ThreadLocal<ServerParam.UserPermissionServerPageQuery> serverQuery = new ThreadLocal<>();
+    private static final ThreadLocal<ServerParam.UserPermissionServerPageQuery> serverQuery = new ThreadLocal<>();
 
     public static void setIdMapper(Map<Integer, Integer> param) {
         idMapper.set(param);

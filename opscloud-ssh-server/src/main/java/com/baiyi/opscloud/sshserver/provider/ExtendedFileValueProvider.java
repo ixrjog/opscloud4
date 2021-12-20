@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.baiyi.opscloud.sshserver.providers;
+package com.baiyi.opscloud.sshserver.provider;
 
 import com.baiyi.opscloud.sshserver.ExtendedCompletionProposal;
 import org.springframework.core.MethodParameter;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  */
 public class ExtendedFileValueProvider extends ValueProviderSupport {
 
-    private boolean replaceAll;
+    private final boolean replaceAll;
 
     public ExtendedFileValueProvider(boolean replaceAll) {
         this.replaceAll = replaceAll;

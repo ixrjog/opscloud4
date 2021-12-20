@@ -21,7 +21,6 @@ public class TableHeaderBuilder {
         return new TableHeaderBuilder();
     }
 
-
     public TableHeaderBuilder addHeader(String name, int length) {
         headers.add(new TableHeader(name, length));
         return this;

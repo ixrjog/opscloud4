@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.sshserver.config;
 
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -8,6 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserCredential;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.user.UserCredentialService;
@@ -17,11 +17,12 @@ import com.baiyi.opscloud.sshserver.auth.SshShellAuthenticationProvider;
 import com.baiyi.opscloud.sshserver.auth.SshShellPublicKeyAuthenticationProvider;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
@@ -33,20 +34,18 @@ import java.util.Map;
  * @Date 2021/6/10 2:16 下午
  * @Since 1.0
  */
+@Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class SshAuthenticationConfig {
 
-    @Resource
-    private UserService userService;
+    private final UserService userService;
 
-    @Resource
-    private UserCredentialService userCredentialService;
+    private final UserCredentialService userCredentialService;
 
-    @Resource
-    private DsInstanceService dsInstanceService;
+    private final DsInstanceService dsInstanceService;
 
-    @Resource
-    private DsInstanceAssetService dsInstanceAssetService;
+    private final DsInstanceAssetService dsInstanceAssetService;
 
     @Bean
     @Primary
@@ -62,20 +61,28 @@ public class SshAuthenticationConfig {
     public PublickeyAuthenticatorProvider publickeyAuthenticatorProvider() {
         return (username, publicKey, serverSession) -> {
             File tmp = null;
+            FileWriter fw = null;
             try {
                 User user = userService.getByUsername(username);
-                Map<String,String> userSshKeyDict = getUserSshKeyDict(user);
-                if(userSshKeyDict.isEmpty())
+                Map<String, String> userSshKeyDict = getUserSshKeyDict(user);
+                if (userSshKeyDict.isEmpty())
                     return false;
                 tmp = Files.createTempFile("sshShellPubKeys-", ".tmp").toFile();
-                FileWriter fw = new FileWriter(tmp);
-                for(String key: userSshKeyDict.keySet())
+                fw = new FileWriter(tmp);
+                for (String key : userSshKeyDict.keySet())
                     fw.write(userSshKeyDict.get(key) + "\n");
                 fw.close();
-                boolean result = new SshShellPublicKeyAuthenticationProvider(tmp).authenticate(username, publicKey, serverSession);
-                tmp.delete();
-                return result;
-            } catch (Exception ignored) {
+                return new SshShellPublicKeyAuthenticationProvider(tmp).authenticate(username, publicKey, serverSession);
+            } catch (Exception e) {
+                log.error("写入公钥错误: username = {}", username);
+                e.printStackTrace();
+            } finally {
+                if (fw != null) {
+                    try {
+                        fw.close();
+                    } catch (Exception fwE) {
+                    }
+                }
                 if (tmp != null)
                     tmp.delete();
             }
@@ -90,9 +97,7 @@ public class SshAuthenticationConfig {
                 sshKeyDict.put(c.getFingerprint(), c.getCredential())
         );
         List<DatasourceInstanceAsset> assets = querySshKeyAssets(user.getUsername());
-        assets.forEach(a->{
-            sshKeyDict.put(a.getAssetKey(),a.getAssetKey2());
-        });
+        assets.forEach(a -> sshKeyDict.put(a.getAssetKey(), a.getAssetKey2()));
         return sshKeyDict;
     }
 

@@ -63,7 +63,6 @@ public class SimpleTable {
      */
     @FunctionalInterface
     public interface SimpleTableBuilderListener {
-
         void onBuilt(TableBuilder tableBuilder);
     }
 }

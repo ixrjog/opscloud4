@@ -21,7 +21,7 @@ import com.baiyi.opscloud.sshserver.listeners.SshShellListenerService;
 import com.baiyi.opscloud.sshserver.postprocess.PostProcessor;
 import com.baiyi.opscloud.sshserver.postprocess.TypePostProcessorResultHandler;
 import com.baiyi.opscloud.sshserver.postprocess.provided.*;
-import com.baiyi.opscloud.sshserver.providers.ExtendedFileValueProvider;
+import com.baiyi.opscloud.sshserver.provider.ExtendedFileValueProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sshd.server.SshServer;
 import org.jline.reader.LineReader;
@@ -101,9 +101,9 @@ public class SshShellAutoConfiguration {
 
     public ApplicationContext context;
 
-    private ConfigurableEnvironment environment;
+    private final ConfigurableEnvironment environment;
 
-    private SshShellProperties properties;
+    private final SshShellProperties properties;
 
     public SshShellAutoConfiguration(ApplicationContext context, ConfigurableEnvironment environment,
                                      SshShellProperties properties) {

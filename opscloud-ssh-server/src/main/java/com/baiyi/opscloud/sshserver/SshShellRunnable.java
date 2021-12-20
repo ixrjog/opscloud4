@@ -69,34 +69,34 @@ public class SshShellRunnable
 
     private static final String SSH_ENV_TERM = "TERM";
 
-    private SshShellProperties properties;
+    private final SshShellProperties properties;
 
     private ChannelSession session;
 
-    private SshShellListenerService shellListenerService;
+    private final SshShellListenerService shellListenerService;
 
-    private Banner shellBanner;
+    private final Banner shellBanner;
 
-    private PromptProvider promptProvider;
+    private final PromptProvider promptProvider;
 
-    private Shell shell;
+    private final Shell shell;
 
-    private JLineShellAutoConfiguration.CompleterAdapter completerAdapter;
+    private final JLineShellAutoConfiguration.CompleterAdapter completerAdapter;
 
-    private Parser parser;
+    private final Parser parser;
 
-    private Environment environment;
+    private final Environment environment;
 
-    private org.apache.sshd.server.Environment sshEnv;
+    private final org.apache.sshd.server.Environment sshEnv;
 
-    private SshShellCommandFactory sshShellCommandFactory;
+    private final SshShellCommandFactory sshShellCommandFactory;
 
-    private InputStream is;
+    private final InputStream is;
 
     @Getter
-    private OutputStream os;
+    private final OutputStream os;
 
-    private ExitCallback ec;
+    private final ExitCallback ec;
 
     public SshShellRunnable(SshShellProperties properties, ChannelSession session,
                             SshShellListenerService shellListenerService, Banner shellBanner,

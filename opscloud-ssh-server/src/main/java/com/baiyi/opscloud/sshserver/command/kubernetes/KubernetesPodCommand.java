@@ -292,12 +292,11 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                 tryResize(size, terminal, execWatch);
             }
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            log.error("用户关闭ssh-server: {}", e.getMessage());
         } finally {
             simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             auditPodCommandHandler.recordCommand(sessionId, instanceId);
             execWatch.close();
-            // pump.close();
             helper.print("\n用户退出容器！", PromptColor.GREEN);
         }
     }
@@ -343,9 +342,11 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                 }
                 Thread.sleep(200L);
             } catch (Exception ignored) {
+            } finally {
+                logWatch.close();
             }
         }
-        logWatch.close();
+
     }
 
     private SshContext getSshContext() {
@@ -377,7 +378,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
 
 
     private byte[] getBytes(char[] chars) {
-        Charset cs = Charset.forName("UTF-8");
+        Charset cs = StandardCharsets.UTF_8;
         CharBuffer cb = CharBuffer.allocate(chars.length);
         cb.put(chars);
         cb.flip();

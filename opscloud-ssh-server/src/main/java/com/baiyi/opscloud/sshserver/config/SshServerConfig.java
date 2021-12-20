@@ -69,39 +69,6 @@ public class SshServerConfig {
         };
     }
 
-    private void xterm256Color() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getColorStrs(16, 21)).append(getColorStrs(22, 27)).append(getColorStrs(28, 33)).append("\n")
-                .append(getColorStrs(52, 57)).append(getColorStrs(58, 63)).append(getColorStrs(64, 69)).append("\n")
-                .append(getColorStrs(88, 93)).append(getColorStrs(94, 99)).append(getColorStrs(100, 105)).append("\n")
-                .append(getColorStrs(124, 129)).append(getColorStrs(130, 135)).append(getColorStrs(136, 141)).append("\n")
-                .append(getColorStrs(160, 165)).append(getColorStrs(166, 171)).append(getColorStrs(172, 177)).append("\n")
-                .append(getColorStrs(196, 201)).append(getColorStrs(202, 207)).append(getColorStrs(208, 213)).append("\n\n")
-
-                .append(getColorStrs(34, 39)).append(getColorStrs(40, 45)).append(getColorStrs(46, 51)).append("\n")
-                .append(getColorStrs(70, 75)).append(getColorStrs(76, 81)).append(getColorStrs(82, 87)).append("\n")
-                .append(getColorStrs(106, 111)).append(getColorStrs(112, 117)).append(getColorStrs(118, 123)).append("\n")
-                .append(getColorStrs(142, 147)).append(getColorStrs(148, 153)).append(getColorStrs(154, 159)).append("\n")
-                .append(getColorStrs(178, 183)).append(getColorStrs(184, 189)).append(getColorStrs(190, 195)).append("\n")
-                .append(getColorStrs(214, 219)).append(getColorStrs(220, 225)).append(getColorStrs(226, 231)).append("\n\n")
-
-                .append(getColorStrs(232, 239)).append("\n")
-                .append(getColorStrs(240, 247)).append("\n")
-                .append(getColorStrs(248, 255)).append("\n");
-        helper.print(sb.toString());
-    }
-
-    private String getColorStrs(int start, int end) {
-        StringBuilder sb = new StringBuilder();
-        do {
-
-            sb.append(helper.getColoredMessage(String.valueOf(start), start));
-            start++;
-        } while (start <= end);
-        return sb.toString() + "\t";
-    }
-
-
     private void recordTerminalSession(SshShellEvent event) {
         //  SessionIdMapper.put(event.getSession().getServerSession().getIoSession());
         String sessionId = SessionIdMapper.getSessionId(event.getSession().getServerSession().getIoSession());
