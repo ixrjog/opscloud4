@@ -35,7 +35,7 @@ public class DingtalkDepartmentDrive {
                 .target(DingtalkDepartmentFeign.class, config.getUrl());
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.DEFAULT, key = "'dingtalk_list_sub_id_by_dept_id_' + #listSubDepartmentId.deptId", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.DEFAULT, key = "'corp_id_'+ #config.corpId + '_dingtalk_list_sub_id_by_dept_id_' + #listSubDepartmentId.deptId", unless = "#result == null")
     public DingtalkDepartment.DepartmentSubIdResponse listSubId(DingtalkConfig.Dingtalk config, DingtalkDepartmentParam.ListSubDepartmentId listSubDepartmentId) {
         DingtalkToken.TokenResponse tokenResponse = dingtalkTokenDrive.getToken(config);
         DingtalkDepartmentFeign dingtalkAPI = buildFeign(config);
@@ -43,7 +43,7 @@ public class DingtalkDepartmentDrive {
         return dingtalkAPI.listSubId(tokenResponse.getAccessToken(), listSubDepartmentId);
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.DEFAULT, key = "'dingtalk_get_dept_id_' + #getDepartment.deptId", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.DEFAULT, key = "'corp_id_'+ #config.corpId + '_dingtalk_get_dept_id_' + #getDepartment.deptId", unless = "#result == null")
     public DingtalkDepartment.GetDepartmentResponse get(DingtalkConfig.Dingtalk config, DingtalkDepartmentParam.GetDepartment getDepartment) {
         DingtalkToken.TokenResponse tokenResponse = dingtalkTokenDrive.getToken(config);
         DingtalkDepartmentFeign dingtalkAPI = buildFeign(config);
