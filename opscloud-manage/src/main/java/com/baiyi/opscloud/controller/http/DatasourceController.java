@@ -77,4 +77,10 @@ public class DatasourceController {
         return new HttpResult<>(datasourceFacade.queryDsInstance(query));
     }
 
+    @ApiOperation(value = "id查询数据源实例")
+    @GetMapping(value = "/instance/id/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DsInstanceVO.Instance> queryDsInstanceById(@RequestParam int instanceId) {
+        return new HttpResult<>(datasourceFacade.queryDsInstanceById(instanceId));
+    }
+
 }

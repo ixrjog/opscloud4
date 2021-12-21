@@ -26,4 +26,6 @@ public interface DsFacade {
     List<DsInstanceVO.Instance> queryDsInstance(DsInstanceParam.DsInstanceQuery query);
 
     void registerDsInstance(DsInstanceParam.RegisterDsInstance registerDsInstance);
+
+    DsInstanceVO.Instance queryDsInstanceById(int instanceId);
 }
