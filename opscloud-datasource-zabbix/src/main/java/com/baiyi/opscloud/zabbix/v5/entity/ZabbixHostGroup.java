@@ -1,5 +1,11 @@
 package com.baiyi.opscloud.zabbix.v5.entity;
 
+import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.v5.entity.base.ZabbixResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -35,7 +41,7 @@ public class ZabbixHostGroup {
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class HostGroup implements Serializable {
+    public static class HostGroup implements IToAsset, Serializable {
 
         private static final long serialVersionUID = -2761527660016718187L;
         @JsonProperty("groupid")
@@ -56,6 +62,21 @@ public class ZabbixHostGroup {
          * 1 - 内部。
          */
         private Integer internal;
+
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.groupid)
+                    .name(this.name)
+                    .assetKey(this.groupid)
+                    .kind(String.valueOf(this.flags))
+                    .assetType(DsAssetTypeEnum.ZABBIX_HOST_GROUP.name())
+                    .build();
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .build();
+        }
     }
 
 }

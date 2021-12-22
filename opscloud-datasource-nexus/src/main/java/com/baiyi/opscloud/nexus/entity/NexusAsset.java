@@ -1,6 +1,12 @@
 package com.baiyi.opscloud.nexus.entity;
 
-import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.common.util.JSONUtil;
+import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,7 +39,7 @@ public class NexusAsset {
 
         @Override
         public String toString() {
-            return JSON.toJSONString(this);
+            return JSONUtil.writeValueAsString(this);
         }
 
     }
@@ -41,7 +47,7 @@ public class NexusAsset {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Item implements Serializable {
+    public static class Item implements IToAsset, Serializable {
 
         private static final long serialVersionUID = 3605486735533585738L;
 
@@ -54,9 +60,28 @@ public class NexusAsset {
 
         @Override
         public String toString() {
-            return JSON.toJSONString(this);
+            return JSONUtil.writeValueAsString(this);
         }
 
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.id)
+                    .name(this.downloadUrl)
+                    .assetKey(this.downloadUrl)
+                    .assetKey2(this.repository)
+                    .isActive(true)
+                    .assetType(DsAssetTypeEnum.NEXUS_ASSET.name())
+                    .kind("user")
+                    .build();
+
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .paramProperty("md5", this.checksum.getMd5())
+                    .paramProperty("sha1", this.checksum.getSha1())
+                    .build();
+        }
     }
 
     @Data

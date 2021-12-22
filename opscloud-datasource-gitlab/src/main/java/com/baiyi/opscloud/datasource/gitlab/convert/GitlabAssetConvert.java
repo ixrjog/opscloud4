@@ -20,7 +20,6 @@ import org.gitlab.api.models.GitlabUser;
 @Slf4j
 public class GitlabAssetConvert {
 
-
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabUser entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())

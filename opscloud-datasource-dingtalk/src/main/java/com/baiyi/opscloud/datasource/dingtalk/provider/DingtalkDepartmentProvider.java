@@ -6,13 +6,10 @@ import com.baiyi.opscloud.common.datasource.DingtalkConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.dingtalk.convert.DingtalkAssetConvert;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkDepartment;
 import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkDepartmentParam;
 import com.baiyi.opscloud.datasource.dingtalk.provider.base.AbstractDingtalkAssetProvider;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.google.common.collect.Lists;
@@ -76,11 +73,6 @@ public class DingtalkDepartmentProvider extends AbstractDingtalkAssetProvider<Di
         if (preAsset.getIsActive() != asset.getIsActive())
             return false;
         return true;
-    }
-
-    @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DingtalkDepartment.Department entity) {
-        return DingtalkAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

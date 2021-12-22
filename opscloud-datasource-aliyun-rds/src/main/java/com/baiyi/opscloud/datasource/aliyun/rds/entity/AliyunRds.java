@@ -1,6 +1,16 @@
 package com.baiyi.opscloud.datasource.aliyun.rds.entity;
 
+import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.core.util.TimeUtil;
+import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import lombok.*;
+
+import java.util.Date;
 
 /**
  * @Author baiyi
@@ -9,11 +19,15 @@ import lombok.*;
  */
 public class AliyunRds {
 
+    public static Date toGmtDate(String time) {
+        return TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
+    }
+
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
     @Data
-    public static class DBInstanceAttribute extends DBInstance {
+    public static class DBInstanceAttribute extends DBInstance implements IToAsset {
 
         private String iPType;
         private String dBInstanceDiskUsed;
@@ -60,6 +74,39 @@ public class AliyunRds {
         private Boolean multipleTempUpgrade;
         private String originConfiguration;
 
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.getDBInstanceId()) // 资产id = 实例id
+                    .name(this.getDBInstanceDescription())
+                    .assetKey(this.getDBInstanceId())
+                    //.assetKey2()
+                    .assetType(DsAssetTypeEnum.RDS_INSTANCE.name())
+                    .kind(this.getDBInstanceClass()) // 类 rds.mysql.s3.large
+                    .regionId(this.getRegionId())
+                    .zone(this.getZoneId())
+                    .createdTime(toGmtDate(this.getCreateTime()))
+                    .expiredTime(toGmtDate(this.getExpireTime()))
+                    .build();
+
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .paramProperty("engine", this.getEngine()) // e.g: MySQL
+                    .paramProperty("engineVersion", this.getEngineVersion()) // e.g: 5.7 ; 8.0
+                    .paramProperty("payType", this.getPayType())
+                    .paramProperty("status", this.getDBInstanceStatus()) // e.g: Running
+                    .paramProperty("networkType", this.getInstanceNetworkType())
+                    .paramProperty("instanceType", this.getDBInstanceType())
+                    .paramProperty("connectionMode", this.getConnectionMode())
+                    .paramProperty("connectionString", this.getConnectionString()) // 内网连接地址
+                    .paramProperty("instanceCPU", this.getDBInstanceCPU())
+                    .paramProperty("instanceMemory", this.getDBInstanceMemory()) // MB
+                    .paramProperty("instanceStorage", this.getDBInstanceStorage()) // GB
+                    .paramProperty("maxIOPS", this.getMaxIOPS())
+                    .paramProperty("maxConnections", this.getMaxConnections())
+                    .build();
+        }
     }
 
     @NoArgsConstructor
@@ -110,7 +157,7 @@ public class AliyunRds {
     @AllArgsConstructor
     @Builder
     @Data
-    public static class Database {
+    public static class Database implements IToAsset {
         private String dBName;
         private String dBInstanceId;
         private String engine;
@@ -119,5 +166,25 @@ public class AliyunRds {
         private String dBDescription;
 
         private String regionId;
+
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.dBInstanceId) // 资产id = 实例id
+                    .name(this.dBName)
+                    .assetKey(this.dBName)
+                    .assetType(DsAssetTypeEnum.RDS_DATABASE.name())
+                    .kind(this.engine)
+                    .regionId(this.regionId)
+                    .build();
+
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .paramProperty("engine", this.engine) // e.g: MySQL
+                    .paramProperty("characterSetName", this.characterSetName) // e.g: utf8mb4
+                    .paramProperty("status", this.dBStatus)  // e.g: Running
+                    .build();
+        }
     }
 }

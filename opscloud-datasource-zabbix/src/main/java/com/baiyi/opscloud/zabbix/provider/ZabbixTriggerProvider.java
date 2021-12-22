@@ -7,12 +7,9 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.zabbix.convert.ZabbixTriggerAssetConvert;
 import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5TriggerDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
@@ -86,11 +83,6 @@ public class ZabbixTriggerProvider extends AbstractAssetRelationProvider<ZabbixT
         if (preAsset.getCreatedTime() != asset.getCreatedTime())
             return false;
         return true;
-    }
-
-    @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixTrigger.Trigger entity) {
-        return ZabbixTriggerAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

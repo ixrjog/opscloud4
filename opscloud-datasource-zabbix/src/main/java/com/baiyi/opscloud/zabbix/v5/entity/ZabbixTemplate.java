@@ -1,5 +1,11 @@
 package com.baiyi.opscloud.zabbix.v5.entity;
 
+import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.v5.entity.base.ZabbixResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -23,7 +29,7 @@ public class ZabbixTemplate {
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Template implements Serializable {
+    public static class Template implements IToAsset, Serializable {
         private static final long serialVersionUID = 6189522582952178463L;
         //@JsonProperty("templateid")
         private String templateid;
@@ -31,6 +37,23 @@ public class ZabbixTemplate {
         // 模板的正式名称。
         private String host;
         private String description;
+
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.templateid)
+                    .name(this.name)
+                    .assetKey(this.templateid)
+                    .assetKey2(this.host)
+                    .assetType(DsAssetTypeEnum.ZABBIX_TEMPLATE.name())
+                    .kind("zabbixTemplate")
+                    .description(this.description)
+                    .build();
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .build();
+        }
     }
 
 }

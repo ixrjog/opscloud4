@@ -1,5 +1,11 @@
 package com.baiyi.opscloud.datasource.aliyun.dms.entity;
 
+import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +22,8 @@ public class DmsUser {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class User {
+    public static class User implements IToAsset {
+
         public Long curExecuteCount;
         public Long curResultCount;
         public String dingRobot;
@@ -33,6 +40,26 @@ public class DmsUser {
         public String uid;
         public String userId;
         public String webhook;
+
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.userId)
+                    .name(this.nickName)
+                    .assetKey(this.uid)
+                    .assetKey2(this.parentUid)
+                    .kind("user")
+                    .assetType(DsAssetTypeEnum.DMS_USER.name())
+                    .build();
+
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .paramProperty("mobile", this.mobile)
+                    .paramProperty("notificationMode", this.notificationMode)
+                    .paramProperty("email", this.email)
+                    .build();
+        }
     }
 
 }

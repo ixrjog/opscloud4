@@ -1,19 +1,16 @@
 package com.baiyi.opscloud.datasource.nacos.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.NacosConfig;
-import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.constants.SingleTaskConstants;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.NacosConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.nacos.convert.NacosClusterNodeConvert;
-import com.baiyi.opscloud.datasource.nacos.entity.NacosCluster;
 import com.baiyi.opscloud.datasource.nacos.drive.NacosClusterDrive;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.datasource.nacos.entity.NacosCluster;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import org.springframework.stereotype.Component;
@@ -79,11 +76,6 @@ public class NacosClusterNodeProvider extends BaseAssetProvider<NacosCluster.Nod
         if (preAsset.getIsActive() != asset.getIsActive())
             return false;
         return true;
-    }
-
-    @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, NacosCluster.Node entity) {
-        return NacosClusterNodeConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

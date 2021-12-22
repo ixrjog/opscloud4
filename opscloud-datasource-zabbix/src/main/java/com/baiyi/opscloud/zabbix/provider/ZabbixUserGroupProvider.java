@@ -7,12 +7,9 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.zabbix.convert.ZabbixUserAssetConvert;
 import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5UserGroupDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
@@ -79,11 +76,6 @@ public class ZabbixUserGroupProvider extends AbstractAssetRelationProvider<Zabbi
         if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
             return false;
         return true;
-    }
-
-    @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixUserGroup.UserGroup entity) {
-        return ZabbixUserAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

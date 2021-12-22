@@ -1,6 +1,15 @@
 package entity;
 
+import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.datasource.aliyun.ons.constants.OnsMessageTypeConstants;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import lombok.Data;
+
+import java.util.Date;
 
 /**
  * @Author baiyi
@@ -13,7 +22,7 @@ public class OnsRocketMqTopic {
      * PublishInfoDo
      */
     @Data
-    public static class Topic {
+    public static class Topic implements IToAsset {
         private String topic;
         private String owner;
         private Integer relation;
@@ -25,6 +34,25 @@ public class OnsRocketMqTopic {
         private Boolean independentNaming;
 
         private String regionId;
+
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.instanceId)
+                    .name(this.topic)
+                    .assetKey(this.topic)
+                    .assetKey2(this.relationName)
+                    .kind(OnsMessageTypeConstants.getDesc(this.messageType))
+                    .assetType(DsAssetTypeEnum.ONS_ROCKETMQ_TOPIC.name())
+                    .regionId(this.regionId)
+                    .description(this.remark)
+                    .createdTime(new Date(this.createTime))
+                    .build();
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .build();
+        }
     }
 
 }

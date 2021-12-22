@@ -1,5 +1,11 @@
 package com.baiyi.opscloud.datasource.ldap.entity;
 
+import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import lombok.*;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
@@ -15,7 +21,7 @@ import org.springframework.ldap.odm.annotations.Entry;
 @NoArgsConstructor
 @ToString
 @Entry(objectClasses = {"groupOfUniqueNames"}) // base = "ou=groups"
-public class Group {
+public class Group implements IToAsset {
 
     /**
      * 主键
@@ -28,4 +34,20 @@ public class Group {
      */
     @Attribute(name = "cn")
     private String groupName;
+
+    @Override
+    public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+        DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                .instanceUuid(dsInstance.getUuid())
+                .assetId(this.groupName) // 资产id = 组名
+                .name(this.groupName)
+                .assetKey(this.groupName)
+                .assetType(DsAssetTypeEnum.GROUP.name())
+                .kind("userGroup")
+                .build();
+        return AssetContainerBuilder.newBuilder()
+                .paramAsset(asset)
+                .build();
+    }
+
 }

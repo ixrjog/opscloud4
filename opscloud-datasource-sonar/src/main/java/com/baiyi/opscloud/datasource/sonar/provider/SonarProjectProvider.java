@@ -1,20 +1,17 @@
 package com.baiyi.opscloud.datasource.sonar.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.SonarConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.SonarConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.sonar.convert.SonarAssetConvert;
+import com.baiyi.opscloud.datasource.sonar.drive.SonarProjectsDrive;
 import com.baiyi.opscloud.datasource.sonar.entity.SonarProjects;
 import com.baiyi.opscloud.datasource.sonar.entity.base.BaseSonarElement;
-import com.baiyi.opscloud.datasource.sonar.drive.SonarProjectsDrive;
 import com.baiyi.opscloud.datasource.sonar.param.PagingParam;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.google.common.collect.Lists;
@@ -91,11 +88,6 @@ public class SonarProjectProvider extends BaseAssetProvider<BaseSonarElement.Pro
         if (preAsset.getIsActive() != asset.getIsActive())
             return false;
         return true;
-    }
-
-    @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, BaseSonarElement.Project entity) {
-        return SonarAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

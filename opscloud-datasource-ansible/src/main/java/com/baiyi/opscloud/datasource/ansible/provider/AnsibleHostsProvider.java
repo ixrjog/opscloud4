@@ -1,19 +1,20 @@
 package com.baiyi.opscloud.datasource.ansible.provider;
 
 import com.baiyi.opscloud.algorithm.ServerPack;
-import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
-import com.baiyi.opscloud.datasource.ansible.convert.AnsibleAssetConvert;
-import com.baiyi.opscloud.datasource.ansible.entity.AnsibleHosts;
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
+import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
+import com.baiyi.opscloud.datasource.ansible.entity.AnsibleHosts;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
-import com.baiyi.opscloud.domain.generator.opscloud.*;
+import com.baiyi.opscloud.domain.generator.opscloud.Credential;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.service.server.ServerGroupService;
@@ -116,11 +117,6 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
         if (preAsset.getIsActive() != asset.getIsActive())
             return false;
         return true;
-    }
-
-    @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, AnsibleHosts.Hosts entity) {
-        return AnsibleAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

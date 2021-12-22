@@ -1,9 +1,19 @@
 package com.baiyi.opscloud.datasource.aliyun.ram.entity;
 
+import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.core.util.TimeUtil;
+import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 /**
  * @Author baiyi
@@ -12,11 +22,15 @@ import lombok.NoArgsConstructor;
  */
 public class RamUser {
 
+    public static Date toGmtDate(String time) {
+        return TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
+    }
+
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
-    public static class User {
+    public static class User implements IToAsset {
         private String userId;
         private String userName;
         private String displayName;
@@ -27,6 +41,27 @@ public class RamUser {
         private String updateDate; // ListUsersResponse
 
         private String attachDate; // ListEntitiesForPolicy
+
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.userId)
+                    .name(this.displayName)
+                    .assetKey(this.userName)
+                    .assetKey2(this.email)
+                    .kind("ramUser")
+                    .assetType(DsAssetTypeEnum.RAM_USER.name())
+                    .description(this.comments)
+                    .createdTime(toGmtDate(this.createDate))
+                    .build();
+
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .paramProperty("mobilePhone", this.mobilePhone)
+                    .build();
+        }
     }
+
 
 }

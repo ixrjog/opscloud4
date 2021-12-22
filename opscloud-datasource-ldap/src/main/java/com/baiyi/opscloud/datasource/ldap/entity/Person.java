@@ -1,5 +1,11 @@
 package com.baiyi.opscloud.datasource.ldap.entity;
 
+import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import lombok.*;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
@@ -17,7 +23,7 @@ import java.util.Date;
 @Data
 @ToString
 @Entry(objectClasses = {"inetorgperson"}) //  base = "ou=users"
-public class Person {
+public class Person implements IToAsset {
     /**
      * 主键
      */
@@ -90,5 +96,22 @@ public class Person {
      */
     @Attribute
     private String company;
+
+    @Override
+    public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+        DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                .instanceUuid(dsInstance.getUuid())
+                .assetId(this.username) // 资产id = username
+                .name(this.displayName)
+                .assetKey(this.username)
+                .assetKey2(this.email)
+                .assetType(DsAssetTypeEnum.USER.name())
+                .kind("user")
+                .build();
+        return AssetContainerBuilder.newBuilder()
+                .paramAsset(asset)
+                .paramProperty("mobile", this.mobile)
+                .build();
+    }
 }
 

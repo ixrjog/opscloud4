@@ -3,6 +3,8 @@ package com.baiyi.opscloud.datasource.aliyun.convert;
 import com.aliyuncs.ecs.model.v20140526.DescribeSecurityGroupsResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeVSwitchesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeVpcsResponse;
+import com.baiyi.opscloud.core.util.TimeUtil;
+import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
@@ -30,7 +32,7 @@ public class VpcAssetConvert {
                 .assetType(DsAssetTypeEnum.VPC.name())
                 .regionId(entity.getRegionId())
                 .description(entity.getDescription())
-                .createdTime(toGmtDate(entity.getCreationTime()))
+                .createdTime(TimeUtil.toGmtDate(entity.getCreationTime(), TimeZoneEnum.UTC))
                 .build();
 
         return AssetContainerBuilder.newBuilder()
@@ -49,7 +51,7 @@ public class VpcAssetConvert {
                 .kind("aliyunSecurityGroup")
                 .assetType(DsAssetTypeEnum.ECS_SG.name())
                 .description(entity.getDescription())
-                .createdTime(toGmtDate(entity.getCreationTime()))
+                .createdTime(TimeUtil.toGmtDate(entity.getCreationTime(), TimeZoneEnum.UTC))
                 .build();
 
         return AssetContainerBuilder.newBuilder()

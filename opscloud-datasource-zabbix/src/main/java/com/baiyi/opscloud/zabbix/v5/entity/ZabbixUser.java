@@ -1,8 +1,15 @@
 package com.baiyi.opscloud.zabbix.v5.entity;
 
+import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.v5.entity.base.ZabbixResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -46,7 +53,7 @@ public class ZabbixUser {
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class User implements Serializable {
+    public static class User implements IToAsset, Serializable {
 
         private static final long serialVersionUID = -8414101569080017905L;
         // @JsonProperty("userid")
@@ -87,5 +94,34 @@ public class ZabbixUser {
          * 用户使用的媒体
          */
         private List<ZabbixMedia.Media> medias;
+
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.userid)
+                    .name(this.name)
+                    .assetKey(this.alias)
+                    .assetKey2(this.surname)
+                    .kind(String.valueOf(this.type))
+                    .assetType(DsAssetTypeEnum.ZABBIX_USER.name())
+                    .build();
+            AssetContainerBuilder builder = AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset);
+            if (!CollectionUtils.isEmpty(this.medias)) {
+                for (ZabbixMedia.Media media : this.medias) {
+                    if ("1".equals(media.getMediatypeid())) {
+                        //  String email = ZabbixMapper.mapperList(media.getSendto(), String.class).get(0);
+                        String email = ((List<String>) media.getSendto()).get(0);
+                        builder.paramProperty("email", email);
+                        continue;
+                    }
+                    if ("3".equals(media.getMediatypeid())) {
+                        builder.paramProperty("phone", media.getSendto());
+                    }
+                }
+            }
+            return builder.build();
+        }
     }
 }

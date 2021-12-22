@@ -1,20 +1,17 @@
 package com.baiyi.opscloud.datasource.ldap.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
-import com.baiyi.opscloud.datasource.ldap.entity.Group;
-import com.baiyi.opscloud.datasource.ldap.entity.Person;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.datasource.ldap.entity.Group;
+import com.baiyi.opscloud.datasource.ldap.entity.Person;
+import com.baiyi.opscloud.datasource.ldap.repo.GroupRepo;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.datasource.ldap.convert.LdapAssetConvert;
-import com.baiyi.opscloud.datasource.ldap.repo.GroupRepo;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -77,11 +74,6 @@ public class LdapGroupProvider extends AbstractAssetRelationProvider<Group, Pers
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
         return true;
-    }
-
-    @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Group entity) {
-        return LdapAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

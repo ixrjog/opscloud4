@@ -9,12 +9,9 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aliyun.convert.OnsRocketMqConvert;
-import com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.drive.AliyunOnsRocketMqInstanceDrive;
+import com.baiyi.opscloud.datasource.aliyun.ons.drive.AliyunOnsRocketMqInstanceDrive;
 import com.baiyi.opscloud.datasource.aliyun.util.AliyunRegionIdUtil;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.google.common.collect.Lists;
@@ -50,11 +47,6 @@ public class AliyunOnsRocketMqInstanceProvider extends BaseAssetProvider<OnsInst
 
     private AliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
         return dsConfigHelper.build(dsConfig, AliyunConfig.class).getAliyun();
-    }
-
-    @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsInstance.InstanceBaseInfo entity) {
-        return OnsRocketMqConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

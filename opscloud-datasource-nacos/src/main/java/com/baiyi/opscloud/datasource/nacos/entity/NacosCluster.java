@@ -1,6 +1,12 @@
 package com.baiyi.opscloud.datasource.nacos.entity;
 
 import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,7 +40,7 @@ public class NacosCluster {
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Node implements Serializable {
+    public static class Node implements IToAsset, Serializable {
 
         private static final long serialVersionUID = -2017355534427518949L;
 
@@ -50,6 +56,29 @@ public class NacosCluster {
             return JSON.toJSONString(this);
         }
 
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.address)
+                    .name(this.address)
+                    .assetKey(this.ip)
+                    //.assetKey2()
+                    .isActive(true)
+                    .assetType(DsAssetTypeEnum.NACOS_CLUSTER_NODE.name())
+                    .kind("node")
+                    .build();
+
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .paramProperty("state", this.state)
+                    .paramProperty("port", this.port)
+                    .paramProperty("failAccessCnt", this.failAccessCnt)
+                    .paramProperty("supportRemoteMetrics",this.abilities.getConfigAbility().getSupportRemoteMetrics())
+                    .paramProperty("supportJraft",this.abilities.getNamingAbility().getSupportJraft())
+                    .paramProperty("supportRemoteConnection",this.abilities.getRemoteAbility().getSupportRemoteConnection())
+                    .build();
+        }
     }
 
     @Data

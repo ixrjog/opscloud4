@@ -1,5 +1,11 @@
 package com.baiyi.opscloud.datasource.dingtalk.entity;
 
+import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,7 +53,7 @@ public class DingtalkDepartment {
      * https://developers.dingtalk.com/document/app/query-department-details0-v2
      */
     @Data
-    public static class Department implements Serializable {
+    public static class Department implements IToAsset, Serializable {
 
         private static final long serialVersionUID = 8992563745168682046L;
         @JsonProperty("dept_id")
@@ -58,6 +64,21 @@ public class DingtalkDepartment {
         @JsonProperty("hide_dept")
         private Boolean hideDept; // 是否隐藏本部门
 
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(String.valueOf(this.deptId))
+                    .name(this.name)
+                    .assetKey(String.valueOf(this.deptId))
+                    .assetType(DsAssetTypeEnum.DINGTALK_DEPARTMENT.name())
+                    .kind("department")
+                    .build();
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .paramProperty("parentId", this.parentId)
+                    .build();
+        }
     }
 
 }

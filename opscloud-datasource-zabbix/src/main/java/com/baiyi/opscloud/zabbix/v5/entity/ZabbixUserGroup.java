@@ -1,5 +1,11 @@
 package com.baiyi.opscloud.zabbix.v5.entity;
 
+import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.v5.entity.base.ZabbixResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -39,7 +45,7 @@ public class ZabbixUserGroup {
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class UserGroup implements Serializable {
+    public static class UserGroup implements IToAsset, Serializable {
 
         private static final long serialVersionUID = 1637937748007727428L;
         @JsonProperty("usrgrpid")
@@ -65,5 +71,21 @@ public class ZabbixUserGroup {
         private String status;
 
         private List<ZabbixUser.User> users;
+
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.usrgrpid)
+                    .name(this.name)
+                    .assetKey(this.usrgrpid)
+                    .assetType(DsAssetTypeEnum.ZABBIX_USER_GROUP.name())
+                    .isActive("0".equals(this.status))
+                    .kind("zabbixUserGroup")
+                    .build();
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .build();
+        }
     }
 }

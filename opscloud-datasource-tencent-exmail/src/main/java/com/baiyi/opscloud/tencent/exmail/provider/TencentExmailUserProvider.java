@@ -7,12 +7,9 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.tencent.exmail.convert.ExmailAssetConvert;
 import com.baiyi.opscloud.tencent.exmail.drive.TencentExmailUserDrive;
 import com.baiyi.opscloud.tencent.exmail.entity.ExmailUser;
 import lombok.RequiredArgsConstructor;
@@ -73,11 +70,6 @@ public class TencentExmailUserProvider extends BaseAssetProvider<ExmailUser> {
         if (preAsset.getIsActive() != asset.getIsActive())
             return false;
         return true;
-    }
-
-    @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ExmailUser entity) {
-        return ExmailAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

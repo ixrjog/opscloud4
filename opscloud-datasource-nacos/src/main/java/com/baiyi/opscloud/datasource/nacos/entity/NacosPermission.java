@@ -1,8 +1,15 @@
 package com.baiyi.opscloud.datasource.nacos.entity;
 
-import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.common.util.JSONUtil;
+import com.baiyi.opscloud.core.asset.IToAsset;
 import com.baiyi.opscloud.datasource.nacos.entity.base.BasePage;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.Joiner;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,6 +24,10 @@ import java.util.List;
  * @Version 1.0
  */
 public class NacosPermission {
+
+    private static String buildAssetKey(NacosPermission.Permission entity){
+        return Joiner.on("#").join(entity.getRole(),entity.getResource(),entity.getAction());
+    }
 
     @EqualsAndHashCode(callSuper = true)
     @Data
@@ -34,7 +45,7 @@ public class NacosPermission {
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Permission implements Serializable {
+    public static class Permission implements IToAsset, Serializable {
 
         private static final long serialVersionUID = -2841569536441847893L;
         private String action;
@@ -43,7 +54,26 @@ public class NacosPermission {
 
         @Override
         public String toString() {
-            return JSON.toJSONString(this);
+            return JSONUtil.writeValueAsString(this);
+        }
+
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.role)
+                    .name(this.role)
+                    .assetKey(buildAssetKey(this))
+                    .isActive(true)
+                    .assetType(DsAssetTypeEnum.NACOS_PERMISSION.name())
+                    .kind("permission")
+                    .build();
+
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .paramProperty("action", this.action)
+                    .paramProperty("resource", this.resource)
+                    .build();
         }
 
     }

@@ -1,7 +1,13 @@
 package com.baiyi.opscloud.datasource.nacos.entity;
 
-import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.common.util.JSONUtil;
+import com.baiyi.opscloud.core.asset.IToAsset;
 import com.baiyi.opscloud.datasource.nacos.entity.base.BasePage;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,17 +40,33 @@ public class NacosRole {
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Role implements Serializable {
+    public static class Role implements IToAsset, Serializable {
 
         private static final long serialVersionUID = -83954783773211983L;
         private String username;
-
         private String role;
 
         @Override
         public String toString() {
-            return JSON.toJSONString(this);
+            return JSONUtil.writeValueAsString(this);
         }
 
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.username)
+                    .name(this.username.replace("LDAP_",""))
+                    .assetKey(this.username)
+                    .assetKey2(this.role)
+                    .isActive(true)
+                    .assetType(DsAssetTypeEnum.NACOS_USER.name())
+                    .kind("user")
+                    .build();
+
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .build();
+        }
     }
 }

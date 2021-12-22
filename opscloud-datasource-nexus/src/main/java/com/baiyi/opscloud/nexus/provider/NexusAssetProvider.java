@@ -2,20 +2,17 @@ package com.baiyi.opscloud.nexus.provider;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.NexusConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.NexusConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.nexus.convert.NexusAssetConvert;
-import com.baiyi.opscloud.nexus.entity.NexusAsset;
 import com.baiyi.opscloud.nexus.drive.NexusAssetDrive;
+import com.baiyi.opscloud.nexus.entity.NexusAsset;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -98,11 +95,6 @@ public class NexusAssetProvider extends BaseAssetProvider<NexusAsset.Item> {
         if (preAsset.getIsActive() != asset.getIsActive())
             return false;
         return true;
-    }
-
-    @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, NexusAsset.Item entity) {
-        return NexusAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

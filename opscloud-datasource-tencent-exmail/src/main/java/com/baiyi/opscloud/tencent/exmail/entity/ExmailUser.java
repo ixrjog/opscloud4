@@ -1,5 +1,11 @@
 package com.baiyi.opscloud.tencent.exmail.entity;
 
+import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.tencent.exmail.entity.base.BaseExmailResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -19,7 +25,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExmailUser extends BaseExmailResult {
+public class ExmailUser extends BaseExmailResult implements IToAsset {
 
     /**
      * 企业邮帐号名，邮箱格式
@@ -47,4 +53,24 @@ public class ExmailUser extends BaseExmailResult {
      * 0 false
      */
     private String enable;
+
+    @Override
+    public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+        DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                .instanceUuid(dsInstance.getUuid())
+                .assetId(this.userId)
+                .name(this.name)
+                .assetKey(this.userId)
+                .assetKey2(this.userId.split("@")[0])  // 用户名
+                .description(this.position)
+                .isActive("1".equals(this.enable))
+                .assetType(DsAssetTypeEnum.TENCENT_EXMAIL_USER.name())
+                .kind("user")
+                .build();
+
+        return AssetContainerBuilder.newBuilder()
+                .paramAsset(asset)
+                .paramProperty("mobile", this.mobile)
+                .build();
+    }
 }

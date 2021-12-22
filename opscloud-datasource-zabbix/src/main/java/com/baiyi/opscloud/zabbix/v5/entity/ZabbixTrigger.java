@@ -1,6 +1,12 @@
 package com.baiyi.opscloud.zabbix.v5.entity;
 
+import com.baiyi.opscloud.core.asset.IToAsset;
 import com.baiyi.opscloud.domain.base.IRecover;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.v5.entity.base.ZabbixResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,6 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,7 +32,7 @@ public class ZabbixTrigger {
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Trigger implements IRecover, Serializable {
+    public static class Trigger implements IToAsset, IRecover, Serializable {
 
         private static final long serialVersionUID = -7481001921036889808L;
         private String triggerid;
@@ -59,6 +66,23 @@ public class ZabbixTrigger {
         @Override
         public boolean isRecover() {
             return value == 0;
+        }
+
+
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.triggerid)
+                    .name(this.description)
+                    .assetKey(this.triggerid)
+                    .kind(String.valueOf(this.priority))
+                    .createdTime(new Date(this.lastchange * 1000))
+                    .assetType(DsAssetTypeEnum.ZABBIX_TRIGGER.name())
+                    .build();
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .build();
         }
     }
 

@@ -1,5 +1,11 @@
 package com.baiyi.opscloud.datasource.sonar.entity.base;
 
+import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,7 +41,7 @@ public class BaseSonarElement {
      */
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Project {
+    public static class Project implements IToAsset {
         // private String organization;
         // private String id;
         private String key;
@@ -45,6 +51,25 @@ public class BaseSonarElement {
         // private Date lastAnalysisDate;
         private String revision;
 
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.key)
+                    .name(this.name)
+                    .assetKey(this.key)
+                    .assetKey2(this.revision)
+                    .isActive(true)
+                    .assetType(DsAssetTypeEnum.SONAR_PROJECT.name())
+                    .kind("project")
+                    .build();
+
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .paramProperty("revision", this.revision)
+                    .paramProperty("visibility", this.visibility)
+                    .build();
+        }
     }
 
     @Data

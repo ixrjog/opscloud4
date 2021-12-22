@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.core.provider.asset;
 
+import com.baiyi.opscloud.core.asset.IToAsset;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
@@ -141,7 +142,13 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
      */
     protected abstract boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset);
 
-    protected abstract AssetContainer toAssetContainer(DatasourceInstance dsInstance, T entity);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, T entity) {
+        if (entity instanceof IToAsset) {
+            return ((IToAsset) entity).toAssetContainer(dsInstance);
+        }
+        throw new UnsupportedOperationException("资产类型转换错误！");
+    }
+
 
     protected void doPull(int dsInstanceId) {
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);

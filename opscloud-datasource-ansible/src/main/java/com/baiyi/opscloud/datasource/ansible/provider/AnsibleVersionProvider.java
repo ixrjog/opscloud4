@@ -1,24 +1,21 @@
 package com.baiyi.opscloud.datasource.ansible.provider;
 
-import com.baiyi.opscloud.datasource.ansible.args.CommandArgs;
-import com.baiyi.opscloud.datasource.ansible.args.PlaybookArgs;
-import com.baiyi.opscloud.datasource.ansible.builder.AnsibleCommandArgsBuilder;
-import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgsBuilder;
-import com.baiyi.opscloud.datasource.ansible.convert.AnsibleAssetConvert;
-import com.baiyi.opscloud.datasource.ansible.executor.AnsibleExecutor;
-import com.baiyi.opscloud.datasource.ansible.entity.AnsibleExecuteResult;
-import com.baiyi.opscloud.datasource.ansible.entity.AnsibleVersion;
 import com.baiyi.opscloud.common.annotation.SingleTask;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
-import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.datasource.ansible.args.CommandArgs;
+import com.baiyi.opscloud.datasource.ansible.args.PlaybookArgs;
+import com.baiyi.opscloud.datasource.ansible.builder.AnsibleCommandArgsBuilder;
+import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgsBuilder;
+import com.baiyi.opscloud.datasource.ansible.entity.AnsibleExecuteResult;
+import com.baiyi.opscloud.datasource.ansible.entity.AnsibleVersion;
+import com.baiyi.opscloud.datasource.ansible.executor.AnsibleExecutor;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.google.common.collect.Lists;
@@ -120,11 +117,6 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
         if (preAsset.getIsActive() != asset.getIsActive())
             return false;
         return true;
-    }
-
-    @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, AnsibleVersion.Version entity) {
-        return AnsibleAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

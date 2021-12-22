@@ -1,5 +1,11 @@
 package com.baiyi.opscloud.zabbix.v5.entity;
 
+import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.v5.entity.base.ZabbixResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -48,7 +54,7 @@ public class ZabbixHost {
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Host implements Serializable {
+    public static class Host implements IToAsset, Serializable {
 
         private static final long serialVersionUID = -1757845550833408363L;
         private String hostid;
@@ -91,6 +97,24 @@ public class ZabbixHost {
 
         private List<HostTag> tags;
         private List<HostTag> inheritedTags;
+
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.hostid)
+                    .name(this.name)
+                    .assetKey(this.interfaces.get(0).getIp())
+                    //.assetKey2()
+                    .kind(String.valueOf(this.flags))
+                    .isActive(0 == this.status)
+                    .assetType(DsAssetTypeEnum.ZABBIX_HOST.name())
+                    .description(this.description)
+                    .build();
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .build();
+        }
     }
 
 
