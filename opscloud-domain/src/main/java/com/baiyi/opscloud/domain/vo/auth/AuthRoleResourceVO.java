@@ -3,10 +3,7 @@ package com.baiyi.opscloud.domain.vo.auth;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * @Author baiyi
@@ -15,6 +12,7 @@ import lombok.NoArgsConstructor;
  */
 public class AuthRoleResourceVO {
 
+    @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
