@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshserver.command.kubernetes.base;
 
+import com.baiyi.opscloud.common.util.JSONUtil;
 import lombok.Builder;
 import lombok.Data;
 
@@ -25,4 +26,9 @@ public class PodContext {
     private String podIp;
 
     private Set<String> containerNames;
+
+    @Override
+    public String toString(){
+        return JSONUtil.writeValueAsString(this);
+    }
 }

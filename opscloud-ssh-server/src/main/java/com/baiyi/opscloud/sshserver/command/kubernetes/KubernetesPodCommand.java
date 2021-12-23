@@ -38,6 +38,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.PodCondition;
 import io.fabric8.kubernetes.client.dsl.ExecWatch;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +60,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -107,19 +109,23 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                         "Pod Name",
                         "Pod IP",
                         "Start Time",
-                        "Restart Count",
+                        "Status",  // Pod状态
+                        "Restart Count", // Pod重启次数
                         "Container Name"
                 );
         int seq = 1;
         for (Pod pod : pods) {
             idMapper.put(seq, asset.getId());
             List<String> names = pod.getSpec().getContainers().stream().map(Container::getName).collect(Collectors.toList());
+            //  return cloudserverList.stream().collect(Collectors.toMap(OcCloudserver::getInstanceId, a -> a, (k1, k2) -> k1));
+            Map<String, Boolean> podStatusMap = pod.getStatus().getConditions().stream().collect(Collectors.toMap(PodCondition::getType, a -> Boolean.valueOf(a.getStatus()), (k1, k2) -> k1));
             pt.addRow(seq,
                     datasourceInstance.getInstanceName(),
                     pod.getMetadata().getNamespace(),
                     pod.getMetadata().getName(),
-                    pod.getStatus().getPodIP(),
+                    StringUtils.isEmpty(pod.getStatus().getPodIP()) ? "N/A" : pod.getStatus().getPodIP(),
                     com.baiyi.opscloud.common.util.TimeUtil.dateToStr(PodAssetConvert.toGmtDate(pod.getStatus().getStartTime())),
+                    toPodStatusStr(pod.getStatus().getPhase(), podStatusMap),
                     pod.getStatus().getContainerStatuses().get(0).getRestartCount(), // Restart Count
                     Joiner.on(",").join(names)
             );
@@ -128,6 +134,17 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         SessionCommandContext.setIdMapper(idMapper);
         helper.print(pt.toString());
         helper.print(buildPagination(pods.size()), PromptColor.GREEN);
+    }
+
+    private String toPodStatusStr(String phase, Map<String, Boolean> podStatusMap) {
+        if (StringUtils.isEmpty(phase))
+            return helper.getColored("N/A", PromptColor.YELLOW);
+        Optional<String> r = podStatusMap.keySet().stream().filter(k -> !podStatusMap.get(k)).findFirst();
+        if (r.isPresent()) {
+            return helper.getColored(phase, PromptColor.YELLOW);
+        } else {
+            return helper.getColored(phase, PromptColor.GREEN);
+        }
     }
 
     private void listPodByDeploymentName(String deploymentName) {
@@ -157,6 +174,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                         "Pod Name",
                         "Pod IP",
                         "Start Time",
+                        "Status",  // Pod状态
                         "Restart Count",
                         "Container Name"
                 );
@@ -174,9 +192,12 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
             try {
                 List<Pod> pods = KubernetesPodDrive.listPod(kubernetesDsInstanceMap
                         .get(instanceUuid).getKubernetesDsInstanceConfig().getKubernetes(), datasourceAsset.getAssetKey2(), datasourceAsset.getAssetKey());
-                if (CollectionUtils.isEmpty(pods))
+                if (CollectionUtils.isEmpty(pods)) {
+                    log.info("查询Pods为空: namespace = {} , deploymentName = {}", datasourceAsset.getAssetKey2(), datasourceAsset.getAssetKey());
                     continue;
+                }
                 for (Pod pod : pods) {
+                    Map<String, Boolean> podStatusMap = pod.getStatus().getConditions().stream().collect(Collectors.toMap(PodCondition::getType, a -> Boolean.valueOf(a.getStatus()), (k1, k2) -> k1));
                     String podName = pod.getMetadata().getName();
                     PodContext podContext = PodContext.builder()
                             .podName(podName)
@@ -192,8 +213,9 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                                     .get(instanceUuid).getDsInstance().getInstanceName(),
                             pod.getMetadata().getNamespace(),
                             podName,
-                            pod.getStatus().getPodIP(),
+                            StringUtils.isEmpty(pod.getStatus().getPodIP()) ? "N/A" : pod.getStatus().getPodIP(),
                             com.baiyi.opscloud.common.util.TimeUtil.dateToStr(PodAssetConvert.toGmtDate(pod.getStatus().getStartTime())),
+                            toPodStatusStr(pod.getStatus().getPhase(), podStatusMap),
                             pod.getStatus().getContainerStatuses().get(0).getRestartCount(), // Restart Count
                             Joiner.on(",").join(names)
                     );
