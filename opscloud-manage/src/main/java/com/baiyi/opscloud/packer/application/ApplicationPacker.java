@@ -79,7 +79,7 @@ public class ApplicationPacker {
         try {
             DatasourceInstance dsInstance = dsInstanceService.getByUuid(asset.getInstanceUuid());
             if (dsInstance != null) {
-                List<AssetContainer> assetContainers = kubernetesPodProvider.queryAssetsByDeployment(dsInstance.getId(), namespace,deployment );
+                List<AssetContainer> assetContainers = kubernetesPodProvider.queryAssetsByDeployment(dsInstance.getId(), namespace, deployment);
                 resourceVO.setAssetContainers(assetContainers);
             }
         } catch (NullPointerException ignored) {
@@ -106,7 +106,7 @@ public class ApplicationPacker {
         return vo;
     }
 
-    private void wrapResourceInstance(ApplicationResourceVO.Resource r){
+    private void wrapResourceInstance(ApplicationResourceVO.Resource r) {
         if (r.getBusinessType() == BusinessTypeEnum.ASSET.getType()) {
             DatasourceInstanceAsset asset = dsInstanceAssetService.getById(r.getBusinessId());
             r.setInstanceUuid(asset.getInstanceUuid());

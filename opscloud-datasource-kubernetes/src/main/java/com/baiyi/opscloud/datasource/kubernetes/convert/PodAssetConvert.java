@@ -9,10 +9,13 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.PodCondition;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -39,17 +42,26 @@ public class PodAssetConvert {
                 .build();
 
         Date startTime = toGmtDate(entity.getStatus().getStartTime());
+        Map<String, Boolean> podStatusMap = entity.getStatus().getConditions()
+                .stream().collect(Collectors.toMap(PodCondition::getType, a -> Boolean.valueOf(a.getStatus()), (k1, k2) -> k1));
+
+        Optional<String> statusOptional = podStatusMap.keySet().stream().filter(k -> !podStatusMap.get(k)).findFirst();
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
                 .paramChildren(toChildren(entity))
                 .paramProperty("phase", entity.getStatus().getPhase())
                 .paramProperty("startTime", com.baiyi.opscloud.common.util.TimeUtil.dateToStr(startTime))
                 .paramProperty("nodeName", entity.getSpec().getNodeName())
-                .paramProperty("restartCount",entity.getStatus().getContainerStatuses().get(0).getRestartCount())
+                .paramProperty("restartCount", entity.getStatus().getContainerStatuses().get(0).getRestartCount())
                 .paramProperty("hostIp", entity.getStatus().getHostIP())
                 .paramProperty("image", entity.getStatus().getContainerStatuses().get(0).getImage())
                 .paramProperty("imageId", entity.getStatus().getContainerStatuses().get(0).getImageID())
-                .paramProperty("containerId",entity.getStatus().getContainerStatuses().get(0).getContainerID())
+                .paramProperty("containerId", entity.getStatus().getContainerStatuses().get(0).getContainerID())
+                .paramProperty("podScheduled",podStatusMap.get("PodScheduled"))
+                .paramProperty("containersReady",podStatusMap.get("ContainersReady"))
+                .paramProperty("initialized",podStatusMap.get("Initialized"))
+                .paramProperty("ready",podStatusMap.get("Ready"))
+                .paramProperty("status",!statusOptional.isPresent())
                 .build();
     }
 
