@@ -60,4 +60,12 @@ public class EnvServiceImpl implements EnvService {
         criteria.andEqualTo("envType", envType);
         return envMapper.selectOneByExample(example);
     }
+
+    @Override
+    public Env getByEnvName(String envName) {
+        Example example = new Example(Env.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("envName", envName);
+        return envMapper.selectOneByExample(example);
+    }
 }

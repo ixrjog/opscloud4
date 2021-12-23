@@ -18,4 +18,6 @@ public interface EnvService {
     DataTable<Env> queryPageByParam(EnvParam.EnvPageQuery pageQuery);
 
     Env getByEnvType(Integer envType);
+
+    Env getByEnvName(String envName);
 }

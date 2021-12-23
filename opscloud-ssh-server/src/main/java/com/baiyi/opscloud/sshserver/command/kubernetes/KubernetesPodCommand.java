@@ -7,10 +7,12 @@ import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesPodDrive;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.service.sys.EnvService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.sshcore.audit.AuditPodCommandAudit;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
@@ -31,6 +33,7 @@ import com.baiyi.opscloud.sshserver.command.context.KubernetesDsInstance;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
 import com.baiyi.opscloud.sshserver.command.kubernetes.base.BaseKubernetesCommand;
 import com.baiyi.opscloud.sshserver.command.kubernetes.base.PodContext;
+import com.baiyi.opscloud.sshserver.command.util.ServerUtil;
 import com.baiyi.opscloud.sshserver.config.SshServerArthasConfig;
 import com.baiyi.opscloud.sshserver.util.TerminalUtil;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
@@ -75,6 +78,9 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
 
     @Resource
     private SshServerArthasConfig arthasConfig;
+
+    @Resource
+    private EnvService envService;
 
     private static byte[] KUBERNETES_EXECUTE_ARTHAS = "curl -O https://arthas.aliyun.com/arthas-boot.jar && java -jar arthas-boot.jar \n".getBytes(StandardCharsets.UTF_8);
 
@@ -121,7 +127,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
             Map<String, Boolean> podStatusMap = pod.getStatus().getConditions().stream().collect(Collectors.toMap(PodCondition::getType, a -> Boolean.valueOf(a.getStatus()), (k1, k2) -> k1));
             pt.addRow(seq,
                     datasourceInstance.getInstanceName(),
-                    pod.getMetadata().getNamespace(),
+                    toNamespaceStr(pod.getMetadata().getNamespace()),
                     pod.getMetadata().getName(),
                     StringUtils.isEmpty(pod.getStatus().getPodIP()) ? "N/A" : pod.getStatus().getPodIP(),
                     com.baiyi.opscloud.common.util.TimeUtil.dateToStr(PodAssetConvert.toGmtDate(pod.getStatus().getStartTime())),
@@ -134,6 +140,13 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         SessionCommandContext.setIdMapper(idMapper);
         helper.print(pt.toString());
         helper.print(buildPagination(pods.size()), PromptColor.GREEN);
+    }
+
+    private String toNamespaceStr(String namespace) {
+        Env env = envService.getByEnvName(namespace);
+        if (env == null)
+            return namespace;
+        return ServerUtil.toDisplayEnv(env);
     }
 
     private String toPodStatusStr(String phase, Map<String, Boolean> podStatusMap) {
@@ -211,7 +224,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                     pt.addRow(seq,
                             kubernetesDsInstanceMap
                                     .get(instanceUuid).getDsInstance().getInstanceName(),
-                            pod.getMetadata().getNamespace(),
+                            toNamespaceStr(pod.getMetadata().getNamespace()),
                             podName,
                             StringUtils.isEmpty(pod.getStatus().getPodIP()) ? "N/A" : pod.getStatus().getPodIP(),
                             com.baiyi.opscloud.common.util.TimeUtil.dateToStr(PodAssetConvert.toGmtDate(pod.getStatus().getStartTime())),

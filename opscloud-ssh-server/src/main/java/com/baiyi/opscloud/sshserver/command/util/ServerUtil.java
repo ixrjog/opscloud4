@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshserver.command.util;
 
+import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
@@ -17,6 +18,14 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 public class ServerUtil {
+
+    public static String toDisplayEnv(Env env) {
+        if (env.getPromptColor() == null) {
+            return env.getEnvName();
+        } else {
+            return Joiner.on("").join("[", (new AttributedStringBuilder()).append(env.getEnvName(), AttributedStyle.DEFAULT.foreground(env.getPromptColor())).toAnsi(), "]");
+        }
+    }
 
     public static String toDisplayEnv(EnvVO.Env env) {
         if (env.getPromptColor() == null) {
