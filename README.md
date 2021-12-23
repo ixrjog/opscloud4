@@ -14,19 +14,18 @@ Welcome to the opscloud wiki!
 
 ### 开发环境
 + MacBook M1PRO(8C/14C) / macOS Monterey
-+ IntelliJ IDEA 2021.2.3 (Ultimate Edition)
-+ WebStorm 2021.2.3
++ IntelliJ IDEA 2021.3 (Ultimate Edition)
++ WebStorm 2021.3
 
-### TODO
-+ 增加钉钉数据源
-  + 用户资产同步
-+ 增加Nacos数据源
-+ 增加腾讯企业邮箱数据源
-+ 工单
-
-### Tag:4.0.5版本
-+ 部分代码优化
-+ 服务端4.0.5版本兼容4.0.4前端和SQL
+### Tag:4.0.6版本
++ 数据源
+  + 钉钉(通讯录用户/部门/工作通知）
+  + Nacos(集群节点/用户/权限)
+  + Sonar(项目)
+  + 阿里云(RDS/Redis/RAM优化/DMS用户推送)
+  + 腾讯企业邮箱
++ 模版
+  + Kubernetes业务模版(创建Deployment,Service)
 + SSH-Server增加Arthas(Alibaba开源的Java诊断工具，深受开发者喜爱)支持
 ```
 # https://arthas.aliyun.com/doc/
