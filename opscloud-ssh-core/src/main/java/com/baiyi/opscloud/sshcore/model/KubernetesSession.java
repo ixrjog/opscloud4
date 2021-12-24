@@ -36,17 +36,21 @@ public class KubernetesSession {
 
     private WatchKubernetesTerminalOutputTask watchKubernetesTerminalOutputTask;
 
-
     private OutputStream inputToChannel;
 
     private static SessionOutput sessionOutput;
 
     public void resize(KubernetesMessage.Resize resizeMessage) {
         if (this.execWatch == null) return;
-        execWatch.resize(resizeMessage.getTerminal().getWidth(), resizeMessage.getTerminal().getHeight());
+        int width = resizeMessage.getTerminal().getWidth();
+        int height = resizeMessage.getTerminal().getHeight();
+        // int cols = (int) Math.floor(width / 7.2981);
+        int cols = (int) Math.floor(width / 7.0);
+        int rows = (int) Math.floor(height / 14.4166);
+        // execWatch.resize(resizeMessage.getTerminal().getWidth(), resizeMessage.getTerminal().getHeight());
+        execWatch.resize(cols, rows);
     }
-
-
+    
     public void setSessionOutput(SessionOutput sessionOutput) {
         KubernetesSession.sessionOutput = sessionOutput;
     }
