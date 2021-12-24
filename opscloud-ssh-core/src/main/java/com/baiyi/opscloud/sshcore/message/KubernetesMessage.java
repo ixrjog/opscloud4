@@ -3,6 +3,7 @@ package com.baiyi.opscloud.sshcore.message;
 import com.baiyi.opscloud.domain.model.message.ILoginMessage;
 import com.baiyi.opscloud.domain.model.message.ISessionType;
 import com.baiyi.opscloud.domain.model.message.IState;
+import com.baiyi.opscloud.domain.model.message.ITerminalSize;
 import com.baiyi.opscloud.sshcore.model.KubernetesResource;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -26,10 +27,20 @@ public class KubernetesMessage {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @JsonIgnoreProperties
-    public static class Resize extends BaseMessage implements ISessionType {
+    public static class Resize extends BaseMessage implements ISessionType, ITerminalSize {
         private KubernetesResource data;
         private String sessionType;
         private String instanceId;
+
+        @Override
+        public int getWidth() {
+            return this.terminal.getWidth();
+        }
+
+        @Override
+        public int getHeight() {
+            return this.terminal.getHeight();
+        }
     }
 
     @EqualsAndHashCode(callSuper = true)

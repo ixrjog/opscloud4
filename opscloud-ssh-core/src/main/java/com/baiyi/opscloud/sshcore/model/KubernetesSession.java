@@ -42,15 +42,9 @@ public class KubernetesSession {
 
     public void resize(KubernetesMessage.Resize resizeMessage) {
         if (this.execWatch == null) return;
-        int width = resizeMessage.getTerminal().getWidth();
-        int height = resizeMessage.getTerminal().getHeight();
-        // int cols = (int) Math.floor(width / 7.2981);
-        int cols = (int) Math.floor(width / 7.0);
-        int rows = (int) Math.floor(height / 14.4166);
-        // execWatch.resize(resizeMessage.getTerminal().getWidth(), resizeMessage.getTerminal().getHeight());
-        execWatch.resize(cols, rows);
+        execWatch.resize(resizeMessage.getCols(), resizeMessage.getRows());
     }
-    
+
     public void setSessionOutput(SessionOutput sessionOutput) {
         KubernetesSession.sessionOutput = sessionOutput;
     }

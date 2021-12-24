@@ -130,7 +130,7 @@ public class RemoteInvokeHandler {
      * @param sessionId
      * @param hostSystem
      */
-    public static void openSSHServer(String sessionId, HostSystem hostSystem,OutputStream out) {
+    public static void openSSHServer(String sessionId, HostSystem hostSystem, OutputStream out) {
         JSch jsch = new JSch();
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
         try {
@@ -145,9 +145,9 @@ public class RemoteInvokeHandler {
             // new session output
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
             // 启动线程处理会话
-              Runnable run = new WatchSshServerOutputTask(sessionOutput, channel.getInputStream(), out);
-              Thread thread = new Thread(run);
-              thread.start();
+            Runnable run = new WatchSshServerOutputTask(sessionOutput, channel.getInputStream(), out);
+            Thread thread = new Thread(run);
+            thread.start();
             /////////////////////
             OutputStream inputToChannel = channel.getOutputStream();
             JSchSession jSchSession = JSchSession.builder()
@@ -228,15 +228,13 @@ public class RemoteInvokeHandler {
     }
 
     public static void setChannelPtySize(ChannelShell channel, ServerMessage.BaseMessage message) {
-        int width = message.getTerminal().getWidth();
-        int height = message.getTerminal().getHeight();
-        // int cols = (int) Math.floor(width / 7.2981);
-        int cols = (int) Math.floor(width / 7.0);
-        int rows = (int) Math.floor(height / 14.4166);
-        channel.setPtySize(cols, rows, width, height);
+        if (channel == null || !channel.isClosed()) return;
+        channel.setPtySize(message.getCols(), message.getRows(), message.getWidth(), message.getHeight());
     }
 
     public static void setChannelPtySize(ChannelShell channel, Size size) {
+        if (channel == null || !channel.isClosed()) return;
         channel.setPtySize(size.getColumns(), size.getRows(), size.getColumns() * 7, (int) Math.floor(size.getRows() / 14.4166));
     }
+
 }

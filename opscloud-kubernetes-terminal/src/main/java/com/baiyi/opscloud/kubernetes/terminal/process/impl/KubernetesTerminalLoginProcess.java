@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.kubernetes.terminal.factory.impl;
+package com.baiyi.opscloud.kubernetes.terminal.process.impl;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.kubernetes.terminal.factory.AbstractKubernetesTerminalProcess;
+import com.baiyi.opscloud.kubernetes.terminal.process.AbstractKubernetesTerminalProcess;
 import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalProcessFactory;
 import com.baiyi.opscloud.sshcore.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;

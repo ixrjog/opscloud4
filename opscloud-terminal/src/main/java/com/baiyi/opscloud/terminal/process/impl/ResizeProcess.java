@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.terminal.factory.impl;
+package com.baiyi.opscloud.terminal.process.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
@@ -6,7 +6,7 @@ import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
-import com.baiyi.opscloud.terminal.factory.AbstractServerTerminalProcess;
+import com.baiyi.opscloud.terminal.process.AbstractServerTerminalProcess;
 import com.google.gson.GsonBuilder;
 import com.jcraft.jsch.ChannelShell;
 import org.springframework.stereotype.Component;

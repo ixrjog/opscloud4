@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.terminal.factory;
+package com.baiyi.opscloud.terminal.process;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
@@ -8,6 +8,7 @@ import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import com.baiyi.opscloud.sshcore.handler.HostSystemHandler;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
+import com.baiyi.opscloud.terminal.factory.TerminalProcessFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 

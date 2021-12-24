@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.kubernetes.terminal.factory;
+package com.baiyi.opscloud.kubernetes.terminal.process;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalProcessFactory;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import com.baiyi.opscloud.sshcore.ITerminalProcess;

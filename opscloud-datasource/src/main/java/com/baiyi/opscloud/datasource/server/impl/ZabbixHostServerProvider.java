@@ -64,7 +64,7 @@ public class ZabbixHostServerProvider extends AbstractZabbixHostServerProvider {
                 //  .paramEntrySkipEmpty("macros", ZabbixUtils.buildMacrosParameter(serverAttributeMap))
                 //  .paramEntrySkipEmpty("proxy_hostid", getProxyhostid(serverAttributeMap))
                 .build();
-        ZabbixHost.CreateHostResponse response = createHandle(configContext.get(),request);
+        ZabbixHost.CreateHostResponse response = createHandle(configContext.get(), request);
         if (CollectionUtils.isEmpty(response.getResult().getHostids())) {
             log.error("ZabbixHost创建失败!");
         }
@@ -75,17 +75,16 @@ public class ZabbixHostServerProvider extends AbstractZabbixHostServerProvider {
         ServerProperty.Server property = getBusinessProperty(server);
         if (!isEnabled(property)) return;
         String manageIp = getManageIp(server, property);
-        com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost.Host host = null;
         try {
-            host = zabbixV5HostDatasource.getByIp(configContext.get(), manageIp);
+            com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost.Host host = zabbixV5HostDatasource.getByIp(configContext.get(), manageIp);
+            if (host == null) {
+                doCreate(server);
+            } else {
+                // 开始更新
+                updateHost(server, property, host);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        if (host == null) {
-            doCreate(server);
-        } else {
-            // 开始更新
-            updateHost(server, property, host);
         }
     }
 
@@ -101,8 +100,9 @@ public class ZabbixHostServerProvider extends AbstractZabbixHostServerProvider {
             zabbixV5HostDatasource.deleteById(configContext.get(), host.getHostid());
             zabbixV5HostDatasource.evictHostById(configContext.get(), host.getHostid());
         } catch (Exception ignored) {
+        } finally {
+            zabbixV5HostDatasource.evictHostByIp(configContext.get(), manageIp);
         }
-        zabbixV5HostDatasource.evictHostByIp(configContext.get(), manageIp);
     }
 
     @Override

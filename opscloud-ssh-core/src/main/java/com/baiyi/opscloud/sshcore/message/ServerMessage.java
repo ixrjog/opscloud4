@@ -2,6 +2,7 @@ package com.baiyi.opscloud.sshcore.message;
 
 import com.baiyi.opscloud.domain.model.message.ILoginMessage;
 import com.baiyi.opscloud.domain.model.message.IState;
+import com.baiyi.opscloud.domain.model.message.ITerminalSize;
 import com.baiyi.opscloud.sshcore.model.ServerNode;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -20,7 +21,7 @@ public class ServerMessage {
     @NoArgsConstructor
     @Data
     @JsonIgnoreProperties
-    public static class BaseMessage implements IState {
+    public static class BaseMessage implements IState, ITerminalSize {
 
         public static final BaseMessage CLOSE = BaseMessage.builder().build();
 
@@ -30,6 +31,16 @@ public class ServerMessage {
         private Integer loginType;
         private boolean isAdmin;
         private com.baiyi.opscloud.sshcore.message.base.BaseMessage.Terminal terminal;
+
+        @Override
+        public int getWidth() {
+            return this.terminal.getWidth();
+        }
+
+        @Override
+        public int getHeight() {
+            return this.terminal.getHeight();
+        }
     }
 
     @EqualsAndHashCode(callSuper = true)
