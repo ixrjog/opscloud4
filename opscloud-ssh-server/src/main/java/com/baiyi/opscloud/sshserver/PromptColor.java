@@ -34,7 +34,12 @@ public enum PromptColor {
     WHITE(7),
     BRIGHT(8),
     COLOR64(64),
-    COLOR128(128)
+    COLOR128(128),
+    COLOR129(129),
+    COLOR130(130),
+    COLOR131(131),
+    COLOR132(132),
+    COLOR250(250)
     ;
 
     @Getter

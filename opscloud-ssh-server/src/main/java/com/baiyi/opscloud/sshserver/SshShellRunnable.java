@@ -128,6 +128,9 @@ public class SshShellRunnable
     public void run() {
         log.debug("{}: running...", session.toString());
         TerminalBuilder terminalBuilder = TerminalBuilder.builder().system(false).streams(is, os);
+                 // 可以不加
+                //.dumb(true)
+                //.encoding(StandardCharsets.UTF_8.name());
         boolean sizeAvailable = false;
         if (sshEnv.getEnv().containsKey(SSH_ENV_COLUMNS) && sshEnv.getEnv().containsKey(SSH_ENV_LINES)) {
             try {
@@ -150,7 +153,6 @@ public class SshShellRunnable
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              PrintStream ps = new PrintStream(baos, true, StandardCharsets.UTF_8.name());
              Terminal terminal = terminalBuilder.build()) {
-
             try {
                 DefaultResultHandler resultHandler = new DefaultResultHandler();
                 resultHandler.setTerminal(terminal);
@@ -191,7 +193,7 @@ public class SshShellRunnable
                             }
                             if (best != null) {
                                 return new AttributedStringBuilder(buffer.length()).append(best,
-                                        AttributedStyle.BOLD).append(buffer.substring(l))
+                                                AttributedStyle.BOLD).append(buffer.substring(l))
                                         .toAttributedString();
                             } else {
                                 return new AttributedString(buffer,
