@@ -93,6 +93,9 @@ public class ZabbixHost {
          */
         private Integer status;
 
+        //  @JsonProperty("proxyHostid")
+        private  String proxy_hostid;
+
         private List<HostInterface> interfaces;
 
         private List<HostTag> tags;

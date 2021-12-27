@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @Date 2021/11/19 10:09 上午
  * @Version 1.0
  */
-public abstract class AbstractZabbixV5HostDatasource {
+public abstract class AbstractZabbixV5HostDrive {
 
     @Resource
     private SimpleZabbixAuth simpleZabbixAuth;

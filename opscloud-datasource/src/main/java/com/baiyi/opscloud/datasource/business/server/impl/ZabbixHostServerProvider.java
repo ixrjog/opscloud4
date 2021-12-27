@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
-import com.baiyi.opscloud.zabbix.v5.drive.base.AbstractZabbixV5HostDatasource;
+import com.baiyi.opscloud.zabbix.v5.drive.base.AbstractZabbixV5HostDrive;
 import com.baiyi.opscloud.zabbix.v5.drive.base.SimpleZabbixAuth;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.feign.ZabbixHostFeign;
@@ -45,7 +45,7 @@ public class ZabbixHostServerProvider extends AbstractZabbixHostServerProvider {
 
     protected ZabbixHost.CreateHostResponse createHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixHostFeign zabbixAPI = buildFeign(config);
-        request.setMethod(AbstractZabbixV5HostDatasource.HostAPIMethod.CREATE);
+        request.setMethod(AbstractZabbixV5HostDrive.HostAPIMethod.CREATE);
         request.setAuth(simpleZabbixAuth.getAuth(config));
         return zabbixAPI.create(request);
     }
@@ -53,16 +53,16 @@ public class ZabbixHostServerProvider extends AbstractZabbixHostServerProvider {
     @Override
     protected void doCreate(Server server) {
         ServerProperty.Server property = getBusinessProperty(server);
-        if (!isEnabled(property)) return;
+        if (isEnabled(property)) return;
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
-                .method(AbstractZabbixV5HostDatasource.HostAPIMethod.CREATE)
+                .method(AbstractZabbixV5HostDrive.HostAPIMethod.CREATE)
                 .putParam("host", SimpleServerNameFacade.toServerName(server))
                 .putParam("interfaces", buildHostInterfaceParams(server, property))
                 .putParam("groups", buildHostGroupParams(configContext.get(), server))
                 .putParam("templates", buildTemplatesParams(configContext.get(), property))
                 .putParam("tags", buildTagsParams(server))
-                //  .paramEntrySkipEmpty("macros", ZabbixUtils.buildMacrosParameter(serverAttributeMap))
-                //  .paramEntrySkipEmpty("proxy_hostid", getProxyhostid(serverAttributeMap))
+                .putParamSkipEmpty("proxy_hostid", getProxyHostid(property))
+                //.paramEntrySkipEmpty("proxy_hostid", getProxyhostid(serverAttributeMap))
                 .build();
         ZabbixHost.CreateHostResponse response = createHandle(configContext.get(), request);
         if (CollectionUtils.isEmpty(response.getResult().getHostids())) {
@@ -73,14 +73,13 @@ public class ZabbixHostServerProvider extends AbstractZabbixHostServerProvider {
     @Override
     protected void doUpdate(Server server) {
         ServerProperty.Server property = getBusinessProperty(server);
-        if (!isEnabled(property)) return;
+        if (isEnabled(property)) return;
         String manageIp = getManageIp(server, property);
         try {
-            com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost.Host host = zabbixV5HostDatasource.getByIp(configContext.get(), manageIp);
+            com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost.Host host = zabbixV5HostDrive.getByIp(configContext.get(), manageIp);
             if (host == null) {
                 doCreate(server);
             } else {
-                // 开始更新
                 updateHost(server, property, host);
             }
         } catch (Exception e) {
@@ -93,15 +92,15 @@ public class ZabbixHostServerProvider extends AbstractZabbixHostServerProvider {
         ServerProperty.Server property = getBusinessProperty(server);
         String manageIp = getManageIp(server, property);
         try {
-            com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost.Host host = zabbixV5HostDatasource.getByIp(configContext.get(), manageIp);
+            com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost.Host host = zabbixV5HostDrive.getByIp(configContext.get(), manageIp);
             if (host == null) {
                 return;
             }
-            zabbixV5HostDatasource.deleteById(configContext.get(), host.getHostid());
-            zabbixV5HostDatasource.evictHostById(configContext.get(), host.getHostid());
+            zabbixV5HostDrive.deleteById(configContext.get(), host.getHostid());
+            zabbixV5HostDrive.evictHostById(configContext.get(), host.getHostid());
         } catch (Exception ignored) {
         } finally {
-            zabbixV5HostDatasource.evictHostByIp(configContext.get(), manageIp);
+            zabbixV5HostDrive.evictHostByIp(configContext.get(), manageIp);
         }
     }
 

@@ -58,15 +58,8 @@ public class ZabbixHostTest extends BaseZabbixTest {
 
     @Test
     void getByIpTest() {
-        ZabbixHost.Host host = zabbixV5HostDrive.getByIp(getConfig().getZabbix(), "172.19.0.129");
+        ZabbixHost.Host host = zabbixV5HostDrive.getByIp(getConfig().getZabbix(), "172.31.8.21");
         print(host);
-    }
-
-    @Test
-    void getByIpTest2() {
-        ZabbixHost.Host host1 = zabbixV5HostDrive.getByIp(getConfig().getZabbix(), "172.19.0.129");
-        ZabbixHost.Host host2 = zabbixV5HostDrive.getById(getConfig().getZabbix(), host1.getHostid());
-        print(host2);
     }
 
     @Test

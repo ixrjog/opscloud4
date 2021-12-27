@@ -3,7 +3,7 @@ package com.baiyi.opscloud.zabbix.v5.drive;
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.util.JSONUtil;
-import com.baiyi.opscloud.zabbix.v5.drive.base.AbstractZabbixV5HostDatasource;
+import com.baiyi.opscloud.zabbix.v5.drive.base.AbstractZabbixV5HostDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class ZabbixV5HostDrive extends AbstractZabbixV5HostDatasource {
+public class ZabbixV5HostDrive extends AbstractZabbixV5HostDrive {
 
     public List<ZabbixHost.Host> list(ZabbixConfig.Zabbix config) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()

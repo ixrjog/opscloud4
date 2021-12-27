@@ -2,7 +2,7 @@ package com.baiyi.opscloud.zabbix.v5.drive;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.v5.drive.base.AbstractZabbixV5UserGroupDatasource;
+import com.baiyi.opscloud.zabbix.v5.drive.base.AbstractZabbixV5UserGroupDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class ZabbixV5UserGroupDrive extends AbstractZabbixV5UserGroupDatasource {
+public class ZabbixV5UserGroupDrive extends AbstractZabbixV5UserGroupDrive {
 
     public List<ZabbixUserGroup.UserGroup> list(ZabbixConfig.Zabbix config) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
