@@ -61,12 +61,12 @@ public class ZabbixV5TemplateDrive {
         return response.getResult();
     }
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#config.url + '_v5_template_hostid_' + #host.hostid")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_template_hostid_' + #host.hostid")
     public void evictHostTemplate(ZabbixConfig.Zabbix config, ZabbixHost.Host host) {
         log.info("清除ZabbixHost模版缓存 : hostid = {}", host.getHostid());
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#config.url + '_v5_template_hostid_' + #host.hostid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_template_hostid_' + #host.hostid", unless = "#result == null")
     public List<ZabbixTemplate.Template> getByHost(ZabbixConfig.Zabbix config, ZabbixHost.Host host) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("hostids", host.getHostid())
@@ -83,7 +83,7 @@ public class ZabbixV5TemplateDrive {
         return response.getResult();
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#config.url + '_v5_template_id_' + #templateId", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_template_id_' + #templateId", unless = "#result == null")
     public ZabbixTemplate.Template getById(ZabbixConfig.Zabbix config, String templateId) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("templateids", templateId)
@@ -104,7 +104,7 @@ public class ZabbixV5TemplateDrive {
         return response.getResult();
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#config.url + '_v5_template_name_' + #templateName", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_template_name_' + #templateName", unless = "#result == null")
     public ZabbixTemplate.Template getByName(ZabbixConfig.Zabbix config, String templateName) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .filter(ZabbixFilterBuilder.builder()

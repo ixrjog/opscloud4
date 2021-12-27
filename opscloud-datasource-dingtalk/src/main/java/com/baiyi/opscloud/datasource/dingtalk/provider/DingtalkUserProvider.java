@@ -11,13 +11,17 @@ import com.baiyi.opscloud.datasource.dingtalk.drive.DingtalkUserDrive;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkUser;
 import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkUserParam;
 import com.baiyi.opscloud.datasource.dingtalk.provider.base.AbstractDingtalkAssetProvider;
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -47,6 +51,9 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
     @Resource
     private UserService userService;
 
+    @Resource
+    private DsInstanceAssetService dsInstanceAssetService;
+
     @Override
     public String getAssetType() {
         return DsAssetTypeEnum.DINGTALK_USER.name();
@@ -63,7 +70,6 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
             Set<Long> deptIdSet = queryDeptSubIds(dsInstanceContext);
             List<DingtalkUser.User> entities = Lists.newArrayList();
             Map<String, DingtalkUser.User> allUserMap = Maps.newHashMap();
-
             deptIdSet.forEach(deptId -> {
                 DingtalkUserParam.QueryUserPage queryUserPage = DingtalkUserParam.QueryUserPage.builder()
                         .deptId(deptId)
@@ -85,6 +91,23 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
             e.printStackTrace();
         }
         throw new RuntimeException("查询条目失败!");
+    }
+
+    @Override
+    protected Set<Long> queryDeptSubIds(DsInstanceContext dsInstanceContext) {
+        DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
+                .instanceId(dsInstanceContext.getDsInstance().getId())
+                .instanceUuid(dsInstanceContext.getDsInstance().getUuid())
+                .assetType(DsAssetTypeEnum.DINGTALK_DEPARTMENT.name())
+                .isActive(true)
+                .build();
+        pageQuery.setPage(1);
+        pageQuery.setLength(10000);
+        DataTable<DatasourceInstanceAsset> dataTable = dsInstanceAssetService.queryPageByParam(pageQuery);
+        if (CollectionUtils.isEmpty(dataTable.getData()))
+            return Sets.newHashSet();
+        return dataTable.getData().stream().map(e -> Long.valueOf(e.getAssetId()))
+                .collect(Collectors.toSet());
     }
 
     private void mapping(DingtalkUser.User user) {

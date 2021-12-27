@@ -76,7 +76,7 @@ public class ZabbixV5HostGroupDrive {
         return response.getResult();
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#config.url + '_v5_hostgroup_groupid_' + #groupid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_hostgroup_groupid_' + #groupid", unless = "#result == null")
     public ZabbixHostGroup.HostGroup getById(ZabbixConfig.Zabbix config, String groupid) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("groupids", groupid)
@@ -87,12 +87,12 @@ public class ZabbixV5HostGroupDrive {
         return response.getResult().get(0);
     }
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#config.url + '_v5_hostgroup_name_' + #hostGroup.name")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_hostgroup_name_' + #hostGroup.name")
     public void evictHostGroup(ZabbixConfig.Zabbix config, ZabbixHostGroup.HostGroup hostGroup) {
         log.info("清除ZabbixHostGroup缓存 : name = {}", hostGroup.getName());
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#config.url + '_v5_hostgroup_name_' + #name", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_hostgroup_name_' + #name", unless = "#result == null")
     public ZabbixHostGroup.HostGroup getByName(ZabbixConfig.Zabbix config, String name) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .filter(ZabbixFilterBuilder.builder()

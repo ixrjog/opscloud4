@@ -34,9 +34,10 @@ public class CachingConfiguration extends CachingConfigurerSupport {
 
     public interface Repositories {
         String DEFAULT = "opscloud:v4:default";
-        String SERVER = "opscloud:v4:server";
-        String ZABBIX = "opscloud:v4:zabbix";
-        String API_TOKEN = "opscloud:v4:apiToken";
+        String CACHE_1HOUR = "opscloud:v4:cache:1h";
+        String CACHE_2HOURS = "opscloud:v4:cache:2h";
+        String CACHE_1WEEK = "opscloud:v4:7d";
+        String CACHE_1DAY = "opscloud:v4:1d";
     }
 
     @Bean
@@ -44,9 +45,10 @@ public class CachingConfiguration extends CachingConfigurerSupport {
         // 设置一个初始化的缓存空间set集合
         Set<String> cacheNames = Sets.newHashSet(
                 Repositories.DEFAULT,
-                Repositories.SERVER,
-                Repositories.ZABBIX,
-                Repositories.API_TOKEN);
+                Repositories.CACHE_1WEEK,
+                Repositories.CACHE_1DAY,
+                Repositories.CACHE_1HOUR,
+                Repositories.CACHE_2HOURS);
         // 使用自定义的缓存配置初始化一个cacheManager
         return RedisCacheManager.builder(factory)
                 // 注意这两句的调用顺序，一定要先调用该方法设置初始化的缓存名，
@@ -64,9 +66,10 @@ public class CachingConfiguration extends CachingConfigurerSupport {
                 // 不缓存空值
                 .disableCachingNullValues();
         configMap.put(Repositories.DEFAULT, config.entryTtl(Duration.ofDays(30)));
-        configMap.put(Repositories.SERVER, config.entryTtl(Duration.ofDays(14)));
-        configMap.put(Repositories.ZABBIX, config.entryTtl(Duration.ofDays(1)));
-        configMap.put(Repositories.API_TOKEN, config.entryTtl(Duration.ofHours(2)));
+        configMap.put(Repositories.CACHE_1WEEK, config.entryTtl(Duration.ofDays(7)));
+        configMap.put(Repositories.CACHE_1DAY, config.entryTtl(Duration.ofDays(1)));
+        configMap.put(Repositories.CACHE_1HOUR, config.entryTtl(Duration.ofHours(1)));
+        configMap.put(Repositories.CACHE_2HOURS, config.entryTtl(Duration.ofHours(2)));
         return configMap;
     }
 

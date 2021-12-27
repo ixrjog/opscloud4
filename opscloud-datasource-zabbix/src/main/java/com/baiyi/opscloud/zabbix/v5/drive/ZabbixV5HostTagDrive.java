@@ -24,12 +24,12 @@ import java.util.List;
 @Component
 public class ZabbixV5HostTagDrive extends AbstractZabbixV5HostDrive {
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#config.url + '_v5_host_tag_hostid' + #host.hostid")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_host_tag_hostid' + #host.hostid")
     public void evictHostTag(ZabbixConfig.Zabbix config, ZabbixHost.Host host) {
         log.info("清除ZabbixHostTag缓存 : hostid = {}", host.getHostid());
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#config.url + '_v5_host_tag_hostid' + #host.hostid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_host_tag_hostid' + #host.hostid", unless = "#result == null")
     public ZabbixHost.Host getHostTag(ZabbixConfig.Zabbix config, ZabbixHost.Host  host) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("output", new String[]{"name"})
