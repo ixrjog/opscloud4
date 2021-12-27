@@ -33,11 +33,11 @@ import java.util.Set;
 public class CachingConfiguration extends CachingConfigurerSupport {
 
     public interface Repositories {
-        String DEFAULT = "opscloud:v4:default";
-        String CACHE_1HOUR = "opscloud:v4:cache:1h";
-        String CACHE_2HOURS = "opscloud:v4:cache:2h";
-        String CACHE_1WEEK = "opscloud:v4:7d";
-        String CACHE_1DAY = "opscloud:v4:1d";
+        String DEFAULT = "opscloud:v4:default:";
+        String CACHE_1HOUR = "opscloud:v4:cache:1h:";
+        String CACHE_2HOURS = "opscloud:v4:cache:2h:";
+        String CACHE_1WEEK = "opscloud:v4:7d:";
+        String CACHE_1DAY = "opscloud:v4:1d:";
     }
 
     @Bean
