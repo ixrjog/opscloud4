@@ -16,7 +16,7 @@ import java.io.OutputStream;
 @Slf4j
 public class WatchSshServerOutputTask extends AbstractOutputTask {
 
-   private final OutputStream out;
+    private final OutputStream out;
 
     public WatchSshServerOutputTask(SessionOutput sessionOutput, InputStream outFromChannel, OutputStream out) {
         super(sessionOutput, outFromChannel);
@@ -28,6 +28,5 @@ public class WatchSshServerOutputTask extends AbstractOutputTask {
         out.write(toBytes(buf), off, len);
         out.flush();
     }
-
 
 }
