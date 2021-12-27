@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.datasource.manager.base.IManager;
-import com.baiyi.opscloud.datasource.serverGroup.factory.ServerGroupProviderFactory;
+import com.baiyi.opscloud.datasource.business.serverGroup.factory.ServerGroupProviderFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.User;

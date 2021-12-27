@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.zabbix.v5;
 
-import com.baiyi.opscloud.datasource.server.impl.ZabbixHostServerProvider;
+import com.baiyi.opscloud.datasource.business.server.impl.ZabbixHostServerProvider;
 import com.baiyi.opscloud.datasource.zabbix.base.BaseZabbixTest;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
