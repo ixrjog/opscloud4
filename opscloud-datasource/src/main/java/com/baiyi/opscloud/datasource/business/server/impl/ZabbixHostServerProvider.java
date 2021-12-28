@@ -53,7 +53,7 @@ public class ZabbixHostServerProvider extends AbstractZabbixHostServerProvider {
     @Override
     protected void doCreate(Server server) {
         ServerProperty.Server property = getBusinessProperty(server);
-        if (isEnabled(property)) return;
+        if (!isEnabled(property)) return;
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .method(AbstractZabbixV5HostDrive.HostAPIMethod.CREATE)
                 .putParam("host", SimpleServerNameFacade.toServerName(server))
@@ -73,7 +73,7 @@ public class ZabbixHostServerProvider extends AbstractZabbixHostServerProvider {
     @Override
     protected void doUpdate(Server server) {
         ServerProperty.Server property = getBusinessProperty(server);
-        if (isEnabled(property)) return;
+        if (!isEnabled(property)) return;
         String manageIp = getManageIp(server, property);
         try {
             com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost.Host host = zabbixV5HostDrive.getByIp(configContext.get(), manageIp);
