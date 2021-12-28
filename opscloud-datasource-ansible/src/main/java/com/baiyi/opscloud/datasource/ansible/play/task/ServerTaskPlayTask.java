@@ -18,9 +18,9 @@ import java.io.LineNumberReader;
 @Slf4j
 public class ServerTaskPlayTask implements Runnable {
 
-    private Session session;
+    private final Session session;
 
-    private ServerTaskMember serverTaskMember;
+    private final ServerTaskMember serverTaskMember;
 
 
     public ServerTaskPlayTask(Session session, ServerTaskMember serverTaskMember) {

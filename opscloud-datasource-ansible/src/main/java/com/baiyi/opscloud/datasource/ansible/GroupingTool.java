@@ -9,13 +9,13 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,13 +27,12 @@ import java.util.Set;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class GroupingTool {
 
-    @Resource
-    private ServerService serverService;
+    private final ServerService serverService;
 
-    @Resource
-    private EnvService envService;
+    private final EnvService envService;
 
     /**
      * 清空缓存
@@ -44,8 +43,8 @@ public class GroupingTool {
     }
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1WEEK, key = "'grouping_' + #serverGroup.id")
-    public Map<String, List<Server>> grouping1(ServerGroup serverGroup){
-        return grouping(serverGroup,true);
+    public Map<String, List<Server>> grouping(ServerGroup serverGroup) {
+        return grouping(serverGroup, true);
     }
 
     /**

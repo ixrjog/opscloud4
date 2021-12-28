@@ -52,5 +52,4 @@ public class TaskLogStorehouse {
         return Joiner.on("/").join(opscloudConfig.getServerTaskLogPath(), taskUuid, serverTaskMember.getServerName());
     }
 
-
 }

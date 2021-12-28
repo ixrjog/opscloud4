@@ -20,10 +20,7 @@ public class AnsibleExecuteResult {
     @Builder.Default
     private int exitValue = -1;
     private Exception exception;
-
-
     private ByteArrayOutputStream output;
     private ByteArrayOutputStream error;
-
 
 }

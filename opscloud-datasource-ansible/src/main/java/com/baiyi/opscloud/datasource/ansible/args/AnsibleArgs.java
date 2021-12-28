@@ -158,7 +158,7 @@ public class AnsibleArgs {
         Integer getForks();
         String getBecomeUser();
         boolean isVersion();
-        
+
     }
 
 }

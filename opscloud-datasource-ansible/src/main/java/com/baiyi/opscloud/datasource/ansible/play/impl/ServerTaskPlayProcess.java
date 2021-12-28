@@ -1,18 +1,18 @@
 package com.baiyi.opscloud.datasource.ansible.play.impl;
 
+import com.baiyi.opscloud.common.util.IOUtil;
 import com.baiyi.opscloud.datasource.ansible.play.AbstractTaskPlayProcess;
 import com.baiyi.opscloud.datasource.ansible.play.PlayOutputMessage;
 import com.baiyi.opscloud.datasource.ansible.play.enums.TaskMessageState;
 import com.baiyi.opscloud.datasource.ansible.play.message.ServerTaskPlayMessage;
 import com.baiyi.opscloud.datasource.ansible.play.task.ServerTaskPlayTask;
-import com.baiyi.opscloud.common.util.IOUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerTaskMember;
 import com.baiyi.opscloud.service.task.ServerTaskMemberService;
 import com.google.gson.GsonBuilder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import javax.websocket.Session;
 import java.io.IOException;
 
@@ -23,10 +23,10 @@ import java.io.IOException;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ServerTaskPlayProcess extends AbstractTaskPlayProcess<ServerTaskPlayMessage> {
 
-    @Resource
-    private ServerTaskMemberService serverTaskMemberService;
+    private final ServerTaskMemberService serverTaskMemberService;
 
     /**
      * 播放
