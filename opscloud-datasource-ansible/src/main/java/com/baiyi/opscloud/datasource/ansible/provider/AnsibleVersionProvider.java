@@ -8,8 +8,7 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.ansible.args.CommandArgs;
-import com.baiyi.opscloud.datasource.ansible.args.PlaybookArgs;
+import com.baiyi.opscloud.datasource.ansible.args.AnsibleArgs;
 import com.baiyi.opscloud.datasource.ansible.builder.AnsibleCommandArgsBuilder;
 import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgsBuilder;
 import com.baiyi.opscloud.datasource.ansible.entity.AnsibleExecuteResult;
@@ -65,7 +64,7 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
     }
 
     private AnsibleVersion.Version getAnsibleVersion(AnsibleConfig.Ansible ansible) {
-        CommandArgs args = CommandArgs.builder()
+        AnsibleArgs.Command args = AnsibleArgs.Command.builder()
                 .version(true)
                 .build();
         CommandLine commandLine = AnsibleCommandArgsBuilder.build(ansible, args);
@@ -82,7 +81,7 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
     }
 
     private AnsibleVersion.Version getAnsiblePlaybookVersion(AnsibleConfig.Ansible ansible) {
-        PlaybookArgs args = PlaybookArgs.builder()
+        AnsibleArgs.Playbook args = AnsibleArgs.Playbook.builder()
                 .version(true)
                 .build();
         CommandLine commandLine = AnsiblePlaybookArgsBuilder.build(ansible, args);
