@@ -229,12 +229,12 @@ public class RemoteInvokeHandler {
     }
 
     public static void setChannelPtySize(ChannelShell channel, ServerMessage.BaseMessage message) {
-        if (channel == null || !channel.isClosed()) return;
+        if (channel == null || channel.isClosed()) return;
         channel.setPtySize(message.getCols(), message.getRows(), message.getWidth(), message.getHeight());
     }
 
     public static void setChannelPtySize(ChannelShell channel, Size size) {
-        if (channel == null || !channel.isClosed()) return;
+        if (channel == null || channel.isClosed()) return;
         channel.setPtySize(size.getColumns(), size.getRows(), size.getColumns() * 7, (int) Math.floor(size.getRows() / 14.4166));
     }
 
