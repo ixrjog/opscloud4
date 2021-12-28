@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.ldap.repo;
 
 import com.baiyi.opscloud.common.datasource.LdapConfig;
-import com.baiyi.opscloud.datasource.ldap.entity.Group;
+import com.baiyi.opscloud.datasource.ldap.entity.LdapGroup;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface GroupRepo {
 
-    List<Group> getGroupList(LdapConfig.Ldap ldapConfig);
+    List<LdapGroup.Group> getGroupList(LdapConfig.Ldap ldapConfig);
 
     /**
      * 查询用户组成员名列表
@@ -22,7 +22,7 @@ public interface GroupRepo {
      */
     List<String> queryGroupMember(LdapConfig.Ldap ldapConfig, String groupName);
 
-    List<Group> searchGroupByUsername(LdapConfig.Ldap ldapConfig, String username);
+    List<LdapGroup.Group> searchGroupByUsername(LdapConfig.Ldap ldapConfig, String username);
 
     /**
      * 移除group中的用户

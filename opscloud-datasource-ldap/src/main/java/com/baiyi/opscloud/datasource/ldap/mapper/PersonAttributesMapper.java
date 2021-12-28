@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.ldap.mapper;
 
 
-import com.baiyi.opscloud.datasource.ldap.entity.Person;
+import com.baiyi.opscloud.datasource.ldap.entity.LdapPerson;
 import org.springframework.ldap.core.AttributesMapper;
 
 import javax.naming.NamingException;
@@ -12,7 +12,7 @@ import javax.naming.directory.Attributes;
  * @Date 2019/12/27 2:30 下午
  * @Version 1.0
  */
-public class PersonAttributesMapper implements AttributesMapper<Person> {
+public class PersonAttributesMapper implements AttributesMapper<LdapPerson.Person> {
     /**
      * Map Attributes to an object. The supplied attributes are the attributes
      * from a single SearchResult.
@@ -22,8 +22,8 @@ public class PersonAttributesMapper implements AttributesMapper<Person> {
      * @throws NamingException if any error occurs mapping the attributes
      */
     @Override
-    public Person mapFromAttributes(Attributes attrs) throws NamingException {
-        Person person = new Person();
+    public LdapPerson.Person mapFromAttributes(Attributes attrs) throws NamingException {
+        LdapPerson.Person person = new LdapPerson.Person();
         person.setUsername((String) attrs.get("cn").get());
         try {
             person.setDisplayName((String) attrs.get("displayName").get());

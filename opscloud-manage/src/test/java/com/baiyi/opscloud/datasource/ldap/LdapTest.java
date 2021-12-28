@@ -9,8 +9,8 @@ import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.business.account.impl.LdapAccountProvider;
 import com.baiyi.opscloud.datasource.business.accountGroup.AccountGroupProviderFactory;
 import com.baiyi.opscloud.datasource.business.accountGroup.IAccountGroup;
-import com.baiyi.opscloud.datasource.ldap.entity.Group;
-import com.baiyi.opscloud.datasource.ldap.entity.Person;
+import com.baiyi.opscloud.datasource.ldap.entity.LdapGroup;
+import com.baiyi.opscloud.datasource.ldap.entity.LdapPerson;
 import com.baiyi.opscloud.datasource.ldap.drive.LdapDrive;
 import com.baiyi.opscloud.datasource.ldap.repo.PersonRepo;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -112,7 +112,7 @@ public class LdapTest extends BaseUnit {
     @Test
     void queryPersonTest() {
         LdapConfig ldapDsInstanceConfig = (LdapConfig) getConfig();
-        Person person = ldapHandler.getPersonWithDn(ldapDsInstanceConfig.getLdap(), "cn=baiyi,ou=People");
+        LdapPerson.Person person = ldapHandler.getPersonWithDn(ldapDsInstanceConfig.getLdap(), "cn=baiyi,ou=People");
         log.info(JSON.toJSONString(person));
     }
 
@@ -121,7 +121,7 @@ public class LdapTest extends BaseUnit {
     void queryGroupTest() {
         LdapConfig ldapDsInstanceConfig = (LdapConfig) getConfig();
         // "cn=confluence-users,ou=Groups"
-        Group group = ldapHandler.getGroupWithDn(ldapDsInstanceConfig.getLdap(), "cn=vpn-users,ou=Groups");
+        LdapGroup.Group group = ldapHandler.getGroupWithDn(ldapDsInstanceConfig.getLdap(), "cn=vpn-users,ou=Groups");
         log.info(JSON.toJSONString(group));
     }
 

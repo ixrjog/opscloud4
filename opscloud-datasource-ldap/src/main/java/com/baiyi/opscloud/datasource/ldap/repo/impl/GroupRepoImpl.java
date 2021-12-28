@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.datasource.ldap.repo.impl;
 
 import com.baiyi.opscloud.common.datasource.LdapConfig;
-import com.baiyi.opscloud.datasource.ldap.entity.Group;
 import com.baiyi.opscloud.datasource.ldap.drive.LdapDrive;
+import com.baiyi.opscloud.datasource.ldap.entity.LdapGroup;
 import com.baiyi.opscloud.datasource.ldap.repo.GroupRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class GroupRepoImpl implements GroupRepo {
     private LdapDrive ldapHandler;
 
     @Override
-    public List<Group> getGroupList(LdapConfig.Ldap ldapConfig) {
+    public List<LdapGroup.Group> getGroupList(LdapConfig.Ldap ldapConfig) {
         return ldapHandler.queryGroupList(ldapConfig);
     }
 
@@ -34,7 +34,7 @@ public class GroupRepoImpl implements GroupRepo {
     }
 
     @Override
-    public List<Group> searchGroupByUsername(LdapConfig.Ldap ldapConfig, String username) {
+    public List<LdapGroup.Group> searchGroupByUsername(LdapConfig.Ldap ldapConfig, String username) {
         List<String> groupNames = ldapHandler.searchLdapGroup(ldapConfig, username);
         return groupNames.stream().map(e ->
                 ldapHandler.getGroupWithDn(ldapConfig, ldapConfig.buildGroupDn(e))
@@ -53,7 +53,7 @@ public class GroupRepoImpl implements GroupRepo {
 
     @Override
     public void create(LdapConfig.Ldap ldapConfig, String groupName) {
-        com.baiyi.opscloud.datasource.ldap.entity.Group group = Group.builder()
+        LdapGroup.Group group = LdapGroup.Group.builder()
                 .groupName(groupName)
                 .build();
         ldapHandler.bindGroup(ldapConfig, group);

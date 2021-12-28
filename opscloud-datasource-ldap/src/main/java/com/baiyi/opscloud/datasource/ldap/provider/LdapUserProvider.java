@@ -7,8 +7,8 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.ldap.entity.Group;
-import com.baiyi.opscloud.datasource.ldap.entity.Person;
+import com.baiyi.opscloud.datasource.ldap.entity.LdapGroup;
+import com.baiyi.opscloud.datasource.ldap.entity.LdapPerson;
 import com.baiyi.opscloud.datasource.ldap.repo.PersonRepo;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -26,7 +26,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_LDAP_
  * @Version 1.0
  */
 @Component
-public class LdapUserProvider extends AbstractAssetRelationProvider<Person, Group>  {
+public class LdapUserProvider extends AbstractAssetRelationProvider<LdapPerson.Person, LdapGroup.Group>  {
 
     @Resource
     private PersonRepo personRepo;
@@ -44,13 +44,13 @@ public class LdapUserProvider extends AbstractAssetRelationProvider<Person, Grou
     }
 
     @Override
-    protected List<Person> listEntities(DsInstanceContext dsInstanceContext, Group target) {
+    protected List<LdapPerson.Person> listEntities(DsInstanceContext dsInstanceContext, LdapGroup.Group target) {
         LdapConfig.Ldap ldap = buildConfig(dsInstanceContext.getDsConfig());
         return personRepo.queryGroupMember(ldap, target.getGroupName());
     }
 
     @Override
-    protected List<Person> listEntities(DsInstanceContext dsInstanceContext) {
+    protected List<LdapPerson.Person> listEntities(DsInstanceContext dsInstanceContext) {
         return personRepo.getPersonList(buildConfig(dsInstanceContext.getDsConfig()));
     }
 

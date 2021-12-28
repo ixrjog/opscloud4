@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.business.account.convert;
 
-import com.baiyi.opscloud.datasource.ldap.entity.Person;
+import com.baiyi.opscloud.datasource.ldap.entity.LdapPerson;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import org.springframework.util.StringUtils;
 
@@ -11,8 +11,8 @@ import org.springframework.util.StringUtils;
  */
 public class AccountConvert {
 
-    public static Person toLdapPerson(User user){
-        return Person.builder()
+    public static LdapPerson.Person toLdapPerson(User user){
+        return LdapPerson.Person.builder()
                 .username(user.getUsername())
                 .displayName(user.getDisplayName())
                 .email(user.getEmail())

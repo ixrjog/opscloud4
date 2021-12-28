@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.ldap.repo;
 
 import com.baiyi.opscloud.common.datasource.LdapConfig;
-import com.baiyi.opscloud.datasource.ldap.entity.Person;
+import com.baiyi.opscloud.datasource.ldap.entity.LdapPerson;
 
 import java.util.List;
 
@@ -19,17 +19,17 @@ public interface PersonRepo {
      * @param groupName
      * @return
      */
-    List<Person> queryGroupMember(LdapConfig.Ldap ldapConfig, String groupName);
+    List<LdapPerson.Person> queryGroupMember(LdapConfig.Ldap ldapConfig, String groupName);
 
     List<String> getAllPersonNames(LdapConfig.Ldap ldapConfig);
 
-    List<Person> getPersonList(LdapConfig.Ldap ldapConfig);
+    List<LdapPerson.Person> getPersonList(LdapConfig.Ldap ldapConfig);
 
-    Person findPersonWithDn(LdapConfig.Ldap ldapConfig, String dn);
+    LdapPerson.Person findPersonWithDn(LdapConfig.Ldap ldapConfig, String dn);
 
-    void create(LdapConfig.Ldap ldapConfig, Person person);
+    void create(LdapConfig.Ldap ldapConfig, LdapPerson.Person person);
 
-    void update(LdapConfig.Ldap ldapConfig, Person person);
+    void update(LdapConfig.Ldap ldapConfig, LdapPerson.Person person);
 
     void delete(LdapConfig.Ldap ldapConfig, String username);
 

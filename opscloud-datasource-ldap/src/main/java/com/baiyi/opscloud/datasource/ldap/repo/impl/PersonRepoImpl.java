@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.ldap.repo.impl;
 
 import com.baiyi.opscloud.common.datasource.LdapConfig;
-import com.baiyi.opscloud.datasource.ldap.entity.Person;
+import com.baiyi.opscloud.datasource.ldap.entity.LdapPerson;
 import com.baiyi.opscloud.datasource.ldap.drive.LdapDrive;
 import com.baiyi.opscloud.datasource.ldap.repo.PersonRepo;
 import com.google.common.collect.Lists;
@@ -25,9 +25,9 @@ public class PersonRepoImpl implements PersonRepo {
     private LdapDrive ldapHandler;
 
     @Override
-    public List<Person> queryGroupMember(LdapConfig.Ldap ldapConfig, String groupName) {
+    public List<LdapPerson.Person> queryGroupMember(LdapConfig.Ldap ldapConfig, String groupName) {
         List<String> usernames = ldapHandler.queryGroupMember(ldapConfig, groupName);
-        List<Person> people = Lists.newArrayList();
+        List<LdapPerson.Person> people = Lists.newArrayList();
         for (String username : usernames) {
             try {
                 people.add(ldapHandler.getPersonWithDn(ldapConfig, ldapConfig.buildUserDn(username)));
@@ -58,7 +58,7 @@ public class PersonRepoImpl implements PersonRepo {
      * @return
      */
     @Override
-    public List<Person> getPersonList(LdapConfig.Ldap ldapConfig) {
+    public List<LdapPerson.Person> getPersonList(LdapConfig.Ldap ldapConfig) {
         return ldapHandler.queryPersonList(ldapConfig);
     }
 
@@ -69,17 +69,17 @@ public class PersonRepoImpl implements PersonRepo {
      * @return
      */
     @Override
-    public Person findPersonWithDn(LdapConfig.Ldap ldapConfig, String dn) {
+    public LdapPerson.Person findPersonWithDn(LdapConfig.Ldap ldapConfig, String dn) {
         return ldapHandler.getPersonWithDn(ldapConfig, dn);
     }
 
     @Override
-    public void create(LdapConfig.Ldap ldapConfig, Person person) {
+    public void create(LdapConfig.Ldap ldapConfig, LdapPerson.Person person) {
         ldapHandler.bindPerson(ldapConfig, person);
     }
 
     @Override
-    public void update(LdapConfig.Ldap ldapConfig, Person person) {
+    public void update(LdapConfig.Ldap ldapConfig, LdapPerson.Person person) {
         ldapHandler.updatePerson(ldapConfig, person);
     }
 
