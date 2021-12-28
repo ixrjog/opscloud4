@@ -19,9 +19,9 @@ import java.util.Map;
  * @Date 2021/12/17 11:46 AM
  * @Version 1.0
  */
-public class DmsClinet extends com.aliyun.dms_enterprise20181101.Client{
+public class DmsClient extends com.aliyun.dms_enterprise20181101.Client{
 
-    public DmsClinet(Config config) throws Exception {
+    public DmsClient(Config config) throws Exception {
         super(config);
     }
 

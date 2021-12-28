@@ -26,7 +26,7 @@ public class AliyunDmsClient {
         return new com.aliyun.dms_enterprise20181101.Client(config);
     }
 
-    public static DmsClinet createMyClient(AliyunConfig.Aliyun aliyun) throws Exception {
+    public static DmsClient createMyClient(AliyunConfig.Aliyun aliyun) throws Exception {
         Config config = new Config()
                 // 您的AccessKey ID
                 .setAccessKeyId(aliyun.getAccount().getAccessKeyId())
@@ -37,7 +37,7 @@ public class AliyunDmsClient {
                 .map(AliyunConfig.Aliyun::getDms)
                 .map(AliyunConfig.Dms::getEndpoint)
                 .orElse(AliyunConfig.DMS_ENDPOINT);
-        return new DmsClinet(config);
+        return new DmsClient(config);
     }
 
 

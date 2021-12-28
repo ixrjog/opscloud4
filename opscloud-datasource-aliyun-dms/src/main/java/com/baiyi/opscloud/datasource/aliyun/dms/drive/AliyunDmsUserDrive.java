@@ -4,7 +4,7 @@ import com.aliyun.dms_enterprise20181101.models.*;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.datasource.aliyun.dms.client.DmsClinet;
+import com.baiyi.opscloud.datasource.aliyun.dms.client.DmsClient;
 import com.baiyi.opscloud.datasource.aliyun.dms.client.AliyunDmsClient;
 import com.baiyi.opscloud.datasource.aliyun.dms.entity.DmsUser;
 import com.google.common.collect.Lists;
@@ -51,7 +51,7 @@ public class AliyunDmsUserDrive {
     }
 
     public static void registerUser(AliyunConfig.Aliyun aliyun, Long tid, DmsUser.User user) throws Exception {
-        DmsClinet client = AliyunDmsClient.createMyClient(aliyun);
+        DmsClient client = AliyunDmsClient.createMyClient(aliyun);
         // DINGDING
         RegisterUserRequest request = new RegisterUserRequest();
         request.setTid(tid);
