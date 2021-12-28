@@ -100,17 +100,6 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
         AssetContainer assetContainer = targetAssetProvider.toAssetContainer(dsInstanceContext.getDsInstance(), target);
         DatasourceInstanceAsset targetAsset = dsInstanceAssetService.getByUniqueKey(assetContainer.getAsset());
         if (targetAsset == null) return null;
-//        if (targetAsset == null) {
-//            UniqueAssetParam param = UniqueAssetParam.builder()
-//                    .assetId(assetContainer.getAsset().getAssetId())
-//                    .build();
-//            try {
-//                targetAsset = targetAssetProvider.doPull(dsInstanceContext.getDsInstance().getId(), param);
-//            } catch (Exception e) {
-//                log.info(e.getMessage());
-//                return;
-//            }
-//        }
         DatasourceInstanceAssetRelation relation = DatasourceInstanceAssetRelation.builder()
                 .instanceUuid(dsInstanceContext.getDsInstance().getUuid())
                 .sourceAssetId(asset.getId())

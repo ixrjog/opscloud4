@@ -49,7 +49,6 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
         boolean SYNC = true;       // 同步模式: 删除旧数据
     }
 
-
     protected boolean executeMode() {
         return Model.SYNC;
     }
