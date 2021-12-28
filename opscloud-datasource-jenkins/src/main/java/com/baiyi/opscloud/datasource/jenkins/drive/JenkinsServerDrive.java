@@ -16,9 +16,17 @@ import java.util.Map;
  */
 public class JenkinsServerDrive {
 
-    public static Map<String, Computer> getComputers(JenkinsConfig.Jenkins jenkins) throws URISyntaxException,IOException {
+    public static Map<String, Computer> getComputers(JenkinsConfig.Jenkins jenkins) throws URISyntaxException, IOException {
         JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
-        return jenkinsServer.getComputers();
+        Map<String, Computer> result;
+        try {
+            result = jenkinsServer.getComputers();
+        } catch (IOException e) {
+            throw new IOException(e.getMessage());
+        } finally {
+            jenkinsServer.close();
+        }
+        return result;
     }
 
 }
