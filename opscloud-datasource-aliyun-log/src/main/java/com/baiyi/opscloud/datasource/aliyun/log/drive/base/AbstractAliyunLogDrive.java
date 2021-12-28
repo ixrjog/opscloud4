@@ -17,13 +17,12 @@ public abstract class AbstractAliyunLogDrive {
 
     /**
      * 未配置 regionId 则使用杭州区
+     *
      * @param aliyun
      * @return
      */
     protected Client buildClient(AliyunConfig.Aliyun aliyun) {
-        String regionId = aliyun.getRegionId();
-        if (StringUtils.isEmpty(regionId))
-            regionId = "cn-hangzhou";
+        String regionId = StringUtils.isEmpty(aliyun.getRegionId()) ? "cn-hangzhou" : aliyun.getRegionId();
         String endpoint = ALIYUN_LOG_ENDPOINT.replace("${regionId}", regionId);
         return new Client(endpoint, aliyun.getAccount().getAccessKeyId(), aliyun.getAccount().getSecret());
     }

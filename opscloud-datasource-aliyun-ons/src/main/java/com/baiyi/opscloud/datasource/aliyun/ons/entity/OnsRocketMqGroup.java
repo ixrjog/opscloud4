@@ -1,7 +1,6 @@
-package entity;
+package com.baiyi.opscloud.datasource.aliyun.ons.entity;
 
 import com.baiyi.opscloud.core.asset.IToAsset;
-import com.baiyi.opscloud.datasource.aliyun.ons.constants.OnsMessageTypeConstants;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -13,26 +12,22 @@ import java.util.Date;
 
 /**
  * @Author baiyi
- * @Date 2021/12/14 7:08 PM
+ * @Date 2021/12/14 7:06 PM
  * @Version 1.0
  */
-public class OnsRocketMqTopic {
+public class OnsRocketMqGroup {
 
-    /**
-     * PublishInfoDo
-     */
+    // SubscribeInfoDo
     @Data
-    public static class Topic implements IToAsset {
-        private String topic;
+    public static class Group implements IToAsset {
         private String owner;
-        private Integer relation;
-        private String relationName;
-        private Long createTime;
+        private String groupId;
+        private Long updateTime;
         private String remark;
-        private Integer messageType;
         private String instanceId;
         private Boolean independentNaming;
-
+        private Long createTime;
+        private String groupType;
         private String regionId;
 
         @Override
@@ -40,19 +35,18 @@ public class OnsRocketMqTopic {
             DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                     .instanceUuid(dsInstance.getUuid())
                     .assetId(this.instanceId)
-                    .name(this.topic)
-                    .assetKey(this.topic)
-                    .assetKey2(this.relationName)
-                    .kind(OnsMessageTypeConstants.getDesc(this.messageType))
-                    .assetType(DsAssetTypeEnum.ONS_ROCKETMQ_TOPIC.name())
+                    .name(this.groupId)
+                    .assetKey(this.groupId)
+                    .kind(this.groupType)
+                    .assetType(DsAssetTypeEnum.ONS_ROCKETMQ_GROUP.name())
                     .regionId(this.regionId)
                     .description(this.remark)
                     .createdTime(new Date(this.createTime))
                     .build();
+
             return AssetContainerBuilder.newBuilder()
                     .paramAsset(asset)
                     .build();
         }
     }
-
 }

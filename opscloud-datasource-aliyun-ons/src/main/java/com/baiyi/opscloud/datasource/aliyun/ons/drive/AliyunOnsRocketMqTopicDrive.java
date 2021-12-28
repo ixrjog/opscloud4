@@ -6,7 +6,7 @@ import com.aliyuncs.ons.model.v20190214.OnsTopicListResponse;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
-import entity.OnsRocketMqTopic;
+import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsRocketMqTopic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

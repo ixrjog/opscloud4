@@ -9,7 +9,7 @@ import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
 import com.google.common.collect.Lists;
-import entity.OnsInstance;
+import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsInstance;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -29,6 +29,7 @@ import java.util.List;
 public class AliyunOnsRocketMqInstanceDrive {
 
     private final AliyunClient aliyunClient;
+
     public List<OnsInstance.InstanceBaseInfo> listInstance(String regionId, AliyunConfig.Aliyun aliyun) throws ClientException {
         OnsInstanceInServiceListRequest request = new OnsInstanceInServiceListRequest();
         OnsInstanceInServiceListResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);

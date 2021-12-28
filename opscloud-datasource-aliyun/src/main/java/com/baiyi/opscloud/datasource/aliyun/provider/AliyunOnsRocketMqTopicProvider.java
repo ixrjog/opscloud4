@@ -16,8 +16,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.google.common.collect.Lists;
-import entity.OnsInstance;
-import entity.OnsRocketMqTopic;
+import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsInstance;
+import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsRocketMqTopic;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 

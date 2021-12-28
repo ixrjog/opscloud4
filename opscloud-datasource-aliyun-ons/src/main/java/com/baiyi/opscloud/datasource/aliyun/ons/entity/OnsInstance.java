@@ -1,4 +1,4 @@
-package entity;
+package com.baiyi.opscloud.datasource.aliyun.ons.entity;
 
 import com.baiyi.opscloud.core.asset.IToAsset;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
