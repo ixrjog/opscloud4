@@ -32,6 +32,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -88,6 +89,8 @@ public class EventCommand extends BaseServerCommand {
         for (Event event : table.getData()) {
             EventContext eventContext = BeanCopierUtil.copyProperties(event, EventContext.class);
             List<EventBusiness> eventBusinesses = eventBusinessService.queryByEventId(eventContext.getId());
+            if (CollectionUtils.isEmpty(eventBusinesses) || eventBusinesses.get(0).getBusinessId() == null)
+                continue;
             Server server = serverService.getById(eventBusinesses.get(0).getBusinessId());
             ServerVO.Server serverVO = sshServerPacker.wrapToVO(server);
             eventContext.setServerVO(serverVO);

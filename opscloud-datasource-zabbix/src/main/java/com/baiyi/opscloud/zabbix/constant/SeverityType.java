@@ -44,4 +44,8 @@ public enum SeverityType {
         return Arrays.stream(SeverityType.values()).filter(severityType -> severityType.getType() == type).findFirst().map(SeverityType::getName).orElse("DEFAULT");
     }
 
+    public static SeverityType getByName(String name) {
+        return Arrays.stream(SeverityType.values()).filter(severityType -> severityType.name.equals(name)).findFirst().orElse(null);
+    }
+
 }

@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2021/6/22 1:38 下午
@@ -27,6 +29,7 @@ public class ZabbixConfig extends BaseConfig {
         private String password;
         private String zone;
         private Operation operation;
+        private List<String> severityTypes;
     }
 
     @Data

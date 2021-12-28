@@ -30,6 +30,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -49,7 +50,7 @@ public class ZabbixEventProcess extends AbstractEventProcess<ZabbixProblem.Probl
     @Resource
     private ZabbixV5HostDrive zabbixV5HostDatasource;
 
-    private static final List<SeverityType> severityTypes = Lists.newArrayList(SeverityType.HIGH, SeverityType.DISASTER);
+    private static final List<SeverityType> SEVERITY_TYPES = Lists.newArrayList(SeverityType.HIGH, SeverityType.DISASTER);
 
     protected ZabbixConfig getConfig(String instanceUuid) {
         DsInstanceContext context = buildDsInstanceContext(instanceUuid);
@@ -74,7 +75,15 @@ public class ZabbixEventProcess extends AbstractEventProcess<ZabbixProblem.Probl
 
     @Override
     protected List<ZabbixProblem.Problem> listeningEvents(DatasourceInstance dsInstance) {
-        return zabbixV5ProblemDatasource.list(getConfig(dsInstance.getUuid()).getZabbix(), severityTypes);
+        ZabbixConfig zabbixConfig = getConfig(dsInstance.getUuid());
+        List<SeverityType> severityTypes;
+        if (CollectionUtils.isEmpty(zabbixConfig.getZabbix().getSeverityTypes())) {
+            severityTypes = SEVERITY_TYPES;
+        } else {
+            severityTypes =
+                    zabbixConfig.getZabbix().getSeverityTypes().stream().map(SeverityType::getByName).collect(Collectors.toList());
+        }
+        return zabbixV5ProblemDatasource.list(zabbixConfig.getZabbix(), severityTypes);
     }
 
     @Override
