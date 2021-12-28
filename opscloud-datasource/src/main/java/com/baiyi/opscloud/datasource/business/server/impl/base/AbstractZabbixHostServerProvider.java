@@ -73,11 +73,8 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
             zabbixV5HostDrive.updateHostName(configContext.get(), host, hostName);
             zabbixV5HostDrive.evictHostByIp(configContext.get(), getManageIp(server, property));
         }
-        // 更新Templates
         updateHostTemplate(property, host);
-        // 更新Tags
         updateHostTag(server, host);
-        // zabbix-proxy
         ZabbixProxy.Proxy proxy = getProxy(property);
         if (proxy != null) {
             zabbixV5ProxyDrive.updateHostProxy(configContext.get(), host, proxy);
