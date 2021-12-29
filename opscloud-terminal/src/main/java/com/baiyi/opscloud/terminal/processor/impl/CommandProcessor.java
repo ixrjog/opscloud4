@@ -1,11 +1,11 @@
-package com.baiyi.opscloud.terminal.process.impl;
+package com.baiyi.opscloud.terminal.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
-import com.baiyi.opscloud.terminal.process.AbstractServerTerminalProcess;
+import com.baiyi.opscloud.terminal.processor.AbstractServerTerminalProcessor;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ import java.util.Map;
  */
 @Component
 @Slf4j
-public class CommandProcess extends AbstractServerTerminalProcess<ServerMessage.Command> {
+public class CommandProcessor extends AbstractServerTerminalProcessor<ServerMessage.Command> {
 
     /**
      * 发送指令

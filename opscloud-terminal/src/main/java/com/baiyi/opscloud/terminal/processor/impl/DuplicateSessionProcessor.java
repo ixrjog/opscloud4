@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.terminal.process.impl;
+package com.baiyi.opscloud.terminal.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
@@ -9,7 +9,7 @@ import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.HostSystem;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
-import com.baiyi.opscloud.terminal.process.AbstractServerTerminalProcess;
+import com.baiyi.opscloud.terminal.processor.AbstractServerTerminalProcessor;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class DuplicateSessionProcess extends AbstractServerTerminalProcess<ServerMessage.DuplicateSession> {
+public class DuplicateSessionProcessor extends AbstractServerTerminalProcessor<ServerMessage.DuplicateSession> {
 
     /**
      * 复制会话

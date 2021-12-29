@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalProcessFactory;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
-import com.baiyi.opscloud.sshcore.ITerminalProcess;
+import com.baiyi.opscloud.sshcore.ITerminalProcessor;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
@@ -26,7 +26,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractKubernetesTerminalProcessor<T extends KubernetesMessage.BaseMessage> implements ITerminalProcess, InitializingBean {
+public abstract class AbstractKubernetesTerminalProcessor<T extends KubernetesMessage.BaseMessage> implements ITerminalProcessor, InitializingBean {
 
     @Resource
     protected TerminalSessionService terminalSessionService;

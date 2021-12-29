@@ -2,7 +2,7 @@ package com.baiyi.opscloud.kubernetes.terminal.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.kubernetes.terminal.processor.AbstractKubernetesTerminalProcessor;
-import com.baiyi.opscloud.sshcore.ITerminalProcess;
+import com.baiyi.opscloud.sshcore.ITerminalProcessor;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.KubernetesSession;
@@ -19,7 +19,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component
-public class KubernetesTerminalCloseProcessor extends AbstractKubernetesTerminalProcessor<KubernetesMessage.BaseMessage> implements ITerminalProcess {
+public class KubernetesTerminalCloseProcessor extends AbstractKubernetesTerminalProcessor<KubernetesMessage.BaseMessage> implements ITerminalProcessor {
 
     @Override
     public String getState() {

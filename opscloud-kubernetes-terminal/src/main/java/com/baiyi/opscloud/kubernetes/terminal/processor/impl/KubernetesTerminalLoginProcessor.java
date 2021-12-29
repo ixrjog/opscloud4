@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.kubernetes.terminal.processor.AbstractKubernetesTerminalProcessor;
 import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalProcessFactory;
-import com.baiyi.opscloud.sshcore.ITerminalProcess;
+import com.baiyi.opscloud.sshcore.ITerminalProcessor;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
  */
 @Slf4j
 @Component
-public class KubernetesTerminalLoginProcessor extends AbstractKubernetesTerminalProcessor<KubernetesMessage.Login> implements ITerminalProcess {
+public class KubernetesTerminalLoginProcessor extends AbstractKubernetesTerminalProcessor<KubernetesMessage.Login> implements ITerminalProcessor {
 
     public interface SessionType {
         String CONTAINER_LOG = "CONTAINER_LOG";

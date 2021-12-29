@@ -1,10 +1,10 @@
-package com.baiyi.opscloud.terminal.process.impl;
+package com.baiyi.opscloud.terminal.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
-import com.baiyi.opscloud.terminal.process.AbstractServerTerminalProcess;
+import com.baiyi.opscloud.terminal.processor.AbstractServerTerminalProcessor;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class LogoutProcess extends AbstractServerTerminalProcess<ServerMessage.Logout> {
+public class LogoutProcessor extends AbstractServerTerminalProcessor<ServerMessage.Logout> {
 
     /**
      * 单个关闭
@@ -36,7 +36,7 @@ public class LogoutProcess extends AbstractServerTerminalProcess<ServerMessage.L
         //  recordAuditLog(terminalSession, baseMessage.getInstanceId()); // 写审计日志
         //  AuditRecordHandler.formatCommanderLog(terminalSession.getSessionId(),baseMessage.getInstanceId());
         simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, baseMessage.getInstanceId()); // 设置关闭会话
-        auditCommandHandler.recordCommand(terminalSession.getSessionId(),baseMessage.getInstanceId());
+        auditServerCommandAudit.recordCommand(terminalSession.getSessionId(),baseMessage.getInstanceId());
         JSchSessionContainer.closeSession(terminalSession.getSessionId(), baseMessage.getInstanceId());
     }
 

@@ -9,7 +9,7 @@ import javax.websocket.Session;
  * @Date 2020/5/11 9:35 上午
  * @Version 1.0
  */
-public interface ITerminalProcess {
+public interface ITerminalProcessor {
 
     void process(String message, Session session, TerminalSession terminalSession);
 

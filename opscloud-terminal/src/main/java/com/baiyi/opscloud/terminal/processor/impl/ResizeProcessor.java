@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.terminal.process.impl;
+package com.baiyi.opscloud.terminal.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
@@ -6,7 +6,7 @@ import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
-import com.baiyi.opscloud.terminal.process.AbstractServerTerminalProcess;
+import com.baiyi.opscloud.terminal.processor.AbstractServerTerminalProcessor;
 import com.google.gson.GsonBuilder;
 import com.jcraft.jsch.ChannelShell;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class ResizeProcess extends AbstractServerTerminalProcess<ServerMessage.Resize> {
+public class ResizeProcessor extends AbstractServerTerminalProcessor<ServerMessage.Resize> {
 
     /**
      * XTerm改变形体

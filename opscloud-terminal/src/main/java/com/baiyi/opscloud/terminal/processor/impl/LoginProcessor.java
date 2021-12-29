@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.terminal.process.impl;
+package com.baiyi.opscloud.terminal.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
@@ -8,7 +8,7 @@ import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.HostSystem;
 import com.baiyi.opscloud.sshcore.model.ServerNode;
-import com.baiyi.opscloud.terminal.process.AbstractServerTerminalProcess;
+import com.baiyi.opscloud.terminal.processor.AbstractServerTerminalProcessor;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ import java.util.concurrent.Executors;
  */
 @Slf4j
 @Component
-public class LoginProcess extends AbstractServerTerminalProcess<ServerMessage.Login>  {
+public class LoginProcessor extends AbstractServerTerminalProcessor<ServerMessage.Login> {
 
     private static final ExecutorService executor = Executors.newFixedThreadPool(4);
 

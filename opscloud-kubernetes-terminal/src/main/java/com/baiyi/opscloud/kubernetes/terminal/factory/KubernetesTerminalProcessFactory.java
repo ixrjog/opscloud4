@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.kubernetes.terminal.factory;
 
-import com.baiyi.opscloud.sshcore.ITerminalProcess;
+import com.baiyi.opscloud.sshcore.ITerminalProcessor;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,14 +12,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class KubernetesTerminalProcessFactory {
 
-    static Map<String, ITerminalProcess> context = new ConcurrentHashMap<>();
+    static Map<String, ITerminalProcessor> context = new ConcurrentHashMap<>();
 
-    public static ITerminalProcess getProcessByKey(String key) {
+    public static ITerminalProcessor getProcessByKey(String key) {
         return context.get(key);
     }
 
-    public static void register(ITerminalProcess bean) {
+    public static void register(ITerminalProcessor bean) {
         context.put(bean.getState(), bean);
     }
-    
+
 }

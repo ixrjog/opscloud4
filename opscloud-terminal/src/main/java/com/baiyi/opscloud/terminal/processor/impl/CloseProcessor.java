@@ -1,11 +1,11 @@
-package com.baiyi.opscloud.terminal.process.impl;
+package com.baiyi.opscloud.terminal.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
-import com.baiyi.opscloud.terminal.process.AbstractServerTerminalProcess;
+import com.baiyi.opscloud.terminal.processor.AbstractServerTerminalProcessor;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.Session;
@@ -17,7 +17,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component
-public class CloseProcess extends AbstractServerTerminalProcess<ServerMessage.BaseMessage> {
+public class CloseProcessor extends AbstractServerTerminalProcessor<ServerMessage.BaseMessage> {
 
     /**
      * 关闭会话
@@ -38,7 +38,7 @@ public class CloseProcess extends AbstractServerTerminalProcess<ServerMessage.Ba
                 JSchSession jSchSession = sessionMap.get(instanceId);
                 jSchSession.getChannel().disconnect();
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, instanceId); // 设置关闭会话
-                auditCommandHandler.recordCommand(terminalSession.getSessionId(),instanceId);
+                auditServerCommandAudit.recordCommand(terminalSession.getSessionId(),instanceId);
             } catch (Exception e) {
                 e.printStackTrace();
             }
