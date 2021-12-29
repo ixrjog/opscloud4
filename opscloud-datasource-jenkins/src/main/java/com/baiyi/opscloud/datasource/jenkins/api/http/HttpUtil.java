@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.jenkins.api.http;
 
-import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.util.JSONMapper;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.core.model.Authentication;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -90,7 +90,7 @@ public class HttpUtil {
         settingRequest(httpPost, authentication);
         HttpClient httpClient = HttpClients.createDefault();
         httpPost.setEntity(
-                new StringEntity(JSON.toJSONString(param), "utf-8"));
+                new StringEntity(JSONUtil.writeValueAsString(param), "utf-8"));
         HttpResponse response
                 = httpClient.execute(httpPost, new HttpClientContext());
         HttpEntity entity = response.getEntity();
@@ -103,7 +103,7 @@ public class HttpUtil {
         settingRequest(httpPut, authentication);
         HttpClient httpClient = HttpClients.createDefault();
         httpPut.setEntity(
-                new StringEntity(JSON.toJSONString(param), "utf-8"));
+                new StringEntity(JSONUtil.writeValueAsString(param), "utf-8"));
         HttpResponse response
                 = httpClient.execute(httpPut, new HttpClientContext());
         HttpEntity entity = response.getEntity();

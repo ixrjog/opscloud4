@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.nacos.entity;
 
-import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.core.asset.IToAsset;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
@@ -53,7 +53,7 @@ public class NacosCluster {
 
         @Override
         public String toString() {
-            return JSON.toJSONString(this);
+            return JSONUtil.writeValueAsString(this);
         }
 
         @Override

@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.common.util;
 
-import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.http.HttpEntity;
@@ -52,7 +51,7 @@ public class HttpUtil {
 
     public static JsonNode httpPostExecutor(String url, Object param, RequestConfig requestConfig, Map<String, String> headers) throws IOException {
         HttpPost httpPost = (HttpPost) setHttpHeader(new HttpPost(url), requestConfig, headers);
-        httpPost.setEntity(new StringEntity(JSON.toJSONString(param), UTF_8));
+        httpPost.setEntity(new StringEntity(JSONUtil.writeValueAsString(param), UTF_8));
         HttpClient httpClient =
                 HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
         HttpResponse response = httpClient.execute(httpPost, new HttpClientContext());
@@ -63,7 +62,7 @@ public class HttpUtil {
 
     public static JsonNode httpPutExecutor(String url, Object param, RequestConfig requestConfig, Map<String, String> headers) throws IOException {
         HttpPut httpPut = (HttpPut) setHttpHeader(new HttpPut(url), requestConfig, headers);
-        httpPut.setEntity(new StringEntity(JSON.toJSONString(param), UTF_8));
+        httpPut.setEntity(new StringEntity(JSONUtil.writeValueAsString(param), UTF_8));
         HttpClient httpClient =
                 HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
         HttpResponse response = httpClient.execute(httpPut, new HttpClientContext());
@@ -83,7 +82,7 @@ public class HttpUtil {
 
     public static JsonNode httpPatchExecutor(String url, Object param, RequestConfig requestConfig, Map<String, String> headers) throws IOException {
         HttpPatch httpPatch = (HttpPatch) setHttpHeader(new HttpPatch(url), requestConfig, headers);
-        httpPatch.setEntity(new StringEntity(JSON.toJSONString(param), UTF_8));
+        httpPatch.setEntity(new StringEntity(JSONUtil.writeValueAsString(param), UTF_8));
         HttpClient httpClient =  HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
         HttpResponse response = httpClient.execute(httpPatch, new HttpClientContext());
         HttpEntity entity = response.getEntity();

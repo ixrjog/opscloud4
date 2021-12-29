@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.ansible.play;
 
-import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +25,6 @@ public class PlayOutputMessage {
 
     @Override
     public String toString(){
-        return JSON.toJSONString(this);
+        return JSONUtil.writeValueAsString(this);
     }
 }

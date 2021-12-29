@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.sshcore.task.audit.output;
 
-import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class OutputMessage {
 
     @Override
     public String toString(){
-        return JSON.toJSONString(this);
+        return JSONUtil.writeValueAsString(this);
     }
 
 }

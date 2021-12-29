@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.common;
 
-import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.exception.BaseException;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import lombok.Data;
@@ -57,6 +57,6 @@ public class HttpResult<T> {
 
     @Override
     public String toString() {
-        return JSON.toJSONString(this);
+        return JSONUtil.writeValueAsString(this);
     }
 }

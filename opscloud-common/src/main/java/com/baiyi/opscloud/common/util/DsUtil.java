@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.common.util;
 
-import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.exception.datasource.DatasourceRuntimeException;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.google.gson.Gson;
@@ -24,7 +23,7 @@ public class DsUtil {
             Yaml yaml = new Yaml();
             Object result = yaml.load(propsYml);
             Gson gson = new GsonBuilder().create();
-            return gson.fromJson(JSON.toJSONString(result), targetClass);
+            return gson.fromJson(JSONUtil.writeValueAsString(result), targetClass);
         } catch (JsonSyntaxException e) {
             throw new DatasourceRuntimeException(ErrorEnum.DATASOURCE_PROPS_CONVERT_ERROR);
         }

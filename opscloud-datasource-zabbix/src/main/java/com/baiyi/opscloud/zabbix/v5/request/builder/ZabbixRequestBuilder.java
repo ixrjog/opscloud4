@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.v5.request.builder;
 
-import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -49,7 +49,7 @@ public class ZabbixRequestBuilder {
      */
     public ZabbixRequestBuilder putParamSkipEmpty(String key, Object value) {
         if (value != null && !org.springframework.util.ObjectUtils.isEmpty(value) && !StringUtils.isEmpty(key)) {
-            String str = JSON.toJSONString(value);
+            String str = JSONUtil.writeValueAsString(value);
             if (str.equals("{}") || str.equals("[]") || str.equals("\"\""))
                 return this;
             request.putParam(key, value);

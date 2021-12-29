@@ -14,7 +14,7 @@ import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.baiyi.opscloud.service.user.UserService;
-import com.baiyi.opscloud.sshcore.audit.AuditPodCommandAudit;
+import com.baiyi.opscloud.sshcore.audit.PodCommandAudit;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import com.baiyi.opscloud.sshcore.model.SessionIdMapper;
@@ -88,7 +88,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
     private UserService userService;
 
     @Resource
-    private AuditPodCommandAudit auditPodCommandHandler;
+    private PodCommandAudit auditPodCommandHandler;
 
     // ^C
     private static final int QUIT = 3;

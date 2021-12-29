@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.common.util;
 
-import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.config.serverAttribute.AttributeGroup;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,8 +17,7 @@ public class ServerAttributeUtil {
         Object result = yaml.load(attributeValue);
         try {
             Gson gson = new GsonBuilder().create();
-            AttributeGroup ag = gson.fromJson(JSON.toJSONString(result), AttributeGroup.class);
-            return ag;
+            return gson.fromJson(JSONUtil.writeValueAsString(result), AttributeGroup.class);
         } catch (Exception e) {
             return new AttributeGroup();
         }

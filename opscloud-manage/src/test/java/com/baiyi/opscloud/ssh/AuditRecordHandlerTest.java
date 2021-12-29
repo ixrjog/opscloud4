@@ -3,7 +3,7 @@ package com.baiyi.opscloud.ssh;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstanceCommand;
 import com.baiyi.opscloud.sshcore.config.TerminalConfigurationProperties;
-import com.baiyi.opscloud.sshcore.audit.AuditServerCommandAudit;
+import com.baiyi.opscloud.sshcore.audit.ServerCommandAudit;
 import com.baiyi.opscloud.sshcore.audit.InstanceCommandBuilder;
 import io.netty.util.AsciiString;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 public class AuditRecordHandlerTest extends BaseUnit {
 
     @Resource
-    private AuditServerCommandAudit auditCommandHandler;
+    private ServerCommandAudit auditCommandHandler;
 
     @Resource
     private TerminalConfigurationProperties terminalConfig;

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.event.convert;
 
-import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
@@ -30,7 +30,7 @@ public class EventConvert {
                 .eventId(problem.getEventid())
                 .eventName(problem.getName())
                 .eventIdDesc(EventTypeEnum.ZABBIX_PROBLEM.name())
-                .eventMessage(JSON.toJSONString(problem))
+                .eventMessage(JSONUtil.writeValueAsString(problem))
                 .priority(problem.getSeverity())
                 .createTime(new Date(problem.getClock() * 1000)) // UNIT时间戳转换
                 .lastchangeTime(new Date(trigger.getLastchange() * 1000)) // UNIT时间戳转换
@@ -44,7 +44,7 @@ public class EventConvert {
                 .eventName(problem.getName())
                 .eventId(problem.getEventid())
                 .eventIdDesc(EventTypeEnum.ZABBIX_PROBLEM.name())
-                .eventMessage(JSON.toJSONString(problem))
+                .eventMessage(JSONUtil.writeValueAsString(problem))
                 .priority(problem.getSeverity())
                 .createTime(new Date(problem.getClock() * 1000)) // UNIT时间戳转换
                 .isActive(false) // 有效事件

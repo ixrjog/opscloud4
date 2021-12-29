@@ -16,7 +16,7 @@ public class SessionIdMapper {
     /**
      * SshServer使用  将ioSessionId转换为UUID
      */
-    private static Map<Long, String> mapper = new HashedMap<>();
+    private static final Map<Long, String> mapper = new HashedMap<>();
 
     public static void put(IoSession ioSession) {
         mapper.put(ioSession.getId(), UUID.randomUUID().toString());

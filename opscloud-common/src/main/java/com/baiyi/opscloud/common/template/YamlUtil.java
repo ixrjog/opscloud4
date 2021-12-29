@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.common.template;
 
-import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +26,7 @@ public class YamlUtil {
             Yaml yaml = new Yaml();
             Object result = yaml.load(vars);
             Gson gson = new GsonBuilder().create();
-            return gson.fromJson(JSON.toJSONString(result), YamlVars.Vars.class);
+            return gson.fromJson(JSONUtil.writeValueAsString(result), YamlVars.Vars.class);
         } catch (Exception e) {
             return YamlVars.Vars.EMPTY;
         }

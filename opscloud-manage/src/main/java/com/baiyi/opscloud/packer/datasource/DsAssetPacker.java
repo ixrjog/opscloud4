@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.packer.datasource;
 
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.asset.IAssetConvert;
 import com.baiyi.opscloud.core.asset.factory.AssetConvertFactory;
-import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
@@ -15,7 +15,6 @@ import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.util.ExtendUtil;
-import com.baiyi.opscloud.util.RelationUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.stereotype.Component;
@@ -72,7 +71,7 @@ public class DsAssetPacker {
             tagPacker.wrap(asset);
             wrap(asset);
             wrapConvertBusinessTypes(asset); // 资产可转换为业务对象
-            if (RelationUtil.isRelation(iRelation))
+            if (iRelation.isRelation())
                 wrapRelation(asset);
             asset.setTree(wrapTree(asset));
         }

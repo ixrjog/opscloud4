@@ -9,4 +9,9 @@ public interface IRelation {
 
     Boolean getRelation();
 
+    default boolean isRelation(){
+        if(this.getRelation() == null) return false;
+        return this.getRelation();
+    }
+
 }

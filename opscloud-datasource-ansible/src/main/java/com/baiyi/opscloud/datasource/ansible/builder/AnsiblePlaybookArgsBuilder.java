@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.datasource.ansible.builder;
 
-import com.alibaba.fastjson.JSON;
-import com.baiyi.opscloud.datasource.ansible.args.AnsibleArgs;
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
+import com.baiyi.opscloud.common.util.JSONUtil;
+import com.baiyi.opscloud.datasource.ansible.args.AnsibleArgs;
 import com.google.common.base.Joiner;
 import com.google.gson.Gson;
 import org.apache.commons.exec.CommandLine;
@@ -24,7 +24,7 @@ public class AnsiblePlaybookArgsBuilder {
      * @return
      */
     public static CommandLine build(AnsibleConfig.Ansible ansible, AnsibleArgs.Playbook args) {
-        CommandLine commandLine = AnsibleArgsBuilder.buildPlaybook(ansible, new Gson().fromJson(JSON.toJSONString(args), AnsibleArgs.Command.class));
+        CommandLine commandLine = AnsibleArgsBuilder.buildPlaybook(ansible, new Gson().fromJson(JSONUtil.writeValueAsString(args), AnsibleArgs.Command.class));
         if (args.isVersion())
             return commandLine;
         // 外部变量

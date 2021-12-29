@@ -27,7 +27,7 @@
  */
 package com.baiyi.opscloud.sshcore.task.terminal;
 
-import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.util.SessionOutputUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +57,7 @@ public class SentOutputTask implements Runnable {
             while (session.isOpen()) {
                 List<SessionOutput> outputList = SessionOutputUtil.getOutput(sessionId);
                 if (CollectionUtils.isNotEmpty(outputList)) {
-                    String jsonStr = JSON.toJSONString(outputList);
+                    String jsonStr = JSONUtil.writeValueAsString(outputList);
                     session.getBasicRemote().sendText(jsonStr);
                 }
                 Thread.sleep(25);
