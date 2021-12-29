@@ -1,7 +1,7 @@
-package com.baiyi.opscloud.kubernetes.terminal.process.impl;
+package com.baiyi.opscloud.kubernetes.terminal.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.kubernetes.terminal.process.AbstractKubernetesTerminalProcess;
+import com.baiyi.opscloud.kubernetes.terminal.processor.AbstractKubernetesTerminalProcessor;
 import com.baiyi.opscloud.sshcore.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
@@ -18,7 +18,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class KubernetesTerminalResizeProcess extends AbstractKubernetesTerminalProcess<KubernetesMessage.Resize> implements ITerminalProcess {
+public class KubernetesTerminalResizeProcessor extends AbstractKubernetesTerminalProcessor<KubernetesMessage.Resize> implements ITerminalProcess {
 
     /**
      * 调整终端

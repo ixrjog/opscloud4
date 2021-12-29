@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.kubernetes.terminal.process;
+package com.baiyi.opscloud.kubernetes.terminal.processor;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
@@ -26,7 +26,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractKubernetesTerminalProcess<T extends KubernetesMessage.BaseMessage> implements ITerminalProcess, InitializingBean {
+public abstract class AbstractKubernetesTerminalProcessor<T extends KubernetesMessage.BaseMessage> implements ITerminalProcess, InitializingBean {
 
     @Resource
     protected TerminalSessionService terminalSessionService;

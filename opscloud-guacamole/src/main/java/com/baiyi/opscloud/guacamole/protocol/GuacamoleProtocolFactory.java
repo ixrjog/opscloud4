@@ -13,7 +13,7 @@ public class GuacamoleProtocolFactory {
     private GuacamoleProtocolFactory() {
     }
 
-    static private Map<String, IGuacamoleProtocol> context = new ConcurrentHashMap<>();
+    static private final Map<String, IGuacamoleProtocol> context = new ConcurrentHashMap<>();
 
     public static IGuacamoleProtocol getProtocol(String protocol) {
         return context.get(protocol);

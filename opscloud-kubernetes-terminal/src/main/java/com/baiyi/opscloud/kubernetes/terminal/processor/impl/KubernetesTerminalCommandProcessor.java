@@ -1,7 +1,7 @@
-package com.baiyi.opscloud.kubernetes.terminal.process.impl;
+package com.baiyi.opscloud.kubernetes.terminal.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.kubernetes.terminal.process.AbstractKubernetesTerminalProcess;
+import com.baiyi.opscloud.kubernetes.terminal.processor.AbstractKubernetesTerminalProcessor;
 import com.baiyi.opscloud.sshcore.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
@@ -21,7 +21,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component
-public class KubernetesTerminalCommandProcess extends AbstractKubernetesTerminalProcess<KubernetesMessage.Command> implements ITerminalProcess {
+public class KubernetesTerminalCommandProcessor extends AbstractKubernetesTerminalProcessor<KubernetesMessage.Command> implements ITerminalProcess {
 
     /**
      * 登录
@@ -49,9 +49,9 @@ public class KubernetesTerminalCommandProcess extends AbstractKubernetesTerminal
     private void printCommand(String sessionId, String instanceId, String cmd) {
         KubernetesSession kubernetesSession = KubernetesSessionContainer.getBySessionId(sessionId, instanceId);
         if (kubernetesSession == null) return;
-        try{
+        try {
             kubernetesSession.getExecWatch().getInput().write(cmd.getBytes());
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
