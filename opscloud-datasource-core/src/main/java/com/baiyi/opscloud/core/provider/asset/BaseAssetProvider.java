@@ -5,7 +5,6 @@ import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
-import com.baiyi.opscloud.core.provider.base.param.AssetFilterParam;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -54,10 +53,6 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     }
 
     protected abstract List<T> listEntities(DsInstanceContext dsInstanceContext);
-
-    protected List<T> listEntities(DsInstanceContext dsInstanceContext, AssetFilterParam param) {
-        throw new UnsupportedOperationException("该数据源实例不支持筛选资产");
-    }
 
     private void enterAssets(DsInstanceContext dsInstanceContext, List<T> entities) {
         if (executeMode()) {
@@ -155,12 +150,6 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
         enterAssets(dsInstanceContext, entities);
     }
 
-    protected void doPull(int dsInstanceId, AssetFilterParam filter) {
-        DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
-        List<T> entities = listEntities(dsInstanceContext, filter);
-        enterAssets(dsInstanceContext, entities);
-    }
-
     /**
      * PULL单个资产
      *
@@ -173,7 +162,6 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
         return enterEntity(dsInstanceContext, entity);
     }
-
 
     @Override
     public void pushAsset(int dsInstanceId) {
