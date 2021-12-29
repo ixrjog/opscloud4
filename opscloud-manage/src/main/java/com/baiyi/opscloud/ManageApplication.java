@@ -48,5 +48,8 @@ public class ManageApplication {
         SpringApplication.run(ManageApplication.class, args);
         log.info("OPSCLOUD 4 IaC 基础架构即代码 <Spring Boot {}>", SpringBootVersion.getVersion());
         log.info("启动成功! 耗时:{}/s", Duration.between(inst1, Instant.now()).getSeconds());
+        System.setProperty("druid.mysql.usePingMethod","false");
+        log.info("修改参数: druid.mysql.usePingMethod=false");
     }
+
 }
