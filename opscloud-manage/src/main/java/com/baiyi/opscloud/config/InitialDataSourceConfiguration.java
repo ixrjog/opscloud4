@@ -21,16 +21,13 @@ import javax.sql.DataSource;
 @Configuration
 public class InitialDataSourceConfiguration implements ApplicationContextAware {
 
-    private static ApplicationContext context;
-
     @Resource
     private ConfigurableApplicationContext configurableApplicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         try {
-            context = applicationContext;
-            DataSource dataSource = context.getBean("opscloudDataSource", DataSource.class);
+            DataSource dataSource = applicationContext.getBean("opscloudDataSource", DataSource.class);
             dataSource.getConnection().close();
             log.info("校验DataSource[Mysql]连接成功!");
         } catch (Exception e) {

@@ -20,16 +20,13 @@ import javax.annotation.Resource;
 @Configuration
 public class InitialRedisConfiguration implements ApplicationContextAware {
 
-    private static ApplicationContext context;
-
     @Resource
     private ConfigurableApplicationContext configurableApplicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         try {
-            context = applicationContext;
-            RedisTemplate<String, Object> redisTemplate = context.getBean("redisTemplate", RedisTemplate.class);
+            RedisTemplate<String, Object> redisTemplate = applicationContext.getBean("redisTemplate", RedisTemplate.class);
             redisTemplate.hasKey("initCheck");
             log.info("校验Redis连接成功!");
         } catch (Exception e) {
