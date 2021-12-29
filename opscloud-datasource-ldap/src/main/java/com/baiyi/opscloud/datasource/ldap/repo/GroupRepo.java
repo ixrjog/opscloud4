@@ -35,7 +35,8 @@ public interface GroupRepo {
 
     void addGroupMember(LdapConfig.Ldap ldapConfig, String groupName, String username);
 
-    void  create(LdapConfig.Ldap ldapConfig, String groupName);
+    void create(LdapConfig.Ldap ldapConfig, String groupName);
 
     void delete(LdapConfig.Ldap ldapConfig, String groupName);
+
 }

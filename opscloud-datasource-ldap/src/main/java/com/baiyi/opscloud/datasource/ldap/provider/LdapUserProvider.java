@@ -83,4 +83,5 @@ public class LdapUserProvider extends AbstractAssetRelationProvider<LdapPerson.P
     public void afterPropertiesSet() {
         AssetProviderFactory.register(ldapUserProvider);
     }
+
 }

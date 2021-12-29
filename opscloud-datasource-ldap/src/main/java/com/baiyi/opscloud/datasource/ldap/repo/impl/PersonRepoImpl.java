@@ -22,23 +22,19 @@ import java.util.List;
 public class PersonRepoImpl implements PersonRepo {
 
     @Resource
-    private LdapDrive ldapHandler;
+    private LdapDrive ldapDrive;
 
     @Override
     public List<LdapPerson.Person> queryGroupMember(LdapConfig.Ldap ldapConfig, String groupName) {
-        List<String> usernames = ldapHandler.queryGroupMember(ldapConfig, groupName);
+        List<String> usernames = ldapDrive.queryGroupMember(ldapConfig, groupName);
         List<LdapPerson.Person> people = Lists.newArrayList();
         for (String username : usernames) {
             try {
-                people.add(ldapHandler.getPersonWithDn(ldapConfig, ldapConfig.buildUserDn(username)));
+                people.add(ldapDrive.getPersonWithDn(ldapConfig, ldapConfig.buildUserDn(username)));
             } catch (Exception e) {
                 log.error("未找到 usernmae = {} 对应的 Person", username);
             }
         }
-//
-//        return usernames.stream().map(e->
-//                ldapHandler.getPersonWithDn(ldapConfig,ldapConfig.buildUserDn(e))
-//        ).collect(Collectors.toList());
         return people;
     }
 
@@ -49,7 +45,7 @@ public class PersonRepoImpl implements PersonRepo {
      */
     @Override
     public List<String> getAllPersonNames(LdapConfig.Ldap ldapConfig) {
-        return ldapHandler.queryPersonNameList(ldapConfig);
+        return ldapDrive.queryPersonNameList(ldapConfig);
     }
 
     /**
@@ -59,7 +55,7 @@ public class PersonRepoImpl implements PersonRepo {
      */
     @Override
     public List<LdapPerson.Person> getPersonList(LdapConfig.Ldap ldapConfig) {
-        return ldapHandler.queryPersonList(ldapConfig);
+        return ldapDrive.queryPersonList(ldapConfig);
     }
 
     /**
@@ -70,34 +66,33 @@ public class PersonRepoImpl implements PersonRepo {
      */
     @Override
     public LdapPerson.Person findPersonWithDn(LdapConfig.Ldap ldapConfig, String dn) {
-        return ldapHandler.getPersonWithDn(ldapConfig, dn);
+        return ldapDrive.getPersonWithDn(ldapConfig, dn);
     }
 
     @Override
     public void create(LdapConfig.Ldap ldapConfig, LdapPerson.Person person) {
-        ldapHandler.bindPerson(ldapConfig, person);
+        ldapDrive.bindPerson(ldapConfig, person);
     }
 
     @Override
     public void update(LdapConfig.Ldap ldapConfig, LdapPerson.Person person) {
-        ldapHandler.updatePerson(ldapConfig, person);
+        ldapDrive.updatePerson(ldapConfig, person);
     }
 
     @Override
     public void delete(LdapConfig.Ldap ldapConfig, String username) {
-        ldapHandler.unbind(ldapConfig, ldapConfig.buildUserDn(username));
+        ldapDrive.unbind(ldapConfig, ldapConfig.buildUserDn(username));
     }
 
     @Override
     public Boolean checkPersonInLdap(LdapConfig.Ldap ldapConfig, String username) {
-        return ldapHandler.checkPersonInLdap(ldapConfig, username);
+        return ldapDrive.checkPersonInLdap(ldapConfig, username);
 
     }
 
     @Override
     public List<String> searchUserGroupByUsername(LdapConfig.Ldap ldapConfig, String username) {
-        return ldapHandler.searchLdapGroup(ldapConfig, username);
+        return ldapDrive.searchLdapGroup(ldapConfig, username);
     }
-
-
+    
 }

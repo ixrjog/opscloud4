@@ -21,34 +21,34 @@ import java.util.stream.Collectors;
 public class GroupRepoImpl implements GroupRepo {
 
     @Resource
-    private LdapDrive ldapHandler;
+    private LdapDrive ldapDrive;
 
     @Override
     public List<LdapGroup.Group> getGroupList(LdapConfig.Ldap ldapConfig) {
-        return ldapHandler.queryGroupList(ldapConfig);
+        return ldapDrive.queryGroupList(ldapConfig);
     }
 
     @Override
     public List<String> queryGroupMember(LdapConfig.Ldap ldapConfig, String groupName) {
-        return ldapHandler.queryGroupMember(ldapConfig, groupName);
+        return ldapDrive.queryGroupMember(ldapConfig, groupName);
     }
 
     @Override
     public List<LdapGroup.Group> searchGroupByUsername(LdapConfig.Ldap ldapConfig, String username) {
-        List<String> groupNames = ldapHandler.searchLdapGroup(ldapConfig, username);
+        List<String> groupNames = ldapDrive.searchLdapGroup(ldapConfig, username);
         return groupNames.stream().map(e ->
-                ldapHandler.getGroupWithDn(ldapConfig, ldapConfig.buildGroupDn(e))
+                ldapDrive.getGroupWithDn(ldapConfig, ldapConfig.buildGroupDn(e))
         ).collect(Collectors.toList());
     }
 
     @Override
     public void removeGroupMember(LdapConfig.Ldap ldapConfig, String groupName, String username) {
-        ldapHandler.removeGroupMember(ldapConfig, groupName, username);
+        ldapDrive.removeGroupMember(ldapConfig, groupName, username);
     }
 
     @Override
     public void addGroupMember(LdapConfig.Ldap ldapConfig, String groupName, String username) {
-        ldapHandler.addGroupMember(ldapConfig, groupName, username);
+        ldapDrive.addGroupMember(ldapConfig, groupName, username);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class GroupRepoImpl implements GroupRepo {
         LdapGroup.Group group = LdapGroup.Group.builder()
                 .groupName(groupName)
                 .build();
-        ldapHandler.bindGroup(ldapConfig, group);
+        ldapDrive.bindGroup(ldapConfig, group);
     }
 
     @Override

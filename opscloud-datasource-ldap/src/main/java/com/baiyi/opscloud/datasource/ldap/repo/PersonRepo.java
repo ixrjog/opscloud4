@@ -12,7 +12,6 @@ import java.util.List;
  */
 public interface PersonRepo {
 
-
     /**
      * 查询用户组成员名列表
      *

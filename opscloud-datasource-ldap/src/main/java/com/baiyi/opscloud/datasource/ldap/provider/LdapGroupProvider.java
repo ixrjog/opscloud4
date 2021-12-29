@@ -42,13 +42,11 @@ public class LdapGroupProvider extends AbstractAssetRelationProvider<LdapGroup.G
         return dsConfigHelper.build(dsConfig, LdapConfig.class).getLdap();
     }
 
-
     @Override
     protected List<LdapGroup.Group> listEntities(DsInstanceContext dsInstanceContext, LdapPerson.Person target) {
         LdapConfig.Ldap ldap = buildConfig(dsInstanceContext.getDsConfig());
         return groupRepo.searchGroupByUsername(ldap, target.getUsername());
     }
-
 
     @Override
     protected List<LdapGroup.Group> listEntities(DsInstanceContext dsInstanceContext) {
@@ -80,5 +78,6 @@ public class LdapGroupProvider extends AbstractAssetRelationProvider<LdapGroup.G
     public void afterPropertiesSet() {
         AssetProviderFactory.register(ldapGroupProvider);
     }
+
 }
 
