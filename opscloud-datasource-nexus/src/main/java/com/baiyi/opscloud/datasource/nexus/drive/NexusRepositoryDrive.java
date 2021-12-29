@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.nexus.drive;
+package com.baiyi.opscloud.datasource.nexus.drive;
 
 import com.baiyi.opscloud.common.datasource.NexusConfig;
-import com.baiyi.opscloud.nexus.entity.NexusRepository;
-import com.baiyi.opscloud.nexus.feign.NexusRepositoriesV1Feign;
+import com.baiyi.opscloud.datasource.nexus.entity.NexusRepository;
+import com.baiyi.opscloud.datasource.nexus.feign.NexusRepositoriesV1Feign;
 import feign.Feign;
 import feign.Retryer;
 import feign.jackson.JacksonDecoder;

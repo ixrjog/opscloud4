@@ -1,10 +1,10 @@
 package com.baiyi.opscloud.datasource.nexus;
 
 import com.baiyi.opscloud.datasource.nexus.base.BaseNexusTest;
-import com.baiyi.opscloud.nexus.entity.NexusAsset;
-import com.baiyi.opscloud.nexus.entity.NexusRepository;
-import com.baiyi.opscloud.nexus.drive.NexusAssetDrive;
-import com.baiyi.opscloud.nexus.drive.NexusRepositoryDrive;
+import com.baiyi.opscloud.datasource.nexus.entity.NexusAsset;
+import com.baiyi.opscloud.datasource.nexus.entity.NexusRepository;
+import com.baiyi.opscloud.datasource.nexus.drive.NexusAssetDrive;
+import com.baiyi.opscloud.datasource.nexus.drive.NexusRepositoryDrive;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;

@@ -1,9 +1,9 @@
-package com.baiyi.opscloud.nexus.drive;
+package com.baiyi.opscloud.datasource.nexus.drive;
 
 import com.baiyi.opscloud.common.datasource.NexusConfig;
+import com.baiyi.opscloud.datasource.nexus.entity.NexusAsset;
 import com.baiyi.opscloud.domain.model.Authorization;
-import com.baiyi.opscloud.nexus.entity.NexusAsset;
-import com.baiyi.opscloud.nexus.feign.NexusAssetsV1Feign;
+import com.baiyi.opscloud.datasource.nexus.feign.NexusAssetsV1Feign;
 import feign.Feign;
 import feign.Retryer;
 import feign.jackson.JacksonDecoder;

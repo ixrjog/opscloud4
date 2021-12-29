@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.nexus.entity;
+package com.baiyi.opscloud.datasource.nexus.entity;
 
 import com.alibaba.fastjson.JSON;
 import lombok.AllArgsConstructor;

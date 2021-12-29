@@ -94,5 +94,5 @@ public class PersonRepoImpl implements PersonRepo {
     public List<String> searchUserGroupByUsername(LdapConfig.Ldap ldapConfig, String username) {
         return ldapDrive.searchLdapGroup(ldapConfig, username);
     }
-    
+
 }

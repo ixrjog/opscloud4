@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.nacos.entity;
 
-import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.datasource.nacos.entity.base.BasePage;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -41,7 +41,7 @@ public class NacosUser {
 
         @Override
         public String toString() {
-            return JSON.toJSONString(this);
+            return JSONUtil.writeValueAsString(this);
         }
 
     }

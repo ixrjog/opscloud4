@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.nexus.provider;
+package com.baiyi.opscloud.datasource.nexus.provider;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.annotation.SingleTask;
@@ -8,11 +8,11 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
+import com.baiyi.opscloud.datasource.nexus.drive.NexusAssetDrive;
+import com.baiyi.opscloud.datasource.nexus.entity.NexusAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.nexus.drive.NexusAssetDrive;
-import com.baiyi.opscloud.nexus.entity.NexusAsset;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
