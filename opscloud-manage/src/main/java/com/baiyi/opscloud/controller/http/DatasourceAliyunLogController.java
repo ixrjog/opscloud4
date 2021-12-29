@@ -24,7 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/datasource/aliyun/log")
-@Api(tags = "数据源实例")
+@Api(tags = "数据源实例-阿里云日志服务")
 @RequiredArgsConstructor
 public class DatasourceAliyunLogController {
 

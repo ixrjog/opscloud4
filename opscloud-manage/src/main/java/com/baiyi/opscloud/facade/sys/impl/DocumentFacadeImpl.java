@@ -29,7 +29,6 @@ public class DocumentFacadeImpl implements DocumentFacade {
     public DocumentVO.Doc previewDocument(DocumentParam.DocumentQuery query) {
         Document doc = documentService.getByKey(query.getDocumentKey());
         render(doc, query);
-
         return DocumentVO.Doc.builder()
                 .content(doc.getContent())
                 .dict(query.getDict())
@@ -38,7 +37,6 @@ public class DocumentFacadeImpl implements DocumentFacade {
 
     private void render(Document doc, DocumentParam.DocumentQuery query) {
         render(doc, query.getDict()); // 反向注入
-
         SimpleDict simpleDict = SimpleDictBuilder.newBuilder()
                 .putParam("username", SessionUtil.getUsername())
                 .build();

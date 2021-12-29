@@ -16,7 +16,7 @@ public class NoticeEvent extends ApplicationEvent {
      * 接受信息
      */
     @Getter
-    private IEvent message;
+    private final IEvent message;
 
     public NoticeEvent(IEvent message) {
         super(message);

@@ -37,30 +37,25 @@ public class GitlabFacade extends BaseManager {
     private final InstanceConfigHelper instanceConfigHelper;
 
     public void consumeEventV4(GitlabNotifyParam.SystemHook systemHook) {
-        try {
-            if (StringUtils.isEmpty(GitlabTokenUtil.getToken())) {
-                log.warn("未配置Gitlab:SystemHooks.SecretToken,无法路由消息！");
-                return;
-            }
-            DatasourceInstance instance = filter();
-            if (instance == null) return; // 未配置 SystemHooks.SecretToken
-            IGitlabEventConsume eventConsume = GitlabEventConsumeFactory.getByEventName(systemHook.getEvent_name());
-            if (eventConsume != null) eventConsume.consumeEventV4(instance, systemHook);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (StringUtils.isEmpty(GitlabTokenUtil.getToken())) {
+            log.warn("未配置Gitlab:SystemHooks.SecretToken,无法路由消息！");
+            return;
         }
+        Optional<DatasourceInstance> optional = filterInstance();
+        if (!optional.isPresent()) return; // 未配置 SystemHooks.SecretToken
+        IGitlabEventConsume eventConsume = GitlabEventConsumeFactory.getByEventName(systemHook.getEvent_name());
+        if (eventConsume != null) eventConsume.consumeEventV4(optional.get(), systemHook);
+
     }
 
-    private DatasourceInstance filter() {
+    private Optional<DatasourceInstance> filterInstance() {
         List<DatasourceInstance> instances = super.listInstance();
-        if (CollectionUtils.isEmpty(instances)) return null;
-        Optional<DatasourceInstance> optional = instances.stream().filter(i -> {
+        if (CollectionUtils.isEmpty(instances)) return Optional.empty();
+        return instances.stream().filter(i -> {
             GitlabConfig gitlabDsInstanceConfig = (GitlabConfig) instanceConfigHelper.getConfig(i);
-            String secretToken =
-                    Optional.ofNullable(gitlabDsInstanceConfig.getGitlab()).map(GitlabConfig.Gitlab::getSystemHooks).map(GitlabConfig.SystemHooks::getToken).get();
-            return GitlabTokenUtil.getToken().equals(secretToken);
+            Optional<String> tokenOptional = Optional.ofNullable(gitlabDsInstanceConfig.getGitlab()).map(GitlabConfig.Gitlab::getSystemHooks).map(GitlabConfig.SystemHooks::getToken);
+            return tokenOptional.filter(s -> GitlabTokenUtil.getToken().equals(s)).isPresent();
         }).findFirst();
-        return optional.get();
     }
 
     @Override

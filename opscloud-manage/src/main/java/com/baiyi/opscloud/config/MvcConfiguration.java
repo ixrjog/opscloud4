@@ -8,6 +8,7 @@ import org.springframework.util.unit.DataSize;
 import org.springframework.web.servlet.config.annotation.*;
 
 import javax.servlet.MultipartConfigElement;
+
 /**
  * @Author baiyi
  * @Date 2020/2/13 5:10 下午
@@ -26,7 +27,6 @@ public class MvcConfiguration implements WebMvcConfigurer {
         registry.addViewController("/").setViewName("index.html");
     }
 
-
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
@@ -36,8 +36,8 @@ public class MvcConfiguration implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/")
                 .resourceChain(false);
-       // registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
-               // .resourceChain(false);
+        // registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+        // .resourceChain(false);
 //        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/")
 //                .resourceChain(false);
 //        registry.addResourceHandler("/index.html").addResourceLocations("classpath:/static/");
