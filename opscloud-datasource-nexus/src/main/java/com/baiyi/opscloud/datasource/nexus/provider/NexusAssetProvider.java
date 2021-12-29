@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.datasource.nexus.provider;
 
-import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.NexusConfig;
@@ -64,7 +63,6 @@ public class NexusAssetProvider extends BaseAssetProvider<NexusAsset.Item> {
                 if (assets == null || CollectionUtils.isEmpty(assets.getItems()))
                     return;
                 entities.addAll(filter(nexus, assets.getItems()));
-                System.out.println(JSON.toJSONString("Size: " +entities.size()));
                 continuationToken = assets.getContinuationToken();
             }
         });
@@ -83,7 +81,7 @@ public class NexusAssetProvider extends BaseAssetProvider<NexusAsset.Item> {
     }
 
     @Override
-    @SingleTask(name = PULL_NEXUS_ASSET , lockTime = "1m")
+    @SingleTask(name = PULL_NEXUS_ASSET, lockTime = "1m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
