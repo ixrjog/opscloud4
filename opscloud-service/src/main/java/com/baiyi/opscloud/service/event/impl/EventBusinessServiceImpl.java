@@ -38,4 +38,9 @@ public class EventBusinessServiceImpl implements EventBusinessService {
         return eventBusinessMapper.selectByPrimaryKey(id);
     }
 
+    @Override
+    public void deleteById(Integer id) {
+        eventBusinessMapper.deleteByPrimaryKey(id);
+    }
+
 }

@@ -89,9 +89,20 @@ public class EventCommand extends BaseServerCommand {
         for (Event event : table.getData()) {
             EventContext eventContext = BeanCopierUtil.copyProperties(event, EventContext.class);
             List<EventBusiness> eventBusinesses = eventBusinessService.queryByEventId(eventContext.getId());
-            if (CollectionUtils.isEmpty(eventBusinesses) || eventBusinesses.get(0).getBusinessId() == null)
+            if (CollectionUtils.isEmpty(eventBusinesses)) {
                 continue;
-            Server server = serverService.getById(eventBusinesses.get(0).getBusinessId());
+            }
+            // 只处理一条记录
+            EventBusiness eventBusiness = eventBusinesses.get(0);
+            if (eventBusiness.getBusinessId() == null) {
+                continue;
+            }
+            Server server = serverService.getById(eventBusiness.getBusinessId());
+            if (server == null) {
+                // 如果业务对象不存在则删除此对象
+                eventBusinessService.deleteById(eventBusiness.getId());
+                continue;
+            }
             ServerVO.Server serverVO = sshServerPacker.wrapToVO(server);
             eventContext.setServerVO(serverVO);
             eventMapper.put(id, eventContext);

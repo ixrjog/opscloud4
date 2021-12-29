@@ -17,4 +17,6 @@ public interface EventBusinessService {
 
     EventBusiness getById(Integer id);
 
+    void deleteById(Integer id);
+
 }
