@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.nexus.entity;
 
-import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,7 +29,7 @@ public class NexusRepository {
 
         @Override
         public String toString() {
-            return JSON.toJSONString(this);
+            return JSONUtil.writeValueAsString(this);
         }
 
     }

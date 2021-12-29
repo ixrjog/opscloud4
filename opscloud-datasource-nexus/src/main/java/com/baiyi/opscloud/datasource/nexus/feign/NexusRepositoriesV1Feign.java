@@ -16,4 +16,5 @@ public interface NexusRepositoriesV1Feign {
     @RequestLine("GET /service/rest/v1/repositories")
     @Headers("accept: application/json")
     List<NexusRepository.Repository> listRepositories();
+
 }
