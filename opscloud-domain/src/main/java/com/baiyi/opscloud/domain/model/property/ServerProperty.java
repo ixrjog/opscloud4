@@ -1,9 +1,15 @@
 package com.baiyi.opscloud.domain.model.property;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.gson.GsonBuilder;
+import lombok.Builder;
+import lombok.Data;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author 修远
@@ -45,6 +51,7 @@ public class ServerProperty {
     @Builder
     @Data
     public static class Zabbix implements Serializable {
+
         private static final long serialVersionUID = 5911353965481533349L;
         @Builder.Default
         private Boolean enabled = false;
@@ -52,7 +59,26 @@ public class ServerProperty {
         @Builder.Default
         private Boolean templateUniformity = false;
         private String proxyName;
+        private List<String> macros;
 
+        public List<Macro> toMacros() {
+            if (CollectionUtils.isEmpty(macros)) return Collections.emptyList();
+            try {
+                return macros.stream().map(e -> new GsonBuilder().create().fromJson(e, Macro.class)).collect(Collectors.toList());
+            } catch (Exception e) {
+                return Collections.emptyList();
+            }
+        }
+
+    }
+
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Macro implements Serializable {
+        private static final long serialVersionUID = -5748446862825981795L;
+        private String macro;
+        private String value;
+        private String description;
     }
 
     @Builder

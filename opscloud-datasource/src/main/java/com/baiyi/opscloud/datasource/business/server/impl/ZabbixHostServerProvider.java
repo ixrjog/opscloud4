@@ -62,6 +62,7 @@ public class ZabbixHostServerProvider extends AbstractZabbixHostServerProvider {
                 .putParam("templates", buildTemplatesParams(configContext.get(), property))
                 .putParam("tags", buildTagsParams(server))
                 .putParamSkipEmpty("proxy_hostid", getProxyHostid(property))
+                .putParamSkipEmpty("macros",property.getZabbix().toMacros() )
                 .build();
         ZabbixHost.CreateHostResponse response = createHandle(configContext.get(), request);
         if (CollectionUtils.isEmpty(response.getResult().getHostids())) {

@@ -9,10 +9,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.zabbix.helper.ZabbixGroupHelper;
-import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5HostDrive;
-import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5HostTagDrive;
-import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5ProxyDrive;
-import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5TemplateDrive;
+import com.baiyi.opscloud.zabbix.v5.drive.*;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixProxy;
@@ -41,6 +38,9 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
 
     @Resource
     protected ZabbixV5HostDrive zabbixV5HostDrive;
+
+    @Resource
+    protected ZabbixV5HostMacroDrive zabbixV5HostMacroDrive;
 
     @Resource
     protected ZabbixV5HostTagDrive zabbixV5HostTagDrive;
@@ -75,6 +75,7 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
         }
         updateHostTemplate(property, host);
         updateHostTag(server, host);
+        updateHostMacro(property, host);
         ZabbixProxy.Proxy proxy = getProxy(property);
         if (proxy != null) {
             zabbixV5ProxyDrive.updateHostProxy(configContext.get(), host, proxy);
@@ -228,6 +229,15 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
                 .map(ServerProperty.Metadata::getManageIp)
                 .orElse(server.getPrivateIp());
         return StringUtils.isEmpty(manageIp) ? server.getPrivateIp() : manageIp;
+    }
+
+    /**
+     * 更新主机宏
+     * @param property
+     * @param host
+     */
+    private void updateHostMacro(ServerProperty.Server property, ZabbixHost.Host host) {
+        zabbixV5HostMacroDrive.updateHostMacro(configContext.get(), host, property.getZabbix());
     }
 
 }
