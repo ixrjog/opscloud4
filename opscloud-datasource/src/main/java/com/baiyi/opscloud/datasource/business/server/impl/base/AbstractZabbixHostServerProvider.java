@@ -193,7 +193,7 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
 
     private void putProxyUpdateParam(ServerProperty.Server property, ZabbixHost.Host host, ZabbixRequestBuilder requestBuilder) {
         String proxyHostid = getProxyHostid(property);
-        if (StringUtils.isEmpty(host.getProxyHostid())) {
+        if (StringUtils.isEmpty(host.getProxyHostid()) || host.getProxyHostid().equals("0")) {
             if (StringUtils.isEmpty(proxyHostid)) {
                 return;
             }
