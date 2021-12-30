@@ -2,6 +2,7 @@ package com.baiyi.opscloud.datasource.business.server.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.business.server.impl.base.AbstractZabbixHostServerProvider;
+import com.baiyi.opscloud.datasource.business.server.util.HostParamUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
@@ -27,8 +28,8 @@ public class ZabbixHostServerProvider extends AbstractZabbixHostServerProvider {
     @Override
     protected void doUpdate(Server server) {
         ServerProperty.Server property = getBusinessProperty(server);
-        if (!isEnable(property)) return;
-        String manageIp = getManageIp(server, property);
+        if (!property.enabledZabbix()) return;
+        String manageIp = HostParamUtil.getManageIp(server, property);
         ZabbixHost.Host host = zabbixV5HostDrive.getByIp(configContext.get(), manageIp);
         if (host == null) {
             doCreate(server, property);
@@ -40,7 +41,7 @@ public class ZabbixHostServerProvider extends AbstractZabbixHostServerProvider {
     @Override
     protected void doDelete(Server server) {
         ServerProperty.Server property = getBusinessProperty(server);
-        String manageIp = getManageIp(server, property);
+        String manageIp = HostParamUtil.getManageIp(server, property);
         try {
             com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost.Host host = zabbixV5HostDrive.getByIp(configContext.get(), manageIp);
             if (host == null) {

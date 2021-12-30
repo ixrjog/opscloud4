@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.datasource.business.server.impl.base;
 
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
+import com.baiyi.opscloud.datasource.business.server.util.HostParamUtil;
 import com.baiyi.opscloud.datasource.business.server.util.ZabbixTemplateUtil;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -78,14 +79,14 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
     }
 
     protected void doCreate(Server server, ServerProperty.Server property) {
-        if (!isEnable(property)) return;
+        if (!property.enabledZabbix()) return;
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .method(SimpleZabbixV5HostDrive.HostAPIMethod.CREATE)
                 .putParam("host", SimpleServerNameFacade.toServerName(server))
-                .putParam("interfaces", buildHostInterfaceParams(server, property))
-                .putParam("groups", buildHostGroupParams(configContext.get(), server))
-                .putParam("templates", buildTemplatesParams(configContext.get(), property))
-                .putParam("tags", buildTagsParams(server))
+                .putParam("interfaces", HostParamUtil.buildInterfaceParam(server, property))
+                .putParam("groups", buildHostGroupParam(configContext.get(), server))
+                .putParam("templates", buildTemplatesParam(configContext.get(), property))
+                .putParam("tags", buildTagsParam(server))
                 .putParamSkipEmpty("proxy_hostid", getProxyHostid(property))
                 .putParamSkipEmpty("macros", property.getZabbix().toMacros())
                 .build();
@@ -101,7 +102,7 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
         // 更新主机名
         if (!hostName.equals(host.getName())) {
             requestBuilder.putParam("host", hostName);
-            zabbixV5HostDrive.evictHostByIp(configContext.get(), getManageIp(server, property));
+            zabbixV5HostDrive.evictHostByIp(configContext.get(), HostParamUtil.getManageIp(server, property));
         }
         putProxyUpdateParam(property, host, requestBuilder);
         putTemplateUpdateParam(property, host, requestBuilder);
@@ -119,7 +120,6 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
             zabbixV5HostDrive.evictHostByIp(configContext.get(), manageIp);
         }
     }
-
 
     public void putMacroUpdateParam(ZabbixHost.Host host, ServerProperty.Server property, ZabbixRequestBuilder requestBuilder) {
         List<ServerProperty.Macro> macros = property.getZabbix().toMacros();
@@ -165,18 +165,13 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
             }
         });
         // 更新模板参数
-        requestBuilder.putParamSkipEmpty("templates", toTemplateParams(zabbixTemplates));
+        requestBuilder.putParamSkipEmpty("templates", HostParamUtil.toTemplateParam(zabbixTemplates));
         // 主机模板与配置保持一致，清理多余模版
         if (property.getZabbix().getTemplateUniformity() != null && property.getZabbix().getTemplateUniformity()) {
             clearTemplates(zabbixTemplates, property); // 清理模版
-            requestBuilder.putParamSkipEmpty("templates_clear", toTemplateParams(zabbixTemplates));
+            requestBuilder.putParamSkipEmpty("templates_clear", HostParamUtil.toTemplateParam(zabbixTemplates));
         }
         zabbixV5TemplateDrive.evictHostTemplate(configContext.get(), host); //清理缓存
-    }
-
-    private List<ZabbixHostParam.Template> toTemplateParams(List<com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate.Template> templates) {
-        return templates.stream().map(e -> ZabbixHostParam.Template.builder().templateid(e.getTemplateid()).build())
-                .collect(Collectors.toList());
     }
 
     private void clearTemplates(List<ZabbixTemplate.Template> templates, ServerProperty.Server property) {
@@ -190,13 +185,6 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
         });
     }
 
-    protected boolean isEnable(ServerProperty.Server property) {
-        return Optional.ofNullable(property)
-                .map(ServerProperty.Server::getZabbix)
-                .map(ServerProperty.Zabbix::getEnabled)
-                .orElse(false);
-    }
-
     private void putProxyUpdateParam(ServerProperty.Server property, ZabbixHost.Host host, ZabbixRequestBuilder requestBuilder) {
         String proxyHostid = getProxyHostid(property);
         if (StringUtils.isEmpty(host.getProxyHostid()) || host.getProxyHostid().equals("0")) {
@@ -207,7 +195,7 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
             if (host.getProxyHostid().equals(proxyHostid)) {
                 return;
             } else {
-                proxyHostid = "0";
+                proxyHostid = "0"; // 删除代理
             }
         }
         requestBuilder.putParam("proxy_hostid", proxyHostid);
@@ -227,14 +215,14 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
         return zabbixV5ProxyDrive.getProxy(configContext.get(), proxyName);
     }
 
-    protected ZabbixHostParam.Tag buildTagsParams(Server server) {
+    protected ZabbixHostParam.Tag buildTagsParam(Server server) {
         return ZabbixHostParam.Tag.builder()
                 .tag("env")
                 .value(getEnv(server).getEnvName())
                 .build();
     }
 
-    protected List<ZabbixHostParam.Template> buildTemplatesParams(ZabbixConfig.Zabbix zabbix, ServerProperty.Server property) {
+    protected List<ZabbixHostParam.Template> buildTemplatesParam(ZabbixConfig.Zabbix zabbix, ServerProperty.Server property) {
         return zabbixV5TemplateDrive.listByNames(zabbix, property.getZabbix().getTemplates()).stream().map(e ->
                 ZabbixHostParam.Template.builder()
                         .templateid(e.getTemplateid())
@@ -242,25 +230,11 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
         ).collect(Collectors.toList());
     }
 
-    protected ZabbixHostParam.Group buildHostGroupParams(ZabbixConfig.Zabbix zabbix, Server server) {
+    protected ZabbixHostParam.Group buildHostGroupParam(ZabbixConfig.Zabbix zabbix, Server server) {
         ZabbixHostGroup.HostGroup hostGroup = zabbixGroupHelper.getOrCreateHostGroup(zabbix, getServerGroup(server).getName());
         return ZabbixHostParam.Group.builder()
                 .groupid(hostGroup.getGroupid())
                 .build();
-    }
-
-    protected ZabbixHostParam.Interface buildHostInterfaceParams(Server server, ServerProperty.Server property) {
-        return ZabbixHostParam.Interface.builder()
-                .ip(getManageIp(server, property))
-                .build();
-    }
-
-    protected String getManageIp(Server server, ServerProperty.Server property) {
-        String manageIp = Optional.ofNullable(property)
-                .map(ServerProperty.Server::getMetadata)
-                .map(ServerProperty.Metadata::getManageIp)
-                .orElse(server.getPrivateIp());
-        return StringUtils.isEmpty(manageIp) ? server.getPrivateIp() : manageIp;
     }
 
 }

@@ -9,6 +9,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +32,14 @@ public class ServerProperty {
         private Zabbix zabbix = Zabbix.builder().build();
         @Builder.Default
         private Ansible ansible = Ansible.builder().build();
+
+        public boolean enabledZabbix() {
+            return Optional.ofNullable(this)
+                    .map(ServerProperty.Server::getZabbix)
+                    .map(ServerProperty.Zabbix::getEnabled)
+                    .orElse(false);
+        }
+        
     }
 
     @Builder
