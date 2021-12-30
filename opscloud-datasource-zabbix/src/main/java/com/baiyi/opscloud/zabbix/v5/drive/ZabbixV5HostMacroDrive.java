@@ -3,7 +3,7 @@ package com.baiyi.opscloud.zabbix.v5.drive;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
-import com.baiyi.opscloud.zabbix.v5.drive.base.AbstractZabbixV5HostDrive;
+import com.baiyi.opscloud.zabbix.v5.drive.base.SimpleZabbixV5HostDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
 import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixRequestBuilder;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class ZabbixV5HostMacroDrive extends AbstractZabbixV5HostDrive {
+public class ZabbixV5HostMacroDrive extends SimpleZabbixV5HostDrive {
 
     public void updateHostMacro(ZabbixConfig.Zabbix config, ZabbixHost.Host host, ServerProperty.Zabbix zabbix) {
         List<ServerProperty.Macro> macros = zabbix.toMacros();

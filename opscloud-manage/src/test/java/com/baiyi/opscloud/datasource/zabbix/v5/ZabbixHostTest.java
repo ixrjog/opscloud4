@@ -62,10 +62,4 @@ public class ZabbixHostTest extends BaseZabbixTest {
         print(host);
     }
 
-    @Test
-    void updateHostNameTest() {
-        ZabbixHost.Host host = zabbixV5HostDrive.getByIp(getConfig().getZabbix(), "172.19.0.129");
-        zabbixV5HostDrive.updateHostName(getConfig().getZabbix(), host, "opscloud4-1");
-    }
-
 }

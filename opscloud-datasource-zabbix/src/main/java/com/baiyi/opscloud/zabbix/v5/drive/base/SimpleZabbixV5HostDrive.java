@@ -8,6 +8,7 @@ import feign.Feign;
 import feign.Retryer;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
@@ -16,7 +17,8 @@ import javax.annotation.Resource;
  * @Date 2021/11/19 10:09 上午
  * @Version 1.0
  */
-public abstract class AbstractZabbixV5HostDrive {
+@Component
+public class SimpleZabbixV5HostDrive {
 
     @Resource
     private SimpleZabbixAuth simpleZabbixAuth;
@@ -34,6 +36,13 @@ public abstract class AbstractZabbixV5HostDrive {
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
                 .target(ZabbixHostFeign.class, config.getUrl());
+    }
+
+    public ZabbixHost.CreateHostResponse createHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
+        ZabbixHostFeign zabbixAPI = buildFeign(config);
+        request.setMethod(HostAPIMethod.CREATE);
+        request.setAuth(simpleZabbixAuth.getAuth(config));
+        return zabbixAPI.create(request);
     }
 
     protected ZabbixHost.QueryHostResponse queryHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {

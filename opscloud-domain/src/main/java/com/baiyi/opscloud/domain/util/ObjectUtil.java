@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 
 import java.lang.reflect.Field;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,10 +14,12 @@ import java.util.Map;
  */
 public class ObjectUtil {
 
-    private ObjectUtil() {}
+    private ObjectUtil() {
+    }
 
     /**
      * 对象转Map
+     *
      * @param obj
      * @return
      */
@@ -35,6 +38,30 @@ public class ObjectUtil {
             }
         }
         return Collections.emptyMap();
+    }
+
+
+    public static boolean isEmpty(Object obj) {
+        if (obj == null) {
+            return true;
+        }
+        if ((obj instanceof List)) {
+            return ((List) obj).size() == 0;
+        }
+        if ((obj instanceof String)) {
+            return ((String) obj).trim().equals("");
+        }
+        return false;
+    }
+
+    /**
+     * 判断对象不为空
+     *
+     * @param obj 对象名
+     * @return 是否不为空
+     */
+    public static boolean isNotEmpty(Object obj) {
+        return !isEmpty(obj);
     }
 
 }

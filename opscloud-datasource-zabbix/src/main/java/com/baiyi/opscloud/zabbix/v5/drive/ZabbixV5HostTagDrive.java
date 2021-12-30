@@ -3,7 +3,7 @@ package com.baiyi.opscloud.zabbix.v5.drive;
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.v5.param.ZabbixHostParam;
-import com.baiyi.opscloud.zabbix.v5.drive.base.AbstractZabbixV5HostDrive;
+import com.baiyi.opscloud.zabbix.v5.drive.base.SimpleZabbixV5HostDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
 import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixRequestBuilder;
@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class ZabbixV5HostTagDrive extends AbstractZabbixV5HostDrive {
+public class ZabbixV5HostTagDrive extends SimpleZabbixV5HostDrive {
 
     @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_host_tag_hostid' + #host.hostid")
     public void evictHostTag(ZabbixConfig.Zabbix config, ZabbixHost.Host host) {

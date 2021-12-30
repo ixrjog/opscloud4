@@ -2,15 +2,13 @@ package com.baiyi.opscloud.zabbix.v5.drive;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.common.util.JSONUtil;
-import com.baiyi.opscloud.zabbix.v5.drive.base.AbstractZabbixV5HostDrive;
+import com.baiyi.opscloud.zabbix.v5.drive.base.SimpleZabbixV5HostDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
 import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixRequestBuilder;
-import com.baiyi.opscloud.zabbix.v5.param.ZabbixHostParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -27,7 +24,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class ZabbixV5HostDrive extends AbstractZabbixV5HostDrive {
+public class ZabbixV5HostDrive extends SimpleZabbixV5HostDrive {
 
     public List<ZabbixHost.Host> list(ZabbixConfig.Zabbix config) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
@@ -86,7 +83,6 @@ public class ZabbixV5HostDrive extends AbstractZabbixV5HostDrive {
         log.info("清除ZabbixHost缓存 : ip = {}", ip);
     }
 
-
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_host_ip_' + #ip", unless = "#result == null")
     public ZabbixHost.Host getByIp(ZabbixConfig.Zabbix config, String ip) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
@@ -100,6 +96,15 @@ public class ZabbixV5HostDrive extends AbstractZabbixV5HostDrive {
         return response.getResult().get(0);
     }
 
+    public void updateHost(ZabbixConfig.Zabbix config, ZabbixHost.Host host, ZabbixRequest.DefaultRequest request) {
+        request.putParam("hostid", host.getHostid());
+        ZabbixHost.UpdateHostResponse response = updateHandle(config, request);
+        if (CollectionUtils.isEmpty(response.getResult().getHostids())) {
+            log.error("更新ZabbixHost主机名称失败: hostName = {}", host.getHost());
+        }
+    }
+
+    @Deprecated
     public void updateHostName(ZabbixConfig.Zabbix config, ZabbixHost.Host host, String hostName) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("hostid", host.getHostid())
@@ -111,36 +116,23 @@ public class ZabbixV5HostDrive extends AbstractZabbixV5HostDrive {
         }
     }
 
-    public void updateHostTemplates(ZabbixConfig.Zabbix config, ZabbixHost.Host host, List<com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate.Template> templates) {
-        if (CollectionUtils.isEmpty(templates)) return;
-        List<ZabbixHostParam.Template> templatesParams = toTemplateParams(templates);
+    /**
+     * 更新主机代理
+     *
+     * @param config
+     * @param host
+     * @param proxyHostid
+     */
+    @Deprecated
+    public void updateHostProxy(ZabbixConfig.Zabbix config, ZabbixHost.Host host, String proxyHostid) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("hostid", host.getHostid())
-                .putParamSkipEmpty("templates", templatesParams)
+                .putParam("proxy_hostid", proxyHostid)
                 .build();
         ZabbixHost.UpdateHostResponse response = updateHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult().getHostids())) {
-            log.error("更新ZabbixHost主机模版失败: templates = {}", JSONUtil.writeValueAsString(templatesParams));
+            log.error("更新ZabbixHost主机名称失败: hostName = {},  proxyHostid = {}", host.getHost(), proxyHostid);
         }
-    }
-
-    public void clearHostTemplates(ZabbixConfig.Zabbix config, ZabbixHost.Host host, List<com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate.Template> templates) {
-        if (CollectionUtils.isEmpty(templates)) return;
-        List<ZabbixHostParam.Template> templatesParams = toTemplateParams(templates);
-        ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
-                .putParam("hostid", host.getHostid())
-                .putParamSkipEmpty("templates_clear", templatesParams)
-                .build();
-
-        ZabbixHost.UpdateHostResponse response = updateHandle(config, request);
-        if (CollectionUtils.isEmpty(response.getResult().getHostids())) {
-            log.error("清除ZabbixHost主机模版失败: templates = {}", JSONUtil.writeValueAsString(templatesParams));
-        }
-    }
-
-    private List<ZabbixHostParam.Template> toTemplateParams(List<com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate.Template> templates) {
-        return templates.stream().map(e -> ZabbixHostParam.Template.builder().templateid(e.getTemplateid()).build())
-                .collect(Collectors.toList());
     }
 
     public void deleteById(ZabbixConfig.Zabbix config, String hostId) {

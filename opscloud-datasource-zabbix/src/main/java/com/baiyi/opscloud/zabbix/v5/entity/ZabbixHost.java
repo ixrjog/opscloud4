@@ -8,6 +8,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.v5.entity.base.ZabbixResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -93,8 +94,8 @@ public class ZabbixHost {
          */
         private Integer status;
 
-        //  @JsonProperty("proxyHostid")
-        private  String proxy_hostid;
+        @JsonProperty("proxy_hostid")
+        private String proxyHostid;
 
         private List<HostInterface> interfaces;
 
