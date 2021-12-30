@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.util.time;
+package com.baiyi.opscloud.common.util.time;
 
 import com.baiyi.opscloud.domain.vo.base.ShowTime;
 

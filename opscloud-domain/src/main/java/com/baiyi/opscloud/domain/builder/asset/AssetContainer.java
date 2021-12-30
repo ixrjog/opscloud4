@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.domain.builder.asset;
 
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.vo.base.ShowTime;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,9 +22,13 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AssetContainer {
+public class AssetContainer implements ShowTime.IAgo {
 
     private DatasourceInstanceAsset asset;
+
+    private Date agoTime;
+
+    private String ago;
 
     /**
      * 前端选择用
@@ -35,5 +41,6 @@ public class AssetContainer {
 
     @Builder.Default
     private List<AssetContainer> children = Lists.newArrayList();
+
 
 }

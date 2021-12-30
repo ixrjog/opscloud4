@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.AccessToken;
 import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.service.user.AccessTokenService;
-import com.baiyi.opscloud.util.time.LaterUtil;
+import com.baiyi.opscloud.common.util.time.LaterUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
