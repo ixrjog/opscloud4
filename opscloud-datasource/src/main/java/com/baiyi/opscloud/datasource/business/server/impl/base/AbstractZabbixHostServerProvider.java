@@ -107,13 +107,19 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
         putTemplateUpdateParam(property, host, requestBuilder);
         putTagUpdateParam(server, host, requestBuilder);
         putMacroUpdateParam(host, property, requestBuilder);
+        updateHost(host, requestBuilder, manageIp);
+    }
+
+    private void updateHost(ZabbixHost.Host host, ZabbixRequestBuilder requestBuilder, String manageIp) {
         ZabbixRequest.DefaultRequest request = requestBuilder.build();
         Map<String, Object> params = request.getParams();
+        // 空参数则不更新主机
         if (params.keySet().stream().anyMatch(k -> ObjectUtil.isNotEmpty(params.get(k)))) {
             zabbixV5HostDrive.updateHost(configContext.get(), host, request);
             zabbixV5HostDrive.evictHostByIp(configContext.get(), manageIp);
         }
     }
+
 
     public void putMacroUpdateParam(ZabbixHost.Host host, ServerProperty.Server property, ZabbixRequestBuilder requestBuilder) {
         List<ServerProperty.Macro> macros = property.getZabbix().toMacros();
