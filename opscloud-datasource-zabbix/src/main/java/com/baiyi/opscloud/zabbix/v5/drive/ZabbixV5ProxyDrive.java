@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.zabbix.v5.drive;
 
+import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.v5.drive.base.AbstractZabbixV5ProxyDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
@@ -10,6 +11,7 @@ import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixRequestBuilder;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -30,6 +32,7 @@ public class ZabbixV5ProxyDrive extends AbstractZabbixV5ProxyDrive {
      * @param hostname 代理的名称
      * @return
      */
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_2HOURS, key = "#config.url + '_v5_proxy_name_' + #hostname", unless = "#result == null")
     public ZabbixProxy.Proxy getProxy(ZabbixConfig.Zabbix config, String hostname) {
         ZabbixRequest.Filter filter = ZabbixFilterBuilder.builder()
                 .putEntry("host", hostname)
