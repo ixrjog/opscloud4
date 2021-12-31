@@ -26,9 +26,9 @@ class ApplicationResourceQueryFactoryTest extends BaseUnit {
             ApplicationResourceParam.ResourcePageQuery pageQuery = ApplicationResourceParam.ResourcePageQuery.builder()
                     .applicationId(22)
                     .queryName("user")
+                    .page(1)
+                    .length(10)
                     .build();
-            pageQuery.setPage(1);
-            pageQuery.setLength(10);
             DataTable<ApplicationResourceVO.Resource> table = iApplicationResourceQuery.queryResourcePage(pageQuery);
             System.err.print(JSON.toJSONString(table));
         }

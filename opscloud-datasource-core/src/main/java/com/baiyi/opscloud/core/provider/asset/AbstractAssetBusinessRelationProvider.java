@@ -48,9 +48,9 @@ public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAsset
         DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
                 .instanceId(dsInstanceId)
                 .assetType(getAssetType())
+                .page(1)
+                .length(10000)
                 .build();
-        pageQuery.setPage(1);
-        pageQuery.setLength(10000);
         DataTable<DatasourceInstanceAsset> dataTable = dsInstanceAssetService.queryPageByParam(pageQuery);
         dataTable.getData().forEach(a -> scan(toAssetVO(a)));
     }

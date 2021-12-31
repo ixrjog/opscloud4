@@ -75,9 +75,9 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
 
     private AnsibleHosts.Hosts buildHosts(String sshUser, String inventoryHost) {
         ServerGroupParam.ServerGroupPageQuery pageQuery = ServerGroupParam.ServerGroupPageQuery.builder()
+                .page(1)
+                .length(10000)
                 .build();
-        pageQuery.setPage(1);
-        pageQuery.setLength(10000);
         List<AnsibleHosts.Group> groups = Lists.newArrayList();
         DataTable<ServerGroup> table = serverGroupService.queryPageByParam(pageQuery);
         for (ServerGroup e : table.getData()) {

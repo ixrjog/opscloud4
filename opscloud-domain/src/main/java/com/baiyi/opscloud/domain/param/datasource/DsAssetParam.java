@@ -2,10 +2,11 @@ package com.baiyi.opscloud.domain.param.datasource;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.IRelation;
-import com.baiyi.opscloud.domain.param.PageParam;
+import com.baiyi.opscloud.domain.param.SuperPageParam;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotNull;
 
@@ -17,12 +18,12 @@ import javax.validation.constraints.NotNull;
 public class DsAssetParam {
 
     @Data
-    @Builder
+    @SuperBuilder(toBuilder = true)
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class AssetPageQuery extends PageParam implements IExtend, IRelation {
+    public static class AssetPageQuery extends SuperPageParam implements IExtend, IRelation {
 
         @ApiModelProperty(value = "实例id")
         @NotNull(message = "实例id不能为空")
@@ -51,12 +52,12 @@ public class DsAssetParam {
     }
 
     @Data
-    @Builder
+    @SuperBuilder(toBuilder = true)
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class UserPermissionAssetPageQuery extends PageParam {
+    public static class UserPermissionAssetPageQuery extends SuperPageParam {
 
         private Integer businessType;
 

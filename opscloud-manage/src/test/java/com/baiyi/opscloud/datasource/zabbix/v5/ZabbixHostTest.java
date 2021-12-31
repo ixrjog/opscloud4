@@ -40,9 +40,9 @@ public class ZabbixHostTest extends BaseZabbixTest {
     void careateHostTest() {
         DatasourceInstance datasourceInstance = dsInstanceService.getById(8);
         ServerParam.ServerPageQuery pageQuery = ServerParam.ServerPageQuery.builder()
+                .page(1)
+                .length(1000)
                 .build();
-        pageQuery.setPage(1);
-        pageQuery.setLength(1000);
         DataTable<Server> dataTable = serverService.queryServerPage(pageQuery);
         for (Server server : dataTable.getData()) {
             zabbixHostServerProvider.update(datasourceInstance, server);

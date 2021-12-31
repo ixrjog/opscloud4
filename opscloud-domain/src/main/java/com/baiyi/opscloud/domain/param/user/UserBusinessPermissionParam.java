@@ -4,10 +4,12 @@ import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.IFilterTag;
 import com.baiyi.opscloud.domain.param.PageParam;
+import com.baiyi.opscloud.domain.param.SuperPageParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotNull;
 
@@ -19,12 +21,12 @@ import javax.validation.constraints.NotNull;
 public class UserBusinessPermissionParam {
 
     @Data
-    @Builder
+    @SuperBuilder(toBuilder = true)
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class UserBusinessPermissionPageQuery extends PageParam implements IExtend {
+    public static class UserBusinessPermissionPageQuery extends SuperPageParam implements IExtend {
 
         @ApiModelProperty(value = "查询名称")
         private String queryName;

@@ -32,8 +32,8 @@ public class ServerCommand extends BaseServerCommand {
         ServerParam.UserPermissionServerPageQuery pageQuery = ServerParam.UserPermissionServerPageQuery.builder()
                 .name(name)
                 .queryIp(ip)
+                .page(1)
                 .build();
-        pageQuery.setPage(1);
         ListServerCommand commandContext = ListServerCommand.builder()
                 .sessionId(sessionId)
                 .username(helper.getSshSession().getUsername())

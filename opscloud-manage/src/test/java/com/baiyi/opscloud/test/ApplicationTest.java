@@ -36,9 +36,9 @@ public class ApplicationTest extends BaseUnit {
     @Test
     void initApplicationUserPermission() {
         ApplicationParam.ApplicationPageQuery pageQuery = ApplicationParam.ApplicationPageQuery.builder()
+                .page(1)
+                .length(1000)
                 .build();
-        pageQuery.setPage(1);
-        pageQuery.setLength(1000);
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
         table.getData().forEach(e -> {
             List<ApplicationResource> resources = applicationResourceService.queryByApplication(e.getId(), BusinessTypeEnum.SERVERGROUP.name());
@@ -60,9 +60,9 @@ public class ApplicationTest extends BaseUnit {
                                 .userId(p.getUserId())
                                 .build();
                         System.out.println(JSON.toJSONString(permission));
-                        try{
+                        try {
                             userPermissionService.add(permission);
-                        }catch (Exception ignored){
+                        } catch (Exception ignored) {
                         }
                     });
                 }

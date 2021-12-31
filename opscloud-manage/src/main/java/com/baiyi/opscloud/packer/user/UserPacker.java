@@ -150,9 +150,9 @@ public class UserPacker implements IPacker<UserVO.User, User> {
         UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery = UserBusinessPermissionParam.UserBusinessPermissionPageQuery
                 .builder()
                 .userId(user.getId())
+                .page(1)
+                .length(10000)
                 .build();
-        pageQuery.setPage(1);
-        pageQuery.setLength(10000);
 
         Map<String, List<UserVO.IUserPermission>> businessPermissions = Maps.newHashMap();
 

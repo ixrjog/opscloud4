@@ -163,20 +163,14 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
     private void listPodByDeploymentName(String deploymentName) {
         Size size = terminal.getSize();
         final int maxSize = size.getRows() - 5;
-//        DatasourceInstanceAsset query = DatasourceInstanceAsset.builder()
-//                .assetType(DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.getType())
-//                .assetKey(deploymentName)
-//                .build();
-//        List<DatasourceInstanceAsset> deploymentAssets = dsInstanceAssetService.queryAssetByAssetParam(query);
-
         DsAssetParam.UserPermissionAssetPageQuery pageQuery = DsAssetParam.UserPermissionAssetPageQuery.builder()
                 .assetType(DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.name())
                 .queryName(deploymentName)
                 .businessType(BusinessTypeEnum.APPLICATION.getType())
                 .userId(userService.getByUsername(SessionUtil.getUsername()).getId())
+                .page(1)
+                .length(terminal.getSize().getRows() - PAGE_FOOTER_SIZE)
                 .build();
-        pageQuery.setLength(terminal.getSize().getRows() - PAGE_FOOTER_SIZE);
-        pageQuery.setPage(1);
         DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
 
         Map<String, KubernetesDsInstance> kubernetesDsInstanceMap = Maps.newHashMap();

@@ -2,10 +2,12 @@ package com.baiyi.opscloud.domain.param.server;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
+import com.baiyi.opscloud.domain.param.SuperPageParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotNull;
 
@@ -17,12 +19,12 @@ import javax.validation.constraints.NotNull;
 public class ServerParam {
 
     @Data
-    @Builder
+    @SuperBuilder(toBuilder = true)
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
     @ApiModel
-    public static class ServerPageQuery extends PageParam implements IExtend {
+    public static class ServerPageQuery extends SuperPageParam implements IExtend {
 
         @ApiModelProperty(value = "关键字查询")
         private String queryName;
@@ -86,12 +88,12 @@ public class ServerParam {
     }
 
     @Data
-    @Builder
+    @SuperBuilder(toBuilder = true)
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
     @ApiModel
-    public static class UserPermissionServerPageQuery extends PageParam implements IExtend {
+    public static class UserPermissionServerPageQuery extends SuperPageParam implements IExtend {
 
         @ApiModelProperty(value = "用户id")
         @NotNull

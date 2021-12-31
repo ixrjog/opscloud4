@@ -100,9 +100,9 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
                 .instanceUuid(dsInstanceContext.getDsInstance().getUuid())
                 .assetType(DsAssetTypeEnum.DINGTALK_DEPARTMENT.name())
                 .isActive(true)
+                .page(1)
+                .length(10000)
                 .build();
-        pageQuery.setPage(1);
-        pageQuery.setLength(10000);
         DataTable<DatasourceInstanceAsset> dataTable = dsInstanceAssetService.queryPageByParam(pageQuery);
         if (CollectionUtils.isEmpty(dataTable.getData()))
             return Sets.newHashSet();

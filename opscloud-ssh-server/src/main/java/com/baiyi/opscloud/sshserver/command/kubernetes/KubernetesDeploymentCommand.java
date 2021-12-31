@@ -49,9 +49,9 @@ public class KubernetesDeploymentCommand extends BaseKubernetesCommand {
                 .queryName(name)
                 .businessType(BusinessTypeEnum.APPLICATION.getType())
                 .userId(userService.getByUsername(SessionUtil.getUsername()).getId())
+                .page(1)
+                .length(terminal.getSize().getRows() - PAGE_FOOTER_SIZE)
                 .build();
-        pageQuery.setLength(terminal.getSize().getRows() - PAGE_FOOTER_SIZE);
-        pageQuery.setPage(1);
         DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
 
 //        DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
@@ -93,8 +93,8 @@ public class KubernetesDeploymentCommand extends BaseKubernetesCommand {
         SessionCommandContext.setIdMapper(idMapper);
         helper.print(pt.toString());
         helper.print(buildPagination(table.getTotalNum(),
-                pageQuery.getPage(),
-                pageQuery.getLength()),
+                        pageQuery.getPage(),
+                        pageQuery.getLength()),
                 PromptColor.GREEN);
     }
 

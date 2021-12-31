@@ -2,9 +2,11 @@ package com.baiyi.opscloud.domain.param.auth;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
+import com.baiyi.opscloud.domain.param.SuperPageParam;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 /**
  * @Author baiyi
@@ -14,12 +16,12 @@ import lombok.*;
 public class AuthResourceParam {
 
     @Data
+    @SuperBuilder(toBuilder = true)
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
     @ApiModel
-    @Builder
-    public static class AuthResourcePageQuery extends PageParam implements IExtend {
+    public static class AuthResourcePageQuery extends SuperPageParam implements IExtend {
 
         @ApiModelProperty(value = "资源组id")
         private Integer groupId;

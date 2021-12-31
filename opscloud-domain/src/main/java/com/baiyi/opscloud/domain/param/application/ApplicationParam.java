@@ -2,9 +2,11 @@ package com.baiyi.opscloud.domain.param.application;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
+import com.baiyi.opscloud.domain.param.SuperPageParam;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotNull;
 
@@ -15,13 +17,13 @@ import javax.validation.constraints.NotNull;
  */
 public class ApplicationParam {
 
-    @Builder
+    @SuperBuilder(toBuilder = true)
     @Data
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class ApplicationPageQuery extends PageParam implements IExtend {
+    public static class ApplicationPageQuery extends SuperPageParam implements IExtend {
 
         @ApiModelProperty(value = "应用名称")
         private String queryName;

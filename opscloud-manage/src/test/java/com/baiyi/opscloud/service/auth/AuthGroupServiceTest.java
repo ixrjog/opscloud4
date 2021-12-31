@@ -23,10 +23,11 @@ public class AuthGroupServiceTest extends BaseUnit {
 
     @Test
     void queryPageTest() {
-        AuthGroupParam.AuthGroupPageQuery pageQuery = new AuthGroupParam.AuthGroupPageQuery();
-        pageQuery.setGroupName("group");
-        pageQuery.setPage(1);
-        pageQuery.setLength(10);
+        AuthGroupParam.AuthGroupPageQuery pageQuery = AuthGroupParam.AuthGroupPageQuery.builder()
+                .groupName("group")
+                .page(1)
+                .length(10)
+                .build();
         DataTable<AuthGroup> table = authGroupService.queryPageByParam(pageQuery);
         log.info(JSON.toJSON(table).toString());
     }

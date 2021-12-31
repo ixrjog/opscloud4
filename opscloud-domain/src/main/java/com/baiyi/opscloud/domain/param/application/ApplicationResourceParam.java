@@ -1,12 +1,13 @@
 package com.baiyi.opscloud.domain.param.application;
 
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.base.IApplicationResourceType;
 import com.baiyi.opscloud.domain.param.IExtend;
-import com.baiyi.opscloud.domain.param.PageParam;
-import com.baiyi.opscloud.domain.base.BaseBusiness;
+import com.baiyi.opscloud.domain.param.SuperPageParam;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotNull;
 
@@ -18,12 +19,12 @@ import javax.validation.constraints.NotNull;
 public class ApplicationResourceParam {
 
     @Data
-    @Builder
+    @SuperBuilder(toBuilder = true)
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class ResourcePageQuery extends PageParam implements IExtend, BaseBusiness.IBusinessType, IApplicationResourceType {
+    public static class ResourcePageQuery extends SuperPageParam implements IExtend, BaseBusiness.IBusinessType, IApplicationResourceType {
 
         @ApiModelProperty(value = "数据源实例id")
         private Integer instanceId;

@@ -81,9 +81,9 @@ public class AliyunDmsUserPushHelper {
         DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
                 .instanceUuid(instanceUuid)
                 .assetType(DsAssetTypeEnum.RAM_USER.name())
+                .page(1)
+                .length(10000)
                 .build();
-        pageQuery.setPage(1);
-        pageQuery.setLength(10000);
         DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
         Tag tag = tagService.getByTagKey(DsInstanceTagConstants.SYSTEM.name());
         return table.getData().stream().filter(e -> {
@@ -101,9 +101,9 @@ public class AliyunDmsUserPushHelper {
         DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
                 .instanceUuid(instanceUuid)
                 .assetType(DsAssetTypeEnum.DMS_USER.name())
+                .page(1)
+                .length(10000)
                 .build();
-        pageQuery.setPage(1);
-        pageQuery.setLength(10000);
         DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
         return table.getData();
     }

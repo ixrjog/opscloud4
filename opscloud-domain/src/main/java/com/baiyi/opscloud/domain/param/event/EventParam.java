@@ -1,10 +1,11 @@
 package com.baiyi.opscloud.domain.param.event;
 
 import com.baiyi.opscloud.domain.param.IExtend;
-import com.baiyi.opscloud.domain.param.PageParam;
+import com.baiyi.opscloud.domain.param.SuperPageParam;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 /**
  * @Author baiyi
@@ -14,12 +15,12 @@ import lombok.*;
 public class EventParam {
 
     @Data
-    @Builder
+    @SuperBuilder(toBuilder = true)
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
     @ApiModel
-    public static class UserPermissionEventPageQuery extends PageParam implements IExtend {
+    public static class UserPermissionEventPageQuery extends SuperPageParam implements IExtend {
 
         @ApiModelProperty(value = "用户id")
         private Integer userId;

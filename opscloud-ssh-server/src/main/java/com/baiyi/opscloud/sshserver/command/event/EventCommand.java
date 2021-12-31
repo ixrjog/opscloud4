@@ -68,8 +68,11 @@ public class EventCommand extends BaseServerCommand {
     public void listEvent(@ShellOption(help = "Event Name", defaultValue = "") String name, @ShellOption(help = "Page", defaultValue = "1") Integer page) {
         EventParam.UserPermissionEventPageQuery pageQuery = EventParam.UserPermissionEventPageQuery.builder()
                 .name(name)
+                .userId(com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin() ? null : com.baiyi.opscloud.common.util.SessionUtil.getUserId())
+                .page(page)
+                .length(terminal.getSize().getRows() - PAGE_FOOTER_SIZE)
                 .build();
-        pageQuery.setPage(page);
+
         PrettyTable pt = PrettyTable
                 .fieldNames("ID",
                         "Severity",
@@ -79,9 +82,6 @@ public class EventCommand extends BaseServerCommand {
                         "Lastchange Time",
                         "Accounts"
                 );
-        pageQuery.setUserId(com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin() ? null : com.baiyi.opscloud.common.util.SessionUtil.getUserId());
-        pageQuery.setLength(terminal.getSize().getRows() - PAGE_FOOTER_SIZE);
-
         IEventProcess iEventProcess = EventFactory.getIEventProcessByEventType(EventTypeEnum.ZABBIX_PROBLEM);
         DataTable<Event> table = iEventProcess.listEvent(pageQuery);
         Map<Integer, EventContext> eventMapper = Maps.newHashMap();

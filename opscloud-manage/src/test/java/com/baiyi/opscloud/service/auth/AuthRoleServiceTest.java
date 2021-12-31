@@ -23,10 +23,11 @@ public class AuthRoleServiceTest extends BaseUnit {
 
     @Test
     void queryPageTest() {
-        AuthRoleParam.AuthRolePageQuery pageQuery = new AuthRoleParam.AuthRolePageQuery();
-        pageQuery.setRoleName("d");
-        pageQuery.setPage(1);
-        pageQuery.setLength(10);
+        AuthRoleParam.AuthRolePageQuery pageQuery = AuthRoleParam.AuthRolePageQuery.builder()
+                .roleName("d")
+                .page(1)
+                .length(10)
+                .build();
         DataTable<AuthRole> table = authRoleService.queryPageByParam(pageQuery);
         log.info(JSON.toJSON(table).toString());
     }

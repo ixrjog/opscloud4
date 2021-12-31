@@ -26,9 +26,9 @@ public class AuthResourceServiceTest extends BaseUnit {
         AuthResourceParam.AuthResourcePageQuery pageQuery = AuthResourceParam.AuthResourcePageQuery.builder()
                 .needAuth(true)
                 .resourceName("server")
+                .page(1)
+                .length(10)
                 .build();
-        pageQuery.setPage(1);
-        pageQuery.setLength(10);
         DataTable<AuthResource> table = authResourceService.queryPageByParam(pageQuery);
         log.info(JSON.toJSON(table).toString());
     }
