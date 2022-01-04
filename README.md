@@ -26,7 +26,8 @@ Welcome to the opscloud wiki!
   + 腾讯企业邮箱
 + 模版
   + Kubernetes业务模版(创建Deployment,Service)
-+ SSH-Server增加Arthas(Alibaba开源的Java诊断工具，深受开发者喜爱)支持
++ SSH-Server
+  + 快速执行Arthas(Alibaba开源的Java诊断工具)
 ```
 # https://arthas.aliyun.com/doc/
 # 登录服务器指定参数 --arthas | -R 快速启动arthas
