@@ -103,18 +103,18 @@ login-k8s-pod 1 --arthas
 #### <span style="color:green">平台演示视频1</span>
 <video src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/video/opscloud4-1.mov" width="400px" height="300px" controls="controls"></video>
 
-#### OpsCloud 优势
-+ 代码质量大于功能实现,充分抽象与继承实现
-+ 约定大于配置
+#### 优势
++ 高安全性（关键数据加密）
 + 代码即文档
-+ 部署简单（jar+sql）
-+ 支持集群架构
++ 集群架构
++ 堡垒机集成
++ 全API实现资产数据同步
 
-#### 4.0版本核心设计
+#### 核心功能
 + 事件驱动
 + 万物皆资产
   + 多实例支持
-  + 多云支持（暂无其他云账户，目前只支持阿里云，有计划接入腾讯云，AWS，vSphere7）
+  + 多云支持（目前只支持阿里云，有计划接入腾讯云，AWS，vSphere7）
   + 抽象数据源实例资产
 + 堡垒机
   + 远程桌面RDP,VNC(需安装apache-guacamole)
@@ -132,7 +132,6 @@ login-k8s-pod 1 --arthas
 ### 帮助文档
 
 <a style="color:#2b669a" href="https://www.kancloud.cn/ixrjog/opscloud4/2361886" target="_blank">传送门:https://www.kancloud.cn/ixrjog/opscloud4/2361886</a>
-
 
 ### Thanks to JetBrains
 <a href="https://www.jetbrains.com" target="_blank">
