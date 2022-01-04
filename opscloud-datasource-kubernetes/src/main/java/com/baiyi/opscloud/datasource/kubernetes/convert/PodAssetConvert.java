@@ -1,12 +1,13 @@
 package com.baiyi.opscloud.datasource.kubernetes.convert;
 
-import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.common.util.time.AgoUtil;
 import com.baiyi.opscloud.core.util.TimeUtil;
+import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodCondition;
@@ -44,9 +45,8 @@ public class PodAssetConvert {
         Date startTime = toGmtDate(entity.getStatus().getStartTime());
         Map<String, Boolean> podStatusMap = entity.getStatus().getConditions()
                 .stream().collect(Collectors.toMap(PodCondition::getType, a -> Boolean.valueOf(a.getStatus()), (k1, k2) -> k1));
-
         Optional<String> statusOptional = podStatusMap.keySet().stream().filter(k -> !podStatusMap.get(k)).findFirst();
-        return AssetContainerBuilder.newBuilder()
+        AssetContainer assetContainer = AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
                 .paramChildren(toChildren(entity))
                 .paramProperty("phase", entity.getStatus().getPhase())
@@ -57,12 +57,14 @@ public class PodAssetConvert {
                 .paramProperty("image", entity.getStatus().getContainerStatuses().get(0).getImage())
                 .paramProperty("imageId", entity.getStatus().getContainerStatuses().get(0).getImageID())
                 .paramProperty("containerId", entity.getStatus().getContainerStatuses().get(0).getContainerID())
-                .paramProperty("podScheduled",podStatusMap.get("PodScheduled"))
-                .paramProperty("containersReady",podStatusMap.get("ContainersReady"))
-                .paramProperty("initialized",podStatusMap.get("Initialized"))
-                .paramProperty("ready",podStatusMap.get("Ready"))
-                .paramProperty("status",!statusOptional.isPresent())
+                .paramProperty("podScheduled", podStatusMap.get("PodScheduled"))
+                .paramProperty("containersReady", podStatusMap.get("ContainersReady"))
+                .paramProperty("initialized", podStatusMap.get("Initialized"))
+                .paramProperty("ready", podStatusMap.get("Ready"))
+                .paramProperty("status", !statusOptional.isPresent())
                 .build();
+        assetContainer.setAgo(AgoUtil.format(startTime));
+        return assetContainer;
     }
 
     private static List<AssetContainer> toChildren(Pod pod) {

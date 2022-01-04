@@ -6,8 +6,8 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.task.ServerTaskVO;
 import com.baiyi.opscloud.packer.base.IPacker;
 import com.baiyi.opscloud.packer.user.UserPacker;
-import com.baiyi.opscloud.util.time.AgoUtil;
-import com.baiyi.opscloud.util.time.DurationUtil;
+import com.baiyi.opscloud.common.util.time.AgoUtil;
+import com.baiyi.opscloud.common.util.time.DurationUtil;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

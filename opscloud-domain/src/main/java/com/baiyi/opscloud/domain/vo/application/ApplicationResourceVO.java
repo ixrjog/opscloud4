@@ -56,6 +56,12 @@ public class ApplicationResourceVO {
         private Integer businessType;
 
         private String comment;
+
+        /**
+         * 前端选择用
+         */
+        @Builder.Default
+        private Boolean checked = false;
         
     }
 }

@@ -13,7 +13,7 @@ import com.baiyi.opscloud.packer.sys.EnvPacker;
 import com.baiyi.opscloud.service.datasource.AliyunLogService;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.service.server.ServerService;
-import com.baiyi.opscloud.util.time.AgoUtil;
+import com.baiyi.opscloud.common.util.time.AgoUtil;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 
