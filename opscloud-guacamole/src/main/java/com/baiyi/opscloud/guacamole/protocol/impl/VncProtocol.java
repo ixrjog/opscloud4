@@ -35,7 +35,8 @@ public class VncProtocol extends AbstractGuacamoleProtocol {
                 .putParam("dpi", guacamoleLogin.getScreenDpi().toString())
                 .putParam("width", guacamoleLogin.getScreenWidth().toString())
                 .putParam("height", guacamoleLogin.getScreenHeight().toString())
-                .build().getDict();
+                .build()
+                .getDict();
     }
 
 }

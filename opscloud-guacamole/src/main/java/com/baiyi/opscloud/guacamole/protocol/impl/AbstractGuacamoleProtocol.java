@@ -91,7 +91,8 @@ public abstract class AbstractGuacamoleProtocol implements IGuacamoleProtocol, I
         List<DatasourceInstance> instances = instanceHelper.listInstance(getFilterInstanceTypes(), getProtocol());
         if (CollectionUtils.isEmpty(instances))
             throw new GuacamoleException("无可用的Guacamole数据源实例！");
-        DatasourceInstance instance = instances.get(RandomUtil.random(instances.size()) - 1);
+        int index = RandomUtil.random(instances.size());
+        DatasourceInstance instance = instances.get(index);
         DatasourceConfig datasourceConfig = dsConfigHelper.getConfigById(instance.getConfigId());
 
        return dsConfigHelper.build(datasourceConfig, GuacamoleConfig.class);
