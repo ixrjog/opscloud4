@@ -23,6 +23,12 @@
             <artifactId>guacamole-common</artifactId>
             <version>1.3.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-core</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

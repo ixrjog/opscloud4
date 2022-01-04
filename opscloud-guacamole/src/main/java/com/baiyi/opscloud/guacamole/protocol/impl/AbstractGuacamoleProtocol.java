@@ -1,8 +1,11 @@
 package com.baiyi.opscloud.guacamole.protocol.impl;
 
-import com.baiyi.opscloud.domain.generator.opscloud.Credential;
-import com.baiyi.opscloud.domain.generator.opscloud.Server;
-import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.GuacamoleConfig;
+import com.baiyi.opscloud.common.util.RandomUtil;
+import com.baiyi.opscloud.core.InstanceHelper;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.guacamole.GuacamoleParam;
 import com.baiyi.opscloud.guacamole.protocol.GuacamoleProtocolFactory;
 import com.baiyi.opscloud.guacamole.protocol.IGuacamoleProtocol;
@@ -18,8 +21,10 @@ import org.apache.guacamole.protocol.ConfiguredGuacamoleSocket;
 import org.apache.guacamole.protocol.GuacamoleConfiguration;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,6 +34,12 @@ import java.util.Map;
  */
 @Slf4j
 public abstract class AbstractGuacamoleProtocol implements IGuacamoleProtocol, InitializingBean {
+
+    @Resource
+    private InstanceHelper instanceHelper;
+
+    @Resource
+    private DsConfigHelper dsConfigHelper;
 
     @Resource
     private CredentialService credentialService;
@@ -42,7 +53,16 @@ public abstract class AbstractGuacamoleProtocol implements IGuacamoleProtocol, I
     @Resource
     private ServerAccountService serverAccountService;
 
-    protected abstract Map<String, String> buildParameters(Server server, ServerAccount serverAccount,GuacamoleParam.Login guacamoleLogin);
+    /**
+     * 支持认证的实例类型
+     */
+    private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.GUACAMOLE};
+
+    private DsTypeEnum[] getFilterInstanceTypes() {
+        return FILTER_INSTANCE_TYPES;
+    }
+
+    protected abstract Map<String, String> buildParameters(Server server, ServerAccount serverAccount, GuacamoleParam.Login guacamoleLogin);
 
     protected Credential getCredential(ServerAccount serverAccount) {
         Credential credential = credentialService.getById(serverAccount.getCredentialId());
@@ -58,12 +78,23 @@ public abstract class AbstractGuacamoleProtocol implements IGuacamoleProtocol, I
         configuration.setProtocol(getProtocol()); // 协议
         Server server = serverService.getById(guacamoleLogin.getServerId());
         ServerAccount serverAccount = serverAccountService.getById(guacamoleLogin.getServerAccountId());
-        Map<String, String> parameters = buildParameters(server, serverAccount,guacamoleLogin);
+        Map<String, String> parameters = buildParameters(server, serverAccount, guacamoleLogin);
         configuration.setParameters(parameters);
+        GuacamoleConfig guacamoleConfig = getConfig();
         return new ConfiguredGuacamoleSocket(
-                new InetGuacamoleSocket("172.16.210.1", 4822),
+                new InetGuacamoleSocket(guacamoleConfig.getGuacamole().getHost(), guacamoleConfig.getGuacamole().getPort()),
                 configuration
         );
+    }
+
+    private GuacamoleConfig getConfig() throws GuacamoleException{
+        List<DatasourceInstance> instances = instanceHelper.listInstance(getFilterInstanceTypes(), getProtocol());
+        if (CollectionUtils.isEmpty(instances))
+            throw new GuacamoleException("无可用的Guacamole数据源实例！");
+        DatasourceInstance instance = instances.get(RandomUtil.random(instances.size()) - 1);
+        DatasourceConfig datasourceConfig = dsConfigHelper.getConfigById(instance.getConfigId());
+
+       return dsConfigHelper.build(datasourceConfig, GuacamoleConfig.class);
     }
 
     @Override
