@@ -22,9 +22,8 @@ public class JenkinsServerDrive {
         try {
             result = jenkinsServer.getComputers();
         } catch (IOException e) {
-            throw new IOException(e.getMessage());
-        } finally {
             jenkinsServer.close();
+            throw new IOException(e.getMessage());
         }
         return result;
     }
