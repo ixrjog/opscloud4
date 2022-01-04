@@ -64,7 +64,7 @@ login-k8s-pod 1 --arthas
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/terminal/terminal-server-3.png"></img>
 
 #### 容器(支持登录操作或只读查看日志)
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/terminal/terminal-k8s-pod.png"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/terminal/terminal-pod.png"></img>
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/terminal/terminal-k8s-pod-2.png"></img>
 
 ### SSH-Server(命令行终端)
@@ -78,7 +78,7 @@ login-k8s-pod 1 --arthas
 #### 服务器列表命令`list`
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-list.png"></img>
 #### 容器组列表命令`list-k8s-pod`
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-k8s-pod.png"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/ssh-server/ssh-server-list-k8s-pod.png"></img>
 
 ### 审计
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/terminal/terminal-audit.png"></img>
@@ -90,7 +90,7 @@ login-k8s-pod 1 --arthas
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/playbook/playbook_log.png"></img>
 
 ### 用户
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/user/user.png"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/user/user.png"></img>
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/user/user-details.png"></img>
 
 ### 数据源(万物皆资产)
