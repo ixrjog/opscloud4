@@ -101,7 +101,7 @@ login-k8s-pod 1 --arthas
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/user/user-details.png"></img>
 
 ### 数据源(万物皆资产)
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/oc4-1.png"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/datasource/instance.png"></img>
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/datasource/datasource-aliyun.png"></img>
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/datasource/datasource-aliyun-log.png"></img>
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/datasource/datasource-zabbix-host.png"></img>
