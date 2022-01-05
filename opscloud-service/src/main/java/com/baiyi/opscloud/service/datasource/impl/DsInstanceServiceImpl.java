@@ -45,7 +45,7 @@ public class DsInstanceServiceImpl implements DsInstanceService {
         if (query.getIsActive() != null) {
             criteria.andEqualTo("isActive", query.getIsActive());
         }
-        example.setOrderByClause("create_time");
+        example.setOrderByClause("instance_type, create_time");
         return dsInstanceMapper.selectByExample(example);
     }
 

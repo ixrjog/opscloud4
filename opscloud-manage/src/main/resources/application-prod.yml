@@ -5,6 +5,12 @@ logging:
   file:
     path: ${HOME}/logs
 
+opscloud:
+  version: 4.0.0
+  dataPath: ${HOME}/opscloud-data
+  instance:
+    register:
+
 # 白名单配置
 white:
   urls:

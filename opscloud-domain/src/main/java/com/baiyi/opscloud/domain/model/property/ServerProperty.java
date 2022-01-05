@@ -51,7 +51,7 @@ public class ServerProperty {
         @Builder.Default
         private Integer rdpPort = 3389;
         @Builder.Default
-        private Integer vncPort = 5901;
+        private Integer vncPort = 5900;
         @Builder.Default
         private String manageIp = "";
 

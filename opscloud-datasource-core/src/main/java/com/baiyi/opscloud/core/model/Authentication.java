@@ -1,7 +1,10 @@
 package com.baiyi.opscloud.core.model;
 
+import com.google.common.base.Joiner;
 import lombok.Builder;
 import lombok.Data;
+
+import static com.baiyi.opscloud.core.model.Authentication.Header.AUTHENTICATION;
 
 /**
  * @Author baiyi
@@ -19,8 +22,12 @@ public class Authentication {
     public static final Authentication FREE = Authentication.builder().isFree(true).build();
 
     @Builder.Default
-    private String header = Header.AUTHENTICATION;
+    private String header = AUTHENTICATION;
     private String token;
     @Builder.Default
     private Boolean isFree = false;
+
+    public String toAuthentication() {
+        return Joiner.on(" ").join(AUTHENTICATION, this.token);
+    }
 }

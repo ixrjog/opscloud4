@@ -6,9 +6,11 @@ import com.baiyi.opscloud.common.util.RandomUtil;
 import com.baiyi.opscloud.core.InstanceHelper;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
+import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.param.guacamole.GuacamoleParam;
 import com.baiyi.opscloud.guacamole.protocol.GuacamoleProtocolFactory;
 import com.baiyi.opscloud.guacamole.protocol.IGuacamoleProtocol;
+import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
 import com.baiyi.opscloud.service.server.ServerAccountService;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.service.sys.CredentialService;
@@ -53,6 +55,9 @@ public abstract class AbstractGuacamoleProtocol implements IGuacamoleProtocol, I
     @Resource
     private ServerAccountService serverAccountService;
 
+    @Resource
+    private BusinessPropertyHelper businessPropertyHelper;
+
     /**
      * 支持认证的实例类型
      */
@@ -78,8 +83,7 @@ public abstract class AbstractGuacamoleProtocol implements IGuacamoleProtocol, I
         configuration.setProtocol(getProtocol()); // 协议
         Server server = serverService.getById(guacamoleLogin.getServerId());
         ServerAccount serverAccount = serverAccountService.getById(guacamoleLogin.getServerAccountId());
-        Map<String, String> parameters = buildParameters(server, serverAccount, guacamoleLogin);
-        configuration.setParameters(parameters);
+        configuration.setParameters(buildParameters(server, serverAccount, guacamoleLogin));
         GuacamoleConfig guacamoleConfig = getConfig();
         return new ConfiguredGuacamoleSocket(
                 new InetGuacamoleSocket(guacamoleConfig.getGuacamole().getHost(), guacamoleConfig.getGuacamole().getPort()),
@@ -96,6 +100,10 @@ public abstract class AbstractGuacamoleProtocol implements IGuacamoleProtocol, I
         DatasourceConfig datasourceConfig = dsConfigHelper.getConfigById(instance.getConfigId());
 
        return dsConfigHelper.build(datasourceConfig, GuacamoleConfig.class);
+    }
+
+    protected ServerProperty.Server getBusinessProperty(Server server) {
+        return businessPropertyHelper.getBusinessProperty(server);
     }
 
     @Override
