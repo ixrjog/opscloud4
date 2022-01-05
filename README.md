@@ -17,6 +17,12 @@ Welcome to the opscloud wiki!
 + IntelliJ IDEA 2021.3 (Ultimate Edition)
 + WebStorm 2021.3
 
+
+### Tag:4.0.7版本
++ 修复部分问题
++ 完善Guacamole代码
++ 优化表字段
+
 ### Tag:4.0.6版本
 + 数据源
   + 钉钉(通讯录用户/部门/工作通知）
