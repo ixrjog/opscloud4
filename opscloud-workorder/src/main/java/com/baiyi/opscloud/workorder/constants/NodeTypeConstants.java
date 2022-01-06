@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.order.enums;
+package com.baiyi.opscloud.workorder.constants;
 
 import lombok.Getter;
 
@@ -7,16 +7,16 @@ import lombok.Getter;
  * @Date 2021/10/21 2:36 下午
  * @Version 1.0
  */
-public enum NodeTypeEnum {
+public enum NodeTypeConstants {
 
     USER_SELECTION(0);
 
-    NodeTypeEnum(int code) {
+    NodeTypeConstants(int code) {
         this.code = code;
     }
 
     @Getter
-    private int code;
+    private final int code;
 
 
 }

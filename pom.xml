@@ -33,7 +33,7 @@
         <module>opscloud-datasource-aliyun-redis</module>
         <module>opscloud-datasource-tencent-exmail</module>
         <module>opscloud-datasource-nexus</module>
-        <module>opscloud-order</module>
+        <module>opscloud-workorder</module>
         <module>opscloud-datasource-sonar</module>
         <module>opscloud-datasource-nacos</module>
         <module>opscloud-datasource-dingtalk</module>
@@ -233,6 +233,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-ssh-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-workorder</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
