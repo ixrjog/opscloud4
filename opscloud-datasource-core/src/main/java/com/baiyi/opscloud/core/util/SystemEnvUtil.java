@@ -11,6 +11,10 @@ public class SystemEnvUtil {
     }
 
     public static String renderEnvHome(String str) {
-        return str.replace("${HOME}", System.getenv("HOME"));
+        try {
+            return str.replace("${HOME}", System.getenv("HOME"));
+        } catch (Exception ignored) {
+        }
+        return str;
     }
 }

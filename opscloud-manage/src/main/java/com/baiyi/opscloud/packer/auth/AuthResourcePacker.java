@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthResource;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.service.auth.AuthGroupService;
-import com.baiyi.opscloud.util.ExtendUtil;
+import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.baiyi.opscloud.domain.vo.auth.AuthResourceVO;
 import org.springframework.stereotype.Component;
 

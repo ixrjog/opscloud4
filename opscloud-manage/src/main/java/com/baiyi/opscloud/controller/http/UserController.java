@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
+import com.baiyi.opscloud.datasource.facade.UserRamFacade;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;

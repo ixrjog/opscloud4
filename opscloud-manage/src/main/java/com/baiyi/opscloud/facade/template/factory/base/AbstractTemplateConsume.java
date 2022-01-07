@@ -11,7 +11,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.Template;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
-import com.baiyi.opscloud.facade.datasource.DsInstanceFacade;
+import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import com.baiyi.opscloud.facade.template.factory.ITemplateConsume;
 import com.baiyi.opscloud.facade.template.factory.TemplateFactory;
 import com.baiyi.opscloud.packer.template.BusinessTemplatePacker;

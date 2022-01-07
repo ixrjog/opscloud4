@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
+import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi

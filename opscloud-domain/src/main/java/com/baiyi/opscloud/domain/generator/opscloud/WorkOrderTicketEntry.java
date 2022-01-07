@@ -23,6 +23,12 @@ public class WorkOrderTicketEntry {
     private String name;
 
     /**
+     * 数据源实例UUID
+     */
+    @Column(name = "instance_uuid")
+    private String instanceUuid;
+
+    /**
      * 业务类型
      */
     @Column(name = "business_type")
@@ -45,6 +51,11 @@ public class WorkOrderTicketEntry {
      */
     @Column(name = "entry_key")
     private String entryKey;
+
+    /**
+     * 角色
+     */
+    private String role;
 
     /**
      * 说明

@@ -14,7 +14,7 @@ import com.baiyi.opscloud.packer.tag.TagPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
-import com.baiyi.opscloud.util.ExtendUtil;
+import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.stereotype.Component;

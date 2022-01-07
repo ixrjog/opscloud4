@@ -1,12 +1,16 @@
 package com.baiyi.opscloud.common.exception;
 
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Arrays;
 
 /**
  * @Author baiyi
  * @Date 2020/4/19 12:20 下午
  * @Version 1.0
  */
+@Getter
 public enum BusinessErrorCodeEnum implements ErrorCode{
 
     UNSPECIFIED("500", "网络异常，请稍后再试");
@@ -17,7 +21,7 @@ public enum BusinessErrorCodeEnum implements ErrorCode{
     /** 描述 */
     private final String desc;
 
-    private BusinessErrorCodeEnum(final String code, final String desc) {
+    BusinessErrorCodeEnum(final String code, final String desc) {
         this.code = code;
         this.desc = desc;
     }
@@ -43,24 +47,7 @@ public enum BusinessErrorCodeEnum implements ErrorCode{
      * @return 结果
      */
     public static Boolean contains(String code){
-        for (BusinessErrorCodeEnum value : BusinessErrorCodeEnum.values()) {
-            if (StringUtils.equals(code, value.getCode())) {
-                return true;
-            }
-        }
-        return  false;
+        return Arrays.stream(BusinessErrorCodeEnum.values()).anyMatch(value -> StringUtils.equals(code, value.getCode()));
     }
-
-    @Override
-    public String getCode() {
-        return code;
-    }
-
-    @Override
-    public String getDesc() {
-        return desc;
-    }
-
-
 
 }

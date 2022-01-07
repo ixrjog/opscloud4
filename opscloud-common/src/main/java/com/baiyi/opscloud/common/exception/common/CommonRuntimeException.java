@@ -14,6 +14,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class CommonRuntimeException extends BaseException {
 
+    private static final long serialVersionUID = -2938977933351653100L;
     private final Integer code = 999;
 
     public CommonRuntimeException(String message) {

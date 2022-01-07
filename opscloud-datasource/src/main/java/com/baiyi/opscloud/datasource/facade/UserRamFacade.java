@@ -1,5 +1,8 @@
-package com.baiyi.opscloud.facade.user;
+package com.baiyi.opscloud.datasource.facade;
 
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamUser;
+import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.user.UserRamParam;
 
 /**
@@ -15,6 +18,8 @@ public interface UserRamFacade {
      * @param createRamUser
      */
     void createRamUser(UserRamParam.CreateRamUser createRamUser);
+
+    RamUser.User createUser(AliyunConfig.Aliyun aliyun, String instanceUuid, User user);
 
     void grantRamPolicy(UserRamParam.GrantRamPolicy grantRamPolicy);
 

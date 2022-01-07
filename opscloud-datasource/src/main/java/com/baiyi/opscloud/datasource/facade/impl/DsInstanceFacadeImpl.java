@@ -1,16 +1,17 @@
-package com.baiyi.opscloud.facade.datasource.impl;
+package com.baiyi.opscloud.datasource.facade.impl;
 
+import com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.factory.SetDsInstanceConfigFactory;
 import com.baiyi.opscloud.core.provider.base.asset.IAssetBusinessRelation;
 import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.core.provider.base.common.AbstractSetDsInstanceConfigProvider;
+import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
+import com.baiyi.opscloud.datasource.packer.DsInstancePacker;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
-import com.baiyi.opscloud.facade.datasource.DsInstanceFacade;
-import com.baiyi.opscloud.packer.datasource.DsInstancePacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi
@@ -37,7 +36,7 @@ public class DsInstanceFacadeImpl<T> implements DsInstanceFacade<T> {
     private final DsInstancePacker dsInstancePacker;
 
     @Override
-    @Async(value = CORE)
+    @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
     public void pullAsset(DsAssetParam.PullAsset pullAsset) {
         List<SimpleAssetProvider> providers = getProviders(pullAsset.getInstanceId(), pullAsset.getAssetType());
         assert providers != null;
@@ -77,7 +76,6 @@ public class DsInstanceFacadeImpl<T> implements DsInstanceFacade<T> {
     }
 
     @Override
-    //@Async
     public void scanAssetBusiness(DsAssetParam.ScanAssetBusiness scanAssetBusiness) {
         DatasourceInstance dsInstance = dsInstanceService.getById(scanAssetBusiness.getInstanceId());
         DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);

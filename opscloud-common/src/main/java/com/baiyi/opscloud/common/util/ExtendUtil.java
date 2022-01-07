@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.util;
+package com.baiyi.opscloud.common.util;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 

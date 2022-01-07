@@ -25,7 +25,7 @@ import com.baiyi.opscloud.packer.user.child.RamUserPacker;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.user.UserService;
-import com.baiyi.opscloud.util.ExtendUtil;
+import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;

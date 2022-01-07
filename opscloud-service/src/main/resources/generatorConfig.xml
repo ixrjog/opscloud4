@@ -90,12 +90,7 @@
             注意：大小写敏感问题。
          -->
 
-        <table tableName="work_order_ticket">
-            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
-            <!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
-        </table>
-
-        <table tableName="work_order_ticket_node">
+        <table tableName="work_order_ticket_entry">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
             <!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
         </table>

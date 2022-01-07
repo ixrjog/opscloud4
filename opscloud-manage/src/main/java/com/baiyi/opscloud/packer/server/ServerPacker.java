@@ -8,7 +8,7 @@ import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.packer.business.BusinessPropertyPacker;
 import com.baiyi.opscloud.packer.sys.EnvPacker;
 import com.baiyi.opscloud.packer.tag.TagPacker;
-import com.baiyi.opscloud.util.ExtendUtil;
+import com.baiyi.opscloud.common.util.ExtendUtil;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

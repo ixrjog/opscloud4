@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 
 import javax.annotation.Resource;
 
-import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
+import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi

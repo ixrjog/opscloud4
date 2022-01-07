@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.packer.business.BusinessPropertyPacker;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.service.server.ServerService;
-import com.baiyi.opscloud.util.ExtendUtil;
+import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import org.springframework.stereotype.Component;

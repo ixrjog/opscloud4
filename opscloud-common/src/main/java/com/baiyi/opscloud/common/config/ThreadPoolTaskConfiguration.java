@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.config;
+package com.baiyi.opscloud.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,8 +6,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
-import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
-import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.EXECUTOR;
+import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
+import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.EXECUTOR;
 
 
 /**

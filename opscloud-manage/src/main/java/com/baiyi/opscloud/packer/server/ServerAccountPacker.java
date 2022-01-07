@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.packer.sys.CredentialPacker;
 import com.baiyi.opscloud.service.server.ServerAccountPermissionService;
 import com.baiyi.opscloud.service.server.ServerAccountService;
-import com.baiyi.opscloud.util.ExtendUtil;
+import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.baiyi.opscloud.domain.vo.server.ServerAccountVO;
 import com.google.common.base.Joiner;
 import org.springframework.stereotype.Component;

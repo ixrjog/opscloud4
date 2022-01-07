@@ -6,5 +6,15 @@ package com.baiyi.opscloud.workorder.constants;
  * @Version 1.0
  */
 public enum WorkOrderKeyConstants {
-    SERVER_GROUP
+
+    RAM_POLICY,
+    ONS_ROCKETMQ_TOPIC,
+    ONS_ROCKETMQ_GROUP,
+
+    SERVER_GROUP,
+    APPLICATION,
+    // UserGroup
+    VPN,
+    NEXUS,
+    CONFLUENCE
 }

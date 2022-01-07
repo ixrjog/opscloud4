@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.ServerGroupType;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.service.server.ServerGroupTypeService;
-import com.baiyi.opscloud.util.ExtendUtil;
+import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
 import org.springframework.stereotype.Component;
 

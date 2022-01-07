@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.facade.user.impl;
+package com.baiyi.opscloud.datasource.facade.impl;
 
 import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
@@ -9,14 +9,14 @@ import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamPolicyDrive;
 import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamUserDrive;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamPolicy;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamUser;
+import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
+import com.baiyi.opscloud.datasource.facade.UserRamFacade;
 import com.baiyi.opscloud.datasource.manager.base.NoticeManager;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.notice.message.CreateRamUserMessage;
 import com.baiyi.opscloud.domain.param.user.UserRamParam;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.facade.datasource.DsInstanceFacade;
-import com.baiyi.opscloud.facade.user.UserRamFacade;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.base.Joiner;
@@ -50,7 +50,7 @@ public class UserRamFacadeImpl implements UserRamFacade {
 
     private final NoticeManager noticeManager;
 
-    private final static boolean CREATE_LOGIN_PROFILE = true;
+    public final static boolean CREATE_LOGIN_PROFILE = true;
 
     @Override
     public void createRamUser(UserRamParam.CreateRamUser createRamUser) {
@@ -63,8 +63,8 @@ public class UserRamFacadeImpl implements UserRamFacade {
         createUser(aliyun, createRamUser.getInstanceUuid(), user);
     }
 
-
-    private RamUser.User createUser(AliyunConfig.Aliyun aliyun, String instanceUuid, User user) {
+    @Override
+    public RamUser.User createUser(AliyunConfig.Aliyun aliyun, String instanceUuid, User user) {
         RamUser.User ramUser = aliyunRamUserDrive.createUser(aliyun.getRegionId(), aliyun, user, CREATE_LOGIN_PROFILE);
         // 同步资产 RAM_USER
         dsInstanceFacade.pullAsset(instanceUuid, DsAssetTypeEnum.RAM_USER.name(), ramUser);

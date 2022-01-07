@@ -51,6 +51,7 @@ public class UserRamParam {
     public static class RevokeRamPolicy extends GrantRamPolicy {
     }
 
+    @Builder
     @Data
     public static class Policy {
         private String policyName;

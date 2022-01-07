@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public abstract class BaseException extends RuntimeException {
 
+    private static final long serialVersionUID = -6758520149628532498L;
+
     private Integer code;
 
     public BaseException(String message) {

@@ -11,7 +11,7 @@ import com.baiyi.opscloud.domain.vo.datasource.DsConfigVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.facade.datasource.DsFacade;
 import com.baiyi.opscloud.packer.datasource.DsConfigPacker;
-import com.baiyi.opscloud.packer.datasource.DsInstancePacker;
+import com.baiyi.opscloud.datasource.packer.DsInstancePacker;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import lombok.RequiredArgsConstructor;

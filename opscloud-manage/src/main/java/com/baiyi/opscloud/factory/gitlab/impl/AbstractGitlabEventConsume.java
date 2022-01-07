@@ -5,7 +5,7 @@ import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
-import com.baiyi.opscloud.facade.datasource.DsInstanceFacade;
+import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import com.baiyi.opscloud.facade.datasource.SimpleDsAssetFacade;
 import com.baiyi.opscloud.facade.event.EventFacade;
 import com.baiyi.opscloud.factory.gitlab.GitlabEventConsumeFactory;
@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
+import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi

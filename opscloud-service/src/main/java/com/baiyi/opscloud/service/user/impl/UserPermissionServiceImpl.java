@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.service.user.impl;
 
 import com.baiyi.opscloud.common.annotation.EventPublisher;
+import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
@@ -58,12 +59,23 @@ public class UserPermissionServiceImpl implements UserPermissionService {
     }
 
     @Override
+    public UserPermission getByUnqueKey(UserPermission userPermission) {
+        Example example = new Example(UserPermission.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("userId", userPermission.getUserId())
+                .andEqualTo("businessType", userPermission.getBusinessType())
+                .andEqualTo("businessId", userPermission.getBusinessId());
+        return permissionMapper.selectOneByExample(example);
+    }
+
+    @Override
     public int countByBusiness(UserPermission userPermission) {
         Example example = new Example(UserPermission.class);
         Example.Criteria criteria = example.createCriteria();
+        if (IdUtil.isNotEmpty(userPermission.getUserId()))
+            criteria.andEqualTo("userId", userPermission.getUserId());
         criteria.andEqualTo("businessType", userPermission.getBusinessType())
                 .andEqualTo("businessId", userPermission.getBusinessId());
-
         return permissionMapper.selectCountByExample(example);
     }
 

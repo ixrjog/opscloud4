@@ -6,13 +6,16 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketEntryService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketService;
+import com.baiyi.opscloud.workorder.constants.EntryStatusConstants;
+import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.processor.ITicketProcessor;
 import com.baiyi.opscloud.workorder.processor.factory.WorkOrderTicketProcessorFactory;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+
+import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -20,14 +23,16 @@ import org.springframework.beans.factory.InitializingBean;
  * @Version 1.0
  */
 @Slf4j
-@RequiredArgsConstructor
 public abstract class AbstractTicketProcessor<T> implements ITicketProcessor, InitializingBean {
 
-    private final WorkOrderTicketEntryService workOrderTicketEntryService;
+    @Resource
+    private WorkOrderTicketEntryService workOrderTicketEntryService;
 
-    private final WorkOrderTicketService workOrderTicketService;
+    @Resource
+    private WorkOrderTicketService workOrderTicketService;
 
-    private final UserService userService;
+    @Resource
+    private UserService userService;
 
     /**
      * 处理工单条目
@@ -35,7 +40,7 @@ public abstract class AbstractTicketProcessor<T> implements ITicketProcessor, In
      * @param ticketEntry
      * @param entry
      */
-    abstract protected void process(WorkOrderTicketEntry ticketEntry, T entry);
+    abstract protected void process(WorkOrderTicketEntry ticketEntry, T entry) throws TicketProcessException;
 
     /**
      * 取条目ClassT
@@ -56,12 +61,19 @@ public abstract class AbstractTicketProcessor<T> implements ITicketProcessor, In
      */
     protected User queryApplicant(WorkOrderTicketEntry ticketEntry) {
         WorkOrderTicket workOrderTicket = workOrderTicketService.getById(ticketEntry.getWorkOrderTicketId());
-        return userService.getByUsername(workOrderTicket.getUsername());
+        return  userService.getByUsername(workOrderTicket.getUsername());
     }
 
     @Override
     public void process(WorkOrderTicketEntry ticketEntry) {
-        this.process(ticketEntry, toEntry(ticketEntry.getContent(), getEntryClassT()));
+        try {
+            this.process(ticketEntry, toEntry(ticketEntry.getContent(), getEntryClassT()));
+            ticketEntry.setEntryStatus(EntryStatusConstants.SUCCESSFUL.getStatus());
+        } catch (TicketProcessException e) {
+            ticketEntry.setResult(e.getMessage());
+            ticketEntry.setEntryStatus(EntryStatusConstants.FAILED.getStatus());
+        }
+        updateTicket(ticketEntry);
     }
 
     protected void updateTicket(WorkOrderTicketEntry ticketEntry) {

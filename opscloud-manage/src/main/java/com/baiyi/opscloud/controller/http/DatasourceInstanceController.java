@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.vo.datasource.DsAssetSubscriptionVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
 import com.baiyi.opscloud.facade.datasource.DsInstanceAssetSubscriptionFacade;
-import com.baiyi.opscloud.facade.datasource.DsInstanceFacade;
+import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

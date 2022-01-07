@@ -1,13 +1,13 @@
-package com.baiyi.opscloud.packer.datasource;
+package com.baiyi.opscloud.datasource.packer;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.packer.tag.TagPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
-import com.baiyi.opscloud.util.ExtendUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 

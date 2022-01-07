@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.BusinessTemplate;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
 import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
-import com.baiyi.opscloud.packer.datasource.DsInstancePacker;
+import com.baiyi.opscloud.datasource.packer.DsInstancePacker;
 import com.baiyi.opscloud.packer.sys.EnvPacker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

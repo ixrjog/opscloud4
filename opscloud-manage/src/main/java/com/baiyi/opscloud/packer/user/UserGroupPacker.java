@@ -9,7 +9,7 @@ import com.baiyi.opscloud.domain.vo.user.UserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.baiyi.opscloud.service.user.UserService;
-import com.baiyi.opscloud.util.ExtendUtil;
+import com.baiyi.opscloud.common.util.ExtendUtil;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

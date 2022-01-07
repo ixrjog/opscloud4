@@ -14,6 +14,7 @@ import lombok.EqualsAndHashCode;
 @Data
 public class AuthRuntimeException extends BaseException {
 
+    private static final long serialVersionUID = -1331639499184065986L;
     private Integer code;
 
     public AuthRuntimeException(String message) {

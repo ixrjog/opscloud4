@@ -43,7 +43,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.EXECUTOR;
+import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.EXECUTOR;
 
 /**
  * @Author baiyi

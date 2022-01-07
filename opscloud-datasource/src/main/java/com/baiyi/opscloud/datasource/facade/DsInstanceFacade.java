@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.facade.datasource;
+package com.baiyi.opscloud.datasource.facade;
 
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
