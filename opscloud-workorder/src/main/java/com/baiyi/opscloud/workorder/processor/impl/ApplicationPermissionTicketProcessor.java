@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class ApplicationTicketProcessor extends AbstractUserPermission<Application> {
+public class ApplicationPermissionTicketProcessor extends AbstractUserPermission<Application> {
 
     @Override
     public String getKey() {
-        return WorkOrderKeyConstants.APPLICATION.name();
+        return WorkOrderKeyConstants.APPLICATION_PERMISSION.name();
     }
 
     @Override

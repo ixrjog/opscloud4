@@ -22,7 +22,7 @@ public class OnsTopicTicketProcessor extends AbstractAssetPermission {
 
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
-        User applicantUser = queryApplicant(ticketEntry);
+        User createUser = queryCreateUser(ticketEntry);
 
         try {
 

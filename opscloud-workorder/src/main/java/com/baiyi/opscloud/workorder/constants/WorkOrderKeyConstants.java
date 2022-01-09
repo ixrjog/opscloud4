@@ -12,7 +12,7 @@ public enum WorkOrderKeyConstants {
     ONS_ROCKETMQ_GROUP,
 
     SERVER_GROUP,
-    APPLICATION,
+    APPLICATION_PERMISSION,
     // UserGroup
     VPN,
     NEXUS,

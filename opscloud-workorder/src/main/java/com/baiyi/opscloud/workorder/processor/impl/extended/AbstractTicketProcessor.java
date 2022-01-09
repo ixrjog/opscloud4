@@ -54,12 +54,12 @@ public abstract class AbstractTicketProcessor<T> implements ITicketProcessor, In
     }
 
     /**
-     * 查询申请人
+     * 查询创建人
      *
      * @param ticketEntry
      * @return
      */
-    protected User queryApplicant(WorkOrderTicketEntry ticketEntry) {
+    protected User queryCreateUser(WorkOrderTicketEntry ticketEntry) {
         WorkOrderTicket workOrderTicket = workOrderTicketService.getById(ticketEntry.getWorkOrderTicketId());
         return userService.getByUsername(workOrderTicket.getUsername());
     }

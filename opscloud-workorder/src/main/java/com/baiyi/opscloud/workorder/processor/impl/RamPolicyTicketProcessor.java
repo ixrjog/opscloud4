@@ -29,7 +29,7 @@ public class RamPolicyTicketProcessor extends AbstractAssetPermission {
 
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
-        User applicantUser = queryApplicant(ticketEntry);
+        User applicantUser = queryCreateUser(ticketEntry);
         UserRamParam.Policy policy = UserRamParam.Policy.builder()
                 .policyName(entry.getAssetId())
                 .policyType(entry.getAssetKey())

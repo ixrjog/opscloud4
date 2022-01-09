@@ -23,9 +23,9 @@ public abstract class AbstractUserPermission<T> extends AbstractTicketProcessor<
 
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, T entry) throws TicketProcessException {
-        User applicantUser = queryApplicant(ticketEntry);
+        User createUser = queryCreateUser(ticketEntry);
         UserPermission prePermission = UserPermission.builder()
-                .userId(applicantUser.getId())
+                .userId(createUser.getId())
                 .businessType(ticketEntry.getBusinessType())
                 .businessId(ticketEntry.getBusinessId())
                 .permissionRole(ticketEntry.getRole())
