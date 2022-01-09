@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.domain.types;
+package com.baiyi.opscloud.domain.constants;
 
 /**
  * @Author 修远

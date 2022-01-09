@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.factory.gitlab.GitlabEventNameEnum;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +48,7 @@ public class GitlabKeyEventConsume extends AbstractGitlabEventConsume {
                 .name(systemHook.getUsername())
                 .assetKey(SSHUtil.getFingerprint(systemHook.getKey()))
                 .assetKey2(systemHook.getKey())
-                .assetType(DsAssetTypeEnum.GITLAB_SSHKEY.name())
+                .assetType(DsAssetTypeConstants.GITLAB_SSHKEY.name())
                 .kind("gitlabSshKey")
                 .build();
 
@@ -64,7 +64,7 @@ public class GitlabKeyEventConsume extends AbstractGitlabEventConsume {
 
     @Override
     protected String getAssetType() {
-        return DsAssetTypeEnum.GITLAB_SSHKEY.name();
+        return DsAssetTypeConstants.GITLAB_SSHKEY.name();
     }
 
 }

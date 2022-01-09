@@ -11,7 +11,7 @@ import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkDepartmentParam;
 import com.baiyi.opscloud.datasource.dingtalk.provider.base.AbstractDingtalkAssetProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +32,7 @@ public class DingtalkDepartmentProvider extends AbstractDingtalkAssetProvider<Di
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.DINGTALK_DEPARTMENT.name();
+        return DsAssetTypeConstants.DINGTALK_DEPARTMENT.name();
     }
 
     private DingtalkConfig.Dingtalk buildConfig(DatasourceConfig dsConfig) {

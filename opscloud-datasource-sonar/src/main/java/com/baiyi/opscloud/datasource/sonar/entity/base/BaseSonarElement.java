@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -60,7 +60,7 @@ public class BaseSonarElement {
                     .assetKey(this.key)
                     .assetKey2(this.revision)
                     .isActive(true)
-                    .assetType(DsAssetTypeEnum.SONAR_PROJECT.name())
+                    .assetType(DsAssetTypeConstants.SONAR_PROJECT.name())
                     .kind("project")
                     .build();
 

@@ -13,7 +13,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import io.fabric8.kubernetes.api.model.Node;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +40,7 @@ public class KubernetesNodeProvider extends BaseAssetProvider<Node> {
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.KUBERNETES_NODE.getType();
+        return DsAssetTypeConstants.KUBERNETES_NODE.name();
     }
 
     private KubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {

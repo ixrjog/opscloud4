@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import lombok.Data;
 
 import java.util.Date;
@@ -37,7 +37,7 @@ public class AccessKey {
                     .name(this.accessKeyId)
                     .assetKey(this.accessKeyId)
                     .kind("ramAccessKey")
-                    .assetType(DsAssetTypeEnum.RAM_ACCESS_KEY.name())
+                    .assetType(DsAssetTypeConstants.RAM_ACCESS_KEY.name())
                     .createdTime(toGmtDate(this.createDate))
                     .isActive("Active".equals(this.status))
                     .build();

@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.template.BusinessTemplateParam;
 import com.baiyi.opscloud.domain.param.template.TemplateParam;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
 import com.baiyi.opscloud.domain.vo.template.TemplateVO;
 import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;

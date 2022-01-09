@@ -2,8 +2,8 @@ package com.baiyi.opscloud.core.asset.impl;
 
 import com.baiyi.opscloud.common.util.EmailUtil;
 import com.baiyi.opscloud.core.asset.impl.base.AbstractAssetToBO;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
@@ -22,7 +22,7 @@ public class DingtalkUserAssetToUser extends AbstractAssetToBO {
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.DINGTALK_USER.getType();
+        return DsAssetTypeConstants.DINGTALK_USER.name();
     }
 
     protected BusinessAssetRelationVO.IBusinessAssetRelation toBO(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum) {

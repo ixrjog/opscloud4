@@ -12,7 +12,7 @@ import com.baiyi.opscloud.datasource.nacos.drive.NacosClusterDrive;
 import com.baiyi.opscloud.datasource.nacos.entity.NacosCluster;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -40,7 +40,7 @@ public class NacosClusterNodeProvider extends BaseAssetProvider<NacosCluster.Nod
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.NACOS_CLUSTER_NODE.name();
+        return DsAssetTypeConstants.NACOS_CLUSTER_NODE.name();
     }
 
     private NacosConfig.Nacos buildConfig(DatasourceConfig dsConfig) {

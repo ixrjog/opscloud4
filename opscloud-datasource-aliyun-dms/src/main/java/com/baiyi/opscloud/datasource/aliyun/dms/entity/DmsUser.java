@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -50,7 +50,7 @@ public class DmsUser {
                     .assetKey(this.uid)
                     .assetKey2(this.parentUid)
                     .kind("user")
-                    .assetType(DsAssetTypeEnum.DMS_USER.name())
+                    .assetType(DsAssetTypeConstants.DMS_USER.name())
                     .build();
 
             return AssetContainerBuilder.newBuilder()

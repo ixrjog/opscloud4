@@ -12,7 +12,7 @@ import com.baiyi.opscloud.datasource.ldap.entity.LdapPerson;
 import com.baiyi.opscloud.datasource.ldap.repo.PersonRepo;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -62,12 +62,12 @@ public class LdapUserProvider extends AbstractAssetRelationProvider<LdapPerson.P
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.USER.getType();
+        return DsAssetTypeConstants.USER.name();
     }
 
     @Override
     public String getTargetAssetKey() {
-        return DsAssetTypeEnum.GROUP.getType();
+        return DsAssetTypeConstants.GROUP.name();
     }
 
     @Override

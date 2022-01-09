@@ -15,7 +15,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -41,7 +41,7 @@ public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vp
     private AliyunVpcProvider aliyunVpcProvider;
 
     @Override
-    @EnablePullChild(type = DsAssetTypeEnum.VPC)
+    @EnablePullChild(type = DsAssetTypeConstants.VPC)
     @SingleTask(name = PULL_ALIYUN_VPC, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
@@ -80,7 +80,7 @@ public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vp
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.VPC.name();
+        return DsAssetTypeConstants.VPC.name();
     }
 
     @Override

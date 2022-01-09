@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import lombok.Data;
 
 import java.util.Date;
@@ -44,7 +44,7 @@ public class RamPolicy {
                     .name(this.policyName)
                     .assetKey(this.policyType)
                     .kind("ramUser")
-                    .assetType(DsAssetTypeEnum.RAM_POLICY.name())
+                    .assetType(DsAssetTypeConstants.RAM_POLICY.name())
                     .description(this.description)
                     .createdTime(toGmtDate(this.createDate))
                     .build();

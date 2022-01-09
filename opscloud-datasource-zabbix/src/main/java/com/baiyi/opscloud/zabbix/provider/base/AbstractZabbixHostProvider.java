@@ -9,7 +9,7 @@ import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.zabbix.provider.ZabbixHostProvider;
 import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5HostDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
@@ -54,7 +54,7 @@ public abstract class AbstractZabbixHostProvider<T> extends AbstractAssetRelatio
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.ZABBIX_HOST.getType();
+        return DsAssetTypeConstants.ZABBIX_HOST.name();
     }
 
     @Override

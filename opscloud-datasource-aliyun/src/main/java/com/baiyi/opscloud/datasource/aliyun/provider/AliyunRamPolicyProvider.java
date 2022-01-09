@@ -14,7 +14,7 @@ import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamPolicy;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamUser;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -88,7 +88,7 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<RamPo
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.RAM_POLICY.name();
+        return DsAssetTypeConstants.RAM_POLICY.name();
     }
 
     @Override
@@ -104,6 +104,6 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<RamPo
 
     @Override
     public String getTargetAssetKey() {
-        return DsAssetTypeEnum.RAM_USER.name();
+        return DsAssetTypeConstants.RAM_USER.name();
     }
 }

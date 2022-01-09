@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.facade.datasource.DsFacade;
@@ -58,7 +58,7 @@ public class DsInstanceAssetFacadeImpl implements DsInstanceAssetFacade {
         List<DsAssetVO.Asset> result = Lists.newArrayList();
         instances.forEach(i -> {
             DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
-                    .assetType(DsAssetTypeEnum.GITLAB_SSHKEY.getType())
+                    .assetType(DsAssetTypeConstants.GITLAB_SSHKEY.name())
                     .instanceUuid(i.getUuid())
                     .name(username)
                     .build();

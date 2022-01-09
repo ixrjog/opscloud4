@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetSubscription;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.facade.datasource.DsInstanceAssetSubscriptionFacade;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetSubscriptionService;
@@ -69,7 +69,7 @@ public class AssetSubscriptionTask extends AbstractTask {
         List<DatasourceInstance> instances = dsInstanceService.listByInstanceType(DsTypeEnum.ANSIBLE.name());
         if (CollectionUtils.isEmpty(instances)) return;
         instances.forEach(i -> {
-            List<DatasourceInstanceAsset> assets = dsInstanceAssetService.listByInstanceAssetType(i.getUuid(), DsAssetTypeEnum.ANSIBLE_HOSTS.name());
+            List<DatasourceInstanceAsset> assets = dsInstanceAssetService.listByInstanceAssetType(i.getUuid(), DsAssetTypeConstants.ANSIBLE_HOSTS.name());
             if (CollectionUtils.isEmpty(assets)) return;
             log.info("构建Ansible主机清单文件！");
             ansibleHostsProvider.pullAsset(i.getId());

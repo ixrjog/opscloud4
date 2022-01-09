@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.jenkins.convert;
 
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -21,7 +21,7 @@ public class ComputerAssetConvert {
                 .name(entity.getDisplayName())
                 .assetKey(entity.getDisplayName())
                 .kind("computer")
-                .assetType(DsAssetTypeEnum.JENKINS_COMPUTER.name())
+                .assetType(DsAssetTypeConstants.JENKINS_COMPUTER.name())
                 .isActive(!entity.getOffline())
                 .build();
 

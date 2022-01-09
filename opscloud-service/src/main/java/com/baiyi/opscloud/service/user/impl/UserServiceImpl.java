@@ -8,9 +8,9 @@ import com.baiyi.opscloud.domain.annotation.Encrypt;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
+import com.baiyi.opscloud.domain.constants.EventActionTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
@@ -63,7 +63,7 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
     @Override
     public BusinessAssetRelationVO.IBusinessAssetRelation toBusinessAssetRelation(DsAssetVO.Asset asset) {
         // 处理Dingtalk
-        if (asset.getAssetType().equals(DsAssetTypeEnum.DINGTALK_USER.name())) {
+        if (asset.getAssetType().equals(DsAssetTypeConstants.DINGTALK_USER.name())) {
             if (asset.getProperties().containsKey("username")) {
                 log.info("同步钉钉，查询本地用户: name = {} , username = {}", asset.getName(), asset.getProperties().get(
                         "username"));

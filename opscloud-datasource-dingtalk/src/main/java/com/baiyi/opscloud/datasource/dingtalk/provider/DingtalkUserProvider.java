@@ -16,7 +16,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.collect.Lists;
@@ -56,7 +56,7 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.DINGTALK_USER.name();
+        return DsAssetTypeConstants.DINGTALK_USER.name();
     }
 
     private DingtalkConfig.Dingtalk buildConfig(DatasourceConfig dsConfig) {
@@ -98,7 +98,7 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
         DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
                 .instanceId(dsInstanceContext.getDsInstance().getId())
                 .instanceUuid(dsInstanceContext.getDsInstance().getUuid())
-                .assetType(DsAssetTypeEnum.DINGTALK_DEPARTMENT.name())
+                .assetType(DsAssetTypeConstants.DINGTALK_DEPARTMENT.name())
                 .isActive(true)
                 .page(1)
                 .length(10000)

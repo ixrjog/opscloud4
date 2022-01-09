@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.datasource.gitlab.drive.GitlabProjectDrive;
 import org.gitlab.api.models.GitlabGroup;
 import org.gitlab.api.models.GitlabProject;
@@ -61,12 +61,12 @@ public class GitlabProjectProvider extends AbstractAssetRelationProvider<GitlabP
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.GITLAB_PROJECT.getType();
+        return DsAssetTypeConstants.GITLAB_PROJECT.name();
     }
 
     @Override
     public String getTargetAssetKey() {
-        return DsAssetTypeEnum.GITLAB_GROUP.getType();
+        return DsAssetTypeConstants.GITLAB_GROUP.name();
     }
 
     @Override

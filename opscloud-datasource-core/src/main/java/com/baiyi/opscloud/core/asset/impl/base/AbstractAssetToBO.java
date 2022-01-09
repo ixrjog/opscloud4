@@ -3,7 +3,7 @@ package com.baiyi.opscloud.core.asset.impl.base;
 import com.baiyi.opscloud.core.asset.factory.AssetConvertFactory;
 import com.baiyi.opscloud.core.asset.IAssetConvert;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;

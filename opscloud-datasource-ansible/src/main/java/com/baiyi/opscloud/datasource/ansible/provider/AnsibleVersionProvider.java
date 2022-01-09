@@ -16,7 +16,7 @@ import com.baiyi.opscloud.datasource.ansible.entity.AnsibleVersion;
 import com.baiyi.opscloud.datasource.ansible.executor.AnsibleExecutor;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
 import org.apache.commons.exec.CommandLine;
 import org.springframework.stereotype.Component;
@@ -47,7 +47,7 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.ANSIBLE_VERSION.getType();
+        return DsAssetTypeConstants.ANSIBLE_VERSION.name();
     }
 
     private AnsibleConfig.Ansible buildConfig(DatasourceConfig dsConfig) {

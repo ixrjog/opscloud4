@@ -15,7 +15,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -30,7 +30,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
  */
 
 @Component
-@ChildProvider(parentType = DsAssetTypeEnum.VPC)
+@ChildProvider(parentType = DsAssetTypeConstants.VPC)
 public class AliyunSecurityGroupProvider extends AbstractAssetChildProvider<DescribeSecurityGroupsResponse.SecurityGroup> {
 
     @Resource
@@ -74,7 +74,7 @@ public class AliyunSecurityGroupProvider extends AbstractAssetChildProvider<Desc
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.ECS_SG.name();
+        return DsAssetTypeConstants.ECS_SG.name();
     }
 
     @Override

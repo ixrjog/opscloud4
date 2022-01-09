@@ -11,8 +11,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetPrope
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
@@ -126,7 +126,7 @@ public class UserPacker implements IPacker<UserVO.User, User> {
                 .businessType(BusinessTypeEnum.USER.getType())
                 .businessId(user.getId())
                 .build();
-        List<BusinessAssetRelation> relations = bizAssetRelationService.queryBusinessRelations(iBusiness, DsAssetTypeEnum.DINGTALK_USER.name());
+        List<BusinessAssetRelation> relations = bizAssetRelationService.queryBusinessRelations(iBusiness, DsAssetTypeConstants.DINGTALK_USER.name());
         if (CollectionUtils.isEmpty(relations)) return;
         for (BusinessAssetRelation relation : relations) {
             DatasourceInstanceAssetProperty property =

@@ -10,8 +10,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.sshcore.audit.PodCommandAudit;
@@ -97,7 +97,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
     private void listPodById(int id) {
         Map<Integer, Integer> idMapper = SessionCommandContext.getIdMapper();
         DatasourceInstanceAsset asset = dsInstanceAssetService.getById(idMapper.get(id));
-        if (!asset.getAssetType().equals(DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.getType())) {
+        if (!asset.getAssetType().equals(DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name())) {
             helper.print("资产类型不符", PromptColor.RED);
             return;
         }
@@ -164,7 +164,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         Size size = terminal.getSize();
         final int maxSize = size.getRows() - 5;
         DsAssetParam.UserPermissionAssetPageQuery pageQuery = DsAssetParam.UserPermissionAssetPageQuery.builder()
-                .assetType(DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.name())
+                .assetType(DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name())
                 .queryName(deploymentName)
                 .businessType(BusinessTypeEnum.APPLICATION.getType())
                 .userId(userService.getByUsername(SessionUtil.getUsername()).getId())

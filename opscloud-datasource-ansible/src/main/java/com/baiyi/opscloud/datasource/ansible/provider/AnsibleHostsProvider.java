@@ -16,7 +16,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.google.common.collect.Lists;
@@ -57,7 +57,7 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.ANSIBLE_HOSTS.getType();
+        return DsAssetTypeConstants.ANSIBLE_HOSTS.name();
     }
 
     private AnsibleConfig.Ansible buildConfig(DatasourceConfig dsConfig) {

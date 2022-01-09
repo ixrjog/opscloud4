@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.util;
 
 import com.baiyi.opscloud.common.constants.enums.ProtocolEnum;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.common.OptionsVO;
 
 import java.util.Arrays;

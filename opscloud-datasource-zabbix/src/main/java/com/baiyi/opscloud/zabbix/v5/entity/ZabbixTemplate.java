@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.zabbix.v5.entity.base.ZabbixResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -46,7 +46,7 @@ public class ZabbixTemplate {
                     .name(this.name)
                     .assetKey(this.templateid)
                     .assetKey2(this.host)
-                    .assetType(DsAssetTypeEnum.ZABBIX_TEMPLATE.name())
+                    .assetType(DsAssetTypeConstants.ZABBIX_TEMPLATE.name())
                     .kind("zabbixTemplate")
                     .description(this.description)
                     .build();

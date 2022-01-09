@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -49,7 +49,7 @@ public class OnsInstance {
                     .name(this.instanceName)
                     .assetKey(this.instanceId)
                     .kind(1 == this.instanceType ? "标准版实例" : "铂金版实例")
-                    .assetType(DsAssetTypeEnum.ONS_ROCKETMQ_INSTANCE.name())
+                    .assetType(DsAssetTypeConstants.ONS_ROCKETMQ_INSTANCE.name())
                     .regionId(this.regionId)
                     .expiredTime(this.releaseTime != null ? new Date(this.releaseTime) : null) // 铂金版本过期时间
                     .build();

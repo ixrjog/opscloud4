@@ -5,7 +5,7 @@ import com.baiyi.opscloud.datasource.business.server.impl.base.AbstractZabbixHos
 import com.baiyi.opscloud.datasource.business.server.util.HostParamUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

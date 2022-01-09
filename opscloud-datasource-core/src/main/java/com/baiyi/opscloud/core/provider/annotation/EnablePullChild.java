@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.core.provider.annotation;
 
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 
 import java.lang.annotation.*;
 
@@ -15,5 +15,5 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 public @interface EnablePullChild {
 
-    DsAssetTypeEnum type();
+    DsAssetTypeConstants type();
 }

@@ -5,7 +5,7 @@ import com.aliyuncs.ecs.model.v20140526.DescribeVSwitchesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeVpcsResponse;
 import com.baiyi.opscloud.core.util.TimeUtil;
 import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -29,7 +29,7 @@ public class VpcAssetConvert {
                 // cidrBlock
                 .assetKey2(entity.getCidrBlock())
                 .kind("aliyunVpc")
-                .assetType(DsAssetTypeEnum.VPC.name())
+                .assetType(DsAssetTypeConstants.VPC.name())
                 .regionId(entity.getRegionId())
                 .description(entity.getDescription())
                 .createdTime(TimeUtil.toGmtDate(entity.getCreationTime(), TimeZoneEnum.UTC))
@@ -49,7 +49,7 @@ public class VpcAssetConvert {
                 .name(entity.getSecurityGroupName())
                 .assetKey(entity.getSecurityGroupId())
                 .kind("aliyunSecurityGroup")
-                .assetType(DsAssetTypeEnum.ECS_SG.name())
+                .assetType(DsAssetTypeConstants.ECS_SG.name())
                 .description(entity.getDescription())
                 .createdTime(TimeUtil.toGmtDate(entity.getCreationTime(), TimeZoneEnum.UTC))
                 .build();
@@ -69,7 +69,7 @@ public class VpcAssetConvert {
                 // cidrBlock
                 .assetKey2(entity.getCidrBlock())
                 .kind("aliyunVSwitch")
-                .assetType(DsAssetTypeEnum.V_SWITCH.name())
+                .assetType(DsAssetTypeConstants.V_SWITCH.name())
                 .zone(entity.getZoneId())
                 .description(entity.getDescription())
                 .createdTime(toGmtDate(entity.getCreationTime()))

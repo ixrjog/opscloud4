@@ -9,7 +9,7 @@ import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.tencent.exmail.drive.TencentExmailUserDrive;
 import com.baiyi.opscloud.tencent.exmail.entity.ExmailUser;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +44,7 @@ public class TencentExmailUserProvider extends BaseAssetProvider<ExmailUser> {
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.TENCENT_EXMAIL_USER.getType();
+        return DsAssetTypeConstants.TENCENT_EXMAIL_USER.name();
     }
 
     private TencentExmailConfig.Tencent buildConfig(DatasourceConfig dsConfig) {

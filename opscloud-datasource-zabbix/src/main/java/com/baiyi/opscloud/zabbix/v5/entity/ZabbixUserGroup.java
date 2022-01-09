@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.zabbix.v5.entity.base.ZabbixResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -79,7 +79,7 @@ public class ZabbixUserGroup {
                     .assetId(this.usrgrpid)
                     .name(this.name)
                     .assetKey(this.usrgrpid)
-                    .assetType(DsAssetTypeEnum.ZABBIX_USER_GROUP.name())
+                    .assetType(DsAssetTypeConstants.ZABBIX_USER_GROUP.name())
                     .isActive("0".equals(this.status))
                     .kind("zabbixUserGroup")
                     .build();

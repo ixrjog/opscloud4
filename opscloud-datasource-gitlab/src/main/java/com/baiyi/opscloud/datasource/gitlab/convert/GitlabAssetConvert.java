@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.gitlab.convert;
 
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.common.util.SSHUtil;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
@@ -29,7 +29,7 @@ public class GitlabAssetConvert {
                 .assetKey2(entity.getEmail())
                 .isActive(entity.isBlocked() == null || !entity.isBlocked())
                 .createdTime(entity.getCreatedAt())
-                .assetType(DsAssetTypeEnum.GITLAB_USER.name())
+                .assetType(DsAssetTypeConstants.GITLAB_USER.name())
                 .kind("gitlabUser")
                 .build();
 
@@ -49,7 +49,7 @@ public class GitlabAssetConvert {
                 .assetKey2(entity.getWebUrl())
                 .createdTime(entity.getCreatedAt())
                 .description(entity.getDescription())
-                .assetType(DsAssetTypeEnum.GITLAB_PROJECT.name())
+                .assetType(DsAssetTypeConstants.GITLAB_PROJECT.name())
                 .kind("gitlabProject")
                 .build();
 
@@ -74,7 +74,7 @@ public class GitlabAssetConvert {
                 .assetKey(entity.getWebUrl())
                 .assetKey2(entity.getPath())
                 .description(entity.getDescription())
-                .assetType(DsAssetTypeEnum.GITLAB_GROUP.name())
+                .assetType(DsAssetTypeConstants.GITLAB_GROUP.name())
                 .kind("gitlabProject")
                 .build();
 
@@ -93,7 +93,7 @@ public class GitlabAssetConvert {
                 .name(gitlabUser.getUsername())
                 .assetKey(SSHUtil.getFingerprint(entity.getKey()))
                 .assetKey2(entity.getKey())
-                .assetType(DsAssetTypeEnum.GITLAB_SSHKEY.name())
+                .assetType(DsAssetTypeConstants.GITLAB_SSHKEY.name())
                 .kind("gitlabSshKey")
                 .description(entity.getTitle())
                 .build();

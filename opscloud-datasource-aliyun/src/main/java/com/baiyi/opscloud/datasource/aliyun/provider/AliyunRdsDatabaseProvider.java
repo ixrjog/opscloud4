@@ -13,7 +13,7 @@ import com.baiyi.opscloud.datasource.aliyun.rds.drive.AliyunRdsDatabaseDrive;
 import com.baiyi.opscloud.datasource.aliyun.rds.entity.AliyunRds;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -27,7 +27,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
  * @Date 2021/9/30 9:31 上午
  * @Version 1.0
  */
-@ChildProvider(parentType = DsAssetTypeEnum.RDS_INSTANCE)
+@ChildProvider(parentType = DsAssetTypeConstants.RDS_INSTANCE)
 @Component
 public class AliyunRdsDatabaseProvider extends AbstractAssetChildProvider<AliyunRds.Database> {
 
@@ -71,7 +71,7 @@ public class AliyunRdsDatabaseProvider extends AbstractAssetChildProvider<Aliyun
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.RDS_DATABASE.name();
+        return DsAssetTypeConstants.RDS_DATABASE.name();
     }
 
 

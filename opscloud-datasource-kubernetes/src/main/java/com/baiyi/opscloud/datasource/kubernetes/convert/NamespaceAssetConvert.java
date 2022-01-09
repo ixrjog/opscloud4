@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.kubernetes.convert;
 
 import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.core.util.TimeUtil;
@@ -29,7 +29,7 @@ public class NamespaceAssetConvert {
                 .name(entity.getMetadata().getName())
                 .assetKey(entity.getMetadata().getName())
                 .kind(entity.getKind())
-                .assetType(DsAssetTypeEnum.KUBERNETES_NAMESPACE.name())
+                .assetType(DsAssetTypeConstants.KUBERNETES_NAMESPACE.name())
                 .createdTime(toGmtDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
 

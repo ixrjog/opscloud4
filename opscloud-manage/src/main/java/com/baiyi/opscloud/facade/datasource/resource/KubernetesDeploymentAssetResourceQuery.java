@@ -2,8 +2,8 @@ package com.baiyi.opscloud.facade.datasource.resource;
 
 import com.baiyi.opscloud.domain.annotation.ApplicationResType;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
-import com.baiyi.opscloud.domain.types.ApplicationResTypeEnum;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import org.springframework.stereotype.Component;

@@ -13,7 +13,7 @@ import com.baiyi.opscloud.datasource.sonar.entity.base.BaseSonarElement;
 import com.baiyi.opscloud.datasource.sonar.param.PagingParam;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -46,7 +46,7 @@ public class SonarProjectProvider extends BaseAssetProvider<BaseSonarElement.Pro
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.SONAR_PROJECT.getType();
+        return DsAssetTypeConstants.SONAR_PROJECT.name();
     }
 
     private SonarConfig.Sonar buildConfig(DatasourceConfig dsConfig) {

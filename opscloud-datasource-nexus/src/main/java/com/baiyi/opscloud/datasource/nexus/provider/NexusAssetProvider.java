@@ -11,7 +11,7 @@ import com.baiyi.opscloud.datasource.nexus.drive.NexusAssetDrive;
 import com.baiyi.opscloud.datasource.nexus.entity.NexusAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -45,7 +45,7 @@ public class NexusAssetProvider extends BaseAssetProvider<NexusAsset.Item> {
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.NEXUS_ASSET.getType();
+        return DsAssetTypeConstants.NEXUS_ASSET.name();
     }
 
     private NexusConfig.Nexus buildConfig(DatasourceConfig dsConfig) {

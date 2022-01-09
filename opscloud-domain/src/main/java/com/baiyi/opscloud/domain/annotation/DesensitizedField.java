@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.annotation;
 
-import com.baiyi.opscloud.domain.types.SensitiveTypeEnum;
+import com.baiyi.opscloud.domain.constants.SensitiveTypeEnum;
 
 import java.lang.annotation.*;
 

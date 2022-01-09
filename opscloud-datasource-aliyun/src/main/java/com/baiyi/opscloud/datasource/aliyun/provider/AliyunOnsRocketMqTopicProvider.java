@@ -14,7 +14,7 @@ import com.baiyi.opscloud.datasource.aliyun.ons.drive.AliyunOnsRocketMqTopicDriv
 import com.baiyi.opscloud.datasource.aliyun.util.AliyunRegionIdUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
 import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsInstance;
 import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsRocketMqTopic;
@@ -34,7 +34,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
  * @Version 1.0
  */
 @Component
-@ChildProvider(parentType = DsAssetTypeEnum.ONS_ROCKETMQ_INSTANCE)
+@ChildProvider(parentType = DsAssetTypeConstants.ONS_ROCKETMQ_INSTANCE)
 public class AliyunOnsRocketMqTopicProvider extends AbstractAssetChildProvider<OnsRocketMqTopic.Topic> {
 
     @Resource
@@ -106,7 +106,7 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetChildProvider<O
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.ONS_ROCKETMQ_TOPIC.name();
+        return DsAssetTypeConstants.ONS_ROCKETMQ_TOPIC.name();
     }
 
     @Override

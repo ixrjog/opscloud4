@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.base.Joiner;
 import io.fabric8.kubernetes.api.model.Service;
 
@@ -31,7 +31,7 @@ public class ServiceAssetConvert {
                 .assetKey(name)
                 .assetKey2(namespace) // namespace
                 .kind(entity.getKind())
-                .assetType(DsAssetTypeEnum.KUBERNETES_SERVICE.name())
+                .assetType(DsAssetTypeConstants.KUBERNETES_SERVICE.name())
                 .createdTime(DeploymentAssetConvert.toGmtDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
 

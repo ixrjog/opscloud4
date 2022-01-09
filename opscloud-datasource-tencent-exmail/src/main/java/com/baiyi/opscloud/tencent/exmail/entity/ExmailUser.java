@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.tencent.exmail.entity.base.BaseExmailResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -64,7 +64,7 @@ public class ExmailUser extends BaseExmailResult implements IToAsset {
                 .assetKey2(this.userId.split("@")[0])  // 用户名
                 .description(this.position)
                 .isActive("1".equals(this.enable))
-                .assetType(DsAssetTypeEnum.TENCENT_EXMAIL_USER.name())
+                .assetType(DsAssetTypeConstants.TENCENT_EXMAIL_USER.name())
                 .kind("user")
                 .build();
 

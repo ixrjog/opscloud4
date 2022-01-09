@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import io.fabric8.kubernetes.api.model.Node;
 import io.fabric8.kubernetes.api.model.NodeAddress;
 
@@ -36,7 +36,7 @@ public class NodeAssetConvert {
                 .assetKey(addressMap.containsKey("InternalIP") ? addressMap.get("InternalIP").getAddress() : entity.getMetadata().getName())
                 .assetKey2(addressMap.containsKey("Hostname") ? addressMap.get("Hostname").getAddress() : null)
                 .kind(entity.getKind())
-                .assetType(DsAssetTypeEnum.KUBERNETES_NODE.name())
+                .assetType(DsAssetTypeConstants.KUBERNETES_NODE.name())
                 .createdTime(toGmtDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
         return AssetContainerBuilder.newBuilder()

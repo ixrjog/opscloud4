@@ -3,7 +3,7 @@ package com.baiyi.opscloud.event.customer.impl;
 import com.baiyi.opscloud.datasource.manager.DsAccountGroupManager;
 import com.baiyi.opscloud.datasource.manager.DsServerGroupManager;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.event.NoticeEvent;
 import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;

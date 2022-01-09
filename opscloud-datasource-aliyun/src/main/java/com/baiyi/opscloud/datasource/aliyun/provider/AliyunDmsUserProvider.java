@@ -13,7 +13,7 @@ import com.baiyi.opscloud.datasource.aliyun.dms.entity.DmsUser;
 import com.baiyi.opscloud.datasource.aliyun.provider.push.AliyunDmsUserPushHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -107,7 +107,7 @@ public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.DMS_USER.name();
+        return DsAssetTypeConstants.DMS_USER.name();
     }
 
     @Override

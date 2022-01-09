@@ -9,7 +9,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
 import com.google.common.base.Joiner;
@@ -46,12 +46,12 @@ public class AnsibleHosts {
             DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                     .instanceUuid(dsInstance.getUuid())
                     .assetId("1")
-                    .name(DsAssetTypeEnum.ANSIBLE_HOSTS.name().toLowerCase())
-                    .assetKey(DsAssetTypeEnum.ANSIBLE_HOSTS.name())
+                    .name(DsAssetTypeConstants.ANSIBLE_HOSTS.name().toLowerCase())
+                    .assetKey(DsAssetTypeConstants.ANSIBLE_HOSTS.name())
                     .assetKey2(SystemEnvUtil.renderEnvHome(this.inventoryHost))
                     .description(this.toInventory())
                     .isActive(true)
-                    .assetType(DsAssetTypeEnum.ANSIBLE_HOSTS.name())
+                    .assetType(DsAssetTypeConstants.ANSIBLE_HOSTS.name())
                     .kind("ansibleHosts")
                     .build();
             IOUtil.writeFile(asset.getDescription(), asset.getAssetKey2());

@@ -11,7 +11,7 @@ import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamAccessKeyDrive;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.AccessKey;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -29,7 +29,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
  */
 
 @Component
-@ChildProvider(parentType = DsAssetTypeEnum.RAM_USER)
+@ChildProvider(parentType = DsAssetTypeConstants.RAM_USER)
 public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<AccessKey.Key> {
 
     @Resource
@@ -70,7 +70,7 @@ public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<Acces
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.RAM_ACCESS_KEY.name();
+        return DsAssetTypeConstants.RAM_ACCESS_KEY.name();
     }
 
     @Override

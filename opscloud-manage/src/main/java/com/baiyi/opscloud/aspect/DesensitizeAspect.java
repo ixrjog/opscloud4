@@ -2,7 +2,7 @@ package com.baiyi.opscloud.aspect;
 
 import com.baiyi.opscloud.common.util.RegexUtil;
 import com.baiyi.opscloud.domain.annotation.DesensitizedField;
-import com.baiyi.opscloud.domain.types.SensitiveTypeEnum;
+import com.baiyi.opscloud.domain.constants.SensitiveTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;

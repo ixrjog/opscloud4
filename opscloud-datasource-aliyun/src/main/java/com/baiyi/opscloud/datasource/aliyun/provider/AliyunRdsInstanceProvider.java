@@ -13,7 +13,7 @@ import com.baiyi.opscloud.datasource.aliyun.rds.drive.AliyunRdsInstanceDrive;
 import com.baiyi.opscloud.datasource.aliyun.rds.entity.AliyunRds;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -39,7 +39,7 @@ public class AliyunRdsInstanceProvider extends BaseAssetProvider<AliyunRds.DBIns
     private AliyunRdsInstanceProvider aliyunRdsInstanceProvider;
 
     @Override
-    @EnablePullChild(type = DsAssetTypeEnum.RDS_INSTANCE)
+    @EnablePullChild(type = DsAssetTypeConstants.RDS_INSTANCE)
     @SingleTask(name = PULL_ALIYUN_RDS_INSTANCE, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
@@ -78,7 +78,7 @@ public class AliyunRdsInstanceProvider extends BaseAssetProvider<AliyunRds.DBIns
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.RDS_INSTANCE.name();
+        return DsAssetTypeConstants.RDS_INSTANCE.name();
     }
 
     @Override

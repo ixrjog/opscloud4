@@ -4,8 +4,8 @@ import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.sshcore.table.PrettyTable;
 import com.baiyi.opscloud.sshserver.PromptColor;
@@ -45,7 +45,7 @@ public class KubernetesDeploymentCommand extends BaseKubernetesCommand {
     @ShellMethod(value = "查询无状态列表信息", key = {"list-k8s-deployment"})
     public void listKubernetesDeployment(@ShellOption(help = "Name", defaultValue = "") String name) {
         DsAssetParam.UserPermissionAssetPageQuery pageQuery = DsAssetParam.UserPermissionAssetPageQuery.builder()
-                .assetType(DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.name())
+                .assetType(DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name())
                 .queryName(name)
                 .businessType(BusinessTypeEnum.APPLICATION.getType())
                 .userId(userService.getByUsername(SessionUtil.getUsername()).getId())

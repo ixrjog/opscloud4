@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.event.customer.impl;
 
 import com.baiyi.opscloud.common.helper.TopicHelper;
-import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
+import com.baiyi.opscloud.domain.constants.EventActionTypeEnum;
 import com.baiyi.opscloud.event.IEvent;
 import com.baiyi.opscloud.event.NoticeEvent;
 import com.baiyi.opscloud.event.customer.EventConsumerFactory;

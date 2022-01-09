@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import lombok.*;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
@@ -111,7 +111,7 @@ public class LdapPerson {
                     .name(this.displayName)
                     .assetKey(this.username)
                     .assetKey2(this.email)
-                    .assetType(DsAssetTypeEnum.USER.name())
+                    .assetType(DsAssetTypeConstants.USER.name())
                     .kind("user")
                     .build();
             return AssetContainerBuilder.newBuilder()

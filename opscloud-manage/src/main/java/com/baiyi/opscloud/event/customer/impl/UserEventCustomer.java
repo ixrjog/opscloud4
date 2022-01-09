@@ -2,7 +2,7 @@ package com.baiyi.opscloud.event.customer.impl;
 
 import com.baiyi.opscloud.datasource.manager.DsAccountManager;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.event.NoticeEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

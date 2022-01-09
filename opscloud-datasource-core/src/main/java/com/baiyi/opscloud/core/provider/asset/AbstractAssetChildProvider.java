@@ -28,7 +28,7 @@ public abstract class AbstractAssetChildProvider<C> extends BaseAssetProvider<C>
     }
 
     private String getParentAssetKey() {
-        return AopUtils.getTargetClass(this).getAnnotation(ChildProvider.class).parentType().getType();
+        return AopUtils.getTargetClass(this).getAnnotation(ChildProvider.class).parentType().name();
     }
 
     protected abstract List<C> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset);

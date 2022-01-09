@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.zabbix.v5.entity.base.ZabbixResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -112,7 +112,7 @@ public class ZabbixHost {
                     //.assetKey2()
                     .kind(String.valueOf(this.flags))
                     .isActive(0 == this.status)
-                    .assetType(DsAssetTypeEnum.ZABBIX_HOST.name())
+                    .assetType(DsAssetTypeConstants.ZABBIX_HOST.name())
                     .description(this.description)
                     .build();
             return AssetContainerBuilder.newBuilder()

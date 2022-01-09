@@ -13,7 +13,7 @@ import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamPolicy;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamUser;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -39,7 +39,7 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<RamUser
     private AliyunRamUserProvider aliyunRamUserProvider;
 
     @Override
-    @EnablePullChild(type = DsAssetTypeEnum.RAM_USER)
+    @EnablePullChild(type = DsAssetTypeConstants.RAM_USER)
     @SingleTask(name = PULL_ALIYUN_RAM_USER, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
@@ -77,7 +77,7 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<RamUser
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.RAM_USER.name();
+        return DsAssetTypeConstants.RAM_USER.name();
     }
 
     @Override
@@ -93,6 +93,6 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<RamUser
 
     @Override
     public String getTargetAssetKey() {
-        return DsAssetTypeEnum.RAM_POLICY.name();
+        return DsAssetTypeConstants.RAM_POLICY.name();
     }
 }

@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesDeploymentDrive;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTemplate;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.facade.template.factory.base.AbstractTemplateConsume;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ public class KubernetesDeploymentTemplateConsume extends AbstractTemplateConsume
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.name();
+        return DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name();
     }
 
     @Override

@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import lombok.*;
 
 import java.util.Date;
@@ -82,7 +82,7 @@ public class AliyunRds {
                     .name(this.getDBInstanceDescription())
                     .assetKey(this.getDBInstanceId())
                     //.assetKey2()
-                    .assetType(DsAssetTypeEnum.RDS_INSTANCE.name())
+                    .assetType(DsAssetTypeConstants.RDS_INSTANCE.name())
                     .kind(this.getDBInstanceClass()) // 类 rds.mysql.s3.large
                     .regionId(this.getRegionId())
                     .zone(this.getZoneId())
@@ -174,7 +174,7 @@ public class AliyunRds {
                     .assetId(this.dBInstanceId) // 资产id = 实例id
                     .name(this.dBName)
                     .assetKey(this.dBName)
-                    .assetType(DsAssetTypeEnum.RDS_DATABASE.name())
+                    .assetType(DsAssetTypeConstants.RDS_DATABASE.name())
                     .kind(this.engine)
                     .regionId(this.regionId)
                     .build();

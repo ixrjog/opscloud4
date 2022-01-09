@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.business.impl;
 import com.baiyi.opscloud.common.annotation.EventPublisher;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessProperty;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
-import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
+import com.baiyi.opscloud.domain.constants.EventActionTypeEnum;
 import com.baiyi.opscloud.mapper.opscloud.BusinessPropertyMapper;
 import com.baiyi.opscloud.service.business.BusinessPropertyService;
 import lombok.RequiredArgsConstructor;

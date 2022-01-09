@@ -3,7 +3,7 @@ package com.baiyi.opscloud.zabbix.provider;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.zabbix.provider.base.AbstractZabbixHostProvider;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class ZabbixHostTargetTriggerProvider extends AbstractZabbixHostProvider<
 
     @Override
     public String getTargetAssetKey() {
-        return DsAssetTypeEnum.ZABBIX_TRIGGER.getType();
+        return DsAssetTypeConstants.ZABBIX_TRIGGER.name();
     }
 
     @Override

@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.datasource.gitlab.drive.GitlabUserDrive;
 import com.google.common.collect.Lists;
 import org.gitlab.api.models.GitlabSSHKey;
@@ -85,12 +85,12 @@ public class GitlabSSHKeyProvider extends AbstractAssetRelationProvider<GitlabSS
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.GITLAB_SSHKEY.getType();
+        return DsAssetTypeConstants.GITLAB_SSHKEY.name();
     }
 
     @Override
     public String getTargetAssetKey() {
-        return DsAssetTypeEnum.GITLAB_USER.getType();
+        return DsAssetTypeConstants.GITLAB_USER.name();
     }
 
     @Override

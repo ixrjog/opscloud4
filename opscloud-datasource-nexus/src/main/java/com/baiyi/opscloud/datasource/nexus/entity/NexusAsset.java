@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -72,7 +72,7 @@ public class NexusAsset {
                     .assetKey(this.downloadUrl)
                     .assetKey2(this.repository)
                     .isActive(true)
-                    .assetType(DsAssetTypeEnum.NEXUS_ASSET.name())
+                    .assetType(DsAssetTypeConstants.NEXUS_ASSET.name())
                     .kind("user")
                     .build();
 

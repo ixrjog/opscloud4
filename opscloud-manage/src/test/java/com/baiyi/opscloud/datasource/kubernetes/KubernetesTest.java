@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.kubernetes;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseConfig;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
@@ -43,21 +43,21 @@ public class KubernetesTest extends BaseUnit {
 
     @Test
     void pullNamespaceTest() {
-        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.KUBERNETES.getName(), DsAssetTypeEnum.KUBERNETES_NAMESPACE.getType());
+        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.KUBERNETES.getName(), DsAssetTypeConstants.KUBERNETES_NAMESPACE.name());
         assert assetProvider != null;
         assetProvider.pullAsset(5);
     }
 
     @Test
     void pullPodTest() {
-        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.KUBERNETES.getName(), DsAssetTypeEnum.KUBERNETES_POD.getType());
+        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.KUBERNETES.getName(), DsAssetTypeConstants.KUBERNETES_POD.name());
         assert assetProvider != null;
         assetProvider.pullAsset(5);
     }
 
     @Test
     void pullDeploymentTest() {
-        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.KUBERNETES.getName(), DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.getType());
+        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.KUBERNETES.getName(), DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name());
         assert assetProvider != null;
         assetProvider.pullAsset(5);
     }

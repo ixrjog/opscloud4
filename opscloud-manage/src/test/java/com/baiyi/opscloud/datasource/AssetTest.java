@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
@@ -26,35 +26,35 @@ public class AssetTest extends BaseUnit {
 
     @Test
     void pullAsset() {
-        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.LDAP.getName(), DsAssetTypeEnum.USER.getType());
+        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.LDAP.getName(), DsAssetTypeConstants.USER.name());
         assert assetProvider != null;
         assetProvider.pullAsset(1);
     }
 
     @Test
     void pullGroup() {
-        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.LDAP.getName(), DsAssetTypeEnum.GROUP.getType());
+        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.LDAP.getName(), DsAssetTypeConstants.GROUP.name());
         assert assetProvider != null;
         assetProvider.pullAsset(1);
     }
 
     @Test
     void pullAssetByGitlabUser() {
-        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.GITLAB.getName(), DsAssetTypeEnum.USER.getType());
+        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.GITLAB.getName(), DsAssetTypeConstants.USER.name());
         assert assetProvider != null;
         assetProvider.pullAsset(2);
     }
 
     @Test
     void pullAssetByGitlabProject() {
-        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.GITLAB.getName(), DsAssetTypeEnum.GITLAB_PROJECT.getType());
+        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.GITLAB.getName(), DsAssetTypeConstants.GITLAB_PROJECT.name());
         assert assetProvider != null;
         assetProvider.pullAsset(2);
     }
 
     @Test
     void pullAssetByGitlabGroup() {
-        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.GITLAB.getName(), DsAssetTypeEnum.GITLAB_GROUP.getType());
+        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.GITLAB.getName(), DsAssetTypeConstants.GITLAB_GROUP.name());
         assert assetProvider != null;
         assetProvider.pullAsset(2);
     }

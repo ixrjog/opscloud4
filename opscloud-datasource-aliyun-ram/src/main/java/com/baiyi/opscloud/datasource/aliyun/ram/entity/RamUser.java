@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -51,7 +51,7 @@ public class RamUser {
                     .assetKey(this.userName)
                     .assetKey2(this.email)
                     .kind("ramUser")
-                    .assetType(DsAssetTypeEnum.RAM_USER.name())
+                    .assetType(DsAssetTypeConstants.RAM_USER.name())
                     .description(this.comments)
                     .createdTime(toGmtDate(this.createDate))
                     .build();

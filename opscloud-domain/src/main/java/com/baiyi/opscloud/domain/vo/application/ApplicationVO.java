@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.vo.application;
 
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.business.IBusinessPermissionUser;
 import com.baiyi.opscloud.domain.vo.user.UserVO;

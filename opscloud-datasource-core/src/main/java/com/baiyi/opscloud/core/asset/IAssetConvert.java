@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.core.asset;
 
 import com.baiyi.opscloud.domain.base.IAssetType;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 

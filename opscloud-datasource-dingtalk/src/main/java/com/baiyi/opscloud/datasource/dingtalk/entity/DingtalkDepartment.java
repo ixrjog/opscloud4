@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -71,7 +71,7 @@ public class DingtalkDepartment {
                     .assetId(String.valueOf(this.deptId))
                     .name(this.name)
                     .assetKey(String.valueOf(this.deptId))
-                    .assetType(DsAssetTypeEnum.DINGTALK_DEPARTMENT.name())
+                    .assetType(DsAssetTypeConstants.DINGTALK_DEPARTMENT.name())
                     .kind("department")
                     .build();
             return AssetContainerBuilder.newBuilder()

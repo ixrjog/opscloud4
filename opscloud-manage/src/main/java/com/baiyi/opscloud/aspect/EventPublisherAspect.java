@@ -2,7 +2,7 @@ package com.baiyi.opscloud.aspect;
 
 import com.baiyi.opscloud.common.annotation.EventPublisher;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.event.NoticeEvent;
 import com.baiyi.opscloud.event.SimpleEvent;

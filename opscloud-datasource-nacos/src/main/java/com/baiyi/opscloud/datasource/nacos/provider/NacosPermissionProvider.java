@@ -13,7 +13,7 @@ import com.baiyi.opscloud.datasource.nacos.entity.NacosPermission;
 import com.baiyi.opscloud.datasource.nacos.param.NacosPageParam;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -40,7 +40,7 @@ public class NacosPermissionProvider extends BaseAssetProvider<NacosPermission.P
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.NACOS_PERMISSION.name();
+        return DsAssetTypeConstants.NACOS_PERMISSION.name();
     }
 
     private NacosConfig.Nacos buildConfig(DatasourceConfig dsConfig) {

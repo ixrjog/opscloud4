@@ -12,7 +12,7 @@ import com.baiyi.opscloud.datasource.aliyun.redis.drive.AliyunRedisInstanceDrive
 import com.baiyi.opscloud.datasource.aliyun.redis.entity.AliyunRedis;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -76,7 +76,7 @@ public class AliyunRedisInstanceProvider extends BaseAssetProvider<AliyunRedis.K
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.REDIS_INSTANCE.name();
+        return DsAssetTypeConstants.REDIS_INSTANCE.name();
     }
 
     @Override

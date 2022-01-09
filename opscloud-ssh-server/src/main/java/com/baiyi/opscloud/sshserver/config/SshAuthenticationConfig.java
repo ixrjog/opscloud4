@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserCredential;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.user.UserCredentialService;
@@ -110,7 +110,7 @@ public class SshAuthenticationConfig {
         List<DatasourceInstanceAsset> result = Lists.newArrayList();
         instances.forEach(i -> {
             DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
-                    .assetType(DsAssetTypeEnum.GITLAB_SSHKEY.getType())
+                    .assetType(DsAssetTypeConstants.GITLAB_SSHKEY.name())
                     .instanceUuid(i.getUuid())
                     .name(username)
                     .build();

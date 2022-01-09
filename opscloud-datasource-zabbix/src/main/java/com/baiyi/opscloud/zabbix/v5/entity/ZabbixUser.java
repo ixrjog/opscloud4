@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.zabbix.v5.entity.base.ZabbixResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -104,7 +104,7 @@ public class ZabbixUser {
                     .assetKey(this.alias)
                     .assetKey2(this.surname)
                     .kind(String.valueOf(this.type))
-                    .assetType(DsAssetTypeEnum.ZABBIX_USER.name())
+                    .assetType(DsAssetTypeConstants.ZABBIX_USER.name())
                     .build();
             AssetContainerBuilder builder = AssetContainerBuilder.newBuilder()
                     .paramAsset(asset);

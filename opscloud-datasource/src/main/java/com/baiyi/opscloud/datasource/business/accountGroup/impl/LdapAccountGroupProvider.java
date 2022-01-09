@@ -6,7 +6,7 @@ import com.baiyi.opscloud.datasource.business.accountGroup.impl.base.AbstractAcc
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.datasource.ldap.repo.GroupRepo;
 import com.baiyi.opscloud.service.user.UserGroupService;

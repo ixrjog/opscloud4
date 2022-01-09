@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.vo.tag;
 
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import io.swagger.annotations.ApiModel;

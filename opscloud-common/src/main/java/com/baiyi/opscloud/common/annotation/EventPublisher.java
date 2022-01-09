@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.common.annotation;
 
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.EventActionTypeEnum;
 
 import java.lang.annotation.*;
 

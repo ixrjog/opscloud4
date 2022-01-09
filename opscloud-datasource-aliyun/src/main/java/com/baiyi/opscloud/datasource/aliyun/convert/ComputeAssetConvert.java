@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.aliyun.convert;
 import com.aliyuncs.ecs.model.v20140526.DescribeImagesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.core.util.TimeUtil;
@@ -40,7 +40,7 @@ public class ComputeAssetConvert {
                         entity.getInnerIpAddress().get(0))
                 // publicIp
                 .assetKey2(getPublicIp(entity))
-                .assetType(DsAssetTypeEnum.ECS.name())
+                .assetType(DsAssetTypeConstants.ECS.name())
                 .kind(entity.getInstanceType())
                 .regionId(entity.getRegionId())
                 .zone(entity.getZoneId())
@@ -77,7 +77,7 @@ public class ComputeAssetConvert {
                 .name(entity.getImageName())
                 .assetKey(entity.getImageId())
                 .kind("ecsImage")
-                .assetType(DsAssetTypeEnum.ECS_IMAGE.name())
+                .assetType(DsAssetTypeConstants.ECS_IMAGE.name())
                 .description(entity.getDescription())
                 .createdTime(toGmtDate(entity.getCreationTime()))
                 .build();

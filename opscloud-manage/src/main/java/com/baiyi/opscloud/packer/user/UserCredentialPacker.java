@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.packer.user;
 
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.UserCredential;
@@ -56,7 +56,7 @@ public class UserCredentialPacker {
 
     private Map<String, List<DsAssetVO.Asset>> buildAssetCredentialMap(String username) {
         Map<String, List<DsAssetVO.Asset>> assetCredentialMap = Maps.newHashMap();
-        assetCredentialMap.put(DsAssetTypeEnum.GITLAB_SSHKEY.getType(), dsInstanceAssetFacade.querySshKeyAssets(username));
+        assetCredentialMap.put(DsAssetTypeConstants.GITLAB_SSHKEY.name(), dsInstanceAssetFacade.querySshKeyAssets(username));
         return assetCredentialMap;
     }
 }

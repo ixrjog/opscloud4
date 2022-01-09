@@ -8,8 +8,8 @@ import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkMessage;
 import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkMessageParam;
 import com.baiyi.opscloud.datasource.message.customer.base.AbstractMessageCustomer;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +33,7 @@ public class DingtalkAppMessageCustomer extends AbstractMessageCustomer<Dingtalk
                 businessAssetRelationService.queryBusinessRelations(BusinessTypeEnum.USER.getType(), user.getId());
         for (BusinessAssetRelation relation : relations) {
             DatasourceInstanceAsset asset = dsInstanceAssetService.getById(relation.getDatasourceInstanceAssetId());
-            if (asset.getInstanceUuid().equals(instance.getUuid()) && asset.getAssetType().equals(DsAssetTypeEnum.DINGTALK_USER.name()))
+            if (asset.getInstanceUuid().equals(instance.getUuid()) && asset.getAssetType().equals(DsAssetTypeConstants.DINGTALK_USER.name()))
                 return asset;
         }
         throw new CommonRuntimeException("发送消息失败: 用户未绑定钉钉用户，无法查找对应userid！");

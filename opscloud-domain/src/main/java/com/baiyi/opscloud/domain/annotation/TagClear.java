@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.annotation;
 
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 
 import java.lang.annotation.*;
 

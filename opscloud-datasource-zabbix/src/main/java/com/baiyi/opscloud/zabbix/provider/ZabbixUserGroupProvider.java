@@ -9,7 +9,7 @@ import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5UserGroupDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
@@ -63,12 +63,12 @@ public class ZabbixUserGroupProvider extends AbstractAssetRelationProvider<Zabbi
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.ZABBIX_USER_GROUP.getType();
+        return DsAssetTypeConstants.ZABBIX_USER_GROUP.name();
     }
 
     @Override
     public String getTargetAssetKey() {
-        return DsAssetTypeEnum.ZABBIX_USER.getType();
+        return DsAssetTypeConstants.ZABBIX_USER.name();
     }
 
     @Override

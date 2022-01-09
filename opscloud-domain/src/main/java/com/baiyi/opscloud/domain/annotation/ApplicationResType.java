@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.annotation;
 
-import com.baiyi.opscloud.domain.types.ApplicationResTypeEnum;
+import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
 
 import java.lang.annotation.*;
 

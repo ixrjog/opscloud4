@@ -13,7 +13,7 @@ import com.baiyi.opscloud.datasource.aliyun.ons.drive.AliyunOnsRocketMqInstanceD
 import com.baiyi.opscloud.datasource.aliyun.util.AliyunRegionIdUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
 import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsInstance;
 import org.springframework.stereotype.Component;
@@ -39,7 +39,7 @@ public class AliyunOnsRocketMqInstanceProvider extends BaseAssetProvider<OnsInst
     private AliyunOnsRocketMqInstanceProvider aliyunOnsRocketMqInstanceProvider;
 
     @Override
-    @EnablePullChild(type = DsAssetTypeEnum.ONS_ROCKETMQ_INSTANCE)
+    @EnablePullChild(type = DsAssetTypeConstants.ONS_ROCKETMQ_INSTANCE)
     @SingleTask(name = PULL_ALIYUN_ONS_ROCKETMQ_INSTANCE, lockTime = "2m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
@@ -77,7 +77,7 @@ public class AliyunOnsRocketMqInstanceProvider extends BaseAssetProvider<OnsInst
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.ONS_ROCKETMQ_INSTANCE.name();
+        return DsAssetTypeConstants.ONS_ROCKETMQ_INSTANCE.name();
     }
 
     @Override

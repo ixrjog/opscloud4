@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.core.asset.impl;
 
 import com.baiyi.opscloud.core.asset.impl.base.AbstractAssetToBO;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
@@ -21,7 +21,7 @@ public class ZabbixHostAssetToServer extends AbstractAssetToBO {
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.ZABBIX_HOST.getType();
+        return DsAssetTypeConstants.ZABBIX_HOST.name();
     }
 
     protected BusinessAssetRelationVO.IBusinessAssetRelation toBO(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum) {

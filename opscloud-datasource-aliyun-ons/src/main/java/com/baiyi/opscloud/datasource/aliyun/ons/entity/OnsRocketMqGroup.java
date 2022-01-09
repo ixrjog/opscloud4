@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import lombok.Data;
 
 import java.util.Date;
@@ -38,7 +38,7 @@ public class OnsRocketMqGroup {
                     .name(this.groupId)
                     .assetKey(this.groupId)
                     .kind(this.groupType)
-                    .assetType(DsAssetTypeEnum.ONS_ROCKETMQ_GROUP.name())
+                    .assetType(DsAssetTypeConstants.ONS_ROCKETMQ_GROUP.name())
                     .regionId(this.regionId)
                     .description(this.remark)
                     .createdTime(new Date(this.createTime))

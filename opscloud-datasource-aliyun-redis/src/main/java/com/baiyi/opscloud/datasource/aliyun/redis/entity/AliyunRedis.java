@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -71,7 +71,7 @@ public class AliyunRedis {
                     .assetKey(this.instanceId)
                     .assetKey2(this.userName)
                     .kind(this.instanceType)
-                    .assetType(DsAssetTypeEnum.REDIS_INSTANCE.name())
+                    .assetType(DsAssetTypeConstants.REDIS_INSTANCE.name())
                     .zone(this.zoneId)
                     .createdTime(TimeUtil.toGmtDate(this.createTime, TimeZoneEnum.UTC))
                     .expiredTime(TimeUtil.toGmtDate(this.endTime, TimeZoneEnum.UTC))

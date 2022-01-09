@@ -13,7 +13,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
 import io.fabric8.kubernetes.api.model.Namespace;
 import io.fabric8.kubernetes.api.model.Service;
@@ -40,7 +40,7 @@ public class KubernetesServiceProvider extends BaseAssetProvider<Service> {
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.KUBERNETES_SERVICE.getType();
+        return DsAssetTypeConstants.KUBERNETES_SERVICE.name();
     }
 
     private KubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {

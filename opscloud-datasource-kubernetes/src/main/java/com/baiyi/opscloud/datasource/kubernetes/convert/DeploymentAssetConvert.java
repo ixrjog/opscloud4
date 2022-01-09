@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.kubernetes.convert;
 
 import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.core.util.TimeUtil;
@@ -40,7 +40,7 @@ public class DeploymentAssetConvert {
                 // entiry.getSpec().getTemplate().getSpec().getContainers().get(0).getImage() 容器模版镜像
                 .assetKey2(namespace) // namespace
                 .kind(entity.getKind())
-                .assetType(DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.name())
+                .assetType(DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name())
                 .createdTime(toGmtDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
 

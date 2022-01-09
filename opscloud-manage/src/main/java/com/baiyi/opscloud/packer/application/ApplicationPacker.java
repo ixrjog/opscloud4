@@ -8,8 +8,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.IExtend;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
@@ -63,7 +63,7 @@ public class ApplicationPacker {
     public List<ApplicationVO.Application> wrapVOListByKubernetes(List<Application> data) {
         List<ApplicationVO.Application> voList = toVOList(data);
         voList.forEach(a -> {
-            List<ApplicationResource> resources = applicationResourceService.queryByApplication(a.getId(), DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.name());
+            List<ApplicationResource> resources = applicationResourceService.queryByApplication(a.getId(), DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name());
             a.setResources(resources.stream().map(this::wrapPodByDeployment).collect(Collectors.toList()));
         });
         return voList;

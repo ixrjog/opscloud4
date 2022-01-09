@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.factory.gitlab.impl;
 
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.factory.gitlab.GitlabEventNameEnum;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +25,7 @@ public class GitlabProjectEventConsume extends AbstractGitlabEventConsume {
 
     @Override
     protected String getAssetType() {
-        return DsAssetTypeEnum.GITLAB_PROJECT.name();
+        return DsAssetTypeConstants.GITLAB_PROJECT.name();
     }
 
 }

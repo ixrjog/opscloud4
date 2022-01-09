@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -85,7 +85,7 @@ public class DingtalkUser {
                     .name(this.name)
                     .assetKey(this.unionid)
                     .assetKey2(this.email)
-                    .assetType(DsAssetTypeEnum.DINGTALK_USER.name())
+                    .assetType(DsAssetTypeConstants.DINGTALK_USER.name())
                     .description(this.title)
                     .isActive(this.active)
                     .kind("user")

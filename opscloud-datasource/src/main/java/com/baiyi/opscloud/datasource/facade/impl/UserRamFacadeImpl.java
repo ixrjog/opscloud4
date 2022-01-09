@@ -16,7 +16,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.notice.message.CreateRamUserMessage;
 import com.baiyi.opscloud.domain.param.user.UserRamParam;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.base.Joiner;
@@ -67,7 +67,7 @@ public class UserRamFacadeImpl implements UserRamFacade {
     public RamUser.User createUser(AliyunConfig.Aliyun aliyun, String instanceUuid, User user) {
         RamUser.User ramUser = aliyunRamUserDrive.createUser(aliyun.getRegionId(), aliyun, user, CREATE_LOGIN_PROFILE);
         // 同步资产 RAM_USER
-        dsInstanceFacade.pullAsset(instanceUuid, DsAssetTypeEnum.RAM_USER.name(), ramUser);
+        dsInstanceFacade.pullAsset(instanceUuid, DsAssetTypeConstants.RAM_USER.name(), ramUser);
         CreateRamUserMessage message = CreateRamUserMessage.builder()
                 .aliyunName(aliyun.getAccount().getName())
                 .loginUrl(aliyun.getAccount().getRamLoginUrl())
@@ -94,7 +94,7 @@ public class UserRamFacadeImpl implements UserRamFacade {
             aliyunRamPolicyDrive.attachPolicyToUser(aliyun.getRegionId(), aliyun, ramUser.getUserName(), ramPolicy);
             RamPolicy.Policy policy = aliyunRamPolicyDrive.getPolicy(aliyun.getRegionId(), aliyun, ramPolicy);
             // 同步资产 RAM_USER
-            dsInstanceFacade.pullAsset(grantRamPolicy.getInstanceUuid(), DsAssetTypeEnum.RAM_USER.name(), ramUser);
+            dsInstanceFacade.pullAsset(grantRamPolicy.getInstanceUuid(), DsAssetTypeConstants.RAM_USER.name(), ramUser);
         } catch (ClientException e) {
             throw new CommonRuntimeException("AliyunAPI查询错误！");
         }
@@ -116,7 +116,7 @@ public class UserRamFacadeImpl implements UserRamFacade {
                     RamPolicy.Policy policy = aliyunRamPolicyDrive.getPolicy(aliyun.getRegionId(), aliyun, ramPolicy);
                 }
                 // 同步资产 RAM_USER
-                dsInstanceFacade.pullAsset(revokeRamPolicy.getInstanceUuid(), DsAssetTypeEnum.RAM_USER.name(), ramUser);
+                dsInstanceFacade.pullAsset(revokeRamPolicy.getInstanceUuid(), DsAssetTypeConstants.RAM_USER.name(), ramUser);
             }
         } catch (ClientException e) {
             throw new CommonRuntimeException("AliyunAPI查询错误！");

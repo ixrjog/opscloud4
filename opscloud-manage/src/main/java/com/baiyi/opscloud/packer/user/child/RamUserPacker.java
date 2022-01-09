@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.SimpleRelation;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
@@ -48,7 +48,7 @@ public class RamUserPacker {
 
     public void wrap(UserVO.User user) {
         DatasourceInstanceAsset param = DatasourceInstanceAsset.builder()
-                .assetType(DsAssetTypeEnum.RAM_USER.name())
+                .assetType(DsAssetTypeConstants.RAM_USER.name())
                 .assetKey(user.getUsername())
                 .isActive(true)
                 .build();
@@ -66,9 +66,9 @@ public class RamUserPacker {
         AliyunConfig config = dsFactory.build(datasourceConfig, AliyunConfig.class);
         config.getAliyun().getAccount().getRamLoginUrl();
         List<DsAssetVO.Asset> accessKeys
-                = asset.getTree().containsKey(DsAssetTypeEnum.RAM_ACCESS_KEY.name()) ? asset.getTree().get(DsAssetTypeEnum.RAM_ACCESS_KEY.name()) : Lists.newArrayList();
+                = asset.getTree().containsKey(DsAssetTypeConstants.RAM_ACCESS_KEY.name()) ? asset.getTree().get(DsAssetTypeConstants.RAM_ACCESS_KEY.name()) : Lists.newArrayList();
         List<DsAssetVO.Asset> ramPolicies
-                = asset.getChildren().containsKey(DsAssetTypeEnum.RAM_POLICY.name()) ? asset.getChildren().get(DsAssetTypeEnum.RAM_POLICY.name()) : Lists.newArrayList();
+                = asset.getChildren().containsKey(DsAssetTypeConstants.RAM_POLICY.name()) ? asset.getChildren().get(DsAssetTypeConstants.RAM_POLICY.name()) : Lists.newArrayList();
         return UserVO.RamUser.builder()
                 .instanceUuid(instance.getUuid())
                 .instanceName(instance.getInstanceName())

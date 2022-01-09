@@ -13,7 +13,7 @@ import com.baiyi.opscloud.datasource.nacos.entity.NacosRole;
 import com.baiyi.opscloud.datasource.nacos.param.NacosPageParam;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +41,7 @@ public class NacosUserProvider extends BaseAssetProvider<NacosRole.Role> {
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.NACOS_USER.name();
+        return DsAssetTypeConstants.NACOS_USER.name();
     }
 
     private NacosConfig.Nacos buildConfig(DatasourceConfig dsConfig) {

@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Joiner;
 import lombok.AllArgsConstructor;
@@ -65,7 +65,7 @@ public class NacosPermission {
                     .name(this.role)
                     .assetKey(buildAssetKey(this))
                     .isActive(true)
-                    .assetType(DsAssetTypeEnum.NACOS_PERMISSION.name())
+                    .assetType(DsAssetTypeConstants.NACOS_PERMISSION.name())
                     .kind("permission")
                     .build();
 

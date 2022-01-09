@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodCondition;
@@ -38,7 +38,7 @@ public class PodAssetConvert {
                 .assetKey(entity.getStatus().getPodIP())    // podIp
                 .assetKey2(entity.getMetadata().getNamespace()) // namespace
                 .kind(entity.getKind())
-                .assetType(DsAssetTypeEnum.KUBERNETES_POD.name())
+                .assetType(DsAssetTypeConstants.KUBERNETES_POD.name())
                 .createdTime(toGmtDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
 

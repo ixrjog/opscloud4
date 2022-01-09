@@ -10,8 +10,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
 import com.baiyi.opscloud.domain.generator.opscloud.Tag;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.tag.BusinessTagService;
@@ -80,7 +80,7 @@ public class AliyunDmsUserPushHelper {
     private List<DatasourceInstanceAsset> queryVaildRamUsers(String instanceUuid) {
         DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
                 .instanceUuid(instanceUuid)
-                .assetType(DsAssetTypeEnum.RAM_USER.name())
+                .assetType(DsAssetTypeConstants.RAM_USER.name())
                 .page(1)
                 .length(10000)
                 .build();
@@ -100,7 +100,7 @@ public class AliyunDmsUserPushHelper {
     private List<DatasourceInstanceAsset> queryDmsUsers(String instanceUuid) {
         DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
                 .instanceUuid(instanceUuid)
-                .assetType(DsAssetTypeEnum.DMS_USER.name())
+                .assetType(DsAssetTypeConstants.DMS_USER.name())
                 .page(1)
                 .length(10000)
                 .build();

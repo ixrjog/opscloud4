@@ -5,8 +5,8 @@ import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalProcessFactory;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
@@ -54,7 +54,7 @@ public abstract class AbstractKubernetesTerminalProcessor<T extends KubernetesMe
     private DatasourceInstanceAsset getAssetByResource(KubernetesResource kubernetesResource) {
         if (kubernetesResource.getBusinessType() == BusinessTypeEnum.ASSET.getType()) {
             DatasourceInstanceAsset asset = dsInstanceAssetService.getById(kubernetesResource.getBusinessId());
-            if (DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.getType().equals(asset.getAssetType()))
+            if (DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name().equals(asset.getAssetType()))
                 return asset;
         }
         throw new CommonRuntimeException("类型不符合");

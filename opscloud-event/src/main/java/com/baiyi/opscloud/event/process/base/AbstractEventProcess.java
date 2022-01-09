@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.domain.generator.opscloud.EventBusiness;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
 import com.baiyi.opscloud.domain.param.event.EventParam;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.event.IEventProcess;
 import com.baiyi.opscloud.event.factory.EventFactory;

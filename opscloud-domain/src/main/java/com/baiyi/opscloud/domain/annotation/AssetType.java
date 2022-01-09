@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.annotation;
 
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 
 import java.lang.annotation.*;
 
@@ -16,5 +16,5 @@ import java.lang.annotation.*;
 @Documented
 public @interface AssetType {
 
-    DsAssetTypeEnum value();
+    DsAssetTypeConstants value();
 }

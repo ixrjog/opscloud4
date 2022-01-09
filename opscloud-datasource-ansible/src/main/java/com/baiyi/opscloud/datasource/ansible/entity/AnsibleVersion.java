@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import lombok.Builder;
 import lombok.Data;
 
@@ -40,7 +40,7 @@ public class AnsibleVersion {
                     .assetKey2(this.executableLocation)
                     .description(this.details)
                     .isActive(true)
-                    .assetType(DsAssetTypeEnum.ANSIBLE_VERSION.name())
+                    .assetType(DsAssetTypeConstants.ANSIBLE_VERSION.name())
                     .kind("ansibleVersion")
                     .build();
 

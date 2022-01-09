@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
-import com.baiyi.opscloud.domain.types.ApplicationResTypeEnum;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import org.junit.jupiter.api.Test;
 

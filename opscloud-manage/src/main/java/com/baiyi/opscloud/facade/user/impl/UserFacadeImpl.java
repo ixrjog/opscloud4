@@ -18,8 +18,8 @@ import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
@@ -107,16 +107,16 @@ public class UserFacadeImpl implements UserFacade {
             log.info("同步用户 {}", u.getUsername());
             DatasourceInstanceAsset query = DatasourceInstanceAsset.builder()
                     .assetId(u.getUsername())
-                    .assetType(DsAssetTypeEnum.USER.name())
+                    .assetType(DsAssetTypeConstants.USER.name())
                     .isActive(true)
                     .build();
             List<DatasourceInstanceAsset> userAssets = dsInstanceAssetService.queryAssetByAssetParam(query);
             if (CollectionUtils.isEmpty(userAssets)) return;
             userAssets.forEach(a -> {
                 DsAssetVO.Asset asset = dsAssetPacker.wrapVO(a, SimpleExtend.EXTEND, SimpleRelation.RELATION);
-                if (asset.getChildren().containsKey(DsAssetTypeEnum.GROUP.getType())) {
+                if (asset.getChildren().containsKey(DsAssetTypeConstants.GROUP.name())) {
                     // GROUP存在
-                    asset.getChildren().get(DsAssetTypeEnum.GROUP.getType()).forEach(g ->
+                    asset.getChildren().get(DsAssetTypeConstants.GROUP.name()).forEach(g ->
                             userPermissionUserGroup(u, g.getAssetId()));
                 }
             });

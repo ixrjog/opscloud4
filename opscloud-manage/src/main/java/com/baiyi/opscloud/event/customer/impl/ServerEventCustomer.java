@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.helper.TopicHelper;
 import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.datasource.manager.DsServerManager;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.event.NoticeEvent;
 import com.baiyi.opscloud.facade.datasource.aliyun.AliyunLogFacade;
 import com.baiyi.opscloud.util.ServerTreeUtil;
