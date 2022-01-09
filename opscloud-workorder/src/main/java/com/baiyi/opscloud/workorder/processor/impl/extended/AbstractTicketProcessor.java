@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.workorder.processor.impl.base;
+package com.baiyi.opscloud.workorder.processor.impl.extended;
 
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
@@ -61,7 +61,7 @@ public abstract class AbstractTicketProcessor<T> implements ITicketProcessor, In
      */
     protected User queryApplicant(WorkOrderTicketEntry ticketEntry) {
         WorkOrderTicket workOrderTicket = workOrderTicketService.getById(ticketEntry.getWorkOrderTicketId());
-        return  userService.getByUsername(workOrderTicket.getUsername());
+        return userService.getByUsername(workOrderTicket.getUsername());
     }
 
     @Override
@@ -76,7 +76,7 @@ public abstract class AbstractTicketProcessor<T> implements ITicketProcessor, In
         updateTicket(ticketEntry);
     }
 
-    protected void updateTicket(WorkOrderTicketEntry ticketEntry) {
+    private void updateTicket(WorkOrderTicketEntry ticketEntry) {
         workOrderTicketEntryService.update(ticketEntry);
     }
 

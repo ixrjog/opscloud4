@@ -11,14 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
- * 阿里云ONS-Topic权限申请工单票据处理
  * @Author baiyi
- * @Date 2022/1/7 6:21 PM
+ * @Date 2022/1/9 2:38 PM
  * @Version 1.0
  */
 @Slf4j
 @Component
-public class OnsTopicTicketProcessor extends AbstractAssetPermission {
+public class OnsGroupTicketProcessor extends AbstractAssetPermission {
 
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
@@ -33,7 +32,7 @@ public class OnsTopicTicketProcessor extends AbstractAssetPermission {
 
     @Override
     public String getKey() {
-        return WorkOrderKeyConstants.ONS_ROCKETMQ_TOPIC.name();
+        return WorkOrderKeyConstants.ONS_ROCKETMQ_GROUP.name();
     }
 
     @Override

@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.domain.param.user.UserRamParam;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
-import com.baiyi.opscloud.workorder.processor.impl.base.asset.AssetPermissionExtendedAbstractTicketProcessor;
+import com.baiyi.opscloud.workorder.processor.impl.base.AbstractAssetPermission;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +22,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-public class RamPolicyTicketProcessor extends AssetPermissionExtendedAbstractTicketProcessor {
+public class RamPolicyTicketProcessor extends AbstractAssetPermission {
 
     @Resource
     private UserRamFacade userRamFacade;
@@ -42,7 +42,7 @@ public class RamPolicyTicketProcessor extends AssetPermissionExtendedAbstractTic
         try {
             userRamFacade.grantRamPolicy(grantRamPolicy);
         } catch (Exception e) {
-            throw new TicketProcessException("工单授权策略失败：" + e.getMessage());
+            throw new TicketProcessException("工单授权策略失败: " + e.getMessage());
         }
     }
 

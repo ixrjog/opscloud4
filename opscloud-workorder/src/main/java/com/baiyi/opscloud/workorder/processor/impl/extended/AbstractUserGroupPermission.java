@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.workorder.processor.impl.base.permission;
+package com.baiyi.opscloud.workorder.processor.impl.extended;
 
 import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
@@ -13,7 +13,7 @@ import java.util.Set;
  * @Date 2022/1/7 10:56 AM
  * @Version 1.0
  */
-public abstract class UserGroupExtendedUserPermission extends UserPermissionExtendedAbstractTicketProcessor<UserGroup> {
+public abstract class AbstractUserGroupPermission extends AbstractUserPermission<UserGroup> {
 
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, UserGroup entry) throws TicketProcessException {
