@@ -1,9 +1,9 @@
 Welcome to the opscloud wiki!
 
 # OpsCloud4.0 IaC基础架构即代码
-<img src="https://img.shields.io/badge/version-4.0.0-brightgreen.svg"></img>
+<img src="https://img.shields.io/badge/version-4.0.7-brightgreen.svg"></img>
 <img src="https://img.shields.io/badge/java-8-brightgreen.svg"></img> 
-<img src="https://img.shields.io/badge/springboot-2.3.10.RELEASE-brightgreen.svg"></img> 
+<img src="https://img.shields.io/badge/springboot-2.4.13-brightgreen.svg"></img> 
 <img src="https://img.shields.io/badge/mysql-8-brightgreen.svg"></img> 
 
 <br>
