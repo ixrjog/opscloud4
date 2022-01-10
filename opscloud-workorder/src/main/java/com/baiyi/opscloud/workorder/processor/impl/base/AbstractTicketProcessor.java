@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.workorder.processor.impl.extended;
+package com.baiyi.opscloud.workorder.processor.impl.base;
 
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;

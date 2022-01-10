@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.datasource.aliyun.ons.drive;
 
 import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.ons.model.v20190214.OnsTopicCreateRequest;
+import com.aliyuncs.ons.model.v20190214.OnsTopicCreateResponse;
 import com.aliyuncs.ons.model.v20190214.OnsTopicListRequest;
 import com.aliyuncs.ons.model.v20190214.OnsTopicListResponse;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
@@ -31,15 +33,16 @@ public class AliyunOnsRocketMqTopicDrive {
 
     public static final String QUERY_ALL_TOPIC = null;
 
-    public List<OnsRocketMqTopic.Topic> listTopic(String regionId, AliyunConfig.Aliyun aliyun, String instanceId) throws ClientException  {
+    public List<OnsRocketMqTopic.Topic> listTopic(String regionId, AliyunConfig.Aliyun aliyun, String instanceId) throws ClientException {
         return listTopic(regionId, aliyun, instanceId, QUERY_ALL_TOPIC);
     }
 
     /**
      * OnsRocketMqTopic
      * OnsTopicListResponse.PublishInfoDo
-     *
+     * <p>
      * https://help.aliyun.com/document_detail/29590.html
+     *
      * @param regionId
      * @param aliyun
      * @param instanceId 必选参数
@@ -60,6 +63,24 @@ public class AliyunOnsRocketMqTopicDrive {
             t.setRegionId(regionId);
             return t;
         }).collect(Collectors.toList());
+    }
+
+    /**
+     * https://help.aliyun.com/document_detail/29591.html
+     * 创建Topic
+     * @param regionId
+     * @param aliyun
+     * @param topic
+     * @throws ClientException
+     */
+    public void createTopic(String regionId, AliyunConfig.Aliyun aliyun, OnsRocketMqTopic.Topic topic) throws ClientException {
+        OnsTopicCreateRequest request = new OnsTopicCreateRequest();
+        request.setInstanceId(topic.getInstanceId());
+        request.setTopic(topic.getTopic());
+        request.setRemark(topic.getRemark());
+        request.setMessageType(topic.getMessageType());
+        OnsTopicCreateResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
+        log.info("创建阿里云ONS-Topic: requestId = {}, topic = {}", response.getRequestId(), topic);
     }
 
 }

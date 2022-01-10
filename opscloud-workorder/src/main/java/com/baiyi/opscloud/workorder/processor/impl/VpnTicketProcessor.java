@@ -2,7 +2,7 @@ package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.baiyi.opscloud.workorder.constants.UserGroupConstants;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
-import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractUserGroupPermission;
+import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractUserGroupPermissionExtendedAbstractUserPermission;
 import com.google.common.collect.Sets;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +15,7 @@ import java.util.Set;
  * @Version 1.0
  */
 @Component
-public class VpnTicketProcessor extends AbstractUserGroupPermission {
+public class VpnTicketProcessor extends AbstractUserGroupPermissionExtendedAbstractUserPermission {
 
     @Override
     protected Set<String> getGroupNames() {

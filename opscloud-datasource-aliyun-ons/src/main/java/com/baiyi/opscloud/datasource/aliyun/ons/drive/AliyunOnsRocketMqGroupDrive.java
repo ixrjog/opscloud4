@@ -1,8 +1,7 @@
 package com.baiyi.opscloud.datasource.aliyun.ons.drive;
 
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.ons.model.v20190214.OnsGroupListRequest;
-import com.aliyuncs.ons.model.v20190214.OnsGroupListResponse;
+import com.aliyuncs.ons.model.v20190214.*;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
@@ -71,4 +70,23 @@ public class AliyunOnsRocketMqGroupDrive {
             return g;
         }).collect(Collectors.toList());
     }
+
+    /**
+     * https://help.aliyun.com/document_detail/29616.html
+     *
+     * @param regionId
+     * @param aliyun
+     * @param group
+     * @throws ClientException
+     */
+    public void createGroup(String regionId, AliyunConfig.Aliyun aliyun, OnsRocketMqGroup.Group group) throws ClientException {
+        OnsGroupCreateRequest request = new OnsGroupCreateRequest();
+        request.setInstanceId(group.getInstanceId());
+        request.setGroupId(group.getGroupId());
+        request.setRemark(group.getRemark());
+        request.setGroupType(group.getGroupType());
+        OnsGroupCreateResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
+        log.info("创建阿里云ONS-Topic: requestId = {}, group = {}", response.getRequestId(), group);
+    }
+
 }

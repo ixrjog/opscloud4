@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.aliyun.ons.entity;
 
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.core.asset.IToAsset;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
@@ -47,6 +48,11 @@ public class OnsRocketMqGroup {
             return AssetContainerBuilder.newBuilder()
                     .paramAsset(asset)
                     .build();
+        }
+
+        @Override
+        public String toString() {
+            return JSONUtil.writeValueAsString(this);
         }
     }
 }
