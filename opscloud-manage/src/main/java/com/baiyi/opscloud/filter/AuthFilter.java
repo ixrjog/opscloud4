@@ -91,12 +91,10 @@ public class AuthFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
             } catch (AuthRuntimeException ex) {
                 response.setContentType(APPLICATION_JSON_UTF8_VALUE);
-                setHeaders(request, response);
                 HttpResult result = new HttpResult(ex);
                 response.getWriter().println(result);
             }
         } else {
-            setHeaders(request, response);
             filterChain.doFilter(request, response);
         }
     }
@@ -108,13 +106,4 @@ public class AuthFilter extends OncePerRequestFilter {
         return false;
     }
 
-    public void setHeaders(HttpServletRequest request, HttpServletResponse response) {
-        String origin = request.getHeader("Origin");
-        response.addHeader("Access-Control-Allow-Origin", origin);
-        response.addHeader("Access-Control-Allow-Credentials", "true");
-        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-        response.addHeader("Access-Control-Allow-Headers", "*");
-        //30 min
-        response.addHeader("Access-Control-Max-Age", "1800");
-    }
 }

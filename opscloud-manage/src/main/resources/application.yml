@@ -8,7 +8,12 @@ knife4j:
 spring:
   profiles:
     active: '@env@'
-    include: common
+    include:
+      - common
+      - ssh-core
+      - ssh-server
+      - opscloud
+
   application:
     name: opscloud
 #  http:
