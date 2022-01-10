@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
-import com.baiyi.opscloud.workorder.processor.impl.base.AbstractTicketProcessor;
+import com.baiyi.opscloud.workorder.processor.impl.base.BaseTicketProcessor;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Resource;
@@ -17,7 +17,7 @@ import javax.annotation.Resource;
  * @Date 2022/1/7 10:16 AM
  * @Version 1.0
  */
-public abstract class AbstractUserPermissionExtendedAbstractTicketProcessor<T> extends AbstractTicketProcessor<T> {
+public abstract class AbstractUserPermissionExtendedBaseTicketProcessor<T> extends BaseTicketProcessor<T> {
 
     @Resource
     private UserPermissionService userPermissionService;

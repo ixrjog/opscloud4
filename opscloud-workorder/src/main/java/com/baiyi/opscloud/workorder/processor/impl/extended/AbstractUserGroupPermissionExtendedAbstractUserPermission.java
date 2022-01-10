@@ -13,7 +13,7 @@ import java.util.Set;
  * @Date 2022/1/7 10:56 AM
  * @Version 1.0
  */
-public abstract class AbstractUserGroupPermissionExtendedAbstractUserPermission extends AbstractUserPermissionExtendedAbstractTicketProcessor<UserGroup> {
+public abstract class AbstractUserGroupPermissionExtendedAbstractUserPermission extends AbstractUserPermissionExtendedBaseTicketProcessor<UserGroup> {
 
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, UserGroup entry) throws TicketProcessException {

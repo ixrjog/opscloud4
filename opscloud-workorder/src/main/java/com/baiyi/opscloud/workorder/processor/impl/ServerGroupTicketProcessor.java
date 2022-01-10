@@ -2,7 +2,7 @@ package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
-import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractUserPermissionExtendedAbstractTicketProcessor;
+import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractUserPermissionExtendedBaseTicketProcessor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class ServerGroupTicketProcessor extends AbstractUserPermissionExtendedAbstractTicketProcessor<ServerGroup> {
+public class ServerGroupTicketProcessor extends AbstractUserPermissionExtendedBaseTicketProcessor<ServerGroup> {
 
     @Override
     public String getKey() {

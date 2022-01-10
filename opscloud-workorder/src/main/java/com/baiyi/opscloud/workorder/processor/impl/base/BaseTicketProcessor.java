@@ -23,7 +23,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractTicketProcessor<T> implements ITicketProcessor, InitializingBean {
+public abstract class BaseTicketProcessor<T> implements ITicketProcessor, InitializingBean {
 
     @Resource
     private WorkOrderTicketEntryService workOrderTicketEntryService;

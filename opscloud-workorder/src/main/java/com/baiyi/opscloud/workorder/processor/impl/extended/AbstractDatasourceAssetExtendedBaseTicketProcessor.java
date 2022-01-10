@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
-import com.baiyi.opscloud.workorder.processor.impl.base.AbstractTicketProcessor;
+import com.baiyi.opscloud.workorder.processor.impl.base.BaseTicketProcessor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
@@ -21,7 +21,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractDatasourceAssetExtendedAbstractTicketProcessor<T, C extends BaseConfig> extends AbstractTicketProcessor<T> implements IInstanceType, IAssetType {
+public abstract class AbstractDatasourceAssetExtendedBaseTicketProcessor<T, C extends BaseConfig> extends BaseTicketProcessor<T> implements IInstanceType, IAssetType {
 
     @Resource
     protected DsInstanceAssetService dsInstanceAssetService;

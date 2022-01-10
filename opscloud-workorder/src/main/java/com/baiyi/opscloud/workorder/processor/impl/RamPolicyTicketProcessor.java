@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.domain.param.user.UserRamParam;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
-import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDatasourceAssetPermissionExtendedAbstractTicketProcessor;
+import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDatasourceAssetPermissionExtendedBaseTicketProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +22,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-public class RamPolicyTicketProcessor extends AbstractDatasourceAssetPermissionExtendedAbstractTicketProcessor {
+public class RamPolicyTicketProcessor extends AbstractDatasourceAssetPermissionExtendedBaseTicketProcessor {
 
     @Resource
     private UserRamFacade userRamFacade;
