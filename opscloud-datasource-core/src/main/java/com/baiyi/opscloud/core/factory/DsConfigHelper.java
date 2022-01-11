@@ -58,7 +58,7 @@ public class DsConfigHelper {
             if (credential != null)
                 propsYml = templateUtil.renderTemplate(propsYml, credential);
         }
-        return DsUtil.toDatasourceConfig(propsYml, targetClass);
+        return DsUtil.toDsConfig(propsYml, targetClass);
     }
 
     public KubernetesConfig buildKubernetesConfig(String instanceUuid) {

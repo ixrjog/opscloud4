@@ -18,7 +18,7 @@ import java.util.Set;
 public class ConfluenceTicketProcessor extends AbstractUserGroupPermissionExtendedAbstractUserPermission {
 
     @Override
-    protected Set<String> getGroupNames() {
+    public Set<String> getGroupNames() {
         return Sets.newHashSet(
                 UserGroupConstants.CONFLUENCE_USERS.getRole()
         );

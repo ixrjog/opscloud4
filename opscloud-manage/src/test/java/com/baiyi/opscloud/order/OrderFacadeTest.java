@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.order;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.domain.vo.order.WorkOrderViewVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkOrderViewVO;
 import com.baiyi.opscloud.facade.workorder.WorkOrderFacade;
 import org.junit.jupiter.api.Test;
 

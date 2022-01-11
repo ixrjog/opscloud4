@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
-import com.baiyi.opscloud.domain.vo.order.WorkOrderViewVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkOrderViewVO;
 import com.baiyi.opscloud.facade.workorder.WorkOrderFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

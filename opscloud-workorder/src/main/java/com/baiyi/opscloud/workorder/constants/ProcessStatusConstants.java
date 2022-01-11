@@ -3,17 +3,18 @@ package com.baiyi.opscloud.workorder.constants;
 import lombok.Getter;
 
 /**
+ * 处理状态
  * @Author baiyi
  * @Date 2022/1/7 1:33 PM
  * @Version 1.0
  */
-public enum EntryStatusConstants {
+public enum ProcessStatusConstants {
 
     DEFAULT(0),
     SUCCESSFUL(1),
     FAILED(-1);
 
-    EntryStatusConstants(int status) {
+    ProcessStatusConstants(int status) {
         this.status = status;
     }
 

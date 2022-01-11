@@ -12,4 +12,7 @@ import java.util.List;
 public interface WorkOrderService {
 
     List<WorkOrder> queryByWorkOrderGroupId(int workOrderGroupId);
+
+    WorkOrder getById(int id);
+
 }

@@ -1,13 +1,16 @@
 package com.baiyi.opscloud.workorder.processor.impl.base;
 
+import com.baiyi.opscloud.domain.base.IAllowOrder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketEntryService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketService;
-import com.baiyi.opscloud.workorder.constants.EntryStatusConstants;
+import com.baiyi.opscloud.workorder.constants.ProcessStatusConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
+import com.baiyi.opscloud.workorder.exception.VerifyTicketEntryException;
 import com.baiyi.opscloud.workorder.processor.ITicketProcessor;
 import com.baiyi.opscloud.workorder.processor.factory.WorkOrderTicketProcessorFactory;
 import com.google.gson.GsonBuilder;
@@ -49,8 +52,8 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
      */
     abstract protected Class<T> getEntryClassT();
 
-    protected T toEntry(String entryContent, Class<T> classOfT) throws JsonSyntaxException {
-        return new GsonBuilder().create().fromJson(entryContent, classOfT);
+    public T toEntry(String entryContent) throws JsonSyntaxException {
+        return new GsonBuilder().create().fromJson(entryContent, getEntryClassT());
     }
 
     /**
@@ -67,17 +70,34 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
     @Override
     public void process(WorkOrderTicketEntry ticketEntry) {
         try {
-            this.process(ticketEntry, toEntry(ticketEntry.getContent(), getEntryClassT()));
-            ticketEntry.setEntryStatus(EntryStatusConstants.SUCCESSFUL.getStatus());
+            this.process(ticketEntry, toEntry(ticketEntry.getContent()));
+            ticketEntry.setEntryStatus(ProcessStatusConstants.SUCCESSFUL.getStatus());
         } catch (TicketProcessException e) {
             ticketEntry.setResult(e.getMessage());
-            ticketEntry.setEntryStatus(EntryStatusConstants.FAILED.getStatus());
+            ticketEntry.setEntryStatus(ProcessStatusConstants.FAILED.getStatus());
         }
         updateTicket(ticketEntry);
     }
 
     private void updateTicket(WorkOrderTicketEntry ticketEntry) {
         workOrderTicketEntryService.update(ticketEntry);
+    }
+
+    protected void verifyEntry(T entry) throws VerifyTicketEntryException {
+        if (entry instanceof IAllowOrder)
+            verifyByAllowOrder((IAllowOrder) entry);
+        if (entry instanceof DatasourceInstanceAsset)
+            verifyByAsset((DatasourceInstanceAsset) entry);
+    }
+
+    private void verifyByAllowOrder(IAllowOrder allowOrder) throws VerifyTicketEntryException {
+        if (allowOrder.getAllowOrder() == null || !allowOrder.getAllowOrder())
+            throw new VerifyTicketEntryException("校验工单条目失败: 此条目不允许工单申请!");
+    }
+
+    private void verifyByAsset(DatasourceInstanceAsset asset) throws VerifyTicketEntryException {
+        if (asset.getIsActive() == null || !asset.getIsActive())
+            throw new VerifyTicketEntryException("校验工单条目失败: 此授权资产无效!");
     }
 
     @Override

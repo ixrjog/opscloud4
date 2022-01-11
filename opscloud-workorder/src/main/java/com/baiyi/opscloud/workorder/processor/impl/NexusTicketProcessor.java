@@ -18,7 +18,7 @@ import java.util.Set;
 public class NexusTicketProcessor extends AbstractUserGroupPermissionExtendedAbstractUserPermission {
 
     @Override
-    protected Set<String> getGroupNames() {
+    public Set<String> getGroupNames() {
         return Sets.newHashSet(
                 UserGroupConstants.NEXUS_USERS.getRole(),
                 UserGroupConstants.NEXUS_DEVELOPER.getRole()

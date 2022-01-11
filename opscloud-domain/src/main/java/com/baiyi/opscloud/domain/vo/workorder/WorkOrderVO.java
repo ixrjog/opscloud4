@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.domain.vo.order;
+package com.baiyi.opscloud.domain.vo.workorder;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import io.swagger.annotations.ApiModel;
@@ -21,6 +21,9 @@ public class WorkOrderVO {
     @NoArgsConstructor
     @ApiModel
     public static class WorkOrder extends BaseVO {
+
+        @ApiModelProperty(value = "工作流视图")
+        private WorkflowVO.WorkflowView workflowView;
 
         private Integer id;
 

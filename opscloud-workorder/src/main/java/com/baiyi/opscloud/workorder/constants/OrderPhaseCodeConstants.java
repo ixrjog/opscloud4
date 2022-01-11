@@ -6,7 +6,7 @@ package com.baiyi.opscloud.workorder.constants;
  * @Date 2021/11/11 11:32 上午
  * @Version 1.0
  */
-public enum OrderStatusCodeConstants {
+public enum OrderPhaseCodeConstants {
 
     NEW, //新建
     TOAUDIT, //审批中

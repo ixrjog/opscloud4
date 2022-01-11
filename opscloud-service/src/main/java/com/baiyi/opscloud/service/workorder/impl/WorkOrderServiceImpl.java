@@ -28,4 +28,9 @@ public class WorkOrderServiceImpl implements WorkOrderService {
         example.setOrderByClause("seq");
         return workOrderMapper.selectByExample(example);
     }
+
+    @Override
+    public WorkOrder getById(int id) {
+        return workOrderMapper.selectByPrimaryKey(id);
+    }
 }

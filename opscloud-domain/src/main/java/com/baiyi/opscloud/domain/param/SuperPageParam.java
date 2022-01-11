@@ -3,6 +3,7 @@ package com.baiyi.opscloud.domain.param;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -20,8 +21,9 @@ import lombok.experimental.SuperBuilder;
 public class SuperPageParam {
 
     @ApiModelProperty(value = "分页页码")
-    private Integer page;
+    @Builder.Default
+    private Integer page = 1;
 
-    @ApiModelProperty(value = "分页页长",example = "10")
+    @ApiModelProperty(value = "分页页长", example = "10")
     private Integer length;
 }

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.workorder;
 
-import com.baiyi.opscloud.domain.vo.order.WorkOrderViewVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkOrderViewVO;
 
 /**
  * @Author baiyi
@@ -11,8 +11,10 @@ public interface WorkOrderFacade {
 
     /**
      * 查询工单视图
+     *
      * @return
      */
     WorkOrderViewVO.View getWorkOrderView();
+
 
 }

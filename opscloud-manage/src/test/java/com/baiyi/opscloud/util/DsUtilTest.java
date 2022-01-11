@@ -29,7 +29,7 @@ public class DsUtilTest extends BaseUnit {
     void toConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(1);
         System.err.println(JSON.toJSON(datasourceConfig));
-        LdapConfig ldapDsInstanceConfig = DsUtil.toDatasourceConfig(datasourceConfig.getPropsYml(), LdapConfig.class);
+        LdapConfig ldapDsInstanceConfig = DsUtil.toDsConfig(datasourceConfig.getPropsYml(), LdapConfig.class);
         System.err.println(JSON.toJSON(ldapDsInstanceConfig));
     }
 

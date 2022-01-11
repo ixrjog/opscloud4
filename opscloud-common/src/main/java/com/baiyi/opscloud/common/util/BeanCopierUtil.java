@@ -18,7 +18,7 @@ public class BeanCopierUtil {
     private BeanCopierUtil() {
     }
 
-    private static Map<String, BeanCopier> beanCopierMap = new MapMaker().initialCapacity(32).concurrencyLevel(32).makeMap();
+    private static final Map<String, BeanCopier> beanCopierMap = new MapMaker().initialCapacity(32).concurrencyLevel(32).makeMap();
 
     /**
      * bean 对象copy

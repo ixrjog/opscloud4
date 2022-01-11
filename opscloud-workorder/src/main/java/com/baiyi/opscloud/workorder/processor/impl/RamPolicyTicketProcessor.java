@@ -8,6 +8,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.domain.param.user.UserRamParam;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
+import com.baiyi.opscloud.workorder.exception.VerifyTicketEntryException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDatasourceAssetPermissionExtendedBaseTicketProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import javax.annotation.Resource;
 
 /**
  * 阿里云访问控制策略权限申请工单票据处理
+ *
  * @Author baiyi
  * @Date 2022/1/7 2:04 PM
  * @Version 1.0
@@ -44,6 +46,13 @@ public class RamPolicyTicketProcessor extends AbstractDatasourceAssetPermissionE
         } catch (Exception e) {
             throw new TicketProcessException("工单授权策略失败: " + e.getMessage());
         }
+    }
+
+    @Override
+    public void verify(WorkOrderTicketEntry ticketEntry) throws VerifyTicketEntryException {
+        DatasourceInstanceAsset entry = this.toEntry(ticketEntry.getContent());
+        DatasourceInstanceAsset asset = getAsset(entry);
+        verifyEntry(asset);
     }
 
     @Override

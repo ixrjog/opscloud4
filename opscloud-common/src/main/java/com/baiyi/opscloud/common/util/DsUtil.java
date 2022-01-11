@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -15,8 +15,9 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class DsUtil {
 
-    // TemplateVariable
-    public static <T> T toDatasourceConfig(String propsYml, Class<T> targetClass) {
+    private DsUtil(){}
+
+    public static <T> T toDsConfig(String propsYml, Class<T> targetClass) {
         if (StringUtils.isEmpty(propsYml))
             throw new DatasourceRuntimeException(ErrorEnum.DATASOURCE_PROPS_EMPTY);
         try {
@@ -28,7 +29,5 @@ public class DsUtil {
             throw new DatasourceRuntimeException(ErrorEnum.DATASOURCE_PROPS_CONVERT_ERROR);
         }
     }
-
-
 
 }

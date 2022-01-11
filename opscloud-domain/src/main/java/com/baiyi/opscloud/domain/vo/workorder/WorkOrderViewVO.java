@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.domain.vo.order;
+package com.baiyi.opscloud.domain.vo.workorder;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;

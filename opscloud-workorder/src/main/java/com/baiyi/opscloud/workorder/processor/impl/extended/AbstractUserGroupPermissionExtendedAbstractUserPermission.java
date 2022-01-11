@@ -21,6 +21,12 @@ public abstract class AbstractUserGroupPermissionExtendedAbstractUserPermission 
         super.process(ticketEntry, entry);
     }
 
+    @Override
+    public void verify(WorkOrderTicketEntry ticketEntry) {
+        UserGroup entry = this.toEntry(ticketEntry.getContent());
+        checkName(entry);
+    }
+
     private void checkName(UserGroup entry) {
         if (getGroupNames().stream().noneMatch(groupName -> groupName.equals(entry.getName())))
             throw new TicketProcessException("授权条目不合规");
@@ -31,7 +37,7 @@ public abstract class AbstractUserGroupPermissionExtendedAbstractUserPermission 
      *
      * @return
      */
-    abstract protected Set<String> getGroupNames();
+    abstract public Set<String> getGroupNames();
 
     @Override
     protected Class<UserGroup> getEntryClassT() {
