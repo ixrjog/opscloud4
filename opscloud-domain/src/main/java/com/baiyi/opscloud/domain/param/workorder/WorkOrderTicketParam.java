@@ -6,12 +6,24 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * @Author baiyi
  * @Date 2022/1/10 2:42 PM
  * @Version 1.0
  */
 public class WorkOrderTicketParam {
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
+    public static class CreateTicket {
+        @NotBlank(message = "工单Key不能为空！")
+        private String workOrderKey;
+    }
 
     @Data
     @Builder

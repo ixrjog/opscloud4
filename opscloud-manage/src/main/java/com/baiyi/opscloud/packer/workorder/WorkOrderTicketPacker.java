@@ -31,7 +31,18 @@ public class WorkOrderTicketPacker {
      * @return
      */
     public WorkOrderTicketVO.TicketView toTicketView(WorkOrderTicket workOrderTicket) {
-        WorkOrderTicketVO.Ticket ticket = BeanCopierUtil.copyProperties(workOrderTicket, WorkOrderTicketVO.Ticket.class);
+        WorkOrderTicketVO.Ticket ticket = WorkOrderTicketVO.Ticket.builder()
+                .id(workOrderTicket.getId())
+                .userId(workOrderTicket.getUserId())
+                .username(workOrderTicket.getUsername())
+                .workOrderId(workOrderTicket.getWorkOrderId())
+                .flowId(workOrderTicket.getFlowId())
+                .ticketPhase(workOrderTicket.getTicketPhase())
+                .ticketStatus(workOrderTicket.getTicketStatus())
+                .startTime(workOrderTicket.getStartTime())
+                .endTime(workOrderTicket.getEndTime())
+                .comment(workOrderTicket.getComment())
+                .build();
         User user = userService.getByUsername(workOrderTicket.getUsername());
         WorkOrderTicketVO.TicketView ticketView = WorkOrderTicketVO.TicketView.builder()
                 .createUser(toCreateUser(workOrderTicket))

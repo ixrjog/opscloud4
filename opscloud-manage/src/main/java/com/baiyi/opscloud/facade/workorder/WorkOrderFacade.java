@@ -16,5 +16,4 @@ public interface WorkOrderFacade {
      */
     WorkOrderViewVO.View getWorkOrderView();
 
-
 }

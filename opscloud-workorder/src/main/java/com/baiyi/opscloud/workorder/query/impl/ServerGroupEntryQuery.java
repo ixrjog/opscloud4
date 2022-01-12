@@ -48,6 +48,7 @@ public class ServerGroupEntryQuery extends BaseTicketEntryQuery<Application> {
                 .businessId(entry.getId())
                 .content(JSONUtil.writeValueAsString(entry))
                 .entry(entry)
+                .comment(entry.getComment())
                 .build();
     }
 
