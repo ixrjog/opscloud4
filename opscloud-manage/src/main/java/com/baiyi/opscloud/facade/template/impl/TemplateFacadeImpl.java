@@ -7,19 +7,19 @@ import com.baiyi.opscloud.common.template.YamlVars;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
+import com.baiyi.opscloud.datasource.packer.DsInstancePacker;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.template.BusinessTemplateParam;
 import com.baiyi.opscloud.domain.param.template.TemplateParam;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
 import com.baiyi.opscloud.domain.vo.template.TemplateVO;
-import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import com.baiyi.opscloud.facade.template.TemplateFacade;
 import com.baiyi.opscloud.facade.template.factory.ITemplateConsume;
 import com.baiyi.opscloud.facade.template.factory.TemplateFactory;
-import com.baiyi.opscloud.datasource.packer.DsInstancePacker;
 import com.baiyi.opscloud.packer.template.BusinessTemplatePacker;
 import com.baiyi.opscloud.packer.template.TemplatePacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
@@ -29,9 +29,9 @@ import com.baiyi.opscloud.service.template.BusinessTemplateService;
 import com.baiyi.opscloud.service.template.TemplateService;
 import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -209,7 +209,6 @@ public class TemplateFacadeImpl implements TemplateFacade {
                 YamlVars.Vars vars = YamlUtil.toVars(bizTemplate.getVars());
                 DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
                 KubernetesConfig.Kubernetes config = dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
-                KubernetesConfig.Nomenclature nomenclature;
                 if ("DEPLOYMENT".equals(template.getTemplateKey())) {
                     setName(bizTemplate, config.getDeployment().getNomenclature(), vars, env);
                     return;
@@ -224,7 +223,8 @@ public class TemplateFacadeImpl implements TemplateFacade {
     }
 
     private void setName(BusinessTemplate bizTemplate, KubernetesConfig.Nomenclature nomenclature, YamlVars.Vars vars, Env env) {
-        if (!vars.getVars().containsKey("appName")) return;
+        if (!vars.getVars().containsKey("appName")
+                || StringUtils.isBlank(vars.getVars().get("appName"))) return;
         String name = Joiner.on("").skipNulls().join(nomenclature.getPrefix(),
                 vars.getVars().get("appName"),
                 nomenclature.getSuffix(), "-", env.getEnvName()

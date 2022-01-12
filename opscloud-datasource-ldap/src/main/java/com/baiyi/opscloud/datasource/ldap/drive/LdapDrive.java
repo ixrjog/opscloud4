@@ -18,8 +18,7 @@ import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import javax.naming.directory.*;
 import java.util.Collections;
 import java.util.List;

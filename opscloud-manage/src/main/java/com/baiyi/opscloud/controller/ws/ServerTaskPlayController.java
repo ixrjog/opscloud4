@@ -6,8 +6,7 @@ import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;

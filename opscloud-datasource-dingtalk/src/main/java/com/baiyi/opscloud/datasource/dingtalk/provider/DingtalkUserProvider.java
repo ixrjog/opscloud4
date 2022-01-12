@@ -25,8 +25,7 @@ import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;

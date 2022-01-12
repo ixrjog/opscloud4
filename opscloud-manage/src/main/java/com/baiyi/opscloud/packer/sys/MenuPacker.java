@@ -14,8 +14,7 @@ import com.baiyi.opscloud.service.sys.MenuService;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.Comparator;

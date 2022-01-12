@@ -7,8 +7,7 @@ import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
 import com.baiyi.opscloud.sshcore.audit.InstanceCommandBuilder;
 import com.baiyi.opscloud.sshcore.config.TerminalConfigurationProperties;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.springframework.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Resource;
 import java.io.FileReader;
 import java.io.IOException;

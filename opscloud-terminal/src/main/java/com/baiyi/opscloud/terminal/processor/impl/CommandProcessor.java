@@ -9,8 +9,7 @@ import com.baiyi.opscloud.terminal.processor.AbstractServerTerminalProcessor;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import javax.websocket.Session;
 import java.util.Map;
 

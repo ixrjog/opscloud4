@@ -11,8 +11,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 
 /**

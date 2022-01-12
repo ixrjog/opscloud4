@@ -23,8 +23,7 @@ import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 /**
  * @Author baiyi
  * @Date 2021/12/12 4:10 PM

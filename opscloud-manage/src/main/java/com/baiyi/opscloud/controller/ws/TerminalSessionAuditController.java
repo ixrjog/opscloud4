@@ -6,7 +6,7 @@ import com.baiyi.opscloud.terminal.audit.ITerminalAuditProcess;
 import com.baiyi.opscloud.terminal.audit.TerminalAuditProcessFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;

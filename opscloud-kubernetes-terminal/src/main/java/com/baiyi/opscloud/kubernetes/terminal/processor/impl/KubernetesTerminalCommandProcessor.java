@@ -9,8 +9,7 @@ import com.baiyi.opscloud.sshcore.model.KubernetesSession;
 import com.baiyi.opscloud.sshcore.model.KubernetesSessionContainer;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import javax.websocket.Session;
 import java.io.IOException;
 import java.util.Map;

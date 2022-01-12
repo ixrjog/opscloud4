@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.util.GitlabTokenUtil;
 import com.baiyi.opscloud.config.properties.WhiteConfigurationProperties;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.annotation.Resource;

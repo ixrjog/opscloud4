@@ -3,7 +3,7 @@ package com.baiyi.opscloud.zabbix.v5.request.builder;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;

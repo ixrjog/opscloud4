@@ -10,7 +10,7 @@ import com.baiyi.opscloud.factory.credential.CredentialCustomerFactory;
 import com.baiyi.opscloud.packer.base.SecretPacker;
 import com.baiyi.opscloud.service.sys.CredentialService;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;

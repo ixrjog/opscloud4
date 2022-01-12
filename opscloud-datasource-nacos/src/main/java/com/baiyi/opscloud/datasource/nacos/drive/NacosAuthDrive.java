@@ -15,8 +15,7 @@ import feign.jackson.JacksonEncoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 /**
  * @Author baiyi
  * @Date 2021/11/11 4:55 下午

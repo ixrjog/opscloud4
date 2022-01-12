@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.builder.asset;
 
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class AssetContainerBuilder {
     }
 
     public AssetContainerBuilder paramProperty(String name, Object value) {
-        if (!StringUtils.isEmpty(value))
+        if (!ObjectUtils.isEmpty(value))
             assetContainer.getProperties().put(name, String.valueOf(value));
         return this;
     }

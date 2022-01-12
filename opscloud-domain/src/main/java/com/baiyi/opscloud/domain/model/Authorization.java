@@ -6,8 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import java.nio.charset.StandardCharsets;
 
 /**

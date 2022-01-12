@@ -6,8 +6,7 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import java.util.Set;
 
 /**

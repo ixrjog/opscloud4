@@ -9,8 +9,7 @@ import com.baiyi.opscloud.packer.tag.TagPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -2,8 +2,7 @@ package com.baiyi.opscloud.common.util;
 
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import org.springframework.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

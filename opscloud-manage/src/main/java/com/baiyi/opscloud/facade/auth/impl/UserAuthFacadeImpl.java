@@ -21,8 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 
 import static com.baiyi.opscloud.common.base.Global.SUPER_ADMIN;

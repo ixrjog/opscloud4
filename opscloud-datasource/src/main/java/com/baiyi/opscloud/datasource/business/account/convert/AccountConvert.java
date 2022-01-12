@@ -2,8 +2,7 @@ package com.baiyi.opscloud.datasource.business.account.convert;
 
 import com.baiyi.opscloud.datasource.ldap.entity.LdapPerson;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
-import org.springframework.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 /**
  * @Author baiyi
  * @Date 2021/8/11 2:56 下午
