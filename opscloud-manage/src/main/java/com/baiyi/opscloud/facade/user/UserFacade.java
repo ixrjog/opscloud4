@@ -35,7 +35,7 @@ public interface UserFacade {
      */
     void syncUserPermissionGroupForAsset();
 
-    void addUser(UserVO.User user);
+    UserVO.User addUser(UserVO.User user);
 
     void updateUser(UserVO.User user);
 

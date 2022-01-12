@@ -13,7 +13,7 @@ public interface ServerFacade {
 
     DataTable<ServerVO.Server> queryServerPage(ServerParam.ServerPageQuery pageQuery);
 
-    void addServer(ServerVO.Server server);
+    ServerVO.Server addServer(ServerVO.Server server);
 
     void updateServer(ServerVO.Server server);
 

@@ -63,10 +63,11 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
 
     @Override
     @AssetBusinessRelation // 资产绑定业务对象
-    public void addServer(ServerVO.Server server) {
+    public ServerVO.Server addServer(ServerVO.Server server) {
         Server pre = toDO(server);
         serverService.add(pre);
         server.setId(pre.getId()); // 绑定资产
+        return serverPacker.wrapVO(pre);
     }
 
     @Override

@@ -46,6 +46,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+
 import java.util.List;
 
 import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
@@ -139,12 +140,13 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     @AssetBusinessRelation // 资产绑定业务对象
-    public void addUser(UserVO.User user) {
+    public UserVO.User addUser(UserVO.User user) {
         User newUser = userPacker.toDO(user);
 //        if (StringUtils.isEmpty(newUser.getPassword()))
 //            throw new CommonRuntimeException("密码不能为空");
         userService.add(newUser);
         user.setId(newUser.getId()); // 给切面提供businessId
+        return userPacker.wrap(newUser);
     }
 
     /**

@@ -1,31 +1,30 @@
 package com.baiyi.opscloud.packer.user;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.RegexUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.base.SimpleBusiness;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
 import com.baiyi.opscloud.packer.auth.AuthRolePacker;
 import com.baiyi.opscloud.packer.base.IPacker;
-import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.packer.desensitized.DesensitizedPacker;
 import com.baiyi.opscloud.packer.tag.TagPacker;
 import com.baiyi.opscloud.packer.user.child.RamUserPacker;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.user.UserService;
-import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -60,8 +59,6 @@ public class UserPacker implements IPacker<UserVO.User, User> {
     private final RamUserPacker ramUserPacker;
 
     private final TagPacker tagPacker;
-
-    private final DsAssetPacker dsAssetPacker;
 
     private final DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
 

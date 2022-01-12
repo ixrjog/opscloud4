@@ -42,9 +42,8 @@ public class ServerController {
 
     @ApiOperation(value = "新增服务器")
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addServer(@RequestBody @Valid ServerVO.Server server) {
-        serverFacade.addServer(server);
-        return HttpResult.SUCCESS;
+    public HttpResult<ServerVO.Server> addServer(@RequestBody @Valid ServerVO.Server server) {
+        return new HttpResult<>(serverFacade.addServer(server));
     }
 
     @ApiOperation(value = "更新服务器")
@@ -60,6 +59,4 @@ public class ServerController {
         serverFacade.deleteServerById(id);
         return HttpResult.SUCCESS;
     }
-
-
 }

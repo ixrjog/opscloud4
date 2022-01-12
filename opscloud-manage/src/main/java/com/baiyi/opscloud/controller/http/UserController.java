@@ -78,9 +78,8 @@ public class UserController {
 
     @ApiOperation(value = "新增用户")
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addUser(@RequestBody @Valid UserVO.User user) {
-        userFacade.addUser(user);
-        return HttpResult.SUCCESS;
+    public HttpResult<UserVO.User> addUser(@RequestBody @Valid UserVO.User user) {
+        return new HttpResult<>(userFacade.addUser(user));
     }
 
     @ApiOperation(value = "更新用户")
