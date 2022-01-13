@@ -3,6 +3,7 @@ package com.baiyi.opscloud.domain.vo.application;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.business.IBusinessPermissionUser;
+import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -25,7 +26,7 @@ public class ApplicationVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Application extends BaseVO implements IBusinessPermissionUser {
+    public static class Application extends BaseVO implements IBusinessPermissionUser, UserVO.IUserPermission {
 
         private final Integer businessType = BusinessTypeEnum.APPLICATION.getType();
 
@@ -56,6 +57,11 @@ public class ApplicationVO {
 
         @ApiModelProperty(value = "描述")
         private String comment;
+
+        // 应用授权角度
+        private Integer userId;
+
+        private UserPermissionVO.UserPermission userPermission;
 
     }
 }

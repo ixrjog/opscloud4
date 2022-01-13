@@ -15,17 +15,26 @@
     </resultMap>
 
     <select id="queryUserPermissionApplicationByParam"
-            parameterType="com.baiyi.opscloud.domain.param.application.ApplicationParam$UserPermissionApplicationPageQuery"
+            parameterType="com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam$UserBusinessPermissionPageQuery"
             resultMap="BaseResultMap">
         select * from application
-        <where>
-            <if test="queryName != null and queryName != ''">
-                name like "%" #{queryName} "%"
-            </if>
-            <if test="userId != null">
-                and id in ( select business_id from user_permission where business_type = 8 and user_id = #{userId} )
-            </if>
-        </where>
+        where
+        <choose>
+            <when test="admin">
+                1 = 1
+            </when>
+            <when test="authorized">
+                id in ( select business_id from user_permission where business_type = #{businessType} and user_id =
+                #{userId})
+            </when>
+            <otherwise>
+                id not in ( select business_id from user_permission where business_type = #{businessType} and user_id =
+                #{userId})
+            </otherwise>
+        </choose>
+        <if test="queryName != null and queryName != ''">
+            and name like "%" #{queryName} "%"
+        </if>
         order by create_time
     </select>
 

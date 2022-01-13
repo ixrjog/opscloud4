@@ -6,24 +6,35 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.domain.annotation.BusinessType;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
 import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
+import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.application.ApplicationFacade;
+import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
+import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
 import com.baiyi.opscloud.factory.resource.ApplicationResourceQueryFactory;
 import com.baiyi.opscloud.factory.resource.IApplicationResourceQuery;
 import com.baiyi.opscloud.packer.application.ApplicationPacker;
+import com.baiyi.opscloud.packer.user.UserPermissionPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
 import com.baiyi.opscloud.service.user.UserService;
+import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -32,7 +43,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class ApplicationFacadeImpl implements ApplicationFacade {
+@BusinessType(BusinessTypeEnum.APPLICATION)
+public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPermissionPageQuery, InitializingBean {
 
     private final ApplicationService applicationService;
 
@@ -44,6 +56,8 @@ public class ApplicationFacadeImpl implements ApplicationFacade {
 
     private final AuthRoleService authRoleService;
 
+    private final UserPermissionPacker userPermissionPacker;
+
     @Override
     public DataTable<ApplicationVO.Application> queryApplicationPage(ApplicationParam.ApplicationPageQuery pageQuery) {
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
@@ -51,8 +65,13 @@ public class ApplicationFacadeImpl implements ApplicationFacade {
     }
 
     @Override
-    public DataTable<ApplicationVO.Application> queryApplicationPageByWebTerminal(ApplicationParam.UserPermissionApplicationPageQuery pageQuery) {
-        pageQuery.setUserId(isAdmin(SessionUtil.getUsername()) ? null : userService.getByUsername(SessionUtil.getUsername()).getId());
+    public DataTable<ApplicationVO.Application> queryApplicationPageByWebTerminal(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
+        pageQuery.setBusinessType(getBusinessType());
+        if (isAdmin(SessionUtil.getUsername())) {
+            pageQuery.setAdmin(true);
+        } else {
+            pageQuery.setUserId(userService.getByUsername(SessionUtil.getUsername()).getId());
+        }
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
         return new DataTable<>(applicationPacker.wrapVOListByKubernetes(table.getData()), table.getTotalNum());
     }
@@ -120,5 +139,29 @@ public class ApplicationFacadeImpl implements ApplicationFacade {
     @Override
     public void unbindApplicationResource(Integer id) {
         applicationResourceService.delete(id);
+    }
+
+    @Override
+    public DataTable<UserVO.IUserPermission> queryUserBusinessPermissionPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
+        pageQuery.setBusinessType(getBusinessType());
+        DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
+        List<ApplicationVO.Application> data = applicationPacker.wrapVOList(table.getData(), pageQuery);
+        if (pageQuery.getAuthorized()) {
+            data.forEach(e -> {
+                e.setUserId(pageQuery.getUserId());
+                userPermissionPacker.wrap(e);
+            });
+        }
+        return new DataTable<>(Lists.newArrayList(data), table.getTotalNum());
+    }
+
+    @Override
+    public Integer getBusinessType() {
+        return BusinessTypeEnum.APPLICATION.getType();
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        UserBusinessPermissionFactory.register(this);
     }
 }

@@ -32,7 +32,7 @@ public class UserBusinessPermissionParam {
         private String queryName;
 
         @ApiModelProperty(value = "用户id")
-        @NotNull(message = "用户id不能为空")
+//        @NotNull(message = "用户id不能为空")
         private Integer userId;
 
         @ApiModelProperty(value = "是否授权")
@@ -40,7 +40,12 @@ public class UserBusinessPermissionParam {
         @Builder.Default
         private Boolean authorized = true;
 
-        private Boolean extend;
+        @ApiModelProperty(value = "是否管理员")
+        @Builder.Default
+        private Boolean admin = false;
+
+        @Builder.Default
+        private Boolean extend = false;
 
         private int businessType;
     }

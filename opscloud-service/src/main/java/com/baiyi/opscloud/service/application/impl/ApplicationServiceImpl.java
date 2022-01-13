@@ -3,6 +3,7 @@ package com.baiyi.opscloud.service.application.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
+import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.mapper.opscloud.ApplicationMapper;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.util.SQLUtil;
@@ -27,13 +28,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationMapper applicationMapper;
 
     @Override
-    public DataTable<Application> queryPageByParam(ApplicationParam.UserPermissionApplicationPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
-        List<Application> data = applicationMapper.queryUserPermissionApplicationByParam(pageQuery);
-        return new DataTable<>(data, page.getTotal());
-    }
-
-    @Override
     public DataTable<Application> queryPageByParam(ApplicationParam.ApplicationPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(Application.class);
@@ -43,6 +37,13 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
         example.setOrderByClause("create_time");
         List<Application> data = applicationMapper.selectByExample(example);
+        return new DataTable<>(data, page.getTotal());
+    }
+
+    @Override
+    public DataTable<Application> queryPageByParam(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<Application> data = applicationMapper.queryUserPermissionApplicationByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
 

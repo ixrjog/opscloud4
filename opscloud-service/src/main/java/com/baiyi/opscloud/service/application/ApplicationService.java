@@ -3,6 +3,7 @@ package com.baiyi.opscloud.service.application;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
+import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 
 /**
  * @Author baiyi
@@ -11,12 +12,7 @@ import com.baiyi.opscloud.domain.param.application.ApplicationParam;
  */
 public interface ApplicationService {
 
-    /**
-     * 按用户授权查询
-     * @param pageQuery
-     * @return
-     */
-    DataTable<Application> queryPageByParam(ApplicationParam.UserPermissionApplicationPageQuery pageQuery);
+    DataTable<Application> queryPageByParam(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery);
 
     DataTable<Application> queryPageByParam(ApplicationParam.ApplicationPageQuery pageQuery);
 
