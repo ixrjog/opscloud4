@@ -13,12 +13,15 @@ import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.VerifyTicketEntryException;
 import com.baiyi.opscloud.workorder.processor.ITicketProcessor;
 import com.baiyi.opscloud.workorder.processor.factory.WorkOrderTicketProcessorFactory;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonSyntaxException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * @Author baiyi
@@ -53,8 +56,19 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
     abstract protected Class<T> getEntryClassT();
 
     public T toEntry(String entryContent) throws JsonSyntaxException {
-        return new GsonBuilder().create().fromJson(entryContent, getEntryClassT());
+        final Gson builder = new GsonBuilder()
+                .registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (jsonElement, type, context) -> new Date(jsonElement.getAsJsonPrimitive().getAsLong())).create();
+        return builder.fromJson(entryContent, getEntryClassT());
     }
+
+    @Override
+    public void verify(WorkOrderTicketEntry ticketEntry) throws VerifyTicketEntryException {
+        if (workOrderTicketEntryService.countByTicketUniqueKey(ticketEntry) != 0)
+            throw new VerifyTicketEntryException("校验工单条目失败: 重复申请!");
+        verifyHandle(ticketEntry);
+    }
+
+    abstract protected void verifyHandle(WorkOrderTicketEntry ticketEntry) throws VerifyTicketEntryException;
 
     /**
      * 查询创建人

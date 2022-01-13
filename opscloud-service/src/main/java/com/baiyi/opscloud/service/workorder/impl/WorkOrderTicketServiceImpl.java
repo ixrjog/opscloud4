@@ -18,8 +18,18 @@ public class WorkOrderTicketServiceImpl implements WorkOrderTicketService {
     private final WorkOrderTicketMapper workOrderTicketMapper;
 
     @Override
+    public void add(WorkOrderTicket workOrderTicket) {
+        workOrderTicketMapper.insert(workOrderTicket);
+    }
+
+    @Override
     public WorkOrderTicket getById(int id) {
         return workOrderTicketMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public WorkOrderTicket getNewTicketByUser(String workOrderKey, String username) {
+        return workOrderTicketMapper.getNewTicketByUser(workOrderKey, username);
     }
 
 }

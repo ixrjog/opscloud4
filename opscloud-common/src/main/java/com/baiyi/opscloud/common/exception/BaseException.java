@@ -2,6 +2,7 @@ package com.baiyi.opscloud.common.exception;
 
 import com.baiyi.opscloud.domain.ErrorEnum;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
  * @Date 2020/4/19 12:17 下午
  * @Version 1.0
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 public abstract class BaseException extends RuntimeException {

@@ -16,15 +16,13 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
- * 阿里云访问控制策略权限申请工单票据处理
- *
  * @Author baiyi
- * @Date 2022/1/7 2:04 PM
+ * @Date 2022/1/13 7:38 PM
  * @Version 1.0
  */
 @Slf4j
 @Component
-public class RamPolicyTicketProcessor extends AbstractDatasourceAssetPermissionExtendedBaseTicketProcessor {
+public class NacosTicketProcessor extends AbstractDatasourceAssetPermissionExtendedBaseTicketProcessor {
 
     @Resource
     private UserRamFacade userRamFacade;
@@ -57,12 +55,12 @@ public class RamPolicyTicketProcessor extends AbstractDatasourceAssetPermissionE
 
     @Override
     public String getKey() {
-        return WorkOrderKeyConstants.RAM_POLICY.name();
+        return WorkOrderKeyConstants.NACOS.name();
     }
 
     @Override
     public String getInstanceType() {
-        return DsTypeEnum.ALIYUN.name();
+        return DsTypeEnum.NACOS.name();
     }
 
 }

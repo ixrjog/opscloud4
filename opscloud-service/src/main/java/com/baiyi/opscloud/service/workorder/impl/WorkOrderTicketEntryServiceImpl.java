@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.mapper.opscloud.WorkOrderTicketEntryMapper;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketEntryService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -46,6 +47,17 @@ public class WorkOrderTicketEntryServiceImpl implements WorkOrderTicketEntryServ
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("workOrderTicketId", workOrderTicketId);
         return workOrderTicketEntryMapper.selectByExample(example);
+    }
+
+    @Override
+    public int countByTicketUniqueKey(WorkOrderTicketEntry workOrderTicketEntry) {
+        Example example = new Example(WorkOrderTicketEntry.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("workOrderTicketId", workOrderTicketEntry.getWorkOrderTicketId())
+                .andEqualTo("name", workOrderTicketEntry.getName());
+        if (!StringUtils.isEmpty(workOrderTicketEntry.getInstanceUuid()))
+            criteria.andEqualTo("instanceUuid", workOrderTicketEntry.getInstanceUuid());
+        return workOrderTicketEntryMapper.selectCountByExample(example);
     }
 
 }

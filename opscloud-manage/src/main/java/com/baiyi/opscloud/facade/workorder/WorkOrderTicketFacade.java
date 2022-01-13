@@ -1,7 +1,10 @@
 package com.baiyi.opscloud.facade.workorder;
 
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -9,6 +12,12 @@ import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
  * @Version 1.0
  */
 public interface WorkOrderTicketFacade {
+
+    WorkOrderTicketVO.TicketView createTicket(WorkOrderTicketParam.CreateTicket createTicket);
+
+    WorkOrderTicketVO.TicketView getTicket(Integer ticketId);
+
+    List<WorkOrderTicketVO.Entry> queryTicketEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery);
 
     /**
      * 更新工单条目
@@ -24,7 +33,7 @@ public interface WorkOrderTicketFacade {
      * @param ticketEntry
      * @return
      */
-    WorkOrderTicketVO.TicketView addTicketEntry(WorkOrderTicketParam.TicketEntry ticketEntry);
+    void addTicketEntry(WorkOrderTicketParam.TicketEntry ticketEntry);
 
     /**
      * 删除工单条目
@@ -32,6 +41,6 @@ public interface WorkOrderTicketFacade {
      * @param ticketEntryId
      * @return
      */
-    WorkOrderTicketVO.TicketView deleteTicketEntry(Integer ticketEntryId);
+    void deleteTicketEntry(Integer ticketEntryId);
 
 }

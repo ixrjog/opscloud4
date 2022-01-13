@@ -18,4 +18,16 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+
+  <select id="getNewTicketByUser" resultMap="BaseResultMap">
+    select a0.* from work_order_ticket a0
+    join work_order a1 on a0.work_order_id = a1.id
+    where
+        username = #{username}
+        and ticket_phase = 'NEW'
+        and a1.work_order_key = #{workOrderKey}
+        order by a0.create_time limit 1
+  </select>
+
+
 </mapper>

@@ -25,13 +25,13 @@ public class ApplicationPermissionTicketProcessor extends AbstractUserPermission
     private ApplicationService applicationService;
 
     @Override
-    public void verify(WorkOrderTicketEntry ticketEntry) throws VerifyTicketEntryException {
+    public void verifyHandle(WorkOrderTicketEntry ticketEntry) throws VerifyTicketEntryException {
         Application entry = this.toEntry(ticketEntry.getContent());
         if (StringUtils.isEmpty(entry.getApplicationKey()))
             throw new VerifyTicketEntryException("校验工单条目失败: 未指定应用Key!");
         Application application = applicationService.getByKey(entry.getApplicationKey());
         if (application == null)
-            throw new VerifyTicketEntryException("校验工单条目失败: 服务器组不存在!");
+            throw new VerifyTicketEntryException("校验工单条目失败: 应用不存在!");
     }
 
     @Override

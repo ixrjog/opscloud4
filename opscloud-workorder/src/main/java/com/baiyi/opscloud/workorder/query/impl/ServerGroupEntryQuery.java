@@ -3,11 +3,11 @@ package com.baiyi.opscloud.workorder.query.impl;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.generator.opscloud.Application;
-import com.baiyi.opscloud.domain.param.application.ApplicationParam;
+import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
+import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
-import com.baiyi.opscloud.service.application.ApplicationService;
+import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.query.impl.base.BaseTicketEntryQuery;
 import org.springframework.stereotype.Component;
@@ -21,33 +21,35 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-public class ServerGroupEntryQuery extends BaseTicketEntryQuery<Application> {
+public class ServerGroupEntryQuery extends BaseTicketEntryQuery<ServerGroup> {
 
     @Resource
-    private ApplicationService applicationService;
+    private ServerGroupService serverGroupService;
 
     @Override
-    protected List<Application> queryEntries(WorkOrderTicketEntryParam.EntryQuery entryQuery){
-        ApplicationParam.ApplicationPageQuery pageQuery = ApplicationParam.ApplicationPageQuery.builder()
-                .queryName(entryQuery.getQueryName())
+    protected List<ServerGroup> queryEntries(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
+        ServerGroupParam.ServerGroupPageQuery pageQuery = ServerGroupParam.ServerGroupPageQuery.builder()
+                .name(entryQuery.getQueryName())
+                .allowOrder(true)
                 .extend(false)
                 .page(1)
                 .length(entryQuery.getLength())
                 .build();
-        DataTable<Application> dataTable = applicationService.queryPageByParam(pageQuery);
+        DataTable<ServerGroup> dataTable = serverGroupService.queryPageByParam(pageQuery);
         return dataTable.getData();
     }
 
     @Override
-    protected WorkOrderTicketVO.Entry toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, Application entry) {
+    protected WorkOrderTicketVO.Entry toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, ServerGroup entry) {
         return WorkOrderTicketVO.Entry.builder()
                 .workOrderTicketId(entryQuery.getWorkOrderTicketId())
                 .name(entry.getName())
                 .entryKey(entry.getName())
-                .businessType(BusinessTypeEnum.APPLICATION.getType())
+                .businessType(BusinessTypeEnum.SERVERGROUP.getType())
                 .businessId(entry.getId())
                 .content(JSONUtil.writeValueAsString(entry))
                 .entry(entry)
+                .comment(entry.getComment())
                 .build();
     }
 

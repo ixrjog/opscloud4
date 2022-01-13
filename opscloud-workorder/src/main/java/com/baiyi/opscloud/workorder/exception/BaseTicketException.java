@@ -7,27 +7,25 @@ import lombok.EqualsAndHashCode;
 
 /**
  * @Author baiyi
- * @Date 2022/1/7 1:23 PM
+ * @Date 2022/1/13 10:38 AM
  * @Version 1.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TicketProcessException extends BaseException {
+public class BaseTicketException extends BaseException {
+    private static final long serialVersionUID = 6926889238773828276L;
+    private final Integer code = 700;
 
-    private static final long serialVersionUID = -9089909260424309939L;
-
-    private final Integer code = 702;
-
-    public TicketProcessException(String message) {
+    public BaseTicketException(String message) {
         super(message);
         setCode(code);
     }
 
-    public TicketProcessException(ErrorEnum errorEnum) {
+    public BaseTicketException(ErrorEnum errorEnum) {
         super(errorEnum);
     }
 
-    public TicketProcessException(String message, Throwable cause) {
+    public BaseTicketException(String message, Throwable cause) {
         super(message, cause);
     }
 }

@@ -25,6 +25,9 @@
             <if test="serverGroupTypeId != null">
                 and server_group_type_id = #{serverGroupTypeId}
             </if>
+            <if test="allowOrder != null">
+                and allow_order = #{allowOrder}
+            </if>
         </where>
         order by replace( name, #{name}, '' ), create_time
     </select>

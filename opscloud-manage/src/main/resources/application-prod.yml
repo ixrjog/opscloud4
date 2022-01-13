@@ -30,12 +30,7 @@ white:
 
 
 spring:
-  profiles:
-    include:
-      - common
-      - ssh-core
-      - ssh-server
-      - opscloud
+
   redis:
     host: r-d7obmf3lmgs0hpph5n.redis.eu-west-1.rds.aliyuncs.com
     port: 6379

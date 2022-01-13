@@ -22,7 +22,7 @@ public abstract class AbstractUserGroupPermissionExtendedAbstractUserPermission 
     }
 
     @Override
-    public void verify(WorkOrderTicketEntry ticketEntry) {
+    public void verifyHandle(WorkOrderTicketEntry ticketEntry) {
         UserGroup entry = this.toEntry(ticketEntry.getContent());
         checkName(entry);
     }

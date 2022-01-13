@@ -55,6 +55,7 @@ public abstract class UserGroupExtendedTicketEntryQuery extends BaseTicketEntryQ
                 .content(JSONUtil.writeValueAsString(entry))
                 .comment(entry.getComment())
                 .entry(entry)
+                .comment(entry.getComment())
                 .build();
     }
 }

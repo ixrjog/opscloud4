@@ -42,7 +42,6 @@ public class DsInstancePacker {
         iDsInstance.setInstance(toVO(datasourceInstance));
     }
 
-
     public void wrap(DsInstanceVO.Instance instance) {
         List<String> assetTypes = dsInstanceAssetService.queryInstanceAssetTypes(instance.getUuid());
         instance.setAssetDetails(

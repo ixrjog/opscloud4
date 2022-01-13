@@ -33,4 +33,12 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     public WorkOrder getById(int id) {
         return workOrderMapper.selectByPrimaryKey(id);
     }
+
+    @Override
+    public  WorkOrder getByKey(String key){
+        Example example = new Example(WorkOrder.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("workOrderKey", key);
+        return workOrderMapper.selectOneByExample(example);
+    }
 }

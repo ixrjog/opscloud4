@@ -9,6 +9,10 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
  */
 public interface WorkOrderTicketService {
 
+    void add(WorkOrderTicket workOrderTicket);
+
     WorkOrderTicket getById(int id);
+
+    WorkOrderTicket getNewTicketByUser(String workOrderKey, String username);
 
 }
