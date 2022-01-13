@@ -40,7 +40,7 @@ public class OnsGroupTicketProcessor extends AbstractDatasourceAssetExtendedBase
     }
 
     @Override
-    public void verify(WorkOrderTicketEntry ticketEntry) throws VerifyTicketEntryException {
+    public void verifyHandle(WorkOrderTicketEntry ticketEntry) throws VerifyTicketEntryException {
         OnsRocketMqGroup.Group entry = this.toEntry(ticketEntry.getContent());
         if (StringUtils.isEmpty(entry.getGroupId()))
             throw new VerifyTicketEntryException("校验工单条目失败: 未指定GID名称!");

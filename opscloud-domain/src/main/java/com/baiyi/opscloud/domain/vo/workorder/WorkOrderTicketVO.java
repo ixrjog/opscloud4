@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.domain.vo.workorder;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -31,13 +32,15 @@ public class WorkOrderTicketVO {
 
         Integer getTicketId();
 
+        String getWorkOrderKey();
+
         void setTicketEntries(List<Entry> ticketEntries);
     }
 
     @Builder
     @Data
     @ApiModel
-    public static class TicketView implements IWorkOrder,ITicketEntries, Serializable {
+    public static class TicketView implements IWorkOrder, ITicketEntries, Serializable {
         private static final long serialVersionUID = -5342262347843407536L;
         @ApiModelProperty(value = "工单")
         private WorkOrderVO.WorkOrder workOrder;
@@ -55,6 +58,13 @@ public class WorkOrderTicketVO {
             if (this.workOrderTicket != null)
                 return this.workOrderTicket.getId();
             return 0;
+        }
+
+        @Override
+        public String getWorkOrderKey() {
+            if (this.workOrder != null)
+                return this.workOrder.getWorkOrderKey();
+            return null;
         }
 
         @Override
@@ -91,16 +101,20 @@ public class WorkOrderTicketVO {
     @Builder
     @Data
     @ApiModel
-    public static class Entry<T> extends BaseVO implements Serializable {
+    public static class Entry<T> extends BaseVO implements DsInstanceVO.IDsInstance, Serializable {
 
         private static final long serialVersionUID = 5462899820190005914L;
+
+        private DsInstanceVO.Instance instance;
+
         private Integer id;
         private Integer workOrderTicketId;
         private String name;
         private String instanceUuid;
         private Integer businessType;
         private Integer businessId;
-        private Integer entryStatus;
+        @Builder.Default
+        private Integer entryStatus = 0;
         private String entryKey;
         private T entry;
         private String role;

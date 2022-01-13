@@ -8,8 +8,8 @@ import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.packer.tag.TagPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -42,7 +42,6 @@ public class DsInstancePacker {
         if(datasourceInstance == null) return;
         iDsInstance.setInstance(toVO(datasourceInstance));
     }
-
 
     public void wrap(DsInstanceVO.Instance instance) {
         List<String> assetTypes = dsInstanceAssetService.queryInstanceAssetTypes(instance.getUuid());

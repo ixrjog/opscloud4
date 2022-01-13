@@ -9,17 +9,17 @@ import org.springframework.stereotype.Component;
 
 /**
  * @Author baiyi
- * @Date 2022/1/11 6:20 PM
+ * @Date 2022/1/13 7:35 PM
  * @Version 1.0
  */
 @Component
-public class RamPolicyEntryQuery extends DatasourceAssetExtendedTicketEntryQuery {
+public class NacosEntryQuery  extends DatasourceAssetExtendedTicketEntryQuery {
 
     @Override
     protected DsAssetParam.AssetPageQuery getAssetQueryParam(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
         return DsAssetParam.AssetPageQuery.builder()
                 .instanceUuid(entryQuery.getInstanceUuid())
-                .assetType(DsAssetTypeConstants.RAM_POLICY.name())
+                .assetType(DsAssetTypeConstants.NACOS_PERMISSION.name())
                 .queryName(entryQuery.getQueryName())
                 .isActive(true)
                 .page(1)
@@ -29,7 +29,7 @@ public class RamPolicyEntryQuery extends DatasourceAssetExtendedTicketEntryQuery
 
     @Override
     public String getKey() {
-        return WorkOrderKeyConstants.RAM_POLICY.name();
+        return WorkOrderKeyConstants.NACOS.name();
     }
 
 }

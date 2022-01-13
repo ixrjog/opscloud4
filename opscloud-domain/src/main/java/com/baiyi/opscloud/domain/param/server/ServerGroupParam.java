@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.param.server;
 
+import com.baiyi.opscloud.domain.base.IAllowOrder;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
@@ -25,7 +26,7 @@ public class ServerGroupParam {
     @NoArgsConstructor
     @AllArgsConstructor
     @ApiModel
-    public static class ServerGroupPageQuery extends SuperPageParam implements IExtend {
+    public static class ServerGroupPageQuery extends SuperPageParam implements IExtend, IAllowOrder {
 
         @ApiModelProperty(value = "组名")
         private String name;
@@ -34,6 +35,8 @@ public class ServerGroupParam {
         private Integer serverGroupTypeId;
 
         private Boolean extend;
+
+        private Boolean allowOrder;
 
     }
 

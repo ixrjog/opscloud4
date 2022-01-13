@@ -16,5 +16,6 @@ public enum WorkOrderKeyConstants {
     // UserGroup
     VPN,
     NEXUS,
-    CONFLUENCE
+    CONFLUENCE,
+    NACOS
 }
