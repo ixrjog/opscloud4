@@ -102,7 +102,7 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
                     .orLike("description", likeName);
             example.and(criteria2);
         }
-        example.setOrderByClause("create_time");
+        example.setOrderByClause("id");
         List<DatasourceInstanceAsset> data = dsInstanceAssetMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }
