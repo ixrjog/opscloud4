@@ -10,8 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class JSONUtil {
 
-    private JSONMapper mapper = new JSONMapper();
-
+    private final JSONMapper mapper = new JSONMapper();
 
     public static String writeValueAsString(Object object) {
         try {
@@ -39,7 +38,6 @@ public class JSONUtil {
             return null;
         }
     }
-
 
     public static <T> T readValue(String content, Class<T> valueType) {
         try {

@@ -9,7 +9,12 @@ import lombok.Getter;
  */
 public enum NodeTypeConstants {
 
-    USER_SELECTION(0);
+    /**
+     * USER_LIST：用户自定义
+     * SYS: 系统定义
+     */
+    USER_LIST(0),
+    SYS(1);
 
     NodeTypeConstants(int code) {
         this.code = code;
@@ -17,6 +22,5 @@ public enum NodeTypeConstants {
 
     @Getter
     private final int code;
-
 
 }

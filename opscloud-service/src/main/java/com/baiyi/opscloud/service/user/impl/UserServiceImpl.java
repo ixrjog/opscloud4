@@ -171,4 +171,10 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
         criteria.andEqualTo("phone", phone);
         return userMapper.selectByExample(example);
     }
+
+    @Override
+    public List<User> queryByTagKeys(List<String> tagKeys) {
+        return userMapper.queryByTagKeys(tagKeys);
+    }
+
 }

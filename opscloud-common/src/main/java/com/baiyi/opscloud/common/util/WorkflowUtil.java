@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.common.util;
 
 import com.baiyi.opscloud.domain.vo.workorder.WorkflowVO;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import org.apache.commons.lang3.StringUtils;
@@ -17,16 +16,16 @@ public class WorkflowUtil {
     private WorkflowUtil() {
     }
 
-    public static WorkflowVO.WorkflowView toWorkflowView(String workflow) {
+    public static WorkflowVO.Workflow toWorkflowView(String workflow) {
         if (StringUtils.isEmpty(workflow))
-            return WorkflowVO.WorkflowView.EMPTY;
+            return WorkflowVO.Workflow.EMPTY;
         try {
             Yaml yaml = new Yaml();
             Object result = yaml.load(workflow);
-            Gson gson = new GsonBuilder().create();
-            return gson.fromJson(JSONUtil.writeValueAsString(result), WorkflowVO.WorkflowView.class);
+            return new GsonBuilder().create().fromJson(JSONUtil.writeValueAsString(result), WorkflowVO.Workflow.class);
         } catch (JsonSyntaxException e) {
-            return WorkflowVO.WorkflowView.EMPTY;
+            e.printStackTrace();
+            return WorkflowVO.Workflow.EMPTY;
         }
     }
 

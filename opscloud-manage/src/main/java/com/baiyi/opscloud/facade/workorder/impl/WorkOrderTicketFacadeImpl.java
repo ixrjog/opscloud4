@@ -10,6 +10,7 @@ import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
 import com.baiyi.opscloud.facade.workorder.WorkOrderTicketFacade;
+import com.baiyi.opscloud.facade.workorder.WorkOrderTicketNodeFacade;
 import com.baiyi.opscloud.packer.workorder.WorkOrderTicketPacker;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.workorder.WorkOrderService;
@@ -46,23 +47,38 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
 
     private final UserService userService;
 
+    private final WorkOrderTicketNodeFacade workOrderTicketNodeFacade;
+
     @Override
     public WorkOrderTicketVO.TicketView createTicket(WorkOrderTicketParam.CreateTicket createTicket) {
         final String username = SessionUtil.getUsername();
         WorkOrderTicket workOrderTicket = workOrderTicketService.getNewTicketByUser(createTicket.getWorkOrderKey(), username);
         WorkOrder workOrder = workOrderService.getByKey(createTicket.getWorkOrderKey());
         if (workOrderTicket == null) {
-            User user = userService.getByUsername(username);
-            workOrderTicket = WorkOrderTicket.builder()
-                    .username(username)
-                    .userId(user.getId())
-                    .workOrderId(workOrder.getId())
-                    .ticketPhase(OrderPhaseCodeConstants.NEW.name())
-                    .ticketStatus(0)
-                    .build();
-            workOrderTicketService.add(workOrderTicket);
+            workOrderTicket = createNewTicket(workOrder, username);
         }
         return toTicketView(workOrderTicket);
+    }
+
+    /**
+     * 创建新工单
+     *
+     * @param workOrder
+     * @param username
+     * @return
+     */
+    private WorkOrderTicket createNewTicket(WorkOrder workOrder, String username) {
+        User user = userService.getByUsername(username);
+        WorkOrderTicket workOrderTicket = WorkOrderTicket.builder()
+                .username(username)
+                .userId(user.getId())
+                .workOrderId(workOrder.getId())
+                .ticketPhase(OrderPhaseCodeConstants.NEW.name())
+                .ticketStatus(0)
+                .build();
+        workOrderTicketService.add(workOrderTicket);
+        workOrderTicketNodeFacade.createWorkflowNodes(workOrder, workOrderTicket);
+        return workOrderTicket;
     }
 
     @Override

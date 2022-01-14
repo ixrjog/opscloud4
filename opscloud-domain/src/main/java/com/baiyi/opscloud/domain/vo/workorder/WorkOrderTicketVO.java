@@ -51,7 +51,7 @@ public class WorkOrderTicketVO {
         @ApiModelProperty(value = "工单创建用户")
         private UserVO.User createUser;
         @ApiModelProperty(value = "工作流")
-        private WorkflowVO.WorkflowView workflow;
+        private WorkflowVO.WorkflowView workflowView;
 
         @Override
         public Integer getTicketId() {

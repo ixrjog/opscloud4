@@ -22,8 +22,8 @@ public class WorkOrderVO {
     @ApiModel
     public static class WorkOrder extends BaseVO {
 
-        @ApiModelProperty(value = "工作流视图")
-        private WorkflowVO.WorkflowView workflowView;
+//        @ApiModelProperty(value = "工作流视图")
+//        private WorkflowVO.Workflow workflowView;
 
         private Integer id;
 

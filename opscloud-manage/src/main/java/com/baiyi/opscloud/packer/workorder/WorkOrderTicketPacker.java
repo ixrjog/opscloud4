@@ -24,6 +24,8 @@ public class WorkOrderTicketPacker {
 
     private final WorkOrderPacker workOrderPacker;
 
+    private final WorkOrderWorkflowPacker workOrderWorkflowPacker;
+
     /**
      * 转换工单至视图
      *
@@ -50,6 +52,7 @@ public class WorkOrderTicketPacker {
                 .build();
         workOrderPacker.wrap(ticketView);
         ticketEntryPacker.wrap(ticketView);
+        workOrderWorkflowPacker.wrap(ticketView); // 工作流节点
         return ticketView;
     }
 

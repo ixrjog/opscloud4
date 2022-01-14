@@ -55,4 +55,6 @@ public interface UserService {
 
     List<User> listByPhone(String phone);
 
+    List<User> queryByTagKeys(List<String> tagKeys);
+
 }

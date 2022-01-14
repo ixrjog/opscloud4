@@ -77,6 +77,14 @@ public class UserPacker implements IPacker<UserVO.User, User> {
                 .collect(Collectors.toList());
     }
 
+    public List<UserVO.User> wrapAvatar(List<User> data) {
+        List<UserVO.User> voList = wrapVOList(data);
+        return voList.stream().peek(e -> {
+            // 插入头像
+            wrapAvatar(e);
+        }).collect(Collectors.toList());
+    }
+
     public List<UserVO.User> wrapVOList(List<User> data, IExtend iExtend) {
         List<UserVO.User> voList = wrapVOList(data);
         return voList.stream().peek(e -> {
