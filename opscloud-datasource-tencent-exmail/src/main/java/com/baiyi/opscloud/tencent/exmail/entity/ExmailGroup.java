@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.tencent.exmail.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,18 +17,18 @@ import java.util.List;
 @NoArgsConstructor
 public class ExmailGroup {
 
-    @JSONField(name = "groupid")
+    @JsonProperty("groupid")
     private String groupId;
-    @JSONField(name = "groupname")
+    @JsonProperty("groupname")
     private String groupName;
-    @JSONField(name = "userlist")
+    @JsonProperty("userlist")
     private List<String> userList;
-    @JSONField(name = "grouplist")
+    @JsonProperty("grouplist")
     private List<String> groupList;
     private List<Long> department;
-    @JSONField(name = "allow_type")
+    @JsonProperty("allow_type")
     private Integer allowType;
-    @JSONField(name = "allow_userlist")
+    @JsonProperty("allow_userlist")
     private List<String> allowUserList;
 
 }

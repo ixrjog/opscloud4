@@ -1,11 +1,10 @@
 package com.baiyi.opscloud.factory.resource;
 
-import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
 import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +29,6 @@ class ApplicationResourceQueryFactoryTest extends BaseUnit {
                     .length(10)
                     .build();
             DataTable<ApplicationResourceVO.Resource> table = iApplicationResourceQuery.queryResourcePage(pageQuery);
-            System.err.print(JSON.toJSONString(table));
         }
     }
 

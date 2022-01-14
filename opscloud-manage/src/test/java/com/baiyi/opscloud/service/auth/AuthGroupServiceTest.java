@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.service.auth;
 
-import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthGroup;
@@ -29,6 +28,5 @@ public class AuthGroupServiceTest extends BaseUnit {
                 .length(10)
                 .build();
         DataTable<AuthGroup> table = authGroupService.queryPageByParam(pageQuery);
-        log.info(JSON.toJSON(table).toString());
     }
 }

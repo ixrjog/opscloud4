@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.util;
 
-import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.constants.enums.CredentialKindEnum;
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,6 @@ public class CredentialKindEnumTest extends BaseUnit {
 
     @Test
     void toOptions() {
-        System.err.println(JSON.toJSON(CredentialKindEnum.toOptions()));
+        print(CredentialKindEnum.toOptions());
     }
 }

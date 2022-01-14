@@ -1,13 +1,12 @@
 package com.baiyi.opscloud.test;
 
-import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.user.UserPermissionService;
@@ -59,7 +58,7 @@ public class ApplicationTest extends BaseUnit {
                                 .businessType(BusinessTypeEnum.APPLICATION.getType())
                                 .userId(p.getUserId())
                                 .build();
-                        System.out.println(JSON.toJSONString(permission));
+                        print(permission);
                         try {
                             userPermissionService.add(permission);
                         } catch (Exception ignored) {

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.druid.support.json.JSONUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -60,6 +60,6 @@ public class TerminalSessionInstanceCommand {
 
     @Override
     public String toString() {
-        return JSON.toJSONString(this);
+        return JSONUtils.toJSONString(this);
     }
 }

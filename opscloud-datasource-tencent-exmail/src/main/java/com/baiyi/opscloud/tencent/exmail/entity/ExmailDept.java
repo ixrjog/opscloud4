@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.tencent.exmail.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,7 @@ public class ExmailDept {
 
     private Long id;
     private String name;
-    @JSONField(name = "parentid")
+    @JsonProperty("parentid")
     private String parentId;
     private Long order;
     private String path;

@@ -1,13 +1,13 @@
 package com.baiyi.opscloud.controller.ws.base;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.baiyi.opscloud.common.util.SessionUtil;
-import com.baiyi.opscloud.domain.model.message.ILoginMessage;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserToken;
+import com.baiyi.opscloud.domain.model.message.ILoginMessage;
+import com.baiyi.opscloud.domain.model.message.SimpleState;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.user.UserTokenService;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,8 +44,8 @@ public class SimpleAuthentication {
         return userToken.getUsername();
     }
 
-    protected String getState(String message){
-        JSONObject jsonObject = JSON.parseObject(message);
-        return jsonObject.getString(MESSAGE_STATE);
+    protected String getState(String message) {
+        SimpleState ss = new GsonBuilder().create().fromJson(message, SimpleState.class);
+        return ss.getState();
     }
 }

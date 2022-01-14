@@ -1,24 +1,23 @@
 package com.baiyi.opscloud.datasource.ldap;
 
-import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseConfig;
-import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.business.account.impl.LdapAccountProvider;
 import com.baiyi.opscloud.datasource.business.accountGroup.AccountGroupProviderFactory;
 import com.baiyi.opscloud.datasource.business.accountGroup.IAccountGroup;
+import com.baiyi.opscloud.datasource.ldap.drive.LdapDrive;
 import com.baiyi.opscloud.datasource.ldap.entity.LdapGroup;
 import com.baiyi.opscloud.datasource.ldap.entity.LdapPerson;
-import com.baiyi.opscloud.datasource.ldap.drive.LdapDrive;
 import com.baiyi.opscloud.datasource.ldap.repo.PersonRepo;
+import com.baiyi.opscloud.domain.base.SimpleBusiness;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.user.UserGroupService;
@@ -113,7 +112,6 @@ public class LdapTest extends BaseUnit {
     void queryPersonTest() {
         LdapConfig ldapDsInstanceConfig = (LdapConfig) getConfig();
         LdapPerson.Person person = ldapHandler.getPersonWithDn(ldapDsInstanceConfig.getLdap(), "cn=baiyi,ou=People");
-        log.info(JSON.toJSONString(person));
     }
 
 
@@ -122,7 +120,6 @@ public class LdapTest extends BaseUnit {
         LdapConfig ldapDsInstanceConfig = (LdapConfig) getConfig();
         // "cn=confluence-users,ou=Groups"
         LdapGroup.Group group = ldapHandler.getGroupWithDn(ldapDsInstanceConfig.getLdap(), "cn=vpn-users,ou=Groups");
-        log.info(JSON.toJSONString(group));
     }
 
     @Test
