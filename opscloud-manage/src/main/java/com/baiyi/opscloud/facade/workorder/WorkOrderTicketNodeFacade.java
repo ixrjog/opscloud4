@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.workorder;
 
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrder;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 
 /**
  * @Author baiyi
@@ -11,4 +12,9 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 public interface WorkOrderTicketNodeFacade {
 
     void createWorkflowNodes(WorkOrder workOrder, WorkOrderTicket workOrderTicket);
+
+    void verifyWorkflowNodes(WorkOrder workOrder, WorkOrderTicket workOrderTicket);
+
+    void updateWorkflowNodeAuditUser(int workOrderTicketId, String nodeName, UserVO.User auditUser);
+
 }

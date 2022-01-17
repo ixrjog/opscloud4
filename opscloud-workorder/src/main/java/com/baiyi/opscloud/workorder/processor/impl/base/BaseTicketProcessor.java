@@ -10,7 +10,7 @@ import com.baiyi.opscloud.service.workorder.WorkOrderTicketEntryService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketService;
 import com.baiyi.opscloud.workorder.constants.ProcessStatusConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
-import com.baiyi.opscloud.workorder.exception.VerifyTicketEntryException;
+import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.ITicketProcessor;
 import com.baiyi.opscloud.workorder.processor.factory.WorkOrderTicketProcessorFactory;
 import com.google.gson.Gson;
@@ -62,13 +62,13 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
     }
 
     @Override
-    public void verify(WorkOrderTicketEntry ticketEntry) throws VerifyTicketEntryException {
+    public void verify(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException {
         if (workOrderTicketEntryService.countByTicketUniqueKey(ticketEntry) != 0)
-            throw new VerifyTicketEntryException("校验工单条目失败: 重复申请!");
+            throw new TicketVerifyException("校验工单条目失败: 重复申请!");
         verifyHandle(ticketEntry);
     }
 
-    abstract protected void verifyHandle(WorkOrderTicketEntry ticketEntry) throws VerifyTicketEntryException;
+    abstract protected void verifyHandle(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException;
 
     /**
      * 查询创建人
@@ -97,21 +97,21 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
         workOrderTicketEntryService.update(ticketEntry);
     }
 
-    protected void verifyEntry(T entry) throws VerifyTicketEntryException {
+    protected void verifyEntry(T entry) throws TicketVerifyException {
         if (entry instanceof IAllowOrder)
             verifyByAllowOrder((IAllowOrder) entry);
         if (entry instanceof DatasourceInstanceAsset)
             verifyByAsset((DatasourceInstanceAsset) entry);
     }
 
-    private void verifyByAllowOrder(IAllowOrder allowOrder) throws VerifyTicketEntryException {
+    private void verifyByAllowOrder(IAllowOrder allowOrder) throws TicketVerifyException {
         if (allowOrder.getAllowOrder() == null || !allowOrder.getAllowOrder())
-            throw new VerifyTicketEntryException("校验工单条目失败: 此条目不允许工单申请!");
+            throw new TicketVerifyException("校验工单条目失败: 此条目不允许工单申请!");
     }
 
-    private void verifyByAsset(DatasourceInstanceAsset asset) throws VerifyTicketEntryException {
+    private void verifyByAsset(DatasourceInstanceAsset asset) throws TicketVerifyException {
         if (asset.getIsActive() == null || !asset.getIsActive())
-            throw new VerifyTicketEntryException("校验工单条目失败: 此授权资产无效!");
+            throw new TicketVerifyException("校验工单条目失败: 此授权资产无效!");
     }
 
     @Override

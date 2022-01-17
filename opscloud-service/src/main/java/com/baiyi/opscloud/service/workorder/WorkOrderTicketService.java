@@ -11,6 +11,8 @@ public interface WorkOrderTicketService {
 
     void add(WorkOrderTicket workOrderTicket);
 
+    void update(WorkOrderTicket workOrderTicket);
+
     WorkOrderTicket getById(int id);
 
     WorkOrderTicket getNewTicketByUser(String workOrderKey, String username);

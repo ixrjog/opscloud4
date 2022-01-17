@@ -3,7 +3,6 @@ package com.baiyi.opscloud.packer.workorder;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrder;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderGroup;
-import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderVO;
 import com.baiyi.opscloud.service.workorder.WorkOrderService;
 import lombok.RequiredArgsConstructor;
@@ -34,10 +33,9 @@ public class WorkOrderPacker {
      *
      * @param iWorkOrder
      */
-    public void wrap(WorkOrderTicketVO.IWorkOrder iWorkOrder) {
+    public void wrap(WorkOrderVO.IWorkOrder iWorkOrder) {
         WorkOrder workOrder = workOrderService.getById(iWorkOrder.getWorkOrderId());
         WorkOrderVO.WorkOrder workOrderVO = BeanCopierUtil.copyProperties(workOrder, WorkOrderVO.WorkOrder.class);
-        //  workOrderVO.setWorkflowView(WorkflowUtil.toWorkflowView(workOrder.getWorkflow()));
         iWorkOrder.setWorkOrder(workOrderVO);
     }
 

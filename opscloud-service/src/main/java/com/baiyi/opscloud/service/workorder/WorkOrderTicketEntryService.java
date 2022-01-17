@@ -21,6 +21,8 @@ public interface WorkOrderTicketEntryService {
 
     List<WorkOrderTicketEntry> queryByWorkOrderTicketId(Integer workOrderTicketId);
 
+    int countByWorkOrderTicketId(Integer workOrderTicketId);
+
     int countByTicketUniqueKey(WorkOrderTicketEntry workOrderTicketEntry);
 
 }

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.workorder.processor;
 
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
-import com.baiyi.opscloud.workorder.exception.VerifyTicketEntryException;
+import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.google.gson.JsonSyntaxException;
 
 /**
@@ -30,7 +30,7 @@ public interface ITicketProcessor<T> {
      *
      * @param ticketEntry
      */
-    void verify(WorkOrderTicketEntry ticketEntry) throws VerifyTicketEntryException;
+    void verify(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException;
 
     T toEntry(String entryContent) throws JsonSyntaxException;
 

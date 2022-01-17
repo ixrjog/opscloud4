@@ -23,6 +23,11 @@ public class WorkOrderTicketServiceImpl implements WorkOrderTicketService {
     }
 
     @Override
+    public void update(WorkOrderTicket workOrderTicket) {
+        workOrderTicketMapper.updateByPrimaryKey(workOrderTicket);
+    }
+
+    @Override
     public WorkOrderTicket getById(int id) {
         return workOrderTicketMapper.selectByPrimaryKey(id);
     }

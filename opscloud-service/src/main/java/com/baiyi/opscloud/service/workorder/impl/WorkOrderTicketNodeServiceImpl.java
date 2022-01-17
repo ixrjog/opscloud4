@@ -5,6 +5,9 @@ import com.baiyi.opscloud.mapper.opscloud.WorkOrderTicketNodeMapper;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketNodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -25,6 +28,32 @@ public class WorkOrderTicketNodeServiceImpl implements WorkOrderTicketNodeServic
     @Override
     public void update(WorkOrderTicketNode workOrderTicketNode) {
         workOrderTicketNodeMapper.updateByPrimaryKey(workOrderTicketNode);
+    }
+
+    @Override
+    public List<WorkOrderTicketNode> queryByWorkOrderTicketId(int workOrderTicketId) {
+        Example example = new Example(WorkOrderTicketNode.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("workOrderTicketId", workOrderTicketId);
+        return workOrderTicketNodeMapper.selectByExample(example);
+    }
+
+    @Override
+    public WorkOrderTicketNode getByUniqueKey(int workOrderTicketId, String nodeName) {
+        Example example = new Example(WorkOrderTicketNode.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("workOrderTicketId", workOrderTicketId)
+                .andEqualTo("nodeName", nodeName);
+        return workOrderTicketNodeMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public WorkOrderTicketNode getByUniqueKey(int workOrderTicketId, int parentId) {
+        Example example = new Example(WorkOrderTicketNode.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("workOrderTicketId", workOrderTicketId)
+                .andEqualTo("parentId", parentId);
+        return workOrderTicketNodeMapper.selectOneByExample(example);
     }
 
 }

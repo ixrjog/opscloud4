@@ -1,12 +1,13 @@
 package com.baiyi.opscloud.domain.param.workorder;
 
+import com.baiyi.opscloud.domain.vo.workorder.WorkflowVO;
 import io.swagger.annotations.ApiModel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * @Author baiyi
@@ -25,46 +26,28 @@ public class WorkOrderTicketParam {
         private String workOrderKey;
     }
 
+    @EqualsAndHashCode(callSuper = true)
     @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
     @ApiModel
-    public static class TicketEntry {
-        private Integer id;
+    public static class SubmitTicket extends SaveTicket {
+        private static final long serialVersionUID = -925558688216913781L;
+    }
 
-        private Integer workOrderTicketId;
+    @Data
+    @ApiModel
+    public static class SaveTicket implements Serializable {
 
-        private String name;
+        private static final long serialVersionUID = -608339787175813785L;
+        @NotNull(message = "必须指定工单票据ID")
+        @ApiModelProperty(value = "工单票据ID")
+        private Integer ticketId;
 
-        private String instanceUuid;
-
-        private Integer businessType;
-
-        private Integer businessId;
-
-        private Integer entryStatus;
-
-        private String entryKey;
-
-        /**
-         * 角色
-         */
-        private String role;
-
-        /**
-         * 说明
-         */
+        @ApiModelProperty(value = "工单说明")
         private String comment;
 
-        /**
-         * 内容
-         */
-        private String content;
+        @ApiModelProperty(value = "工作流")
+        private WorkflowVO.WorkflowView workflowView;
 
-        /**
-         * 处理结果
-         */
-        private String result;
     }
+
 }

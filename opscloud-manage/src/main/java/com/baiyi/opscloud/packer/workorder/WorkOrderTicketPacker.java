@@ -26,6 +26,9 @@ public class WorkOrderTicketPacker {
 
     private final WorkOrderWorkflowPacker workOrderWorkflowPacker;
 
+    private final WorkOrderTicketNodePacker nodePacker;
+
+
     /**
      * 转换工单至视图
      *
@@ -38,7 +41,7 @@ public class WorkOrderTicketPacker {
                 .userId(workOrderTicket.getUserId())
                 .username(workOrderTicket.getUsername())
                 .workOrderId(workOrderTicket.getWorkOrderId())
-                .flowId(workOrderTicket.getFlowId())
+                .nodeId(workOrderTicket.getNodeId())
                 .ticketPhase(workOrderTicket.getTicketPhase())
                 .ticketStatus(workOrderTicket.getTicketStatus())
                 .startTime(workOrderTicket.getStartTime())
@@ -53,6 +56,7 @@ public class WorkOrderTicketPacker {
         workOrderPacker.wrap(ticketView);
         ticketEntryPacker.wrap(ticketView);
         workOrderWorkflowPacker.wrap(ticketView); // 工作流节点
+        nodePacker.wrap(ticketView);
         return ticketView;
     }
 

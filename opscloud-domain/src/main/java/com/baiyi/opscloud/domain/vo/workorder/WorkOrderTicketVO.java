@@ -21,13 +21,6 @@ import java.util.List;
  */
 public class WorkOrderTicketVO {
 
-    public interface IWorkOrder {
-
-        Integer getWorkOrderId();
-
-        void setWorkOrder(WorkOrderVO.WorkOrder workOrder);
-    }
-
     public interface ITicketEntries {
 
         Integer getTicketId();
@@ -40,7 +33,7 @@ public class WorkOrderTicketVO {
     @Builder
     @Data
     @ApiModel
-    public static class TicketView implements IWorkOrder, ITicketEntries, Serializable {
+    public static class TicketView implements WorkOrderVO.IWorkOrder, ITicketEntries, Serializable {
         private static final long serialVersionUID = -5342262347843407536L;
         @ApiModelProperty(value = "工单")
         private WorkOrderVO.WorkOrder workOrder;
@@ -52,6 +45,8 @@ public class WorkOrderTicketVO {
         private UserVO.User createUser;
         @ApiModelProperty(value = "工作流")
         private WorkflowVO.WorkflowView workflowView;
+        @ApiModelProperty(value = "工作流审批节点视图")
+        private WorkOrderNodeVO.NodeView nodeView;
 
         @Override
         public Integer getTicketId() {
@@ -73,6 +68,17 @@ public class WorkOrderTicketVO {
                 return this.workOrderTicket.getWorkOrderId();
             return 0;
         }
+
+        /**
+         * Ticket Comment
+         *
+         * @return
+         */
+        public String getComment() {
+            if (this.workOrderTicket != null)
+                return this.workOrderTicket.getComment();
+            return "";
+        }
     }
 
     @EqualsAndHashCode(callSuper = true)
@@ -86,7 +92,7 @@ public class WorkOrderTicketVO {
         private Integer workOrderId;
         private Integer userId;
         private String username;
-        private Integer flowId;
+        private Integer nodeId;
         private String ticketPhase;
         private Integer ticketStatus;
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")

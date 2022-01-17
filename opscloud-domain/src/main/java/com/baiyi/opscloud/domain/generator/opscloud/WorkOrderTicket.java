@@ -38,8 +38,8 @@ public class WorkOrderTicket {
     /**
      * 工单流程id
      */
-    @Column(name = "flow_id")
-    private Integer flowId;
+    @Column(name = "node_id")
+    private Integer nodeId;
 
     /**
      * 工单阶段

@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.facade.server.impl;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
@@ -23,7 +22,7 @@ class ServerGroupFacadeImplTest extends BaseUnit {
 
     @Test
     void deleteServerGroupByIdTest() {
-        serverGroupFacade.deleteServerGroupById(1);
+      //  serverGroupFacade.deleteServerGroupById(1);
     }
 
     @Test
@@ -33,7 +32,7 @@ class ServerGroupFacadeImplTest extends BaseUnit {
                 .envType(4)
                 .build();
         Map<String, List<Server>> map= serverGroupFacade.queryServerGroupHostPatternByEnv(query);
-        System.out.printf(JSONUtil.writeValueAsString(map));
+        print(map);
     }
 
 }

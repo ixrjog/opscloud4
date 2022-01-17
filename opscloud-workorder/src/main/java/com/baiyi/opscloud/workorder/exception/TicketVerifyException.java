@@ -12,21 +12,21 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class VerifyTicketEntryException extends BaseException {
+public class TicketVerifyException extends BaseException {
 
     private static final long serialVersionUID = -7136556927011864675L;
     private final Integer code = 701;
 
-    public VerifyTicketEntryException(String message) {
+    public TicketVerifyException(String message) {
         super(message);
         setCode(code);
     }
 
-    public VerifyTicketEntryException(ErrorEnum errorEnum) {
+    public TicketVerifyException(ErrorEnum errorEnum) {
         super(errorEnum);
     }
 
-    public VerifyTicketEntryException(String message, Throwable cause) {
+    public TicketVerifyException(String message, Throwable cause) {
         super(message, cause);
     }
 }

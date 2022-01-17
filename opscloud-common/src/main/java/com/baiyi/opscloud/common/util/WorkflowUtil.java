@@ -6,6 +6,9 @@ import com.google.gson.JsonSyntaxException;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * @Author baiyi
  * @Date 2022/1/11 2:42 PM
@@ -27,6 +30,11 @@ public class WorkflowUtil {
             e.printStackTrace();
             return WorkflowVO.Workflow.EMPTY;
         }
+    }
+
+    public static Map<String, WorkflowVO.Node> toWorkflowNodeMap(String workflow) {
+        WorkflowVO.Workflow wf = toWorkflowView(workflow);
+        return wf.getNodes().stream().collect(Collectors.toMap(WorkflowVO.Node::getName, a -> a, (k1, k2) -> k1));
     }
 
 }

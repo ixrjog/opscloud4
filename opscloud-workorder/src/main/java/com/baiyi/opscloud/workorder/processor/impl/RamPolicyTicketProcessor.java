@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.domain.param.user.UserRamParam;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
-import com.baiyi.opscloud.workorder.exception.VerifyTicketEntryException;
+import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDatasourceAssetPermissionExtendedBaseTicketProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -49,7 +49,7 @@ public class RamPolicyTicketProcessor extends AbstractDatasourceAssetPermissionE
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntry ticketEntry) throws VerifyTicketEntryException {
+    public void verifyHandle(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException {
         DatasourceInstanceAsset entry = this.toEntry(ticketEntry.getContent());
         DatasourceInstanceAsset asset = getAsset(entry);
         verifyEntry(asset);

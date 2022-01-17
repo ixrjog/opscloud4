@@ -8,7 +8,7 @@ import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsRocketMqGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
-import com.baiyi.opscloud.workorder.exception.VerifyTicketEntryException;
+import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDatasourceAssetExtendedBaseTicketProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -40,14 +40,14 @@ public class OnsGroupTicketProcessor extends AbstractDatasourceAssetExtendedBase
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntry ticketEntry) throws VerifyTicketEntryException {
+    public void verifyHandle(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException {
         OnsRocketMqGroup.Group entry = this.toEntry(ticketEntry.getContent());
         if (StringUtils.isEmpty(entry.getGroupId()))
-            throw new VerifyTicketEntryException("校验工单条目失败: 未指定GID名称!");
+            throw new TicketVerifyException("校验工单条目失败: 未指定GID名称!");
         if (!entry.getGroupId().startsWith("GID_"))
-            throw new VerifyTicketEntryException("校验工单条目失败: GID名称必须为GID_!");
+            throw new TicketVerifyException("校验工单条目失败: GID名称必须为GID_!");
         if (!entry.getGroupId().matches("[0-9A-Z_]{7,64}"))
-            throw new VerifyTicketEntryException("校验工单条目失败: GID名称不合规!");
+            throw new TicketVerifyException("校验工单条目失败: GID名称不合规!");
     }
 
     @Override

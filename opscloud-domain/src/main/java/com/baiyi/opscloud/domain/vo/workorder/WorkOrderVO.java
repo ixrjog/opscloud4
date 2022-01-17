@@ -16,14 +16,18 @@ import java.util.List;
  */
 public class WorkOrderVO {
 
+    public interface IWorkOrder {
+
+        Integer getWorkOrderId();
+
+        void setWorkOrder(WorkOrderVO.WorkOrder workOrder);
+    }
+
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
     @ApiModel
     public static class WorkOrder extends BaseVO {
-
-//        @ApiModelProperty(value = "工作流视图")
-//        private WorkflowVO.Workflow workflowView;
 
         private Integer id;
 

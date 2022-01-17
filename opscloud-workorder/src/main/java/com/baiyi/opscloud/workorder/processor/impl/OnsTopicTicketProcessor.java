@@ -8,7 +8,7 @@ import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsRocketMqTopic;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
-import com.baiyi.opscloud.workorder.exception.VerifyTicketEntryException;
+import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDatasourceAssetExtendedBaseTicketProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -47,14 +47,14 @@ public class OnsTopicTicketProcessor extends AbstractDatasourceAssetExtendedBase
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntry ticketEntry) throws VerifyTicketEntryException {
+    public void verifyHandle(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException {
         OnsRocketMqTopic.Topic entry = this.toEntry(ticketEntry.getContent());
         if (StringUtils.isEmpty(entry.getTopic()))
-            throw new VerifyTicketEntryException("校验工单条目失败: 未指定Topic名称!");
+            throw new TicketVerifyException("校验工单条目失败: 未指定Topic名称!");
         if (!entry.getTopic().startsWith("TOPIC_"))
-            throw new VerifyTicketEntryException("校验工单条目失败: Topic名称必须为TOPIC_!");
+            throw new TicketVerifyException("校验工单条目失败: Topic名称必须为TOPIC_!");
         if (!entry.getTopic().matches("[0-9A-Z_]{9,64}"))
-            throw new VerifyTicketEntryException("校验工单条目失败: Topic名称不合规!");
+            throw new TicketVerifyException("校验工单条目失败: Topic名称不合规!");
     }
 
     @Override

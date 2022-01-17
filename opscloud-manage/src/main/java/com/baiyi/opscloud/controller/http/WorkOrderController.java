@@ -43,16 +43,28 @@ public class WorkOrderController {
         return new HttpResult<>(workOrderTicketFacade.createTicket(createTicket));
     }
 
+    @ApiOperation(value = "暂存工单票据")
+    @PostMapping(value = "/ticket/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<WorkOrderTicketVO.TicketView> saveTicket(@RequestBody @Valid WorkOrderTicketParam.SaveTicket saveTicket) {
+        return new HttpResult<>(workOrderTicketFacade.saveTicket(saveTicket));
+    }
+
+    @ApiOperation(value = "提交工单票据")
+    @PostMapping(value = "/ticket/submit", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<WorkOrderTicketVO.TicketView> submitTicket(@RequestBody @Valid WorkOrderTicketParam.SubmitTicket submitTicket) {
+        return new HttpResult<>(workOrderTicketFacade.submitTicket(submitTicket));
+    }
+
     @ApiOperation(value = "新增工单票据配置条目")
     @PostMapping(value = "/ticket/entry/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addTicketEntry(@RequestBody @Valid WorkOrderTicketParam.TicketEntry ticketEntry) {
+    public HttpResult<Boolean> addTicketEntry(@RequestBody @Valid WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
         workOrderTicketFacade.addTicketEntry(ticketEntry);
         return HttpResult.SUCCESS;
     }
 
     @ApiOperation(value = "更新工单票据配置条目")
     @PostMapping(value = "/ticket/entry/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<WorkOrderTicketVO.TicketView> updateTicketEntry(@RequestBody @Valid WorkOrderTicketParam.TicketEntry ticketEntry) {
+    public HttpResult<WorkOrderTicketVO.TicketView> updateTicketEntry(@RequestBody @Valid WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
         return new HttpResult<>(workOrderTicketFacade.updateTicketEntry(ticketEntry));
     }
 

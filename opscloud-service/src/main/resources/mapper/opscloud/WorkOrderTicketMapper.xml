@@ -9,7 +9,7 @@
     <result column="work_order_id" jdbcType="INTEGER" property="workOrderId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="username" jdbcType="VARCHAR" property="username" />
-    <result column="flow_id" jdbcType="INTEGER" property="flowId" />
+    <result column="node_id" jdbcType="INTEGER" property="nodeId" />
     <result column="ticket_phase" jdbcType="VARCHAR" property="ticketPhase" />
     <result column="ticket_status" jdbcType="INTEGER" property="ticketStatus" />
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
