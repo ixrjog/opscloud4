@@ -46,7 +46,6 @@ public class SessionOutputUtil {
             userSessionsOutput.getSessionOutputMap().clear();
         }
         userSessionsOutputMap.remove(sessionId);
-
     }
 
     /**
@@ -68,7 +67,6 @@ public class SessionOutputUtil {
      * @param sessionOutput session output object
      */
     public static void addOutput(SessionOutput sessionOutput) {
-
         UserSessionsOutput userSessionsOutput = userSessionsOutputMap.get(sessionOutput.getSessionId());
         if (userSessionsOutput == null) {
             userSessionsOutputMap.put(sessionOutput.getSessionId(), new UserSessionsOutput());
@@ -76,7 +74,6 @@ public class SessionOutputUtil {
         }
         userSessionsOutput.getSessionOutputMap().put(sessionOutput.getInstanceId(), sessionOutput);
     }
-
 
     /**
      * adds a new output
@@ -90,7 +87,10 @@ public class SessionOutputUtil {
     public static void addToOutput(String sessionId, String instanceId, char[] value, int offset, int count) {
         UserSessionsOutput userSessionsOutput = userSessionsOutputMap.get(sessionId);
         if (userSessionsOutput != null) {
-            userSessionsOutput.getSessionOutputMap().get(instanceId).getOutput().append(value, offset, count);
+            Map<String, SessionOutput> sessionOutputMap = userSessionsOutput.getSessionOutputMap();
+            if (sessionOutputMap.containsKey(instanceId)) {
+                sessionOutputMap.get(instanceId).getOutput().append(value, offset, count);
+            }
         }
     }
 
@@ -150,15 +150,14 @@ public class SessionOutputUtil {
         String cacheKey = TerminalLogUtil.toAuditLogKey(sessionId, instanceId);
         String logRepo;
         if (redisUtil.hasKey(cacheKey)) {
-            logRepo = new StringBuilder((String) redisUtil.get(cacheKey)).append(auditLog).toString();
+            //   logRepo = new StringBuilder((String) redisUtil.get(cacheKey)).append(auditLog).toString();
+            logRepo =  redisUtil.get(cacheKey) + auditLog;
         } else {
             logRepo = auditLog;
         }
         redisUtil.set(cacheKey, logRepo, 6000);
-
 //        if (logRepo.length() > 10240)
 //            AuditRecordHandler.recordAuditLog(sessionId, instanceId);
-
     }
 
     private static int subOutputLine(String auditContent) {
