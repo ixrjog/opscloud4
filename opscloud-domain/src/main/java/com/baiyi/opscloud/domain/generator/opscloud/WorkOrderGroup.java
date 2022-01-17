@@ -1,8 +1,9 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
-import javax.persistence.*;
 import lombok.Data;
+
+import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @Table(name = "work_order_group")
@@ -37,9 +38,9 @@ public class WorkOrderGroup {
      */
     private String comment;
 
-    @Column(name = "create_time")
+    @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
-    @Column(name = "update_time")
+    @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 }
