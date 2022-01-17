@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -58,8 +57,8 @@ public class TerminalSessionInstanceCommand {
      */
     private String output;
 
-    @Override
-    public String toString() {
-        return JSONUtils.toJSONString(this);
-    }
+//    @Override
+//    public String toString() {
+//        return JSONUtils.toJSONString(this);
+//    }
 }
