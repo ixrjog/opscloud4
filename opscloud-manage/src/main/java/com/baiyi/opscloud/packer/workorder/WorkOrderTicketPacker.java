@@ -1,10 +1,13 @@
 package com.baiyi.opscloud.packer.workorder;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.time.AgoUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
+import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
+import com.baiyi.opscloud.packer.user.UserPacker;
 import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -28,6 +31,18 @@ public class WorkOrderTicketPacker {
 
     private final WorkOrderTicketNodePacker nodePacker;
 
+    private final UserPacker userPacker;
+
+    public WorkOrderTicketVO.Ticket wrap(WorkOrderTicket workOrderTicket, IExtend iExtend) {
+        WorkOrderTicketVO.Ticket ticket = BeanCopierUtil.copyProperties(workOrderTicket, WorkOrderTicketVO.Ticket.class);
+        if (iExtend.getExtend()) {
+            AgoUtil.wrap(ticket);
+            workOrderPacker.wrap(ticket);
+            User user = userService.getByUsername(workOrderTicket.getUsername());
+            ticket.setCreateUser(toCreateUser(workOrderTicket));
+        }
+        return ticket;
+    }
 
     /**
      * 转换工单至视图
@@ -48,7 +63,6 @@ public class WorkOrderTicketPacker {
                 .endTime(workOrderTicket.getEndTime())
                 .comment(workOrderTicket.getComment())
                 .build();
-        User user = userService.getByUsername(workOrderTicket.getUsername());
         WorkOrderTicketVO.TicketView ticketView = WorkOrderTicketVO.TicketView.builder()
                 .createUser(toCreateUser(workOrderTicket))
                 .workOrderTicket(ticket)
@@ -62,7 +76,9 @@ public class WorkOrderTicketPacker {
 
     private UserVO.User toCreateUser(WorkOrderTicket workOrderTicket) {
         User user = userService.getByUsername(workOrderTicket.getUsername());
-        return BeanCopierUtil.copyProperties(user, UserVO.User.class);
+        UserVO.User userVO = BeanCopierUtil.copyProperties(user, UserVO.User.class);
+        userPacker.wrapAvatar(userVO);
+        return userVO;
     }
 
 }

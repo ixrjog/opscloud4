@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.domain.param.workorder;
 
+import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.param.PageParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkflowVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,6 +17,31 @@ import java.io.Serializable;
  * @Version 1.0
  */
 public class WorkOrderTicketParam {
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @EqualsAndHashCode(callSuper = true)
+    @NoArgsConstructor
+    @ApiModel
+    public static class MyTicketPageQuery extends PageParam implements IExtend {
+
+        @ApiModelProperty(value = "用户名(非用户指定)")
+        private String username;
+
+        @ApiModelProperty(value = "工单ID")
+        private Integer workOrderId;
+
+        @ApiModelProperty(value = "工单票据阶段")
+        private String ticketPhase;
+
+        @ApiModelProperty(value = "工单票据状态")
+        private Integer ticketStatus;
+
+        @ApiModelProperty(value = "展开")
+        private Boolean extend;
+
+    }
 
     @Data
     @Builder

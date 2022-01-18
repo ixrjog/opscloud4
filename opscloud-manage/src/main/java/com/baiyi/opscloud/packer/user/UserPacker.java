@@ -85,6 +85,7 @@ public class UserPacker implements IPacker<UserVO.User, User> {
         }).collect(Collectors.toList());
     }
 
+
     public List<UserVO.User> wrapVOList(List<User> data, IExtend iExtend) {
         List<UserVO.User> voList = wrapVOList(data);
         return voList.stream().peek(e -> {
@@ -123,10 +124,11 @@ public class UserPacker implements IPacker<UserVO.User, User> {
     }
 
     /**
-     *  从资产获取用户头像并插入
+     * 从资产获取用户头像并插入
+     *
      * @param user
      */
-    private void wrapAvatar(UserVO.User user) {
+    public void wrapAvatar(UserVO.User user) {
         BaseBusiness.IBusiness iBusiness = SimpleBusiness.builder()
                 .businessType(BusinessTypeEnum.USER.getType())
                 .businessId(user.getId())

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.workorder;
 
-import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
@@ -13,6 +13,8 @@ import java.util.List;
  * @Version 1.0
  */
 public interface WorkOrderTicketFacade {
+
+    DataTable<WorkOrderTicketVO.Ticket> queryMyTicketPage(WorkOrderTicketParam.MyTicketPageQuery pageQuery);
 
     WorkOrderTicketVO.TicketView createTicket(WorkOrderTicketParam.CreateTicket createTicket);
 
@@ -47,7 +49,5 @@ public interface WorkOrderTicketFacade {
      * @return
      */
     void deleteTicketEntry(Integer ticketEntryId);
-
-    WorkOrderTicketVO.TicketView toTicketView(WorkOrderTicket workOrderTicket);
 
 }

@@ -30,17 +30,20 @@ public class WorkOrderTicketNodePacker {
             return; // 新建工单不需要展示审批视图
         int parentId = 0;
         List<WorkOrderNodeVO.Stage> stages = Lists.newArrayList();
+        int id = 1;
         while (true) {
             WorkOrderTicketNode ticketNode = workOrderTicketNodeService.getByUniqueKey(ticketView.getWorkOrderTicket().getId(), parentId);
             if (ticketNode == null)
                 break;
             parentId = ticketNode.getId();
             WorkOrderNodeVO.Stage stage = WorkOrderNodeVO.Stage.builder()
-                    .name(ticketNode.getNodeName())
+                    .name(ticketNode.getComment())
                     .state(toState(ticketView.getWorkOrderTicket(), ticketNode))
                     .type("STAGE")
+                    .id(id)
                     .build();
             stages.add(stage);
+            id++;
         }
         ticketView.setNodeView(
                 WorkOrderNodeVO.NodeView.builder()

@@ -1,10 +1,16 @@
 package com.baiyi.opscloud.service.workorder.impl;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam;
 import com.baiyi.opscloud.mapper.opscloud.WorkOrderTicketMapper;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -16,6 +22,13 @@ import org.springframework.stereotype.Service;
 public class WorkOrderTicketServiceImpl implements WorkOrderTicketService {
 
     private final WorkOrderTicketMapper workOrderTicketMapper;
+
+    @Override
+    public DataTable<WorkOrderTicket> queryPageByParam(WorkOrderTicketParam.MyTicketPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<WorkOrderTicket> data = workOrderTicketMapper.queryPageByParam(pageQuery);
+        return new DataTable<>(data, page.getTotal());
+    }
 
     @Override
     public void add(WorkOrderTicket workOrderTicket) {

@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.workorder;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
+import com.baiyi.opscloud.packer.workorder.WorkOrderTicketPacker;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketService;
 import org.junit.jupiter.api.Test;
 
@@ -21,10 +22,13 @@ class WorkOrderTest extends BaseUnit {
     @Resource
     private WorkOrderTicketFacade workOrderTicketFacade;
 
+    @Resource
+    private WorkOrderTicketPacker workOrderTicketPacker;
+
     @Test
     void ticketViewTest() {
         WorkOrderTicket workOrderTicket = workOrderTicketService.getById(1);
-        WorkOrderTicketVO.TicketView ticketView = workOrderTicketFacade.toTicketView(workOrderTicket);
+        WorkOrderTicketVO.TicketView ticketView = workOrderTicketPacker.toTicketView(workOrderTicket);
         print(ticketView);
     }
 

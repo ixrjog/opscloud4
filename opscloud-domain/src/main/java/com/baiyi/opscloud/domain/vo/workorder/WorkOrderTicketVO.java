@@ -1,14 +1,13 @@
 package com.baiyi.opscloud.domain.vo.workorder;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.base.ShowTime;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -83,11 +82,22 @@ public class WorkOrderTicketVO {
 
     @EqualsAndHashCode(callSuper = true)
     @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @Data
     @ApiModel
-    public static class Ticket extends BaseVO implements Serializable {
+    public static class Ticket extends BaseVO implements WorkOrderVO.IWorkOrder, ShowTime.IAgo, Serializable {
 
         private static final long serialVersionUID = -3191271933875590264L;
+
+        private String ago;
+
+        @ApiModelProperty(value = "工单")
+        private WorkOrderVO.WorkOrder workOrder;
+
+        @ApiModelProperty(value = "创建（申请）人")
+        private UserVO.User createUser;
+
         private Integer id;
         private Integer workOrderId;
         private Integer userId;
@@ -100,6 +110,11 @@ public class WorkOrderTicketVO {
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date endTime;
         private String comment;
+
+        @Override
+        public Date getAgoTime() {
+            return getStartTime();
+        }
 
     }
 
