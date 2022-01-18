@@ -53,6 +53,30 @@ public class WorkOrderTicketParam {
         private String workOrderKey;
     }
 
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
+    public static class ApproveTicket {
+        @NotNull(message = "必须指定工单票据ID")
+        @ApiModelProperty(value = "工单票据ID")
+        private Integer ticketId;
+
+        /**
+         * 审批动作，取值和说明如下：
+         *
+         * AGREE：同意
+         * CANCEL：取消
+         * REJECT：拒绝
+         */
+        @ApiModelProperty(value = "审批动作")
+        private String approvalType;
+
+        @ApiModelProperty(value = "审批说明")
+        private String approvalComment;
+    }
+
     @EqualsAndHashCode(callSuper = true)
     @Data
     @ApiModel

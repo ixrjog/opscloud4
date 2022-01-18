@@ -61,6 +61,12 @@ public class WorkOrderController {
     public HttpResult<WorkOrderTicketVO.TicketView> submitTicket(@RequestBody @Valid WorkOrderTicketParam.SubmitTicket submitTicket) {
         return new HttpResult<>(workOrderTicketFacade.submitTicket(submitTicket));
     }
+    
+    @ApiOperation(value = "审批工单票据")
+    @PostMapping(value = "/ticket/approve", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<WorkOrderTicketVO.TicketView> approveTicket(@RequestBody @Valid WorkOrderTicketParam.ApproveTicket approveTicket) {
+        return new HttpResult<>(workOrderTicketFacade.approveTicket(approveTicket));
+    }
 
     @ApiOperation(value = "新增工单票据配置条目")
     @PostMapping(value = "/ticket/entry/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

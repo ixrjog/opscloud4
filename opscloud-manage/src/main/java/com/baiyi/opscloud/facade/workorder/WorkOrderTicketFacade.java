@@ -22,6 +22,8 @@ public interface WorkOrderTicketFacade {
 
     WorkOrderTicketVO.TicketView submitTicket(WorkOrderTicketParam.SubmitTicket submitTicket);
 
+    WorkOrderTicketVO.TicketView approveTicket(WorkOrderTicketParam.ApproveTicket approveTicket);
+
     WorkOrderTicketVO.TicketView getTicket(Integer ticketId);
 
     List<WorkOrderTicketVO.Entry> queryTicketEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery);

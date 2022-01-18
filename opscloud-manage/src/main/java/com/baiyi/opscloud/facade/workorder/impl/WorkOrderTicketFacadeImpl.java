@@ -101,6 +101,13 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         return toTicketView(workOrderTicket);
     }
 
+    @Override
+    public WorkOrderTicketVO.TicketView approveTicket(WorkOrderTicketParam.ApproveTicket approveTicket) {
+        WorkOrderTicket workOrderTicket = ticketService.getById(approveTicket.getTicketId());
+
+        return toTicketView(workOrderTicket);
+    }
+
     // 验证工单完整性
     private void verifyTicket(WorkOrderTicket workOrderTicket) {
         if (ticketEntryService.countByWorkOrderTicketId(workOrderTicket.getId()) == 0)

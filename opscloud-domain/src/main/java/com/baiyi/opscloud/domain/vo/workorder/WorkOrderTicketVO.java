@@ -47,6 +47,9 @@ public class WorkOrderTicketVO {
         @ApiModelProperty(value = "工作流审批节点视图")
         private WorkOrderNodeVO.NodeView nodeView;
 
+        @ApiModelProperty(value = "是否为审批人")
+        private Boolean isApprover;
+
         @Override
         public Integer getTicketId() {
             if (this.workOrderTicket != null)
@@ -66,6 +69,12 @@ public class WorkOrderTicketVO {
             if (this.workOrderTicket != null)
                 return this.workOrderTicket.getWorkOrderId();
             return 0;
+        }
+
+        public String getTicketPhase() {
+            if (this.workOrderTicket != null)
+                return this.workOrderTicket.getTicketPhase();
+            return "NEW";
         }
 
         /**
