@@ -44,10 +44,10 @@ public class ManageApplication {
     private static final Logger log = LoggerFactory.getLogger(ManageApplication.class);
 
     public static void main(String[] args) {
-        Instant inst1 = Instant.now();
+        Instant inst = Instant.now();
         SpringApplication.run(ManageApplication.class, args);
         log.info("OPSCLOUD 4 IaC 基础架构即代码 <Spring Boot {}>", SpringBootVersion.getVersion());
-        log.info("启动成功! 耗时:{}/s", Duration.between(inst1, Instant.now()).getSeconds());
+        log.info("启动成功! 耗时:{}/s", Duration.between(inst, Instant.now()).getSeconds());
         System.setProperty("druid.mysql.usePingMethod","false");
         log.info("修改参数: druid.mysql.usePingMethod=false");
     }

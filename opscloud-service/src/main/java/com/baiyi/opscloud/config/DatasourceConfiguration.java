@@ -43,7 +43,7 @@ public class DatasourceConfiguration {
         factoryBean.setDataSource(opscloudDataSource());
         factoryBean.setMapperLocations(
                 new PathMatchingResourcePatternResolver()
-                        .getResources("classpath:mapper/opscloud/*.xml")); // 2. xml 所在路径
+                        .getResources("classpath:mapper/opscloud/*.xml"));
         return factoryBean.getObject();
     }
 
