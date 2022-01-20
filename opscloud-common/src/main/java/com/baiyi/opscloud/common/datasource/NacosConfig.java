@@ -44,6 +44,7 @@ public class NacosConfig extends BaseConfig {
     @NoArgsConstructor
     @ApiModel
     public static class Account {
+
         private String prefix;
         private String username;
         private String password;

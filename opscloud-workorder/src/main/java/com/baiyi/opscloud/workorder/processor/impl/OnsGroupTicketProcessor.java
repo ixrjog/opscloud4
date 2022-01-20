@@ -9,7 +9,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
-import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDatasourceAssetExtendedBaseTicketProcessor;
+import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExtendedBaseTicketProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-public class OnsGroupTicketProcessor extends AbstractDatasourceAssetExtendedBaseTicketProcessor<OnsRocketMqGroup.Group, AliyunConfig> {
+public class OnsGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcessor<OnsRocketMqGroup.Group, AliyunConfig> {
 
     @Resource
     private AliyunOnsRocketMqGroupDrive aliyunOnsRocketMqGroupDrive;

@@ -26,7 +26,6 @@ public class BasePage {
         private Integer totalCount;
         private Integer pagesAvailable;
 
-
     }
 
 }

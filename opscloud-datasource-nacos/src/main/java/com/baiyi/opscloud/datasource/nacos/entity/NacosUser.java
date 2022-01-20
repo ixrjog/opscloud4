@@ -34,6 +34,32 @@ public class NacosUser {
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class CreateUserResponse implements Serializable {
+
+        private static final long serialVersionUID = 4110339556174099015L;
+        private Integer code;
+        private String message;
+        private String data;
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class AuthRoleResponse implements Serializable {
+
+        private static final long serialVersionUID = -1258014694158106573L;
+        private Integer code;
+        private String message;
+        private String data;
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class User implements Serializable {
 
         private static final long serialVersionUID = 3832085642768517657L;
