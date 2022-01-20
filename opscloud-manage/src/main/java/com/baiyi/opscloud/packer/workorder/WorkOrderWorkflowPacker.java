@@ -49,7 +49,11 @@ public class WorkOrderWorkflowPacker {
                 if (NodeTypeConstants.USER_LIST.getCode() == nodeView.getType()) {
                     WorkOrderTicketNode workOrderTicketNode = workOrderTicketNodeService.getByUniqueKey(ticketView.getTicketId(), nodeView.getName());
                     if (!StringUtils.isEmpty(workOrderTicketNode.getUsername()))
-                        nodeView.setAuditUser(nodeView.getAuditUsers().stream().filter(n -> n.getUsername().equals(workOrderTicketNode.getUsername())).findFirst().get());
+                        nodeView.setAuditUser(nodeView.getAuditUsers()
+                                .stream()
+                                .filter(n -> n.getUsername().equals(workOrderTicketNode.getUsername()))
+                                .findFirst()
+                                .get());
                 }
             } catch (Exception ignore) {
             }

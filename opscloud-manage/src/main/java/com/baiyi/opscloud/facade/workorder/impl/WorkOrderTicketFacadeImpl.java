@@ -12,15 +12,19 @@ import com.baiyi.opscloud.domain.vo.workorder.WorkflowVO;
 import com.baiyi.opscloud.facade.workorder.WorkOrderTicketFacade;
 import com.baiyi.opscloud.facade.workorder.WorkOrderTicketNodeFacade;
 import com.baiyi.opscloud.facade.workorder.WorkOrderTicketSubscriberFacade;
-import com.baiyi.opscloud.packer.workorder.WorkOrderTicketPacker;
+import com.baiyi.opscloud.packer.workorder.TicketPacker;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.workorder.WorkOrderService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketEntryService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketNodeService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketService;
+import com.baiyi.opscloud.workorder.approve.ITicketApprove;
+import com.baiyi.opscloud.workorder.approve.factory.WorkOrderTicketApproveFactory;
+import com.baiyi.opscloud.workorder.constants.ApprovalTypeConstants;
 import com.baiyi.opscloud.workorder.constants.NodeTypeConstants;
 import com.baiyi.opscloud.workorder.constants.OrderPhaseCodeConstants;
 import com.baiyi.opscloud.workorder.exception.TicketCommonException;
+import com.baiyi.opscloud.workorder.helper.TicketApproverHelper;
 import com.baiyi.opscloud.workorder.processor.ITicketProcessor;
 import com.baiyi.opscloud.workorder.processor.factory.WorkOrderTicketProcessorFactory;
 import com.baiyi.opscloud.workorder.query.factory.WorkOrderTicketEntryQueryFactory;
@@ -47,7 +51,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
 
     private final WorkOrderService workOrderService;
 
-    private final WorkOrderTicketPacker ticketPacker;
+    private final TicketPacker ticketPacker;
 
     private final WorkOrderTicketService ticketService;
 
@@ -60,6 +64,8 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     private final WorkOrderTicketNodeService ticketNodeService;
 
     private final WorkOrderTicketSubscriberFacade ticketSubscriberFacade;
+
+    private final TicketApproverHelper ticketApproverHelper;
 
     @Override
     public DataTable<WorkOrderTicketVO.Ticket> queryMyTicketPage(WorkOrderTicketParam.MyTicketPageQuery pageQuery) {
@@ -89,23 +95,30 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
 
     @Override
     public WorkOrderTicketVO.TicketView submitTicket(WorkOrderTicketParam.SubmitTicket submitTicket) {
-        WorkOrderTicket workOrderTicket = ticketService.getById(submitTicket.getTicketId());
-        preSaveHandle(workOrderTicket, submitTicket);
-        verifyTicket(workOrderTicket);  // 验证工单完整性
+        WorkOrderTicket ticket = ticketService.getById(submitTicket.getTicketId());
+        preSaveHandle(ticket, submitTicket);
+        verifyTicket(ticket);  // 验证工单完整性
         // 提交工单 变更工单进度
-        workOrderTicket.setTicketPhase(OrderPhaseCodeConstants.TOAUDIT.name());
+        ticket.setTicketPhase(OrderPhaseCodeConstants.TOAUDIT.name());
         // 设置工单开始时间
-        workOrderTicket.setStartTime(new Date());
-        ticketService.update(workOrderTicket);
-        // TODO
-        return toTicketView(workOrderTicket);
+        ticket.setStartTime(new Date());
+        ticketService.update(ticket);
+        ticketSubscriberFacade.publish(ticket);
+        return toTicketView(ticket);
     }
 
     @Override
     public WorkOrderTicketVO.TicketView approveTicket(WorkOrderTicketParam.ApproveTicket approveTicket) {
-        WorkOrderTicket workOrderTicket = ticketService.getById(approveTicket.getTicketId());
-
-        return toTicketView(workOrderTicket);
+        if (StringUtils.isBlank(approveTicket.getApprovalComment())) {
+            // 设置默认的审批意见
+            approveTicket.setApprovalComment(ApprovalTypeConstants.getDesc(approveTicket.getApprovalType()));
+        }
+        ITicketApprove iTicketApprove = WorkOrderTicketApproveFactory.getByApprovalType(approveTicket.getApprovalType());
+        if (iTicketApprove == null)
+            throw new TicketCommonException("审批类型不正确!");
+        iTicketApprove.approve(approveTicket);
+        WorkOrderTicket ticket = ticketService.getById(approveTicket.getTicketId());
+        return toTicketView(ticket);
     }
 
     // 验证工单完整性
@@ -166,7 +179,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
                 .build();
         ticketService.add(workOrderTicket);
         ticketNodeFacade.createWorkflowNodes(workOrder, workOrderTicket);
-        ticketSubscriberFacade.createSubscriber(workOrderTicket, user); // 增加创建订阅人
+        ticketSubscriberFacade.publish(workOrderTicket, user); // 增加创建订阅人
         // 更新节点ID
         WorkOrderTicketNode workOrderTicketNode = ticketNodeService.getByUniqueKey(workOrderTicket.getId(), 0);
         workOrderTicket.setNodeId(workOrderTicketNode.getId());

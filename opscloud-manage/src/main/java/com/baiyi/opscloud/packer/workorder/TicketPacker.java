@@ -9,6 +9,7 @@ import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
 import com.baiyi.opscloud.packer.user.UserPacker;
 import com.baiyi.opscloud.service.user.UserService;
+import com.baiyi.opscloud.workorder.helper.TicketApproverHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,19 +20,21 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class WorkOrderTicketPacker {
+public class TicketPacker {
 
     private final UserService userService;
 
-    private final WorkOrderTicketEntryPacker ticketEntryPacker;
+    private final TicketEntryPacker ticketEntryPacker;
 
     private final WorkOrderPacker workOrderPacker;
 
     private final WorkOrderWorkflowPacker workOrderWorkflowPacker;
 
-    private final WorkOrderTicketNodePacker nodePacker;
+    private final TicketNodePacker nodePacker;
 
     private final UserPacker userPacker;
+
+    private final TicketApproverHelper ticketApproverHelper;
 
     public WorkOrderTicketVO.Ticket wrap(WorkOrderTicket workOrderTicket, IExtend iExtend) {
         WorkOrderTicketVO.Ticket ticket = BeanCopierUtil.copyProperties(workOrderTicket, WorkOrderTicketVO.Ticket.class);
@@ -40,6 +43,7 @@ public class WorkOrderTicketPacker {
             workOrderPacker.wrap(ticket);
             User user = userService.getByUsername(workOrderTicket.getUsername());
             ticket.setCreateUser(toCreateUser(workOrderTicket));
+            ticketApproverHelper.wrap(ticket);
         }
         return ticket;
     }
@@ -63,14 +67,16 @@ public class WorkOrderTicketPacker {
                 .endTime(workOrderTicket.getEndTime())
                 .comment(workOrderTicket.getComment())
                 .build();
+        ticketApproverHelper.wrap(ticket);
         WorkOrderTicketVO.TicketView ticketView = WorkOrderTicketVO.TicketView.builder()
                 .createUser(toCreateUser(workOrderTicket))
-                .workOrderTicket(ticket)
+                .ticket(ticket)
                 .build();
         workOrderPacker.wrap(ticketView);
         ticketEntryPacker.wrap(ticketView);
         workOrderWorkflowPacker.wrap(ticketView); // 工作流节点
         nodePacker.wrap(ticketView);
+
         return ticketView;
     }
 

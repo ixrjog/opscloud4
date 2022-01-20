@@ -57,9 +57,11 @@ public class WorkOrderNodeVO {
         private static final long serialVersionUID = 4493746212394051044L;
 
         private String title;
-        private String msg;
-        private String width; // "101"
-        private String height; // "120"
+        private List<String> msg;
+        @Builder.Default
+        private String width = "100"; // "101"
+        @Builder.Default
+        private String height = "102"; // "120"
 
     }
 

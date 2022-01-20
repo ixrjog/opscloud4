@@ -1,8 +1,10 @@
 package com.baiyi.opscloud.packer.workorder;
 
+import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketNode;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderNodeVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
+import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketNodeService;
 import com.baiyi.opscloud.workorder.constants.ApprovalTypeConstants;
 import com.baiyi.opscloud.workorder.constants.OrderPhaseCodeConstants;
@@ -21,27 +23,39 @@ import java.util.List;
  */
 @Component
 @RequiredArgsConstructor
-public class WorkOrderTicketNodePacker {
+public class TicketNodePacker {
 
     private final WorkOrderTicketNodeService workOrderTicketNodeService;
 
+    private final UserService userService;
+
     public void wrap(WorkOrderTicketVO.TicketView ticketView) {
-        if (OrderPhaseCodeConstants.NEW.name().equals(ticketView.getWorkOrderTicket().getTicketPhase()))
+        if (OrderPhaseCodeConstants.NEW.name().equals(ticketView.getTicket().getTicketPhase()))
             return; // 新建工单不需要展示审批视图
         int parentId = 0;
         List<WorkOrderNodeVO.Stage> stages = Lists.newArrayList();
         int id = 1;
         while (true) {
-            WorkOrderTicketNode ticketNode = workOrderTicketNodeService.getByUniqueKey(ticketView.getWorkOrderTicket().getId(), parentId);
+            WorkOrderTicketNode ticketNode = workOrderTicketNodeService.getByUniqueKey(ticketView.getTicket().getId(), parentId);
             if (ticketNode == null)
                 break;
             parentId = ticketNode.getId();
             WorkOrderNodeVO.Stage stage = WorkOrderNodeVO.Stage.builder()
-                    .name(ticketNode.getComment())
-                    .state(toState(ticketView.getWorkOrderTicket(), ticketNode))
-                    .type("STAGE")
                     .id(id)
+                    .name(ticketNode.getNodeName())
+                    .state(toState(ticketView.getTicket(), ticketNode))
+                    .type("STAGE")
                     .build();
+            // 插入审批意见
+            if (!StringUtils.isEmpty(ticketNode.getApprovalStatus())) {
+                User user = userService.getByUsername(ticketNode.getUsername());
+                stage.setPopInfo(
+                        WorkOrderNodeVO.PopInfo.builder()
+                                .title(user.getDisplayName())
+                                .msg(Lists.newArrayList("审批意见:", ticketNode.getComment()))
+                                .build()
+                );
+            }
             stages.add(stage);
             id++;
         }
@@ -51,6 +65,19 @@ public class WorkOrderTicketNodePacker {
                         .build()
         );
     }
+
+    /**
+     * 'popInfo': {
+     * title: '< 通知 >',
+     * msg: [ '重要内容', '经党委会研究决定，现任命王铁柱为中共河北省省委书记' ],
+     * width: "101",
+     * height: "120",
+     * }
+     *
+     * @param workOrderTicket
+     * @param workOrderTicketNode
+     * @return
+     */
 
     private String toState(WorkOrderTicketVO.Ticket workOrderTicket, WorkOrderTicketNode workOrderTicketNode) {
         String approvalStatus = workOrderTicketNode.getApprovalStatus();
@@ -64,7 +91,7 @@ public class WorkOrderTicketNodePacker {
             }
         }
         if (ApprovalTypeConstants.AGREE.name().equals(approvalStatus)) {
-            return StageConstants.FINISHED.name();
+            return StageConstants.SUCCESS.name();
         }
         if (ApprovalTypeConstants.REJECT.name().equals(approvalStatus)) {
             return StageConstants.FAILURE.name();

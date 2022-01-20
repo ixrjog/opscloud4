@@ -11,8 +11,8 @@ import lombok.Getter;
 public enum ProcessStatusConstants {
 
     DEFAULT(0),
-    SUCCESSFUL(1),
-    FAILED(-1);
+    SUCCESSFUL(1), // 执行成功
+    FAILED(-1);  // 执行失败
 
     ProcessStatusConstants(int status) {
         this.status = status;

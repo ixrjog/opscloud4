@@ -9,6 +9,7 @@ public enum StageConstants {
 
     FINISHED,
     RUNNING,
+    SUCCESS,
     SKIPPED,
     PAUSED,
     FAILURE,

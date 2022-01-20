@@ -14,6 +14,7 @@ public enum OrderPhaseCodeConstants {
     REJECT,//审批拒绝
     PROCESSING,//执行中
     SUCCESS,//执行成功
+    FAILED, //执行失败
     CLOSED //已关闭
 
 }

@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @RequiredArgsConstructor
-public class WorkOrderTicketEntryPacker {
+public class TicketEntryPacker {
 
     private final WorkOrderTicketEntryService workOrderTicketEntryService;
 

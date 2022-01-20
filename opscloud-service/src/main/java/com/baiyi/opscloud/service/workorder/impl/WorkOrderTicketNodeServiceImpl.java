@@ -21,6 +21,11 @@ public class WorkOrderTicketNodeServiceImpl implements WorkOrderTicketNodeServic
     private final WorkOrderTicketNodeMapper workOrderTicketNodeMapper;
 
     @Override
+    public WorkOrderTicketNode getById(int id) {
+        return workOrderTicketNodeMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public void add(WorkOrderTicketNode workOrderTicketNode) {
         workOrderTicketNodeMapper.insert(workOrderTicketNode);
     }

@@ -20,13 +20,26 @@ import java.util.List;
  */
 public class WorkOrderTicketVO {
 
-    public interface ITicketEntries {
+    public interface ITicket {
 
         Integer getTicketId();
+
+    }
+
+    public interface ITicketEntries extends ITicket {
 
         String getWorkOrderKey();
 
         void setTicketEntries(List<Entry> ticketEntries);
+
+    }
+
+    public interface IApprover extends ITicket {
+
+        Boolean getIsApprover();
+
+        void setIsApprover(Boolean isApprover);
+
     }
 
     @Builder
@@ -37,7 +50,7 @@ public class WorkOrderTicketVO {
         @ApiModelProperty(value = "工单")
         private WorkOrderVO.WorkOrder workOrder;
         @ApiModelProperty(value = "工单票据")
-        private Ticket workOrderTicket;
+        private Ticket ticket;
         @ApiModelProperty(value = "工单票据条目")
         private List<Entry> ticketEntries;
         @ApiModelProperty(value = "工单创建用户")
@@ -47,13 +60,10 @@ public class WorkOrderTicketVO {
         @ApiModelProperty(value = "工作流审批节点视图")
         private WorkOrderNodeVO.NodeView nodeView;
 
-        @ApiModelProperty(value = "是否为审批人")
-        private Boolean isApprover;
-
         @Override
         public Integer getTicketId() {
-            if (this.workOrderTicket != null)
-                return this.workOrderTicket.getId();
+            if (this.ticket != null)
+                return this.ticket.getId();
             return 0;
         }
 
@@ -66,14 +76,14 @@ public class WorkOrderTicketVO {
 
         @Override
         public Integer getWorkOrderId() {
-            if (this.workOrderTicket != null)
-                return this.workOrderTicket.getWorkOrderId();
+            if (this.ticket != null)
+                return this.ticket.getWorkOrderId();
             return 0;
         }
 
         public String getTicketPhase() {
-            if (this.workOrderTicket != null)
-                return this.workOrderTicket.getTicketPhase();
+            if (this.ticket != null)
+                return this.ticket.getTicketPhase();
             return "NEW";
         }
 
@@ -83,10 +93,17 @@ public class WorkOrderTicketVO {
          * @return
          */
         public String getComment() {
-            if (this.workOrderTicket != null)
-                return this.workOrderTicket.getComment();
+            if (this.ticket != null)
+                return this.ticket.getComment();
             return "";
         }
+
+        public Boolean getIsApprover() {
+            if (this.ticket != null)
+                return this.ticket.getIsApprover();
+            return false;
+        }
+
     }
 
     @EqualsAndHashCode(callSuper = true)
@@ -95,9 +112,19 @@ public class WorkOrderTicketVO {
     @NoArgsConstructor
     @Data
     @ApiModel
-    public static class Ticket extends BaseVO implements WorkOrderVO.IWorkOrder, ShowTime.IAgo, Serializable {
+    public static class Ticket extends BaseVO implements WorkOrderVO.IWorkOrder, IApprover, ShowTime.IAgo, Serializable {
 
         private static final long serialVersionUID = -3191271933875590264L;
+
+        @ApiModelProperty(value = "是否为审批人")
+        private Boolean isApprover;
+
+        @Override
+        public Boolean getIsApprover() {
+            if (this.isApprover == null)
+                return false;
+            return this.isApprover;
+        }
 
         private String ago;
 
@@ -125,6 +152,10 @@ public class WorkOrderTicketVO {
             return getStartTime();
         }
 
+        @Override
+        public Integer getTicketId() {
+            return this.id;
+        }
     }
 
     @EqualsAndHashCode(callSuper = true)

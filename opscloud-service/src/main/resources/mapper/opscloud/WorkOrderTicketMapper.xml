@@ -48,7 +48,7 @@
             and is_active = true
             )
         </where>
-        order by id
+        order by id desc
     </select>
 
 </mapper>

@@ -10,6 +10,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
  */
 public interface WorkOrderTicketSubscriberFacade {
 
-    void createSubscriber(WorkOrderTicket workOrderTicket, User user);
+    void publish(WorkOrderTicket workOrderTicket, User user);
+
+    void publish(WorkOrderTicket workOrderTicket);
 
 }
