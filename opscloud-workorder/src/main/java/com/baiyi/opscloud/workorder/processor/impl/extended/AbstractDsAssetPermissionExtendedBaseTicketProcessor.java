@@ -13,7 +13,7 @@ import javax.annotation.Resource;
  * @Date 2022/1/7 2:07 PM
  * @Version 1.0
  */
-public abstract class AbstractDatasourceAssetPermissionExtendedBaseTicketProcessor extends BaseTicketProcessor<DatasourceInstanceAsset> implements IInstanceType {
+public abstract class AbstractDsAssetPermissionExtendedBaseTicketProcessor extends BaseTicketProcessor<DatasourceInstanceAsset> implements IInstanceType {
 
     @Resource
     private DsInstanceAssetService dsInstanceAssetService;
