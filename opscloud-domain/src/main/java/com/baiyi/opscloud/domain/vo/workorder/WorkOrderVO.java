@@ -3,9 +3,7 @@ package com.baiyi.opscloud.domain.vo.workorder;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -24,8 +22,10 @@ public class WorkOrderVO {
     }
 
     @EqualsAndHashCode(callSuper = true)
+    @Builder
     @Data
     @NoArgsConstructor
+    @AllArgsConstructor
     @ApiModel
     public static class WorkOrder extends BaseVO {
 

@@ -54,7 +54,6 @@ public class TicketEntryPacker {
                      dsInstancePacker.wrap(entry);
                     return entry;
         }).collect(Collectors.toList());
-
         iTicketEntries.setTicketEntries(entries);
     }
 

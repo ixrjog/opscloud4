@@ -14,22 +14,67 @@ import java.util.List;
  */
 public interface WorkOrderTicketFacade {
 
+    /**
+     * 分页查询
+     *
+     * @param pageQuery
+     * @return
+     */
     DataTable<WorkOrderTicketVO.Ticket> queryMyTicketPage(WorkOrderTicketParam.MyTicketPageQuery pageQuery);
 
+    /**
+     * 创建
+     *
+     * @param createTicket
+     * @return
+     */
     WorkOrderTicketVO.TicketView createTicket(WorkOrderTicketParam.CreateTicket createTicket);
 
+    /**
+     * 保存
+     *
+     * @param saveTicket
+     * @return
+     */
     WorkOrderTicketVO.TicketView saveTicket(WorkOrderTicketParam.SaveTicket saveTicket);
 
+    /**
+     * 提交
+     *
+     * @param submitTicket
+     * @return
+     */
     WorkOrderTicketVO.TicketView submitTicket(WorkOrderTicketParam.SubmitTicket submitTicket);
 
+    /**
+     * 审批
+     *
+     * @param approveTicket
+     * @return
+     */
     WorkOrderTicketVO.TicketView approveTicket(WorkOrderTicketParam.ApproveTicket approveTicket);
 
+
+    WorkOrderTicketVO.TicketView getTicketEntries(int ticketId, String workOrderKey);
+
+    /**
+     * 查询工单视图
+     *
+     * @param ticketId
+     * @return
+     */
     WorkOrderTicketVO.TicketView getTicket(Integer ticketId);
 
+    /**
+     * 查询工单配置条目
+     *
+     * @param entryQuery
+     * @return
+     */
     List<WorkOrderTicketVO.Entry> queryTicketEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery);
 
     /**
-     * 更新工单条目
+     * 更新工单配置条目
      *
      * @param ticketEntry
      * @return
@@ -37,7 +82,7 @@ public interface WorkOrderTicketFacade {
     WorkOrderTicketVO.TicketView updateTicketEntry(WorkOrderTicketEntryParam.TicketEntry ticketEntry);
 
     /**
-     * 新增工单条目
+     * 新增工单配置条目
      *
      * @param ticketEntry
      * @return
@@ -45,7 +90,7 @@ public interface WorkOrderTicketFacade {
     void addTicketEntry(WorkOrderTicketEntryParam.TicketEntry ticketEntry);
 
     /**
-     * 删除工单条目
+     * 删除工单配置条目
      *
      * @param ticketEntryId
      * @return

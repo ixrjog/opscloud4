@@ -24,7 +24,8 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     public List<WorkOrder> queryByWorkOrderGroupId(int workOrderGroupId) {
         Example example = new Example(WorkOrder.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("workOrderGroupId", workOrderGroupId);
+        criteria.andEqualTo("workOrderGroupId", workOrderGroupId)
+                .andEqualTo("isActive", true);
         example.setOrderByClause("seq");
         return workOrderMapper.selectByExample(example);
     }
@@ -35,7 +36,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     }
 
     @Override
-    public  WorkOrder getByKey(String key){
+    public WorkOrder getByKey(String key) {
         Example example = new Example(WorkOrder.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("workOrderKey", key);

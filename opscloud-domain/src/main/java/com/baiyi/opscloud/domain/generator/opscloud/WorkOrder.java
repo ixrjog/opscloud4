@@ -51,6 +51,12 @@ public class WorkOrder {
     private String icon;
 
     /**
+     * 有效
+     */
+    @Column(name = "is_active")
+    private Boolean isActive;
+
+    /**
      * 说明
      */
     private String comment;

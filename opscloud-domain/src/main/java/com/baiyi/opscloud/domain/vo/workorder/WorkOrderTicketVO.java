@@ -141,6 +141,7 @@ public class WorkOrderTicketVO {
         private Integer nodeId;
         private String ticketPhase;
         private Integer ticketStatus;
+        private Boolean isActive;
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date startTime;
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")

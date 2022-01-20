@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkOrderVO;
 import com.baiyi.opscloud.packer.user.UserPacker;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.workorder.helper.TicketApproverHelper;
@@ -46,6 +47,27 @@ public class TicketPacker {
             ticketApproverHelper.wrap(ticket);
         }
         return ticket;
+    }
+
+    /**
+     * 只包装工单配置条目
+     *
+     * @param ticketId
+     * @return
+     */
+    public WorkOrderTicketVO.TicketView toTicketEntries(int ticketId, String workOrderKey) {
+        WorkOrderTicketVO.Ticket ticket = WorkOrderTicketVO.Ticket.builder()
+                .id(ticketId)
+                .build();
+        WorkOrderVO.WorkOrder workOrder = WorkOrderVO.WorkOrder.builder()
+                .workOrderKey(workOrderKey)
+                .build();
+        WorkOrderTicketVO.TicketView ticketView = WorkOrderTicketVO.TicketView.builder()
+                .ticket(ticket)
+                .workOrder(workOrder)
+                .build();
+        ticketEntryPacker.wrap(ticketView);
+        return ticketView;
     }
 
     /**

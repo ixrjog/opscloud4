@@ -121,6 +121,11 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         return toTicketView(ticket);
     }
 
+    @Override
+    public WorkOrderTicketVO.TicketView getTicketEntries(int ticketId,String workOrderKey) {
+        return ticketPacker.toTicketEntries(ticketId,workOrderKey);
+    }
+
     // 验证工单完整性
     private void verifyTicket(WorkOrderTicket workOrderTicket) {
         if (ticketEntryService.countByWorkOrderTicketId(workOrderTicket.getId()) == 0)
@@ -201,10 +206,6 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
             throw new TicketCommonException("工单票据不存在！");
         WorkOrder workOrder = workOrderService.getById(ticket.getWorkOrderId());
         return WorkOrderTicketEntryQueryFactory.getByKey(workOrder.getWorkOrderKey()).query(entryQuery);
-    }
-
-    public void approveTicket() {
-
     }
 
     @Override
