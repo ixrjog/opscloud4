@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -24,7 +25,13 @@ public class WorkOrderPacker {
     public WorkOrderVO.Group wrap(WorkOrderGroup workOrderGroup) {
         WorkOrderVO.Group group = BeanCopierUtil.copyProperties(workOrderGroup, WorkOrderVO.Group.class);
         List<WorkOrder> workOrders = workOrderService.queryByWorkOrderGroupId(group.getId());
-        group.setWorkOrders(BeanCopierUtil.copyListProperties(workOrders, WorkOrderVO.WorkOrder.class));
+        group.setWorkOrders(
+                workOrders.stream().map(workOrder -> {
+                    WorkOrderVO.WorkOrder workOrderVO = BeanCopierUtil.copyProperties(workOrder, WorkOrderVO.WorkOrder.class);
+                    workOrderVO.setLoading(false);
+                    return workOrderVO;
+                }).collect(Collectors.toList())
+        );
         return group;
     }
 

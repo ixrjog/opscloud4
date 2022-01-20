@@ -57,6 +57,12 @@ public class WorkOrderVO {
 
         @ApiModelProperty(value = "工作流配置")
         private String workflow;
+
+        /**
+         * 前端选择用
+         */
+        private Boolean loading;
+
     }
 
     @EqualsAndHashCode(callSuper = true)
@@ -84,6 +90,5 @@ public class WorkOrderVO {
 
         @ApiModelProperty(value = "说明")
         private String comment;
-
     }
 }

@@ -148,6 +148,11 @@ public class WorkOrderTicketVO {
         private Date endTime;
         private String comment;
 
+        /**
+         * 前端选择用
+         */
+        private Boolean loading;
+
         @Override
         public Date getAgoTime() {
             return getStartTime();
