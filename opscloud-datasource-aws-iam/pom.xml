@@ -20,7 +20,7 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-core</artifactId>
+            <artifactId>opscloud-datasource-aws-core</artifactId>
         </dependency>
 
         <dependency>
