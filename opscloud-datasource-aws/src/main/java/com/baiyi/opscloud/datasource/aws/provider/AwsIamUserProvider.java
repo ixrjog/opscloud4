@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
-import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_AWS_IAM_POLICY;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_AWS_IAM_USER;
 
 /**
  * @Author baiyi
@@ -40,7 +40,7 @@ public class AwsIamUserProvider extends AbstractAssetRelationProvider<IamUser.Us
     private AwsIamUserProvider awsIamUserProvider;
 
     @Override
-    @SingleTask(name = PULL_AWS_IAM_POLICY, lockTime = "2m")
+    @SingleTask(name = PULL_AWS_IAM_USER, lockTime = "2m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
