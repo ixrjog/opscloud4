@@ -39,6 +39,10 @@
         <module>opscloud-datasource-dingtalk</module>
         <module>opscloud-datasource-message</module>
         <module>opscloud-datasource-aliyun-dms</module>
+        <module>opscloud-datasource-aws</module>
+        <module>opscloud-datasource-aws-core</module>
+        <module>opscloud-datasource-aws-ec2</module>
+        <module>opscloud-datasource-aws-iam</module>
     </modules>
     <parent>
         <!--https://spring.io/projects/spring-boot#learn-->
@@ -407,6 +411,30 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-message</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aws</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aws-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aws-iam</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aws-ec2</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

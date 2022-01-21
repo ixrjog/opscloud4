@@ -31,9 +31,9 @@ public class AwsConfig extends BaseConfig {
     @ApiModel
     public static class Account {
 
-        private String uid;
+        private String id;
         private String name;
-        private String company; // 公司
+        private String company; // 可选项公司
         private String accessKeyId;
         private String secretKey;
 
