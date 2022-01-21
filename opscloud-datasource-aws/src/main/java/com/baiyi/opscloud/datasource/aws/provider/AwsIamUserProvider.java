@@ -17,7 +17,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Collections;
 import java.util.List;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_AWS_IAM_POLICY;
@@ -84,16 +83,7 @@ public class AwsIamUserProvider extends AbstractAssetRelationProvider<IamUser.Us
     @Override
     protected List<IamUser.User> listEntities(DsInstanceContext dsInstanceContext, IamPolicy.Policy target) {
         AwsConfig.Aws config = buildConfig(dsInstanceContext.getDsConfig());
-//        amazonIMUserDrive.listUsers()
-//
-//        List<String> policyNames = amazonIMPolicyDrive.listUserPolicies(config, target.getUserName());
-//        if (CollectionUtils.isEmpty(policyNames)) {
-//            return Collections.emptyList();
-//        } else {
-//            Map<String, IamPolicy.Policy> policyMap = amazonIMPolicyDrive.getPolicyMap(config);
-//            return policyNames.stream().map(policyMap::get).collect(Collectors.toList());
-//        }
-        return Collections.emptyList();
+        return amazonIMUserDrive.listUsersForPolicy(config, target.getArn());
     }
 
     @Override

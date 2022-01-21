@@ -72,22 +72,6 @@ public class AmazonIdentityManagementPolicyDrive {
         return attachedPolicies.stream().map(e -> getPolicy(config, e.getPolicyArn())).collect(Collectors.toList());
     }
 
-//    public List<String> listUserPolicies(AwsConfig.Aws aws, String userName) {
-//        ListUserPoliciesRequest request = new ListUserPoliciesRequest();
-//        request.setUserName(userName);
-//        List<String> policyNames = Lists.newArrayList();
-//        while (true) {
-//            ListUserPoliciesResult result = buildAmazonIdentityManagement(aws).listUserPolicies(request);
-//            policyNames.addAll(result.getPolicyNames());
-//            if (result.getIsTruncated()) {
-//                request.setMarker(result.getMarker());
-//            } else {
-//                break;
-//            }
-//        }
-//        return policyNames;
-//    }
-
     private AmazonIdentityManagement buildAmazonIdentityManagement(AwsConfig.Aws aws) {
         return AmazonIdentityManagementService.buildAmazonIdentityManagement(aws);
     }
