@@ -39,6 +39,7 @@ public class AmazonIdentityManagementUserDrive {
         ListEntitiesForPolicyRequest request = new ListEntitiesForPolicyRequest();
         request.setPolicyUsageFilter("User");
         request.setPolicyArn(policyArn);
+        request.setPolicyUsageFilter("PermissionsPolicy");
         List<PolicyUser> policyUsers = Lists.newArrayList();
         while (true) {
             ListEntitiesForPolicyResult result = buildAmazonIdentityManagement(config).listEntitiesForPolicy(request);
@@ -49,14 +50,14 @@ public class AmazonIdentityManagementUserDrive {
                 break;
             }
         }
-        return policyUsers.stream().map(e->getUser(config, e.getUserName())).collect(Collectors.toList());
+        return policyUsers.stream().map(e -> getUser(config, e.getUserName())).collect(Collectors.toList());
     }
 
     public IamUser.User getUser(AwsConfig.Aws config, String userName) {
-        GetUserRequest request = new  GetUserRequest();
+        GetUserRequest request = new GetUserRequest();
         request.setUserName(userName);
         GetUserResult result = buildAmazonIdentityManagement(config).getUser(request);
-        return BeanCopierUtil.copyProperties(result.getUser(),IamUser.User.class);
+        return BeanCopierUtil.copyProperties(result.getUser(), IamUser.User.class);
     }
 
     private AmazonIdentityManagement buildAmazonIdentityManagement(AwsConfig.Aws aws) {
