@@ -20,6 +20,20 @@ import java.util.stream.Collectors;
 @Component
 public class AmazonIdentityManagementUserDrive {
 
+    // https://docs.aws.amazon.com/zh_cn/IAM/latest/APIReference/API_ListEntitiesForPolicy.html
+    private interface EntityFilter {
+        String USER = "User";
+        String ROLE = "Role";
+        String GROUP = "Group";
+        String LOCAL_MANAGED = "LocalManagedPolicy";
+        String AWS_MANAGED = "AWSManagedPolicy";
+    }
+
+    private interface PolicyUsageFilter {
+        String POLICY = "PermissionsPolicy";
+        String BOUNDARY = "PermissionsBoundary";
+    }
+
     public List<IamUser.User> listUsers(AwsConfig.Aws config) {
         ListUsersRequest request = new ListUsersRequest();
         List<User> users = Lists.newArrayList();
@@ -37,9 +51,15 @@ public class AmazonIdentityManagementUserDrive {
 
     public List<IamUser.User> listUsersForPolicy(AwsConfig.Aws config, String policyArn) {
         ListEntitiesForPolicyRequest request = new ListEntitiesForPolicyRequest();
-        request.setPolicyUsageFilter("User");
+        // 用于筛选结果的类型
+        request.setEntityFilter(EntityFilter.USER);
         request.setPolicyArn(policyArn);
-        request.setPolicyUsageFilter("PermissionsPolicy");
+        /**
+         * 用于过滤结果的策略使用方法
+         * 只列出权限策略，设置为PermissionsPolicy
+         * 只列出用于设置权限边界的策略，设置为PermissionsBoundary
+         */
+        request.setPolicyUsageFilter(PolicyUsageFilter.POLICY);
         List<PolicyUser> policyUsers = Lists.newArrayList();
         while (true) {
             ListEntitiesForPolicyResult result = buildAmazonIdentityManagement(config).listEntitiesForPolicy(request);
