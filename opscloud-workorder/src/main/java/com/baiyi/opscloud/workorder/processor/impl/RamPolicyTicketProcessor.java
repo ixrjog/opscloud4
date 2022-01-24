@@ -31,14 +31,15 @@ public class RamPolicyTicketProcessor extends AbstractDsAssetPermissionExtendedB
 
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
-        User applicantUser = queryCreateUser(ticketEntry);
+        User createUser = queryCreateUser(ticketEntry);
+        preProcess(ticketEntry,createUser);
         UserRamParam.Policy policy = UserRamParam.Policy.builder()
                 .policyName(entry.getAssetId())
                 .policyType(entry.getAssetKey())
                 .build();
         UserRamParam.GrantRamPolicy grantRamPolicy = UserRamParam.GrantRamPolicy.builder()
                 .instanceUuid(ticketEntry.getInstanceUuid())
-                .username(applicantUser.getUsername())
+                .username(createUser.getUsername())
                 .policy(policy)
                 .build();
         try {
@@ -46,6 +47,19 @@ public class RamPolicyTicketProcessor extends AbstractDsAssetPermissionExtendedB
         } catch (Exception e) {
             throw new TicketProcessException("工单授权策略失败: " + e.getMessage());
         }
+    }
+
+    /**
+     * 创建RAM用户
+     * @param ticketEntry
+     * @param user
+     */
+    private void preProcess(WorkOrderTicketEntry ticketEntry,User user) {
+        UserRamParam.CreateRamUser createRamUser = UserRamParam.CreateRamUser.builder()
+                .instanceUuid(ticketEntry.getInstanceUuid())
+                .username(user.getUsername())
+                .build();
+        userRamFacade.createRamUser(createRamUser);
     }
 
     @Override

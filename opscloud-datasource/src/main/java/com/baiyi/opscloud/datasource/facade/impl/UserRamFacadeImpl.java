@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.StringUtils;
+
 /**
  * @Author baiyi
  * @Date 2021/12/12 4:10 PM
@@ -64,7 +65,14 @@ public class UserRamFacadeImpl implements UserRamFacade {
 
     @Override
     public RamUser.User createUser(AliyunConfig.Aliyun aliyun, String instanceUuid, User user) {
-        RamUser.User ramUser = aliyunRamUserDrive.createUser(aliyun.getRegionId(), aliyun, user, CREATE_LOGIN_PROFILE);
+        RamUser.User ramUser;
+        try {
+            ramUser = aliyunRamUserDrive.getUser(aliyun.getRegionId(), aliyun, user.getUsername());
+            if (ramUser != null)
+                return ramUser;
+        } catch (ClientException ignore) {
+        }
+        ramUser = aliyunRamUserDrive.createUser(aliyun.getRegionId(), aliyun, user, CREATE_LOGIN_PROFILE);
         // 同步资产 RAM_USER
         dsInstanceFacade.pullAsset(instanceUuid, DsAssetTypeConstants.RAM_USER.name(), ramUser);
         CreateRamUserMessage message = CreateRamUserMessage.builder()
