@@ -42,6 +42,7 @@ public class TicketEntryPacker {
                             .entry(iTicketProcessor.toEntry(e.getContent()))
                             .id(e.getId())
                             .name(e.getName())
+                            .workOrderTicketId(e.getWorkOrderTicketId())
                             .instanceUuid(e.getInstanceUuid())
                             .businessType(e.getBusinessType())
                             .businessId(e.getBusinessId())

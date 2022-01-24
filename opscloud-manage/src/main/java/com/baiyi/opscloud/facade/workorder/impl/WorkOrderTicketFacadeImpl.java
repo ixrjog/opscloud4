@@ -211,6 +211,11 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     @Override
     public WorkOrderTicketVO.TicketView updateTicketEntry(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
         WorkOrderTicket workOrderTicket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
+        WorkOrder workOrder = workOrderService.getById(workOrderTicket.getWorkOrderId());
+        ITicketProcessor iTicketProcessor = WorkOrderTicketProcessorFactory.getByKey(workOrder.getWorkOrderKey());
+        if (iTicketProcessor == null)
+            throw new TicketCommonException("工单类型不正确！");
+        iTicketProcessor.update(ticketEntry);
         return toTicketView(workOrderTicket);
     }
 

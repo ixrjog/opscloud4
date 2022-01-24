@@ -2,6 +2,7 @@ package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
@@ -32,6 +33,11 @@ public class ApplicationPermissionTicketProcessor extends AbstractUserPermission
         Application application = applicationService.getByKey(entry.getApplicationKey());
         if (application == null)
             throw new TicketVerifyException("校验工单条目失败: 应用不存在!");
+    }
+
+    @Override
+    public void update(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
+        updateHandle(ticketEntry);
     }
 
     @Override

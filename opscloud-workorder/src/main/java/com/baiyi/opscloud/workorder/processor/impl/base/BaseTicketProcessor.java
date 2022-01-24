@@ -32,10 +32,10 @@ import java.util.Date;
 public abstract class BaseTicketProcessor<T> implements ITicketProcessor, InitializingBean {
 
     @Resource
-    private WorkOrderTicketEntryService workOrderTicketEntryService;
+    protected WorkOrderTicketEntryService ticketEntryService;
 
     @Resource
-    private WorkOrderTicketService workOrderTicketService;
+    protected WorkOrderTicketService ticketService;
 
     @Resource
     private UserService userService;
@@ -63,7 +63,7 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
 
     @Override
     public void verify(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException {
-        if (workOrderTicketEntryService.countByTicketUniqueKey(ticketEntry) != 0)
+        if (ticketEntryService.countByTicketUniqueKey(ticketEntry) != 0)
             throw new TicketVerifyException("校验工单条目失败: 重复申请!");
         verifyHandle(ticketEntry);
     }
@@ -77,7 +77,7 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
      * @return
      */
     protected User queryCreateUser(WorkOrderTicketEntry ticketEntry) {
-        WorkOrderTicket workOrderTicket = workOrderTicketService.getById(ticketEntry.getWorkOrderTicketId());
+        WorkOrderTicket workOrderTicket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
         return userService.getByUsername(workOrderTicket.getUsername());
     }
 
@@ -90,11 +90,11 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
             ticketEntry.setResult(e.getMessage());
             ticketEntry.setEntryStatus(ProcessStatusConstants.FAILED.getStatus());
         }
-        updateTicket(ticketEntry);
+        updateTicketEntry(ticketEntry);
     }
 
-    private void updateTicket(WorkOrderTicketEntry ticketEntry) {
-        workOrderTicketEntryService.update(ticketEntry);
+    protected void updateTicketEntry(WorkOrderTicketEntry ticketEntry) {
+        ticketEntryService.update(ticketEntry);
     }
 
     protected void verifyEntry(T entry) throws TicketVerifyException {

@@ -2,6 +2,7 @@ package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
@@ -38,6 +39,11 @@ public class ServerGroupTicketProcessor extends AbstractUserPermissionExtendedBa
         if (serverGroup == null)
             throw new TicketVerifyException("校验工单条目失败: 服务器组不存在!");
         verifyEntry(serverGroup); // 验证接口 IAllowOrder
+    }
+
+    @Override
+    public void update(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
+        updateHandle(ticketEntry);
     }
 
     @Override
