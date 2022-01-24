@@ -3,6 +3,7 @@ package com.baiyi.opscloud.domain.vo.user;
 import com.baiyi.opscloud.domain.annotation.DesensitizedField;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.SensitiveTypeEnum;
+import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleVO;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
@@ -164,6 +165,8 @@ public class UserVO {
         public String getBusinessUniqueKey() {
             return username;
         }
+
+        private UserPermission userPermission;
     }
 
 }

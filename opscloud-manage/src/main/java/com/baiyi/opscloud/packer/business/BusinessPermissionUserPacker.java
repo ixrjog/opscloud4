@@ -38,9 +38,11 @@ public class BusinessPermissionUserPacker {
                 .build();
         List<UserPermission> userPermissions = userPermissionService.queryByBusiness(userPermission);
         iBusinessPermissionUser.setUsers(
-                userPermissions.stream().map(e ->
-                        BeanCopierUtil.copyProperties(userService.getById(e.getUserId()), UserVO.User.class)
-                ).collect(Collectors.toList())
+                userPermissions.stream().map(e -> {
+                    UserVO.User vo = BeanCopierUtil.copyProperties(userService.getById(e.getUserId()), UserVO.User.class);
+                    vo.setUserPermission(e);
+                    return vo;
+                }).collect(Collectors.toList())
         );
     }
 }
