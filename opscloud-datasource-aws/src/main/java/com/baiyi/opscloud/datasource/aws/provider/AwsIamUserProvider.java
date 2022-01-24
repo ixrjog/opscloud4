@@ -5,6 +5,7 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
+import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.aws.iam.drive.AmazonIdentityManagementPolicyDrive;
@@ -39,6 +40,7 @@ public class AwsIamUserProvider extends AbstractAssetRelationProvider<IamUser.Us
     private AwsIamUserProvider awsIamUserProvider;
 
     @Override
+    @EnablePullChild(type = DsAssetTypeConstants.IAM_USER)
     @SingleTask(name = PULL_AWS_IAM_USER, lockTime = "2m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
