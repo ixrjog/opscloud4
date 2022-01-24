@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 /**
  * @Author baiyi
  * @Date 2021/10/21 4:35 下午
@@ -22,7 +24,8 @@ public class AwsConfig extends BaseConfig {
     @ApiModel
     public static class Aws {
         private Account account;
-        private String apRegionId;
+        private String regionId;
+        private Set<String> regionIds; // 可用区
         private Ec2 ec2;
     }
 

@@ -15,11 +15,15 @@ import com.baiyi.opscloud.datasource.aws.core.helper.AwsCredentialsHelper;
 public class AmazonEC2Service {
 
     public static AmazonEC2 buildAmazonEC2(AwsConfig.Aws aws) {
+        return buildAmazonEC2(aws, aws.getRegionId());
+    }
+
+    public static AmazonEC2 buildAmazonEC2(AwsConfig.Aws aws, String regionId) {
         AWSCredentials credentials = AwsCredentialsHelper.buildAWSCredentials(aws);
         // AWSCredentials credentials = awsCore.getAWSCredentials();
         return AmazonEC2ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(aws.getApRegionId())
+                .withRegion(regionId)
                 .build();
     }
 

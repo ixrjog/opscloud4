@@ -1,10 +1,14 @@
 package com.baiyi.opscloud.datasource.aws;
 
-import com.amazonaws.services.ec2.model.Instance;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.core.factory.AssetProviderFactory;
+import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.datasource.aws.base.BaseAwsTest;
 import com.baiyi.opscloud.datasource.aws.ec2.drive.AmazonEc2Drive;
+import com.baiyi.opscloud.datasource.aws.ec2.entity.Ec2Instance;
 import com.baiyi.opscloud.datasource.aws.ec2.helper.AmazonEc2InstanceTypeHelper;
 import com.baiyi.opscloud.datasource.aws.ec2.model.InstanceModel;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
@@ -27,18 +31,26 @@ public class Ec2Test extends BaseAwsTest {
     private AmazonEc2InstanceTypeHelper amazonEc2InstanceTypeHelper;
 
     @Test
-    void getAmazonEc2InstanceTypeMapTest(){
+    void pullAssetTest() {
+        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.AWS.getName(), DsAssetTypeConstants.EC2.name());
+        assert assetProvider != null;
+        assetProvider.pullAsset(20);
+    }
+
+
+    @Test
+    void getAmazonEc2InstanceTypeMapTest() {
         try {
             Map<String, InstanceModel.EC2InstanceType> map = amazonEc2InstanceTypeHelper.getAmazonEc2InstanceTypeMap(getConfig().getAws());
             print(map);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Test
     void listInstancesTest() {
-        List<Instance> instances = amazonEc2Drive.listInstances(getConfig().getAws());
+        List<Ec2Instance.Instance> instances = amazonEc2Drive.listInstances("eu-west-2", getConfig().getAws());
         print(instances);
     }
 

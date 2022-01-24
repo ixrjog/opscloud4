@@ -21,7 +21,7 @@ public class AmazonIdentityManagementService {
         AWSCredentials credentials = AwsCredentialsHelper.buildAWSCredentials(aws);
         return AmazonIdentityManagementClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(aws.getApRegionId())
+                .withRegion(aws.getRegionId())
                 .build();
     }
 
