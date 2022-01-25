@@ -121,7 +121,7 @@ public class KubernetesPodDrive {
                 //.redirectingErrorChannel()
                 //.readingInput(in)
                 .writingOutput(out)
-                .writingError(System.err)
+                .writingError(out)
                 .withTTY()
                 .usingListener(listener)
                 .exec("sh");
@@ -130,9 +130,9 @@ public class KubernetesPodDrive {
     @Data
     public static class SimpleListener implements ExecListener {
 
+
         private boolean isClosed = false;
 
-        @Override
         public void onOpen(Response response) {
         }
 
