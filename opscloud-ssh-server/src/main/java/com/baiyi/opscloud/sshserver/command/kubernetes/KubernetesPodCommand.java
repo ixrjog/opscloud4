@@ -345,15 +345,17 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                 podContext.getPodName(),
                 name,
                 lines, baos);
-        // SshContext sshContext = getSshContext();
+
         TerminalUtil.rawModeSupportVintr(terminal);
         ServerSession serverSession = helper.getSshSession();
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
         String instanceId = TerminalSessionUtil.toInstanceId(podContext.getPodName(), name);
         SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
-        //WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getSshShellRunnable().getOs());
-        // 低性能输出日志，为了能实现日子换行
-        WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, terminal.writer());
+        // 高速输出日志流
+        SshContext sshContext = getSshContext();
+        WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getSshShellRunnable().getOs());
+        // 低性能输出日志，为了能实现日志换行
+        // WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, terminal.writer());
         Thread thread = new Thread(run);
         thread.start();
         while (true) {
