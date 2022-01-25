@@ -16,8 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class KubeClient {
 
-    private static final int CONNECTION_TIMEOUT = 30 * 1000;
-    private static final int REQUEST_TIMEOUT = 30 * 1000;
+    public static final int CONNECTION_TIMEOUT = 30 * 1000;
+    public static final int REQUEST_TIMEOUT = 30 * 1000;
 
     public static KubernetesClient build(KubernetesConfig.Kubernetes kubernetes) {
         System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE,
