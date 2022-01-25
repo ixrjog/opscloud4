@@ -21,4 +21,6 @@ public interface WorkOrderTicketService {
 
     WorkOrderTicket getNewTicketByUser(String workOrderKey, String username);
 
+    void deleteById(int id);
+
 }

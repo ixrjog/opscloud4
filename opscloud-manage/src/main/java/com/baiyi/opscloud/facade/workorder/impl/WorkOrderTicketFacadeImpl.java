@@ -14,10 +14,7 @@ import com.baiyi.opscloud.facade.workorder.WorkOrderTicketNodeFacade;
 import com.baiyi.opscloud.facade.workorder.WorkOrderTicketSubscriberFacade;
 import com.baiyi.opscloud.packer.workorder.TicketPacker;
 import com.baiyi.opscloud.service.user.UserService;
-import com.baiyi.opscloud.service.workorder.WorkOrderService;
-import com.baiyi.opscloud.service.workorder.WorkOrderTicketEntryService;
-import com.baiyi.opscloud.service.workorder.WorkOrderTicketNodeService;
-import com.baiyi.opscloud.service.workorder.WorkOrderTicketService;
+import com.baiyi.opscloud.service.workorder.*;
 import com.baiyi.opscloud.workorder.approve.ITicketApprove;
 import com.baiyi.opscloud.workorder.approve.factory.WorkOrderTicketApproveFactory;
 import com.baiyi.opscloud.workorder.constants.ApprovalTypeConstants;
@@ -32,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -56,6 +54,8 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     private final WorkOrderTicketService ticketService;
 
     private final WorkOrderTicketEntryService ticketEntryService;
+
+    private final WorkOrderTicketSubscriberService ticketSubscriberService;
 
     private final UserService userService;
 
@@ -122,8 +122,8 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     }
 
     @Override
-    public WorkOrderTicketVO.TicketView getTicketEntries(int ticketId,String workOrderKey) {
-        return ticketPacker.toTicketEntries(ticketId,workOrderKey);
+    public WorkOrderTicketVO.TicketView getTicketEntries(int ticketId, String workOrderKey) {
+        return ticketPacker.toTicketEntries(ticketId, workOrderKey);
     }
 
     // 验证工单完整性
@@ -242,6 +242,36 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         if (!OrderPhaseCodeConstants.NEW.name().equals(workOrderTicket.getTicketPhase()))
             throw new TicketCommonException("只有新建工单才能修改或删除条目！");
         ticketEntryService.deleteById(ticketEntryId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
+    public void deleteTicketById(Integer ticketId) {
+        WorkOrderTicket ticket = ticketService.getById(ticketId);
+        if (ticket == null) return;
+        // 删除所有条目
+        List<WorkOrderTicketEntry> entries = ticketEntryService.queryByWorkOrderTicketId(ticketId);
+        if (!CollectionUtils.isEmpty(entries)) {
+            for (WorkOrderTicketEntry entry : entries) {
+                ticketEntryService.deleteById(entry.getId());
+            }
+        }
+        // 删除节点
+        List<WorkOrderTicketNode> nodes = ticketNodeService.queryByWorkOrderTicketId(ticketId);
+        if (!CollectionUtils.isEmpty(nodes)) {
+            for (WorkOrderTicketNode node : nodes) {
+                ticketNodeService.deleteById(node.getId());
+            }
+        }
+        // 删除订阅人
+        List<WorkOrderTicketSubscriber> subscribers = ticketSubscriberService.queryByWorkOrderTicketId(ticketId);
+        if (!CollectionUtils.isEmpty(subscribers)) {
+            for (WorkOrderTicketSubscriber subscriber : subscribers) {
+                ticketSubscriberService.deleteById(subscriber.getId());
+            }
+        }
+        // 删除工单票据
+        ticketService.deleteById(ticketId);
     }
 
     private WorkOrderTicketVO.TicketView toTicketView(WorkOrderTicket workOrderTicket) {

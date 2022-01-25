@@ -50,4 +50,9 @@ public class WorkOrderTicketServiceImpl implements WorkOrderTicketService {
         return workOrderTicketMapper.getNewTicketByUser(workOrderKey, username);
     }
 
+    @Override
+    public void deleteById(int id) {
+        workOrderTicketMapper.deleteByPrimaryKey(id);
+    }
+
 }

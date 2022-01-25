@@ -97,4 +97,6 @@ public interface WorkOrderTicketFacade {
      */
     void deleteTicketEntry(Integer ticketEntryId);
 
+    void deleteTicketById(Integer ticketId);
+
 }

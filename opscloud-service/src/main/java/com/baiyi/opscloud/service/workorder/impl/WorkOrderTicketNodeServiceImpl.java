@@ -61,4 +61,9 @@ public class WorkOrderTicketNodeServiceImpl implements WorkOrderTicketNodeServic
         return workOrderTicketNodeMapper.selectOneByExample(example);
     }
 
+    @Override
+    public void deleteById(int id) {
+        workOrderTicketNodeMapper.deleteByPrimaryKey(id);
+    }
+
 }

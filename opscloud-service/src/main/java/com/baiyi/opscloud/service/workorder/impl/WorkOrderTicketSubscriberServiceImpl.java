@@ -5,6 +5,9 @@ import com.baiyi.opscloud.mapper.opscloud.WorkOrderTicketSubscriberMapper;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketSubscriberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -25,6 +28,19 @@ public class WorkOrderTicketSubscriberServiceImpl implements WorkOrderTicketSubs
     @Override
     public void update(WorkOrderTicketSubscriber workOrderTicketSubscriber) {
         workOrderTicketSubscriberMapper.updateByPrimaryKey(workOrderTicketSubscriber);
+    }
+
+    @Override
+    public List<WorkOrderTicketSubscriber> queryByWorkOrderTicketId(int workOrderTicketId) {
+        Example example = new Example(WorkOrderTicketSubscriber.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("workOrderTicketId", workOrderTicketId);
+        return workOrderTicketSubscriberMapper.selectByExample(example);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        workOrderTicketSubscriberMapper.deleteByPrimaryKey(id);
     }
 
 }

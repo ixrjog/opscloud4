@@ -50,6 +50,13 @@ public class WorkOrderController {
         return new HttpResult<>(workOrderTicketFacade.createTicket(createTicket));
     }
 
+    @ApiOperation(value = "删除指定的工单票据")
+    @DeleteMapping(value = "/ticket/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteTicketById(@RequestParam int ticketId) {
+        workOrderTicketFacade.deleteTicketById(ticketId);
+        return HttpResult.SUCCESS;
+    }
+
     @ApiOperation(value = "暂存工单票据")
     @PostMapping(value = "/ticket/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<WorkOrderTicketVO.TicketView> saveTicket(@RequestBody @Valid WorkOrderTicketParam.SaveTicket saveTicket) {
