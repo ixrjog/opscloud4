@@ -1,12 +1,11 @@
 package com.baiyi.opscloud.domain.vo.user;
 
 import com.baiyi.opscloud.domain.annotation.DesensitizedField;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.SensitiveTypeEnum;
-import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleVO;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
@@ -81,7 +80,7 @@ public class UserVO {
     @NoArgsConstructor
     @ApiModel
     public static class User extends BaseVO implements BusinessAssetRelationVO.IBusinessAssetRelation, // 资产与业务对象绑定关系
-            TagVO.ITags {
+            TagVO.ITags, IUserPermission {
 
         private List<TagVO.Tag> tags;
 
@@ -89,6 +88,11 @@ public class UserVO {
 
         @Override
         public Integer getBusinessId() {
+            return id;
+        }
+
+        @Override
+        public Integer getUserId() {
             return id;
         }
 
@@ -166,7 +170,7 @@ public class UserVO {
             return username;
         }
 
-        private UserPermission userPermission;
+        private UserPermissionVO.UserPermission userPermission;
     }
 
 }

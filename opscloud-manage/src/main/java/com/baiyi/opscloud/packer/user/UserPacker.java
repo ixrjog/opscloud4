@@ -73,16 +73,14 @@ public class UserPacker implements IPacker<UserVO.User, User> {
     public List<UserVO.User> wrapVOList(List<User> data) {
         List<UserVO.User> userList = BeanCopierUtil.copyListProperties(data, UserVO.User.class);
         return userList.stream()
-                .map(e -> desensitizedPacker.desensitized(e))
+                .map(desensitizedPacker::desensitized)
                 .collect(Collectors.toList());
     }
 
     public List<UserVO.User> wrapAvatar(List<User> data) {
         List<UserVO.User> voList = wrapVOList(data);
-        return voList.stream().peek(e -> {
-            // 插入头像
-            wrapAvatar(e);
-        }).collect(Collectors.toList());
+        // 插入头像
+        return voList.stream().peek(this::wrapAvatar).collect(Collectors.toList());
     }
 
 
@@ -162,7 +160,6 @@ public class UserPacker implements IPacker<UserVO.User, User> {
                 .build();
 
         Map<String, List<UserVO.IUserPermission>> businessPermissions = Maps.newHashMap();
-
         context.keySet().forEach(k -> {
             DataTable<UserVO.IUserPermission> table = context.get(k).queryUserBusinessPermissionPage(pageQuery);
             BusinessTypeEnum businessTypeEnum = BusinessTypeEnum.getByType(k);
