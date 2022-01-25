@@ -17,14 +17,18 @@ import static com.baiyi.opscloud.datasource.kubernetes.client.KubeClient.REQUEST
 public class KubernetesClientTest extends BaseUnit {
 
     private final static String token = "";
+
     @Test
     void test() {
+        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE,
+                "/Users/liangjian/opscloud-data/kubernetes/eks-test/kubeconfig");
+
         io.fabric8.kubernetes.client.Config config = new ConfigBuilder()
                 //.withMasterUrl kubeconfg中获取
-                .withMasterUrl("")
                 .withCaCertData(token)
                 .withTrustCerts(true)
                 .build();
+        // /Users/liangjian/opscloud-data/kubernetes/eks-test/kubeconfig
         config.setConnectionTimeout(CONNECTION_TIMEOUT);
         config.setRequestTimeout(REQUEST_TIMEOUT);
         DefaultKubernetesClient defaultKubernetesClient = new DefaultKubernetesClient(config);
