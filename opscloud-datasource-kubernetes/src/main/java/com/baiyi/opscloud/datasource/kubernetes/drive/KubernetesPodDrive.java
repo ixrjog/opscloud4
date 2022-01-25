@@ -9,7 +9,6 @@ import io.fabric8.kubernetes.client.dsl.ExecListener;
 import io.fabric8.kubernetes.client.dsl.ExecWatch;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
 import lombok.Data;
-import okhttp3.Response;
 import org.springframework.util.CollectionUtils;
 
 import java.io.OutputStream;

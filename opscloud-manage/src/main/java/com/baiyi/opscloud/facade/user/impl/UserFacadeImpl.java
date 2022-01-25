@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.user.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.PasswordUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
@@ -24,6 +25,7 @@ import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
+import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
@@ -48,6 +50,7 @@ import org.springframework.util.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
@@ -236,7 +239,15 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public DataTable<UserVO.User> queryBusinessPermissionUserPage(UserBusinessPermissionParam.BusinessPermissionUserPageQuery pageQuery) {
         DataTable<User> table = userService.queryPageByParam(pageQuery);
-        return new DataTable<>(userPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<UserVO.User> userList = userPacker.wrapVOList(table.getData(), pageQuery).stream().peek(e -> {
+            UserPermission userPermission = userPermissionService.getByUserPermission(UserPermission.builder()
+                    .userId(e.getUserId())
+                    .businessId(pageQuery.getBusinessId())
+                    .businessType(pageQuery.getBusinessType())
+                    .build());
+            e.setUserPermission(BeanCopierUtil.copyProperties(userPermission, UserPermissionVO.UserPermission.class));
+        }).collect(Collectors.toList());
+        return new DataTable<>(userList, table.getTotalNum());
     }
 
     @Override
