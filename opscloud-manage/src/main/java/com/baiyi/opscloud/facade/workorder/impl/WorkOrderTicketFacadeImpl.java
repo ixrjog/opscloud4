@@ -22,6 +22,7 @@ import com.baiyi.opscloud.workorder.constants.NodeTypeConstants;
 import com.baiyi.opscloud.workorder.constants.OrderPhaseCodeConstants;
 import com.baiyi.opscloud.workorder.exception.TicketCommonException;
 import com.baiyi.opscloud.workorder.helper.TicketApproverHelper;
+import com.baiyi.opscloud.workorder.helper.TicketNoticeHelper;
 import com.baiyi.opscloud.workorder.processor.ITicketProcessor;
 import com.baiyi.opscloud.workorder.processor.factory.WorkOrderTicketProcessorFactory;
 import com.baiyi.opscloud.workorder.query.factory.WorkOrderTicketEntryQueryFactory;
@@ -67,6 +68,8 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
 
     private final TicketApproverHelper ticketApproverHelper;
 
+    private final TicketNoticeHelper ticketNoticeHelper;
+
     @Override
     public DataTable<WorkOrderTicketVO.Ticket> queryTicketPage(WorkOrderTicketParam.TicketPageQuery pageQuery){
         DataTable<WorkOrderTicket> table = ticketService.queryPageByParam(pageQuery);
@@ -109,7 +112,10 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         // 设置工单开始时间
         ticket.setStartTime(new Date());
         ticketService.update(ticket);
+        // 发布订阅人
         ticketSubscriberFacade.publish(ticket);
+        // 工单通知
+        ticketNoticeHelper.notice(ticket);
         return toTicketView(ticket);
     }
 
@@ -124,6 +130,8 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
             throw new TicketCommonException("审批类型不正确!");
         iTicketApprove.approve(approveTicket);
         WorkOrderTicket ticket = ticketService.getById(approveTicket.getTicketId());
+        // 工单通知
+        ticketNoticeHelper.notice(ticket);
         return toTicketView(ticket);
     }
 

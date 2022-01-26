@@ -34,6 +34,8 @@ public class NoticeManager {
         String CREATE_USER = "CREATE_USER";
         String UPDATE_USER_PASSWORD = "UPDATE_USER_PASSWORD";
         String CREATE_RAM_USER = "CREATE_RAM_USER";
+        String TICKET_APPROVE = "TICKET_APPROVE";
+        String TICKET_END = "TICKET_END";
     }
 
     /**
@@ -44,6 +46,12 @@ public class NoticeManager {
     @Resource
     private NoticeHelper noticeHelper;
 
+    /**
+     * 简单消息发送
+     *
+     * @param user
+     * @param msgKey
+     */
     public void sendMessage(User user, String msgKey) {
         List<DatasourceInstance> instances = instanceHelper.listInstance(FILTER_INSTANCE_TYPES,
                 DsInstanceTagConstants.NOTICE.getTag());
@@ -52,6 +60,13 @@ public class NoticeManager {
         }
     }
 
+    /**
+     * 模版消息发送
+     *
+     * @param user
+     * @param msgKey
+     * @param iNoticeMessage
+     */
     @Async(value = CORE)
     public void sendMessage(User user, String msgKey, INoticeMessage iNoticeMessage) {
         try {

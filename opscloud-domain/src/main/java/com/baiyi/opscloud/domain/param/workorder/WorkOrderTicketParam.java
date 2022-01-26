@@ -31,7 +31,7 @@ public class WorkOrderTicketParam {
     @ApiModel
     public static class TicketPageQuery extends PageParam implements IExtend {
 
-        @ApiModelProperty(value = "用户名(非用户指定)")
+        @ApiModelProperty(value = "用户名")
         private String username;
 
         @ApiModelProperty(value = "工单ID")

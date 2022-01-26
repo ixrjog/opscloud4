@@ -67,13 +67,13 @@ public class WorkOrderTicketSubscriberFacadeImpl implements WorkOrderTicketSubsc
                     // 广播
                     List<User> auditUsers = userService.queryByTagKeys(workflowNode.getTags());
                     auditUsers.forEach(auditUser -> createSubscriber(ticket, auditUser, SubscribeStatusConstants.AUDIT));
+                    return;
                 }
                 if (NodeTypeConstants.USER_LIST.getCode() == workflowNode.getType()) {
                     // 单播
                     User auditUser = userService.getByUsername(n.getUsername());
                     createSubscriber(ticket, auditUser, SubscribeStatusConstants.AUDIT);
                 }
-
             }
         });
     }
