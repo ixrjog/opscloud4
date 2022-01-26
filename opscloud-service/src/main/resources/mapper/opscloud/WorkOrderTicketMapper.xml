@@ -30,7 +30,7 @@
     </select>
 
     <select id="queryPageByParam"
-            parameterType="com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam$MyTicketPageQuery"
+            parameterType="com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam$TicketPageQuery"
             resultMap="BaseResultMap">
         select * from work_order_ticket
         <where>
@@ -40,13 +40,10 @@
             <if test="ticketPhase != null and ticketPhase != ''">
                 and ticket_phase = #{ticketPhase}
             </if>
-            and id in
-            (
-            select work_order_ticket_id from work_order_ticket_subscriber
-            where
-            username = #{username}
-            and is_active = true
-            )
+            <if test="username != null and username != ''">
+                and id in ( select work_order_ticket_id from work_order_ticket_subscriber where username = #{username}
+                and is_active = true )
+            </if>
         </where>
         order by id desc
     </select>

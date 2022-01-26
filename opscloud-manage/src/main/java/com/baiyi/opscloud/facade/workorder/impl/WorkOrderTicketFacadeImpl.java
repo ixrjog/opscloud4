@@ -68,6 +68,12 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     private final TicketApproverHelper ticketApproverHelper;
 
     @Override
+    public DataTable<WorkOrderTicketVO.Ticket> queryTicketPage(WorkOrderTicketParam.TicketPageQuery pageQuery){
+        DataTable<WorkOrderTicket> table = ticketService.queryPageByParam(pageQuery);
+        return new DataTable<>(table.getData().stream().map(e -> ticketPacker.wrap(e, pageQuery)).collect(Collectors.toList()), table.getTotalNum());
+    }
+
+    @Override
     public DataTable<WorkOrderTicketVO.Ticket> queryMyTicketPage(WorkOrderTicketParam.MyTicketPageQuery pageQuery) {
         pageQuery.setUsername(SessionUtil.getUsername());
         DataTable<WorkOrderTicket> table = ticketService.queryPageByParam(pageQuery);

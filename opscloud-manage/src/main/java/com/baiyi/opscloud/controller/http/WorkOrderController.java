@@ -38,6 +38,12 @@ public class WorkOrderController {
         return new HttpResult<>(workOrderFacade.getWorkOrderView());
     }
 
+    @ApiOperation(value = "分页查询工单票据")
+    @PostMapping(value = "/ticket/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<WorkOrderTicketVO.Ticket>> queryTicketPage(@RequestBody @Valid WorkOrderTicketParam.TicketPageQuery pageQuery) {
+        return new HttpResult<>(workOrderTicketFacade.queryTicketPage(pageQuery));
+    }
+
     @ApiOperation(value = "分页查询我的工单票据")
     @PostMapping(value = "/ticket/my/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<WorkOrderTicketVO.Ticket>> queryMyTicketPage(@RequestBody @Valid WorkOrderTicketParam.MyTicketPageQuery pageQuery) {

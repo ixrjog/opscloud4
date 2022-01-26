@@ -11,6 +11,6 @@ public interface WorkOrderTicketMapper extends Mapper<WorkOrderTicket> {
 
     WorkOrderTicket getNewTicketByUser(@Param("workOrderKey") String workOrderKey, @Param("username") String username);
 
-    List<WorkOrderTicket> queryPageByParam(WorkOrderTicketParam.MyTicketPageQuery pageQuery);
+    List<WorkOrderTicket> queryPageByParam(WorkOrderTicketParam.TicketPageQuery pageQuery);
 
 }

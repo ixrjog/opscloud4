@@ -11,7 +11,7 @@ import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam;
  */
 public interface WorkOrderTicketService {
 
-    DataTable<WorkOrderTicket> queryPageByParam(WorkOrderTicketParam.MyTicketPageQuery pageQuery);
+    DataTable<WorkOrderTicket> queryPageByParam(WorkOrderTicketParam.TicketPageQuery pageQuery);
 
     void add(WorkOrderTicket workOrderTicket);
 

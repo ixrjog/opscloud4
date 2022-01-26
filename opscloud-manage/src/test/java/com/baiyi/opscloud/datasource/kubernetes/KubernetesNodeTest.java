@@ -3,6 +3,8 @@ package com.baiyi.opscloud.datasource.kubernetes;
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
 import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesNodeDrive;
 import io.fabric8.kubernetes.api.model.Node;
+import io.fabric8.kubernetes.api.model.NodeList;
+import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -18,6 +20,13 @@ public class KubernetesNodeTest extends BaseKubernetesTest {
     void listNodeTest() {
         List<Node> nodes = KubernetesNodeDrive.listNode(getConfig().getKubernetes());
         print(nodes);
+    }
+
+    @Test
+    void test() {
+        DefaultKubernetesClient defaultKubernetesClient = buildClient();
+        NodeList nodeList = defaultKubernetesClient.nodes().list();
+        print(nodeList);
     }
 
 }
