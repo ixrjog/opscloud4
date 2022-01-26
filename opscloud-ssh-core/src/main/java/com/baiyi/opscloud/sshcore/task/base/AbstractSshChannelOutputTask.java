@@ -11,6 +11,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -37,7 +38,7 @@ public abstract class AbstractSshChannelOutputTask implements IOutputTask {
         SessionOutputUtil.addOutput(this.sessionOutput);
         try {
             while (!isClosed) {
-                Thread.sleep(25);
+                TimeUnit.MILLISECONDS.sleep(25L);
                 InputStream ins = baos.toInputStream();
                 if (ins instanceof ClosedInputStream)
                     continue;

@@ -64,6 +64,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -299,9 +300,9 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                 }
             }
             if (arthas) {
-                Thread.sleep(200L);
+                TimeUnit.MILLISECONDS.sleep(200L);
                 execWatch.getInput().write(KUBERNETES_EXECUTE_ARTHAS);
-                Thread.sleep(1000L);
+                TimeUnit.SECONDS.sleep(1L);
             }
         } catch (IOException | InterruptedException ie) {
             log.error("执行Arthas错误！");
@@ -312,7 +313,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                 if (ch >= 0) {
                     if (ch == EOF) {
                         execWatch.getInput().write(EOF);
-                        Thread.sleep(200L); // 等待退出，避免sh残留
+                        TimeUnit.MILLISECONDS.sleep(200L); // 等待退出，避免sh残留
                         break;
                     } else {
                         execWatch.getInput().write(ch);
@@ -368,10 +369,10 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                     } else {
                         terminal.writer().print(helper.getColored("\n输入 [ ctrl+c ] 关闭日志!\n", PromptColor.RED));
                         terminal.writer().flush();
-                        Thread.sleep(200L);
+                        TimeUnit.MILLISECONDS.sleep(200L);
                     }
                 }
-                Thread.sleep(200L);
+                TimeUnit.MILLISECONDS.sleep(200L);
             } catch (Exception ignored) {
             } finally {
                 logWatch.close();

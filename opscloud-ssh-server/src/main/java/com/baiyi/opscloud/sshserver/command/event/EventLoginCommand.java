@@ -37,6 +37,7 @@ import javax.annotation.Resource;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -96,7 +97,7 @@ public class EventLoginCommand extends BaseServerCommand {
             try {
                 while (true) {
                     if (isClosed(sessionId, instanceId)) {
-                        Thread.sleep(150L);
+                        TimeUnit.MILLISECONDS.sleep(150L);
                         sessionClosed("用户正常退出登录! 耗时:%s/s", inst1);
                         break;
                     }
