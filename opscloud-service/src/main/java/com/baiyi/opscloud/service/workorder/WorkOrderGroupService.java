@@ -13,4 +13,6 @@ public interface WorkOrderGroupService {
 
     List<WorkOrderGroup> queryAll();
 
+    WorkOrderGroup getById(int id);
+
 }

@@ -29,6 +29,8 @@ public class WorkOrderVO {
     @ApiModel
     public static class WorkOrder extends BaseVO {
 
+        private WorkOrderVO.Group workOrderGroup;
+
         private Integer id;
 
         @ApiModelProperty(value = "工单名称")
