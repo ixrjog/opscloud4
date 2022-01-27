@@ -17,6 +17,11 @@ Welcome to the opscloud wiki!
 + IntelliJ IDEA 2021.3 (Ultimate Edition)
 + WebStorm 2021.3
 
+### 4.0.8版本(基本完成，测试中)
++ 运维工单（钉钉通知，自定义审批节点，自动处理工单）
++ AWS数据源接入
+  + EC2
+  + IAM(策略，用户，AK)
 
 ### Tag:4.0.7版本
 + 修复部分问题

@@ -28,4 +28,9 @@ public class WorkOrderGroupServiceImpl implements WorkOrderGroupService {
         return workOrderGroupMapper.selectByExample(example);
     }
 
+    @Override
+    public WorkOrderGroup getById(int id) {
+        return workOrderGroupMapper.selectByPrimaryKey(id);
+    }
+
 }

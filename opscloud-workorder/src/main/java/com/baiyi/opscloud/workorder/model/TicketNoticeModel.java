@@ -15,7 +15,7 @@ import java.util.List;
  * @Date 2022/1/26 3:20 PM
  * @Version 1.0
  */
-public class TicketNoticeModel {
+public class TicketNoticeModel implements INoticeMessage {
 
     @Builder
     @Data

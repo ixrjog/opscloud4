@@ -2,9 +2,11 @@ package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkOrderVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderViewVO;
 import com.baiyi.opscloud.facade.workorder.WorkOrderFacade;
 import com.baiyi.opscloud.facade.workorder.WorkOrderTicketFacade;
@@ -31,6 +33,14 @@ public class WorkOrderController {
     private final WorkOrderFacade workOrderFacade;
 
     private final WorkOrderTicketFacade workOrderTicketFacade;
+
+
+    @ApiOperation(value = "分页查询工单配置")
+    @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<WorkOrderVO.WorkOrder>> queryWorkOrderPage(@RequestBody @Valid WorkOrderParam.WorkOrderPageQuery pageQuery) {
+        return new HttpResult<>(workOrderFacade.queryWorkOrderPage(pageQuery));
+    }
+
 
     @ApiOperation(value = "查询工单视图")
     @GetMapping(value = "/view/get", produces = MediaType.APPLICATION_JSON_VALUE)
