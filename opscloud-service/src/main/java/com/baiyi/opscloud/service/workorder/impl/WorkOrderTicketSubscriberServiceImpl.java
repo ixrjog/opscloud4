@@ -22,12 +22,23 @@ public class WorkOrderTicketSubscriberServiceImpl implements WorkOrderTicketSubs
 
     @Override
     public void add(WorkOrderTicketSubscriber workOrderTicketSubscriber) {
-        workOrderTicketSubscriberMapper.insert(workOrderTicketSubscriber);
+        if (getByUniqueKey(workOrderTicketSubscriber) == null)
+            workOrderTicketSubscriberMapper.insert(workOrderTicketSubscriber);
     }
 
     @Override
     public void update(WorkOrderTicketSubscriber workOrderTicketSubscriber) {
         workOrderTicketSubscriberMapper.updateByPrimaryKey(workOrderTicketSubscriber);
+    }
+
+    @Override
+    public WorkOrderTicketSubscriber getByUniqueKey(WorkOrderTicketSubscriber workOrderTicketSubscriber) {
+        Example example = new Example(WorkOrderTicketSubscriber.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("workOrderTicketId", workOrderTicketSubscriber.getWorkOrderTicketId())
+                .andEqualTo("username", workOrderTicketSubscriber.getUsername())
+                .andEqualTo("subscribeStatus", workOrderTicketSubscriber.getSubscribeStatus());
+        return workOrderTicketSubscriberMapper.selectOneByExample(example);
     }
 
     @Override

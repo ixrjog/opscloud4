@@ -35,7 +35,7 @@ public abstract class AbstractUserPermissionExtendedBaseTicketProcessor<T> exten
                 .permissionRole(ticketEntry.getRole())
                 .build();
         // 查询是否重复授权
-        UserPermission userPermission = userPermissionService.getByUnqueKey(prePermission);
+        UserPermission userPermission = userPermissionService.getByUniqueKey(prePermission);
         if (userPermission == null) {
             userPermissionService.add(prePermission); // 授权
         } else {

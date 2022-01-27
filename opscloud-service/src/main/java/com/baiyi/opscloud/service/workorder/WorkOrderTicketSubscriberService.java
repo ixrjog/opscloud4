@@ -13,6 +13,8 @@ public interface WorkOrderTicketSubscriberService {
 
     void add(WorkOrderTicketSubscriber workOrderTicketSubscriber);
 
+    WorkOrderTicketSubscriber getByUniqueKey(WorkOrderTicketSubscriber workOrderTicketSubscriber);
+
     void update(WorkOrderTicketSubscriber workOrderTicketSubscriber);
 
     List<WorkOrderTicketSubscriber> queryByWorkOrderTicketId(int workOrderTicketId);

@@ -59,7 +59,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
     }
 
     @Override
-    public UserPermission getByUnqueKey(UserPermission userPermission) {
+    public UserPermission getByUniqueKey(UserPermission userPermission) {
         Example example = new Example(UserPermission.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("userId", userPermission.getUserId())
