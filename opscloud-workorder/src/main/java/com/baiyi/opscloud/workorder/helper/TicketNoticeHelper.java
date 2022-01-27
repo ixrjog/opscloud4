@@ -1,12 +1,13 @@
 package com.baiyi.opscloud.workorder.helper;
 
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
-import com.baiyi.opscloud.workorder.constants.OrderPhaseCodeConstants;
-import com.baiyi.opscloud.workorder.helper.strategy.TicketNoticeStrategy;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
@@ -20,10 +21,9 @@ import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskP
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class TicketNoticeHelper {
 
-    private final TicketNoticeStrategy ticketNoticeStrategy;
+    public static final Map<String, Consumer<WorkOrderTicket>> context = new ConcurrentHashMap<>();
 
     /**
      * 发送通知
@@ -32,11 +32,10 @@ public class TicketNoticeHelper {
      */
     @Async(CORE)
     public void notice(WorkOrderTicket ticket) {
-        try {
-            OrderPhaseCodeConstants ticketPhase = OrderPhaseCodeConstants.getEnum(ticket.getTicketPhase());
-            ticketNoticeStrategy.getStrategyNotice(ticketPhase).accept(ticket, ticketPhase.getResult());
-        } catch (Exception e) {
-            log.error("未定义改阶段通知模板");
+        final String phase = ticket.getTicketPhase();
+        if (context.containsKey(phase)) {
+            context.get(phase).accept(ticket);
         }
     }
+
 }

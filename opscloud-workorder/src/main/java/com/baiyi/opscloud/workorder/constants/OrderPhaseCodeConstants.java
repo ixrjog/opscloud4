@@ -2,6 +2,8 @@ package com.baiyi.opscloud.workorder.constants;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 /**
  * 工单状态码
  *
@@ -21,8 +23,8 @@ public enum OrderPhaseCodeConstants {
     FAILED("FAILED", "工单执行失败！"),
     CLOSED("CLOSED", "工单已关闭");
 
-    private String phase;
-    private String result;
+    private final String phase;
+    private final String result;
 
     OrderPhaseCodeConstants(String phase, String result) {
         this.phase = phase;
@@ -30,11 +32,6 @@ public enum OrderPhaseCodeConstants {
     }
 
     public static OrderPhaseCodeConstants getEnum(String phase) {
-        for (OrderPhaseCodeConstants phaseCodeConstants : OrderPhaseCodeConstants.values()) {
-            if (phaseCodeConstants.getPhase().equals(phase)) {
-                return phaseCodeConstants;
-            }
-        }
-        return null;
+        return Arrays.stream(OrderPhaseCodeConstants.values()).filter(phaseCodeConstants -> phaseCodeConstants.getPhase().equals(phase)).findFirst().orElse(null);
     }
 }
