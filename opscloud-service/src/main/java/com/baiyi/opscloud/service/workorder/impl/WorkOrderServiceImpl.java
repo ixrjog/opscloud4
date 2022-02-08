@@ -33,7 +33,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
             Example.Criteria criteria = example.createCriteria();
             criteria.andEqualTo("workOrderGroupId", pageQuery.getWorkOrderGroupId());
         }
-        example.setOrderByClause("seq");
+        example.setOrderByClause("work_order_group_id, seq");
         return new DataTable<>(workOrderMapper.selectByExample(example), page.getTotal());
     }
 
@@ -66,5 +66,10 @@ public class WorkOrderServiceImpl implements WorkOrderService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("workOrderKey", key);
         return workOrderMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public void update(WorkOrder workOrder) {
+        workOrderMapper.updateByPrimaryKey(workOrder);
     }
 }

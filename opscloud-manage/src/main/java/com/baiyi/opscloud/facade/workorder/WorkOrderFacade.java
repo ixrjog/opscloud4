@@ -21,6 +21,13 @@ public interface WorkOrderFacade {
      */
     DataTable<WorkOrderVO.WorkOrder> queryWorkOrderPage(WorkOrderParam.WorkOrderPageQuery pageQuery);
 
+
+    /**
+     * 工单组分页查询
+     *
+     * @param pageQuery
+     * @return
+     */
     DataTable<WorkOrderVO.Group> queryWorkOrderGroupPage(WorkOrderGroupParam.WorkOrderGroupPageQuery pageQuery);
 
     /**
@@ -29,5 +36,24 @@ public interface WorkOrderFacade {
      * @return
      */
     WorkOrderViewVO.View getWorkOrderView();
+
+    /**
+     * 保存工单组
+     * @param group
+     */
+    void saveWorkOrderGroup(WorkOrderVO.Group group);
+
+    /**
+     * 删除工单组
+     * @param workOrderGroupId
+     */
+    void deleteWorkOrderGroup(Integer workOrderGroupId);
+
+
+    /**
+     * 保存工单组
+     * @param workOrder
+     */
+    void updateWorkOrder(WorkOrderVO.WorkOrder workOrder);
 
 }

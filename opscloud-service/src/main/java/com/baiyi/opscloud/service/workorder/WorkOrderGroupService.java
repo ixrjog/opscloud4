@@ -19,4 +19,12 @@ public interface WorkOrderGroupService {
 
     WorkOrderGroup getById(int id);
 
+    void add(WorkOrderGroup workOrderGroup);
+
+    void update(WorkOrderGroup workOrderGroup);
+
+    void deleteById(int id);
+
+    int count();
+
 }

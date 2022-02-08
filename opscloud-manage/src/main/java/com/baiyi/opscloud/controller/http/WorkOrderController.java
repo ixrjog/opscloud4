@@ -41,10 +41,31 @@ public class WorkOrderController {
         return new HttpResult<>(workOrderFacade.queryWorkOrderPage(pageQuery));
     }
 
+    @ApiOperation(value = "更新工单配置")
+    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> queryWorkOrderPage(@RequestBody @Valid WorkOrderVO.WorkOrder workOrder) {
+        workOrderFacade.updateWorkOrder(workOrder);
+        return HttpResult.SUCCESS;
+    }
+
     @ApiOperation(value = "分页查询工单组配置")
     @PostMapping(value = "/group/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<WorkOrderVO.Group>> queryWorkOrderGroupPage(@RequestBody @Valid WorkOrderGroupParam.WorkOrderGroupPageQuery pageQuery) {
         return new HttpResult<>(workOrderFacade.queryWorkOrderGroupPage(pageQuery));
+    }
+
+    @ApiOperation(value = "保存工单组配置")
+    @PostMapping(value = "/group/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> saveWorkOrderGroup(@RequestBody @Valid WorkOrderVO.Group group) {
+        workOrderFacade.saveWorkOrderGroup(group);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "删除工单组配置")
+    @DeleteMapping(value = "/group/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteWorkOrderGroup(@RequestParam int workOrderGroupId) {
+        workOrderFacade.deleteWorkOrderGroup(workOrderGroupId);
+        return HttpResult.SUCCESS;
     }
 
     @ApiOperation(value = "查询工单视图")
