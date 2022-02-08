@@ -22,4 +22,6 @@ public interface WorkOrderService {
     WorkOrder getById(int id);
 
     WorkOrder getByKey(String key);
+
+    void update(WorkOrder workOrder);
 }

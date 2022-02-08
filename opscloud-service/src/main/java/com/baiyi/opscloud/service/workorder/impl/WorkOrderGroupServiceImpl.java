@@ -45,4 +45,24 @@ public class WorkOrderGroupServiceImpl implements WorkOrderGroupService {
         return workOrderGroupMapper.selectByPrimaryKey(id);
     }
 
+    @Override
+    public void add(WorkOrderGroup workOrderGroup) {
+        workOrderGroupMapper.insert(workOrderGroup);
+    }
+
+    @Override
+    public void update(WorkOrderGroup workOrderGroup) {
+        workOrderGroupMapper.updateByPrimaryKey(workOrderGroup);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        workOrderGroupMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public int count() {
+        Example example = new Example(WorkOrderGroup.class);
+        return workOrderGroupMapper.selectCountByExample(example);
+    }
 }
