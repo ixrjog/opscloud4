@@ -56,8 +56,6 @@ public class UserPacker implements IPacker<UserVO.User, User> {
 
     private final UserAccessTokenPacker userAccessTokenPacker;
 
-   //  private final RamUserPacker ramUserPacker;
-
     private final TagPacker tagPacker;
 
     private final DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
@@ -117,7 +115,6 @@ public class UserPacker implements IPacker<UserVO.User, User> {
         userAccessTokenPacker.wrap(user);
         wrapPermission(user);
         amPacker.wrap(user);
-        // ramUserPacker.wrap(user);
         tagPacker.wrap(user);
         // 插入头像
         wrapAvatar(user);
