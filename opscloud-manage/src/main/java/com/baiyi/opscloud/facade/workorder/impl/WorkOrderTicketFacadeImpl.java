@@ -115,7 +115,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         // 发布订阅人
         ticketSubscriberFacade.publish(ticket);
         // 工单通知
-        ticketNoticeHelper.notice(ticket);
+        ticketNoticeHelper.send(ticket);
         return toTicketView(ticket);
     }
 
@@ -131,7 +131,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         iTicketApprove.approve(approveTicket);
         WorkOrderTicket ticket = ticketService.getById(approveTicket.getTicketId());
         // 工单通知
-        ticketNoticeHelper.notice(ticket);
+        ticketNoticeHelper.send(ticket);
         return toTicketView(ticket);
     }
 

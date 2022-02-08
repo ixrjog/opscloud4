@@ -26,7 +26,7 @@ public class SendEndNotice extends AbstractSendNotice {
     @Override
     public void send(WorkOrderTicket ticket) {
         User user = userService.getByUsername(ticket.getUsername());
-        notice(Lists.newArrayList(user), TICKET_END, buildNoticeMessage(ticket));
+        send(Lists.newArrayList(user), TICKET_END, buildNoticeMessage(ticket));
     }
 
     @Override

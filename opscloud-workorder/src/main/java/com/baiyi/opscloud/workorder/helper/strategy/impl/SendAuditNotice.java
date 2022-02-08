@@ -43,12 +43,12 @@ public class SendAuditNotice extends AbstractSendNotice {
             if (NodeTypeConstants.SYS.getCode() == workflowNode.getType()) {
                 // 广播
                 List<User> auditUsers = userService.queryByTagKeys(workflowNode.getTags());
-                notice(auditUsers, TICKET_APPROVE, noticeMessage);
+                send(auditUsers, TICKET_APPROVE, noticeMessage);
             }
             if (NodeTypeConstants.USER_LIST.getCode() == workflowNode.getType()) {
                 // 单播
                 User auditUser = userService.getByUsername(node.getUsername());
-                notice(Lists.newArrayList(auditUser), TICKET_APPROVE, noticeMessage);
+                send(Lists.newArrayList(auditUser), TICKET_APPROVE, noticeMessage);
             }
         }
     }

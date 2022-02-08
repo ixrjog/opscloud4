@@ -31,7 +31,7 @@ public class TicketNoticeHelper {
      * @param ticket
      */
     @Async(CORE)
-    public void notice(WorkOrderTicket ticket) {
+    public void send(WorkOrderTicket ticket) {
         final String phase = ticket.getTicketPhase();
         if (context.containsKey(phase)) {
             context.get(phase).accept(ticket);

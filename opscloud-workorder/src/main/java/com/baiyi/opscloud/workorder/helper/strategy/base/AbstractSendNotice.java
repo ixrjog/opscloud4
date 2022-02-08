@@ -39,7 +39,7 @@ public abstract class AbstractSendNotice implements ISendNotice, InitializingBea
 
     abstract protected INoticeMessage buildNoticeMessage(WorkOrderTicket ticket);
 
-    protected void notice(List<User> users, String msgKey, INoticeMessage noticeMessage) {
+    protected void send(List<User> users, String msgKey, INoticeMessage noticeMessage) {
         if (CollectionUtils.isEmpty(users)) return;
         users.forEach(user -> noticeManager.sendMessage(user, msgKey, noticeMessage));
     }
