@@ -3,7 +3,6 @@ package com.baiyi.opscloud.packer.user.am.converter;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.user.AMVO;
 import com.google.common.collect.Lists;
@@ -20,24 +19,18 @@ import java.util.List;
 public class AssetToIAMConverter extends AbstractToAMConverter {
 
     @Override
-    public AMVO.XAM toAM(DsAssetVO.Asset asset) {
-        DatasourceInstance instance = dsInstanceService.getByUuid(asset.getInstanceUuid());
-        DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getConfigId());
+    protected void wrap(AMVO.XAM xam, DatasourceConfig datasourceConfig) {
         AwsConfig config = dsConfigHelper.build(datasourceConfig, AwsConfig.class);
-        List<DsAssetVO.Asset> accessKeys
-                = asset.getTree().containsKey(DsAssetTypeConstants.IAM_ACCESS_KEY.name()) ? asset.getTree().get(DsAssetTypeConstants.IAM_ACCESS_KEY.name()) : Lists.newArrayList();
-        List<DsAssetVO.Asset> ramPolicies
-                = asset.getChildren().containsKey(DsAssetTypeConstants.IAM_POLICY.name()) ? asset.getChildren().get(DsAssetTypeConstants.IAM_POLICY.name()) : Lists.newArrayList();
-        return AMVO.IAM.builder()
-                .instanceUuid(instance.getUuid())
-                .instanceName(instance.getInstanceName())
-                .username(asset.getAssetKey())
-                .loginUser(asset.getAssetKey())
-                .loginUrl(config.getAws().getAccount().getLoginUrl())
-                .name(asset.getName())
-                .accessKeys(accessKeys)
-                .policies(ramPolicies)
-                .build();
+        xam.setLoginUser(xam.getUsername());
+        xam.setLoginUrl(config.getAws().getAccount().getLoginUrl());
+    }
+
+    protected List<DsAssetVO.Asset> toAccessKeys(DsAssetVO.Asset asset) {
+        return asset.getTree().containsKey(DsAssetTypeConstants.IAM_ACCESS_KEY.name()) ? asset.getTree().get(DsAssetTypeConstants.IAM_ACCESS_KEY.name()) : Lists.newArrayList();
+    }
+
+    protected List<DsAssetVO.Asset> toPolicies(DsAssetVO.Asset asset) {
+        return asset.getChildren().containsKey(DsAssetTypeConstants.IAM_POLICY.name()) ? asset.getChildren().get(DsAssetTypeConstants.IAM_POLICY.name()) : Lists.newArrayList();
     }
 
     @Override
