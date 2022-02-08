@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.packer.user.am;
 
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
@@ -9,9 +8,7 @@ import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.user.AMVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
-import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
-import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -35,13 +32,7 @@ public class AmPacker {
 
     private final DsInstanceAssetService dsInstanceAssetService;
 
-    private final DsInstanceService dsInstanceService;
-
     private final DsAssetPacker dsAssetPacker;
-
-    private final DsConfigService dsConfigService;
-
-    private final DsConfigHelper dsConfigHelper;
 
     public static final Map<String, Function<DsAssetVO.Asset, AMVO.XAM>> context = new ConcurrentHashMap<>();
 
@@ -49,6 +40,7 @@ public class AmPacker {
 
     /**
      * 包装amMap
+     *
      * @param user
      */
     public void wrap(UserVO.User user) {
@@ -67,6 +59,7 @@ public class AmPacker {
 
     /**
      * 包装ams
+     *
      * @param user
      * @param xamType
      */
