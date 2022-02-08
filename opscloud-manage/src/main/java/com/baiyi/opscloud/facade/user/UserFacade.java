@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
+import com.baiyi.opscloud.domain.vo.user.AMVO;
 import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import org.apache.logging.log4j.util.Strings;
@@ -65,6 +66,6 @@ public interface UserFacade {
 
     DataTable<UserVO.User> queryBusinessPermissionUserPage(UserBusinessPermissionParam.BusinessPermissionUserPageQuery pageQuery);
 
-    List<UserVO.RamUser> queryUserRamUsers(String username);
+    List<AMVO.XAM> queryAms(String username, String amType);
 
 }

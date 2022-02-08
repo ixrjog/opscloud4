@@ -47,6 +47,10 @@ public class AmPacker {
 
     private static final DsAssetTypeConstants[] xamAssetTypes = {DsAssetTypeConstants.RAM_USER, DsAssetTypeConstants.IAM_USER};
 
+    /**
+     * 包装amMap
+     * @param user
+     */
     public void wrap(UserVO.User user) {
         Map<String, List<AMVO.XAM>> amMap = Maps.newHashMap();
         for (DsAssetTypeConstants xamAssetType : xamAssetTypes) {
@@ -61,13 +65,18 @@ public class AmPacker {
         user.setAmMap(amMap);
     }
 
+    /**
+     * 包装ams
+     * @param user
+     * @param xamType
+     */
     public void wrap(UserVO.User user, String xamType) {
         List<AMVO.XAM> xams = toAms(user, xamType);
         if (!CollectionUtils.isEmpty(xams))
             user.setAms(xams);
     }
 
-    private List<AMVO.XAM> toAms(UserVO.User user, String xamType) {
+    public List<AMVO.XAM> toAms(UserVO.User user, String xamType) {
         if (!context.containsKey(xamType)) return Collections.emptyList();
         DatasourceInstanceAsset param = DatasourceInstanceAsset.builder()
                 .assetType(xamType)

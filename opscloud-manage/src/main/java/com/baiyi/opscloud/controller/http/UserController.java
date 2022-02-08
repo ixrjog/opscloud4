@@ -195,12 +195,6 @@ public class UserController {
         return HttpResult.SUCCESS;
     }
 
-    @ApiOperation(value = "查询用户RAM授权信息")
-    @GetMapping(value = "/ram/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<UserVO.RamUser>> queryUserRamUsers(@RequestParam @Valid String username) {
-        return new HttpResult<>(userFacade.queryUserRamUsers(username));
-    }
-
     @ApiOperation(value = "创建RAM账户")
     @PostMapping(value = "/ram/user/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> createRamUser(@RequestBody @Valid UserRamParam.CreateRamUser createRamUser) {
@@ -220,6 +214,12 @@ public class UserController {
     public HttpResult<Boolean> revokeRamPolicy(@RequestBody @Valid UserRamParam.RevokeRamPolicy revokeRamPolicy) {
         userRamFacade.revokeRamPolicy(revokeRamPolicy);
         return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "查询用户AM授权信息")
+    @GetMapping(value = "/am/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<AMVO.XAM>> queryAms(@RequestParam @Valid String username, @Valid String amType) {
+        return new HttpResult<>(userFacade.queryAms(username, amType));
     }
 
 }

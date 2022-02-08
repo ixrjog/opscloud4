@@ -12,6 +12,8 @@ import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.annotation.RevokeUserPermission;
 import com.baiyi.opscloud.domain.annotation.TagClear;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.SimpleRelation;
@@ -19,11 +21,10 @@ import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
+import com.baiyi.opscloud.domain.vo.user.AMVO;
 import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
@@ -36,7 +37,7 @@ import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
 import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.packer.user.UserAccessTokenPacker;
 import com.baiyi.opscloud.packer.user.UserPacker;
-import com.baiyi.opscloud.packer.user.RamUserPacker;
+import com.baiyi.opscloud.packer.user.am.AmPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.user.AccessTokenService;
 import com.baiyi.opscloud.service.user.UserGroupService;
@@ -44,10 +45,10 @@ import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -87,7 +88,7 @@ public class UserFacadeImpl implements UserFacade {
 
     private final UserPermissionService userPermissionService;
 
-    private final RamUserPacker ramUserPacker;
+    private final AmPacker amPacker;
 
     @Override
     public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {
@@ -251,12 +252,11 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public List<UserVO.RamUser> queryUserRamUsers(String username) {
+    public List<AMVO.XAM> queryAms(String username, String amType) {
         UserVO.User vo = UserVO.User.builder()
                 .username(username)
                 .build();
-        ramUserPacker.wrap(vo);
-        return vo.getRamUsers();
+        return amPacker.toAms(vo, amType);
     }
 
 }
