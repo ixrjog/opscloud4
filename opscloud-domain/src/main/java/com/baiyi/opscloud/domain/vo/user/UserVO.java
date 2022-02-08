@@ -11,6 +11,7 @@ import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -112,6 +113,15 @@ public class UserVO {
 
         private Map<String, List<IUserPermission>> businessPermissions;
 
+        @ApiModelProperty(value = "云AM账户Map")
+        @Builder.Default
+        private Map<String, List<AMVO.XAM>> amMap = Maps.newHashMap();
+
+        @ApiModelProperty(value = "云AM用户列表（某一类型）")
+        @Builder.Default
+        private List<AMVO.XAM> ams = Lists.newArrayList();
+
+        // 废弃
         @ApiModelProperty(value = "阿里云RAM用户列表")
         @Builder.Default
         private List<RamUser> ramUsers = Lists.newArrayList();

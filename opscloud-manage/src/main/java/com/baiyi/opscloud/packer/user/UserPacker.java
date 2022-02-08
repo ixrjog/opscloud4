@@ -21,7 +21,7 @@ import com.baiyi.opscloud.packer.auth.AuthRolePacker;
 import com.baiyi.opscloud.packer.base.IPacker;
 import com.baiyi.opscloud.packer.desensitized.DesensitizedPacker;
 import com.baiyi.opscloud.packer.tag.TagPacker;
-import com.baiyi.opscloud.packer.user.child.RamUserPacker;
+import com.baiyi.opscloud.packer.user.am.AmPacker;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.user.UserService;
@@ -56,11 +56,13 @@ public class UserPacker implements IPacker<UserVO.User, User> {
 
     private final UserAccessTokenPacker userAccessTokenPacker;
 
-    private final RamUserPacker ramUserPacker;
+   //  private final RamUserPacker ramUserPacker;
 
     private final TagPacker tagPacker;
 
     private final DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
+
+    private final AmPacker amPacker;
 
     @Resource
     private BusinessAssetRelationService bizAssetRelationService;
@@ -114,7 +116,8 @@ public class UserPacker implements IPacker<UserVO.User, User> {
         userCredentialPacker.wrap(user);
         userAccessTokenPacker.wrap(user);
         wrapPermission(user);
-        ramUserPacker.wrap(user);
+        amPacker.wrap(user);
+        // ramUserPacker.wrap(user);
         tagPacker.wrap(user);
         // 插入头像
         wrapAvatar(user);

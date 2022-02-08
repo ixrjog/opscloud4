@@ -14,7 +14,7 @@ import java.util.List;
  * @Date 2021/6/4 5:29 下午
  * @Version 1.0
  */
-public class UserUIVO {
+public class UIVO {
 
     @Data
     @NoArgsConstructor

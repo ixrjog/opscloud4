@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.packer.user.child;
+package com.baiyi.opscloud.packer.user;
 
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
@@ -64,7 +64,7 @@ public class RamUserPacker {
         DatasourceInstance instance = dsInstanceService.getByUuid(asset.getInstanceUuid());
         DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getConfigId());
         AliyunConfig config = dsFactory.build(datasourceConfig, AliyunConfig.class);
-        config.getAliyun().getAccount().getRamLoginUrl();
+        config.getAliyun().getAccount().getLoginUrl();
         List<DsAssetVO.Asset> accessKeys
                 = asset.getTree().containsKey(DsAssetTypeConstants.RAM_ACCESS_KEY.name()) ? asset.getTree().get(DsAssetTypeConstants.RAM_ACCESS_KEY.name()) : Lists.newArrayList();
         List<DsAssetVO.Asset> ramPolicies
@@ -74,7 +74,7 @@ public class RamUserPacker {
                 .instanceName(instance.getInstanceName())
                 .username(asset.getAssetKey())
                 .loginUser(Joiner.on("").join(asset.getAssetKey(), config.getAliyun().getAccount().getDomain()))
-                .loginUrl(config.getAliyun().getAccount().getRamLoginUrl())
+                .loginUrl(config.getAliyun().getAccount().getLoginUrl())
                 .name(asset.getName())
                 .accessKeys(accessKeys)
                 .ramPolicies(ramPolicies)

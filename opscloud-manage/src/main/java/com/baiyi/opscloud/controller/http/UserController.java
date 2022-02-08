@@ -47,7 +47,7 @@ public class UserController {
 
     @ApiOperation(value = "查询用户前端界面信息(菜单&UI鉴权)")
     @GetMapping(value = "/ui/info/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<UserUIVO.UIInfo> getUserUIInfo() {
+    public HttpResult<UIVO.UIInfo> getUserUIInfo() {
         return new HttpResult<>(uiFacade.buildUIInfo());
     }
 

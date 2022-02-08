@@ -36,7 +36,7 @@ import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
 import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.packer.user.UserAccessTokenPacker;
 import com.baiyi.opscloud.packer.user.UserPacker;
-import com.baiyi.opscloud.packer.user.child.RamUserPacker;
+import com.baiyi.opscloud.packer.user.RamUserPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.user.AccessTokenService;
 import com.baiyi.opscloud.service.user.UserGroupService;

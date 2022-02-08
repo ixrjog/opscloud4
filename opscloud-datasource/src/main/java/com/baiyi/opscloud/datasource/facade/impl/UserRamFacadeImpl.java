@@ -77,7 +77,7 @@ public class UserRamFacadeImpl implements UserRamFacade {
         dsInstanceFacade.pullAsset(instanceUuid, DsAssetTypeConstants.RAM_USER.name(), ramUser);
         CreateRamUserMessage message = CreateRamUserMessage.builder()
                 .aliyunName(aliyun.getAccount().getName())
-                .loginUrl(aliyun.getAccount().getRamLoginUrl())
+                .loginUrl(aliyun.getAccount().getLoginUrl())
                 .username(Joiner.on("").join(ramUser.getUserName(), aliyun.getAccount().getDomain()))
                 .password(user.getPassword())
                 .build();

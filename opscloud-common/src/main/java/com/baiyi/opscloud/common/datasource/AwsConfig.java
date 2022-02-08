@@ -39,6 +39,7 @@ public class AwsConfig extends BaseConfig {
         private String company; // 可选项公司
         private String accessKeyId;
         private String secretKey;
+        private String loginUrl; // IAM登录地址
 
     }
 
