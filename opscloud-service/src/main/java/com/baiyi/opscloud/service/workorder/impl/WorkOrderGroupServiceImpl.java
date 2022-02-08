@@ -1,8 +1,12 @@
 package com.baiyi.opscloud.service.workorder.impl;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderGroup;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderGroupParam;
 import com.baiyi.opscloud.mapper.opscloud.WorkOrderGroupMapper;
 import com.baiyi.opscloud.service.workorder.WorkOrderGroupService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -19,6 +23,14 @@ import java.util.List;
 public class WorkOrderGroupServiceImpl implements WorkOrderGroupService {
 
     private final WorkOrderGroupMapper workOrderGroupMapper;
+
+    @Override
+    public DataTable<WorkOrderGroup> queryPageByParam(WorkOrderGroupParam.WorkOrderGroupPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Example example = new Example(WorkOrderGroup.class);
+        example.setOrderByClause("seq");
+        return new DataTable<>(workOrderGroupMapper.selectByExample(example), page.getTotal());
+    }
 
     @Override
     public List<WorkOrderGroup> queryAll() {

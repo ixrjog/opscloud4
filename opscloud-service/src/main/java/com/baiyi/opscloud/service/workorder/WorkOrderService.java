@@ -17,6 +17,8 @@ public interface WorkOrderService {
 
     List<WorkOrder> queryByWorkOrderGroupId(int workOrderGroupId);
 
+    int countByWorkOrderGroupId(int workOrderGroupId);
+
     WorkOrder getById(int id);
 
     WorkOrder getByKey(String key);

@@ -73,6 +73,9 @@ public class WorkOrderVO {
     @ApiModel
     public static class Group extends BaseVO {
 
+        @ApiModelProperty(value = "工单数量", example = "1")
+        private Integer workOrderSize;
+
         @ApiModelProperty(value = "组成员工单")
         private List<WorkOrder> workOrders;
 

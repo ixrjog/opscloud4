@@ -48,6 +48,14 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     }
 
     @Override
+    public int countByWorkOrderGroupId(int workOrderGroupId){
+        Example example = new Example(WorkOrder.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("workOrderGroupId", workOrderGroupId);
+        return workOrderMapper.selectCountByExample(example);
+    }
+
+    @Override
     public WorkOrder getById(int id) {
         return workOrderMapper.selectByPrimaryKey(id);
     }

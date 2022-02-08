@@ -2,6 +2,7 @@ package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam;
@@ -34,13 +35,17 @@ public class WorkOrderController {
 
     private final WorkOrderTicketFacade workOrderTicketFacade;
 
-
     @ApiOperation(value = "分页查询工单配置")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<WorkOrderVO.WorkOrder>> queryWorkOrderPage(@RequestBody @Valid WorkOrderParam.WorkOrderPageQuery pageQuery) {
         return new HttpResult<>(workOrderFacade.queryWorkOrderPage(pageQuery));
     }
 
+    @ApiOperation(value = "分页查询工单组配置")
+    @PostMapping(value = "/group/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<WorkOrderVO.Group>> queryWorkOrderGroupPage(@RequestBody @Valid WorkOrderGroupParam.WorkOrderGroupPageQuery pageQuery) {
+        return new HttpResult<>(workOrderFacade.queryWorkOrderGroupPage(pageQuery));
+    }
 
     @ApiOperation(value = "查询工单视图")
     @GetMapping(value = "/view/get", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -94,7 +99,7 @@ public class WorkOrderController {
     @ApiOperation(value = "查询工单所有配置条目")
     @GetMapping(value = "/ticket/entries/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<WorkOrderTicketVO.TicketView> getTicketEntries(@RequestParam @Valid int ticketId, @Valid String workOrderKey) {
-        return new HttpResult<>(workOrderTicketFacade.getTicketEntries(ticketId,workOrderKey));
+        return new HttpResult<>(workOrderTicketFacade.getTicketEntries(ticketId, workOrderKey));
     }
 
     @ApiOperation(value = "新增工单票据配置条目")
