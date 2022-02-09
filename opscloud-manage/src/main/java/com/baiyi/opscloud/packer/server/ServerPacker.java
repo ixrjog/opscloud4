@@ -1,11 +1,11 @@
 package com.baiyi.opscloud.packer.server;
 
 import com.baiyi.opscloud.common.annotation.EnvWrapper;
+import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.packer.business.BusinessPropertyPacker;
-import com.baiyi.opscloud.packer.tag.TagPacker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,8 +18,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ServerPacker {
 
-    private final TagPacker tagPacker;
-
     private final ServerAccountPacker accountPacker;
 
     private final ServerGroupPacker serverGroupPacker;
@@ -27,8 +25,8 @@ public class ServerPacker {
     private final BusinessPropertyPacker businessPropertyPacker;
 
     @EnvWrapper
+    @TagsWrapper
     public void wrap(ServerVO.Server server, IExtend iExtend) {
-        tagPacker.wrap(server);
         accountPacker.wrap(server);
         serverGroupPacker.wrap(server);
         businessPropertyPacker.wrap(server);

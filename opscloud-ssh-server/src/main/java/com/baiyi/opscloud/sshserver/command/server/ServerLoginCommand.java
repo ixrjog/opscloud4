@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.sshserver.command.server;
 
 import com.baiyi.opscloud.common.exception.ssh.SshRuntimeException;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
@@ -81,7 +82,8 @@ public class ServerLoginCommand implements InitializingBean {
     private SimpleTerminalSessionFacade simpleTerminalSessionFacade;
 
     private String toInstanceId(Server server) {
-        ServerVO.Server serverVO = sshServerPacker.wrapToVO(server);
+        ServerVO.Server serverVO = BeanCopierUtil.copyProperties(server,ServerVO.Server.class);
+        sshServerPacker.wrap(serverVO);
         return Joiner.on("#").join(serverVO.getDisplayName(), server.getPrivateIp(), IdUtil.buildUUID());
     }
 

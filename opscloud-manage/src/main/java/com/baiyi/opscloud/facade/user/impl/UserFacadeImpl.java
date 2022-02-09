@@ -93,13 +93,16 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {
         DataTable<User> table = userService.queryPageByParam(pageQuery);
-        return new DataTable<>(userPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<UserVO.User> data = BeanCopierUtil.copyListProperties(table.getData(), UserVO.User.class).stream().peek(e -> userPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
     public UserVO.User getUserDetailsByUsername(String username) {
         User user = userService.getByUsername(StringUtils.isEmpty(username) ? SessionUtil.getUsername() : username);
-        return userPacker.wrap(user);
+        UserVO.User userVO = BeanCopierUtil.copyProperties(user, UserVO.User.class);
+        userPacker.wrap(userVO, SimpleExtend.EXTEND);
+        return userVO;
     }
 
     @Async(value = CORE)
@@ -150,7 +153,10 @@ public class UserFacadeImpl implements UserFacade {
 //            throw new CommonRuntimeException("密码不能为空");
         userService.add(newUser);
         user.setId(newUser.getId()); // 给切面提供businessId
-        return userPacker.wrap(newUser);
+
+        UserVO.User userVO = BeanCopierUtil.copyProperties(user, UserVO.User.class);
+        userPacker.wrap(userVO, SimpleExtend.EXTEND);
+        return userVO;
     }
 
     /**
@@ -240,7 +246,8 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public DataTable<UserVO.User> queryBusinessPermissionUserPage(UserBusinessPermissionParam.BusinessPermissionUserPageQuery pageQuery) {
         DataTable<User> table = userService.queryPageByParam(pageQuery);
-        List<UserVO.User> userList = userPacker.wrapVOList(table.getData(), pageQuery).stream().peek(e -> {
+        List<UserVO.User> data = BeanCopierUtil.copyListProperties(table.getData(), UserVO.User.class).stream().peek(e -> {
+            userPacker.wrap(e, pageQuery);
             UserPermission userPermission = userPermissionService.getByUserPermission(UserPermission.builder()
                     .userId(e.getUserId())
                     .businessId(pageQuery.getBusinessId())
@@ -248,7 +255,7 @@ public class UserFacadeImpl implements UserFacade {
                     .build());
             e.setUserPermission(BeanCopierUtil.copyProperties(userPermission, UserPermissionVO.UserPermission.class));
         }).collect(Collectors.toList());
-        return new DataTable<>(userList, table.getTotalNum());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override

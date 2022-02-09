@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.packer.user;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.RegexUtil;
 import com.baiyi.opscloud.domain.DataTable;
@@ -13,15 +12,14 @@ import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
-import com.baiyi.opscloud.packer.auth.AuthRolePacker;
 import com.baiyi.opscloud.packer.base.IPacker;
 import com.baiyi.opscloud.packer.desensitized.DesensitizedPacker;
-import com.baiyi.opscloud.packer.tag.TagPacker;
-import com.baiyi.opscloud.packer.user.am.AmPacker;
+import com.baiyi.opscloud.packer.user.delegate.UserPackerDelegate;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.user.UserService;
@@ -46,21 +44,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserPacker implements IPacker<UserVO.User, User> {
 
-    private final AuthRolePacker authRolePacker;
-
-    private final UserCredentialPacker userCredentialPacker;
-
     private final DesensitizedPacker<UserVO.User> desensitizedPacker;
 
     private final UserService userService;
 
-    private final UserAccessTokenPacker userAccessTokenPacker;
-
-    private final TagPacker tagPacker;
-
     private final DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
 
-    private final AmPacker amPacker;
+    private final UserPackerDelegate userPackerDelegate;
 
     @Resource
     private BusinessAssetRelationService bizAssetRelationService;
@@ -83,16 +73,6 @@ public class UserPacker implements IPacker<UserVO.User, User> {
         return voList.stream().peek(this::wrapAvatar).collect(Collectors.toList());
     }
 
-
-    public List<UserVO.User> wrapVOList(List<User> data, IExtend iExtend) {
-        List<UserVO.User> voList = wrapVOList(data);
-        return voList.stream().peek(e -> {
-            if (ExtendUtil.isExtend(iExtend)) {
-                wrap(e);
-            }
-        }).collect(Collectors.toList());
-    }
-
     public User toDO(UserVO.User user) {
         User pre = BeanCopierUtil.copyProperties(user, User.class);
         if (!StringUtils.isEmpty(pre.getPassword()))
@@ -105,21 +85,33 @@ public class UserPacker implements IPacker<UserVO.User, User> {
         return pre;
     }
 
-    public UserVO.User wrap(User user) {
-        return wrap(BeanCopierUtil.copyProperties(user, UserVO.User.class));
-    }
-
-    public UserVO.User wrap(UserVO.User user) {
-        authRolePacker.wrap(user);
-        userCredentialPacker.wrap(user);
-        userAccessTokenPacker.wrap(user);
+    public void wrap(UserVO.User user, IExtend iExtend) {
+        userPackerDelegate.wrap(user, iExtend);
         wrapPermission(user);
-        amPacker.wrap(user);
-        tagPacker.wrap(user);
         // 插入头像
         wrapAvatar(user);
-        return desensitizedPacker.desensitized(user);
     }
+
+    public void wrap(UserVO.IUser iUser) {
+        User user = userService.getByUsername(iUser.getUsername());
+        if (user != null) {
+            UserVO.User userVO = BeanCopierUtil.copyProperties(user, UserVO.User.class);
+            wrap(userVO, SimpleExtend.EXTEND);
+            iUser.setUser(userVO);
+        }
+    }
+
+//    public UserVO.User wrap(UserVO.User user) {
+//        authRolePacker.wrap(user);
+//        userCredentialPacker.wrap(user);
+//        userAccessTokenPacker.wrap(user);
+//        wrapPermission(user);
+//        amPacker.wrap(user);
+//        tagPacker.wrap(user);
+//        // 插入头像
+//        wrapAvatar(user);
+//        return desensitizedPacker.desensitized(user);
+//    }
 
     /**
      * 从资产获取用户头像并插入
@@ -143,22 +135,14 @@ public class UserPacker implements IPacker<UserVO.User, User> {
         }
     }
 
-    public void wrap(UserVO.IUser iUser) {
-        User user = userService.getByUsername(iUser.getUsername());
-        if (user != null)
-            iUser.setUser(wrap(user));
-    }
-
     private void wrapPermission(UserVO.User user) {
         Map<Integer, IUserBusinessPermissionPageQuery> context = UserBusinessPermissionFactory.getContext();
-
         UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery = UserBusinessPermissionParam.UserBusinessPermissionPageQuery
                 .builder()
                 .userId(user.getId())
                 .page(1)
                 .length(10000)
                 .build();
-
         Map<String, List<UserVO.IUserPermission>> businessPermissions = Maps.newHashMap();
         context.keySet().forEach(k -> {
             DataTable<UserVO.IUserPermission> table = context.get(k).queryUserBusinessPermissionPage(pageQuery);
@@ -169,6 +153,5 @@ public class UserPacker implements IPacker<UserVO.User, User> {
         });
         user.setBusinessPermissions(businessPermissions);
     }
-
 
 }
