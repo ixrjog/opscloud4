@@ -35,7 +35,7 @@ public class TemplatePacker {
     public TemplateVO.Template wrapVO(Template template, IExtend iExtend) {
         TemplateVO.Template vo = BeanCopierUtil.copyProperties(template, TemplateVO.Template.class);
         if (iExtend.getExtend()) {
-            envPacker.wrap(vo);
+            // envPacker.wrap(vo);
             vo.setBizTemplateSize(bizTemplateService.countByTemplateId(template.getId()));
         }
         return vo;
@@ -45,7 +45,7 @@ public class TemplatePacker {
         Template template = templateService.getById(iTempate.getTemplateId());
         if (template == null) return;
         TemplateVO.Template vo = BeanCopierUtil.copyProperties(template, TemplateVO.Template.class);
-        envPacker.wrap(vo);
+        //envPacker.wrap(vo);
         iTempate.setTemplate(vo);
     }
 

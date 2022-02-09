@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.packer.datasource;
 
+import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.asset.IAssetConvert;
 import com.baiyi.opscloud.core.asset.factory.AssetConvertFactory;
@@ -59,16 +60,28 @@ public class DsAssetPacker {
         return asset;
     }
 
-    public List<DsAssetVO.Asset> wrapVOList(List<DatasourceInstanceAsset> data, IExtend iExtend, IRelation iRelation) {
-        return data.stream().map(e ->
-                wrapVO(e, iExtend, iRelation)
-        ).collect(Collectors.toList());
+//    public List<DsAssetVO.Asset> wrapVOList(List<DatasourceInstanceAsset> data, IExtend iExtend, IRelation iRelation) {
+//        return data.stream().map(e ->
+//                wrapVO(e, iExtend, iRelation)
+//        ).collect(Collectors.toList());
+//    }
+
+    @TagsWrapper
+    public void wrap(DsAssetVO.Asset asset, IExtend iExtend, IRelation iRelation) {
+        if (ExtendUtil.isExtend(iExtend)) {
+            wrap(asset);
+            wrapConvertBusinessTypes(asset); // 资产可转换为业务对象
+            if (iRelation.isRelation())
+                wrapRelation(asset);
+            asset.setTree(wrapTree(asset));
+        }
     }
+
 
     public DsAssetVO.Asset wrapVO(DatasourceInstanceAsset datasourceInstanceAsset, IExtend iExtend, IRelation iRelation) {
         DsAssetVO.Asset asset = toVO(datasourceInstanceAsset);
         if (ExtendUtil.isExtend(iExtend)) {
-            tagPacker.wrap(asset);
+            // tagPacker.wrap(asset);
             wrap(asset);
             wrapConvertBusinessTypes(asset); // 资产可转换为业务对象
             if (iRelation.isRelation())

@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -61,7 +62,7 @@ public class DsFacadeImpl implements DsFacade {
     @Override
     public List<DsInstanceVO.Instance> queryDsInstance(DsInstanceParam.DsInstanceQuery query) {
         List<DatasourceInstance> instanceList = dsInstanceService.queryByParam(query);
-        return dsInstancePacker.wrapVOList(instanceList, query);
+        return BeanCopierUtil.copyListProperties(instanceList, DsInstanceVO.Instance.class).stream().peek(e -> dsInstancePacker.wrap(e, query)).collect(Collectors.toList());
     }
 
     @Override

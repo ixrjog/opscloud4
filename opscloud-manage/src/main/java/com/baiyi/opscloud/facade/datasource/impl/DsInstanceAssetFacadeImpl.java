@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.datasource.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -46,13 +47,17 @@ public class DsInstanceAssetFacadeImpl implements DsInstanceAssetFacade {
         DatasourceInstance dsInstance = dsInstanceService.getById(pageQuery.getInstanceId());
         pageQuery.setInstanceUuid(dsInstance.getUuid());
         DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
-        return new DataTable<>(dsAssetPacker.wrapVOList(table.getData(), pageQuery, pageQuery), table.getTotalNum());
+        List<DsAssetVO.Asset> data = BeanCopierUtil.copyListProperties(table.getData(), DsAssetVO.Asset.class).stream().peek(e ->
+                dsAssetPacker.wrap(e, pageQuery, pageQuery)
+        ).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
     public List<DsAssetVO.Asset> querySshKeyAssets(String username) {
         DsInstanceParam.DsInstanceQuery instanceQuery = DsInstanceParam.DsInstanceQuery.builder()
                 .instanceType(DsTypeEnum.GITLAB.getName())
+                .extend(false)
                 .build();
         List<DsInstanceVO.Instance> instances = dsFacade.queryDsInstance(instanceQuery);
         List<DsAssetVO.Asset> result = Lists.newArrayList();

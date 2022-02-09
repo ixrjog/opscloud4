@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.packer.user.am;
 
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
@@ -78,7 +79,11 @@ public class AmPacker {
                 .build();
         List<DatasourceInstanceAsset> data = dsInstanceAssetService.queryAssetByAssetParam(param);
         if (CollectionUtils.isEmpty(data)) return Collections.emptyList();
-        List<DsAssetVO.Asset> assets = dsAssetPacker.wrapVOList(data, SimpleExtend.EXTEND, SimpleRelation.RELATION);
+
+        List<DsAssetVO.Asset> assets = BeanCopierUtil.copyListProperties(data, DsAssetVO.Asset.class).stream().peek(e ->
+                dsAssetPacker.wrap(e, SimpleExtend.EXTEND, SimpleRelation.RELATION)
+        ).collect(Collectors.toList());
+
         Function<DsAssetVO.Asset, AMVO.XAM> converter = context.get(xamType);
         return assets.stream().map(converter).collect(Collectors.toList());
     }
