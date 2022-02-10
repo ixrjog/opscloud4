@@ -54,13 +54,13 @@
         <dependency>
             <groupId>net.javacrumbs.shedlock</groupId>
             <artifactId>shedlock-spring</artifactId>
-            <version>4.30.0</version>
+            <version>4.33.0</version>
         </dependency>
 
         <dependency>
             <groupId>net.javacrumbs.shedlock</groupId>
             <artifactId>shedlock-provider-jdbc-template</artifactId>
-            <version>4.30.0</version>
+            <version>4.33.0</version>
         </dependency>
         <!--   Shedlock 分布式任务锁 -->
 
