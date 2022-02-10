@@ -11,11 +11,14 @@ import com.baiyi.opscloud.service.sys.InstanceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.stream.Collectors;
+
+import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
 
 /**
  * @Author baiyi
@@ -26,6 +29,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
+
+    @Value("${spring.profiles.active}")
+    private String env;
 
     private final InstanceService instanceService;
 
@@ -88,6 +94,7 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
      * 注册Opscloud实例
      */
     private void register() throws UnknownHostException {
+        if (!ENV_PROD.equals(env)) return;
         InetAddress inetAddress = HostUtil.getInetAddress();
         // 已存在
         if (instanceService.getByHostIp(inetAddress.getHostAddress()) != null) return;
