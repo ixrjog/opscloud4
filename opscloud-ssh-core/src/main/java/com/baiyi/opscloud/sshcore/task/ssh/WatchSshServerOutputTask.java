@@ -25,8 +25,7 @@ public class WatchSshServerOutputTask extends AbstractOutputTask {
 
     @Override
     public void write(char[] buf, int off, int len) throws IOException {
-        byte[] byteBuf = toBytes(buf);
-        out.write(byteBuf);
+        out.write(toBytes(buf),off,len);
         out.flush();
     }
 
