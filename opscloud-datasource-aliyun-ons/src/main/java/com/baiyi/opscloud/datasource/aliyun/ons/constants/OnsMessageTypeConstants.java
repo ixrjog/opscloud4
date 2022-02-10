@@ -27,7 +27,11 @@ public enum OnsMessageTypeConstants {
     }
 
     public static String getDesc(int type) {
-        return Arrays.stream(OnsMessageTypeConstants.values()).filter(typeEnum -> typeEnum.getType() == type).findFirst().map(OnsMessageTypeConstants::getDesc).orElse("undefined");
+        return Arrays.stream(OnsMessageTypeConstants.values())
+                .filter(typeEnum -> typeEnum.getType() == type)
+                .findFirst()
+                .map(OnsMessageTypeConstants::getDesc)
+                .orElse("undefined");
     }
 
 }
