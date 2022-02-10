@@ -90,7 +90,6 @@ public class EventLoginCommand extends BaseServerCommand {
             );
 
             RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, sshContext.getSshShellRunnable().getOs());
-            //terminal.enterRawMode();
             TerminalUtil.rawModeSupportVintr(terminal);
             Instant inst1 = Instant.now(); // 计时
             Size size = terminal.getSize();
@@ -105,7 +104,6 @@ public class EventLoginCommand extends BaseServerCommand {
                     printJSchSession(sessionId, instanceId, terminal.reader().read(5L));
                 }
             } catch (Exception e) {
-                // e.printStackTrace();
                 sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);
             } finally {
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);

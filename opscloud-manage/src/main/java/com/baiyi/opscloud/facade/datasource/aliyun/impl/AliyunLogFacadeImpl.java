@@ -24,6 +24,7 @@ import com.baiyi.opscloud.service.datasource.AliyunLogService;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.server.ServerGroupService;
+import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,13 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
     @Override
     public DataTable<AliyunLogMemberVO.LogMember> queryLogMemberPage(AliyunLogMemberParam.LogMemberPageQuery pageQuery) {
         DataTable<AliyunLogMember> table = aliyunLogMemberService.queryAliyunLogMemberByParam(pageQuery);
-        return new DataTable<>(table.getData().stream().map(e -> aliyunLogMemberPacker.wrap(e, pageQuery)).collect(Collectors.toList()), table.getTotalNum());
+
+        List<AliyunLogMemberVO.LogMember> data = Lists.newArrayList();
+
+        if (!CollectionUtils.isEmpty(table.getData())) {
+            data = BeanCopierUtil.copyListProperties(table.getData(), AliyunLogMemberVO.LogMember.class).stream().peek(e -> aliyunLogMemberPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        }
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
@@ -123,7 +130,8 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
     public void pushLogMemberById(Integer id) {
         AliyunLogMember aliyunLogMember = aliyunLogMemberService.getById(id);
         if (aliyunLogMember == null) return;
-        AliyunLogMemberVO.LogMember logMember = aliyunLogMemberPacker.wrap(aliyunLogMember, SimpleExtend.EXTEND);
+        AliyunLogMemberVO.LogMember logMember = BeanCopierUtil.copyProperties(aliyunLogMember, AliyunLogMemberVO.LogMember.class);
+        aliyunLogMemberPacker.wrap(logMember, SimpleExtend.EXTEND);
         AliyunConfig aliyunDsInstanceConfig = (AliyunConfig) getConfig(logMember.getLog().getDatasourceInstanceId());
         MachineGroup machineGroup = aliyunLogMachineGroupHandler.getMachineGroup(aliyunDsInstanceConfig.getAliyun(), logMember.getLog().getProject(), logMember.getServerGroupName());
         if (machineGroup == null) {

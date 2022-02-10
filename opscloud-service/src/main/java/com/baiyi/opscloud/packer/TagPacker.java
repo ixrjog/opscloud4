@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.packer.tag;
+package com.baiyi.opscloud.packer;
 
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;

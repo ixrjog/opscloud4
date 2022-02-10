@@ -28,12 +28,14 @@ import com.baiyi.opscloud.service.sys.EnvService;
 import com.baiyi.opscloud.service.template.BusinessTemplateService;
 import com.baiyi.opscloud.service.template.TemplateService;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -100,7 +102,12 @@ public class TemplateFacadeImpl implements TemplateFacade {
     @Override
     public DataTable<BusinessTemplateVO.BusinessTemplate> queryBusinessTemplatePage(BusinessTemplateParam.BusinessTemplatePageQuery pageQuery) {
         DataTable<BusinessTemplate> table = businessTemplateService.queryPageByParam(pageQuery);
-        return new DataTable<>(businessTemplatePacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+
+        List<BusinessTemplateVO.BusinessTemplate> data = Lists.newArrayList();
+        if (!CollectionUtils.isEmpty(table.getData())) {
+            data = BeanCopierUtil.copyListProperties(table.getData(), BusinessTemplateVO.BusinessTemplate.class).stream().peek(e -> businessTemplatePacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        }
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     private YamlVars.Vars toVars(BusinessTemplate bizTemplate) {
@@ -176,7 +183,10 @@ public class TemplateFacadeImpl implements TemplateFacade {
         bizTemplate.setVars(template.getVars());
         setName(bizTemplate);
         businessTemplateService.add(bizTemplate);
-        return businessTemplatePacker.wrapVO(bizTemplate, SimpleExtend.EXTEND);
+
+        BusinessTemplateVO.BusinessTemplate businessTemplateVO = BeanCopierUtil.copyProperties(bizTemplate, BusinessTemplateVO.BusinessTemplate.class);
+        businessTemplatePacker.wrap(businessTemplateVO, SimpleExtend.EXTEND);
+        return businessTemplateVO;
     }
 
     @Override
@@ -198,7 +208,10 @@ public class TemplateFacadeImpl implements TemplateFacade {
             setName(preBizTemplate);
         }
         businessTemplateService.update(preBizTemplate);
-        return businessTemplatePacker.wrapVO(preBizTemplate, SimpleExtend.EXTEND);
+        BusinessTemplateVO.BusinessTemplate businessTemplateVO = BeanCopierUtil.copyProperties(preBizTemplate, BusinessTemplateVO.BusinessTemplate.class);
+        businessTemplatePacker.wrap(businessTemplateVO, SimpleExtend.EXTEND);
+        return businessTemplateVO;
+
     }
 
     private void setName(BusinessTemplate bizTemplate) {
