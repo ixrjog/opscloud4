@@ -7,10 +7,13 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+
+import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
 
 /**
  * 实例健康检查AOP
@@ -24,6 +27,9 @@ import javax.annotation.Resource;
 @Component
 public class InstanceHealthAspect implements Ordered {
 
+    @Value("${spring.profiles.active}")
+    private String env;
+
     @Resource
     private InstanceFacade instanceFacade;
 
@@ -33,14 +39,17 @@ public class InstanceHealthAspect implements Ordered {
 
     @Around("@annotation(instanceHealth)")
     public Object around(ProceedingJoinPoint joinPoint, InstanceHealth instanceHealth) throws Throwable {
-        if (instanceFacade.isHealth()) {
-            log.info("InstanceHealthAspect: passed !");
-            return joinPoint.proceed();
-        } else {
-            // throw new CommonRuntimeException("InstanceHealthAspect: 当前实例不可用！");
-            log.error("InstanceHealthAspect: 当前实例不可用 !");
-            return joinPoint;
+        if (ENV_PROD.equals(env)) {
+            if (instanceFacade.isHealth()) {
+                log.info("InstanceHealthAspect: passed !");
+                return joinPoint.proceed();
+            } else {
+                // throw new CommonRuntimeException("InstanceHealthAspect: 当前实例不可用！");
+                log.error("InstanceHealthAspect: 当前实例不可用 !");
+                return joinPoint;
+            }
         }
+        return joinPoint.proceed();
     }
 
     @Override
