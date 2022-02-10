@@ -40,7 +40,7 @@ public interface ITicketProcessor<T> {
      *
      * @param ticketEntry
      */
-    void verify(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException;
+    void verify(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException;
 
     T toEntry(String entryContent) throws JsonSyntaxException;
 

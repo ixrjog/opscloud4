@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.facade.workorder.impl;
 
-import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.common.util.WorkflowUtil;
 import com.baiyi.opscloud.domain.DataTable;
@@ -71,7 +70,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     private final TicketNoticeHelper ticketNoticeHelper;
 
     @Override
-    public DataTable<WorkOrderTicketVO.Ticket> queryTicketPage(WorkOrderTicketParam.TicketPageQuery pageQuery){
+    public DataTable<WorkOrderTicketVO.Ticket> queryTicketPage(WorkOrderTicketParam.TicketPageQuery pageQuery) {
         DataTable<WorkOrderTicket> table = ticketService.queryPageByParam(pageQuery);
         return new DataTable<>(table.getData().stream().map(e -> ticketPacker.wrap(e, pageQuery)).collect(Collectors.toList()), table.getTotalNum());
     }
@@ -242,9 +241,9 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         ITicketProcessor iTicketProcessor = WorkOrderTicketProcessorFactory.getByKey(workOrder.getWorkOrderKey());
         if (iTicketProcessor == null)
             throw new TicketCommonException("工单类型不正确！");
-        WorkOrderTicketEntry verificationTicketEntry = BeanCopierUtil.copyProperties(ticketEntry, WorkOrderTicketEntry.class);
-        iTicketProcessor.verify(verificationTicketEntry); // 验证
-        ticketEntryService.add(verificationTicketEntry); // 新增
+        // WorkOrderTicketEntry verificationTicketEntry = BeanCopierUtil.copyProperties(ticketEntry, WorkOrderTicketEntry.class);
+        iTicketProcessor.verify(ticketEntry); // 验证
+        ticketEntryService.add(ticketEntry); // 新增
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketEntryService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketService;
@@ -62,7 +63,7 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
     }
 
     @Override
-    public void verify(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException {
+    public void verify(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         if (ticketEntryService.countByTicketUniqueKey(ticketEntry) != 0)
             throw new TicketVerifyException("校验工单条目失败: 重复申请!");
         verifyHandle(ticketEntry);

@@ -1,11 +1,12 @@
 package com.baiyi.opscloud.domain.param.workorder;
 
+import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -33,47 +34,18 @@ public class WorkOrderTicketEntryParam {
 
     }
 
+    @EqualsAndHashCode(callSuper = true)
     @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class TicketEntry {
-        private Integer id;
+    public static class TicketEntry extends WorkOrderTicketEntry implements Serializable {
 
-        private Integer workOrderTicketId;
+        private static final long serialVersionUID = 7854793943421192263L;
 
-        private String name;
+        private Map<String, String> properties;
 
-        private String instanceUuid;
-
-        private Integer businessType;
-
-        private Integer businessId;
-
-        private Integer entryStatus;
-
-        private String entryKey;
-
-        /**
-         * 角色
-         */
-        private String role;
-
-        /**
-         * 说明
-         */
-        private String comment;
-
-        /**
-         * 内容
-         */
-        private String content;
-
-        /**
-         * 处理结果
-         */
-        private String result;
     }
 
 }
