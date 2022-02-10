@@ -20,7 +20,7 @@ import java.util.Optional;
  * @Version 1.0
  */
 @Component
-public class AwsEc2AssetToServer extends AbstractAssetToBO {
+public class Ec2AssetToServer extends AbstractAssetToBO {
 
     @Override
     public String getAssetType() {

@@ -9,7 +9,7 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetChildProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aliyun.convert.VpcAssetConvert;
+import com.baiyi.opscloud.datasource.aliyun.converter.VpcAssetConverter;
 import com.baiyi.opscloud.datasource.aliyun.ecs.drive.AliyunEcsDrive;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -51,7 +51,7 @@ public class AliyunSecurityGroupProvider extends AbstractAssetChildProvider<Desc
 
     @Override
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeSecurityGroupsResponse.SecurityGroup entity) {
-        return VpcAssetConvert.toAssetContainer(dsInstance, entity);
+        return VpcAssetConverter.toAssetContainer(dsInstance, entity);
     }
 
     @Override

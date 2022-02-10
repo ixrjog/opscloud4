@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.aliyun.convert;
+package com.baiyi.opscloud.datasource.aliyun.converter;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeImagesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
@@ -19,7 +19,7 @@ import java.util.Date;
  * @Date 2021/6/18 3:31 下午
  * @Version 1.0
  */
-public class ComputeAssetConvert {
+public class ComputeAssetConverter {
 
     private static final String VPC = "vpc";
 

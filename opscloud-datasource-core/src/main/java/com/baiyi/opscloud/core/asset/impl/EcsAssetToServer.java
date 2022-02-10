@@ -17,7 +17,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-public class AliyunEcsAssetToServer extends AbstractAssetToBO {
+public class EcsAssetToServer extends AbstractAssetToBO {
 
     @Override
     public String getAssetType() {

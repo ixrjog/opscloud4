@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.core.asset.factory;
 
-import com.baiyi.opscloud.core.asset.IAssetConvert;
+import com.baiyi.opscloud.core.asset.IAssetConverter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -19,13 +19,13 @@ public class AssetConvertFactory {
     private AssetConvertFactory() {
     }
 
-    private static final Map<String, IAssetConvert> context = new ConcurrentHashMap<>();
+    private static final Map<String, IAssetConverter> context = new ConcurrentHashMap<>();
 
-    public static IAssetConvert getIAssetConvertByAssetType(String assetType) {
+    public static IAssetConverter getIAssetConvertByAssetType(String assetType) {
         return context.get(assetType);
     }
 
-    public static void register(IAssetConvert bean) {
+    public static void register(IAssetConverter bean) {
         log.info("AssetConvertFactory注册: beanName = {}", bean.getClass().getSimpleName());
         context.put(bean.getAssetType(), bean);
     }

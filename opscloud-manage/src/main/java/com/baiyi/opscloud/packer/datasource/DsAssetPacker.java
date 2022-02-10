@@ -2,7 +2,7 @@ package com.baiyi.opscloud.packer.datasource;
 
 import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.core.asset.IAssetConvert;
+import com.baiyi.opscloud.core.asset.IAssetConverter;
 import com.baiyi.opscloud.core.asset.factory.AssetConvertFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
@@ -93,7 +93,7 @@ public class DsAssetPacker {
 
     //  to   AssetConvertFactory
     private void wrapConvertBusinessTypes(DsAssetVO.Asset asset) {
-        IAssetConvert iAssetConvert = AssetConvertFactory.getIAssetConvertByAssetType(asset.getAssetType());
+        IAssetConverter iAssetConvert = AssetConvertFactory.getIAssetConvertByAssetType(asset.getAssetType());
         if (iAssetConvert != null) {
             asset.setConvertBusinessTypes(iAssetConvert.toBusinessTypes(asset));
         }

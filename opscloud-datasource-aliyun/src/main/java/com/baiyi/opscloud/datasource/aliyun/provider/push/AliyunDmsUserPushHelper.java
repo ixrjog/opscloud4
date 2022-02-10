@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.aliyun.provider.push;
 
 import com.baiyi.opscloud.core.model.DsInstanceContext;
-import com.baiyi.opscloud.datasource.aliyun.convert.DmsAssetConvert;
+import com.baiyi.opscloud.datasource.aliyun.converter.DmsAssetConverter;
 import com.baiyi.opscloud.datasource.aliyun.dms.entity.DmsUser;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
@@ -65,7 +65,7 @@ public class AliyunDmsUserPushHelper {
             Optional<DatasourceInstanceAssetProperty> optionalProperty
                     = dsInstanceAssetPropertyService.queryByAssetId(r.getId()).stream().filter(e -> "mobilePhone".equals(e.getName())).findFirst();
             if (optionalProperty.isPresent())
-                dmsUserList.add(DmsAssetConvert.toDmsUser(r,
+                dmsUserList.add(DmsAssetConverter.toDmsUser(r,
                         optionalProperty.map(DatasourceInstanceAssetProperty::getValue).orElse(null)));
         });
         return dmsUserList;

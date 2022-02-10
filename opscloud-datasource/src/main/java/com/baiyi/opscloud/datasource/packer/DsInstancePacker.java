@@ -5,7 +5,6 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
-import com.baiyi.opscloud.packer.TagPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import org.apache.commons.lang3.StringUtils;
@@ -22,9 +21,6 @@ import java.util.stream.Collectors;
  */
 @Component
 public class DsInstancePacker {
-
-    @Resource
-    private TagPacker tagPacker;
 
     @Resource
     private DsInstanceAssetService dsInstanceAssetService;

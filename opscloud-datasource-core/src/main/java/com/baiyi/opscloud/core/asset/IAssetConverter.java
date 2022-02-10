@@ -13,7 +13,7 @@ import java.util.Map;
  * @Date 2021/7/30 1:22 下午
  * @Version 1.0
  */
-public interface IAssetConvert extends IAssetType {
+public interface IAssetConverter extends IAssetType {
 
     List<BusinessTypeEnum> getBusinessTypes();
 

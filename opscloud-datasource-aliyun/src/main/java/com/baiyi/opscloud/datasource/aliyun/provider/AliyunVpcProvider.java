@@ -4,7 +4,7 @@ import com.aliyuncs.ecs.model.v20140526.DescribeVpcsResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.datasource.aliyun.convert.VpcAssetConvert;
+import com.baiyi.opscloud.datasource.aliyun.converter.VpcAssetConverter;
 import com.baiyi.opscloud.datasource.aliyun.ecs.drive.AliyunVpcDrive;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
@@ -53,7 +53,7 @@ public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vp
 
     @Override
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeVpcsResponse.Vpc entity) {
-        return VpcAssetConvert.toAssetContainer(dsInstance, entity);
+        return VpcAssetConverter.toAssetContainer(dsInstance, entity);
     }
 
     @Override
