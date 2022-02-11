@@ -56,6 +56,7 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
      */
     abstract protected Class<T> getEntryClassT();
 
+    @Override
     public T toEntry(String entryContent) throws JsonSyntaxException {
         final Gson builder = new GsonBuilder()
                 .registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (jsonElement, type, context) -> new Date(jsonElement.getAsJsonPrimitive().getAsLong())).create();

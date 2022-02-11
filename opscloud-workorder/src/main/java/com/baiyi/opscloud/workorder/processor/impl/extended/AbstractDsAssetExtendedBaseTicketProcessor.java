@@ -56,6 +56,7 @@ public abstract class AbstractDsAssetExtendedBaseTicketProcessor<T, C extends Ba
 
     abstract protected void processHandle(WorkOrderTicketEntry ticketEntry, T entry) throws TicketProcessException;
 
+    @Override
     protected void process(WorkOrderTicketEntry ticketEntry, T entry) throws TicketProcessException {
         processHandle(ticketEntry, entry); // 处理
         pullAsset(ticketEntry, entry); // 同步资产
@@ -76,7 +77,7 @@ public abstract class AbstractDsAssetExtendedBaseTicketProcessor<T, C extends Ba
     /**
      * 更新资产
      *
-     * @param ticketEntry
+     * @param ticketEntry`
      * @param entry
      */
     protected void pullAsset(WorkOrderTicketEntry ticketEntry, T entry) {
