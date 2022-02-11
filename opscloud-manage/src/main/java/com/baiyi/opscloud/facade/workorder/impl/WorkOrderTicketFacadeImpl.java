@@ -20,7 +20,6 @@ import com.baiyi.opscloud.workorder.constants.ApprovalTypeConstants;
 import com.baiyi.opscloud.workorder.constants.NodeTypeConstants;
 import com.baiyi.opscloud.workorder.constants.OrderPhaseCodeConstants;
 import com.baiyi.opscloud.workorder.exception.TicketCommonException;
-import com.baiyi.opscloud.workorder.helper.TicketApproverHelper;
 import com.baiyi.opscloud.workorder.helper.TicketNoticeHelper;
 import com.baiyi.opscloud.workorder.processor.ITicketProcessor;
 import com.baiyi.opscloud.workorder.processor.factory.WorkOrderTicketProcessorFactory;
@@ -64,8 +63,6 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     private final WorkOrderTicketNodeService ticketNodeService;
 
     private final WorkOrderTicketSubscriberFacade ticketSubscriberFacade;
-
-    private final TicketApproverHelper ticketApproverHelper;
 
     private final TicketNoticeHelper ticketNoticeHelper;
 
