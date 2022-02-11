@@ -3,7 +3,6 @@ package com.baiyi.opscloud.facade.user;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
-import com.baiyi.opscloud.domain.param.user.UserAmParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
@@ -51,7 +50,6 @@ public interface UserFacade {
 
     DataTable<ServerVO.Server> queryUserRemoteServerPage(ServerParam.UserRemoteServerPageQuery queryParam);
 
-
     /**
      * 授予用户AccessToken
      *
@@ -67,8 +65,6 @@ public interface UserFacade {
 
     DataTable<UserVO.User> queryBusinessPermissionUserPage(UserBusinessPermissionParam.BusinessPermissionUserPageQuery pageQuery);
 
-    List<AMVO.XAM> queryAms(String username, String amType);
-
-    void grantAmPolicy(UserAmParam.GrantPolicy grantPolicy);
+    List<AMVO.XAM> queryAmsUser(String username, String amType);
 
 }
