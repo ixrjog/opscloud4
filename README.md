@@ -22,6 +22,7 @@ Welcome to the opscloud wiki!
 + AWS数据源接入
   + EC2
   + IAM(策略，用户，AK)
++ 堡垒机密钥支持rsa-4096
 
 ### Tag:4.0.7版本
 + 修复部分问题
