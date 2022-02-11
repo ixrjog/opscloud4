@@ -10,13 +10,13 @@ import lombok.Data;
 public class JenkinsPipeline {
 
     @Data
-    public static class Pipeline  {
+    public static class Pipeline {
+
         private Boolean disabled;
         private String displayName;
         private Long estimatedDurationInMillis;
         private String fullDisplayName;
         private String fullName;
-
 
     }
 

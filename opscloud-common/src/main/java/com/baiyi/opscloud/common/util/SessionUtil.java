@@ -9,13 +9,13 @@ import com.baiyi.opscloud.domain.generator.opscloud.UserToken;
  */
 public class SessionUtil {
 
-    private static ThreadLocal<String> username = new ThreadLocal<>();
+    private static final ThreadLocal<String> username = new ThreadLocal<>();
 
-    private static ThreadLocal<String> token = new ThreadLocal<>();
+    private static final ThreadLocal<String> token = new ThreadLocal<>();
 
-    private static ThreadLocal<Integer> userId = new ThreadLocal<>();
+    private static final ThreadLocal<Integer> userId = new ThreadLocal<>();
 
-    private static ThreadLocal<Boolean> isAdmin = new ThreadLocal<>();
+    private static final ThreadLocal<Boolean> isAdmin = new ThreadLocal<>();
 
     public static void setUserToken(UserToken userToken) {
         username.set(userToken.getUsername());

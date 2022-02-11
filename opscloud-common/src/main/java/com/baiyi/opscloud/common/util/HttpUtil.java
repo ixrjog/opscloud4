@@ -39,7 +39,7 @@ public class HttpUtil {
         return httpRequest;
     }
 
-    public static JsonNode httpGetExecutor(String url, RequestConfig requestConfig, Map<String, String> headers) throws IOException {
+    private static JsonNode httpGetExecutor(String url, RequestConfig requestConfig, Map<String, String> headers) throws IOException {
         HttpGet httpGet = (HttpGet) setHttpHeader(new HttpGet(url), requestConfig, headers);
         HttpClient httpClient =
                 HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
@@ -49,7 +49,7 @@ public class HttpUtil {
         return readTree(data);
     }
 
-    public static JsonNode httpPostExecutor(String url, Object param, RequestConfig requestConfig, Map<String, String> headers) throws IOException {
+    private static JsonNode httpPostExecutor(String url, Object param, RequestConfig requestConfig, Map<String, String> headers) throws IOException {
         HttpPost httpPost = (HttpPost) setHttpHeader(new HttpPost(url), requestConfig, headers);
         httpPost.setEntity(new StringEntity(JSONUtil.writeValueAsString(param), UTF_8));
         HttpClient httpClient =
@@ -60,7 +60,7 @@ public class HttpUtil {
         return readTree(data);
     }
 
-    public static JsonNode httpPutExecutor(String url, Object param, RequestConfig requestConfig, Map<String, String> headers) throws IOException {
+    private static JsonNode httpPutExecutor(String url, Object param, RequestConfig requestConfig, Map<String, String> headers) throws IOException {
         HttpPut httpPut = (HttpPut) setHttpHeader(new HttpPut(url), requestConfig, headers);
         httpPut.setEntity(new StringEntity(JSONUtil.writeValueAsString(param), UTF_8));
         HttpClient httpClient =
@@ -71,7 +71,7 @@ public class HttpUtil {
         return readTree(data);
     }
 
-    public static JsonNode httpDeleteExecutor(String url, RequestConfig requestConfig, Map<String, String> headers) throws IOException {
+    private static JsonNode httpDeleteExecutor(String url, RequestConfig requestConfig, Map<String, String> headers) throws IOException {
         HttpDelete httpDelete = (HttpDelete) setHttpHeader(new HttpDelete(url), requestConfig, headers);
         HttpClient httpClient = HttpClients.createDefault();
         HttpResponse response = httpClient.execute(httpDelete, new HttpClientContext());
@@ -83,7 +83,7 @@ public class HttpUtil {
     public static JsonNode httpPatchExecutor(String url, Object param, RequestConfig requestConfig, Map<String, String> headers) throws IOException {
         HttpPatch httpPatch = (HttpPatch) setHttpHeader(new HttpPatch(url), requestConfig, headers);
         httpPatch.setEntity(new StringEntity(JSONUtil.writeValueAsString(param), UTF_8));
-        HttpClient httpClient =  HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
+        HttpClient httpClient = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
         HttpResponse response = httpClient.execute(httpPatch, new HttpClientContext());
         HttpEntity entity = response.getEntity();
         byte[] data = EntityUtils.toByteArray(entity);

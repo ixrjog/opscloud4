@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class JsonNodeMapperUtil {
 
-    public static <T> List<T> mapperList(JsonNode jsonNode, Class<T> tClass) {
+    private static <T> List<T> mapperList(JsonNode jsonNode, Class<T> tClass) {
         List<T> list = Lists.newArrayList();
         Iterator<JsonNode> iterator = jsonNode.elements();
         while (iterator.hasNext()) {
@@ -25,7 +25,7 @@ public class JsonNodeMapperUtil {
         return list;
     }
 
-    public static <T> T mapper(JsonNode jsonNode, Class<T> tClass) {
+    private static <T> T mapper(JsonNode jsonNode, Class<T> tClass) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.readValue(jsonNode.toString(), tClass);

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.jenkins.convert;
+package com.baiyi.opscloud.datasource.jenkins.converter;
 
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
@@ -12,7 +12,7 @@ import com.offbytwo.jenkins.model.ComputerWithDetails;
  * @Date 2021/7/2 10:18 上午
  * @Version 1.0
  */
-public class ComputerAssetConvert {
+public class ComputerAssetConverter {
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ComputerWithDetails entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()

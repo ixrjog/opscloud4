@@ -31,11 +31,19 @@ public class UserAmFacade {
         log.info("AM Processor注册: dsType = {} , beanName = {}  ", bean.getDsType(), bean.getClass().getSimpleName());
     }
 
+    /**
+     * 授权策略
+     * @param grantPolicy
+     */
     public void grantPolicy(UserAmParam.GrantPolicy grantPolicy) {
         IXamProcessor xamProcessor = getAmProcessorByInstanceUuid(grantPolicy.getInstanceUuid());
         xamProcessor.grantPolicy(grantPolicy);
     }
 
+    /**
+     * 撤销已授权策略
+     * @param revokePolicy
+     */
     public void revokePolicy(UserAmParam.RevokePolicy revokePolicy) {
         IXamProcessor xamProcessor = getAmProcessorByInstanceUuid(revokePolicy.getInstanceUuid());
         xamProcessor.revokePolicy(revokePolicy);
