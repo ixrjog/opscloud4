@@ -1,14 +1,14 @@
 package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
-import com.baiyi.opscloud.datasource.facade.UserRamFacade;
+import com.baiyi.opscloud.datasource.facade.UserAmFacade;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
+import com.baiyi.opscloud.domain.param.user.UserAmParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
-import com.baiyi.opscloud.domain.param.user.UserRamParam;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.*;
@@ -43,7 +43,7 @@ public class UserController {
 
     private final UserPermissionFacade permissionFacade;
 
-    private final UserRamFacade userRamFacade;
+    private final UserAmFacade userAmFacade;
 
     @ApiOperation(value = "查询用户前端界面信息(菜单&UI鉴权)")
     @GetMapping(value = "/ui/info/get", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -195,31 +195,31 @@ public class UserController {
         return HttpResult.SUCCESS;
     }
 
-    @ApiOperation(value = "创建RAM账户")
-    @PostMapping(value = "/ram/user/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> createRamUser(@RequestBody @Valid UserRamParam.CreateRamUser createRamUser) {
-        userRamFacade.createRamUser(createRamUser);
-        return HttpResult.SUCCESS;
-    }
-
-    @ApiOperation(value = "授权RAM账户策略")
-    @PostMapping(value = "/ram/policy/grant", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> grantRamPolicy(@RequestBody @Valid UserRamParam.GrantRamPolicy grantRamPolicy) {
-        userRamFacade.grantRamPolicy(grantRamPolicy);
-        return HttpResult.SUCCESS;
-    }
-
-    @ApiOperation(value = "撤销RAM账户策略")
-    @PutMapping(value = "/ram/policy/revoke", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> revokeRamPolicy(@RequestBody @Valid UserRamParam.RevokeRamPolicy revokeRamPolicy) {
-        userRamFacade.revokeRamPolicy(revokeRamPolicy);
-        return HttpResult.SUCCESS;
-    }
-
     @ApiOperation(value = "查询用户AM授权信息")
     @GetMapping(value = "/am/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<List<AMVO.XAM>> queryAms(@RequestParam @Valid String username, @Valid String amType) {
         return new HttpResult<>(userFacade.queryAms(username, amType));
+    }
+
+    @ApiOperation(value = "创建AM用户")
+    @PostMapping(value = "/am/user/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> createAmUser(@RequestBody @Valid UserAmParam.CreateUser createUser) {
+        userAmFacade.createUser(createUser);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "授权AM用户策略")
+    @PostMapping(value = "/am/policy/grant", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> grantAmPolicy(@RequestBody @Valid UserAmParam.GrantPolicy grantPolicy) {
+        userAmFacade.grantPolicy(grantPolicy);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "撤销AM用户策略")
+    @PutMapping(value = "/am/policy/revoke", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> revokeAmPolicy(@RequestBody @Valid UserAmParam.RevokePolicy revokePolicy) {
+        userAmFacade.revokePolicy(revokePolicy);
+        return HttpResult.SUCCESS;
     }
 
 }

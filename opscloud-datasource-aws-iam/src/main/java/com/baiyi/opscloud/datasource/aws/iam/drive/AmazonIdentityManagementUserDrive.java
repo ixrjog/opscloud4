@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 @Component
 public class AmazonIdentityManagementUserDrive {
 
+    public static final boolean NO_PASSWORD_RESET_REQUIRED = false;
+
     // https://docs.aws.amazon.com/zh_cn/IAM/latest/APIReference/API_ListEntitiesForPolicy.html
     private interface EntityFilter {
         String USER = "User";
@@ -32,6 +34,38 @@ public class AmazonIdentityManagementUserDrive {
     private interface PolicyUsageFilter {
         String POLICY = "PermissionsPolicy";
         String BOUNDARY = "PermissionsBoundary";
+    }
+
+    /**
+     * https://docs.aws.amazon.com/zh_cn/IAM/latest/APIReference/API_CreateUser.html
+     *
+     * @param config
+     */
+    public IamUser.User createUser(AwsConfig.Aws config, com.baiyi.opscloud.domain.generator.opscloud.User user, boolean createLoginProfile) {
+        CreateUserRequest request = new CreateUserRequest();
+        request.setUserName(user.getUsername());
+        CreateUserResult result = buildAmazonIdentityManagement(config).createUser(request);
+        if (createLoginProfile) {
+            this.createLoginProfile(config, user, NO_PASSWORD_RESET_REQUIRED);
+        }
+        return BeanCopierUtil.copyProperties(result.getUser(), IamUser.User.class);
+    }
+
+    /**
+     * https://docs.aws.amazon.com/zh_cn/IAM/latest/APIReference/API_CreateLoginProfile.html
+     *
+     * @param config
+     * @param user
+     * @param passwordResetRequired
+     * @return
+     */
+    private LoginProfile createLoginProfile(AwsConfig.Aws config, com.baiyi.opscloud.domain.generator.opscloud.User user, boolean passwordResetRequired) {
+        CreateLoginProfileRequest request = new CreateLoginProfileRequest();
+        request.setUserName(user.getUsername());
+        request.setPassword(user.getPassword());
+        request.setPasswordResetRequired(passwordResetRequired);
+        CreateLoginProfileResult result = buildAmazonIdentityManagement(config).createLoginProfile(request);
+        return result.getLoginProfile();
     }
 
     public List<IamUser.User> listUsers(AwsConfig.Aws config) {

@@ -34,6 +34,7 @@ public class NoticeManager {
         String CREATE_USER = "CREATE_USER";
         String UPDATE_USER_PASSWORD = "UPDATE_USER_PASSWORD";
         String CREATE_RAM_USER = "CREATE_RAM_USER";
+        String CREATE_IAM_USER = "CREATE_IAM_USER";
         String TICKET_APPROVE = "TICKET_APPROVE";
         String TICKET_END = "TICKET_END";
     }

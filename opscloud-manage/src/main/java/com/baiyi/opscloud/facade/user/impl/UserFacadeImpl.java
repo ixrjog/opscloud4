@@ -19,6 +19,7 @@ import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.SimpleRelation;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
+import com.baiyi.opscloud.domain.param.user.UserAmParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
@@ -264,6 +265,15 @@ public class UserFacadeImpl implements UserFacade {
                 .username(username)
                 .build();
         return amPacker.toAms(vo, amType);
+    }
+
+    /**
+     * 授权用户策略
+     * @param grantPolicy
+     */
+    @Override
+    public void grantAmPolicy(UserAmParam.GrantPolicy grantPolicy) {
+
     }
 
 }

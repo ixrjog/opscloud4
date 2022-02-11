@@ -1,11 +1,11 @@
 package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.datasource.facade.UserRamFacade;
+import com.baiyi.opscloud.datasource.facade.UserAmFacade;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
-import com.baiyi.opscloud.domain.param.user.UserRamParam;
+import com.baiyi.opscloud.domain.param.user.UserAmParam;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
@@ -27,23 +27,23 @@ import javax.annotation.Resource;
 public class RamPolicyTicketProcessor extends AbstractDsAssetPermissionExtendedBaseTicketProcessor {
 
     @Resource
-    private UserRamFacade userRamFacade;
+    private UserAmFacade userAmFacade;
 
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
         User createUser = queryCreateUser(ticketEntry);
         preProcess(ticketEntry,createUser);
-        UserRamParam.Policy policy = UserRamParam.Policy.builder()
+        UserAmParam.Policy policy = UserAmParam.Policy.builder()
                 .policyName(entry.getAssetId())
                 .policyType(entry.getAssetKey())
                 .build();
-        UserRamParam.GrantRamPolicy grantRamPolicy = UserRamParam.GrantRamPolicy.builder()
+        UserAmParam.GrantPolicy grantPolicy = UserAmParam.GrantPolicy.builder()
                 .instanceUuid(ticketEntry.getInstanceUuid())
                 .username(createUser.getUsername())
                 .policy(policy)
                 .build();
         try {
-            userRamFacade.grantRamPolicy(grantRamPolicy);
+            userAmFacade.grantPolicy(grantPolicy);
         } catch (Exception e) {
             throw new TicketProcessException("工单授权策略失败: " + e.getMessage());
         }
@@ -55,11 +55,11 @@ public class RamPolicyTicketProcessor extends AbstractDsAssetPermissionExtendedB
      * @param user
      */
     private void preProcess(WorkOrderTicketEntry ticketEntry,User user) {
-        UserRamParam.CreateRamUser createRamUser = UserRamParam.CreateRamUser.builder()
+        UserAmParam.CreateUser createUser = UserAmParam.CreateUser.builder()
                 .instanceUuid(ticketEntry.getInstanceUuid())
                 .username(user.getUsername())
                 .build();
-        userRamFacade.createRamUser(createRamUser);
+        userAmFacade.createUser(createUser);
     }
 
     @Override

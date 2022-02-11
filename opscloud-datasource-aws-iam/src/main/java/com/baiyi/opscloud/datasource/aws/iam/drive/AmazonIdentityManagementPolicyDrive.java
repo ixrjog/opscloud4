@@ -29,6 +29,32 @@ public class AmazonIdentityManagementPolicyDrive {
         return policies.stream().collect(Collectors.toMap(IamPolicy.Policy::getPolicyName, a -> a, (k1, k2) -> k1));
     }
 
+    /**
+     * https://docs.aws.amazon.com/IAM/latest/APIReference/API_AttachUserPolicy.html
+     * @param config
+     * @param userName
+     * @param policy
+     */
+    public void attachUserPolicy(AwsConfig.Aws config, String userName, IamPolicy.Policy policy) {
+        AttachUserPolicyRequest request = new AttachUserPolicyRequest();
+        request.setUserName(userName);
+        request.setPolicyArn(policy.getArn());
+        buildAmazonIdentityManagement(config).attachUserPolicy(request);
+    }
+
+    /**
+     * https://docs.aws.amazon.com/IAM/latest/APIReference/API_DetachUserPolicy.html
+     * @param config
+     * @param userName
+     * @param policy
+     */
+    public void detachUserPolicy(AwsConfig.Aws config, String userName, IamPolicy.Policy policy){
+        DetachUserPolicyRequest request = new DetachUserPolicyRequest();
+        request.setUserName(userName);
+        request.setPolicyArn(policy.getArn());
+        buildAmazonIdentityManagement(config).detachUserPolicy(request);
+    }
+
     public List<IamPolicy.Policy> listPolicies(AwsConfig.Aws config) {
         ListPoliciesRequest request = new ListPoliciesRequest();
         List<Policy> policies = Lists.newArrayList();
