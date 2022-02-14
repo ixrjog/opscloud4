@@ -8,6 +8,7 @@ package com.baiyi.opscloud.workorder.constants;
 public enum WorkOrderKeyConstants {
 
     RAM_POLICY,
+    IAM_POLICY,
     ONS_ROCKETMQ_TOPIC,
     ONS_ROCKETMQ_GROUP,
 
