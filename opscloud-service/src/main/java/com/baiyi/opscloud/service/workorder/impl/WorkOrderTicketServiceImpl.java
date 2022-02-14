@@ -3,6 +3,7 @@ package com.baiyi.opscloud.service.workorder.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam;
+import com.baiyi.opscloud.domain.vo.workorder.WorkOrderReportVO;
 import com.baiyi.opscloud.mapper.opscloud.WorkOrderTicketMapper;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketService;
 import com.github.pagehelper.Page;
@@ -28,6 +29,11 @@ public class WorkOrderTicketServiceImpl implements WorkOrderTicketService {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<WorkOrderTicket> data = workOrderTicketMapper.queryPageByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
+    }
+
+    @Override
+    public List<WorkOrderReportVO.Report> queryReportByName() {
+        return workOrderTicketMapper.queryReportByName();
     }
 
     @Override

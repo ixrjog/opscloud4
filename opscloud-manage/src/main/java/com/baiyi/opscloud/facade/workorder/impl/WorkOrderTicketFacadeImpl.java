@@ -18,7 +18,7 @@ import com.baiyi.opscloud.workorder.approve.ITicketApprove;
 import com.baiyi.opscloud.workorder.approve.factory.WorkOrderTicketApproveFactory;
 import com.baiyi.opscloud.workorder.constants.ApprovalTypeConstants;
 import com.baiyi.opscloud.workorder.constants.NodeTypeConstants;
-import com.baiyi.opscloud.workorder.constants.OrderPhaseCodeConstants;
+import com.baiyi.opscloud.workorder.constants.OrderTicketPhaseCodeConstants;
 import com.baiyi.opscloud.workorder.exception.TicketCommonException;
 import com.baiyi.opscloud.workorder.helper.TicketNoticeHelper;
 import com.baiyi.opscloud.workorder.processor.ITicketProcessor;
@@ -104,7 +104,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         preSaveHandle(ticket, submitTicket);
         verifyTicket(ticket);  // 验证工单完整性
         // 提交工单 变更工单进度
-        ticket.setTicketPhase(OrderPhaseCodeConstants.TOAUDIT.name());
+        ticket.setTicketPhase(OrderTicketPhaseCodeConstants.TOAUDIT.name());
         // 设置工单开始时间
         ticket.setStartTime(new Date());
         ticketService.update(ticket);
@@ -151,7 +151,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         final String username = SessionUtil.getUsername();
         if (!workOrderTicket.getUsername().equals(username))
             throw new TicketCommonException("只有本人才能保存工单！");
-        if (!OrderPhaseCodeConstants.NEW.name().equals(workOrderTicket.getTicketPhase()))
+        if (!OrderTicketPhaseCodeConstants.NEW.name().equals(workOrderTicket.getTicketPhase()))
             throw new TicketCommonException("工单状态不允许变更！");
         saveTicketComment(workOrderTicket, saveTicket);
         WorkOrder workOrder = workOrderService.getById(workOrderTicket.getWorkOrderId());
@@ -189,7 +189,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
                 .username(username)
                 .userId(user.getId())
                 .workOrderId(workOrder.getId())
-                .ticketPhase(OrderPhaseCodeConstants.NEW.name())
+                .ticketPhase(OrderTicketPhaseCodeConstants.NEW.name())
                 .ticketStatus(0)
                 .build();
         ticketService.add(workOrderTicket);
@@ -249,7 +249,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         if (ticketEntry == null)
             throw new TicketCommonException("工单条目不存在！");
         WorkOrderTicket workOrderTicket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
-        if (!OrderPhaseCodeConstants.NEW.name().equals(workOrderTicket.getTicketPhase()))
+        if (!OrderTicketPhaseCodeConstants.NEW.name().equals(workOrderTicket.getTicketPhase()))
             throw new TicketCommonException("只有新建工单才能修改或删除条目！");
         ticketEntryService.deleteById(ticketEntryId);
     }

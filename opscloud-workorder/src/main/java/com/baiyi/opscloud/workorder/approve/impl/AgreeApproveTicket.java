@@ -8,7 +8,8 @@ import com.baiyi.opscloud.service.workorder.WorkOrderService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketEntryService;
 import com.baiyi.opscloud.workorder.approve.impl.base.AbstractApproveTicket;
 import com.baiyi.opscloud.workorder.constants.ApprovalTypeConstants;
-import com.baiyi.opscloud.workorder.constants.OrderPhaseCodeConstants;
+import com.baiyi.opscloud.workorder.constants.OrderTicketPhaseCodeConstants;
+import com.baiyi.opscloud.workorder.constants.OrderTicketStatusConstants;
 import com.baiyi.opscloud.workorder.constants.ProcessStatusConstants;
 import com.baiyi.opscloud.workorder.processor.ITicketProcessor;
 import com.baiyi.opscloud.workorder.processor.factory.WorkOrderTicketProcessorFactory;
@@ -45,7 +46,7 @@ public class AgreeApproveTicket extends AbstractApproveTicket {
         WorkOrderTicketNode nextNode = ticketNodeService.getByUniqueKey(ticket.getId(), ticketNode.getId());
         if (nextNode == null) {
             log.info("工单审批结束开始自动执行: ticketId = {} , createUser = {}", ticket.getId(), ticket.getCreateTime());
-            ticket.setTicketPhase(OrderPhaseCodeConstants.PROCESSING.name());
+            ticket.setTicketPhase(OrderTicketPhaseCodeConstants.PROCESSING.name());
             updateTicket(ticket, false);
             processing(ticket); // 开始执行
             statisticalResults(ticket);
@@ -56,16 +57,17 @@ public class AgreeApproveTicket extends AbstractApproveTicket {
         }
     }
 
-
     private void statisticalResults(WorkOrderTicket ticket) {
         List<WorkOrderTicketEntry> entries = queryTicketEntries(ticket);
         Optional<WorkOrderTicketEntry> entryOptional = entries.stream().filter(entry -> entry.getEntryStatus() == ProcessStatusConstants.FAILED.getStatus()).findFirst();
         if (entryOptional.isPresent()) {
             // 失败
-            ticket.setTicketPhase(OrderPhaseCodeConstants.FAILED.name());
+            ticket.setTicketPhase(OrderTicketPhaseCodeConstants.FAILED.name());
+            ticket.setTicketStatus(OrderTicketStatusConstants.FAILED.getStatus());
         } else {
             // 成功
-            ticket.setTicketPhase(OrderPhaseCodeConstants.SUCCESS.name());
+            ticket.setTicketPhase(OrderTicketPhaseCodeConstants.SUCCESS.name());
+            ticket.setTicketStatus(OrderTicketStatusConstants.SUCCESS.getStatus());
         }
         updateTicket(ticket, true);
     }

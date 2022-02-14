@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrder;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.notice.INoticeMessage;
-import com.baiyi.opscloud.workorder.constants.OrderPhaseCodeConstants;
+import com.baiyi.opscloud.workorder.constants.OrderTicketPhaseCodeConstants;
 import com.baiyi.opscloud.workorder.helper.strategy.base.AbstractSendNotice;
 import com.baiyi.opscloud.workorder.model.TicketNoticeModel;
 import com.google.common.collect.Lists;
@@ -31,9 +31,9 @@ public class SendEndNotice extends AbstractSendNotice {
 
     @Override
     public Set<String> getPhases() {
-        return Sets.newHashSet(OrderPhaseCodeConstants.SUCCESS.getPhase(),
-                OrderPhaseCodeConstants.FAILED.getPhase(),
-                OrderPhaseCodeConstants.REJECT.getPhase());
+        return Sets.newHashSet(OrderTicketPhaseCodeConstants.SUCCESS.getPhase(),
+                OrderTicketPhaseCodeConstants.FAILED.getPhase(),
+                OrderTicketPhaseCodeConstants.REJECT.getPhase());
     }
 
     @Override
@@ -42,7 +42,7 @@ public class SendEndNotice extends AbstractSendNotice {
         return TicketNoticeModel.EndNoticeMessage.builder()
                 .ticketId(ticket.getId())
                 .workOrderName(workOrder.getName())
-                .result(OrderPhaseCodeConstants.getEnum(ticket.getTicketPhase()).getResult())
+                .result(OrderTicketPhaseCodeConstants.getEnum(ticket.getTicketPhase()).getResult())
                 .build();
     }
 

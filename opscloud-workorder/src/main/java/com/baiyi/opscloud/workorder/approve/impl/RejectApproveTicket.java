@@ -4,7 +4,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketNode;
 import com.baiyi.opscloud.workorder.approve.impl.base.AbstractApproveTicket;
 import com.baiyi.opscloud.workorder.constants.ApprovalTypeConstants;
-import com.baiyi.opscloud.workorder.constants.OrderPhaseCodeConstants;
+import com.baiyi.opscloud.workorder.constants.OrderTicketPhaseCodeConstants;
+import com.baiyi.opscloud.workorder.constants.OrderTicketStatusConstants;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,7 +23,8 @@ public class RejectApproveTicket extends AbstractApproveTicket {
 
     @Override
     protected void postHandle(WorkOrderTicket ticket, WorkOrderTicketNode ticketNode) {
-        ticket.setTicketPhase(OrderPhaseCodeConstants.REJECT.name());
+        ticket.setTicketPhase(OrderTicketPhaseCodeConstants.REJECT.name());
+        ticket.setTicketStatus(OrderTicketStatusConstants.FAILED.getStatus());
         updateTicket(ticket, true);
     }
 

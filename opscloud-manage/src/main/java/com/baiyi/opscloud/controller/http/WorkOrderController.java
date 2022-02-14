@@ -6,10 +6,12 @@ import com.baiyi.opscloud.domain.param.workorder.WorkOrderGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam;
+import com.baiyi.opscloud.domain.vo.workorder.WorkOrderReportVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderViewVO;
 import com.baiyi.opscloud.facade.workorder.WorkOrderFacade;
+import com.baiyi.opscloud.facade.workorder.WorkOrderReportFacade;
 import com.baiyi.opscloud.facade.workorder.WorkOrderTicketFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +36,8 @@ public class WorkOrderController {
     private final WorkOrderFacade workOrderFacade;
 
     private final WorkOrderTicketFacade workOrderTicketFacade;
+
+    private final WorkOrderReportFacade workOrderReportFacade;
 
     @ApiOperation(value = "分页查询工单配置")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -153,6 +157,12 @@ public class WorkOrderController {
     @GetMapping(value = "/ticket/view/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<WorkOrderTicketVO.TicketView> getTicketView(@RequestParam @Valid int ticketId) {
         return new HttpResult<>(workOrderTicketFacade.getTicket(ticketId));
+    }
+
+    @ApiOperation(value = "工单报表(按名称汇总)")
+    @GetMapping(value = "/report/name", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<WorkOrderReportVO.Report>> queryTicketReportByName() {
+        return new HttpResult<>(workOrderReportFacade.queryTicketReportByName());
     }
 
 }

@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketNodeService;
 import com.baiyi.opscloud.workorder.constants.ApprovalTypeConstants;
-import com.baiyi.opscloud.workorder.constants.OrderPhaseCodeConstants;
+import com.baiyi.opscloud.workorder.constants.OrderTicketPhaseCodeConstants;
 import com.baiyi.opscloud.workorder.constants.StageConstants;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class TicketNodePacker {
     private final UserService userService;
 
     public void wrap(WorkOrderTicketVO.TicketView ticketView) {
-        if (OrderPhaseCodeConstants.NEW.name().equals(ticketView.getTicket().getTicketPhase()))
+        if (OrderTicketPhaseCodeConstants.NEW.name().equals(ticketView.getTicket().getTicketPhase()))
             return; // 新建工单不需要展示审批视图
         int parentId = 0;
         List<WorkOrderNodeVO.Stage> stages = Lists.newArrayList();

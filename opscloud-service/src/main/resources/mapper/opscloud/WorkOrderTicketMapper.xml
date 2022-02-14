@@ -48,4 +48,21 @@
         order by id desc
     </select>
 
+    <!--    report-->
+    <resultMap id="ReportResultMap" type="com.baiyi.opscloud.domain.vo.workorder.WorkOrderReportVO$Report">
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="value" jdbcType="INTEGER" property="value"/>
+    </resultMap>
+
+    <select id="queryReportByName" resultMap="ReportResultMap">
+        select a1.name as `name`, count(*) as `value`
+        from work_order_ticket a0
+                 join work_order a1 on a1.id = a0.work_order_id
+        where a0.ticket_phase = 'SUCCESS' and a0.end_time is not null
+        group by a0.work_order_id
+        order by a0.work_order_id;
+    </select>
+
+
+
 </mapper>

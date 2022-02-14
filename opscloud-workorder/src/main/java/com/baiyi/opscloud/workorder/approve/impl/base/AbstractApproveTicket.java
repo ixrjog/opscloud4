@@ -62,7 +62,6 @@ public abstract class AbstractApproveTicket implements ITicketApprove, Initializ
         postHandle(ticket, ticketNode);
     }
 
-
     abstract protected void postHandle(WorkOrderTicket ticket, WorkOrderTicketNode ticketNode);
 
     protected void updateTicket(WorkOrderTicket ticket, boolean isFinished) {

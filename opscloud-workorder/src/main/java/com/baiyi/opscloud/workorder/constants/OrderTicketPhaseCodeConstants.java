@@ -12,7 +12,7 @@ import java.util.Arrays;
  * @Version 1.0
  */
 @Getter
-public enum OrderPhaseCodeConstants {
+public enum OrderTicketPhaseCodeConstants {
 
     NEW("NEW", "新建"),
     TOAUDIT("TOAUDIT", "工单申请中！"),
@@ -26,12 +26,12 @@ public enum OrderPhaseCodeConstants {
     private final String phase;
     private final String result;
 
-    OrderPhaseCodeConstants(String phase, String result) {
+    OrderTicketPhaseCodeConstants(String phase, String result) {
         this.phase = phase;
         this.result = result;
     }
 
-    public static OrderPhaseCodeConstants getEnum(String phase) {
-        return Arrays.stream(OrderPhaseCodeConstants.values()).filter(phaseCodeConstants -> phaseCodeConstants.getPhase().equals(phase)).findFirst().orElse(null);
+    public static OrderTicketPhaseCodeConstants getEnum(String phase) {
+        return Arrays.stream(OrderTicketPhaseCodeConstants.values()).filter(phaseCodeConstants -> phaseCodeConstants.getPhase().equals(phase)).findFirst().orElse(null);
     }
 }

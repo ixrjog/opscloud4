@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.notice.INoticeMessage;
 import com.baiyi.opscloud.domain.vo.workorder.WorkflowVO;
 import com.baiyi.opscloud.workorder.constants.NodeTypeConstants;
-import com.baiyi.opscloud.workorder.constants.OrderPhaseCodeConstants;
+import com.baiyi.opscloud.workorder.constants.OrderTicketPhaseCodeConstants;
 import com.baiyi.opscloud.workorder.helper.strategy.base.AbstractSendNotice;
 import com.baiyi.opscloud.workorder.model.TicketNoticeModel;
 import com.google.common.base.Joiner;
@@ -29,7 +29,7 @@ public class SendAuditNotice extends AbstractSendNotice {
 
     @Override
     public Set<String> getPhases() {
-        return Sets.newHashSet(OrderPhaseCodeConstants.TOAUDIT.getPhase());
+        return Sets.newHashSet(OrderTicketPhaseCodeConstants.TOAUDIT.getPhase());
     }
 
     @Override
