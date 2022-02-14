@@ -4,12 +4,9 @@ import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.packer.auth.AuthRolePacker;
-import com.baiyi.opscloud.packer.desensitized.DesensitizedPacker;
 import com.baiyi.opscloud.packer.user.UserAccessTokenPacker;
 import com.baiyi.opscloud.packer.user.UserCredentialPacker;
 import com.baiyi.opscloud.packer.user.am.AmPacker;
-import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
-import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,13 +23,7 @@ public class UserPackerDelegate {
 
     private final UserCredentialPacker userCredentialPacker;
 
-    private final DesensitizedPacker<UserVO.User> desensitizedPacker;
-
-    private final UserService userService;
-
     private final UserAccessTokenPacker userAccessTokenPacker;
-
-    private final DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
 
     private final AmPacker amPacker;
 

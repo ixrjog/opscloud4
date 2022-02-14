@@ -93,7 +93,10 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {
         DataTable<User> table = userService.queryPageByParam(pageQuery);
-        List<UserVO.User> data = BeanCopierUtil.copyListProperties(table.getData(), UserVO.User.class).stream().peek(e -> userPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        List<UserVO.User> data = BeanCopierUtil.copyListProperties(table.getData(), UserVO.User.class)
+                .stream()
+                .peek(e -> userPacker.wrap(e, pageQuery)).
+                collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 

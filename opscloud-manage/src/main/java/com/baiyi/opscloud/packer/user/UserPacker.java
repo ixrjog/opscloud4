@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.packer.user;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.RegexUtil;
 import com.baiyi.opscloud.domain.DataTable;
@@ -63,7 +64,7 @@ public class UserPacker implements IPacker<UserVO.User, User> {
     public List<UserVO.User> wrapVOList(List<User> data) {
         List<UserVO.User> userList = BeanCopierUtil.copyListProperties(data, UserVO.User.class);
         return userList.stream()
-                .map(desensitizedPacker::desensitized)
+                .peek(desensitizedPacker::desensitized)
                 .collect(Collectors.toList());
     }
 
@@ -87,9 +88,14 @@ public class UserPacker implements IPacker<UserVO.User, User> {
 
     public void wrap(UserVO.User user, IExtend iExtend) {
         userPackerDelegate.wrap(user, iExtend);
-        wrapPermission(user);
-        // 插入头像
-        wrapAvatar(user);
+        if (ExtendUtil.isExtend(iExtend)) {
+            wrapPermission(user);
+            // 插入头像
+            wrapAvatar(user);
+        }
+        // 数据脱敏
+        desensitizedPacker.desensitized(user);
+        System.err.println(user);
     }
 
     public void wrap(UserVO.IUser iUser) {

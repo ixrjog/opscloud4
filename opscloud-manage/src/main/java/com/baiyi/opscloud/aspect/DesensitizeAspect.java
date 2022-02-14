@@ -6,8 +6,8 @@ import com.baiyi.opscloud.domain.constants.SensitiveTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
@@ -30,11 +30,12 @@ public class DesensitizeAspect {
     public void action() {
     }
 
-    @Around(value = "action()")
-    public Object doAround(ProceedingJoinPoint pjp) throws Throwable {
-        Object result = pjp.proceed();
-        handleDesensitized(result);
-        return result;
+    @After(value = "action()")
+    public void doAfter(JoinPoint joinPoint) throws IllegalAccessException {
+        Object[] args = joinPoint.getArgs();
+        for (Object object : args) {
+            handleDesensitized(object);
+        }
     }
 
     private void handleDesensitized(Object resultObj) throws IllegalAccessException {
@@ -63,7 +64,8 @@ public class DesensitizeAspect {
                 return value;
             case PASSWORD:
                 return Strings.EMPTY;
+            default:
+                return Strings.EMPTY;
         }
-        return Strings.EMPTY;
     }
 }

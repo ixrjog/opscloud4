@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 public class DesensitizedPacker<T> {
 
     @DesensitizedMethod
-    public T desensitized(T source) {
-        return source;
+    public void desensitized(T source) {
     }
 }
