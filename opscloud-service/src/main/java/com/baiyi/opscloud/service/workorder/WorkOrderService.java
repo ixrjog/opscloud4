@@ -24,4 +24,6 @@ public interface WorkOrderService {
     WorkOrder getByKey(String key);
 
     void update(WorkOrder workOrder);
+
+    List<WorkOrder> queryAll();
 }

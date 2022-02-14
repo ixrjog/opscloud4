@@ -165,4 +165,10 @@ public class WorkOrderController {
         return new HttpResult<>(workOrderReportFacade.queryTicketReportByName());
     }
 
+    @ApiOperation(value = "工单报表(按月份汇总)")
+    @GetMapping(value = "/report/month", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<WorkOrderReportVO.MonthReport> queryTicketReportByMonth() {
+        return new HttpResult<>(workOrderReportFacade.queryTicketReportByMonth());
+    }
+
 }

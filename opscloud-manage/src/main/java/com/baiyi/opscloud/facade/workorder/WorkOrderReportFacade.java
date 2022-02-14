@@ -12,4 +12,6 @@ import java.util.List;
 public interface WorkOrderReportFacade {
 
     List<WorkOrderReportVO.Report> queryTicketReportByName();
+
+    WorkOrderReportVO.MonthReport queryTicketReportByMonth();
 }

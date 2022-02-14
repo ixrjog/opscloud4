@@ -72,4 +72,9 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     public void update(WorkOrder workOrder) {
         workOrderMapper.updateByPrimaryKey(workOrder);
     }
+
+    @Override
+    public List<WorkOrder> queryAll() {
+        return workOrderMapper.selectAll();
+    }
 }

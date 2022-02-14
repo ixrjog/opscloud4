@@ -50,19 +50,32 @@
 
     <!--    report-->
     <resultMap id="ReportResultMap" type="com.baiyi.opscloud.domain.vo.workorder.WorkOrderReportVO$Report">
-        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="c_name" jdbcType="VARCHAR" property="cName"/>
         <result column="value" jdbcType="INTEGER" property="value"/>
     </resultMap>
 
     <select id="queryReportByName" resultMap="ReportResultMap">
-        select a1.name as `name`, count(*) as `value`
+        select a1.name as `c_name`, count(*) as `value`
         from work_order_ticket a0
                  join work_order a1 on a1.id = a0.work_order_id
-        where a0.ticket_phase = 'SUCCESS' and a0.end_time is not null
+        where a0.ticket_phase = 'SUCCESS'
+          and a0.end_time is not null
         group by a0.work_order_id
         order by a0.work_order_id;
     </select>
 
+    <select id="queryReportByMonth" resultMap="ReportResultMap">
+        select date_format(a0.end_time, '%Y-%m') as `c_name`
+        <if test="workOrderId != -1">
+            , sum(if(a0.work_order_id = #{workOrderId}, 1, 0)) as `value`
+        </if>
+        from work_order_ticket a0
+                 join work_order a1 on a1.id = a0.work_order_id
+        where a0.ticket_phase = 'SUCCESS'
+          and a0.end_time is not null
+        group by `c_name`
+        order by `c_name`;
+    </select>
 
 
 </mapper>

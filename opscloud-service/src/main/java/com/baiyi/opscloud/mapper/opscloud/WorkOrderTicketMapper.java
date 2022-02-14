@@ -16,4 +16,6 @@ public interface WorkOrderTicketMapper extends Mapper<WorkOrderTicket> {
 
     List<WorkOrderReportVO.Report> queryReportByName();
 
+    List<WorkOrderReportVO.Report> queryReportByMonth(Integer workOrderId);
+
 }
