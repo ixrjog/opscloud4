@@ -43,6 +43,12 @@ public class DatasourceController {
         return new HttpResult<>(datasourceFacade.queryDsConfigPage(pageQuery));
     }
 
+    @ApiOperation(value = "id查询数据源配置")
+    @GetMapping(value = "/config/id/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DsConfigVO.DsConfig> queryDsConfigById(@RequestParam int configId) {
+        return new HttpResult<>(datasourceFacade.queryDsConfigById(configId));
+    }
+
     @ApiOperation(value = "新增数据源配置")
     @PostMapping(value = "/config/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> addDsConfig(@RequestBody @Valid DsConfigVO.DsConfig dsConfig) {

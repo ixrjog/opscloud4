@@ -5,6 +5,7 @@ import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.datasource.DsConfigParam;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
 import com.baiyi.opscloud.domain.vo.datasource.DsConfigVO;
@@ -62,19 +63,31 @@ public class DsFacadeImpl implements DsFacade {
     @Override
     public List<DsInstanceVO.Instance> queryDsInstance(DsInstanceParam.DsInstanceQuery query) {
         List<DatasourceInstance> instanceList = dsInstanceService.queryByParam(query);
-        return BeanCopierUtil.copyListProperties(instanceList, DsInstanceVO.Instance.class).stream().peek(e -> dsInstancePacker.wrap(e, query)).collect(Collectors.toList());
+        return BeanCopierUtil.copyListProperties(instanceList, DsInstanceVO.Instance.class)
+                .stream().peek(e -> dsInstancePacker.wrap(e, query)).collect(Collectors.toList());
     }
 
     @Override
     public void registerDsInstance(DsInstanceParam.RegisterDsInstance registerDsInstance) {
         DatasourceInstance datasourceInstance = BeanCopierUtil.copyProperties(registerDsInstance, DatasourceInstance.class);
-        datasourceInstance.setUuid(IdUtil.buildUUID());
-        dsInstanceService.add(datasourceInstance);
+        if (datasourceInstance.getId() == null) {
+            datasourceInstance.setUuid(IdUtil.buildUUID());
+            dsInstanceService.add(datasourceInstance);
+        } else {
+            dsInstanceService.update(datasourceInstance);
+        }
+
     }
 
     @Override
     public DsInstanceVO.Instance queryDsInstanceById(int instanceId) {
         DatasourceInstance instance = dsInstanceService.getById(instanceId);
         return DsInstancePacker.toVO(instance);
+    }
+
+    @Override
+    public DsConfigVO.DsConfig queryDsConfigById(int configId) {
+        DatasourceConfig config = dsConfigService.getById(configId);
+        return dsConfigPacker.wrapVO(config, SimpleExtend.EXTEND);
     }
 }

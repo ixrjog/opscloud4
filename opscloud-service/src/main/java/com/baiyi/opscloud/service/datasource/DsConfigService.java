@@ -25,4 +25,5 @@ public interface DsConfigService extends ICredentialCustomer {
 
     List<DatasourceConfig> queryByDsType(Integer dsType);
 
+
 }
