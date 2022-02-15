@@ -42,7 +42,7 @@ public class InstanceServiceImpl implements InstanceService {
     }
 
     @Override
-    public Instance getById(Integer id){
+    public Instance getById(Integer id) {
         return instanceMapper.selectByPrimaryKey(id);
     }
 
@@ -63,11 +63,18 @@ public class InstanceServiceImpl implements InstanceService {
             criteria.andLike("name", SQLUtil.toLike(pageQuery.getName()));
         }
         if (pageQuery.getIsActive() != null) {
-            criteria.andEqualTo("isActive",pageQuery.getIsActive());
+            criteria.andEqualTo("isActive", pageQuery.getIsActive());
         }
         example.setOrderByClause("create_time");
         List<Instance> data = instanceMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }
 
+    @Override
+    public List<Instance> listActiveInstance() {
+        Example example = new Example(Instance.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isActive", true);
+        return instanceMapper.selectByExample(example);
+    }
 }

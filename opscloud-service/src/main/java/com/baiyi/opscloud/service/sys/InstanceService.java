@@ -4,6 +4,8 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Instance;
 import com.baiyi.opscloud.domain.param.sys.RegisteredInstanceParam;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2021/9/3 1:26 下午
@@ -22,5 +24,7 @@ public interface InstanceService {
     Instance getByHostIp(String hostIp);
 
     DataTable<Instance> queryRegisteredInstancePage(RegisteredInstanceParam.RegisteredInstancePageQuery pageQuery);
+
+    List<Instance> listActiveInstance();
 
 }
