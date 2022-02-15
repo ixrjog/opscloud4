@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.sys.impl;
 
+import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.HostUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Instance;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
@@ -55,6 +57,12 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
     public void setRegisteredInstanceActive(int id) {
         Instance instance = instanceService.getById(id);
         if (instance == null) return;
+        if (instance.getIsActive()) {
+            List<Instance> instanceList = instanceService.listActiveInstance();
+            if (instanceList.size() <= 1) {
+                throw new CommonRuntimeException("至少保留一个可用实例");
+            }
+        }
         instance.setIsActive(!instance.getIsActive());
         instanceService.update(instance);
         log.info("用户修改注册实例: isActive = {}", instance.getIsActive());
