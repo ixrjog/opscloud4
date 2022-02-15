@@ -28,4 +28,6 @@ public interface DsFacade {
     void registerDsInstance(DsInstanceParam.RegisterDsInstance registerDsInstance);
 
     DsInstanceVO.Instance queryDsInstanceById(int instanceId);
+
+    DsConfigVO.DsConfig queryDsConfigById(int configId);
 }

@@ -42,4 +42,13 @@ public class DsConfigPacker {
         }).collect(Collectors.toList());
     }
 
+    public DsConfigVO.DsConfig wrapVO(DatasourceConfig data, IExtend iExtend) {
+        DsConfigVO.DsConfig vo = BeanCopierUtil.copyProperties(data, DsConfigVO.DsConfig.class);
+        if (ExtendUtil.isExtend(iExtend)) {
+            credentialPacker.wrap(vo);
+            vo.setIsRegistered(dsInstanceService.countByConfigId(vo.getId()) > 0);
+        }
+        return vo;
+    }
+
 }

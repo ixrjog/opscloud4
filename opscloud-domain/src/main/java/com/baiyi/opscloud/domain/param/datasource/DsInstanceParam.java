@@ -40,6 +40,8 @@ public class DsInstanceParam {
     @ApiModel
     public static class RegisterDsInstance {
 
+        private Integer id;
+
         @ApiModelProperty(value = "数据源实例名称")
         @Valid
         private String instanceName;
