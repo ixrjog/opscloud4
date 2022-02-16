@@ -69,14 +69,24 @@ public class TemplateFacadeImpl implements TemplateFacade {
     @Override
     public DataTable<TemplateVO.Template> queryTemplatePage(TemplateParam.TemplatePageQuery pageQuery) {
         DataTable<Template> table = templateService.queryPageByParam(pageQuery);
-        return new DataTable<>(templatePacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+
+        List<TemplateVO.Template> data = BeanCopierUtil.copyListProperties(table.getData(), TemplateVO.Template.class).stream().peek(e ->
+                templatePacker.wrap(e, pageQuery)
+        ).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
     public TemplateVO.Template addTemplate(TemplateParam.Template template) {
         Template pre = BeanCopierUtil.copyProperties(template, Template.class);
         templateService.add(pre);
-        return templatePacker.wrapVO(pre, SimpleExtend.EXTEND);
+        return toVO(pre);
+    }
+
+    public TemplateVO.Template toVO(Template template){
+        TemplateVO.Template vo = BeanCopierUtil.copyProperties(template, TemplateVO.Template.class);
+        templatePacker.wrap(vo , SimpleExtend.EXTEND);
+        return vo ;
     }
 
     @Override
@@ -89,7 +99,7 @@ public class TemplateFacadeImpl implements TemplateFacade {
             pre.setTemplateType(null);
         }
         templateService.updateSelective(pre);
-        return templatePacker.wrapVO(templateService.getById(pre.getId()), SimpleExtend.EXTEND);
+        return toVO(templateService.getById(pre.getId()));
     }
 
     @Override

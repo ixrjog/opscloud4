@@ -13,7 +13,7 @@ import lombok.*;
  */
 public class TemplateVO {
 
-    public interface ITempate {
+    public interface ITemplate {
 
         Integer getTemplateId();
 
