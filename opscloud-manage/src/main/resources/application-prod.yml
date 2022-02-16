@@ -6,10 +6,8 @@ logging:
     path: ${HOME}/logs
 
 opscloud:
-  version: 4.0.0
+  version: 4.0.8
   dataPath: ${HOME}/opscloud-data
-  instance:
-    register:
 
 # 白名单配置
 white:
@@ -28,9 +26,7 @@ white:
     - /api/ws/terminal/session/audit
     - /api/ws/server/task/play
 
-
 spring:
-
   redis:
     host: r-d7obmf3lmgs0hpph5n.redis.eu-west-1.rds.aliyuncs.com
     port: 6379
@@ -41,8 +37,6 @@ spring:
         max-idle: 20
         max-active: 100
         min-idle: 0
-  jackson:
-    time-zone: GMT+8
   datasource:
     druid:
       opscloud:
@@ -70,7 +64,6 @@ spring:
         pool-prepared-statements: on
         # 要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true
         max-pool-prepared-statement-per-connection-size: 20
-
 
 # java -jar -Djasypt.encryptor.password=${password}
 jasypt:

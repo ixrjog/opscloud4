@@ -13,7 +13,6 @@ spring:
       - ssh-core
       - ssh-server
       - opscloud
-
   application:
     name: opscloud
 #  http:
