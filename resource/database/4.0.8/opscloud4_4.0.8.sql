@@ -1012,4 +1012,1263 @@ BEGIN;
 COMMIT;
 
 -- ----------------------------
--- Table structure for datasource_inst
+-- Table structure for datasource_instance_asset_property
+-- ----------------------------
+DROP TABLE IF EXISTS `datasource_instance_asset_property`;
+CREATE TABLE `datasource_instance_asset_property` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `datasource_instance_asset_id` int(11) NOT NULL DEFAULT '0' COMMENT '资产ID',
+  `name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '属性名称',
+  `value` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '属性值',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `datasource_instance_asset_id` (`datasource_instance_asset_id`,`name`,`value`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=21317 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='资产属性';
+
+-- ----------------------------
+-- Records of datasource_instance_asset_property
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for datasource_instance_asset_relation
+-- ----------------------------
+DROP TABLE IF EXISTS `datasource_instance_asset_relation`;
+CREATE TABLE `datasource_instance_asset_relation` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `instance_uuid` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '实例UUID',
+  `source_asset_id` int(11) NOT NULL COMMENT '源资产ID',
+  `target_asset_id` int(11) NOT NULL COMMENT '目标资产ID',
+  `relation_type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '关系类型',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `instance_uuid` (`instance_uuid`,`source_asset_id`,`target_asset_id`,`relation_type`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=990 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='资产关系';
+
+-- ----------------------------
+-- Records of datasource_instance_asset_relation
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for datasource_instance_asset_subscription
+-- ----------------------------
+DROP TABLE IF EXISTS `datasource_instance_asset_subscription`;
+CREATE TABLE `datasource_instance_asset_subscription` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `instance_uuid` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '数据源实例UUID',
+  `datasource_instance_asset_id` int(11) NOT NULL DEFAULT '0' COMMENT '资产ID',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '有效',
+  `playbook` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '订阅剧本',
+  `vars` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '外部变量',
+  `last_subscription_time` timestamp NULL DEFAULT NULL COMMENT '最后订阅时间',
+  `last_subscription_log` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '最后订阅日志',
+  `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='资产订阅';
+
+-- ----------------------------
+-- Records of datasource_instance_asset_subscription
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for event
+-- ----------------------------
+DROP TABLE IF EXISTS `event`;
+CREATE TABLE `event` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `instance_uuid` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '数据源实例UUID',
+  `event_id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '数据源事件ID',
+  `event_id_desc` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '数据源事件ID描述',
+  `event_name` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '事件名称',
+  `event_message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '数据源事件信息',
+  `priority` int(2) NOT NULL DEFAULT '0' COMMENT '严重性级别',
+  `lastchange_time` timestamp NULL DEFAULT NULL COMMENT '最后更改其状态的时间',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '有效事件',
+  `expired_time` timestamp NULL DEFAULT NULL COMMENT '过期时间',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `instance_uuid` (`instance_uuid`,`event_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=282 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='事件';
+
+-- ----------------------------
+-- Records of event
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for event_business
+-- ----------------------------
+DROP TABLE IF EXISTS `event_business`;
+CREATE TABLE `event_business` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `event_id` int(11) NOT NULL COMMENT '事件ID',
+  `business_type` int(2) NOT NULL COMMENT '业务类型',
+  `business_id` int(11) NOT NULL DEFAULT '0' COMMENT '业务ID',
+  `name` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '名称',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `event_id` (`event_id`,`business_type`,`business_id`) USING BTREE,
+  KEY `event_id_2` (`event_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='事件业务对象关联';
+
+-- ----------------------------
+-- Records of event_business
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for instance
+-- ----------------------------
+DROP TABLE IF EXISTS `instance`;
+CREATE TABLE `instance` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '实例名',
+  `hostname` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '主机名',
+  `host_ip` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '主机IP',
+  `status` int(11) NOT NULL COMMENT '实例状态',
+  `is_active` tinyint(1) NOT NULL COMMENT '有效',
+  `license` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `comment` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '说明',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `name_UNIQUE` (`name`) USING BTREE,
+  UNIQUE KEY `host_ip_UNIQUE` (`host_ip`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of instance
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for message_template
+-- ----------------------------
+DROP TABLE IF EXISTS `message_template`;
+CREATE TABLE `message_template` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '名称',
+  `msg_key` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '消息关键字',
+  `msg_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '消息类型',
+  `consumer` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '消费者',
+  `title` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '标题',
+  `msg_template` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '通知模版',
+  `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '描述',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `msg_key` (`msg_key`,`msg_type`,`consumer`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='通知模版';
+
+-- ----------------------------
+-- Records of message_template
+-- ----------------------------
+BEGIN;
+INSERT INTO `message_template` VALUES (1, '创建用户消息通知模板', 'CREATE_USER', 'markdown', 'DINGTALK_APP', 'OPSCLOUD通知', '### OPSCLOUD账户开通\n- 用户名: ${username}   \n- 密码: `${password}`', '', '2021-12-01 17:56:15', '2021-12-14 10:04:22');
+INSERT INTO `message_template` VALUES (2, '修改用户密码消息通知模板', 'UPDATE_USER_PASSWORD', 'markdown', 'DINGTALK_APP', 'OPSCLOUD通知', '### OPSCLOUD账户重置\n- 用户名: ${username} \n- 密码: `${password}`', '本人修改密码则不发送', '2021-12-01 18:06:47', '2021-12-14 10:04:19');
+INSERT INTO `message_template` VALUES (3, '创建RAM用户通知模板', 'CREATE_RAM_USER', 'markdown', 'DINGTALK_APP', 'OPSCLOUD通知', '### 阿里云RAM(访问控制)账户开通\n- 阿里云实例名称: ${aliyunName}\n- RAM用户登录地址: ${loginUrl}\n- 用户名: ${username}   \n- 密码: `${password}`', NULL, '2021-12-14 10:01:40', '2022-02-11 09:44:48');
+INSERT INTO `message_template` VALUES (4, '工单审批通知模板', 'TICKET_APPROVE', 'markdown', 'DINGTALK_APP', 'OPSCLOUD工单审批通知', '### No.${ticketId} ${workOrderName}\n\n您有 **${createUser}** 发起的工单需要审批:\n<% for(ticketEntry in ticketEntities){ %> \n+ ${ticketEntry.name}  ${ticketEntry.comment} \n<% } %> \n\n[点击查看(仅支持PC)](https://oc.chuanyinet.com/index.html#/workorder)', NULL, '2022-01-26 14:20:38', '2022-02-11 11:07:11');
+INSERT INTO `message_template` VALUES (5, '工单结束通知模板', 'TICKET_END', 'markdown', 'DINGTALK_APP', 'OPSCLOUD工单结束通知', '### No.${ticketId} ${workOrderName}\n\n您发起的工单已经结束:\n${result}\n\n[点击查看(仅支持PC)](https://oc.chuanyinet.com/index.html#/workorder)', NULL, '2022-01-26 16:25:02', '2022-01-26 16:58:41');
+INSERT INTO `message_template` VALUES (6, '创建IAM用户通知模板', 'CREATE_IAM_USER', 'markdown', 'DINGTALK_APP', 'OPSCLOUD通知', '### AWS-IAM(身份管理)账户开通\n- AWS实例名称: ${awsName}\n- IAM 用户的登录URL: ${loginUrl}\n- 账户 ID (12 位数)或账户别名: ${accountId}\n- 用户名: ${username}   \n- 密码: `${password}`', NULL, '2022-02-11 09:19:39', '2022-02-11 09:44:21');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for qrtz_blob_triggers
+-- ----------------------------
+DROP TABLE IF EXISTS `qrtz_blob_triggers`;
+CREATE TABLE `qrtz_blob_triggers` (
+  `sched_name` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `trigger_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `trigger_group` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `blob_data` blob,
+  PRIMARY KEY (`sched_name`,`trigger_name`,`trigger_group`) USING BTREE,
+  CONSTRAINT `qrtz_blob_triggers_ibfk_1` FOREIGN KEY (`sched_name`, `trigger_name`, `trigger_group`) REFERENCES `qrtz_triggers` (`sched_name`, `trigger_name`, `trigger_group`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+-- Records of qrtz_blob_triggers
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for qrtz_calendars
+-- ----------------------------
+DROP TABLE IF EXISTS `qrtz_calendars`;
+CREATE TABLE `qrtz_calendars` (
+  `sched_name` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `calendar_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `calendar` blob NOT NULL,
+  PRIMARY KEY (`sched_name`,`calendar_name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+-- Records of qrtz_calendars
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for qrtz_cron_triggers
+-- ----------------------------
+DROP TABLE IF EXISTS `qrtz_cron_triggers`;
+CREATE TABLE `qrtz_cron_triggers` (
+  `sched_name` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `trigger_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `trigger_group` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `cron_expression` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `time_zone_id` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  PRIMARY KEY (`sched_name`,`trigger_name`,`trigger_group`) USING BTREE,
+  CONSTRAINT `qrtz_cron_triggers_ibfk_1` FOREIGN KEY (`sched_name`, `trigger_name`, `trigger_group`) REFERENCES `qrtz_triggers` (`sched_name`, `trigger_name`, `trigger_group`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+-- Records of qrtz_cron_triggers
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for qrtz_fired_triggers
+-- ----------------------------
+DROP TABLE IF EXISTS `qrtz_fired_triggers`;
+CREATE TABLE `qrtz_fired_triggers` (
+  `sched_name` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `entry_id` varchar(95) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `trigger_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `trigger_group` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `instance_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `fired_time` bigint(13) NOT NULL,
+  `sched_time` bigint(13) NOT NULL,
+  `priority` int(11) NOT NULL,
+  `state` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `job_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `job_group` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `is_nonconcurrent` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `requests_recovery` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  PRIMARY KEY (`sched_name`,`entry_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+-- Records of qrtz_fired_triggers
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for qrtz_job_details
+-- ----------------------------
+DROP TABLE IF EXISTS `qrtz_job_details`;
+CREATE TABLE `qrtz_job_details` (
+  `sched_name` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `job_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `job_group` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `description` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `job_class_name` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `is_durable` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `is_nonconcurrent` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `is_update_data` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `requests_recovery` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `job_data` blob,
+  PRIMARY KEY (`sched_name`,`job_name`,`job_group`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+-- Records of qrtz_job_details
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for qrtz_locks
+-- ----------------------------
+DROP TABLE IF EXISTS `qrtz_locks`;
+CREATE TABLE `qrtz_locks` (
+  `sched_name` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `lock_name` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`sched_name`,`lock_name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+-- Records of qrtz_locks
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for qrtz_paused_trigger_grps
+-- ----------------------------
+DROP TABLE IF EXISTS `qrtz_paused_trigger_grps`;
+CREATE TABLE `qrtz_paused_trigger_grps` (
+  `sched_name` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `trigger_group` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`sched_name`,`trigger_group`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+-- Records of qrtz_paused_trigger_grps
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for qrtz_scheduler_state
+-- ----------------------------
+DROP TABLE IF EXISTS `qrtz_scheduler_state`;
+CREATE TABLE `qrtz_scheduler_state` (
+  `sched_name` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `instance_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `last_checkin_time` bigint(13) NOT NULL,
+  `checkin_interval` bigint(13) NOT NULL,
+  PRIMARY KEY (`sched_name`,`instance_name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+-- Records of qrtz_scheduler_state
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for qrtz_simple_triggers
+-- ----------------------------
+DROP TABLE IF EXISTS `qrtz_simple_triggers`;
+CREATE TABLE `qrtz_simple_triggers` (
+  `sched_name` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `trigger_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `trigger_group` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `repeat_count` bigint(7) NOT NULL,
+  `repeat_interval` bigint(12) NOT NULL,
+  `times_triggered` bigint(10) NOT NULL,
+  PRIMARY KEY (`sched_name`,`trigger_name`,`trigger_group`) USING BTREE,
+  CONSTRAINT `qrtz_simple_triggers_ibfk_1` FOREIGN KEY (`sched_name`, `trigger_name`, `trigger_group`) REFERENCES `qrtz_triggers` (`sched_name`, `trigger_name`, `trigger_group`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+-- Records of qrtz_simple_triggers
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for qrtz_simprop_triggers
+-- ----------------------------
+DROP TABLE IF EXISTS `qrtz_simprop_triggers`;
+CREATE TABLE `qrtz_simprop_triggers` (
+  `sched_name` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `trigger_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `trigger_group` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `str_prop_1` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `str_prop_2` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `str_prop_3` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `int_prop_1` int(11) DEFAULT NULL,
+  `int_prop_2` int(11) DEFAULT NULL,
+  `long_prop_1` bigint(20) DEFAULT NULL,
+  `long_prop_2` bigint(20) DEFAULT NULL,
+  `dec_prop_1` decimal(13,4) DEFAULT NULL,
+  `dec_prop_2` decimal(13,4) DEFAULT NULL,
+  `bool_prop_1` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `bool_prop_2` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  PRIMARY KEY (`sched_name`,`trigger_name`,`trigger_group`) USING BTREE,
+  CONSTRAINT `qrtz_simprop_triggers_ibfk_1` FOREIGN KEY (`sched_name`, `trigger_name`, `trigger_group`) REFERENCES `qrtz_triggers` (`sched_name`, `trigger_name`, `trigger_group`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+-- Records of qrtz_simprop_triggers
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for qrtz_triggers
+-- ----------------------------
+DROP TABLE IF EXISTS `qrtz_triggers`;
+CREATE TABLE `qrtz_triggers` (
+  `sched_name` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `trigger_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `trigger_group` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `job_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `job_group` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `description` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `next_fire_time` bigint(13) DEFAULT NULL,
+  `prev_fire_time` bigint(13) DEFAULT NULL,
+  `priority` int(11) DEFAULT NULL,
+  `trigger_state` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `trigger_type` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `start_time` bigint(13) NOT NULL,
+  `end_time` bigint(13) DEFAULT NULL,
+  `calendar_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `misfire_instr` smallint(2) DEFAULT NULL,
+  `job_data` blob,
+  PRIMARY KEY (`sched_name`,`trigger_name`,`trigger_group`) USING BTREE,
+  KEY `sched_name` (`sched_name`,`job_name`,`job_group`) USING BTREE,
+  CONSTRAINT `qrtz_triggers_ibfk_1` FOREIGN KEY (`sched_name`, `job_name`, `job_group`) REFERENCES `qrtz_job_details` (`sched_name`, `job_name`, `job_group`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+-- Records of qrtz_triggers
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for server
+-- ----------------------------
+DROP TABLE IF EXISTS `server`;
+CREATE TABLE `server` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '服务器名称',
+  `server_group_id` int(11) NOT NULL COMMENT '服务器组ID',
+  `os_type` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '系统类型',
+  `env_type` int(2) NOT NULL DEFAULT '0' COMMENT '环境类型',
+  `public_ip` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '公网IP',
+  `private_ip` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '私网IP',
+  `server_type` int(11) DEFAULT NULL COMMENT '服务器类型',
+  `area` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '地区',
+  `serial_number` int(8) NOT NULL DEFAULT '0' COMMENT '序号',
+  `monitor_status` int(1) NOT NULL DEFAULT '-1' COMMENT '监控状态',
+  `comment` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT '说明',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '有效',
+  `server_status` int(2) NOT NULL DEFAULT '1' COMMENT '服务器状态',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `env_type` (`env_type`,`serial_number`,`server_group_id`) USING BTREE,
+  UNIQUE KEY `private_ip_2` (`private_ip`) USING BTREE,
+  KEY `name` (`name`) USING BTREE,
+  KEY `private_ip` (`private_ip`) USING BTREE,
+  KEY `server_group_id` (`server_group_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of server
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for server_account
+-- ----------------------------
+DROP TABLE IF EXISTS `server_account`;
+CREATE TABLE `server_account` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '服务器名称',
+  `credential_id` int(11) NOT NULL COMMENT '凭据ID',
+  `account_type` int(2) NOT NULL DEFAULT '0' COMMENT '0普通账户/1管理员',
+  `protocol` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '连接协议',
+  `comment` text CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT '说明',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '有效',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `username` (`username`,`account_type`,`protocol`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='服务器账户';
+
+-- ----------------------------
+-- Records of server_account
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for server_account_permission
+-- ----------------------------
+DROP TABLE IF EXISTS `server_account_permission`;
+CREATE TABLE `server_account_permission` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `server_id` int(11) NOT NULL COMMENT '服务器ID',
+  `server_account_id` int(11) NOT NULL COMMENT '账户ID',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `server_id` (`server_id`,`server_account_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='服务器-账户 授权表';
+
+-- ----------------------------
+-- Records of server_account_permission
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for server_group
+-- ----------------------------
+DROP TABLE IF EXISTS `server_group`;
+CREATE TABLE `server_group` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '服务器组名称',
+  `server_group_type_id` int(2) NOT NULL DEFAULT '0' COMMENT '服务器组类型',
+  `allow_order` tinyint(1) NOT NULL DEFAULT '1' COMMENT '允许工单申请',
+  `comment` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `name` (`name`) USING BTREE,
+  KEY `server_group_type_id` (`server_group_type_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of server_group
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for server_group_type
+-- ----------------------------
+DROP TABLE IF EXISTS `server_group_type`;
+CREATE TABLE `server_group_type` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
+  `color` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `comment` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `name` (`name`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of server_group_type
+-- ----------------------------
+BEGIN;
+INSERT INTO `server_group_type` VALUES (1, 'default', '#858585', '默认类型', '2021-05-24 18:34:49', '2021-05-24 18:34:49');
+INSERT INTO `server_group_type` VALUES (2, 'gitlab', '#dd4d3a', '', '2021-05-26 16:56:27', '2021-05-26 16:56:27');
+INSERT INTO `server_group_type` VALUES (3, 'microservice', '#F29603', '微服务', '2021-06-08 20:23:38', '2021-06-08 20:23:38');
+INSERT INTO `server_group_type` VALUES (4, 'zookeeper', '#dd4d3a', 'zookeeper', '2021-06-24 16:42:11', '2021-06-24 16:42:11');
+INSERT INTO `server_group_type` VALUES (5, 'mysql', '#1451B4', 'mysql', '2021-06-24 16:42:11', '2021-06-24 16:42:11');
+INSERT INTO `server_group_type` VALUES (6, 'other', NULL, NULL, '2021-06-24 16:42:11', '2021-06-24 16:42:11');
+INSERT INTO `server_group_type` VALUES (7, 'public', '#E80F07', NULL, '2021-06-24 16:42:11', '2021-06-24 16:42:11');
+INSERT INTO `server_group_type` VALUES (8, 'redis', '#D7160F', NULL, '2021-06-24 16:42:11', '2021-06-24 16:42:11');
+INSERT INTO `server_group_type` VALUES (9, 'web-server', NULL, NULL, '2021-06-24 16:42:11', '2021-06-24 16:42:11');
+INSERT INTO `server_group_type` VALUES (10, 'front-end', NULL, NULL, '2021-06-24 16:42:12', '2021-06-24 16:42:12');
+INSERT INTO `server_group_type` VALUES (11, 'bi', NULL, NULL, '2021-06-24 16:42:12', '2021-06-24 16:42:12');
+INSERT INTO `server_group_type` VALUES (12, 'testType', NULL, '', '2021-06-24 16:42:12', '2021-06-24 16:42:12');
+INSERT INTO `server_group_type` VALUES (13, 'getway', NULL, '终端跳板机', '2021-06-24 16:42:12', '2021-06-24 16:42:12');
+INSERT INTO `server_group_type` VALUES (14, 'dubbo', NULL, '', '2021-06-24 16:42:12', '2021-06-24 16:42:12');
+INSERT INTO `server_group_type` VALUES (15, 'elasticsearch', NULL, '', '2021-06-24 16:42:12', '2021-06-24 16:42:12');
+INSERT INTO `server_group_type` VALUES (16, 'job', NULL, '', '2021-06-24 16:42:12', '2021-06-24 16:42:12');
+INSERT INTO `server_group_type` VALUES (17, 'k8s', NULL, '', '2021-06-24 16:42:12', '2021-06-24 16:42:12');
+INSERT INTO `server_group_type` VALUES (18, 'zabbix', NULL, '', '2021-06-24 16:42:12', '2021-06-24 16:42:12');
+INSERT INTO `server_group_type` VALUES (19, 'kafka', NULL, 'kafka集群', '2021-06-24 16:42:12', '2021-06-24 16:42:12');
+INSERT INTO `server_group_type` VALUES (20, 'jenkins', '#048112', '持续集成', '2021-06-24 16:42:12', '2021-06-24 16:42:12');
+INSERT INTO `server_group_type` VALUES (21, 'bigdata', '#dd4d3a', '大数据相关服务(非业务)', '2021-06-24 16:42:12', '2021-06-24 16:42:12');
+INSERT INTO `server_group_type` VALUES (22, 'kubernetes', '#dd4d3a', '容器服务', '2021-06-24 16:42:12', '2021-06-24 16:42:12');
+INSERT INTO `server_group_type` VALUES (23, 'canal', '#3093EA', '', '2021-06-24 16:42:12', '2021-06-24 16:42:12');
+INSERT INTO `server_group_type` VALUES (24, 'qa', '#dd4d3a', '测试组', '2021-06-24 16:42:13', '2021-06-24 16:42:13');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for server_task
+-- ----------------------------
+DROP TABLE IF EXISTS `server_task`;
+CREATE TABLE `server_task` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `instance_uuid` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '数据源实例UUID',
+  `task_uuid` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '任务UUID',
+  `username` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '用户名',
+  `member_size` int(11) NOT NULL DEFAULT '0' COMMENT '成员数量',
+  `ansible_playbook_id` int(11) DEFAULT NULL COMMENT '剧本ID',
+  `vars` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `tags` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `task_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT 'PLAYBOOK',
+  `finalized` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否完成',
+  `stop_type` int(11) DEFAULT '0' COMMENT '终止任务',
+  `task_status` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '任务状态',
+  `start_time` timestamp NULL DEFAULT NULL COMMENT '任务开始时间',
+  `end_time` timestamp NULL DEFAULT NULL COMMENT '任务结束时间',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `task_uuid` (`task_uuid`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='服务器任务';
+
+-- ----------------------------
+-- Records of server_task
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for server_task_member
+-- ----------------------------
+DROP TABLE IF EXISTS `server_task_member`;
+CREATE TABLE `server_task_member` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `server_task_id` int(11) NOT NULL COMMENT '任务ID',
+  `server_id` int(11) DEFAULT NULL COMMENT '服务器ID',
+  `server_name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '服务器名称',
+  `env_type` int(2) NOT NULL DEFAULT '0' COMMENT '环境类型',
+  `manage_ip` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '管理IP',
+  `task_status` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '任务状态',
+  `finalized` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否完成',
+  `stop_type` int(11) DEFAULT '0' COMMENT '终止任务',
+  `exit_value` int(2) DEFAULT NULL COMMENT '退出值',
+  `task_result` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '',
+  `output_msg` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `error_msg` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `start_time` timestamp NULL DEFAULT NULL COMMENT '任务开始时间',
+  `end_time` timestamp NULL DEFAULT NULL COMMENT '任务结束时间',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=179 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of server_task_member
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for shedlock
+-- ----------------------------
+DROP TABLE IF EXISTS `shedlock`;
+CREATE TABLE `shedlock` (
+  `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `lock_until` timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+  `locked_at` timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `locked_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of shedlock
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for sys_credential
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_credential`;
+CREATE TABLE `sys_credential` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `kind` int(11) NOT NULL COMMENT '凭据分类',
+  `username` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '用户名',
+  `credential` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '凭据内容',
+  `credential_2` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT 'PublicKey',
+  `passphrase` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '密码短语',
+  `fingerprint` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '指纹',
+  `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `create_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='系统凭据';
+
+-- ----------------------------
+-- Records of sys_credential
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for sys_document
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_document`;
+CREATE TABLE `sys_document` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `document_key` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '文档内容',
+  `document_type` int(2) NOT NULL DEFAULT '1' COMMENT '文档类型',
+  `comment` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `doc_key` (`document_key`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of sys_document
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_document` VALUES (1, 'JUMP_README', '# 公告板\n![](https://img.shields.io/badge/opscloud-jump-brightgreen.svg?style=plastic&logo=iCloud)\n\n##### 保存公钥\n\n- 在`个人详情-我的详情-SSH密钥`中添加公钥\n```\n# 查看公钥\ncat ~/.ssh/id_rsa.pub\n```\n\n##### 权限申请\n   \n- `工作台`-`工单`-`服务器组权限申请`\n\n\n##### 登录JUMP\n     \n- mac命令行中输入\n```\n# -C 压缩传输\n# -o StrictHostKeyChecking=no 公钥免检\nssh ${username}@${cocoHost}\n```\n- 在家访问请先连接VPN\n\n##### OC-Web-XTerm\n<video width=\"100%\" controls Autoplay=autoplay>\n<source src=\"https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/help/opscloud/web-xterm/oc-web-xterm.mov\" type=\"video/mp4\" align=center>\n</video>', 0, NULL, '2020-05-13 00:26:57', '2021-06-16 18:31:08');
+INSERT INTO `sys_document` VALUES (2, 'WORDPAD', '# 欢迎使用OC-Web终端\n![](https://img.shields.io/badge/opscloud-xterm-brightgreen.svg?style=plastic&logo=iCloud)\n\n<b style=\"color:red\">!!!此文档是用户私有文档，可随意编辑!!!</b>\n\n#### 常用命令\n\n##### 应用服务管理\n```bash\n# 切换到app用户\nxincheng$ sudo su - app\napp$ sh /opt/bin/appctl.sh start # 启动应用\napp$ sh /opt/bin/appctl.sh stop # 停止应用\napp$ sh /opt/bin/appctl.sh dump # dump java进程，完成后需重启\napp$ sh /opt/bin/appctl.sh forcestop # 强制停止应用\napp$ sh /opt/bin/appctl.sh # 查看进程状态\n```\n\n##### 高权限账户登录后切换到root\n```bash\n# 切换root\nmanage$ sudo su - # 或直接输入封装命令 s\n```\n\n##### Docket命令指南\n + <a style=\"color:#2b669a\" href=\"https://www.runoob.com/docker/docker-run-command.html\" target=\"_blank\"><b>传送门</b></a>', 0, NULL, '2020-05-13 22:04:04', '2021-06-16 18:31:09');
+INSERT INTO `sys_document` VALUES (3, 'USER_GROUP_README', '#### 账户\n+ 已完成企业内部统一权限认证，所有平台账户互通', 0, NULL, '2020-05-18 20:37:31', '2021-06-16 18:31:10');
+INSERT INTO `sys_document` VALUES (4, 'SERVER_GROUP_README', '#### 说明\n+ 授权的服务器组内所有服务器都可以通过`JUMP跳板机`登录\n  + 登录方式详见 <a style=\"color:#2b669a\" href=\"https://oc3.ops.yangege.cn/#/workbench/jump\" target=\"_blank\"><b>传送门</b></a>\n\n+ 授权的服务器组内所有服务都可以登录`Zabbix`监控平台查看数据\n  + `Zabbix`监控平台登录账户于本平台相同<a style=\"color:#2b669a\" href=\"http://zabbix.ops.yangege.cn\" target=\"_blank\"><b>传送门</b></a>\n\n+ 授权的服务器组内所有服务器都通过OC内置WebXTerm批量登录\n  + WebXTerm支持高权限登录服务器（需要在工单中申请服务器组的管理员权限）\n\n##### OC-Web-XTerm\n<video width=\"100%\" controls Autoplay=autoplay>\n<source src=\"https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/help/opscloud/web-xterm/oc-web-xterm.mov\" type=\"video/mp4\" align=center>\n</video>', 0, NULL, '2020-05-18 20:38:36', '2021-06-16 18:31:11');
+INSERT INTO `sys_document` VALUES (5, 'OC_ROLE', '#### `dev`角色\n+ 查看服务器相关信息\n+ 堡垒机权限，监控权限，日志权限等', 0, NULL, '2020-05-18 20:39:22', '2021-06-16 18:31:12');
+INSERT INTO `sys_document` VALUES (6, 'RAM_POLICY', '#### 账户\n+ 阿里云主账户\n   + 主账户uid : 1255805305757185\n   + 子账户: ${username}@1255805305757185\n   + 登录地址:  https://signin.aliyun.com/1255805305757185/.onaliyun.com/login.htm\n+ 阿里云MS账户\n   + 主账户uid : 1267986359450069\n   + 子账户: ${username}@1267986359450069\n   + 登录地址:  https://signin.aliyun.com/1267986359450069/.onaliyun.com/login.htm\n\n#### 用户RAM策略详情\n+ 个人详情-我的详情-阿里云RAM账户授权策略 中查看\n\n#### 登录密码\n> 密码同oc密码一致，但必须符合密码强度（包含英文大小写，数字。特殊字符，长度>=10位），登录错误请联系运维！\n\n', 0, NULL, '2020-06-12 23:16:46', '2021-06-16 18:31:12');
+INSERT INTO `sys_document` VALUES (7, 'SSH_SERVER_README', '<h1>OpsCloud v4.0 SSH-Server</h1>\n\n![](https://img.shields.io/badge/springshell-2.0.1.RELEASE-brightgreen.svg?style=plastic)\n\n### 帮助文档\n\n##### SSH-Server登录/认证\n\n+  认证优先级\n    + `本地公钥`  --> `Gitlab个人公钥`  --> `LDAP密码认证`\n+  添加个人公钥（若在Gitlab中已添加则忽略此步骤）\n    + `用户信息`-`个人详情`-`SSH密钥`（编辑-添加公钥）\n```bash\n# 查看公钥\n$ cat ~/.ssh/id_rsa.pub\n```\n\n##### 登录终端\n+ Mac终端命令行中输入\n```bash\n# -o StrictHostKeyChecking=no 跳过公钥检查\n$ ssh ${username}@${sshServerHost}\n```\n\n##### Example\n+  登录和帮助\n\n\n<img src=\"https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/ssh-server/ssh-server-help.png\" style=\"height: 700px\"></img>\n\n\n+  查询服务器信息\n\n```bash\n$ list\n```\n\n<img src=\"https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/ssh-server/ssh-server-list.png\" style=\"height: 700px\"></img>\n\n+  登录列表ID1的服务器\n\n```bash\n$ list\n$ login 1\n```\n\n\n+  查询容器组(Pod)信息\n\n```\nopscloud shell>list-k8s-pod\n+----+--------------------------+-----------+------------------------------------+------------+---------------------+---------------+-------------------+\n| ID | Kubernetes Instance Name | Namespace | Pod Name                           | Pod IP     | Start Time          | Restart Count | Container Name    |\n+----+--------------------------+-----------+------------------------------------+------------+---------------------+---------------+-------------------+\n|  1 | kubernetes-dev           | dev       | merchant-kili-dev-69f89bc69c-tbc4h | 10.10.0.34 | 2021-12-02 14:53:30 |            11 | merchant-kili-dev | \n+----+--------------------------+-----------+------------------------------------+------------+---------------------+---------------+-------------------+\nopscloud shell>\n```\n\n+ 查看容器日志(ID1)\n\n`opscloud shell>show-k8s-pod-log 1`\n\n\n+ 登录容器(ID1)\n\n`opscloud shell>login-k8s-pod  1`\n', 1, NULL, '2021-06-16 20:35:52', '2022-02-16 09:59:16');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for sys_env
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_env`;
+CREATE TABLE `sys_env` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `env_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '环境名称',
+  `env_type` int(11) NOT NULL COMMENT '环境类型',
+  `color` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '环境色',
+  `prompt_color` int(11) DEFAULT NULL COMMENT '终端提示色',
+  `comment` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `env_name` (`env_name`) USING BTREE,
+  UNIQUE KEY `env_type` (`env_type`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='`create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,';
+
+-- ----------------------------
+-- Records of sys_env
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_env` VALUES (1, 'default', 0, '#B7B6B6', 7, '默认环境', '2020-04-03 05:06:38', '2020-07-03 00:56:04');
+INSERT INTO `sys_env` VALUES (2, 'dev', 1, '#5bc0de', 6, '开发环境', '2020-01-10 20:53:51', '2021-07-03 01:17:13');
+INSERT INTO `sys_env` VALUES (3, 'test', 5, '#A0AE07', 3, '测试环境', '2020-01-10 20:53:55', '2021-09-03 00:27:44');
+INSERT INTO `sys_env` VALUES (4, 'gray', 3, '#000000', 8, '灰度环境', '2020-03-11 21:03:58', '2021-09-03 00:25:35');
+INSERT INTO `sys_env` VALUES (5, 'prod', 4, '#E34C15', 1, '生产环境', '2020-02-22 20:13:16', '2021-07-27 18:21:55');
+INSERT INTO `sys_env` VALUES (6, 'daily', 2, '#449d44', 2, '日常环境', '2020-03-04 18:10:44', '2020-03-04 18:10:44');
+INSERT INTO `sys_env` VALUES (14, 'local', 7, '#FC7A00', 5, '本地环境', '2020-03-11 21:05:28', '2021-12-13 17:15:28');
+INSERT INTO `sys_env` VALUES (15, 'st', 8, '#0926C9', 4, '压测环境', '2021-06-24 17:36:07', '2021-06-24 17:37:43');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for sys_menu
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_menu`;
+CREATE TABLE `sys_menu` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '菜单标题',
+  `icon` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '菜单图标',
+  `seq` int(11) NOT NULL COMMENT '顺序',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of sys_menu
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_menu` VALUES (1, '系统管理', 'fab fa-whmcs', 0, '2021-06-09 17:41:34', '2021-07-09 00:17:45');
+INSERT INTO `sys_menu` VALUES (2, '工作台', 'fas fa-desktop', 1, '2021-06-09 17:41:34', '2021-07-01 17:06:37');
+INSERT INTO `sys_menu` VALUES (3, '用户管理', 'fas fa-users', 3, '2021-06-09 17:41:34', '2021-07-15 21:05:05');
+INSERT INTO `sys_menu` VALUES (4, '服务器管理', 'fas fa-server', 4, '2021-06-09 17:41:34', '2021-07-15 21:05:05');
+INSERT INTO `sys_menu` VALUES (5, '数据源管理', 'fas fa-dice-d20', 6, '2021-06-09 17:41:34', '2021-09-01 20:47:16');
+INSERT INTO `sys_menu` VALUES (6, 'RBAC管理', 'fab fa-google-drive', 7, '2021-06-09 17:41:34', '2021-09-01 20:47:16');
+INSERT INTO `sys_menu` VALUES (7, '用户信息', 'fas fa-user-circle', 8, '2021-06-09 17:41:34', '2021-11-24 11:17:44');
+INSERT INTO `sys_menu` VALUES (8, '应用管理', 'fab fa-deezer', 2, '2021-07-15 21:05:05', '2021-11-24 11:14:20');
+INSERT INTO `sys_menu` VALUES (9, '任务管理', 'fab fa-google-play', 5, '2021-09-01 20:42:07', '2021-09-01 20:47:16');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for sys_menu_child
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_menu_child`;
+CREATE TABLE `sys_menu_child` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `menu_id` int(11) NOT NULL COMMENT '菜单ID',
+  `title` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '子菜单标题',
+  `icon` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '子菜单图标名称',
+  `path` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '子菜单路径',
+  `seq` int(11) NOT NULL COMMENT '子菜单排序',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of sys_menu_child
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_menu_child` VALUES (1, 1, '凭据管理', 'fas fa-fingerprint', '/sys/credential', 0, '2021-06-02 21:37:00', '2021-07-23 21:37:33');
+INSERT INTO `sys_menu_child` VALUES (2, 1, '标签管理', 'fas fa-tags', '/sys/tag', 1, '2021-06-02 21:37:00', '2021-07-23 21:37:33');
+INSERT INTO `sys_menu_child` VALUES (3, 1, '环境管理', 'fab fa-pagelines', '/sys/env', 2, '2021-06-02 21:37:00', '2021-11-24 10:16:23');
+INSERT INTO `sys_menu_child` VALUES (4, 1, '菜单管理', 'fas fa-bars', '/sys/menu', 3, '2021-06-02 21:37:00', '2021-07-01 00:54:03');
+INSERT INTO `sys_menu_child` VALUES (6, 2, '批量终端', 'fas fa-terminal', '/workbench/web-terminal', 1, '2021-06-16 00:10:03', '2021-07-01 17:03:58');
+INSERT INTO `sys_menu_child` VALUES (7, 3, '用户', 'fas fa-user-alt', '/user', 0, '2021-06-02 22:00:58', '2021-12-10 09:56:51');
+INSERT INTO `sys_menu_child` VALUES (8, 4, '服务器', 'fas fa-server', '/server', 0, '2021-06-02 22:01:51', '2021-07-01 00:54:24');
+INSERT INTO `sys_menu_child` VALUES (9, 4, '服务器组', 'fas fa-window-restore', '/server/group', 1, '2021-06-02 22:01:51', '2021-07-01 00:54:24');
+INSERT INTO `sys_menu_child` VALUES (10, 5, '数据源实例', 'fab fa-battle-net', '/datasource/instance', 0, '2021-06-02 22:02:20', '2021-11-24 10:15:10');
+INSERT INTO `sys_menu_child` VALUES (11, 5, '数据源配置', 'fab fa-unity', '/datasource/config', 1, '2021-06-02 22:02:20', '2021-12-08 16:56:57');
+INSERT INTO `sys_menu_child` VALUES (12, 6, '资源配置', 'fas fa-stream', '/rbac/resource', 0, '2021-06-02 22:03:02', '2021-07-01 00:54:44');
+INSERT INTO `sys_menu_child` VALUES (13, 6, '用户角色配置', 'fas fa-id-card', '/rbac/user-role', 2, '2021-06-02 22:03:02', '2021-07-01 00:54:44');
+INSERT INTO `sys_menu_child` VALUES (14, 6, '角色配置', 'fas fa-users', '/rbac/role', 1, '2021-06-02 22:03:02', '2021-07-01 00:54:44');
+INSERT INTO `sys_menu_child` VALUES (15, 7, '个人详情', 'fas fa-address-book', '/user/details', 0, '2021-06-09 17:36:50', '2021-07-01 00:54:49');
+INSERT INTO `sys_menu_child` VALUES (16, 2, 'SSH终端', 'fab fa-markdown', '/workbench/ssh-server', 0, '2021-06-16 00:10:04', '2021-11-24 10:33:02');
+INSERT INTO `sys_menu_child` VALUES (17, 2, '远程桌面', 'fab fa-windows', '/workbench/remote-desktop', 2, '2021-07-09 21:50:59', '2021-07-09 21:50:59');
+INSERT INTO `sys_menu_child` VALUES (19, 2, '容器终端', 'fab fa-docker', '/workbench/kubernetes-web-terminal', 3, '2021-07-13 23:13:19', '2021-07-13 23:19:25');
+INSERT INTO `sys_menu_child` VALUES (20, 8, '应用', 'fas fa-grip-horizontal', '/application', 0, '2021-07-15 21:09:18', '2021-11-24 11:15:55');
+INSERT INTO `sys_menu_child` VALUES (21, 1, '审计管理', 'fas fa-video', '/sys/audit', 4, '2021-07-22 22:08:59', '2021-07-23 21:37:34');
+INSERT INTO `sys_menu_child` VALUES (22, 5, '资产订阅', 'fa fa-rss', '/datasource/asset/subscription', 3, '2021-08-27 22:52:47', '2021-12-08 16:48:08');
+INSERT INTO `sys_menu_child` VALUES (23, 9, '剧本任务', 'fas fa-recycle', '/task/playbook', 0, '2021-09-01 20:42:50', '2021-09-26 18:42:58');
+INSERT INTO `sys_menu_child` VALUES (24, 1, '集群管理', 'fas fa-server', '/sys/instance', 5, '2021-09-06 18:13:25', '2021-09-06 18:18:52');
+INSERT INTO `sys_menu_child` VALUES (25, 5, '模版管理', 'fab fa-slack-hash', '/template', 2, '2021-12-08 10:47:44', '2021-12-08 16:56:57');
+INSERT INTO `sys_menu_child` VALUES (26, 3, '无效用户', 'fas fa-user-alt-slash', '/user/inactive', 1, '2021-12-10 09:51:10', '2021-12-10 09:56:28');
+INSERT INTO `sys_menu_child` VALUES (27, 3, '用户详情', 'fas fa-address-book', '/user/info', 2, '2021-12-13 15:17:17', '2021-12-13 15:17:25');
+INSERT INTO `sys_menu_child` VALUES (28, 2, '我的工单', 'fas fa-ticket-alt', '/workorder', 4, '2022-01-06 16:00:27', '2022-01-06 16:03:00');
+INSERT INTO `sys_menu_child` VALUES (29, 1, '工单管理', 'fas fa-ticket-alt', '/sys/workorder', 6, '2022-01-26 09:36:59', '2022-01-26 09:36:59');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for tag
+-- ----------------------------
+DROP TABLE IF EXISTS `tag`;
+CREATE TABLE `tag` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `tag_key` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '标签Key,全局唯一',
+  `business_type` int(2) NOT NULL DEFAULT '0' COMMENT '业务类型',
+  `color` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '颜色值',
+  `comment` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '描述',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `tag_key` (`tag_key`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='`create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,';
+
+-- ----------------------------
+-- Records of tag
+-- ----------------------------
+BEGIN;
+INSERT INTO `tag` VALUES (1, 'Authorization', 16, '#EB0303', '启用认证', '2021-05-19 23:32:43', '2021-05-19 23:32:43');
+INSERT INTO `tag` VALUES (2, 'Jenkins', 1, '#B70707', '', '2021-05-26 01:06:24', '2021-05-26 01:06:24');
+INSERT INTO `tag` VALUES (3, 'Gitlab', 1, '#144AD3', '', '2021-05-26 18:18:34', '2021-05-26 18:18:34');
+INSERT INTO `tag` VALUES (6, 'Android', 5, '#B70707', '', '2021-06-22 20:16:27', '2021-06-22 20:16:27');
+INSERT INTO `tag` VALUES (7, 'RDP', 16, '#0684C4', '支持RDP协议', '2021-07-09 01:06:29', '2021-07-09 01:06:29');
+INSERT INTO `tag` VALUES (8, 'VNC', 16, '#30ADED', '支持VNC协议', '2021-07-09 01:06:49', '2021-07-09 01:06:49');
+INSERT INTO `tag` VALUES (9, 'Account', 16, '#0320A2', '账户管理', '2021-08-11 22:59:31', '2021-08-11 23:07:54');
+INSERT INTO `tag` VALUES (10, 'Server', 16, '', '服务器管理', '2021-08-20 23:24:00', '2021-08-20 23:24:00');
+INSERT INTO `tag` VALUES (11, 'Event', 16, '#00E5FF', '实例事件监听', '2021-10-10 00:05:09', '2021-10-10 00:05:09');
+INSERT INTO `tag` VALUES (12, 'TeamLeader', 3, '#0026FF', '经理', '2021-10-20 23:23:05', '2021-10-20 23:23:05');
+INSERT INTO `tag` VALUES (13, 'Operations', 3, '', '运维工程师', '2021-10-20 23:27:02', '2021-10-20 23:27:02');
+INSERT INTO `tag` VALUES (14, 'SystemHooks', 16, '#287710', '接收SystemHooks', '2021-10-29 01:20:39', '2021-10-29 01:20:39');
+INSERT INTO `tag` VALUES (15, 'System', 0, '#329D04', '系统用户', '2021-11-05 11:28:11', '2021-12-16 14:04:26');
+INSERT INTO `tag` VALUES (16, 'Notice', 16, '#05735D', '消息通知', '2021-12-02 10:55:00', '2021-12-02 10:55:00');
+INSERT INTO `tag` VALUES (17, '@Hangzhou', 0, '#BA3D08', '杭州地域标签', '2021-12-30 17:18:08', '2021-12-30 17:18:23');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for template
+-- ----------------------------
+DROP TABLE IF EXISTS `template`;
+CREATE TABLE `template` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '名称',
+  `env_type` int(11) NOT NULL COMMENT '环境类型',
+  `instance_type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '实例类型',
+  `template_key` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '模板Key',
+  `template_type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '模板类型',
+  `vars` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '模板变量',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '模板内容',
+  `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '描述',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='模版';
+
+-- ----------------------------
+-- Records of template
+-- ----------------------------
+BEGIN;
+INSERT INTO `template` VALUES (1, 'k8s-无状态模板-dev', 1, 'KUBERNETES', 'DEPLOYMENT', 'yaml', 'vars:\n  # 必须指定\n  appName: \n  javaOpts: \'-Xms512m -Xmx512m -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5000 -Ddruid.mysql.usePingMethod=false\'\n  springCustomOpts: \'\'\n  livenessInitialDelay: 120\n  readinessInitialDelay: 30', '---\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  labels:\n    app: ${appName}-${envName}\n    env: ${envName}\n  name: ${appName}-${envName}\n  namespace: ${envName}\nspec:\n  progressDeadlineSeconds: 600\n  replicas: 1\n  revisionHistoryLimit: 10\n  selector:\n    matchLabels:\n      app: ${appName}-${envName}\n  strategy:\n    rollingUpdate:\n      maxSurge: 50%\n      maxUnavailable: 50%\n    type: RollingUpdate\n  template:\n    metadata:\n      labels:\n        app: ${appName}-${envName}\n    spec:\n      containers:\n        - env:\n            - name: JAVA_OPTS\n              value: ${javaOpts}\n            - name: SPRING_OPTS\n              valueFrom:\n                configMapKeyRef:\n                  key: spring-common-opts\n                  name: java-options\n            - name: JAR_NAME\n              value: ${appName}.jar\n            - name: SPRING_CUSTOM_OPTS\n              value: ${springCustomOpts}\n          image: >-\n            aliyun-cr-uk.chuanyinet.com/service/${appName}\n          imagePullPolicy: Always\n          lifecycle:\n            preStop:\n              exec:\n                command:\n                  - curl\n                  - \'http://127.0.0.1:8081/actuator/shutdown\'\n                  - \'-X\'\n                  - POST\n          livenessProbe:\n            failureThreshold: 3\n            httpGet:\n              path: /actuator/health/liveness\n              port: 8081\n              scheme: HTTP\n            initialDelaySeconds: ${livenessInitialDelay}\n            periodSeconds: 5\n            successThreshold: 1\n            timeoutSeconds: 1\n          name: ${appName}-${envName}\n          readinessProbe:\n            failureThreshold: 3\n            httpGet:\n              path: /actuator/health/readiness\n              port: 8081\n              scheme: HTTP\n            initialDelaySeconds: ${readinessInitialDelay}\n            periodSeconds: 5\n            successThreshold: 1\n            timeoutSeconds: 1\n          resources:\n            limits:\n              cpu: \'1\'\n              memory: 2Gi\n            requests:\n              cpu: 100m\n              memory: 512Mi\n          securityContext:\n            privileged: true\n          stdin: true\n          tty: true\n          volumeMounts:\n            - mountPath: /etc/localtime\n              name: volume-localtime\n      dnsPolicy: ClusterFirst\n      imagePullSecrets:\n        - name: admin-cr\n      restartPolicy: Always\n      volumes:\n        - hostPath:\n            path: /etc/localtime\n          name: volume-localtime', NULL, '2021-12-03 16:13:26', '2022-01-12 11:43:09');
+INSERT INTO `template` VALUES (2, 'k8s-服务模板-dev', 1, 'KUBERNETES', 'SERVICE', 'yaml', 'vars:\n  # 必须指定\n  appName: ', '---\napiVersion: v1\nkind: Service\nmetadata:\n  name: ${appName}-${envName}\n  namespace: ${envName}\n  labels:\n    env: ${envName}\n    micrometer-prometheus-discovery: \'true\'\nspec:\n  externalTrafficPolicy: Cluster\n  ports:\n    - name: http\n      port: 8080\n      protocol: TCP\n      targetPort: 8080\n    - name: http-mgmt\n      port: 8081\n      protocol: TCP\n      targetPort: 8081\n  selector:\n    app: ${appName}-${envName}\n  sessionAffinity: None\n  type: NodePort', NULL, '2021-12-07 15:01:19', '2021-12-27 18:50:36');
+INSERT INTO `template` VALUES (4, 'k8s-无状态模板-daily', 2, 'KUBERNETES', 'DEPLOYMENT', 'yaml', 'vars:\n  # 必须指定\n  appName: \n  javaOpts: \'-Xms512m -Xmx512m -Ddruid.mysql.usePingMethod=false\'\n  springCustomOpts: \'\'\n  livenessInitialDelay: 120\n  readinessInitialDelay: 30', '---\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  labels:\n    app: ${appName}-${envName}\n    env: ${envName}\n  name: ${appName}-${envName}\n  namespace: ${envName}\nspec:\n  progressDeadlineSeconds: 600\n  replicas: 1\n  revisionHistoryLimit: 10\n  selector:\n    matchLabels:\n      app: ${appName}-${envName}\n  strategy:\n    rollingUpdate:\n      maxSurge: 50%\n      maxUnavailable: 50%\n    type: RollingUpdate\n  template:\n    metadata:\n      annotations:\n        armsPilotAutoEnable: \'on\'\n        armsPilotCreateAppName: ${appName}-${envName}\n      labels:\n        app: ${appName}-${envName}\n    spec:\n      containers:\n        - env:\n            - name: JAVA_OPTS\n              value: ${javaOpts}\n            - name: SPRING_OPTS\n              valueFrom:\n                configMapKeyRef:\n                  key: spring-common-opts\n                  name: java-options\n            - name: JAR_NAME\n              value: ${appName}.jar\n            - name: SPRING_CUSTOM_OPTS\n              value: ${springCustomOpts}\n          image: >-\n            aliyun-cr-uk.chuanyinet.com/service/${appName}\n          imagePullPolicy: Always\n          lifecycle:\n            preStop:\n              exec:\n                command:\n                  - curl\n                  - \'http://127.0.0.1:8081/actuator/shutdown\'\n                  - \'-X\'\n                  - POST\n          livenessProbe:\n            failureThreshold: 3\n            httpGet:\n              path: /actuator/health/liveness\n              port: 8081\n              scheme: HTTP\n            initialDelaySeconds: ${livenessInitialDelay}\n            periodSeconds: 5\n            successThreshold: 1\n            timeoutSeconds: 1\n          name: ${appName}-${envName}\n          readinessProbe:\n            failureThreshold: 3\n            httpGet:\n              path: /actuator/health/readiness\n              port: 8081\n              scheme: HTTP\n            initialDelaySeconds: ${readinessInitialDelay}\n            periodSeconds: 5\n            successThreshold: 1\n            timeoutSeconds: 1\n          resources:\n            limits:\n              cpu: \'1\'\n              memory: 2Gi\n            requests:\n              cpu: 100m\n              memory: 512Mi\n          securityContext:\n            privileged: true\n          stdin: true\n          tty: true\n          volumeMounts:\n            - mountPath: /etc/localtime\n              name: volume-localtime\n      dnsPolicy: ClusterFirst\n      imagePullSecrets:\n        - name: admin-cr\n      restartPolicy: Always\n      volumes:\n        - hostPath:\n            path: /etc/localtime\n          name: volume-localtime', '', '2021-12-09 10:08:13', '2021-12-30 10:00:53');
+INSERT INTO `template` VALUES (5, 'k8s-服务模板-daily', 2, 'KUBERNETES', 'SERVICE', 'yaml', 'vars:\n  # 必须指定\n  appName: ', '---\napiVersion: v1\nkind: Service\nmetadata:\n  name: ${appName}-${envName}\n  namespace: ${envName}\n  labels:\n    env: ${envName}\n    micrometer-prometheus-discovery: \'true\'\nspec:\n  ports:\n    - name: http\n      port: 8080\n      protocol: TCP\n      targetPort: 8080\n    - name: http-mgmt\n      port: 8081\n      protocol: TCP\n      targetPort: 8081\n  selector:\n    app: ${appName}-${envName}\n  sessionAffinity: None\n  type: ClusterIP', '', '2021-12-20 11:06:51', '2021-12-23 14:51:33');
+INSERT INTO `template` VALUES (6, 'k8s-无状态模板-gray', 3, 'KUBERNETES', 'DEPLOYMENT', 'yaml', 'vars:\n  # 必须指定\n  appName: \n  javaOpts: \'-Xms4096M -Xmx4096M -Xmn2048M -XX:MetaspaceSize=128M -XX:MaxMetaspaceSize=256M -Xss256K -XX:+HeapDumpOnOutOfMemoryError -XX:+PrintGCDateStamps -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=80 -Ddruid.mysql.usePingMethod=false\'\n  springCustomOpts: \'\'\n  livenessInitialDelay: 120\n  readinessInitialDelay: 30', '---\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  labels:\n    app: ${appName}-${envName}\n    env: ${envName}\n  name: ${appName}-${envName}\n  namespace: ${envName}\nspec:\n  progressDeadlineSeconds: 600\n  replicas: 2\n  revisionHistoryLimit: 10\n  selector:\n    matchLabels:\n      app: ${appName}-${envName}\n  strategy:\n    rollingUpdate:\n      maxSurge: 50%\n      maxUnavailable: 50%\n    type: RollingUpdate\n  template:\n    metadata:\n      labels:\n        app: ${appName}-${envName}\n    spec:\n      containers:\n        - env:\n            - name: JAVA_OPTS\n              value: ${javaOpts}\n            - name: SPRING_OPTS\n              valueFrom:\n                configMapKeyRef:\n                  key: spring-common-opts\n                  name: java-options\n            - name: JAR_NAME\n              value: ${appName}.jar\n            - name: SPRING_CUSTOM_OPTS\n              value: ${springCustomOpts}\n          image: >-\n            aliyun-cr-uk.chuanyinet.com/service/${appName}\n          imagePullPolicy: Always\n          lifecycle:\n            preStop:\n              exec:\n                command:\n                  - curl\n                  - \'http://127.0.0.1:8081/actuator/shutdown\'\n                  - \'-X\'\n                  - POST\n          livenessProbe:\n            failureThreshold: 3\n            httpGet:\n              path: /actuator/health/liveness\n              port: 8081\n              scheme: HTTP\n            initialDelaySeconds: ${livenessInitialDelay}\n            periodSeconds: 5\n            successThreshold: 1\n            timeoutSeconds: 1\n          name: ${appName}-${envName}\n          readinessProbe:\n            failureThreshold: 3\n            httpGet:\n              path: /actuator/health/readiness\n              port: 8081\n              scheme: HTTP\n            initialDelaySeconds: ${readinessInitialDelay}\n            periodSeconds: 5\n            successThreshold: 1\n            timeoutSeconds: 1\n          resources:\n            limits:\n              cpu: \'4\'\n              memory: 8Gi\n            requests:\n              cpu: 100m\n              memory: 4Gi\n          securityContext:\n            privileged: true\n          stdin: true\n          tty: true\n          volumeMounts:\n            - mountPath: /etc/localtime\n              name: volume-localtime\n      dnsPolicy: ClusterFirst\n      imagePullSecrets:\n        - name: admin-cr\n      restartPolicy: Always\n      volumes:\n        - hostPath:\n            path: /etc/localtime\n          name: volume-localtime', '', '2021-12-22 16:39:05', '2021-12-30 10:01:08');
+INSERT INTO `template` VALUES (7, 'k8s-服务模板-gray', 3, 'KUBERNETES', 'SERVICE', 'yaml', 'vars:\n  # 必须指定\n  appName: ', '---\napiVersion: v1\nkind: Service\nmetadata:\n  name: ${appName}-${envName}\n  namespace: ${envName}\n  labels:\n    env: ${envName}\n    micrometer-prometheus-discovery: \'true\'\nspec:\n  ports:\n    - name: http\n      port: 8080\n      protocol: TCP\n      targetPort: 8080\n    - name: http-mgmt\n      port: 8081\n      protocol: TCP\n      targetPort: 8081\n  selector:\n    app: ${appName}-${envName}\n  sessionAffinity: None\n  type: ClusterIP', '', '2021-12-23 14:50:55', '2021-12-23 14:51:24');
+INSERT INTO `template` VALUES (8, 'k8s-无状态模板-prod', 4, 'KUBERNETES', 'DEPLOYMENT', 'yaml', 'vars:\n  # 必须指定\n  appName: \n  javaOpts: \'-Xms4096M -Xmx4096M -Xmn2048M -XX:MetaspaceSize=128M -XX:MaxMetaspaceSize=256M -Xss256K -XX:+HeapDumpOnOutOfMemoryError -XX:+PrintGCDateStamps -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=80 -Ddruid.mysql.usePingMethod=false\'\n  springCustomOpts: \'\'\n  livenessInitialDelay: 120\n  readinessInitialDelay: 30', '---\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  labels:\n    app: ${appName}-${envName}\n    env: ${envName}\n  name: ${appName}-${envName}\n  namespace: ${envName}\nspec:\n  progressDeadlineSeconds: 600\n  replicas: 2\n  revisionHistoryLimit: 10\n  selector:\n    matchLabels:\n      app: ${appName}-${envName}\n  strategy:\n    rollingUpdate:\n      maxSurge: 25%\n      maxUnavailable: 25%\n    type: RollingUpdate\n  template:\n    metadata:\n      annotations:\n        armsPilotAutoEnable: \'on\'\n        armsPilotCreateAppName: ${appName}-${envName}\n      labels:\n        app: ${appName}-${envName}\n    spec:\n      affinity:\n        podAntiAffinity:\n          requiredDuringSchedulingIgnoredDuringExecution:\n            - labelSelector:\n                matchExpressions:\n                  - key: app\n                    operator: In\n                    values:\n                      - ${appName}-${envName}\n              topologyKey: kubernetes.io/hostname\n      containers:\n        - env:\n            - name: JAVA_OPTS\n              value: ${javaOpts}\n            - name: SPRING_OPTS\n              valueFrom:\n                configMapKeyRef:\n                  key: spring-common-opts\n                  name: java-options\n            - name: JAR_NAME\n              value: ${appName}.jar\n            - name: SPRING_CUSTOM_OPTS\n              value: ${springCustomOpts}\n          image: >-\n            aliyun-cr-uk.chuanyinet.com/service/${appName}\n          imagePullPolicy: Always\n          lifecycle:\n            preStop:\n              exec:\n                command:\n                  - curl\n                  - \'http://127.0.0.1:8081/actuator/shutdown\'\n                  - \'-X\'\n                  - POST\n          livenessProbe:\n            failureThreshold: 3\n            httpGet:\n              path: /actuator/health/liveness\n              port: 8081\n              scheme: HTTP\n            initialDelaySeconds: ${livenessInitialDelay}\n            periodSeconds: 5\n            successThreshold: 1\n            timeoutSeconds: 1\n          name: ${appName}-${envName}\n          readinessProbe:\n            failureThreshold: 3\n            httpGet:\n              path: /actuator/health/readiness\n              port: 8081\n              scheme: HTTP\n            initialDelaySeconds: ${readinessInitialDelay}\n            periodSeconds: 5\n            successThreshold: 1\n            timeoutSeconds: 1\n          resources:\n            limits:\n              cpu: \'4\'\n              memory: 8Gi\n            requests:\n              cpu: 100m\n              memory: 4Gi\n          securityContext:\n            privileged: true\n          stdin: true\n          tty: true\n          volumeMounts:\n            - mountPath: /etc/localtime\n              name: volume-localtime\n      dnsPolicy: ClusterFirst\n      imagePullSecrets:\n        - name: admin-cr\n      restartPolicy: Always\n      volumes:\n        - hostPath:\n            path: /etc/localtime\n          name: volume-localtime', '', '2021-12-27 18:48:49', '2022-01-07 10:39:01');
+INSERT INTO `template` VALUES (9, 'k8s-服务模板-prod', 4, 'KUBERNETES', 'SERVICE', 'yaml', 'vars:\n  # 必须指定\n  appName: ', '---\napiVersion: v1\nkind: Service\nmetadata:\n  name: ${appName}-${envName}\n  namespace: ${envName}\n  labels:\n    env: ${envName}\n    micrometer-prometheus-discovery: \'true\'\nspec:\n  ports:\n    - name: http\n      port: 8080\n      protocol: TCP\n      targetPort: 8080\n    - name: http-mgmt\n      port: 8081\n      protocol: TCP\n      targetPort: 8081\n  selector:\n    app: ${appName}-${envName}\n  sessionAffinity: None\n  type: ClusterIP', '', '2021-12-27 19:02:29', '2021-12-27 19:02:43');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for terminal_session
+-- ----------------------------
+DROP TABLE IF EXISTS `terminal_session`;
+CREATE TABLE `terminal_session` (
+  `id` int(2) unsigned NOT NULL AUTO_INCREMENT,
+  `session_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '会话UUID',
+  `user_id` int(11) DEFAULT NULL COMMENT '用户ID',
+  `username` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `remote_addr` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `session_closed` tinyint(1) NOT NULL DEFAULT '0' COMMENT '会话是否关闭',
+  `close_time` timestamp NULL DEFAULT NULL COMMENT '关闭时间',
+  `server_hostname` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '服务端主机名',
+  `server_addr` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '服务端地址',
+  `session_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `session_id` (`session_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=3832 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of terminal_session
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for terminal_session_instance
+-- ----------------------------
+DROP TABLE IF EXISTS `terminal_session_instance`;
+CREATE TABLE `terminal_session_instance` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `session_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '会话ID',
+  `instance_id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '实例ID',
+  `duplicate_instance_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '会话复制实例ID',
+  `instance_session_type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '实例会话类型',
+  `login_user` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '登录账户',
+  `host_ip` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '主机IP',
+  `output_size` bigint(20) NOT NULL DEFAULT '0' COMMENT '输出文件大小',
+  `instance_closed` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否关闭',
+  `open_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '打开时间',
+  `close_time` timestamp NULL DEFAULT NULL COMMENT '关闭时间',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `session_id` (`session_id`,`instance_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=4267 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of terminal_session_instance
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for terminal_session_instance_command
+-- ----------------------------
+DROP TABLE IF EXISTS `terminal_session_instance_command`;
+CREATE TABLE `terminal_session_instance_command` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `terminal_session_instance_id` int(11) NOT NULL COMMENT '实例表ID',
+  `prompt` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '提示符',
+  `input` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '输入',
+  `input_formatted` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '输入格式化',
+  `output` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '输出',
+  `is_formatted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否格式化',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=15188 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of terminal_session_instance_command
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for user
+-- ----------------------------
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '用户名',
+  `uuid` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '前端框架用户UUID',
+  `password` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '姓名',
+  `display_name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '显示名称',
+  `email` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '邮箱',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '有效',
+  `last_login` timestamp NULL DEFAULT NULL,
+  `wechat` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '',
+  `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '手机',
+  `created_by` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '',
+  `source` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '数据源',
+  `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `username` (`username`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='oc用户本地用户';
+
+-- ----------------------------
+-- Records of user
+-- ----------------------------
+BEGIN;
+INSERT INTO `user` VALUES (1, 'admin', '0000000000000001', NULL, '白衣', '作者', 'ixrjog@qq.com', 1, NULL, '', '13456789101', '', '', NULL, '2021-12-29 16:31:26', '2021-12-29 16:32:33');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for user_credential
+-- ----------------------------
+DROP TABLE IF EXISTS `user_credential`;
+CREATE TABLE `user_credential` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `valid` tinyint(1) DEFAULT NULL COMMENT '有效',
+  `user_id` int(11) DEFAULT NULL,
+  `credential_type` int(11) NOT NULL COMMENT '用户凭据分类',
+  `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `credential` varchar(4096) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '凭据内容',
+  `expired_time` timestamp NULL DEFAULT NULL COMMENT '有效期',
+  `fingerprint` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户凭据';
+
+-- ----------------------------
+-- Records of user_credential
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for user_group
+-- ----------------------------
+DROP TABLE IF EXISTS `user_group`;
+CREATE TABLE `user_group` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '组名',
+  `group_type` int(2) DEFAULT NULL COMMENT '组类型',
+  `source` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '数据源',
+  `allow_order` tinyint(1) DEFAULT NULL COMMENT '允许工单申请',
+  `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '描述',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `name` (`name`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户组';
+
+-- ----------------------------
+-- Records of user_group
+-- ----------------------------
+BEGIN;
+INSERT INTO `user_group` VALUES (1, 'default', 0, '', 1, NULL, '2021-06-16 23:08:03', '2021-06-16 23:08:11');
+INSERT INTO `user_group` VALUES (21, 'nexus-admin', 0, '', 0, 'nexus管理员组', '2021-11-04 17:00:53', '2021-11-04 18:54:11');
+INSERT INTO `user_group` VALUES (23, 'nexus-users', 0, '', 1, 'nexus普通用户组(可下载依赖包)', '2021-11-04 17:01:12', '2021-11-04 18:54:32');
+INSERT INTO `user_group` VALUES (24, 'nexus-developer', 0, '', 0, 'nexus研发用户组(可部署依赖包)', '2021-11-04 17:44:32', '2021-11-04 18:54:51');
+INSERT INTO `user_group` VALUES (25, 'vpn-users', 0, '', 1, '', '2021-11-05 10:39:49', '2021-11-05 10:39:49');
+INSERT INTO `user_group` VALUES (26, 'jenkins-users', 0, '', 1, '', '2021-11-08 17:49:24', '2021-11-08 17:49:24');
+INSERT INTO `user_group` VALUES (27, 'jenkins-administrators', 0, '', 0, '', '2021-11-08 17:49:40', '2021-11-08 17:49:40');
+INSERT INTO `user_group` VALUES (28, 'confluence-administrators', 0, '', 0, 'confluence-administrators', '2021-11-29 18:43:02', '2021-11-29 18:43:02');
+INSERT INTO `user_group` VALUES (29, 'confluence-users', 0, '', 1, 'confluence-users', '2021-11-29 18:43:43', '2021-11-29 18:43:43');
+INSERT INTO `user_group` VALUES (30, 'ldap-admin', 0, '', 0, 'ldap管理员用户', '2021-11-30 16:17:35', '2021-11-30 16:17:35');
+INSERT INTO `user_group` VALUES (31, 'jira-administrators', 0, '', 0, 'jira-administrators', '2021-11-30 16:26:16', '2021-11-30 16:26:16');
+INSERT INTO `user_group` VALUES (32, 'jira-software-users', 0, '', 1, 'jira-software-users', '2021-11-30 16:26:25', '2021-11-30 16:26:25');
+INSERT INTO `user_group` VALUES (33, 'jira-project-manager', 0, '', 1, 'jira项目管理员（可创建项目）', '2021-12-09 18:21:26', '2021-12-09 18:21:26');
+INSERT INTO `user_group` VALUES (34, 'sonar-administrators', 0, '', 0, 'sonar管理员组', '2021-12-14 17:07:00', '2021-12-14 17:07:00');
+INSERT INTO `user_group` VALUES (35, 'sonar-users', 0, '', 1, 'sonar用户', '2021-12-14 17:28:09', '2021-12-14 17:28:09');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for user_permission
+-- ----------------------------
+DROP TABLE IF EXISTS `user_permission`;
+CREATE TABLE `user_permission` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT '用户ID',
+  `business_id` int(11) NOT NULL COMMENT '业务ID',
+  `business_type` int(2) NOT NULL COMMENT '业务类型',
+  `permission_role` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '角色',
+  `rate` int(11) DEFAULT '0' COMMENT '等级',
+  `content` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `user_id` (`user_id`,`business_id`,`business_type`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=585 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户-用户组 授权表';
+
+-- ----------------------------
+-- Records of user_permission
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for user_token
+-- ----------------------------
+DROP TABLE IF EXISTS `user_token`;
+CREATE TABLE `user_token` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '用户登录名',
+  `token` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '登录唯一标识',
+  `valid` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否无效。0：无效；1：有效',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `username` (`username`,`id`,`token`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1040 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of user_token
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for work_order
+-- ----------------------------
+DROP TABLE IF EXISTS `work_order`;
+CREATE TABLE `work_order` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '工单名称',
+  `seq` int(2) DEFAULT '0' COMMENT '顺序',
+  `work_order_key` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '工单Key',
+  `sys_document_id` int(11) NOT NULL DEFAULT '0' COMMENT '帮助文档ID',
+  `work_order_group_id` int(11) DEFAULT NULL COMMENT '工单组ID',
+  `status` int(2) NOT NULL DEFAULT '0' COMMENT '状态 0 正常 1 开发 2 停用',
+  `workflow` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '工作流配置',
+  `icon` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '图标',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '有效',
+  `comment` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '说明',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `workorder_key` (`work_order_key`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of work_order
+-- ----------------------------
+BEGIN;
+INSERT INTO `work_order` VALUES (1, '服务器权限申请', 2, 'SERVER_GROUP', 0, 1, 0, 'nodes:\n  - name: TeamLeader\n    type: 0\n    comment: 上级审批\n    tags:\n      - TeamLeader\n  - name: Operations\n    type: 1\n    comment: 运维审批\n    tags:\n      - Operations', 'fas fa-server', 1, NULL, '2021-10-21 17:45:29', '2022-01-20 15:39:33');
+INSERT INTO `work_order` VALUES (2, '应用权限申请', 1, 'APPLICATION_PERMISSION', 0, 1, 0, 'nodes:\n  - name: TeamLeader\n    type: 0\n    comment: 上级审批\n    tags:\n      - TeamLeader\n  - name: Operations\n    type: 1\n    comment: 运维审批\n    tags:\n      - Operations', 'fab fa-deezer', 1, NULL, '2022-01-06 09:42:45', '2022-01-20 15:39:34');
+INSERT INTO `work_order` VALUES (3, 'Confluence(Wiki)权限申请', 3, 'CONFLUENCE', 0, 1, 0, 'nodes:\n  - name: Operations\n    type: 1\n    comment: 运维审批\n    tags:\n      - Operations', 'fab fa-confluence', 1, NULL, '2022-01-12 10:33:27', '2022-01-24 14:44:39');
+INSERT INTO `work_order` VALUES (4, 'Nexus(构件仓库)权限申请', 4, 'NEXUS', 0, 1, 0, 'nodes:\n  - name: TeamLeader\n    type: 0\n    comment: 上级审批\n    tags:\n      - TeamLeader\n  - name: Operations\n    type: 1\n    comment: 运维审批\n    tags:\n      - Operations', 'fab fa-codepen', 1, NULL, '2022-01-12 10:33:52', '2022-01-20 15:39:36');
+INSERT INTO `work_order` VALUES (5, 'VPN(远程办公)权限申请', 5, 'VPN', 0, 1, 0, 'nodes:\n  - name: Operations\n    type: 1\n    comment: 运维审批\n    tags:\n      - Operations', 'fab fa-telegram', 1, NULL, '2022-01-12 10:34:07', '2022-01-24 14:44:26');
+INSERT INTO `work_order` VALUES (6, '阿里云-RAM策略申请', 6, 'RAM_POLICY', 0, 1, 0, 'nodes:\n  - name: TeamLeader\n    type: 0\n    comment: 上级审批\n    tags:\n      - TeamLeader\n  - name: Operations\n    type: 1\n    comment: 运维审批\n    tags:\n      - Operations', 'fab fa-cloudversify', 1, NULL, '2022-01-12 10:35:54', '2022-02-11 10:56:23');
+INSERT INTO `work_order` VALUES (7, 'Nacos(注册/配置中心)权限申请', 8, 'NACOS', 0, 1, 0, 'nodes:\n  - name: TeamLeader\n    type: 0\n    comment: 上级审批\n    tags:\n      - TeamLeader\n  - name: Operations\n    type: 1\n    comment: 运维审批\n    tags:\n      - Operations', 'fab fa-centercode', 1, NULL, '2022-01-12 10:36:44', '2022-01-24 09:30:41');
+INSERT INTO `work_order` VALUES (8, '阿里云消息队列Topic申请', 1, 'ONS_ROCKETMQ_TOPIC', 0, 2, 0, 'nodes:\n  - name: TeamLeader\n    type: 0\n    comment: 上级审批\n    tags:\n      - TeamLeader\n  - name: Operations\n    type: 1\n    comment: 运维审批\n    tags:\n      - Operations', 'fas fa-rocket', 1, NULL, '2022-01-12 10:37:56', '2022-02-11 16:50:09');
+INSERT INTO `work_order` VALUES (9, '阿里云消息队列Group申请', 2, 'ONS_ROCKETMQ_GROUP', 0, 2, 0, 'nodes:\n  - name: TeamLeader\n    type: 0\n    comment: 上级审批\n    tags:\n      - TeamLeader\n  - name: Operations\n    type: 1\n    comment: 运维审批\n    tags:\n      - Operations', 'fas fa-rocket', 1, '', '2022-01-12 10:38:13', '2022-02-11 16:50:04');
+INSERT INTO `work_order` VALUES (10, 'AWS-IAM策略申请', 7, 'IAM_POLICY', 0, 1, 0, 'nodes:\n  - name: TeamLeader\n    type: 0\n    comment: 上级审批\n    tags:\n      - TeamLeader\n  - name: Operations\n    type: 1\n    comment: 运维审批\n    tags:\n      - Operations', 'fab fa-aws', 1, NULL, '2022-01-24 09:29:49', '2022-02-15 11:23:00');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for work_order_group
+-- ----------------------------
+DROP TABLE IF EXISTS `work_order_group`;
+CREATE TABLE `work_order_group` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '工单组名称',
+  `seq` int(2) DEFAULT NULL COMMENT '顺序',
+  `group_type` int(2) DEFAULT NULL COMMENT '工单组类型',
+  `icon` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '图标',
+  `comment` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '说明',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of work_order_group
+-- ----------------------------
+BEGIN;
+INSERT INTO `work_order_group` VALUES (1, '权限申请', 1, 0, 'fab fa-unity', NULL, '2022-01-06 09:46:46', '2022-02-09 13:53:53');
+INSERT INTO `work_order_group` VALUES (2, '配置变更', 2, 0, 'fab fa-whmcs', NULL, '2022-01-12 10:37:29', '2022-01-12 11:18:50');
+INSERT INTO `work_order_group` VALUES (3, '系统工单', 3, 1, 'fab fa-slack', NULL, '2022-02-08 08:59:57', '2022-02-08 09:06:13');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for work_order_ticket
+-- ----------------------------
+DROP TABLE IF EXISTS `work_order_ticket`;
+CREATE TABLE `work_order_ticket` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `work_order_id` int(11) NOT NULL COMMENT '工单ID',
+  `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '用户名',
+  `node_id` int(11) DEFAULT NULL COMMENT '工单节点ID',
+  `ticket_phase` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '工单阶段',
+  `ticket_status` int(2) DEFAULT NULL COMMENT '工单状态 0 正常  1 结束（成功） 2结束（失败）',
+  `start_time` timestamp NULL DEFAULT NULL COMMENT '申请开始时间',
+  `end_time` timestamp NULL DEFAULT NULL COMMENT '结束开始时间',
+  `comment` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '说明',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='工单票据';
+
+-- ----------------------------
+-- Records of work_order_ticket
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for work_order_ticket_entry
+-- ----------------------------
+DROP TABLE IF EXISTS `work_order_ticket_entry`;
+CREATE TABLE `work_order_ticket_entry` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `work_order_ticket_id` int(11) NOT NULL COMMENT '工单票据ID',
+  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '名称',
+  `instance_uuid` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '数据源实例UUID',
+  `business_type` int(11) DEFAULT NULL COMMENT '业务类型',
+  `business_id` int(11) DEFAULT NULL COMMENT '业务ID',
+  `entry_status` int(2) NOT NULL DEFAULT '0' COMMENT '状态',
+  `entry_key` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '条目Key',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '内容',
+  `role` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '角色',
+  `result` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '处理结果',
+  `comment` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '说明',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='工单票据条目';
+
+-- ----------------------------
+-- Records of work_order_ticket_entry
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for work_order_ticket_node
+-- ----------------------------
+DROP TABLE IF EXISTS `work_order_ticket_node`;
+CREATE TABLE `work_order_ticket_node` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `work_order_ticket_id` int(11) NOT NULL COMMENT '工单票据ID',
+  `node_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '节点名称',
+  `user_id` int(11) DEFAULT NULL COMMENT '(责任人)用户ID',
+  `username` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '(责任人)用户名',
+  `parent_id` int(11) DEFAULT NULL COMMENT '父流程ID',
+  `approval_status` char(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'ApprovalTypeConstants( AGREE,  //同意\\n    CANCEL, //取消\\n    REJECT  //拒绝)',
+  `comment` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '说明',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `ticket_id` (`work_order_ticket_id`,`node_name`) USING BTREE,
+  UNIQUE KEY `work_order_ticket_id` (`work_order_ticket_id`,`parent_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='工单票据节点';
+
+-- ----------------------------
+-- Records of work_order_ticket_node
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for work_order_ticket_subscriber
+-- ----------------------------
+DROP TABLE IF EXISTS `work_order_ticket_subscriber`;
+CREATE TABLE `work_order_ticket_subscriber` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `work_order_ticket_id` int(11) NOT NULL COMMENT '工单票据ID',
+  `user_id` int(11) NOT NULL COMMENT '用户ID',
+  `username` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '用户名',
+  `subscribe_status` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '订阅类型(Tag)',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '有效',
+  `comment` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '说明',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `work_order_ticket_id` (`work_order_ticket_id`,`username`,`subscribe_status`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
+-- Records of work_order_ticket_subscriber
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+SET FOREIGN_KEY_CHECKS = 1;
