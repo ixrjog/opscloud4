@@ -7,7 +7,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.service.server.ServerService;
-import com.baiyi.opscloud.sshcore.SshAccountHelper;
 import com.baiyi.opscloud.sshcore.audit.ServerCommandAudit;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
@@ -74,9 +73,6 @@ public class ServerLoginCommand implements InitializingBean {
 
     @Resource
     private SshServerPacker sshServerPacker;
-
-    @Resource
-    private SshAccountHelper sshAccountHelper;
 
     @Resource
     private SimpleTerminalSessionFacade simpleTerminalSessionFacade;

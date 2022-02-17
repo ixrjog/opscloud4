@@ -95,7 +95,6 @@ public class UserPacker implements IPacker<UserVO.User, User> {
         }
         // 数据脱敏
         desensitizedPacker.desensitized(user);
-        System.err.println(user);
     }
 
     public void wrap(UserVO.IUser iUser) {
