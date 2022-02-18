@@ -3,7 +3,7 @@ package com.baiyi.opscloud.packer.datasource;
 import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.datasource.DsConfigVO;
-import com.baiyi.opscloud.packer.base.IWrapper;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.packer.sys.CredentialPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import lombok.RequiredArgsConstructor;

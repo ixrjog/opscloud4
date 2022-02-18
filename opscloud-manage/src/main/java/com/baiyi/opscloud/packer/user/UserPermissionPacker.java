@@ -2,12 +2,11 @@ package com.baiyi.opscloud.packer.user;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
-import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
+import com.baiyi.opscloud.service.user.UserPermissionService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -15,10 +14,10 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class UserPermissionPacker {
 
-    @Resource
-    private UserPermissionService permissionService;
+    private final UserPermissionService permissionService;
 
     public void wrap(UserVO.IUserPermission iUserPermission) {
         UserPermission query = UserPermission.builder()
@@ -26,7 +25,6 @@ public class UserPermissionPacker {
                 .businessId(iUserPermission.getBusinessId())
                 .businessType(iUserPermission.getBusinessType())
                 .build();
-
         UserPermission userPermission = permissionService.getByUserPermission(query);
         if (userPermission != null)
             iUserPermission.setUserPermission(BeanCopierUtil.copyProperties(userPermission, UserPermissionVO.UserPermission.class));

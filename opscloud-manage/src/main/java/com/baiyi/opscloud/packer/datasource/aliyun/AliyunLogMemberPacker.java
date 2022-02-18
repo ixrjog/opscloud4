@@ -4,13 +4,12 @@ import com.baiyi.opscloud.common.annotation.EnvWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.time.AgoUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.AliyunLog;
-import com.baiyi.opscloud.domain.generator.opscloud.AliyunLogMember;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.datasource.aliyun.AliyunLogMemberVO;
 import com.baiyi.opscloud.domain.vo.datasource.aliyun.AliyunLogVO;
-import com.baiyi.opscloud.packer.base.IPacker;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.datasource.AliyunLogService;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.service.server.ServerService;
@@ -28,7 +27,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @RequiredArgsConstructor
-public class AliyunLogMemberPacker implements IPacker<AliyunLogMemberVO.LogMember, AliyunLogMember> {
+public class AliyunLogMemberPacker implements IWrapper<AliyunLogMemberVO.LogMember> {
 
     private final ServerGroupService serverGroupService;
 
@@ -36,10 +35,7 @@ public class AliyunLogMemberPacker implements IPacker<AliyunLogMemberVO.LogMembe
 
     private final ServerService serverService;
 
-    public AliyunLogMemberVO.LogMember toVO(AliyunLogMember aliyunLogMember) {
-        return BeanCopierUtil.copyProperties(aliyunLogMember, AliyunLogMemberVO.LogMember.class);
-    }
-
+    @Override
     @EnvWrapper
     public void wrap(AliyunLogMemberVO.LogMember logMember, IExtend iExtend) {
         if (!iExtend.getExtend()) return;

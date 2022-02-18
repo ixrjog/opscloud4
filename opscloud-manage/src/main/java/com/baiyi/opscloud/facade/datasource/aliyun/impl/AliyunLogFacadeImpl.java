@@ -68,7 +68,9 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
     @Override
     public DataTable<AliyunLogVO.Log> queryLogPage(AliyunLogParam.AliyunLogPageQuery pageQuery) {
         DataTable<AliyunLog> table = aliyunLogService.queryAliyunLogByParam(pageQuery);
-        return new DataTable<>(table.getData().stream().map(e -> aliyunLogPacker.wrap(e, pageQuery)).collect(Collectors.toList()), table.getTotalNum());
+        List<AliyunLogVO.Log> data = BeanCopierUtil.copyListProperties(table.getData(), AliyunLogVO.Log.class).stream()
+                .peek(e -> aliyunLogPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
-import com.baiyi.opscloud.packer.base.IWrapper;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.packer.business.BusinessPropertyPacker;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.service.server.ServerService;

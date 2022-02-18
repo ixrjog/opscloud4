@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.packer.base;
+package com.baiyi.opscloud.packer;
 
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.vo.base.ISecret;

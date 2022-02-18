@@ -2,7 +2,7 @@ package com.baiyi.opscloud.packer.sys;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.terminal.TerminalSessionVO;
-import com.baiyi.opscloud.packer.base.IWrapper;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.packer.user.UserPacker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

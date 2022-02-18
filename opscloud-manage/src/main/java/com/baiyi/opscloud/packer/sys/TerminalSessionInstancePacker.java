@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.terminal.TerminalSessionInstanceVO;
-import com.baiyi.opscloud.packer.base.IWrapper;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
 import org.springframework.stereotype.Component;
 

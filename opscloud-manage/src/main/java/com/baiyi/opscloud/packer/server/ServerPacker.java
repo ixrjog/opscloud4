@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.packer.ServerPackerDelegate;
-import com.baiyi.opscloud.packer.base.IWrapper;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.packer.business.BusinessPropertyPacker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

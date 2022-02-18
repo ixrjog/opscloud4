@@ -3,7 +3,7 @@ package com.baiyi.opscloud.packer.auth;
 import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.auth.AuthResourceVO;
-import com.baiyi.opscloud.packer.base.IWrapper;
+import com.baiyi.opscloud.packer.IWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

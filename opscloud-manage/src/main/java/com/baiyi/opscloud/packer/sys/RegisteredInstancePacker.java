@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.sys.InstanceVO;
 import com.baiyi.opscloud.domain.vo.sys.SystemVO;
-import com.baiyi.opscloud.packer.base.IWrapper;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.util.SystemInfoUtil;
 import org.springframework.stereotype.Component;
 

@@ -78,7 +78,6 @@ public class TicketNodePacker {
      * @param workOrderTicketNode
      * @return
      */
-
     private String toState(WorkOrderTicketVO.Ticket workOrderTicket, WorkOrderTicketNode workOrderTicketNode) {
         String approvalStatus = workOrderTicketNode.getApprovalStatus();
         if (workOrderTicket.getNodeId().equals(workOrderTicketNode.getId())) {

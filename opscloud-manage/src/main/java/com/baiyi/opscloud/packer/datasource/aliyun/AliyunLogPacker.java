@@ -1,14 +1,11 @@
 package com.baiyi.opscloud.packer.datasource.aliyun;
 
-import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.domain.generator.opscloud.AliyunLog;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.datasource.aliyun.AliyunLogVO;
-import com.baiyi.opscloud.packer.base.IPacker;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.datasource.AliyunLogMemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -16,21 +13,16 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
-public class AliyunLogPacker implements IPacker<AliyunLogVO.Log, AliyunLog> {
+@RequiredArgsConstructor
+public class AliyunLogPacker implements IWrapper<AliyunLogVO.Log> {
 
-    @Resource
-    private AliyunLogMemberService aliyunLogMemberService;
+    private final AliyunLogMemberService aliyunLogMemberService;
 
-    public AliyunLogVO.Log toVO(AliyunLog aliyunLog) {
-        return BeanCopierUtil.copyProperties(aliyunLog, AliyunLogVO.Log.class);
-    }
-
-    public AliyunLogVO.Log wrap(AliyunLog aliyunLog, IExtend iExtend) {
-        AliyunLogVO.Log vo = toVO(aliyunLog);
+    @Override
+    public void wrap(AliyunLogVO.Log aliyunLog, IExtend iExtend) {
         if (iExtend.getExtend()) {
-            vo.setMemberSize(aliyunLogMemberService.countByAliyunLogId(aliyunLog.getId()));
+            aliyunLog.setMemberSize(aliyunLogMemberService.countByAliyunLogId(aliyunLog.getId()));
         }
-        return vo;
     }
 
 }

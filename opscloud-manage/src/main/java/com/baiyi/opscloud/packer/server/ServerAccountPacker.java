@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.vo.server.ServerAccountVO;
-import com.baiyi.opscloud.packer.base.IWrapper;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.packer.sys.CredentialPacker;
 import com.baiyi.opscloud.service.server.ServerAccountPermissionService;
 import com.baiyi.opscloud.service.server.ServerAccountService;

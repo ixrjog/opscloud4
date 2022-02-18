@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.util.time.AgoUtil;
 import com.baiyi.opscloud.datasource.packer.DsInstancePacker;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetSubscriptionVO;
-import com.baiyi.opscloud.packer.base.IWrapper;
+import com.baiyi.opscloud.packer.IWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

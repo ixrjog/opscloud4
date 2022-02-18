@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -54,7 +55,9 @@ public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermis
     @Override
     public DataTable<UserGroupVO.UserGroup> queryUserGroupPage(UserGroupParam.UserGroupPageQuery pageQuery) {
         DataTable<UserGroup> table = userGroupService.queryPageByParam(pageQuery);
-        return new DataTable<>(userGroupPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<UserGroupVO.UserGroup> data = BeanCopierUtil.copyListProperties(table.getData(), UserGroupVO.UserGroup.class).stream()
+                .peek(e -> userGroupPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
@@ -92,7 +95,8 @@ public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermis
     public DataTable<UserVO.IUserPermission> queryUserBusinessPermissionPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
         pageQuery.setBusinessType(getBusinessType());
         DataTable<UserGroup> table = userGroupService.queryPageByParam(pageQuery);
-        List<UserGroupVO.UserGroup> data = userGroupPacker.wrapVOList(table.getData(), pageQuery);
+        List<UserGroupVO.UserGroup> data = BeanCopierUtil.copyListProperties(table.getData(), UserGroupVO.UserGroup.class).stream()
+                .peek(e -> userGroupPacker.wrap(e, pageQuery)).collect(Collectors.toList());
         if (pageQuery.getAuthorized()) {
             data.forEach(e -> {
                 e.setUserId(pageQuery.getUserId());

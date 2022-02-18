@@ -7,7 +7,7 @@ import com.baiyi.opscloud.common.util.SSHUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.vo.sys.CredentialVO;
 import com.baiyi.opscloud.factory.credential.CredentialCustomerFactory;
-import com.baiyi.opscloud.packer.base.SecretPacker;
+import com.baiyi.opscloud.packer.SecretPacker;
 import com.baiyi.opscloud.service.sys.CredentialService;
 import org.springframework.stereotype.Component;
 import org.apache.commons.lang3.StringUtils;

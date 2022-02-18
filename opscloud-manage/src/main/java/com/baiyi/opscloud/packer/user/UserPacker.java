@@ -18,7 +18,6 @@ import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
-import com.baiyi.opscloud.packer.base.IPacker;
 import com.baiyi.opscloud.packer.desensitized.DesensitizedPacker;
 import com.baiyi.opscloud.packer.user.delegate.UserPackerDelegate;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
@@ -31,7 +30,6 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -43,7 +41,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @RequiredArgsConstructor
-public class UserPacker implements IPacker<UserVO.User, User> {
+public class UserPacker {
 
     private final DesensitizedPacker<UserVO.User> desensitizedPacker;
 
@@ -53,10 +51,8 @@ public class UserPacker implements IPacker<UserVO.User, User> {
 
     private final UserPackerDelegate userPackerDelegate;
 
-    @Resource
-    private BusinessAssetRelationService bizAssetRelationService;
+    private final BusinessAssetRelationService bizAssetRelationService;
 
-    @Override
     public UserVO.User toVO(User user) {
         return BeanCopierUtil.copyProperties(user, UserVO.User.class);
     }
@@ -105,18 +101,6 @@ public class UserPacker implements IPacker<UserVO.User, User> {
             iUser.setUser(userVO);
         }
     }
-
-//    public UserVO.User wrap(UserVO.User user) {
-//        authRolePacker.wrap(user);
-//        userCredentialPacker.wrap(user);
-//        userAccessTokenPacker.wrap(user);
-//        wrapPermission(user);
-//        amPacker.wrap(user);
-//        tagPacker.wrap(user);
-//        // 插入头像
-//        wrapAvatar(user);
-//        return desensitizedPacker.desensitized(user);
-//    }
 
     /**
      * 从资产获取用户头像并插入

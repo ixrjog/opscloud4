@@ -2,7 +2,7 @@ package com.baiyi.opscloud.packer.sys;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.terminal.TerminalSessionInstanceCommandVO;
-import com.baiyi.opscloud.packer.base.IWrapper;
+import com.baiyi.opscloud.packer.IWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.packer.base;
+package com.baiyi.opscloud.packer;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.SimpleExtend;

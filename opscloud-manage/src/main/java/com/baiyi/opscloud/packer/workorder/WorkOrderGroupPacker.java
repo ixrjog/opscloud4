@@ -1,9 +1,8 @@
 package com.baiyi.opscloud.packer.workorder;
 
-import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderGroup;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderVO;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.workorder.WorkOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,16 +14,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class WorkOrderGroupPacker {
+public class WorkOrderGroupPacker implements IWrapper<WorkOrderVO.Group> {
 
     private final WorkOrderService workOrderService;
 
-    public WorkOrderVO.Group wrap(WorkOrderGroup workOrderGroup, IExtend iExtend) {
-        WorkOrderVO.Group vo = BeanCopierUtil.copyProperties(workOrderGroup, WorkOrderVO.Group.class);
+    @Override
+    public void wrap(WorkOrderVO.Group group, IExtend iExtend) {
         if (iExtend.getExtend()) {
-            int workOrderSize = workOrderService.countByWorkOrderGroupId(workOrderGroup.getId());
-            vo.setWorkOrderSize(workOrderSize);
+            int workOrderSize = workOrderService.countByWorkOrderGroupId(group.getId());
+            group.setWorkOrderSize(workOrderSize);
         }
-        return vo;
     }
+
 }

@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Template;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.template.TemplateVO;
-import com.baiyi.opscloud.packer.base.IWrapper;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.template.BusinessTemplateService;
 import com.baiyi.opscloud.service.template.TemplateService;
 import lombok.RequiredArgsConstructor;
