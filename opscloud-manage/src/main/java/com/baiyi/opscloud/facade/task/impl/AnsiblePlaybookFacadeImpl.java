@@ -14,7 +14,7 @@ import com.baiyi.opscloud.util.PlaybookUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -32,8 +32,9 @@ public class AnsiblePlaybookFacadeImpl implements AnsiblePlaybookFacade {
     @Override
     public DataTable<AnsiblePlaybookVO.Playbook> queryAnsiblePlaybookPage(AnsiblePlaybookParam.AnsiblePlaybookPageQuery pageQuery) {
         DataTable<AnsiblePlaybook> table = ansiblePlaybookService.queryPageByParam(pageQuery);
+        List<AnsiblePlaybookVO.Playbook> data = BeanCopierUtil.copyListProperties(table.getData(), AnsiblePlaybookVO.Playbook.class);
         return new DataTable<>(
-                table.getData().stream().map(ansiblePlaybookPacker::toVO).collect(Collectors.toList()),
+                data,
                 table.getTotalNum());
     }
 

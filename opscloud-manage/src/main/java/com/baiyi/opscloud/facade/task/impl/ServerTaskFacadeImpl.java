@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.base.ServerTaskStatusEnum;
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.template.YamlUtil;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
@@ -77,8 +78,9 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     @Override
     public DataTable<ServerTaskVO.ServerTask> queryServerTaskPage(ServerTaskParam.ServerTaskPageQuery pageQuery) {
         DataTable<ServerTask> table = serverTaskService.queryServerTaskPage(pageQuery);
-        return new DataTable<>(table.getData().stream().map(e ->
-                serverTaskPacker.wrapToVO(e, pageQuery)).collect(Collectors.toList())
+        List<ServerTaskVO.ServerTask> data = BeanCopierUtil.copyListProperties(table.getData(), ServerTaskVO.ServerTask.class).stream()
+                .peek(e -> serverTaskPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data
                 , table.getTotalNum());
     }
 
