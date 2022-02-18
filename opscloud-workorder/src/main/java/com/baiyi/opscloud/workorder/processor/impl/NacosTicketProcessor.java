@@ -2,16 +2,19 @@ package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.NacosConfig;
+import com.baiyi.opscloud.core.InstanceHelper;
 import com.baiyi.opscloud.datasource.nacos.drive.NacosAuthDrive;
 import com.baiyi.opscloud.datasource.nacos.entity.NacosUser;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
+import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExtendedBaseTicketProcessor;
 import com.google.common.base.Joiner;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -31,6 +34,9 @@ public class NacosTicketProcessor extends AbstractDsAssetExtendedBaseTicketProce
 
     @Resource
     private NacosAuthDrive nacosAuthDrive;
+
+    @Resource
+    private InstanceHelper instanceHelper;
 
     private static final String RANDOM_PASSWORD = null;
 
@@ -60,10 +66,27 @@ public class NacosTicketProcessor extends AbstractDsAssetExtendedBaseTicketProce
         WorkOrderTicket ticket = getTicketById(ticketEntry.getWorkOrderTicketId());
         String nacosUsername = Joiner.on("").skipNulls().join(prefix, ticket.getUsername());
         createNacosUser(config, nacosUsername);
-        NacosUser.AuthRoleResponse authRoleResponse = nacosAuthDrive.authRole(config, nacosUsername, ticketEntry.getName());
-        if (authRoleResponse.getCode() != 200) {
-            throw new TicketProcessException("工单配置Nacos失败: " + authRoleResponse.getMessage());
+        try {
+            NacosUser.AuthRoleResponse authRoleResponse = nacosAuthDrive.authRole(config, nacosUsername, ticketEntry.getName());
+            if (authRoleResponse.getCode() != 200) {
+                throw new TicketProcessException("工单配置Nacos失败: " + authRoleResponse.getMessage());
+            }
+        } catch (FeignException e) {
+            if (e.status() == 500) {
+                log.info("Nacos授权角色接口500错误: 可能是重复申请导致的！");
+            } else {
+                throw new TicketProcessException("工单配置Nacos失败: " + e.getMessage());
+            }
         }
+    }
+
+    @Override
+    protected void pullAsset(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) {
+        DsAssetParam.PullAsset pullAsset = DsAssetParam.PullAsset.builder()
+                .instanceId(instanceHelper.getInstanceByUuid(ticketEntry.getInstanceUuid()).getId())
+                .assetType(getAssetType())
+                .build();
+        dsInstanceFacade.pullAsset(pullAsset);
     }
 
     @Override

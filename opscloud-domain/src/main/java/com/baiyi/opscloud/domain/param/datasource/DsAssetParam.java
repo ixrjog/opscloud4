@@ -79,6 +79,7 @@ public class DsAssetParam {
 
     }
 
+    @SuperBuilder(toBuilder = true)
     @Data
     @NoArgsConstructor
     @ApiModel
@@ -101,6 +102,7 @@ public class DsAssetParam {
     public static class PushAsset extends BaseAsset {
     }
 
+    @SuperBuilder(toBuilder = true)
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
