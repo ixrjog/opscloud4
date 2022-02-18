@@ -7,9 +7,9 @@ import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.baiyi.opscloud.service.user.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,13 +19,12 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class BusinessPermissionUserPacker {
 
-    @Resource
-    private UserPermissionService userPermissionService;
+    private final UserPermissionService userPermissionService;
 
-    @Resource
-    private UserService userService;
+    private final UserService userService;
 
     /**
      * 业务授权用户
@@ -46,4 +45,5 @@ public class BusinessPermissionUserPacker {
                 }).collect(Collectors.toList())
         );
     }
+
 }

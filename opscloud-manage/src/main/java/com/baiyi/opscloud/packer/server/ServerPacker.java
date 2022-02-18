@@ -1,10 +1,11 @@
 package com.baiyi.opscloud.packer.server;
 
-import com.baiyi.opscloud.common.annotation.EnvWrapper;
-import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
+import com.baiyi.opscloud.packer.ServerPackerDelegate;
+import com.baiyi.opscloud.packer.base.IWrapper;
 import com.baiyi.opscloud.packer.business.BusinessPropertyPacker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class ServerPacker {
+public class ServerPacker implements IWrapper<ServerVO.Server> {
 
     private final ServerAccountPacker accountPacker;
 
@@ -24,17 +25,14 @@ public class ServerPacker {
 
     private final BusinessPropertyPacker businessPropertyPacker;
 
-    @EnvWrapper
-    @TagsWrapper
+    private final ServerPackerDelegate serverPackerDelegate;
+
+    @Override
     public void wrap(ServerVO.Server server, IExtend iExtend) {
+        serverPackerDelegate.wrap(server, SimpleExtend.EXTEND); // 代理
         accountPacker.wrap(server);
         serverGroupPacker.wrap(server);
         businessPropertyPacker.wrap(server);
-        SimpleServerNameFacade.wrapDisplayName(server);
-    }
-
-    @EnvWrapper(extend = true)
-    public void wrapVO(ServerVO.Server server) {
         SimpleServerNameFacade.wrapDisplayName(server);
     }
 

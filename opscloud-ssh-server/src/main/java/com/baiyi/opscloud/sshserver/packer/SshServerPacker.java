@@ -1,16 +1,16 @@
 package com.baiyi.opscloud.sshserver.packer;
 
-import com.baiyi.opscloud.common.annotation.EnvWrapper;
-import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
+import com.baiyi.opscloud.packer.ServerPackerDelegate;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.service.user.UserPermissionService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +29,8 @@ public class SshServerPacker {
 
     private final UserPermissionService permissionService;
 
+    private final ServerPackerDelegate serverPackerDelegate;
+
     private void wrap(UserVO.IUserPermission iUserPermission) {
         UserPermission query = UserPermission.builder()
                 .userId(iUserPermission.getUserId())
@@ -41,9 +43,8 @@ public class SshServerPacker {
             iUserPermission.setUserPermission(BeanCopierUtil.copyProperties(userPermission, UserPermissionVO.UserPermission.class));
     }
 
-    @EnvWrapper(extend = true)
-    @TagsWrapper(extend = true)
     public void wrap(ServerVO.Server server) {
+        serverPackerDelegate.wrap(server, SimpleExtend.EXTEND);
         ServerGroup group = serverGroupService.getById(server.getServerGroupId());
         ServerGroupVO.ServerGroup serverGroup = BeanCopierUtil.copyProperties(group, ServerGroupVO.ServerGroup.class);
         serverGroup.setUserId(SessionUtil.getUserId());

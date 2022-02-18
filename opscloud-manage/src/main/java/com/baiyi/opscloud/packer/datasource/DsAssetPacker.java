@@ -60,12 +60,6 @@ public class DsAssetPacker {
         return asset;
     }
 
-//    public List<DsAssetVO.Asset> wrapVOList(List<DatasourceInstanceAsset> data, IExtend iExtend, IRelation iRelation) {
-//        return data.stream().map(e ->
-//                wrapVO(e, iExtend, iRelation)
-//        ).collect(Collectors.toList());
-//    }
-
     @TagsWrapper
     public void wrap(DsAssetVO.Asset asset, IExtend iExtend, IRelation iRelation) {
         if (ExtendUtil.isExtend(iExtend)) {
@@ -76,7 +70,6 @@ public class DsAssetPacker {
             asset.setTree(wrapTree(asset));
         }
     }
-
 
     public DsAssetVO.Asset wrapVO(DatasourceInstanceAsset datasourceInstanceAsset, IExtend iExtend, IRelation iRelation) {
         DsAssetVO.Asset asset = toVO(datasourceInstanceAsset);

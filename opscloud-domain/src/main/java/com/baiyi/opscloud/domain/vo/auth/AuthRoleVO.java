@@ -7,8 +7,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 public class AuthRoleVO {
+
+    public interface IRoles {
+
+        String getUsername();
+
+        void setRoles(List<Role> roles);
+    }
 
     @EqualsAndHashCode(callSuper = true)
     @Data
