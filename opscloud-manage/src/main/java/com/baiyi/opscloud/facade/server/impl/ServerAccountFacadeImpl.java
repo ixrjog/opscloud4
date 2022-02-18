@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -39,7 +40,9 @@ public class ServerAccountFacadeImpl implements ServerAccountFacade {
     @Override
     public DataTable<ServerAccountVO.Account> queryServerAccountPage(ServerAccountParam.ServerAccountPageQuery pageQuery) {
         DataTable<ServerAccount> table = accountService.queryPageByParam(pageQuery);
-        return new DataTable<>(accountPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<ServerAccountVO.Account> data = BeanCopierUtil.copyListProperties(table.getData(), ServerAccountVO.Account.class).stream()
+                .peek(e -> accountPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
@@ -66,20 +69,20 @@ public class ServerAccountFacadeImpl implements ServerAccountFacade {
     @Override
     public void updateServerAccountPermission(ServerAccountParam.UpdateServerAccountPermission updatePermission) {
         List<ServerAccountPermission> permissions = accountPermissionService.queryByServerId(updatePermission.getServerId());
-        updatePermission.getAccountIds().forEach(id->{
-          if(!isAuthorized(permissions,id)){
-              ServerAccountPermission permission = ServerAccountPermission.builder()
-                      .serverAccountId(id)
-                      .serverId(updatePermission.getServerId())
-                      .build();
-              accountPermissionService.add(permission);
-          }
+        updatePermission.getAccountIds().forEach(id -> {
+            if (!isAuthorized(permissions, id)) {
+                ServerAccountPermission permission = ServerAccountPermission.builder()
+                        .serverAccountId(id)
+                        .serverId(updatePermission.getServerId())
+                        .build();
+                accountPermissionService.add(permission);
+            }
 
         });
-        permissions.forEach(e-> accountPermissionService.deleteById(e.getId()) );
+        permissions.forEach(e -> accountPermissionService.deleteById(e.getId()));
     }
 
-    private boolean isAuthorized(List<ServerAccountPermission> permissions,Integer accountId){
+    private boolean isAuthorized(List<ServerAccountPermission> permissions, Integer accountId) {
         Iterator<ServerAccountPermission> iter = permissions.iterator();
         while (iter.hasNext()) {
             ServerAccountPermission permission = iter.next();

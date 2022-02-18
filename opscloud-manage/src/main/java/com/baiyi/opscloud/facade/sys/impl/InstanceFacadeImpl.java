@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.sys.impl;
 
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.HostUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Instance;
@@ -48,8 +49,10 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
     @Override
     public DataTable<InstanceVO.RegisteredInstance> queryRegisteredInstancePage(RegisteredInstanceParam.RegisteredInstancePageQuery pageQuery) {
         DataTable<Instance> table = instanceService.queryRegisteredInstancePage(pageQuery);
+        List<InstanceVO.RegisteredInstance> data = BeanCopierUtil.copyListProperties(table.getData(), InstanceVO.RegisteredInstance.class).stream()
+                .peek(e -> registeredInstancePacker.wrap(e, pageQuery)).collect(Collectors.toList());
         return new DataTable<>(
-                table.getData().stream().map(e -> registeredInstancePacker.wrapToVO(e, pageQuery)).collect(Collectors.toList()),
+                data,
                 table.getTotalNum());
     }
 

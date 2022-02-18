@@ -154,7 +154,9 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
     @Override
     public DataTable<ServerGroupTypeVO.ServerGroupType> queryServerGroupTypePage(ServerGroupTypeParam.ServerGroupTypePageQuery pageQuery) {
         DataTable<ServerGroupType> table = serverGroupTypeService.queryPageByParam(pageQuery);
-        return new DataTable<>(serverGroupTypePacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<ServerGroupTypeVO.ServerGroupType> data = BeanCopierUtil.copyListProperties(table.getData(),ServerGroupTypeVO.ServerGroupType.class).stream()
+                .peek(e->serverGroupTypePacker.wrap(e,pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
