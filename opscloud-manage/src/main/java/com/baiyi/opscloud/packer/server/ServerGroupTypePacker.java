@@ -7,9 +7,8 @@ import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.service.server.ServerGroupTypeService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -17,13 +16,12 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class ServerGroupTypePacker implements IWrapper<ServerGroupTypeVO.ServerGroupType> {
 
-    @Resource
-    private ServerGroupService serverGroupService;
+    private final ServerGroupService serverGroupService;
 
-    @Resource
-    private ServerGroupTypeService serverGroupTypeService;
+    private final ServerGroupTypeService serverGroupTypeService;
 
     public void wrap(ServerGroupTypeVO.IServerGroupType iServerGroupType) {
         ServerGroupType serverGroupType = serverGroupTypeService.getById(iServerGroupType.getServerGroupTypeId());

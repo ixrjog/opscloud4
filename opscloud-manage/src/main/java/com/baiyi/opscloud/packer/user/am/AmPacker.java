@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -46,15 +47,15 @@ public class AmPacker {
      */
     public void wrap(UserVO.User user) {
         Map<String, List<AMVO.XAM>> amMap = Maps.newHashMap();
-        for (DsAssetTypeConstants xamAssetType : xamAssetTypes) {
+        Arrays.stream(xamAssetTypes).forEach(xamAssetType -> {
             List<AMVO.XAM> xams = toAms(user, xamAssetType.name());
-            if (CollectionUtils.isEmpty(xams)) continue;
+            if (CollectionUtils.isEmpty(xams)) return;
             if (amMap.containsKey(xamAssetType.name())) {
                 amMap.get(xamAssetType.name()).addAll(xams);
             } else {
                 amMap.put(xamAssetType.name(), xams);
             }
-        }
+        });
         user.setAmMap(amMap);
     }
 

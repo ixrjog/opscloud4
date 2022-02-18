@@ -6,9 +6,8 @@ import com.baiyi.opscloud.domain.vo.sys.InstanceVO;
 import com.baiyi.opscloud.domain.vo.sys.SystemVO;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.util.SystemInfoUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -16,10 +15,10 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class RegisteredInstancePacker implements IWrapper<InstanceVO.RegisteredInstance> {
 
-    @Resource
-    private RedisUtil redisUtil;
+    private final RedisUtil redisUtil;
 
     @Override
     public void wrap(InstanceVO.RegisteredInstance registeredInstance, IExtend iExtend) {

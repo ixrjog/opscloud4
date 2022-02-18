@@ -6,9 +6,9 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.terminal.TerminalSessionInstanceVO;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class TerminalSessionInstancePacker implements IWrapper<TerminalSessionInstanceVO.SessionInstance> {
 
-    @Resource
-    private TerminalSessionInstanceService terminalSessionInstanceService;
+    private final TerminalSessionInstanceService terminalSessionInstanceService;
 
     public void wrap(TerminalSessionInstanceVO.ISessionInstances iSessionInstances, IExtend iExtend) {
         List<TerminalSessionInstance> sessionInstances = terminalSessionInstanceService.queryBySessionId(iSessionInstances.getSessionId());

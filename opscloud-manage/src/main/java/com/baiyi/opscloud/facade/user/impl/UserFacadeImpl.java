@@ -2,10 +2,7 @@ package com.baiyi.opscloud.facade.user.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
-import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.IdUtil;
-import com.baiyi.opscloud.common.util.PasswordUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
@@ -46,6 +43,7 @@ import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -123,7 +121,8 @@ public class UserFacadeImpl implements UserFacade {
             List<DatasourceInstanceAsset> userAssets = dsInstanceAssetService.queryAssetByAssetParam(query);
             if (CollectionUtils.isEmpty(userAssets)) return;
             userAssets.forEach(a -> {
-                DsAssetVO.Asset asset = dsAssetPacker.wrapVO(a, SimpleExtend.EXTEND, SimpleRelation.RELATION);
+                DsAssetVO.Asset asset = BeanCopierUtil.copyProperties(a, DsAssetVO.Asset.class);
+                dsAssetPacker.wrap(asset, SimpleExtend.EXTEND, SimpleRelation.RELATION);
                 if (asset.getChildren().containsKey(DsAssetTypeConstants.GROUP.name())) {
                     // GROUP存在
                     asset.getChildren().get(DsAssetTypeConstants.GROUP.name()).forEach(g ->
@@ -151,7 +150,7 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     @AssetBusinessRelation // 资产绑定业务对象
     public UserVO.User addUser(UserVO.User user) {
-        User newUser = userPacker.toDO(user);
+        User newUser = this.toDO(user);
 //        if (StringUtils.isEmpty(newUser.getPassword()))
 //            throw new CommonRuntimeException("密码不能为空");
         userService.add(newUser);
@@ -176,7 +175,7 @@ public class UserFacadeImpl implements UserFacade {
                 throw new CommonRuntimeException("权限不足:需要管理员才能修改其他用户信息!");
             }
         }
-        User updateUser = userPacker.toDO(user);
+        User updateUser = this.toDO(user);
         updateUser.setUsername(checkUser.getUsername());
         userService.updateBySelective(updateUser);
     }
@@ -267,6 +266,18 @@ public class UserFacadeImpl implements UserFacade {
                 .username(username)
                 .build();
         return amPacker.toAms(vo, amType);
+    }
+
+    private User toDO(UserVO.User user) {
+        User pre = BeanCopierUtil.copyProperties(user, User.class);
+        if (!StringUtils.isEmpty(pre.getPassword()))
+            RegexUtil.checkPasswordRule(pre.getPassword());
+        if (!RegexUtil.isPhone(user.getPhone()))
+            pre.setPhone(Strings.EMPTY);
+        if (StringUtils.isEmpty(user.getUuid())) {
+            pre.setUuid(IdUtil.buildUUID());
+        }
+        return pre;
     }
 
 }

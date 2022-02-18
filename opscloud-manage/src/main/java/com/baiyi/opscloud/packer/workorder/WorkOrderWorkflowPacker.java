@@ -4,10 +4,12 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.WorkflowUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketNode;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkflowVO;
-import com.baiyi.opscloud.packer.user.UserPacker;
+import com.baiyi.opscloud.packer.user.UserAvatarPacker;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketNodeService;
 import com.baiyi.opscloud.workorder.constants.NodeTypeConstants;
@@ -30,7 +32,7 @@ public class WorkOrderWorkflowPacker {
 
     private final UserService userService;
 
-    private final UserPacker userPacker;
+    private final UserAvatarPacker userAvatarPacker;
 
     private final WorkOrderTicketNodeService workOrderTicketNodeService;
 
@@ -43,7 +45,10 @@ public class WorkOrderWorkflowPacker {
             try {
                 if (!CollectionUtils.isEmpty(nodeView.getTags())) {
                     List<User> users = userService.queryByTagKeys(nodeView.getTags());
-                    nodeView.setAuditUsers(userPacker.wrapAvatar(users));
+                    nodeView.setAuditUsers(BeanCopierUtil.copyListProperties(users, UserVO.User.class).stream()
+                            .peek(u -> userAvatarPacker.wrap(u, SimpleExtend.EXTEND))
+                            .collect(Collectors.toList())
+                    );
                 }
                 // 设置用户选择审批人
                 if (NodeTypeConstants.USER_LIST.getCode() == nodeView.getType()) {

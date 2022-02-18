@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderVO;
-import com.baiyi.opscloud.packer.user.UserPacker;
+import com.baiyi.opscloud.packer.user.UserAvatarPacker;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.workorder.helper.TicketApproverHelper;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class TicketPacker {
 
     private final TicketNodePacker nodePacker;
 
-    private final UserPacker userPacker;
+    private final UserAvatarPacker userAvatarPacker;
 
     private final TicketApproverHelper ticketApproverHelper;
 
@@ -98,14 +98,13 @@ public class TicketPacker {
         ticketEntryPacker.wrap(ticketView);
         workOrderWorkflowPacker.wrap(ticketView); // 工作流节点
         nodePacker.wrap(ticketView);
-
         return ticketView;
     }
 
     private UserVO.User toCreateUser(WorkOrderTicket workOrderTicket) {
         User user = userService.getByUsername(workOrderTicket.getUsername());
         UserVO.User userVO = BeanCopierUtil.copyProperties(user, UserVO.User.class);
-        userPacker.wrapAvatar(userVO);
+        userAvatarPacker.wrap(userVO);
         return userVO;
     }
 

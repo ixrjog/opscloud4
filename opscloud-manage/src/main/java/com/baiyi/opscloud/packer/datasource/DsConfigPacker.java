@@ -22,6 +22,7 @@ public class DsConfigPacker implements IWrapper<DsConfigVO.DsConfig> {
 
     private final DsInstanceService dsInstanceService;
 
+    @Override
     public void wrap(DsConfigVO.DsConfig dsConfig, IExtend iExtend) {
         if (!ExtendUtil.isExtend(iExtend))
             return;

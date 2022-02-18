@@ -2,6 +2,7 @@ package com.baiyi.opscloud.packer.datasource;
 
 import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.baiyi.opscloud.core.asset.IAssetConverter;
 import com.baiyi.opscloud.core.asset.factory.AssetConvertFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -11,17 +12,17 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.IRelation;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
+import com.baiyi.opscloud.packer.IWrapperRelation;
 import com.baiyi.opscloud.packer.TagPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
-import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -33,25 +34,22 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class DsAssetPacker {
+@RequiredArgsConstructor
+public class DsAssetPacker implements IWrapperRelation<DsAssetVO.Asset> {
 
-    @Resource
-    private DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
+    private final DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
 
-    @Resource
-    private DsInstanceAssetService dsInstanceAssetService;
+    private final DsInstanceAssetService dsInstanceAssetService;
 
-    @Resource
-    private DsInstanceAssetRelationService dsInstanceAssetRelationService;
+    private final DsInstanceAssetRelationService dsInstanceAssetRelationService;
 
-    @Resource
-    private TagPacker tagPacker;
+    private final TagPacker tagPacker;
 
     public void wrap(DsAssetVO.IDsAsset iDsAsset) {
         if (iDsAsset.getAssetId() == 0) return;
         DatasourceInstanceAsset asset = dsInstanceAssetService.getById(iDsAsset.getAssetId());
         if (asset == null) return;
-        iDsAsset.setAsset(toVO(asset));
+        iDsAsset.setAsset(BeanCopierUtil.copyProperties(asset, DsAssetVO.Asset.class));
     }
 
     public DsAssetVO.Asset wrap(DsInstanceVO.Instance instance, DatasourceInstanceAsset dsInstanceAsset) {
@@ -60,59 +58,30 @@ public class DsAssetPacker {
         return asset;
     }
 
+    @Override
     @TagsWrapper
     public void wrap(DsAssetVO.Asset asset, IExtend iExtend, IRelation iRelation) {
-        if (ExtendUtil.isExtend(iExtend)) {
-            wrap(asset);
-            wrapConvertBusinessTypes(asset); // 资产可转换为业务对象
-            if (iRelation.isRelation())
-                wrapRelation(asset);
-            asset.setTree(wrapTree(asset));
-        }
-    }
-
-    public DsAssetVO.Asset wrapVO(DatasourceInstanceAsset datasourceInstanceAsset, IExtend iExtend, IRelation iRelation) {
-        DsAssetVO.Asset asset = toVO(datasourceInstanceAsset);
-        if (ExtendUtil.isExtend(iExtend)) {
-            // tagPacker.wrap(asset);
-            wrap(asset);
-            wrapConvertBusinessTypes(asset); // 资产可转换为业务对象
-            if (iRelation.isRelation())
-                wrapRelation(asset);
-            asset.setTree(wrapTree(asset));
-        }
-        return asset;
-    }
-
-    //  to   AssetConvertFactory
-    private void wrapConvertBusinessTypes(DsAssetVO.Asset asset) {
-        IAssetConverter iAssetConvert = AssetConvertFactory.getIAssetConvertByAssetType(asset.getAssetType());
-        if (iAssetConvert != null) {
-            asset.setConvertBusinessTypes(iAssetConvert.toBusinessTypes(asset));
-        }
-    }
-
-
-    // asset properties
-    private void wrap(DsAssetVO.Asset asset) {
+        if (!ExtendUtil.isExtend(iExtend)) return;
+        // asset properties
         Map<String, String> properties = dsInstanceAssetPropertyService.queryByAssetId(asset.getId())
                 .stream().collect(Collectors.toMap(DatasourceInstanceAssetProperty::getName, DatasourceInstanceAssetProperty::getValue, (k1, k2) -> k1));
         asset.setProperties(properties);
+        // 资产可转换为业务对象
+        IAssetConverter converter = AssetConvertFactory.getIAssetConvertByAssetType(asset.getAssetType());
+        if (converter != null) {
+            asset.setConvertBusinessTypes(converter.toBusinessTypes(asset));
+        }
+        // 关系
+        wrap(asset, iRelation);
+        asset.setTree(wrapTree(asset));
     }
 
-    private DsAssetVO.Asset toVO(DatasourceInstanceAsset asset) {
-        return BeanCopierUtil.copyProperties(asset, DsAssetVO.Asset.class);
-    }
-
-    private List<DsAssetVO.Asset> toVOList(List<DatasourceInstanceAsset> assetList) {
-        return BeanCopierUtil.copyListProperties(assetList, DsAssetVO.Asset.class);
-    }
-
-    private void wrapRelation(DsAssetVO.Asset asset) {
+    private void wrap(DsAssetVO.Asset asset, IRelation iRelation) {
+        if (!iRelation.isRelation()) return;
         Map<String, List<DsAssetVO.Asset>> children = Maps.newHashMap();
         List<DatasourceInstanceAssetRelation> relations = dsInstanceAssetRelationService.queryTargetAsset(asset.getInstanceUuid(), asset.getId());
         relations.forEach(e -> {
-            DsAssetVO.Asset targetAsset = toVO(dsInstanceAssetService.getById(e.getTargetAssetId()));
+            DsAssetVO.Asset targetAsset = BeanCopierUtil.copyProperties(dsInstanceAssetService.getById(e.getTargetAssetId()), DsAssetVO.Asset.class);
             if (children.containsKey(e.getRelationType())) {
                 children.get(e.getRelationType()).add(targetAsset);
             } else {
@@ -126,7 +95,7 @@ public class DsAssetPacker {
         List<DatasourceInstanceAsset> assetList = dsInstanceAssetService.listByParentId(asset.getId());
         if (CollectionUtils.isEmpty(assetList))
             return Collections.emptyMap();
-        List<DsAssetVO.Asset> assetVOList = toVOList(assetList);
+        List<DsAssetVO.Asset> assetVOList = BeanCopierUtil.copyListProperties(assetList, DsAssetVO.Asset.class);
         assetVOList.forEach(a -> a.setChildren(wrapTree(a)));
         return assetVOList.stream().collect(Collectors.groupingBy(DsAssetVO.Asset::getAssetType));
     }

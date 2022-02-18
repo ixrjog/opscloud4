@@ -21,12 +21,12 @@ public class DsAssetSubscriptionPacker implements IWrapper<DsAssetSubscriptionVO
 
     private final DsAssetPacker dsAssetPacker;
 
+    @Override
     public void wrap(DsAssetSubscriptionVO.AssetSubscription assetSubscription, IExtend iExtend) {
-        if (iExtend.getExtend()) {
-            dsInstancePacker.wrap(assetSubscription);
-            dsAssetPacker.wrap(assetSubscription);
-            AgoUtil.wrap(assetSubscription);
-        }
+        if (!iExtend.getExtend()) return;
+        dsInstancePacker.wrap(assetSubscription);
+        dsAssetPacker.wrap(assetSubscription);
+        AgoUtil.wrap(assetSubscription);
     }
 
 }
