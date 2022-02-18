@@ -4,9 +4,8 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessProperty;
 import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
 import com.baiyi.opscloud.service.business.BusinessPropertyService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author 修远
@@ -15,10 +14,10 @@ import javax.annotation.Resource;
  */
 
 @Component
+@RequiredArgsConstructor
 public class BusinessPropertyPacker {
 
-    @Resource
-    private BusinessPropertyService businessPropertyService;
+    private final BusinessPropertyService businessPropertyService;
 
     public void wrap(BusinessPropertyVO.IBusinessProperty iBusinessProperty) {
         BusinessProperty businessProperty = businessPropertyService.getByUniqueKey(iBusinessProperty);

@@ -6,6 +6,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.auth.AuthGroupParam;
 import com.baiyi.opscloud.domain.param.auth.AuthResourceParam;
 import com.baiyi.opscloud.domain.param.auth.AuthRoleParam;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -58,7 +60,8 @@ public class AuthFacadeImpl implements AuthFacade {
     @Override
     public DataTable<AuthRoleVO.Role> queryRolePage(AuthRoleParam.AuthRolePageQuery pageQuery) {
         DataTable<AuthRole> table = authRoleService.queryPageByParam(pageQuery);
-        return new DataTable<>(authRolePacker.wrapVOList(table.getData()), table.getTotalNum());
+        List<AuthRoleVO.Role> data = BeanCopierUtil.copyListProperties(table.getData(), AuthRoleVO.Role.class);
+        return new DataTable<>(data , table.getTotalNum());
     }
 
     @Override
@@ -81,7 +84,9 @@ public class AuthFacadeImpl implements AuthFacade {
     @Override
     public DataTable<AuthGroupVO.Group> queryGroupPage(AuthGroupParam.AuthGroupPageQuery pageQuery) {
         DataTable<AuthGroup> table = authGroupService.queryPageByParam(pageQuery);
-        return new DataTable<>(authGroupPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<AuthGroupVO.Group> data = BeanCopierUtil.copyListProperties(table.getData(), AuthGroupVO.Group.class).stream()
+                .peek(e -> authGroupPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
@@ -104,7 +109,9 @@ public class AuthFacadeImpl implements AuthFacade {
     @Override
     public DataTable<AuthResourceVO.Resource> queryRoleBindResourcePage(AuthResourceParam.RoleBindResourcePageQuery pageQuery) {
         DataTable<AuthResource> table = authResourceService.queryRoleBindResourcePageByParam(pageQuery);
-        return new DataTable<>(authResourcePacker.wrapVOList(table.getData()), table.getTotalNum());
+        List<AuthResourceVO.Resource> data = BeanCopierUtil.copyListProperties(table.getData(), AuthResourceVO.Resource.class)
+                .stream().peek(e -> authResourcePacker.wrap(e, SimpleExtend.EXTEND)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
@@ -123,7 +130,9 @@ public class AuthFacadeImpl implements AuthFacade {
     @Override
     public DataTable<AuthResourceVO.Resource> queryResourcePage(AuthResourceParam.AuthResourcePageQuery pageQuery) {
         DataTable<AuthResource> table = authResourceService.queryPageByParam(pageQuery);
-        return new DataTable<>(authResourcePacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<AuthResourceVO.Resource> data = BeanCopierUtil.copyListProperties(table.getData(), AuthResourceVO.Resource.class)
+                .stream().peek(e -> authResourcePacker.wrap(e, SimpleExtend.EXTEND)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override

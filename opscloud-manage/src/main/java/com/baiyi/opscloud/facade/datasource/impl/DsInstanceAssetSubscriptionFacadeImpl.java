@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -52,9 +53,11 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
     @Override
     public DataTable<DsAssetSubscriptionVO.AssetSubscription> queryAssetSubscriptionPage(DsAssetSubscriptionParam.AssetSubscriptionPageQuery pageQuery) {
         DataTable<DatasourceInstanceAssetSubscription> table = dsInstanceAssetSubscriptionService.queryPageByParam(pageQuery);
-        return new DataTable<>(
-                table.getData().stream().map(e -> dsAssetSubscriptionPacker.wrapToVO(e, pageQuery)).collect(Collectors.toList()),
-                table.getTotalNum());
+
+        List<DsAssetSubscriptionVO.AssetSubscription> data = BeanCopierUtil.copyListProperties(table.getData(), DsAssetSubscriptionVO.AssetSubscription.class)
+                .stream().peek(e->dsAssetSubscriptionPacker.wrap(e,pageQuery)).collect(Collectors.toList());
+
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override

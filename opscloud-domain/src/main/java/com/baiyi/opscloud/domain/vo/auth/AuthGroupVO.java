@@ -14,6 +14,14 @@ import lombok.NoArgsConstructor;
  */
 public class AuthGroupVO {
 
+    public interface IAuthGroup {
+
+        Integer getGroupId();
+
+        void setGroup(Group group);
+
+    }
+
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
@@ -23,7 +31,7 @@ public class AuthGroupVO {
         @ApiModelProperty(value = "资源数量")
         private Integer resourceSize;
 
-        @ApiModelProperty(value = "主键",example="1")
+        @ApiModelProperty(value = "主键", example = "1")
         private Integer id;
 
         @ApiModelProperty(value = "资源组名称")

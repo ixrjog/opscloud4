@@ -80,8 +80,11 @@ public class UserVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class User extends BaseVO implements BusinessAssetRelationVO.IBusinessAssetRelation, // 资产与业务对象绑定关系
-            TagVO.ITags, IUserPermission {
+    public static class User extends BaseVO implements
+            BusinessAssetRelationVO.IBusinessAssetRelation, // 资产与业务对象绑定关系
+            TagVO.ITags,
+            IUserPermission,
+            AuthRoleVO.IRoles {
 
         private List<TagVO.Tag> tags;
 

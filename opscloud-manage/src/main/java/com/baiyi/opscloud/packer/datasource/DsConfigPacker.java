@@ -1,17 +1,13 @@
 package com.baiyi.opscloud.packer.datasource;
 
-import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.vo.datasource.DsConfigVO;
+import com.baiyi.opscloud.packer.base.IWrapper;
 import com.baiyi.opscloud.packer.sys.CredentialPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
-import com.baiyi.opscloud.common.util.ExtendUtil;
-import com.baiyi.opscloud.domain.vo.datasource.DsConfigVO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -19,36 +15,18 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class DsConfigPacker {
+@RequiredArgsConstructor
+public class DsConfigPacker implements IWrapper<DsConfigVO.DsConfig> {
 
-    @Resource
-    private CredentialPacker credentialPacker;
+    private final CredentialPacker credentialPacker;
 
-    @Resource
-    private DsInstanceService dsInstanceService;
+    private final DsInstanceService dsInstanceService;
 
-    public List<DsConfigVO.DsConfig> wrapVOList(List<DatasourceConfig> data) {
-        return BeanCopierUtil.copyListProperties(data, DsConfigVO.DsConfig.class);
-    }
-
-    public List<DsConfigVO.DsConfig> wrapVOList(List<DatasourceConfig> data, IExtend iExtend) {
-        List<DsConfigVO.DsConfig> voList = wrapVOList(data);
+    public void wrap(DsConfigVO.DsConfig dsConfig, IExtend iExtend) {
         if (!ExtendUtil.isExtend(iExtend))
-            return voList;
-
-        return voList.stream().peek(e -> {
-            credentialPacker.wrap(e);
-            e.setIsRegistered(dsInstanceService.countByConfigId(e.getId()) > 0);
-        }).collect(Collectors.toList());
-    }
-
-    public DsConfigVO.DsConfig wrapVO(DatasourceConfig data, IExtend iExtend) {
-        DsConfigVO.DsConfig vo = BeanCopierUtil.copyProperties(data, DsConfigVO.DsConfig.class);
-        if (ExtendUtil.isExtend(iExtend)) {
-            credentialPacker.wrap(vo);
-            vo.setIsRegistered(dsInstanceService.countByConfigId(vo.getId()) > 0);
-        }
-        return vo;
+            return;
+        credentialPacker.wrap(dsConfig);
+        dsConfig.setIsRegistered(dsInstanceService.countByConfigId(dsConfig.getId()) > 0);
     }
 
 }

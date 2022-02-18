@@ -1,15 +1,14 @@
 package com.baiyi.opscloud.packer.auth;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.domain.generator.opscloud.AuthRole;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthUserRole;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleVO;
-import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
 import com.baiyi.opscloud.service.auth.AuthUserRoleService;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,25 +18,19 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class AuthRolePacker {
 
-    @Resource
-    private AuthUserRoleService authUserRoleService;
+    private final AuthUserRoleService authUserRoleService;
 
-    @Resource
-    private AuthRoleService authRoleService;
+    private final AuthRoleService authRoleService;
 
-    public List<AuthRoleVO.Role> wrapVOList(List<AuthRole> data) {
-        return BeanCopierUtil.copyListProperties(data, AuthRoleVO.Role.class);
-    }
-
-    public void wrap(UserVO.User user) {
-        List<AuthUserRole> roles = authUserRoleService.queryByUsername(user.getUsername());
-        user.setRoles(
-                roles.stream().map(e ->
-                        BeanCopierUtil.copyProperties(authRoleService.getById(e.getRoleId()), AuthRoleVO.Role.class)
-                ).collect(Collectors.toList())
-        );
+    public void wrap(AuthRoleVO.IRoles iRoles) {
+        if (StringUtils.isEmpty(iRoles.getUsername())) return;
+        List<AuthUserRole> roles = authUserRoleService.queryByUsername(iRoles.getUsername());
+        iRoles.setRoles(roles.stream().map(e ->
+                BeanCopierUtil.copyProperties(authRoleService.getById(e.getRoleId()), AuthRoleVO.Role.class)
+        ).collect(Collectors.toList()));
     }
 
 }

@@ -1,14 +1,12 @@
 package com.baiyi.opscloud.packer.datasource;
 
-import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.time.AgoUtil;
 import com.baiyi.opscloud.datasource.packer.DsInstancePacker;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetSubscription;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetSubscriptionVO;
-import com.baiyi.opscloud.common.util.time.AgoUtil;
+import com.baiyi.opscloud.packer.base.IWrapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -16,21 +14,19 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
-public class DsAssetSubscriptionPacker {
+@RequiredArgsConstructor
+public class DsAssetSubscriptionPacker implements IWrapper<DsAssetSubscriptionVO.AssetSubscription> {
 
-    @Resource
-    private DsInstancePacker dsInstancePacker;
+    private final DsInstancePacker dsInstancePacker;
 
-    @Resource
-    private DsAssetPacker dsAssetPacker;
+    private final DsAssetPacker dsAssetPacker;
 
-    public DsAssetSubscriptionVO.AssetSubscription wrapToVO(DatasourceInstanceAssetSubscription assetSubscription, IExtend iExtend) {
-        DsAssetSubscriptionVO.AssetSubscription vo = BeanCopierUtil.copyProperties(assetSubscription, DsAssetSubscriptionVO.AssetSubscription.class);
+    public void wrap(DsAssetSubscriptionVO.AssetSubscription assetSubscription, IExtend iExtend) {
         if (iExtend.getExtend()) {
-            dsInstancePacker.wrap(vo);
-            dsAssetPacker.wrap(vo);
-            AgoUtil.wrap(vo);
+            dsInstancePacker.wrap(assetSubscription);
+            dsAssetPacker.wrap(assetSubscription);
+            AgoUtil.wrap(assetSubscription);
         }
-        return vo;
     }
+
 }

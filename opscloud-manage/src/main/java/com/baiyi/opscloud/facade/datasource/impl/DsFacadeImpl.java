@@ -45,7 +45,9 @@ public class DsFacadeImpl implements DsFacade {
     @Override
     public DataTable<DsConfigVO.DsConfig> queryDsConfigPage(DsConfigParam.DsConfigPageQuery pageQuery) {
         DataTable<DatasourceConfig> table = dsConfigService.queryPageByParam(pageQuery);
-        return new DataTable<>(dsConfigPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<DsConfigVO.DsConfig> data = BeanCopierUtil.copyListProperties(table.getData(), DsConfigVO.DsConfig.class).stream()
+                .peek(e -> dsConfigPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
@@ -87,6 +89,8 @@ public class DsFacadeImpl implements DsFacade {
     @Override
     public DsConfigVO.DsConfig queryDsConfigById(int configId) {
         DatasourceConfig config = dsConfigService.getById(configId);
-        return dsConfigPacker.wrapVO(config, SimpleExtend.EXTEND);
+        DsConfigVO.DsConfig result = BeanCopierUtil.copyProperties(config, DsConfigVO.DsConfig.class);
+        dsConfigPacker.wrap(result, SimpleExtend.EXTEND);
+        return result;
     }
 }

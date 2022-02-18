@@ -21,15 +21,15 @@ public class AuthResourceVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Resource extends BaseVO {
+    public static class Resource extends BaseVO implements AuthGroupVO.IAuthGroup {
 
         // 资源组
         private AuthGroupVO.Group group;
 
-        @ApiModelProperty(value = "主键",example="1")
+        @ApiModelProperty(value = "主键", example = "1")
         private Integer id;
 
-        @ApiModelProperty(value = "资源组id",example="1")
+        @ApiModelProperty(value = "资源组id", example = "1")
         @Valid
         private Integer groupId;
 
