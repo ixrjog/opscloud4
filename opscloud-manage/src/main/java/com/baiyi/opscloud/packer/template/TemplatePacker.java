@@ -5,6 +5,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Template;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.template.TemplateVO;
+import com.baiyi.opscloud.packer.base.IWrapper;
 import com.baiyi.opscloud.service.template.BusinessTemplateService;
 import com.baiyi.opscloud.service.template.TemplateService;
 import lombok.RequiredArgsConstructor;
@@ -17,22 +18,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class TemplatePacker {
+public class TemplatePacker implements IWrapper<TemplateVO.Template> {
 
     private final BusinessTemplateService bizTemplateService;
 
     private final TemplateService templateService;
 
-//    public TemplateVO.Template wrapVO(Template template, IExtend iExtend) {
-//        TemplateVO.Template vo = BeanCopierUtil.copyProperties(template, TemplateVO.Template.class);
-//        if (iExtend.getExtend()) {
-//            vo.setBizTemplateSize(bizTemplateService.countByTemplateId(template.getId()));
-//        }
-//        return vo;
-//    }
-
+    @Override
     @EnvWrapper()
-    public void wrap(TemplateVO.Template template,IExtend iExtend) {
+    public void wrap(TemplateVO.Template template, IExtend iExtend) {
         template.setBizTemplateSize(bizTemplateService.countByTemplateId(template.getId()));
     }
 

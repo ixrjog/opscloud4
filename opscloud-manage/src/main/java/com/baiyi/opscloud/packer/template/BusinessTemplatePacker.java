@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.annotation.EnvWrapper;
 import com.baiyi.opscloud.datasource.packer.DsInstancePacker;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
+import com.baiyi.opscloud.packer.base.IWrapper;
 import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class BusinessTemplatePacker {
+public class BusinessTemplatePacker implements IWrapper<BusinessTemplateVO.BusinessTemplate> {
 
     private final TemplatePacker templatePacker;
 
@@ -23,6 +24,7 @@ public class BusinessTemplatePacker {
 
     private final DsAssetPacker dsAssetPacker;
 
+    @Override
     @EnvWrapper
     public void wrap(BusinessTemplateVO.BusinessTemplate businessTemplate, IExtend iExtend) {
         if (iExtend.getExtend()) {
