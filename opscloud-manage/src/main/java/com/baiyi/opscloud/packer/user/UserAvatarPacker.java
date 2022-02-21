@@ -36,6 +36,7 @@ public class UserAvatarPacker implements IWrapper<UserVO.User> {
      *
      * @param user
      */
+    @Override
     public void wrap(UserVO.User user, IExtend iExtend) {
         if (!ExtendUtil.isExtend(iExtend)) return;
         BaseBusiness.IBusiness iBusiness = SimpleBusiness.builder()

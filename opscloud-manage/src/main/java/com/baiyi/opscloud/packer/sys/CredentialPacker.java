@@ -7,12 +7,13 @@ import com.baiyi.opscloud.common.util.SSHUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.vo.sys.CredentialVO;
 import com.baiyi.opscloud.factory.credential.CredentialCustomerFactory;
-import com.baiyi.opscloud.packer.SecretPacker;
+import com.baiyi.opscloud.packer.secret.SecretPacker;
 import com.baiyi.opscloud.service.sys.CredentialService;
-import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.jasypt.encryption.StringEncryptor;
+import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,10 +23,14 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class CredentialPacker extends SecretPacker {
+@RequiredArgsConstructor
+public class CredentialPacker {
 
-    @Resource
-    private CredentialService credentialService;
+    private final StringEncryptor stringEncryptor;
+
+    private final SecretPacker secretPacker;
+
+    private final CredentialService credentialService;
 
     public void wrap(CredentialVO.ICredential iCredential) {
         if (IdUtil.isEmpty(iCredential.getCredentialId())) return;
@@ -49,23 +54,26 @@ public class CredentialPacker extends SecretPacker {
 
     public CredentialVO.Credential wrap(com.baiyi.opscloud.domain.generator.opscloud.Credential credential) {
         CredentialVO.Credential vo = BeanCopierUtil.copyProperties(credential, CredentialVO.Credential.class);
-        super.wrap(vo);
+        secretPacker.wrap(vo);
         return vo;
     }
 
     public Credential toDO(CredentialVO.Credential vo) {
         com.baiyi.opscloud.domain.generator.opscloud.Credential credential = BeanCopierUtil.copyProperties(vo, com.baiyi.opscloud.domain.generator.opscloud.Credential.class);
-        if (!StringUtils.isEmpty(vo.getCredential()))
-            credential.setCredential(encrypt(vo.getCredential()));
-        if (!StringUtils.isEmpty(vo.getCredential2()))
-            credential.setCredential2(encrypt(vo.getCredential2()));
-        if (!StringUtils.isEmpty(vo.getPassphrase()))
-            credential.setPassphrase(encrypt(vo.getPassphrase()));
+        credential.setCredential(encrypt(vo.getCredential()));
+        credential.setCredential2(encrypt(vo.getCredential2()));
+        credential.setPassphrase(encrypt(vo.getPassphrase()));
         if (vo.getKind().equals(CredentialKindEnum.SSH_USERNAME_WITH_KEY_PAIR.getKind()) || vo.getKind().equals(CredentialKindEnum.SSH_USERNAME_WITH_PRIVATE_KEY.getKind())) {
             if (!StringUtils.isEmpty(vo.getCredential2()))
                 credential.setFingerprint(SSHUtil.getFingerprint(vo.getCredential2()));
         }
         return credential;
+    }
+
+    private String encrypt(String s) {
+        if (StringUtils.isEmpty(s))
+            return s;
+        return stringEncryptor.encrypt(s);
     }
 
 }

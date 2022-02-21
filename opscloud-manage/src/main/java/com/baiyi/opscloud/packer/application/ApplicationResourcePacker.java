@@ -11,8 +11,6 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.packer.IWrapper;
-import com.baiyi.opscloud.packer.business.BusinessPermissionUserPacker;
-import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import lombok.RequiredArgsConstructor;
@@ -35,11 +33,7 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
 
     private final DsInstanceService dsInstanceService;
 
-    private final ApplicationResourceService applicationResourceService;
-
     private final DsInstancePacker dsInstancePacker;
-
-    private final BusinessPermissionUserPacker businessPermissionUserPacker;
 
     /**
      * wrapPodByDeployment

@@ -8,8 +8,6 @@ import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.packer.desensitized.DesensitizedPacker;
 import com.baiyi.opscloud.packer.user.delegate.UserPackerDelegate;
-import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
-import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -27,11 +25,7 @@ public class UserPacker implements IWrapper<UserVO.User> {
 
     private final UserService userService;
 
-    private final DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
-
     private final UserPackerDelegate userPackerDelegate;
-
-    private final BusinessAssetRelationService bizAssetRelationService;
 
     private final UserAvatarPacker userAvatarPacker;
 

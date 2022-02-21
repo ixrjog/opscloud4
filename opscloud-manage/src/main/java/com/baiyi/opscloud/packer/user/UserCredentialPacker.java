@@ -59,4 +59,5 @@ public class UserCredentialPacker {
         assetCredentialMap.put(DsAssetTypeConstants.GITLAB_SSHKEY.name(), dsInstanceAssetFacade.querySshKeyAssets(username));
         return assetCredentialMap;
     }
+
 }

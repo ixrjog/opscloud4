@@ -13,7 +13,6 @@ import com.baiyi.opscloud.domain.param.IRelation;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.packer.IWrapperRelation;
-import com.baiyi.opscloud.packer.TagPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
@@ -42,8 +41,6 @@ public class DsAssetPacker implements IWrapperRelation<DsAssetVO.Asset> {
     private final DsInstanceAssetService dsInstanceAssetService;
 
     private final DsInstanceAssetRelationService dsInstanceAssetRelationService;
-
-    private final TagPacker tagPacker;
 
     public void wrap(DsAssetVO.IDsAsset iDsAsset) {
         if (iDsAsset.getAssetId() == 0) return;
