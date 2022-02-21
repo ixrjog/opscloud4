@@ -57,7 +57,6 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
         wrapResourceInstance(resource);
     }
 
-
     public void wrapResourceInstance(ApplicationResourceVO.Resource r) {
         if (r.getBusinessType() == BusinessTypeEnum.ASSET.getType()) {
             DatasourceInstanceAsset asset = dsInstanceAssetService.getById(r.getBusinessId());
@@ -65,4 +64,5 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
             dsInstancePacker.wrap(r);
         }
     }
+
 }

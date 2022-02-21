@@ -25,6 +25,7 @@ public class AuthGroupPacker implements IWrapper<AuthGroupVO.Group> {
 
     private final AuthResourceService authResourceService;
 
+    @Override
     public void wrap(AuthGroupVO.Group group, IExtend iExtend) {
         if (!ExtendUtil.isExtend(iExtend)) return;
         group.setResourceSize(authResourceService.countByGroupId(group.getId()));

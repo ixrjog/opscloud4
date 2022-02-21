@@ -49,12 +49,9 @@ public class AliyunLogMemberPacker implements IWrapper<AliyunLogMemberVO.LogMemb
     }
 
     private List<Server> acqMemberServers(AliyunLogMemberVO.LogMember logMember) {
-        List<Server> servers;
-        if (logMember.getEnvType() == 0) {
-            servers = serverService.queryByServerGroupId(logMember.getServerGroupId());
-        } else {
-            servers = serverService.queryByGroupIdAndEnvType(logMember.getServerGroupId(), logMember.getEnvType());
-        }
+        List<Server> servers = logMember.getEnvType() == 0 ?
+                serverService.queryByServerGroupId(logMember.getServerGroupId()) :
+                serverService.queryByGroupIdAndEnvType(logMember.getServerGroupId(), logMember.getEnvType());
         return servers.stream().filter(Server::getIsActive).collect(Collectors.toList());
     }
 
