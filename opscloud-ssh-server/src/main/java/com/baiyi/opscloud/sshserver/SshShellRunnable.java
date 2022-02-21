@@ -21,10 +21,10 @@ import com.baiyi.opscloud.sshserver.listeners.SshShellListenerService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sshd.common.Factory;
-import org.apache.sshd.server.ChannelSessionAware;
 import org.apache.sshd.server.ExitCallback;
 import org.apache.sshd.server.Signal;
 import org.apache.sshd.server.channel.ChannelSession;
+import org.apache.sshd.server.channel.ChannelSessionAware;
 import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.session.ServerSession;
 import org.jline.reader.EndOfFileException;
@@ -128,9 +128,12 @@ public class SshShellRunnable
     public void run() {
         log.debug("{}: running...", session.toString());
         TerminalBuilder terminalBuilder = TerminalBuilder.builder().system(false).streams(is, os);
-                 // 可以不加
-                //.dumb(true)
-                //.encoding(StandardCharsets.UTF_8.name());
+        /**
+         * 可以不加
+         * TerminalBuilder terminalBuilder = TerminalBuilder.builder().system(false).streams(is, os)
+         *    .dumb(true)
+         *    .encoding(StandardCharsets.UTF_8.name());
+         */
         boolean sizeAvailable = false;
         if (sshEnv.getEnv().containsKey(SSH_ENV_COLUMNS) && sshEnv.getEnv().containsKey(SSH_ENV_LINES)) {
             try {
@@ -170,8 +173,8 @@ public class SshShellRunnable
                     }, Signal.WINCH);
                 }
                 // 清理屏幕
-                terminal.puts(InfoCmp.Capability.clear_screen, new Object[0]);
-
+                //terminal.puts(InfoCmp.Capability.clear_screen, new Object[0]);
+                terminal.puts(InfoCmp.Capability.clear_screen);
                 if (properties.isDisplayBanner() && shellBanner != null) {
                     shellBanner.printBanner(environment, this.getClass(), ps);
                 }

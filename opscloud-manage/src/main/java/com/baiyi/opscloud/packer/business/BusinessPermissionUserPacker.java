@@ -3,12 +3,13 @@ package com.baiyi.opscloud.packer.business;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.vo.business.IBusinessPermissionUser;
+import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.baiyi.opscloud.service.user.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,13 +19,12 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class BusinessPermissionUserPacker {
 
-    @Resource
-    private UserPermissionService userPermissionService;
+    private final UserPermissionService userPermissionService;
 
-    @Resource
-    private UserService userService;
+    private final UserService userService;
 
     /**
      * 业务授权用户
@@ -38,9 +38,12 @@ public class BusinessPermissionUserPacker {
                 .build();
         List<UserPermission> userPermissions = userPermissionService.queryByBusiness(userPermission);
         iBusinessPermissionUser.setUsers(
-                userPermissions.stream().map(e ->
-                        BeanCopierUtil.copyProperties(userService.getById(e.getUserId()), UserVO.User.class)
-                ).collect(Collectors.toList())
+                userPermissions.stream().map(e -> {
+                    UserVO.User vo = BeanCopierUtil.copyProperties(userService.getById(e.getUserId()), UserVO.User.class);
+                    vo.setUserPermission(BeanCopierUtil.copyProperties(e, UserPermissionVO.UserPermission.class));
+                    return vo;
+                }).collect(Collectors.toList())
         );
     }
+
 }

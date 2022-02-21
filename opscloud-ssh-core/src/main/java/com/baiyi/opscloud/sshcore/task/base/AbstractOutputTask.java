@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -39,8 +40,8 @@ public abstract class AbstractOutputTask implements IOutputTask {
             int read;
             while ((read = br.read(buff)) != -1) {
                 write(buff, 0, read);
-                auditing(buff,0, read);
-                Thread.sleep(10);
+                auditing(buff, 0, read);
+                TimeUnit.MILLISECONDS.sleep(10L);
             }
         } catch (Exception ex) {
             log.error(ex.toString(), ex);
@@ -51,7 +52,7 @@ public abstract class AbstractOutputTask implements IOutputTask {
     }
 
     protected byte[] toBytes(char[] chars) {
-       return TaskUtil.toBytes(chars);
+        return TaskUtil.toBytes(chars);
     }
 
 
@@ -61,7 +62,7 @@ public abstract class AbstractOutputTask implements IOutputTask {
      * @param buf
      */
     private void auditing(char[] buf, int off, int len) {
-        AuditRecordHelper.recordAuditLog(sessionOutput.getSessionId(), sessionOutput.getInstanceId(),buf,off,len);
+        AuditRecordHelper.recordAuditLog(sessionOutput.getSessionId(), sessionOutput.getInstanceId(), buf, off, len);
     }
 
 }

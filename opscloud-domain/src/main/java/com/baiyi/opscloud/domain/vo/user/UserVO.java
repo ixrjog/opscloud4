@@ -1,16 +1,17 @@
 package com.baiyi.opscloud.domain.vo.user;
 
 import com.baiyi.opscloud.domain.annotation.DesensitizedField;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.SensitiveTypeEnum;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleVO;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -79,8 +80,11 @@ public class UserVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class User extends BaseVO implements BusinessAssetRelationVO.IBusinessAssetRelation, // 资产与业务对象绑定关系
-            TagVO.ITags {
+    public static class User extends BaseVO implements
+            BusinessAssetRelationVO.IBusinessAssetRelation, // 资产与业务对象绑定关系
+            TagVO.ITags,
+            IUserPermission,
+            AuthRoleVO.IRoles {
 
         private List<TagVO.Tag> tags;
 
@@ -88,6 +92,11 @@ public class UserVO {
 
         @Override
         public Integer getBusinessId() {
+            return id;
+        }
+
+        @Override
+        public Integer getUserId() {
             return id;
         }
 
@@ -107,6 +116,15 @@ public class UserVO {
 
         private Map<String, List<IUserPermission>> businessPermissions;
 
+        @ApiModelProperty(value = "云AM账户Map")
+        @Builder.Default
+        private Map<String, List<AMVO.XAM>> amMap = Maps.newHashMap();
+
+        @ApiModelProperty(value = "云AM用户列表（某一类型）")
+        @Builder.Default
+        private List<AMVO.XAM> ams = Lists.newArrayList();
+
+        // 废弃
         @ApiModelProperty(value = "阿里云RAM用户列表")
         @Builder.Default
         private List<RamUser> ramUsers = Lists.newArrayList();
@@ -164,6 +182,8 @@ public class UserVO {
         public String getBusinessUniqueKey() {
             return username;
         }
+
+        private UserPermissionVO.UserPermission userPermission;
     }
 
 }

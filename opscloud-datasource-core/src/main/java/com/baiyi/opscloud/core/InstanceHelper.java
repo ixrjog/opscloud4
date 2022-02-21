@@ -28,6 +28,10 @@ public class InstanceHelper {
 
     private final SimpleTagService simpleTagService;
 
+    public DatasourceInstance getInstanceByUuid(String uuid){
+        return dsInstanceService.getByUuid(uuid);
+    }
+
     /**
      * 查询实例
      *
@@ -43,4 +47,5 @@ public class InstanceHelper {
         }
         return instances;
     }
+
 }

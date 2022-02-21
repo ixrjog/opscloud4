@@ -27,7 +27,6 @@ public class AgoUtil {
     private static final String ONE_MONTH_AGO = "月前";
     private static final String ONE_YEAR_AGO = "年前";
 
-
     public static String format(String gmtDate) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:m:s");
         try {
@@ -36,7 +35,6 @@ public class AgoUtil {
         } catch (Exception e) {
             return gmtDate;
         }
-
     }
 
     public static void wrap(ShowTime.IAgo iAgo) {

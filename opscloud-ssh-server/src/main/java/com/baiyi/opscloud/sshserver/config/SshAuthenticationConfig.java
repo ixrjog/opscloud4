@@ -69,13 +69,14 @@ public class SshAuthenticationConfig {
                     return false;
                 tmp = Files.createTempFile("sshShellPubKeys-", ".tmp").toFile();
                 fw = new FileWriter(tmp);
-                for (String key : userSshKeyDict.keySet())
+                for (String key : userSshKeyDict.keySet()) {
                     fw.write(userSshKeyDict.get(key) + "\n");
+                }
                 fw.close();
                 return new SshShellPublicKeyAuthenticationProvider(tmp).authenticate(username, publicKey, serverSession);
             } catch (Exception e) {
                 log.error("写入公钥错误: username = {}", username);
-                e.printStackTrace();
+                log.error(e.getMessage());
             } finally {
                 if (fw != null) {
                     try {

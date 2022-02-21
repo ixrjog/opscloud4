@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.facade.sys.impl;
 
+import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.HostUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Instance;
@@ -11,11 +13,15 @@ import com.baiyi.opscloud.service.sys.InstanceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
 
 /**
  * @Author baiyi
@@ -26,6 +32,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
+
+    @Value("${spring.profiles.active}")
+    private String env;
 
     private final InstanceService instanceService;
 
@@ -40,8 +49,10 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
     @Override
     public DataTable<InstanceVO.RegisteredInstance> queryRegisteredInstancePage(RegisteredInstanceParam.RegisteredInstancePageQuery pageQuery) {
         DataTable<Instance> table = instanceService.queryRegisteredInstancePage(pageQuery);
+        List<InstanceVO.RegisteredInstance> data = BeanCopierUtil.copyListProperties(table.getData(), InstanceVO.RegisteredInstance.class).stream()
+                .peek(e -> registeredInstancePacker.wrap(e, pageQuery)).collect(Collectors.toList());
         return new DataTable<>(
-                table.getData().stream().map(e -> registeredInstancePacker.wrapToVO(e, pageQuery)).collect(Collectors.toList()),
+                data,
                 table.getTotalNum());
     }
 
@@ -49,6 +60,12 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
     public void setRegisteredInstanceActive(int id) {
         Instance instance = instanceService.getById(id);
         if (instance == null) return;
+        if (instance.getIsActive()) {
+            List<Instance> instanceList = instanceService.listActiveInstance();
+            if (instanceList.size() <= 1) {
+                throw new CommonRuntimeException("至少保留一个可用实例");
+            }
+        }
         instance.setIsActive(!instance.getIsActive());
         instanceService.update(instance);
         log.info("用户修改注册实例: isActive = {}", instance.getIsActive());
@@ -88,6 +105,7 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
      * 注册Opscloud实例
      */
     private void register() throws UnknownHostException {
+        if (!ENV_PROD.equals(env)) return;
         InetAddress inetAddress = HostUtil.getInetAddress();
         // 已存在
         if (instanceService.getByHostIp(inetAddress.getHostAddress()) != null) return;

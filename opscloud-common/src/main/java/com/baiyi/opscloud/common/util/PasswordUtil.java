@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.common.util;
 
-import java.util.ArrayList;
+import com.google.common.collect.Lists;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -38,30 +39,29 @@ public class PasswordUtil {
 
     /**
      * 生成随机密码 包含至少1个大写，1个小写，1个数字，1个特殊字符（长度必须大于8）
+     *
      * @param length 长度>=8
      * @return
      */
     public static String getPW(int length) {
         if (length < 8) length = 8;
-        String p = getChar(NUM_CHAR, 1);
-        p += getChar(UPPER_CHAR, 1);
-        p += getChar(LOWER_CHAR, 1);
-        p += getChar(SYBL_CHAR, 1);
-        p += getChar(NUM_CHAR + UPPER_CHAR + LOWER_CHAR + SYBL_CHAR, length - 4);
-        return shuffleForSortingString(p);
+        StringBuilder resultStr = new StringBuilder()
+                .append(getChar(NUM_CHAR, 1))
+                .append(getChar(UPPER_CHAR, 1))
+                .append(getChar(LOWER_CHAR, 1))
+                .append(getChar(SYBL_CHAR, 1))
+                .append(getChar(NUM_CHAR + UPPER_CHAR + LOWER_CHAR + SYBL_CHAR, length - 4));
+        return shuffleForSortingString(resultStr.toString());
     }
 
     public static String shuffleForSortingString(String s) {
         char[] c = s.toCharArray();
-        List<Character> lst = new ArrayList<Character>();
-        for (int i = 0; i < c.length; i++)
-            lst.add(c[i]);
-
+        List<Character> lst = Lists.newArrayList();
+        for (char value : c) lst.add(value);
         Collections.shuffle(lst);
-        String resultStr = "";
-        for (int i = 0; i < lst.size(); i++)
-            resultStr += lst.get(i);
-        return resultStr;
+        StringBuilder resultStr = new StringBuilder();
+        for (Character character : lst) resultStr.append(character);
+        return resultStr.toString();
     }
 
     /**
@@ -73,7 +73,7 @@ public class PasswordUtil {
      */
     public static String getChar(String sourceChar, int max) {
         Random random = new Random();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < max; i++) {
             int number = random.nextInt(sourceChar.length());
             sb.append(sourceChar.charAt(number));

@@ -1,17 +1,15 @@
 package com.baiyi.opscloud.packer.template;
 
+import com.baiyi.opscloud.common.annotation.EnvWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Template;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.template.TemplateVO;
-import com.baiyi.opscloud.packer.sys.EnvPacker;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.template.BusinessTemplateService;
 import com.baiyi.opscloud.service.template.TemplateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -20,33 +18,24 @@ import java.util.stream.Collectors;
  */
 @Component
 @RequiredArgsConstructor
-public class TemplatePacker {
+public class TemplatePacker implements IWrapper<TemplateVO.Template> {
 
     private final BusinessTemplateService bizTemplateService;
 
     private final TemplateService templateService;
 
-    private final EnvPacker envPacker;
-
-    public List<TemplateVO.Template> wrapVOList(List<Template> data, IExtend iExtend) {
-        return data.stream().map(e -> wrapVO(e, iExtend)).collect(Collectors.toList());
+    @Override
+    @EnvWrapper()
+    public void wrap(TemplateVO.Template template, IExtend iExtend) {
+        template.setBizTemplateSize(bizTemplateService.countByTemplateId(template.getId()));
     }
 
-    public TemplateVO.Template wrapVO(Template template, IExtend iExtend) {
-        TemplateVO.Template vo = BeanCopierUtil.copyProperties(template, TemplateVO.Template.class);
-        if (iExtend.getExtend()) {
-            envPacker.wrap(vo);
-            vo.setBizTemplateSize(bizTemplateService.countByTemplateId(template.getId()));
-        }
-        return vo;
-    }
-
-    public void wrap(TemplateVO.ITempate iTempate) {
-        Template template = templateService.getById(iTempate.getTemplateId());
+    public void wrap(TemplateVO.ITemplate iTemplate) {
+        Template template = templateService.getById(iTemplate.getTemplateId());
         if (template == null) return;
         TemplateVO.Template vo = BeanCopierUtil.copyProperties(template, TemplateVO.Template.class);
-        envPacker.wrap(vo);
-        iTempate.setTemplate(vo);
+        //envPacker.wrap(vo);
+        iTemplate.setTemplate(vo);
     }
 
 }

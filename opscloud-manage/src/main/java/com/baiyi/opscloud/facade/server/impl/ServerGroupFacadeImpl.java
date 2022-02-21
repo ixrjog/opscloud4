@@ -80,7 +80,9 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
     @Override
     public DataTable<ServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.ServerGroupPageQuery pageQuery) {
         DataTable<ServerGroup> table = serverGroupService.queryPageByParam(pageQuery);
-        return new DataTable<>(serverGroupPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<ServerGroupVO.ServerGroup> data = BeanCopierUtil.copyListProperties(table.getData(), ServerGroupVO.ServerGroup.class).stream()
+                .peek(e -> serverGroupPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
@@ -107,7 +109,8 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
     public DataTable<UserVO.IUserPermission> queryUserBusinessPermissionPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
         pageQuery.setBusinessType(getBusinessType());
         DataTable<ServerGroup> table = serverGroupService.queryPageByParam(pageQuery);
-        List<ServerGroupVO.ServerGroup> data = serverGroupPacker.wrapVOList(table.getData(), pageQuery);
+        List<ServerGroupVO.ServerGroup> data = BeanCopierUtil.copyListProperties(table.getData(), ServerGroupVO.ServerGroup.class).stream()
+                .peek(e -> serverGroupPacker.wrap(e, pageQuery)).collect(Collectors.toList());
         if (pageQuery.getAuthorized())
             data.forEach(e -> {
                 e.setUserId(pageQuery.getUserId());
@@ -151,7 +154,9 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
     @Override
     public DataTable<ServerGroupTypeVO.ServerGroupType> queryServerGroupTypePage(ServerGroupTypeParam.ServerGroupTypePageQuery pageQuery) {
         DataTable<ServerGroupType> table = serverGroupTypeService.queryPageByParam(pageQuery);
-        return new DataTable<>(serverGroupTypePacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<ServerGroupTypeVO.ServerGroupType> data = BeanCopierUtil.copyListProperties(table.getData(),ServerGroupTypeVO.ServerGroupType.class).stream()
+                .peek(e->serverGroupTypePacker.wrap(e,pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override

@@ -21,6 +21,11 @@ public class WorkOrderTicketNodeServiceImpl implements WorkOrderTicketNodeServic
     private final WorkOrderTicketNodeMapper workOrderTicketNodeMapper;
 
     @Override
+    public WorkOrderTicketNode getById(int id) {
+        return workOrderTicketNodeMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public void add(WorkOrderTicketNode workOrderTicketNode) {
         workOrderTicketNodeMapper.insert(workOrderTicketNode);
     }
@@ -54,6 +59,11 @@ public class WorkOrderTicketNodeServiceImpl implements WorkOrderTicketNodeServic
         criteria.andEqualTo("workOrderTicketId", workOrderTicketId)
                 .andEqualTo("parentId", parentId);
         return workOrderTicketNodeMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        workOrderTicketNodeMapper.deleteByPrimaryKey(id);
     }
 
 }

@@ -9,7 +9,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  * @Version 1.0
  */
 public class JSONMapper extends ObjectMapper {
+
     public JSONMapper() {
         this.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
     }
+
 }

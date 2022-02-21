@@ -1,14 +1,15 @@
 package com.baiyi.opscloud.facade.server.impl;
 
+import com.baiyi.opscloud.common.annotation.EnvWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.*;
+import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
-import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.server.ServerFacade;
@@ -18,6 +19,7 @@ import com.baiyi.opscloud.service.server.ServerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -38,7 +40,10 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     @Override
     public DataTable<ServerVO.Server> queryServerPage(ServerParam.ServerPageQuery pageQuery) {
         DataTable<Server> table = serverService.queryServerPage(pageQuery);
-        return new DataTable<>(serverPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<ServerVO.Server> data = BeanCopierUtil.copyListProperties(table.getData(), ServerVO.Server.class).stream().peek(e ->
+                serverPacker.wrap(e, pageQuery)
+        ).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
@@ -62,12 +67,13 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     }
 
     @Override
+    @EnvWrapper(extend = true, wrapResult = true)
     @AssetBusinessRelation // 资产绑定业务对象
     public ServerVO.Server addServer(ServerVO.Server server) {
         Server pre = toDO(server);
         serverService.add(pre);
         server.setId(pre.getId()); // 绑定资产
-        return serverPacker.wrapVO(pre);
+        return BeanCopierUtil.copyProperties(pre, ServerVO.Server.class);
     }
 
     @Override
@@ -101,7 +107,10 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     @Override
     public DataTable<ServerVO.Server> queryUserRemoteServerPage(ServerParam.UserRemoteServerPageQuery pageQuery) {
         DataTable<Server> table = serverService.queryUserRemoteServerPage(pageQuery);
-        return new DataTable<>(serverPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<ServerVO.Server> data = BeanCopierUtil.copyListProperties(table.getData(), ServerVO.Server.class).stream().peek(e ->
+                serverPacker.wrap(e, pageQuery)
+        ).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
 }

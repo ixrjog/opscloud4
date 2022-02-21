@@ -3,11 +3,9 @@ package com.baiyi.opscloud.packer.task;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.AnsiblePlaybook;
 import com.baiyi.opscloud.domain.vo.ansible.AnsiblePlaybookVO;
-import com.baiyi.opscloud.packer.base.AbstractPacker;
 import com.baiyi.opscloud.service.ansible.AnsiblePlaybookService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -15,20 +13,15 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
-public class AnsiblePlaybookPacker extends AbstractPacker<AnsiblePlaybookVO.Playbook, AnsiblePlaybook> {
+@RequiredArgsConstructor
+public class AnsiblePlaybookPacker {
 
-    @Resource
-    private AnsiblePlaybookService ansiblePlaybookService;
-
-    @Override
-    public AnsiblePlaybookVO.Playbook toVO(AnsiblePlaybook ansiblePlaybook) {
-        return BeanCopierUtil.copyProperties(ansiblePlaybook, AnsiblePlaybookVO.Playbook.class);
-    }
+    private final AnsiblePlaybookService ansiblePlaybookService;
 
     public void wrap(AnsiblePlaybookVO.IPlaybook iPlaybook) {
         AnsiblePlaybook ansiblePlaybook = ansiblePlaybookService.getById(iPlaybook.getAnsiblePlaybookId());
         if (ansiblePlaybook == null) return;
-        iPlaybook.setPlaybook(toVO(ansiblePlaybook));
+        iPlaybook.setPlaybook(BeanCopierUtil.copyProperties(ansiblePlaybook, AnsiblePlaybookVO.Playbook.class));
         iPlaybook.setTaskName(ansiblePlaybook.getName());
     }
 

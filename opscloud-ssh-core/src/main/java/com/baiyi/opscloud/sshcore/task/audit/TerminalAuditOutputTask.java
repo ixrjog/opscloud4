@@ -9,6 +9,7 @@ import javax.websocket.Session;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -36,7 +37,7 @@ public class TerminalAuditOutputTask implements Runnable {
                 if (!str.isEmpty()) {
                     send(str +"\n");
                 }
-                Thread.sleep(25);
+                TimeUnit.MILLISECONDS.sleep(25L);
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

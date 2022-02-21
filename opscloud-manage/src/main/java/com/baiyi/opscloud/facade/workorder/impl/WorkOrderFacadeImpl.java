@@ -1,19 +1,19 @@
 package com.baiyi.opscloud.facade.workorder.impl;
 
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrder;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderGroup;
-import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
-import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
-import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderGroupParam;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderViewVO;
 import com.baiyi.opscloud.facade.workorder.WorkOrderFacade;
+import com.baiyi.opscloud.packer.workorder.WorkOrderGroupPacker;
 import com.baiyi.opscloud.packer.workorder.WorkOrderPacker;
 import com.baiyi.opscloud.service.workorder.WorkOrderGroupService;
 import com.baiyi.opscloud.service.workorder.WorkOrderService;
-import com.baiyi.opscloud.service.workorder.WorkOrderTicketService;
-import com.baiyi.opscloud.workorder.query.factory.WorkOrderTicketEntryQueryFactory;
+import com.baiyi.opscloud.workorder.exception.TicketCommonException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -33,9 +33,23 @@ public class WorkOrderFacadeImpl implements WorkOrderFacade {
 
     private final WorkOrderService workOrderService;
 
-    private final WorkOrderTicketService workOrderTicketService;
-
     private final WorkOrderPacker workOrderPacker;
+
+    private final WorkOrderGroupPacker workOrderGroupPacker;
+
+    @Override
+    public DataTable<WorkOrderVO.WorkOrder> queryWorkOrderPage(WorkOrderParam.WorkOrderPageQuery pageQuery) {
+        DataTable<WorkOrder> table = workOrderService.queryPageByParam(pageQuery);
+        return new DataTable<>(table.getData().stream().map(e -> workOrderPacker.wrap(e, pageQuery)).collect(Collectors.toList()), table.getTotalNum());
+    }
+
+    @Override
+    public DataTable<WorkOrderVO.Group> queryWorkOrderGroupPage(WorkOrderGroupParam.WorkOrderGroupPageQuery pageQuery) {
+        DataTable<WorkOrderGroup> table = workOrderGroupService.queryPageByParam(pageQuery);
+        List<WorkOrderVO.Group> data = BeanCopierUtil.copyListProperties(table.getData(), WorkOrderVO.Group.class).stream()
+                .peek(e -> workOrderGroupPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
+    }
 
     @Override
     public WorkOrderViewVO.View getWorkOrderView() {
@@ -46,4 +60,29 @@ public class WorkOrderFacadeImpl implements WorkOrderFacade {
                 .build();
     }
 
+    @Override
+    public void saveWorkOrderGroup(WorkOrderVO.Group group) {
+        WorkOrderGroup newWorkOrderGroup = BeanCopierUtil.copyProperties(group, WorkOrderGroup.class);
+        if (group.getId() == null) {
+            if (group.getSeq() == null)
+                newWorkOrderGroup.setSeq(workOrderGroupService.count() + 1);
+            workOrderGroupService.add(newWorkOrderGroup);
+        } else {
+            workOrderGroupService.update(newWorkOrderGroup);
+        }
+    }
+
+    @Override
+    public void deleteWorkOrderGroup(Integer workOrderGroupId) {
+        if (0 != workOrderService.countByWorkOrderGroupId(workOrderGroupId)) {
+            throw new TicketCommonException("工单组下存在工单，无法删除！");
+        }
+        workOrderGroupService.deleteById(workOrderGroupId);
+    }
+
+    @Override
+    public void updateWorkOrder(WorkOrderVO.WorkOrder workOrder) {
+        WorkOrder newWorkOrder = BeanCopierUtil.copyProperties(workOrder, WorkOrder.class);
+        workOrderService.update(newWorkOrder);
+    }
 }

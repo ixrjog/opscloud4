@@ -35,6 +35,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -61,7 +62,9 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     @Override
     public DataTable<ApplicationVO.Application> queryApplicationPage(ApplicationParam.ApplicationPageQuery pageQuery) {
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
-        return new DataTable<>(applicationPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class).stream()
+                .peek(e -> applicationPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
@@ -73,7 +76,9 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
             pageQuery.setUserId(userService.getByUsername(SessionUtil.getUsername()).getId());
         }
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
-        return new DataTable<>(applicationPacker.wrapVOListByKubernetes(table.getData()), table.getTotalNum());
+        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class).stream()
+                .peek(e -> applicationPacker.wrap(e)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     /**
@@ -100,7 +105,9 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
         Application application = applicationService.getById(id);
         if (application == null)
             throw new CommonRuntimeException(ErrorEnum.APPLICATION_NOT_EXIST);
-        return applicationPacker.wrapVO(application, SimpleExtend.EXTEND);
+        ApplicationVO.Application vo = BeanCopierUtil.copyProperties(application, ApplicationVO.Application.class);
+        applicationPacker.wrap(vo, SimpleExtend.EXTEND);
+        return vo;
     }
 
     @Override
@@ -145,7 +152,8 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     public DataTable<UserVO.IUserPermission> queryUserBusinessPermissionPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
         pageQuery.setBusinessType(getBusinessType());
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
-        List<ApplicationVO.Application> data = applicationPacker.wrapVOList(table.getData(), pageQuery);
+        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class).stream()
+                .peek(e -> applicationPacker.wrap(e, pageQuery)).collect(Collectors.toList());
         if (pageQuery.getAuthorized()) {
             data.forEach(e -> {
                 e.setUserId(pageQuery.getUserId());

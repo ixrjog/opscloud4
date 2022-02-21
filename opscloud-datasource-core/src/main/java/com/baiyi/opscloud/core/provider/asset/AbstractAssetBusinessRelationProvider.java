@@ -2,7 +2,7 @@ package com.baiyi.opscloud.core.provider.asset;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.core.asset.IAssetConvert;
+import com.baiyi.opscloud.core.asset.IAssetConverter;
 import com.baiyi.opscloud.core.asset.factory.AssetConvertFactory;
 import com.baiyi.opscloud.core.provider.base.asset.IAssetBusinessRelation;
 import com.baiyi.opscloud.domain.DataTable;
@@ -65,7 +65,7 @@ public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAsset
 
     @Override
     public void scan(DsAssetVO.Asset asset) {
-        IAssetConvert iAssetConvert = AssetConvertFactory.getIAssetConvertByAssetType(getAssetType());
+        IAssetConverter iAssetConvert = AssetConvertFactory.getIAssetConvertByAssetType(getAssetType());
         if (iAssetConvert == null) return;
         // 获取可转换的业务对象
         List<BusinessTypeEnum> businessTypeEnums = iAssetConvert.getBusinessTypes();

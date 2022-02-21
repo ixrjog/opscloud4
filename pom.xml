@@ -39,6 +39,10 @@
         <module>opscloud-datasource-dingtalk</module>
         <module>opscloud-datasource-message</module>
         <module>opscloud-datasource-aliyun-dms</module>
+        <module>opscloud-datasource-aws</module>
+        <module>opscloud-datasource-aws-core</module>
+        <module>opscloud-datasource-aws-ec2</module>
+        <module>opscloud-datasource-aws-iam</module>
     </modules>
     <parent>
         <!--https://spring.io/projects/spring-boot#learn-->
@@ -198,10 +202,16 @@
             <version>1.29</version>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>com.jcraft</groupId>-->
+<!--            <artifactId>jsch</artifactId>-->
+<!--            <version>0.1.55</version>-->
+<!--        </dependency>-->
+
         <dependency>
-            <groupId>com.jcraft</groupId>
+            <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.1.55</version>
+            <version>0.2.0</version>
         </dependency>
 
     </dependencies>
@@ -412,6 +422,30 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-message</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aws</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aws-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aws-iam</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aws-ec2</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

@@ -26,7 +26,7 @@ import org.springframework.shell.table.Aligner;
  */
 public class ColorAligner implements Aligner {
 
-    private PromptColor color;
+    private final PromptColor color;
 
     /**
      * Default constructor

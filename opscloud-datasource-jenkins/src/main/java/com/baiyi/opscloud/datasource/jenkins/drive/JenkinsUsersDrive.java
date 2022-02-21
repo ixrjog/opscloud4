@@ -38,5 +38,4 @@ public class JenkinsUsersDrive {
         return jenkinsAPI.listUsers(JenkinsAuthUtil.buildAuthBasic(jenkins));
     }
 
-
 }

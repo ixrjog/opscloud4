@@ -17,7 +17,6 @@ public class JenkinsAuthUtil {
     private JenkinsAuthUtil() {
     }
 
-
     public static Authentication buildAuthentication(JenkinsConfig.Jenkins jenkins) {
         return Authentication.builder()
                 .token(Joiner.on(" ").join("Basic", buildAuthBasic(jenkins)))

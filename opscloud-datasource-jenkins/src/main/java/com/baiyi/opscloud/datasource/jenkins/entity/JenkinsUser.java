@@ -17,20 +17,24 @@ public class JenkinsUser {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class User implements Serializable {
+
         private static final long serialVersionUID = 967178899220442346L;
+
         private String id;
         private String fullName;
         private String avatar;
         //   private String name;
         private String email;
+
     }
-    // permission'
 
     @Data
     public static class Permission {
+
         private Boolean administrator;
         private Credential credential;
         private Pipeline pipeline;
+
     }
 
     @Data

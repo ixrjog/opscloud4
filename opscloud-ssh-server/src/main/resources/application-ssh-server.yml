@@ -1,7 +1,7 @@
 ssh:
   arthas:
     server: "cd /tmp && curl -O https://arthas.aliyun.com/arthas-boot.jar && sudo su - app -c 'java -jar /tmp/arthas-boot.jar'\n"
-    kubernetes: "java -jar /home/app/arthas-boot.jar\n"
+    # kubernetes: "java -jar /home/app/arthas-boot.jar\n"
   shell:
     enable: true
     # 'simple' or 'security'
@@ -85,4 +85,4 @@ ssh:
         # since 1.2.1, to let default local spring shell prompt when application starts
         enable: false
 project:
-  version: 4.0.0
+  version: 4.0

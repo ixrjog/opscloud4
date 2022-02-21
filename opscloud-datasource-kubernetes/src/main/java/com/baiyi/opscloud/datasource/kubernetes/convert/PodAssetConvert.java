@@ -5,12 +5,10 @@ import com.baiyi.opscloud.core.util.TimeUtil;
 import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import io.fabric8.kubernetes.api.model.Container;
-import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.api.model.PodCondition;
+import io.fabric8.kubernetes.api.model.*;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
@@ -46,17 +44,20 @@ public class PodAssetConvert {
         Map<String, Boolean> podStatusMap = entity.getStatus().getConditions()
                 .stream().collect(Collectors.toMap(PodCondition::getType, a -> Boolean.valueOf(a.getStatus()), (k1, k2) -> k1));
         Optional<String> statusOptional = podStatusMap.keySet().stream().filter(k -> !podStatusMap.get(k)).findFirst();
+        ContainerStatus containerStatus = CollectionUtils.isEmpty(entity.getStatus().getContainerStatuses()) ?
+                new ContainerStatus("-", "-", "-", new ContainerState(), "-", false, 0, false, new ContainerState())
+                : entity.getStatus().getContainerStatuses().get(0);
         AssetContainer assetContainer = AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
                 .paramChildren(toChildren(entity))
                 .paramProperty("phase", entity.getStatus().getPhase())
                 .paramProperty("startTime", com.baiyi.opscloud.common.util.TimeUtil.dateToStr(startTime))
                 .paramProperty("nodeName", entity.getSpec().getNodeName())
-                .paramProperty("restartCount", entity.getStatus().getContainerStatuses().get(0).getRestartCount())
+                .paramProperty("restartCount", containerStatus.getRestartCount())
                 .paramProperty("hostIp", entity.getStatus().getHostIP())
-                .paramProperty("image", entity.getStatus().getContainerStatuses().get(0).getImage())
-                .paramProperty("imageId", entity.getStatus().getContainerStatuses().get(0).getImageID())
-                .paramProperty("containerId", entity.getStatus().getContainerStatuses().get(0).getContainerID())
+                .paramProperty("image", containerStatus.getImage())
+                .paramProperty("imageId", containerStatus.getImageID())
+                .paramProperty("containerId", containerStatus.getContainerID())
                 .paramProperty("podScheduled", podStatusMap.get("PodScheduled"))
                 .paramProperty("containersReady", podStatusMap.get("ContainersReady"))
                 .paramProperty("initialized", podStatusMap.get("Initialized"))

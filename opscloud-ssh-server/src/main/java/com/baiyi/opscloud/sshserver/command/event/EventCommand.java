@@ -103,7 +103,9 @@ public class EventCommand extends BaseServerCommand {
                 eventBusinessService.deleteById(eventBusiness.getId());
                 continue;
             }
-            ServerVO.Server serverVO = sshServerPacker.wrapToVO(server);
+            ServerVO.Server serverVO = BeanCopierUtil.copyProperties(server,ServerVO.Server.class);
+            sshServerPacker.wrap(serverVO);
+            //ServerVO.Server serverVO = sshServerPacker.wrapToVO(server);
             eventContext.setServerVO(serverVO);
             eventMapper.put(id, eventContext);
             pt.addRow(id,

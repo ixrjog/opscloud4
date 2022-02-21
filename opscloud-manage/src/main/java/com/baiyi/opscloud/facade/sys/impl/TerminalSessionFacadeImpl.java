@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.sys.impl;
 
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstanceCommand;
@@ -14,6 +15,9 @@ import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceCommandService
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -35,13 +39,18 @@ public class TerminalSessionFacadeImpl implements TerminalSessionFacade {
     @Override
     public DataTable<TerminalSessionVO.Session> queryTerminalSessionPage(TerminalSessionParam.TerminalSessionPageQuery pageQuery) {
         DataTable<TerminalSession> table = terminalSessionService.queryTerminalSessionPage(pageQuery);
-        return new DataTable<>(terminalSessionPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<TerminalSessionVO.Session> data = BeanCopierUtil.copyListProperties(table.getData(), TerminalSessionVO.Session.class).stream()
+                .peek(e -> terminalSessionPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
     public DataTable<TerminalSessionInstanceCommandVO.Command> queryTerminalSessionCommandPage(TerminalSessionInstanceCommandParam.InstanceCommandPageQuery pageQuery) {
         DataTable<TerminalSessionInstanceCommand> table = terminalSessionInstanceCommandService.queryTerminalSessionInstanceCommandPage(pageQuery);
-        return new DataTable<>(terminalSessionInstanceCommandPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+
+        List<TerminalSessionInstanceCommandVO.Command> data = BeanCopierUtil.copyListProperties(table.getData(), TerminalSessionInstanceCommandVO.Command.class).stream()
+                .peek(e -> terminalSessionInstanceCommandPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
 }

@@ -9,6 +9,7 @@ import javax.websocket.Session;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -38,7 +39,7 @@ public class ServerTaskPlayTask implements Runnable {
             while (session.isOpen() &&
                     ((output = outputReader.readLine()) != null || (error = errorReader.readLine()) != null)) {
                 send(output, error);
-                Thread.sleep(100);
+                TimeUnit.MILLISECONDS.sleep(100L);
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

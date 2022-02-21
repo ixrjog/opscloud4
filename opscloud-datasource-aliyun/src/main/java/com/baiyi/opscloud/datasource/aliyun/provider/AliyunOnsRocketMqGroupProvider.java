@@ -77,11 +77,11 @@ public class AliyunOnsRocketMqGroupProvider extends AbstractAssetChildProvider<O
                     instances.forEach(instance -> {
                         try {
                             entities.addAll(aliyunOnsRocketMqGroupDrive.listGroup(regionId, aliyun, instance.getInstanceId()));
-                        } catch (ClientException e) {
+                        } catch (ClientException ignored) {
                         }
                     });
                 }
-            } catch (ClientException e) {
+            } catch (ClientException ignored) {
             }
         });
         return entities;

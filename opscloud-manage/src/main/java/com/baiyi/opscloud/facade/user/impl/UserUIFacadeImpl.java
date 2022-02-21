@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.user.impl;
 
 import com.baiyi.opscloud.domain.vo.sys.MenuVO;
-import com.baiyi.opscloud.domain.vo.user.UserUIVO;
+import com.baiyi.opscloud.domain.vo.user.UIVO;
 import com.baiyi.opscloud.facade.sys.MenuFacade;
 import com.baiyi.opscloud.facade.user.UserUIFacade;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +23,9 @@ public class UserUIFacadeImpl implements UserUIFacade {
     // private final AuthResourceService authResourceService;
 
     @Override
-    public UserUIVO.UIInfo buildUIInfo() {
+    public UIVO.UIInfo buildUIInfo() {
         List<MenuVO.Menu> menuInfo = menuFacade.queryMyMenu();
-        return UserUIVO.UIInfo.builder()
+        return UIVO.UIInfo.builder()
                 .menuInfo(menuInfo)
                 .build();
     }

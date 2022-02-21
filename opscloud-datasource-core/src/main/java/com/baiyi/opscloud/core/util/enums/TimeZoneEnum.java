@@ -12,7 +12,7 @@ public enum TimeZoneEnum {
 
     UTC("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-    private String format;
+    private final String format;
 
     TimeZoneEnum(String format) {
         this.format = format;

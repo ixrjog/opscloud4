@@ -1,16 +1,13 @@
 package com.baiyi.opscloud.packer.task;
 
-import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.domain.generator.opscloud.ServerTask;
-import com.baiyi.opscloud.domain.param.IExtend;
-import com.baiyi.opscloud.domain.vo.task.ServerTaskVO;
-import com.baiyi.opscloud.packer.base.IPacker;
-import com.baiyi.opscloud.packer.user.UserPacker;
 import com.baiyi.opscloud.common.util.time.AgoUtil;
 import com.baiyi.opscloud.common.util.time.DurationUtil;
+import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.vo.task.ServerTaskVO;
+import com.baiyi.opscloud.packer.IWrapper;
+import com.baiyi.opscloud.packer.user.UserPacker;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -18,32 +15,24 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
-public class ServerTaskPacker implements IPacker<ServerTaskVO.ServerTask, ServerTask> {
+@RequiredArgsConstructor
+public class ServerTaskPacker implements IWrapper<ServerTaskVO.ServerTask> {
 
-    @Resource
-    private ServerTaskMemberPacker serverTaskMemberPacker;
+    private final ServerTaskMemberPacker serverTaskMemberPacker;
 
-    @Resource
-    private AnsiblePlaybookPacker ansiblePlaybookPacker;
+    private final AnsiblePlaybookPacker ansiblePlaybookPacker;
 
-    @Resource
-    private UserPacker userPacker;
+    private final UserPacker userPacker;
 
     @Override
-    public ServerTaskVO.ServerTask toVO(ServerTask serverTask) {
-        return BeanCopierUtil.copyProperties(serverTask, ServerTaskVO.ServerTask.class);
-    }
-
-    public ServerTaskVO.ServerTask wrapToVO(ServerTask serverTask, IExtend iExtend) {
-        ServerTaskVO.ServerTask vo = toVO(serverTask);
+    public void wrap(ServerTaskVO.ServerTask serverTask, IExtend iExtend) {
         if (iExtend.getExtend()) {
-            serverTaskMemberPacker.wrap(vo);
-            AgoUtil.wrap(vo); // 以前
-            DurationUtil.wrap(vo); // 时长
-            ansiblePlaybookPacker.wrap(vo); // playbook
-            userPacker.wrap(vo); // user
+            serverTaskMemberPacker.wrap(serverTask);
+            AgoUtil.wrap(serverTask); // 以前
+            DurationUtil.wrap(serverTask); // 时长
+            ansiblePlaybookPacker.wrap(serverTask); // playbook
+            userPacker.wrap(serverTask); // user
         }
-        return vo;
     }
 
 }

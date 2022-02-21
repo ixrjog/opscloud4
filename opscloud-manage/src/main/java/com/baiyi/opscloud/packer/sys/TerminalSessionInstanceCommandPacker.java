@@ -1,13 +1,10 @@
 package com.baiyi.opscloud.packer.sys;
 
-import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstanceCommand;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.terminal.TerminalSessionInstanceCommandVO;
-import org.springframework.stereotype.Component;
+import com.baiyi.opscloud.packer.IWrapper;
 import org.apache.commons.lang3.StringUtils;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author baiyi
@@ -15,18 +12,13 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class TerminalSessionInstanceCommandPacker {
+public class TerminalSessionInstanceCommandPacker implements IWrapper<TerminalSessionInstanceCommandVO.Command> {
 
-    public List<TerminalSessionInstanceCommandVO.Command> wrapVOList(List<TerminalSessionInstanceCommand> commands, IExtend iExtend) {
-        return commands.stream().map(e -> wrapVO(e, iExtend)).collect(Collectors.toList());
-    }
-
-    public TerminalSessionInstanceCommandVO.Command wrapVO(TerminalSessionInstanceCommand terminalSessionInstanceCommand, IExtend iExtend) {
-        TerminalSessionInstanceCommandVO.Command command = BeanCopierUtil.copyProperties(terminalSessionInstanceCommand, TerminalSessionInstanceCommandVO.Command.class);
+    @Override
+    public void wrap(TerminalSessionInstanceCommandVO.Command command, IExtend iExtend) {
         if (iExtend.getExtend()) {
             command.setOutputRows(calcLines(command.getOutput()));
         }
-        return command;
     }
 
     private Integer calcLines(String output) {

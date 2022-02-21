@@ -37,7 +37,7 @@ public class IOUtil {
         boolean result = false;
         try {
             if (StringUtils.isBlank(fileName)) {
-                return result;
+                return false;
             }
             mkdir(dir);
             if (StringUtils.isNotBlank(dir) && StringUtils.isNotBlank(context)) {

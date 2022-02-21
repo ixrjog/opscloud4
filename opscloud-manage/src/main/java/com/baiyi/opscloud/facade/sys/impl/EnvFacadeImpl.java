@@ -6,10 +6,14 @@ import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.param.sys.EnvParam;
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.baiyi.opscloud.facade.sys.EnvFacade;
-import com.baiyi.opscloud.packer.sys.EnvPacker;
 import com.baiyi.opscloud.service.sys.EnvService;
+import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -43,7 +47,10 @@ public class EnvFacadeImpl implements EnvFacade {
     @Override
     public DataTable<EnvVO.Env> queryEnvPage(EnvParam.EnvPageQuery pageQuery) {
         DataTable<Env> table = envService.queryPageByParam(pageQuery);
-        return new DataTable<>(EnvPacker.wrapVOList(table.getData()), table.getTotalNum());
+        List<EnvVO.Env> data = Lists.newArrayList();
+        if (!CollectionUtils.isEmpty(table.getData()))
+            data = table.getData().stream().map(e -> BeanCopierUtil.copyProperties(e, EnvVO.Env.class)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
 }

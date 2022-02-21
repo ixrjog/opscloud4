@@ -13,5 +13,12 @@ public interface IMessageCustomer {
 
     String getInstanceType();
 
+    /**
+     * 向数据源实例发送消息通知
+     * @param instance
+     * @param user
+     * @param mt
+     * @param text
+     */
     void send(DatasourceInstance instance, User user, MessageTemplate mt, String text);
 }

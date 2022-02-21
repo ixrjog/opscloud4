@@ -17,37 +17,10 @@ Welcome to the opscloud wiki!
 + IntelliJ IDEA 2021.3 (Ultimate Edition)
 + WebStorm 2021.3
 
-
-### Tag:4.0.7版本
-+ 修复部分问题
-+ 完善Guacamole代码
-+ 优化表字段
-
-### Tag:4.0.6版本
-+ 数据源
-  + 钉钉(通讯录用户/部门/工作通知）
-  + Nacos(集群节点/用户/权限)
-  + Sonar(项目)
-  + 阿里云(RDS/Redis/RAM优化/DMS用户推送)
-  + 腾讯企业邮箱
-+ 模版
-  + Kubernetes业务模版(创建Deployment,Service)
-+ SSH-Server
-  + 快速执行Arthas(Alibaba开源的Java诊断工具)
-```
-# https://arthas.aliyun.com/doc/
-# 登录服务器指定参数 --arthas | -R 快速启动arthas
-login 1 --arthas 
-# 登录容器指定参数 --arthas | -R 快速启动arthas
-login-k8s-pod 1 --arthas
-```
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-arthas-1.png"></img>
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-arthas-2.png"></img>
-
-
-### Tag:4.0.4版本主要功能(黄色块功能未实现)
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/opscloud4_4.0.4.png"></img>
-<br>
+### 4.0.8版本
++ 运维工单（钉钉通知，自定义审批节点，自动处理工单）
++ AWS数据源接入(EC2,IAM等)
++ 堡垒机密钥增强rsa-4096
 
 ### 系统
 #### 环境管理

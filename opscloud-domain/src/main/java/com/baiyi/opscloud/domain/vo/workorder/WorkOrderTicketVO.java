@@ -1,14 +1,13 @@
 package com.baiyi.opscloud.domain.vo.workorder;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.base.ShowTime;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,13 +20,26 @@ import java.util.List;
  */
 public class WorkOrderTicketVO {
 
-    public interface ITicketEntries {
+    public interface ITicket {
 
         Integer getTicketId();
+
+    }
+
+    public interface ITicketEntries extends ITicket {
 
         String getWorkOrderKey();
 
         void setTicketEntries(List<Entry> ticketEntries);
+
+    }
+
+    public interface IApprover extends ITicket {
+
+        Boolean getIsApprover();
+
+        void setIsApprover(Boolean isApprover);
+
     }
 
     @Builder
@@ -38,7 +50,7 @@ public class WorkOrderTicketVO {
         @ApiModelProperty(value = "工单")
         private WorkOrderVO.WorkOrder workOrder;
         @ApiModelProperty(value = "工单票据")
-        private Ticket workOrderTicket;
+        private Ticket ticket;
         @ApiModelProperty(value = "工单票据条目")
         private List<Entry> ticketEntries;
         @ApiModelProperty(value = "工单创建用户")
@@ -50,8 +62,8 @@ public class WorkOrderTicketVO {
 
         @Override
         public Integer getTicketId() {
-            if (this.workOrderTicket != null)
-                return this.workOrderTicket.getId();
+            if (this.ticket != null)
+                return this.ticket.getId();
             return 0;
         }
 
@@ -64,9 +76,15 @@ public class WorkOrderTicketVO {
 
         @Override
         public Integer getWorkOrderId() {
-            if (this.workOrderTicket != null)
-                return this.workOrderTicket.getWorkOrderId();
+            if (this.ticket != null)
+                return this.ticket.getWorkOrderId();
             return 0;
+        }
+
+        public String getTicketPhase() {
+            if (this.ticket != null)
+                return this.ticket.getTicketPhase();
+            return "NEW";
         }
 
         /**
@@ -75,19 +93,47 @@ public class WorkOrderTicketVO {
          * @return
          */
         public String getComment() {
-            if (this.workOrderTicket != null)
-                return this.workOrderTicket.getComment();
+            if (this.ticket != null)
+                return this.ticket.getComment();
             return "";
         }
+
+        public Boolean getIsApprover() {
+            if (this.ticket != null)
+                return this.ticket.getIsApprover();
+            return false;
+        }
+
     }
 
     @EqualsAndHashCode(callSuper = true)
     @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @Data
     @ApiModel
-    public static class Ticket extends BaseVO implements Serializable {
+    public static class Ticket extends BaseVO implements WorkOrderVO.IWorkOrder, IApprover, ShowTime.IAgo, Serializable {
 
         private static final long serialVersionUID = -3191271933875590264L;
+
+        @ApiModelProperty(value = "是否为审批人")
+        private Boolean isApprover;
+
+        @Override
+        public Boolean getIsApprover() {
+            if (this.isApprover == null)
+                return false;
+            return this.isApprover;
+        }
+
+        private String ago;
+
+        @ApiModelProperty(value = "工单")
+        private WorkOrderVO.WorkOrder workOrder;
+
+        @ApiModelProperty(value = "创建（申请）人")
+        private UserVO.User createUser;
+
         private Integer id;
         private Integer workOrderId;
         private Integer userId;
@@ -95,12 +141,27 @@ public class WorkOrderTicketVO {
         private Integer nodeId;
         private String ticketPhase;
         private Integer ticketStatus;
+        private Boolean isActive;
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date startTime;
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date endTime;
         private String comment;
 
+        /**
+         * 前端选择用
+         */
+        private Boolean loading;
+
+        @Override
+        public Date getAgoTime() {
+            return getStartTime();
+        }
+
+        @Override
+        public Integer getTicketId() {
+            return this.id;
+        }
     }
 
     @EqualsAndHashCode(callSuper = true)

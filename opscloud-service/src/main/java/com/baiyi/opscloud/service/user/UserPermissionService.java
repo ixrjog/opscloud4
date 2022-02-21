@@ -15,7 +15,7 @@ public interface UserPermissionService {
 
     UserPermission getByUserPermission(UserPermission userPermission);
 
-    UserPermission getByUnqueKey(UserPermission userPermission);
+    UserPermission getByUniqueKey(UserPermission userPermission);
 
     void update(UserPermission userPermission);
 

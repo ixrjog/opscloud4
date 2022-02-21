@@ -5,6 +5,7 @@ import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
@@ -59,7 +60,7 @@ public class ServerTreeUtil {
     private ServerTreeVO.Tree apply(ServerPack serverPack) {
         String serverName = SimpleServerNameFacade.toName(serverPack.getServer(), serverPack.getEnv());
         ServerVO.Server vo = BeanCopierUtil.copyProperties(serverPack.getServer(), ServerVO.Server.class);
-        serverPacker.wrap(vo);
+        serverPacker.wrap(vo, SimpleExtend.EXTEND);
         return ServerTreeVO.Tree.builder()
                 .id(serverName)
                 .disabled(isDisabled(serverPack.getServer()))

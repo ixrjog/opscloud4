@@ -9,6 +9,7 @@ import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsRocketMqGroup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -28,7 +29,7 @@ public class AliyunOnsRocketMqGroupDrive {
 
     private final AliyunClient aliyunClient;
 
-    public static final String QUERY_ALL = null;
+    public static final String QUERY_ALL = Strings.EMPTY;
 
     /**
      * ONS Group
@@ -40,6 +41,11 @@ public class AliyunOnsRocketMqGroupDrive {
      */
     public List<OnsRocketMqGroup.Group> listGroup(String regionId, AliyunConfig.Aliyun aliyun, String instanceId) throws ClientException {
         return listGroup(regionId, aliyun, instanceId, QUERY_ALL, QUERY_ALL);
+    }
+
+    public OnsRocketMqGroup.Group getGroup(String regionId, AliyunConfig.Aliyun aliyun, String instanceId, String groupId) throws ClientException {
+        List<OnsRocketMqGroup.Group> list = listGroup(regionId, aliyun, instanceId, groupId, QUERY_ALL);
+        return CollectionUtils.isEmpty(list) ? null : list.get(0);
     }
 
     /**

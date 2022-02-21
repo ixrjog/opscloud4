@@ -37,6 +37,7 @@ import javax.annotation.Resource;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -89,14 +90,13 @@ public class EventLoginCommand extends BaseServerCommand {
             );
 
             RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, sshContext.getSshShellRunnable().getOs());
-            //terminal.enterRawMode();
             TerminalUtil.rawModeSupportVintr(terminal);
             Instant inst1 = Instant.now(); // 计时
             Size size = terminal.getSize();
             try {
                 while (true) {
                     if (isClosed(sessionId, instanceId)) {
-                        Thread.sleep(150L);
+                        TimeUnit.MILLISECONDS.sleep(150L);
                         sessionClosed("用户正常退出登录! 耗时:%s/s", inst1);
                         break;
                     }
@@ -104,7 +104,6 @@ public class EventLoginCommand extends BaseServerCommand {
                     printJSchSession(sessionId, instanceId, terminal.reader().read(5L));
                 }
             } catch (Exception e) {
-                // e.printStackTrace();
                 sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);
             } finally {
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);

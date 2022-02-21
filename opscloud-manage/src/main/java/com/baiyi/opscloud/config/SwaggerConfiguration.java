@@ -34,9 +34,9 @@ public class SwaggerConfiguration {
     //API 作者相关信息
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("OPSCLOUD (IaC) 4.0.7")
+                .title("OPSCLOUD 4.0.8")
                 .description("OPSCLOUD OPENAPI接口文档")
-                .version("4.0.7-RELEASE")
+                .version("4.0.8-RELEASE")
                 .license("APACHE LICENSE, VERSION 2.0")
                 .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
                 .contact(new Contact("白衣", "https://github.com/ixrjog/opscloud", "ixrjog@qq.com"))

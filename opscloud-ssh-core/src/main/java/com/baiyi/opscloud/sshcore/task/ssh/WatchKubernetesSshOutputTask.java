@@ -35,14 +35,12 @@ public class WatchKubernetesSshOutputTask extends AbstractSshChannelOutputTask {
 
     @Override
     public void write(char[] buf, int off, int len) throws IOException {
-        if(printWriter != null){
+        if (printWriter != null) {
             this.printWriter.write(buf, off, len);
-            // System.out.write(toBytes(buf),off,len);
             this.printWriter.flush();
             return;
         }
         this.channelOutput.write(toBytes(buf), off, len);
-        // System.out.write(toBytes(buf),off,len);
         this.channelOutput.flush();
     }
 

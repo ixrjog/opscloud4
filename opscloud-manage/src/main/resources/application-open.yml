@@ -6,10 +6,8 @@ logging:
     path: /logs/opscloud
 
 opscloud:
-  version: 4.0.0
+  version: 4.0.8
   dataPath: ${HOME}/opscloud-data
-  instance:
-    register:
 
 # 白名单配置
 white:
@@ -39,8 +37,6 @@ spring:
         max-idle: 20
         max-active: 100
         min-idle: 0
-  jackson:
-    time-zone: GMT+8
 
 app:
   datasource:
@@ -54,10 +50,7 @@ app:
       max-lifetime: 30000
       connection-test-query: SELECT 1
 
-
-
-# java -jar -Djasypt.encryptor.password=${password}
-#jasypt:
-#  encryptor:
-#    password: ${password}
-
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: 'org.jasypt.iv.NoIvGenerator'

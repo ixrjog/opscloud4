@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshserver.command.server.base;
 
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
@@ -86,8 +87,9 @@ public class BaseServerCommand {
         SessionCommandContext.setServerQuery(pageQuery); // 设置上下文
         DataTable<Server> table = serverService.queryUserPermissionServerPage(pageQuery);
         Map<Integer, Integer> idMapper = Maps.newHashMap();
+        List<ServerVO.Server> data = BeanCopierUtil.copyListProperties(table.getData(), ServerVO.Server.class).stream().peek(e -> sshServerPacker.wrap(e)).collect(Collectors.toList());
         int id = 1;
-        for (ServerVO.Server s : sshServerPacker.wrapToVO(table.getData())) {
+        for (ServerVO.Server s : data) {
             idMapper.put(id, s.getId());
             pt.addRow(id,
                     s.getDisplayName(),

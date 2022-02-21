@@ -2,15 +2,15 @@ package com.baiyi.opscloud.facade.user.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
-import com.baiyi.opscloud.common.util.IdUtil;
-import com.baiyi.opscloud.common.util.PasswordUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.annotation.RevokeUserPermission;
 import com.baiyi.opscloud.domain.annotation.TagClear;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.SimpleRelation;
@@ -18,12 +18,12 @@ import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
+import com.baiyi.opscloud.domain.vo.user.AMVO;
 import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
+import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
@@ -34,7 +34,7 @@ import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
 import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.packer.user.UserAccessTokenPacker;
 import com.baiyi.opscloud.packer.user.UserPacker;
-import com.baiyi.opscloud.packer.user.child.RamUserPacker;
+import com.baiyi.opscloud.packer.user.am.AmPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.user.AccessTokenService;
 import com.baiyi.opscloud.service.user.UserGroupService;
@@ -42,12 +42,14 @@ import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
@@ -84,18 +86,24 @@ public class UserFacadeImpl implements UserFacade {
 
     private final UserPermissionService userPermissionService;
 
-    private final RamUserPacker ramUserPacker;
+    private final AmPacker amPacker;
 
     @Override
     public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {
         DataTable<User> table = userService.queryPageByParam(pageQuery);
-        return new DataTable<>(userPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<UserVO.User> data = BeanCopierUtil.copyListProperties(table.getData(), UserVO.User.class)
+                .stream()
+                .peek(e -> userPacker.wrap(e, pageQuery)).
+                collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
     public UserVO.User getUserDetailsByUsername(String username) {
         User user = userService.getByUsername(StringUtils.isEmpty(username) ? SessionUtil.getUsername() : username);
-        return userPacker.wrap(user);
+        UserVO.User userVO = BeanCopierUtil.copyProperties(user, UserVO.User.class);
+        userPacker.wrap(userVO, SimpleExtend.EXTEND);
+        return userVO;
     }
 
     @Async(value = CORE)
@@ -113,7 +121,8 @@ public class UserFacadeImpl implements UserFacade {
             List<DatasourceInstanceAsset> userAssets = dsInstanceAssetService.queryAssetByAssetParam(query);
             if (CollectionUtils.isEmpty(userAssets)) return;
             userAssets.forEach(a -> {
-                DsAssetVO.Asset asset = dsAssetPacker.wrapVO(a, SimpleExtend.EXTEND, SimpleRelation.RELATION);
+                DsAssetVO.Asset asset = BeanCopierUtil.copyProperties(a, DsAssetVO.Asset.class);
+                dsAssetPacker.wrap(asset, SimpleExtend.EXTEND, SimpleRelation.RELATION);
                 if (asset.getChildren().containsKey(DsAssetTypeConstants.GROUP.name())) {
                     // GROUP存在
                     asset.getChildren().get(DsAssetTypeConstants.GROUP.name()).forEach(g ->
@@ -141,12 +150,15 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     @AssetBusinessRelation // 资产绑定业务对象
     public UserVO.User addUser(UserVO.User user) {
-        User newUser = userPacker.toDO(user);
+        User newUser = this.toDO(user);
 //        if (StringUtils.isEmpty(newUser.getPassword()))
 //            throw new CommonRuntimeException("密码不能为空");
         userService.add(newUser);
         user.setId(newUser.getId()); // 给切面提供businessId
-        return userPacker.wrap(newUser);
+
+        UserVO.User userVO = BeanCopierUtil.copyProperties(user, UserVO.User.class);
+        userPacker.wrap(userVO, SimpleExtend.EXTEND);
+        return userVO;
     }
 
     /**
@@ -163,7 +175,7 @@ public class UserFacadeImpl implements UserFacade {
                 throw new CommonRuntimeException("权限不足:需要管理员才能修改其他用户信息!");
             }
         }
-        User updateUser = userPacker.toDO(user);
+        User updateUser = this.toDO(user);
         updateUser.setUsername(checkUser.getUsername());
         userService.updateBySelective(updateUser);
     }
@@ -236,16 +248,36 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public DataTable<UserVO.User> queryBusinessPermissionUserPage(UserBusinessPermissionParam.BusinessPermissionUserPageQuery pageQuery) {
         DataTable<User> table = userService.queryPageByParam(pageQuery);
-        return new DataTable<>(userPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<UserVO.User> data = BeanCopierUtil.copyListProperties(table.getData(), UserVO.User.class).stream().peek(e -> {
+            userPacker.wrap(e, pageQuery);
+            UserPermission userPermission = userPermissionService.getByUserPermission(UserPermission.builder()
+                    .userId(e.getUserId())
+                    .businessId(pageQuery.getBusinessId())
+                    .businessType(pageQuery.getBusinessType())
+                    .build());
+            e.setUserPermission(BeanCopierUtil.copyProperties(userPermission, UserPermissionVO.UserPermission.class));
+        }).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
-    public List<UserVO.RamUser> queryUserRamUsers(String username) {
+    public List<AMVO.XAM> queryAmsUser(String username, String amType) {
         UserVO.User vo = UserVO.User.builder()
                 .username(username)
                 .build();
-        ramUserPacker.wrap(vo);
-        return vo.getRamUsers();
+        return amPacker.toAms(vo, amType);
+    }
+
+    private User toDO(UserVO.User user) {
+        User pre = BeanCopierUtil.copyProperties(user, User.class);
+        if (!StringUtils.isEmpty(pre.getPassword()))
+            RegexUtil.checkPasswordRule(pre.getPassword());
+        if (!RegexUtil.isPhone(user.getPhone()))
+            pre.setPhone(Strings.EMPTY);
+        if (StringUtils.isEmpty(user.getUuid())) {
+            pre.setUuid(IdUtil.buildUUID());
+        }
+        return pre;
     }
 
 }

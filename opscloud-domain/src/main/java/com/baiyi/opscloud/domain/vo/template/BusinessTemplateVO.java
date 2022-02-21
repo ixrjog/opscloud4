@@ -24,7 +24,7 @@ public class BusinessTemplateVO {
     @NoArgsConstructor
     @ApiModel
     public static class BusinessTemplate extends BaseVO implements EnvVO.IEnv,
-            TemplateVO.ITempate,
+            TemplateVO.ITemplate,
             BaseBusiness.IBusiness,
             DsInstanceVO.IDsInstance,
             DsAssetVO.IDsAsset {

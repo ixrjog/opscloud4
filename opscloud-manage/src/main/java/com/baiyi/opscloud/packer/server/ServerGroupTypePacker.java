@@ -3,15 +3,12 @@ package com.baiyi.opscloud.packer.server;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroupType;
 import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.service.server.ServerGroupTypeService;
-import com.baiyi.opscloud.common.util.ExtendUtil;
-import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -19,33 +16,21 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class ServerGroupTypePacker {
+@RequiredArgsConstructor
+public class ServerGroupTypePacker implements IWrapper<ServerGroupTypeVO.ServerGroupType> {
 
-    @Resource
-    private ServerGroupService serverGroupService;
+    private final ServerGroupService serverGroupService;
 
-    @Resource
-    private ServerGroupTypeService serverGroupTypeService;
+    private final ServerGroupTypeService serverGroupTypeService;
 
     public void wrap(ServerGroupTypeVO.IServerGroupType iServerGroupType) {
         ServerGroupType serverGroupType = serverGroupTypeService.getById(iServerGroupType.getServerGroupTypeId());
         iServerGroupType.setServerGroupType(BeanCopierUtil.copyProperties(serverGroupType, ServerGroupTypeVO.ServerGroupType.class));
     }
 
-    public List<ServerGroupTypeVO.ServerGroupType> wrapVOList(List<ServerGroupType> data) {
-        return BeanCopierUtil.copyListProperties(data, ServerGroupTypeVO.ServerGroupType.class);
+    @Override
+    public void wrap(ServerGroupTypeVO.ServerGroupType serverGroupType, IExtend iExtend) {
+        serverGroupType.setServerGroupSize(serverGroupService.countByServerGroupTypeId(serverGroupType.getId()));
     }
 
-    public List<ServerGroupTypeVO.ServerGroupType> wrapVOList(List<ServerGroupType> data, IExtend iExtend) {
-        List<ServerGroupTypeVO.ServerGroupType> voList = wrapVOList(data);
-
-        if (!ExtendUtil.isExtend(iExtend))
-            return voList;
-
-        return voList.stream().peek(this::wrap).collect(Collectors.toList());
-    }
-
-    public void wrap(ServerGroupTypeVO.ServerGroupType vo) {
-        vo.setServerGroupSize(serverGroupService.countByServerGroupTypeId(vo.getId()));
-    }
 }

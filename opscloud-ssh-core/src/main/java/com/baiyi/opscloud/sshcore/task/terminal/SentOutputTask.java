@@ -35,6 +35,7 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import javax.websocket.Session;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * class to send output to web socket client
@@ -60,7 +61,7 @@ public class SentOutputTask implements Runnable {
                     String jsonStr = JSONUtil.writeValueAsString(outputList);
                     session.getBasicRemote().sendText(jsonStr);
                 }
-                Thread.sleep(25);
+                TimeUnit.MILLISECONDS.sleep(25L);
             }
             log.info("SentOutputTask 结束 sessionId = {}", sessionId);
         } catch (Exception ex) {

@@ -5,6 +5,7 @@ import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.datasource.DsConfigParam;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
 import com.baiyi.opscloud.domain.vo.datasource.DsConfigVO;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -43,7 +45,9 @@ public class DsFacadeImpl implements DsFacade {
     @Override
     public DataTable<DsConfigVO.DsConfig> queryDsConfigPage(DsConfigParam.DsConfigPageQuery pageQuery) {
         DataTable<DatasourceConfig> table = dsConfigService.queryPageByParam(pageQuery);
-        return new DataTable<>(dsConfigPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+        List<DsConfigVO.DsConfig> data = BeanCopierUtil.copyListProperties(table.getData(), DsConfigVO.DsConfig.class).stream()
+                .peek(e -> dsConfigPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
@@ -61,19 +65,32 @@ public class DsFacadeImpl implements DsFacade {
     @Override
     public List<DsInstanceVO.Instance> queryDsInstance(DsInstanceParam.DsInstanceQuery query) {
         List<DatasourceInstance> instanceList = dsInstanceService.queryByParam(query);
-        return dsInstancePacker.wrapVOList(instanceList, query);
+        return BeanCopierUtil.copyListProperties(instanceList, DsInstanceVO.Instance.class)
+                .stream().peek(e -> dsInstancePacker.wrap(e, query)).collect(Collectors.toList());
     }
 
     @Override
     public void registerDsInstance(DsInstanceParam.RegisterDsInstance registerDsInstance) {
         DatasourceInstance datasourceInstance = BeanCopierUtil.copyProperties(registerDsInstance, DatasourceInstance.class);
-        datasourceInstance.setUuid(IdUtil.buildUUID());
-        dsInstanceService.add(datasourceInstance);
+        if (datasourceInstance.getId() == null) {
+            datasourceInstance.setUuid(IdUtil.buildUUID());
+            dsInstanceService.add(datasourceInstance);
+        } else {
+            dsInstanceService.update(datasourceInstance);
+        }
     }
 
     @Override
     public DsInstanceVO.Instance queryDsInstanceById(int instanceId) {
         DatasourceInstance instance = dsInstanceService.getById(instanceId);
         return DsInstancePacker.toVO(instance);
+    }
+
+    @Override
+    public DsConfigVO.DsConfig queryDsConfigById(int configId) {
+        DatasourceConfig config = dsConfigService.getById(configId);
+        DsConfigVO.DsConfig result = BeanCopierUtil.copyProperties(config, DsConfigVO.DsConfig.class);
+        dsConfigPacker.wrap(result, SimpleExtend.EXTEND);
+        return result;
     }
 }

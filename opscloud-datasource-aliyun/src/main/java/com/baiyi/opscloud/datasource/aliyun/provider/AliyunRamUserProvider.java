@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.aliyun.provider;
 
+import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
@@ -8,10 +9,13 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
+import com.baiyi.opscloud.datasource.aliyun.converter.ComputeAssetConverter;
 import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamUserDrive;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamPolicy;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamUser;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
@@ -89,6 +93,11 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<RamUser
     protected List<RamUser.User> listEntities(DsInstanceContext dsInstanceContext, RamPolicy.Policy target) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         return aliyunRamUserDrive.listUsersForPolicy(aliyun.getRegionId(), aliyun, target.getPolicyType(), target.getPolicyName());
+    }
+
+
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance entity) {
+        return ComputeAssetConverter.toAssetContainer(dsInstance, entity);
     }
 
     @Override

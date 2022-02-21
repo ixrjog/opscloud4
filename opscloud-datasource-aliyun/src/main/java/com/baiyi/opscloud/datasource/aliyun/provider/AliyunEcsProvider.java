@@ -4,7 +4,7 @@ import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.datasource.aliyun.convert.ComputeAssetConvert;
+import com.baiyi.opscloud.datasource.aliyun.converter.ComputeAssetConverter;
 import com.baiyi.opscloud.datasource.aliyun.ecs.drive.AliyunEcsDrive;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
@@ -51,7 +51,7 @@ public class AliyunEcsProvider extends AbstractAssetBusinessRelationProvider<Des
 
     @Override
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance entity) {
-        return ComputeAssetConvert.toAssetContainer(dsInstance, entity);
+        return ComputeAssetConverter.toAssetContainer(dsInstance, entity);
     }
 
     @Override

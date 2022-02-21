@@ -1,15 +1,15 @@
 package com.baiyi.opscloud.packer.user;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.time.LaterUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.AccessToken;
 import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.service.user.AccessTokenService;
-import com.baiyi.opscloud.common.util.time.LaterUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class UserAccessTokenPacker {
 
-    @Resource
-    private AccessTokenService accessTokenService;
+    private final AccessTokenService accessTokenService;
 
     public void wrap(UserVO.User user) {
         List<AccessToken> accessTokens = accessTokenService.queryByUsername(user.getUsername());

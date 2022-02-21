@@ -54,7 +54,7 @@ public class AliyunConfig extends BaseConfig {
          *
          * @return
          */
-        public String getRamLoginUrl() {
+        public String getLoginUrl() {
             return RAM_LOGIN_URL.replace("${COMPANY}", StringUtils.isEmpty(this.company) ? this.uid : this.company);
         }
     }

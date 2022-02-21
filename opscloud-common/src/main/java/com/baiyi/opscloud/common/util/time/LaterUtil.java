@@ -29,7 +29,6 @@ public class LaterUtil {
 
     //private static final String SUFFIX = "后";
 
-
     public static String format(String gmtDate) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:m:s");
         try {

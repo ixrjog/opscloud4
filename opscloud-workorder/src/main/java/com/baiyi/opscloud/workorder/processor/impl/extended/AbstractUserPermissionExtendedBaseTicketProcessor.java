@@ -2,8 +2,11 @@ package com.baiyi.opscloud.workorder.processor.impl.extended;
 
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
+import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.service.user.UserPermissionService;
+import com.baiyi.opscloud.workorder.constants.OrderTicketPhaseCodeConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.processor.impl.base.BaseTicketProcessor;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +35,7 @@ public abstract class AbstractUserPermissionExtendedBaseTicketProcessor<T> exten
                 .permissionRole(ticketEntry.getRole())
                 .build();
         // 查询是否重复授权
-        UserPermission userPermission = userPermissionService.getByUnqueKey(prePermission);
+        UserPermission userPermission = userPermissionService.getByUniqueKey(prePermission);
         if (userPermission == null) {
             userPermissionService.add(prePermission); // 授权
         } else {
@@ -43,6 +46,26 @@ public abstract class AbstractUserPermissionExtendedBaseTicketProcessor<T> exten
                 userPermissionService.update(userPermission);
             }
         }
+    }
+
+    /**
+     * 更新工单条目配置(修改角色)
+     *
+     * @param ticketEntry
+     */
+    protected void updateHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
+        WorkOrderTicket ticket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
+        if (!OrderTicketPhaseCodeConstants.NEW.name().equals(ticket.getTicketPhase()))
+            throw new TicketProcessException("工单进度不是新建，无法更新配置条目");
+        String role = ticketEntry.getRole();
+        if (!StringUtils.isEmpty(role)) {
+            if (!"admin".equalsIgnoreCase(role)) {
+                return;
+            }
+        }
+        WorkOrderTicketEntry preTicketEntry = ticketEntryService.getById(ticketEntry.getId());
+        preTicketEntry.setRole(role);
+        updateTicketEntry(preTicketEntry);
     }
 
 }

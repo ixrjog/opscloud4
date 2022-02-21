@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketEntryService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketService;
@@ -32,10 +33,10 @@ import java.util.Date;
 public abstract class BaseTicketProcessor<T> implements ITicketProcessor, InitializingBean {
 
     @Resource
-    private WorkOrderTicketEntryService workOrderTicketEntryService;
+    protected WorkOrderTicketEntryService ticketEntryService;
 
     @Resource
-    private WorkOrderTicketService workOrderTicketService;
+    protected WorkOrderTicketService ticketService;
 
     @Resource
     private UserService userService;
@@ -55,6 +56,7 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
      */
     abstract protected Class<T> getEntryClassT();
 
+    @Override
     public T toEntry(String entryContent) throws JsonSyntaxException {
         final Gson builder = new GsonBuilder()
                 .registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (jsonElement, type, context) -> new Date(jsonElement.getAsJsonPrimitive().getAsLong())).create();
@@ -62,8 +64,8 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
     }
 
     @Override
-    public void verify(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException {
-        if (workOrderTicketEntryService.countByTicketUniqueKey(ticketEntry) != 0)
+    public void verify(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
+        if (ticketEntryService.countByTicketUniqueKey(ticketEntry) != 0)
             throw new TicketVerifyException("校验工单条目失败: 重复申请!");
         verifyHandle(ticketEntry);
     }
@@ -77,7 +79,7 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
      * @return
      */
     protected User queryCreateUser(WorkOrderTicketEntry ticketEntry) {
-        WorkOrderTicket workOrderTicket = workOrderTicketService.getById(ticketEntry.getWorkOrderTicketId());
+        WorkOrderTicket workOrderTicket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
         return userService.getByUsername(workOrderTicket.getUsername());
     }
 
@@ -90,11 +92,11 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
             ticketEntry.setResult(e.getMessage());
             ticketEntry.setEntryStatus(ProcessStatusConstants.FAILED.getStatus());
         }
-        updateTicket(ticketEntry);
+        updateTicketEntry(ticketEntry);
     }
 
-    private void updateTicket(WorkOrderTicketEntry ticketEntry) {
-        workOrderTicketEntryService.update(ticketEntry);
+    protected void updateTicketEntry(WorkOrderTicketEntry ticketEntry) {
+        ticketEntryService.update(ticketEntry);
     }
 
     protected void verifyEntry(T entry) throws TicketVerifyException {

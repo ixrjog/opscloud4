@@ -10,14 +10,18 @@ import com.baiyi.opscloud.domain.param.tag.BusinessTagParam;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.facade.tag.SimpleTagFacade;
-import com.baiyi.opscloud.packer.tag.TagPacker;
+import com.baiyi.opscloud.packer.TagPacker;
 import com.baiyi.opscloud.service.tag.BusinessTagService;
 import com.baiyi.opscloud.service.tag.TagService;
+import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -37,13 +41,18 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
     @Override
     public List<TagVO.Tag> queryTagByBusinessType(Integer businessType) {
         List<Tag> tags = tagService.queryTagByBusinessType(businessType);
-        return tagPacker.wrapVOList(tags);
+        if (CollectionUtils.isEmpty(tags))
+            return Collections.emptyList();
+        return BeanCopierUtil.copyListProperties(tags, TagVO.Tag.class).stream().peek(tagPacker::wrap).collect(Collectors.toList());
     }
 
     @Override
     public DataTable<TagVO.Tag> queryTagPage(TagParam.TagPageQuery pageQuery) {
         DataTable<Tag> table = tagService.queryPageByParam(pageQuery);
-        return new DataTable<>(tagPacker.wrapVOList(table.getData()), table.getTotalNum());
+        List<TagVO.Tag> data = Lists.newArrayList();
+        if (!CollectionUtils.isEmpty(table.getData()))
+            data = BeanCopierUtil.copyListProperties(table.getData(), TagVO.Tag.class).stream().peek(tagPacker::wrap).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override

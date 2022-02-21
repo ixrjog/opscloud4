@@ -1,5 +1,9 @@
 package com.baiyi.opscloud.facade.workorder;
 
+import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderGroupParam;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderParam;
+import com.baiyi.opscloud.domain.vo.workorder.WorkOrderVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderViewVO;
 
 /**
@@ -10,10 +14,46 @@ import com.baiyi.opscloud.domain.vo.workorder.WorkOrderViewVO;
 public interface WorkOrderFacade {
 
     /**
+     * 工单分页查询
+     *
+     * @param pageQuery
+     * @return
+     */
+    DataTable<WorkOrderVO.WorkOrder> queryWorkOrderPage(WorkOrderParam.WorkOrderPageQuery pageQuery);
+
+
+    /**
+     * 工单组分页查询
+     *
+     * @param pageQuery
+     * @return
+     */
+    DataTable<WorkOrderVO.Group> queryWorkOrderGroupPage(WorkOrderGroupParam.WorkOrderGroupPageQuery pageQuery);
+
+    /**
      * 查询工单视图
      *
      * @return
      */
     WorkOrderViewVO.View getWorkOrderView();
+
+    /**
+     * 保存工单组
+     * @param group
+     */
+    void saveWorkOrderGroup(WorkOrderVO.Group group);
+
+    /**
+     * 删除工单组
+     * @param workOrderGroupId
+     */
+    void deleteWorkOrderGroup(Integer workOrderGroupId);
+
+
+    /**
+     * 保存工单组
+     * @param workOrder
+     */
+    void updateWorkOrder(WorkOrderVO.WorkOrder workOrder);
 
 }

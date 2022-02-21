@@ -9,7 +9,6 @@ import io.fabric8.kubernetes.client.dsl.ExecListener;
 import io.fabric8.kubernetes.client.dsl.ExecWatch;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
 import lombok.Data;
-import okhttp3.Response;
 import org.springframework.util.CollectionUtils;
 
 import java.io.OutputStream;
@@ -121,7 +120,7 @@ public class KubernetesPodDrive {
                 //.redirectingErrorChannel()
                 //.readingInput(in)
                 .writingOutput(out)
-                .writingError(System.err)
+                .writingError(out)
                 .withTTY()
                 .usingListener(listener)
                 .exec("sh");
@@ -130,9 +129,9 @@ public class KubernetesPodDrive {
     @Data
     public static class SimpleListener implements ExecListener {
 
+
         private boolean isClosed = false;
 
-        @Override
         public void onOpen(Response response) {
         }
 

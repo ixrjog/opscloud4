@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.datasource.nacos.drive;
 
+import com.baiyi.opscloud.common.builder.SimpleDictBuilder;
 import com.baiyi.opscloud.common.datasource.NacosConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.datasource.nacos.entity.NacosLogin;
 import com.baiyi.opscloud.datasource.nacos.entity.NacosPermission;
 import com.baiyi.opscloud.datasource.nacos.entity.NacosRole;
@@ -14,8 +16,12 @@ import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Author baiyi
  * @Date 2021/11/11 4:55 下午
@@ -51,8 +57,8 @@ public class NacosAuthDrive {
         return accessToken;
     }
 
-    public NacosPermission.PermissionsResponse listPermissions(NacosConfig.Nacos config,NacosPageParam.PageQuery pageQuery) {
-        preHandle(config,pageQuery);
+    public NacosPermission.PermissionsResponse listPermissions(NacosConfig.Nacos config, NacosPageParam.PageQuery pageQuery) {
+        preHandle(config, pageQuery);
         NacosAuthV1Feign nacosAPI = buildFeign(config);
         return nacosAPI.listPermissions(
                 pageQuery.getPageNo(),
@@ -60,8 +66,45 @@ public class NacosAuthDrive {
                 pageQuery.getAccessToken());
     }
 
+    public List<String> searchUsers(NacosConfig.Nacos config, String username) {
+        NacosLogin.AccessToken accessToken = this.login(config);
+        NacosAuthV1Feign nacosAPI = buildFeign(config);
+        return nacosAPI.searchUsers(
+                username,
+                accessToken.getAccessToken());
+    }
+
+    public NacosUser.CreateUserResponse createUser(NacosConfig.Nacos config, String username, String password) {
+        if (StringUtils.isEmpty(password)) {
+            password = IdUtil.buildUUID();
+        }
+        Map<String, String> paramMap = SimpleDictBuilder.newBuilder()
+                .putParam("username", username)
+                .putParam("password", password)
+                .build().getDict();
+        NacosLogin.AccessToken accessToken = this.login(config);
+        NacosAuthV1Feign nacosAPI = buildFeign(config);
+        return nacosAPI.createUser(accessToken.getAccessToken(), paramMap);
+    }
+
+    /**
+     * @param config
+     * @param username
+     * @param role
+     * @return
+     */
+    public NacosUser.AuthRoleResponse authRole(NacosConfig.Nacos config, String username, String role) {
+        Map<String, String> paramMap = SimpleDictBuilder.newBuilder()
+                .putParam("username", username)
+                .putParam("role", role)
+                .build().getDict();
+        NacosLogin.AccessToken accessToken = this.login(config);
+        NacosAuthV1Feign nacosAPI = buildFeign(config);
+        return nacosAPI.authRole(accessToken.getAccessToken(), paramMap);
+    }
+
     public NacosUser.UsersResponse listUsers(NacosConfig.Nacos config, NacosPageParam.PageQuery pageQuery) {
-        preHandle(config,pageQuery);
+        preHandle(config, pageQuery);
         NacosAuthV1Feign nacosAPI = buildFeign(config);
         return nacosAPI.listUsers(
                 pageQuery.getPageNo(),
@@ -70,7 +113,7 @@ public class NacosAuthDrive {
     }
 
     public NacosRole.RolesResponse listRoles(NacosConfig.Nacos config, NacosPageParam.PageQuery pageQuery) {
-        preHandle(config,pageQuery);
+        preHandle(config, pageQuery);
         NacosAuthV1Feign nacosAPI = buildFeign(config);
         return nacosAPI.listRoles(
                 pageQuery.getPageNo(),
@@ -78,8 +121,8 @@ public class NacosAuthDrive {
                 pageQuery.getAccessToken());
     }
 
-    private void preHandle(NacosConfig.Nacos config,NacosPageParam.PageQuery pageQuery){
-        if(StringUtils.isEmpty(pageQuery.getAccessToken())){
+    private void preHandle(NacosConfig.Nacos config, NacosPageParam.PageQuery pageQuery) {
+        if (StringUtils.isEmpty(pageQuery.getAccessToken())) {
             NacosLogin.AccessToken accessToken = this.login(config);
             pageQuery.setAccessToken(accessToken.getAccessToken());
         }

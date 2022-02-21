@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.user;
 
-import com.baiyi.opscloud.domain.vo.user.UserUIVO;
+import com.baiyi.opscloud.domain.vo.user.UIVO;
 
 /**
  * @Author baiyi
@@ -9,5 +9,5 @@ import com.baiyi.opscloud.domain.vo.user.UserUIVO;
  */
 public interface UserUIFacade {
 
-    UserUIVO.UIInfo buildUIInfo();
+    UIVO.UIInfo buildUIInfo();
 }

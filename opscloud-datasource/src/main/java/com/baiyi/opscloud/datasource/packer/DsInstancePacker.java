@@ -1,15 +1,15 @@
 package com.baiyi.opscloud.datasource.packer;
 
+import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
-import com.baiyi.opscloud.packer.tag.TagPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
-import org.springframework.stereotype.Component;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
+
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,9 +23,6 @@ import java.util.stream.Collectors;
 public class DsInstancePacker {
 
     @Resource
-    private TagPacker tagPacker;
-
-    @Resource
     private DsInstanceAssetService dsInstanceAssetService;
 
     @Resource
@@ -36,34 +33,26 @@ public class DsInstancePacker {
     }
 
     public void wrap(DsInstanceVO.IDsInstance iDsInstance) {
-        if(StringUtils.isEmpty(iDsInstance.getInstanceUuid())) return;
+        if (StringUtils.isEmpty(iDsInstance.getInstanceUuid())) return;
         DatasourceInstance datasourceInstance = dsInstanceService.getByUuid(iDsInstance.getInstanceUuid());
-        if(datasourceInstance == null) return;
+        if (datasourceInstance == null) return;
         iDsInstance.setInstance(toVO(datasourceInstance));
     }
 
-    public void wrap(DsInstanceVO.Instance instance) {
-        List<String> assetTypes = dsInstanceAssetService.queryInstanceAssetTypes(instance.getUuid());
-        instance.setAssetDetails(
-                assetTypes.stream().map(e ->
-                        DsInstanceVO.AssetDetail.builder()
-                                .assetType(e)
-                                .assetSize(dsInstanceAssetService.countByInstanceAssetType(instance.getUuid(), e))
-                                .build()
-                ).collect(Collectors.toList())
-        );
-        tagPacker.wrap(instance);
+    @TagsWrapper
+    public void wrap(DsInstanceVO.Instance instance, IExtend iExtend) {
+        if (iExtend.getExtend()) {
+            List<String> assetTypes = dsInstanceAssetService.queryInstanceAssetTypes(instance.getUuid());
+            instance.setAssetDetails(
+                    assetTypes.stream().map(e ->
+                            DsInstanceVO.AssetDetail.builder()
+                                    .assetType(e)
+                                    .assetSize(dsInstanceAssetService.countByInstanceAssetType(instance.getUuid(), e))
+                                    .build()
+                    ).collect(Collectors.toList())
+            );
+        }
     }
 
-    public List<DsInstanceVO.Instance> wrapVOList(List<DatasourceInstance> data) {
-        return BeanCopierUtil.copyListProperties(data, DsInstanceVO.Instance.class);
-    }
 
-    public List<DsInstanceVO.Instance> wrapVOList(List<DatasourceInstance> data, IExtend iExtend) {
-        List<DsInstanceVO.Instance> voList = wrapVOList(data);
-        if (!ExtendUtil.isExtend(iExtend))
-            return voList;
-        return voList.stream().peek(this::wrap
-        ).collect(Collectors.toList());
-    }
 }

@@ -1,6 +1,11 @@
 package com.baiyi.opscloud.service.workorder;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam;
+import com.baiyi.opscloud.domain.vo.workorder.WorkOrderReportVO;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -9,6 +14,12 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
  */
 public interface WorkOrderTicketService {
 
+    DataTable<WorkOrderTicket> queryPageByParam(WorkOrderTicketParam.TicketPageQuery pageQuery);
+
+    List<WorkOrderReportVO.Report> queryReportByName();
+
+    List<WorkOrderReportVO.Report> queryReportByMonth(Integer workorderId);
+
     void add(WorkOrderTicket workOrderTicket);
 
     void update(WorkOrderTicket workOrderTicket);
@@ -16,5 +27,7 @@ public interface WorkOrderTicketService {
     WorkOrderTicket getById(int id);
 
     WorkOrderTicket getNewTicketByUser(String workOrderKey, String username);
+
+    void deleteById(int id);
 
 }

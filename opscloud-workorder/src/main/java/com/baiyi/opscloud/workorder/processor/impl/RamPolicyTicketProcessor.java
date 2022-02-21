@@ -1,15 +1,15 @@
 package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.datasource.facade.UserRamFacade;
+import com.baiyi.opscloud.datasource.facade.UserAmFacade;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
-import com.baiyi.opscloud.domain.param.user.UserRamParam;
+import com.baiyi.opscloud.domain.param.user.UserAmParam;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
-import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDatasourceAssetPermissionExtendedBaseTicketProcessor;
+import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetPermissionExtendedBaseTicketProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -24,28 +24,42 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-public class RamPolicyTicketProcessor extends AbstractDatasourceAssetPermissionExtendedBaseTicketProcessor {
+public class RamPolicyTicketProcessor extends AbstractDsAssetPermissionExtendedBaseTicketProcessor {
 
     @Resource
-    private UserRamFacade userRamFacade;
+    private UserAmFacade userAmFacade;
 
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
-        User applicantUser = queryCreateUser(ticketEntry);
-        UserRamParam.Policy policy = UserRamParam.Policy.builder()
+        User createUser = queryCreateUser(ticketEntry);
+        preProcess(ticketEntry,createUser);
+        UserAmParam.Policy policy = UserAmParam.Policy.builder()
                 .policyName(entry.getAssetId())
                 .policyType(entry.getAssetKey())
                 .build();
-        UserRamParam.GrantRamPolicy grantRamPolicy = UserRamParam.GrantRamPolicy.builder()
+        UserAmParam.GrantPolicy grantPolicy = UserAmParam.GrantPolicy.builder()
                 .instanceUuid(ticketEntry.getInstanceUuid())
-                .username(applicantUser.getUsername())
+                .username(createUser.getUsername())
                 .policy(policy)
                 .build();
         try {
-            userRamFacade.grantRamPolicy(grantRamPolicy);
+            userAmFacade.grantPolicy(grantPolicy);
         } catch (Exception e) {
             throw new TicketProcessException("工单授权策略失败: " + e.getMessage());
         }
+    }
+
+    /**
+     * 创建RAM用户
+     * @param ticketEntry
+     * @param user
+     */
+    private void preProcess(WorkOrderTicketEntry ticketEntry,User user) {
+        UserAmParam.CreateUser createUser = UserAmParam.CreateUser.builder()
+                .instanceUuid(ticketEntry.getInstanceUuid())
+                .username(user.getUsername())
+                .build();
+        userAmFacade.createUser(createUser);
     }
 
     @Override

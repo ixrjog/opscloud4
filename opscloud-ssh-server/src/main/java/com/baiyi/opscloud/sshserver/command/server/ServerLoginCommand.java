@@ -1,12 +1,12 @@
 package com.baiyi.opscloud.sshserver.command.server;
 
 import com.baiyi.opscloud.common.exception.ssh.SshRuntimeException;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.service.server.ServerService;
-import com.baiyi.opscloud.sshcore.SshAccountHelper;
 import com.baiyi.opscloud.sshcore.audit.ServerCommandAudit;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
@@ -42,6 +42,7 @@ import javax.annotation.Resource;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -74,13 +75,11 @@ public class ServerLoginCommand implements InitializingBean {
     private SshServerPacker sshServerPacker;
 
     @Resource
-    private SshAccountHelper sshAccountHelper;
-
-    @Resource
     private SimpleTerminalSessionFacade simpleTerminalSessionFacade;
 
     private String toInstanceId(Server server) {
-        ServerVO.Server serverVO = sshServerPacker.wrapToVO(server);
+        ServerVO.Server serverVO = BeanCopierUtil.copyProperties(server,ServerVO.Server.class);
+        sshServerPacker.wrap(serverVO);
         return Joiner.on("#").join(serverVO.getDisplayName(), server.getPrivateIp(), IdUtil.buildUUID());
     }
 
@@ -129,7 +128,7 @@ public class ServerLoginCommand implements InitializingBean {
             try {
                 while (true) {
                     if (isClosed(sessionId, instanceId)) {
-                        Thread.sleep(150L);
+                        TimeUnit.MILLISECONDS.sleep(150L);
                         sessionClosed("用户正常退出登录! 耗时:%s/s", inst1);
                         break;
                     }

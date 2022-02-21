@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
@@ -68,18 +69,7 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
         try {
             Set<Long> deptIdSet = queryDeptSubIds(dsInstanceContext);
             List<DingtalkUser.User> entities = Lists.newArrayList();
-            Map<String, DingtalkUser.User> allUserMap = Maps.newHashMap();
-            deptIdSet.forEach(deptId -> {
-                DingtalkUserParam.QueryUserPage queryUserPage = DingtalkUserParam.QueryUserPage.builder()
-                        .deptId(deptId)
-                        .build();
-                DingtalkUser.UserResponse userResponse = dingtalkUserDrive.list(dingtalk, queryUserPage);
-
-                if (CollectionUtils.isEmpty(userResponse.getResult().getList())) return;
-                Map<String, DingtalkUser.User> userMap = userResponse.getResult().getList().stream().collect(Collectors.toMap(DingtalkUser.User::getUserid, a -> a, (k1, k2) -> k1));
-                allUserMap.putAll(userMap);
-                log.info("查询钉钉用户: size = {}", allUserMap.size());
-            });
+            Map<String, DingtalkUser.User> allUserMap = queryAllUserMap(dingtalk, deptIdSet);
             allUserMap.keySet().forEach(k -> {
                 DingtalkUser.User user = allUserMap.get(k);
                 mapping(user);
@@ -87,9 +77,25 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
             });
             return entities;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("查询钉钉用户错误: {}", e.getMessage());
         }
         throw new RuntimeException("查询条目失败!");
+    }
+
+    private Map<String, DingtalkUser.User> queryAllUserMap(DingtalkConfig.Dingtalk dingtalk, Set<Long> deptIdSet) {
+        Map<String, DingtalkUser.User> allUserMap = Maps.newHashMap();
+        deptIdSet.forEach(deptId -> {
+            DingtalkUserParam.QueryUserPage queryUserPage = DingtalkUserParam.QueryUserPage.builder()
+                    .deptId(deptId)
+                    .build();
+            DingtalkUser.UserResponse userResponse = dingtalkUserDrive.list(dingtalk, queryUserPage);
+
+            if (CollectionUtils.isEmpty(userResponse.getResult().getList())) return;
+            Map<String, DingtalkUser.User> userMap = userResponse.getResult().getList().stream().collect(Collectors.toMap(DingtalkUser.User::getUserid, a -> a, (k1, k2) -> k1));
+            allUserMap.putAll(userMap);
+            log.info("查询钉钉用户: 部门ID = {} , 用户总数 = {}", deptId, allUserMap.size());
+        });
+        return allUserMap;
     }
 
     @Override
@@ -126,7 +132,7 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
     }
 
     @Override
-    @SingleTask(name = SingleTaskConstants.PULL_DINGTALK_USER, lockTime = "2m")
+    @SingleTask(name = SingleTaskConstants.PULL_DINGTALK_USER, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

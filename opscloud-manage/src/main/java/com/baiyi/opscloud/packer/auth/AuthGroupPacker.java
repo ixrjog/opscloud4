@@ -1,16 +1,16 @@
 package com.baiyi.opscloud.packer.auth;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.ExtendUtil;
+import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthGroup;
 import com.baiyi.opscloud.domain.param.IExtend;
-import com.baiyi.opscloud.service.auth.AuthResourceService;
-import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.baiyi.opscloud.domain.vo.auth.AuthGroupVO;
+import com.baiyi.opscloud.packer.IWrapper;
+import com.baiyi.opscloud.service.auth.AuthGroupService;
+import com.baiyi.opscloud.service.auth.AuthResourceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -18,25 +18,24 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class AuthGroupPacker {
+@RequiredArgsConstructor
+public class AuthGroupPacker implements IWrapper<AuthGroupVO.Group> {
 
-    @Resource
-    private AuthResourceService authResourceService;
+    private final AuthGroupService authGroupService;
 
-    public static List<AuthGroupVO.Group> wrapVOList(List<AuthGroup> data) {
-        return BeanCopierUtil.copyListProperties(data, AuthGroupVO.Group.class);
+    private final AuthResourceService authResourceService;
+
+    @Override
+    public void wrap(AuthGroupVO.Group group, IExtend iExtend) {
+        if (!ExtendUtil.isExtend(iExtend)) return;
+        group.setResourceSize(authResourceService.countByGroupId(group.getId()));
     }
 
-    public List<AuthGroupVO.Group> wrapVOList(List<AuthGroup> data, IExtend iExtend) {
-        List<AuthGroupVO.Group> groups = wrapVOList(data);
-        if (!ExtendUtil.isExtend(iExtend))
-            return groups;
-
-        return groups.stream().peek(e ->
-                e.setResourceSize(authResourceService.countByGroupId(e.getId()))).collect(Collectors.toList());
+    public void wrap(AuthGroupVO.IAuthGroup iAuthGroup) {
+        if (IdUtil.isEmpty(iAuthGroup.getGroupId())) return;
+        AuthGroup authGroup = authGroupService.getById(iAuthGroup.getGroupId());
+        if (authGroup == null) return;
+        iAuthGroup.setGroup(BeanCopierUtil.copyProperties(authGroup, AuthGroupVO.Group.class));
     }
 
-    public static AuthGroupVO.Group wrap(AuthGroup authGroup) {
-        return BeanCopierUtil.copyProperties(authGroup, AuthGroupVO.Group.class);
-    }
 }

@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.template.factory.base;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.template.YamlUtil;
 import com.baiyi.opscloud.common.template.YamlVars;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.BeetlUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTemplate;
@@ -77,7 +78,10 @@ public abstract class AbstractTemplateConsume<T> implements ITemplateConsume, In
         }
         bizTemplate.setBusinessId(assets.get(0).getId());
         businessTemplateService.update(bizTemplate); // 更新关联资产
-        return businessTemplatePacker.wrapVO(bizTemplate, SimpleExtend.EXTEND);
+
+        BusinessTemplateVO.BusinessTemplate businessTemplateVO = BeanCopierUtil.copyProperties(bizTemplate, BusinessTemplateVO.BusinessTemplate.class);
+        businessTemplatePacker.wrap(businessTemplateVO, SimpleExtend.EXTEND);
+        return businessTemplateVO;
     }
 
     private YamlVars.Vars toVars(BusinessTemplate bizTemplate) {

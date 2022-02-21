@@ -28,6 +28,11 @@ public enum DsAssetTypeConstants {
     ONS_ROCKETMQ_TOPIC,
     ONS_ROCKETMQ_GROUP,
 
+    EC2,
+    IAM_POLICY,
+    IAM_USER,
+    IAM_ACCESS_KEY,
+
     GITLAB_USER,
     GITLAB_GROUP,
     GITLAB_PROJECT,

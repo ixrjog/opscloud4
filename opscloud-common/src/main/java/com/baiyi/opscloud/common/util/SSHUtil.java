@@ -34,10 +34,8 @@ public class SSHUtil {
                 }
             } catch (JSchException ex) {
             }
-
         }
         return fingerprint;
-
     }
 
 }

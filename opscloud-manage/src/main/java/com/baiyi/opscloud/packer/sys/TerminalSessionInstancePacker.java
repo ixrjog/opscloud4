@@ -2,11 +2,13 @@ package com.baiyi.opscloud.packer.sys;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
+import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.terminal.TerminalSessionInstanceVO;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,21 +19,23 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class TerminalSessionInstancePacker {
+@RequiredArgsConstructor
+public class TerminalSessionInstancePacker implements IWrapper<TerminalSessionInstanceVO.SessionInstance> {
 
-    @Resource
-    private TerminalSessionInstanceService terminalSessionInstanceService;
+    private final TerminalSessionInstanceService terminalSessionInstanceService;
 
-    public void wrapVO(TerminalSessionInstanceVO.ISessionInstances iSessionInstances) {
+    public void wrap(TerminalSessionInstanceVO.ISessionInstances iSessionInstances, IExtend iExtend) {
         List<TerminalSessionInstance> sessionInstances = terminalSessionInstanceService.queryBySessionId(iSessionInstances.getSessionId());
-        iSessionInstances.setSessionInstances(sessionInstances.stream().map(this::wrapVO).collect(Collectors.toList()));
+        List<TerminalSessionInstanceVO.SessionInstance> data = BeanCopierUtil.copyListProperties(sessionInstances, TerminalSessionInstanceVO.SessionInstance.class).stream()
+                .peek(e -> wrap(e, iExtend)).collect(Collectors.toList());
+        iSessionInstances.setSessionInstances(data);
     }
 
-    public TerminalSessionInstanceVO.SessionInstance wrapVO(TerminalSessionInstance terminalSessionInstance) {
-        TerminalSessionInstanceVO.SessionInstance vo = BeanCopierUtil.copyProperties(terminalSessionInstance, TerminalSessionInstanceVO.SessionInstance.class);
+    @Override
+    public void wrap(TerminalSessionInstanceVO.SessionInstance sessionInstance, IExtend iExtend) {
         // 会话时长
-        Date endTime = vo.getInstanceClosed() ? vo.getCloseTime() : new Date();
-        vo.setSessionDuration(Long.valueOf((endTime.getTime() - vo.getOpenTime().getTime()) / 1000).intValue());
-        return vo;
+        Date endTime = sessionInstance.getInstanceClosed() ? sessionInstance.getCloseTime() : new Date();
+        sessionInstance.setSessionDuration(Long.valueOf((endTime.getTime() - sessionInstance.getOpenTime().getTime()) / 1000).intValue());
     }
+
 }

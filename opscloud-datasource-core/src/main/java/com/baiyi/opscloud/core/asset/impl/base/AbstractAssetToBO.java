@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.core.asset.impl.base;
 
 import com.baiyi.opscloud.core.asset.factory.AssetConvertFactory;
-import com.baiyi.opscloud.core.asset.IAssetConvert;
+import com.baiyi.opscloud.core.asset.IAssetConverter;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
@@ -22,7 +22,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractAssetToBO implements IAssetConvert, InitializingBean {
+public abstract class AbstractAssetToBO implements IAssetConverter, InitializingBean {
 
     @Resource
     protected BusinessAssetRelationService businessAssetRelationService;
