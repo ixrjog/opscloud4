@@ -1,10 +1,10 @@
-package com.baiyi.opscloud.task;
+package com.baiyi.opscloud.schedule.task;
 
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.domain.generator.opscloud.Instance;
 import com.baiyi.opscloud.facade.sys.InstanceFacade;
-import com.baiyi.opscloud.task.base.AbstractTask;
+import com.baiyi.opscloud.schedule.task.base.AbstractTask;
 import com.baiyi.opscloud.util.SystemInfoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

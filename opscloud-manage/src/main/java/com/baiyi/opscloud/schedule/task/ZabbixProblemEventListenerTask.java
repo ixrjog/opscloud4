@@ -1,10 +1,10 @@
-package com.baiyi.opscloud.task;
+package com.baiyi.opscloud.schedule.task;
 
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.event.IEventProcess;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
 import com.baiyi.opscloud.event.factory.EventFactory;
-import com.baiyi.opscloud.task.base.AbstractTask;
+import com.baiyi.opscloud.schedule.task.base.AbstractTask;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.Scheduled;

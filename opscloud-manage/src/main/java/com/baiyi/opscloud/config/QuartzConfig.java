@@ -34,7 +34,7 @@ public class QuartzConfig {
         prop.put("org.quartz.threadPool.threadCount", "10");
         prop.put("org.quartz.threadPool.threadPriority", "5");
         //JobStore配置
-        prop.put("org.quartz.jobStore.class", "org.springframework.scheduling.quartz.LocalDataSourceJobStore");
+        // prop.put("org.quartz.jobStore.class", "org.springframework.scheduling.quartz.LocalDataSourceJobStore");
         prop.put("org.quartz.jobStore.tablePrefix", "qrtz_");
         prop.put("org.quartz.jobStore.useProperties", "false");
         //集群配置
@@ -42,7 +42,6 @@ public class QuartzConfig {
         prop.put("org.quartz.jobStore.clusterCheckinInterval", "15000");
         prop.put("org.quartz.jobStore.maxMisfiresToHandleAtATime", "1");
         prop.put("org.quartz.jobStore.misfireThreshold", "60000");
-        prop.put("org.quartz.jobStore.clusterCheckinInterval", "5000");
         return prop;
     }
 
@@ -58,9 +57,10 @@ public class QuartzConfig {
     }
 
     @Bean
-    public Scheduler scheduler(SchedulerFactoryBean schedulerFactoryBean) {
-        return schedulerFactoryBean.getScheduler();
+    public Scheduler scheduler(SchedulerFactoryBean schedulerFactoryBean) throws Exception {
+        Scheduler scheduler = schedulerFactoryBean.getScheduler();
+        scheduler.start();
+        return scheduler;
     }
-
 
 }

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.task;
+package com.baiyi.opscloud.schedule.quartz;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

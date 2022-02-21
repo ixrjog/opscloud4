@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.task.base;
+package com.baiyi.opscloud.schedule.task.base;
 
 
 import com.baiyi.opscloud.common.redis.RedisUtil;

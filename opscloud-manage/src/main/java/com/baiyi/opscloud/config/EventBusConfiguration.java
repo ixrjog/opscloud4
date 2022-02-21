@@ -2,12 +2,11 @@ package com.baiyi.opscloud.config;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-
-import javax.annotation.Resource;
 
 import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
@@ -19,10 +18,10 @@ import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskP
  */
 
 @Configuration
+@RequiredArgsConstructor
 public class EventBusConfiguration {
 
-    @Resource
-    private ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
 
     @Bean
     public EventBus eventBus() {

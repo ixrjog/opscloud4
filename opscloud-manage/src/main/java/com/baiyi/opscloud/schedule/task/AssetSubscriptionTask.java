@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.task;
+package com.baiyi.opscloud.schedule.task;
 
 import com.baiyi.opscloud.datasource.ansible.provider.AnsibleHostsProvider;
 import com.baiyi.opscloud.common.helper.TopicHelper;
@@ -12,7 +12,7 @@ import com.baiyi.opscloud.facade.datasource.DsInstanceAssetSubscriptionFacade;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetSubscriptionService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
-import com.baiyi.opscloud.task.base.AbstractTask;
+import com.baiyi.opscloud.schedule.task.base.AbstractTask;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.Scheduled;

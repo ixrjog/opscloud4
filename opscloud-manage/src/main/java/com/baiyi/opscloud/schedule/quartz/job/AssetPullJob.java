@@ -1,0 +1,82 @@
+package com.baiyi.opscloud.schedule.quartz.job;
+
+import com.baiyi.opscloud.core.factory.AssetProviderFactory;
+import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
+import com.baiyi.opscloud.datasource.packer.DsInstancePacker;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
+import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
+import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
+import com.baiyi.opscloud.service.datasource.DsInstanceService;
+import lombok.extern.slf4j.Slf4j;
+import org.quartz.JobDataMap;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+/**
+ * 通用资产拉取任务
+ *
+ * @Author baiyi
+ * @Date 2022/2/21 10:26 AM
+ * @Version 1.0
+ */
+@Slf4j
+@Component
+public class AssetPullJob extends QuartzJobBean {
+
+    public static final String ASSET_TYPE = "assetType";
+
+    public static final String INSTANCE_ID = "instanceId";
+
+    private static DsInstanceService dsInstanceService;
+
+    private static DsInstancePacker dsInstancePacker;
+
+    @Autowired
+    public void setDsInstanceService(DsInstanceService dsInstanceService) {
+        this.dsInstanceService = dsInstanceService;
+    }
+
+    @Autowired
+    public void setDsInstancePacker(DsInstancePacker dsInstancePacker) {
+        this.dsInstancePacker = dsInstancePacker;
+    }
+
+    @Override
+    protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+        // 获取参数
+        JobDataMap jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
+        // 任务
+        String assetType = jobDataMap.getString(ASSET_TYPE);
+        Integer instanceId = jobDataMap.getInt(INSTANCE_ID);
+        log.info("---Quartz Task执行 : assetType = {} , instanceId = {} , trigger = {}", assetType, instanceId, jobExecutionContext.getTrigger());
+        // 任务开始时间
+        // Instant instant = Instant.now();
+        DsAssetParam.PullAsset pullAsset = DsAssetParam.PullAsset.builder()
+                .assetType(assetType)
+                .instanceId(instanceId)
+                .build();
+        try {
+            List<SimpleAssetProvider> providers = getProviders(pullAsset.getInstanceId(), pullAsset.getAssetType());
+            assert providers != null;
+            providers.forEach(x -> x.pullAsset(pullAsset.getInstanceId()));
+            // 任务执行总时长
+            // log.error("任务执行完毕，任务ID：" + jobExecutionContext.getJobDetail() + "  总共耗时：" + InstantUtil.timerSeconds(instant) + "毫秒");
+        } catch (Exception e) {
+            // log.error("任务执行失败，任务ID：" + jobExecutionContext.getJobDetail() + "  总共耗时：" + InstantUtil.timerSeconds(instant) + "毫秒", e);
+        }
+    }
+
+    private List<SimpleAssetProvider> getProviders(Integer instanceId, String assetType) {
+        DatasourceInstance dsInstance = dsInstanceService.getById(instanceId);
+        DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);
+        dsInstancePacker.wrap(instance, SimpleExtend.EXTEND);
+        return AssetProviderFactory.getProviders(instance.getInstanceType(), assetType);
+    }
+
+}
