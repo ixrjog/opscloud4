@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.baiyi.opscloud.sshserver.command.component;
+package com.baiyi.opscloud.sshserver.annotation;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.shell.standard.ShellComponent;

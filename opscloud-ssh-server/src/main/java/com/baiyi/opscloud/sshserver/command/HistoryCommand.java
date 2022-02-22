@@ -18,7 +18,7 @@ package com.baiyi.opscloud.sshserver.command;
 
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.SshShellProperties;
-import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
+import com.baiyi.opscloud.sshserver.annotation.SshShellComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.standard.ShellCommandGroup;
