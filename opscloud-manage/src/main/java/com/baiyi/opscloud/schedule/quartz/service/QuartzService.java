@@ -8,6 +8,7 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +27,23 @@ public class QuartzService {
     @Resource
     private Scheduler scheduler;
 
-//    @PostConstruct
-//    public void startScheduler() {
-//        try {
-//            scheduler.start();
-//            log.info("Quartz Scheduler 启动成功!");
-//        } catch (SchedulerException e) {
-//            log.error("Quartz Scheduler 启动失败: e = {}", e.getMessage());
-//        }
-//    }
+    @PostConstruct
+    public void scheduleJob() {
+        try {
+            GroupMatcher<JobKey> matcher = GroupMatcher.anyJobGroup();
+            Set<JobKey> jobKeys = scheduler.getJobKeys(matcher);
+            for (JobKey jobKey : jobKeys) {
+                List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
+                for (Trigger trigger : triggers) {
+                    if (trigger instanceof CronTrigger) {
+                        scheduler.rescheduleJob(trigger.getKey(), trigger);
+                    }
+                }
+            }
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 增加一个job

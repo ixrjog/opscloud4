@@ -8,6 +8,7 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -25,23 +26,11 @@ public class QuartzConfig {
 
     private Properties quartzProperties() {
         Properties prop = new Properties();
-        //获取trigger加锁
-        prop.put("org.quartz.jobStore.acquireTriggersWithinLock", "true");
-        prop.put("org.quartz.scheduler.instanceName", "opscloudScheduler");
-        prop.put("org.quartz.scheduler.instanceId", "AUTO");
-        //线程池配置
-        prop.put("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
-        prop.put("org.quartz.threadPool.threadCount", "10");
-        prop.put("org.quartz.threadPool.threadPriority", "5");
-        //JobStore配置
-        // prop.put("org.quartz.jobStore.class", "org.springframework.scheduling.quartz.LocalDataSourceJobStore");
-        prop.put("org.quartz.jobStore.tablePrefix", "qrtz_");
-        prop.put("org.quartz.jobStore.useProperties", "false");
-        //集群配置
-        prop.put("org.quartz.jobStore.isClustered", "true");
-        prop.put("org.quartz.jobStore.clusterCheckinInterval", "15000");
-        prop.put("org.quartz.jobStore.maxMisfiresToHandleAtATime", "1");
-        prop.put("org.quartz.jobStore.misfireThreshold", "60000");
+        try {
+            prop.load(getClass().getResourceAsStream("/quartz.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return prop;
     }
 

@@ -39,12 +39,12 @@ public class AssetPullJob extends QuartzJobBean {
 
     @Autowired
     public void setDsInstanceService(DsInstanceService dsInstanceService) {
-        this.dsInstanceService = dsInstanceService;
+        AssetPullJob.dsInstanceService = dsInstanceService;
     }
 
     @Autowired
     public void setDsInstancePacker(DsInstancePacker dsInstancePacker) {
-        this.dsInstancePacker = dsInstancePacker;
+        AssetPullJob.dsInstancePacker = dsInstancePacker;
     }
 
     @Override
@@ -56,7 +56,6 @@ public class AssetPullJob extends QuartzJobBean {
         Integer instanceId = jobDataMap.getInt(INSTANCE_ID);
         log.info("---Quartz Task执行 : assetType = {} , instanceId = {} , trigger = {}", assetType, instanceId, jobExecutionContext.getTrigger());
         // 任务开始时间
-        // Instant instant = Instant.now();
         DsAssetParam.PullAsset pullAsset = DsAssetParam.PullAsset.builder()
                 .assetType(assetType)
                 .instanceId(instanceId)
@@ -65,10 +64,7 @@ public class AssetPullJob extends QuartzJobBean {
             List<SimpleAssetProvider> providers = getProviders(pullAsset.getInstanceId(), pullAsset.getAssetType());
             assert providers != null;
             providers.forEach(x -> x.pullAsset(pullAsset.getInstanceId()));
-            // 任务执行总时长
-            // log.error("任务执行完毕，任务ID：" + jobExecutionContext.getJobDetail() + "  总共耗时：" + InstantUtil.timerSeconds(instant) + "毫秒");
-        } catch (Exception e) {
-            // log.error("任务执行失败，任务ID：" + jobExecutionContext.getJobDetail() + "  总共耗时：" + InstantUtil.timerSeconds(instant) + "毫秒", e);
+        } catch (Exception ignored) {
         }
     }
 

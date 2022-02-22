@@ -82,6 +82,7 @@ public class DsAssetParam {
     @SuperBuilder(toBuilder = true)
     @Data
     @NoArgsConstructor
+    @AllArgsConstructor
     @ApiModel
     public static class BaseAsset {
 
