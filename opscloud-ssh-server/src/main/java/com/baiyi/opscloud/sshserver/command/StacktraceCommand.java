@@ -16,7 +16,7 @@
 
 package com.baiyi.opscloud.sshserver.command;
 
-import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
+import com.baiyi.opscloud.sshserver.annotation.SshShellComponent;
 import com.baiyi.opscloud.sshserver.postprocess.TypePostProcessorResultHandler;
 import org.jline.terminal.Terminal;
 import org.springframework.beans.factory.annotation.Autowired;

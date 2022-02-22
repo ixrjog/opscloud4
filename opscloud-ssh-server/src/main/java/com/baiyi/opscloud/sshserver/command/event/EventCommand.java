@@ -17,7 +17,7 @@ import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.annotation.CheckTerminalSize;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.opscloud.sshserver.annotation.ScreenClear;
-import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
+import com.baiyi.opscloud.sshserver.annotation.SshShellComponent;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
 import com.baiyi.opscloud.sshserver.command.event.base.EventContext;
 import com.baiyi.opscloud.sshserver.command.event.util.SeverityUtil;

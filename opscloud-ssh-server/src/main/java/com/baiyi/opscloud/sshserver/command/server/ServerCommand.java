@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.sshserver.annotation.CheckTerminalSize;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.opscloud.sshserver.annotation.ScreenClear;
-import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
+import com.baiyi.opscloud.sshserver.annotation.SshShellComponent;
 import com.baiyi.opscloud.sshserver.command.context.ListServerCommand;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
 import com.baiyi.opscloud.sshserver.command.server.base.BaseServerCommand;

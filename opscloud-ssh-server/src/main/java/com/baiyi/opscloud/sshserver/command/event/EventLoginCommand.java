@@ -19,7 +19,7 @@ import com.baiyi.opscloud.sshserver.SshContext;
 import com.baiyi.opscloud.sshserver.SshShellCommandFactory;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
-import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
+import com.baiyi.opscloud.sshserver.annotation.SshShellComponent;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
 import com.baiyi.opscloud.sshserver.command.event.base.EventContext;
 import com.baiyi.opscloud.sshserver.command.server.base.BaseServerCommand;
