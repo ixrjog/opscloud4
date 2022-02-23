@@ -19,7 +19,7 @@ public enum ServerTaskStopType {
     LOG_EXCEEDED_LIMIT(5),
     ERROR_STOP(6);
 
-    private int type;
+    private final int type;
 
     ServerTaskStopType(int type) {
         this.type = type;

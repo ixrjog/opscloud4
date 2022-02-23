@@ -31,12 +31,14 @@ public class ApplicationPacker implements IWrapper<ApplicationVO.Application> {
 
     private final ApplicationResourcePacker resourcePacker;
 
+    private final ApplicationResourceInstancePacker applicationResourceInstancePacker;
+
     @Override
     public void wrap(ApplicationVO.Application application, IExtend iExtend) {
         if (!iExtend.getExtend()) return;
         List<ApplicationResource> applicationResourceList = applicationResourceService.queryByApplication(application.getId());
         List<ApplicationResourceVO.Resource> resources = BeanCopierUtil.copyListProperties(applicationResourceList, ApplicationResourceVO.Resource.class);
-        resources.forEach(resourcePacker::wrapResourceInstance);
+        resources.forEach(applicationResourceInstancePacker::wrap);
         Map<String, List<ApplicationResourceVO.Resource>> resourcesMap = resources.stream()
                 .collect(Collectors.groupingBy(ApplicationResourceVO.Resource::getResourceType));
         application.setResourceMap(resourcesMap);

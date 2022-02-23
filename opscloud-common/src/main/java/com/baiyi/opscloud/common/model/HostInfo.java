@@ -21,6 +21,7 @@ public class HostInfo {
 
     @Builder.Default
     private String hostAddress = "127.0.0.1";
+
     @Builder.Default
     private String hostname = "opscloud";
 

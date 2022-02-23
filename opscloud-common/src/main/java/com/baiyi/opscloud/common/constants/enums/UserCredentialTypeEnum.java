@@ -18,7 +18,6 @@ public enum UserCredentialTypeEnum {
     private final int type;
     private final String name;
 
-
     UserCredentialTypeEnum(int type, String name) {
         this.type = type;
         this.name = name;

@@ -1,9 +1,9 @@
 package com.baiyi.opscloud.sshcore.util;
 
 import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.common.redis.TerminalLogUtil;
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.model.UserSessionsOutput;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -146,8 +146,7 @@ public class SessionOutputUtil {
         } else {
             auditLog = sessionOutput.getOutput().toString();
         }
-
-        String cacheKey = TerminalLogUtil.toAuditLogKey(sessionId, instanceId);
+        String cacheKey =  Joiner.on("_").join(sessionId, instanceId, "auditLog");
         String logRepo;
         if (redisUtil.hasKey(cacheKey)) {
             //   logRepo = new StringBuilder((String) redisUtil.get(cacheKey)).append(auditLog).toString();

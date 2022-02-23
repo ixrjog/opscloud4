@@ -25,7 +25,6 @@ public class ThreadPoolTaskConfiguration {
         String EXECUTOR = "EXECUTOR";
     }
 
-
     /**
      * 允许线程空闲时间（单位：默认为秒）
      */
@@ -38,6 +37,7 @@ public class ThreadPoolTaskConfiguration {
      * 线程池名前缀
      */
     private static final String threadNamePrefix = "Async-Service-";
+
     @Bean(name = CORE)
     public ThreadPoolTaskExecutor getExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

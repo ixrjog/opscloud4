@@ -33,12 +33,7 @@ public enum BusinessErrorCodeEnum implements ErrorCode{
      * @return 枚举。
      */
     public static BusinessErrorCodeEnum getByCode(String code) {
-        for (BusinessErrorCodeEnum value : BusinessErrorCodeEnum.values()) {
-            if (StringUtils.equals(code, value.getCode())) {
-                return value;
-            }
-        }
-        return UNSPECIFIED;
+        return Arrays.stream(BusinessErrorCodeEnum.values()).filter(value -> StringUtils.equals(code, value.getCode())).findFirst().orElse(UNSPECIFIED);
     }
 
     /**

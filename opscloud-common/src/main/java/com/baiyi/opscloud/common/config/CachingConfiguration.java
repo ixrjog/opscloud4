@@ -40,6 +40,7 @@ public class CachingConfiguration extends CachingConfigurerSupport {
         String CACHE_1DAY = "opscloud:v4:1d:";
     }
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory factory) {
         // 设置一个初始化的缓存空间set集合
@@ -81,6 +82,7 @@ public class CachingConfiguration extends CachingConfigurerSupport {
      * @param factory
      * @return
      */
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
 
@@ -165,6 +167,5 @@ public class CachingConfiguration extends CachingConfigurerSupport {
     public ZSetOperations<String, Object> zSetOperations(RedisTemplate<String, Object> redisTemplate) {
         return redisTemplate.opsForZSet();
     }
-
 
 }
