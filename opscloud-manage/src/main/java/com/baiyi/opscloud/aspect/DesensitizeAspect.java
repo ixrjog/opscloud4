@@ -5,7 +5,6 @@ import com.baiyi.opscloud.domain.annotation.DesensitizedField;
 import com.baiyi.opscloud.domain.constants.SensitiveTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.util.Strings;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -63,9 +62,9 @@ public class DesensitizeAspect {
                 }
                 return value;
             case PASSWORD:
-                return Strings.EMPTY;
+                return StringUtils.EMPTY;
             default:
-                return Strings.EMPTY;
+                return StringUtils.EMPTY;
         }
     }
 }
