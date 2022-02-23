@@ -1,7 +1,10 @@
 package com.baiyi.opscloud.datasource.aliyun.ons.drive;
 
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.ons.model.v20190214.*;
+import com.aliyuncs.ons.model.v20190214.OnsGroupCreateRequest;
+import com.aliyuncs.ons.model.v20190214.OnsGroupCreateResponse;
+import com.aliyuncs.ons.model.v20190214.OnsGroupListRequest;
+import com.aliyuncs.ons.model.v20190214.OnsGroupListResponse;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
@@ -9,7 +12,6 @@ import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsRocketMqGroup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -29,7 +31,7 @@ public class AliyunOnsRocketMqGroupDrive {
 
     private final AliyunClient aliyunClient;
 
-    public static final String QUERY_ALL = Strings.EMPTY;
+    public static final String QUERY_ALL = StringUtils.EMPTY;
 
     /**
      * ONS Group

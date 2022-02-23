@@ -13,7 +13,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -100,7 +99,7 @@ public class AliyunRamUserDrive {
                 userList.addAll(response.getUsers());
                 marker = response.getMarker();
                 request.setMarker(marker);
-            } while (Strings.isNotBlank(marker));
+            } while (StringUtils.isNotBlank(marker));
         } catch (ClientException e) {
             e.printStackTrace();
         }
