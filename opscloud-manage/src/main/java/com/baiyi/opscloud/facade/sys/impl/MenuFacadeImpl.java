@@ -15,7 +15,7 @@ import com.baiyi.opscloud.service.auth.AuthRoleMenuService;
 import com.baiyi.opscloud.service.sys.MenuChildService;
 import com.baiyi.opscloud.service.sys.MenuService;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -57,8 +57,8 @@ public class MenuFacadeImpl implements MenuFacade {
 
     private Boolean validMenuList(List<Menu> menuList) {
         return menuList.stream().allMatch(x ->
-                Strings.isNotBlank(x.getIcon())
-                        && Strings.isNotBlank(x.getTitle())
+                StringUtils.isNotBlank(x.getIcon())
+                        && StringUtils.isNotBlank(x.getTitle())
         );
     }
 
@@ -78,9 +78,9 @@ public class MenuFacadeImpl implements MenuFacade {
 
     private Boolean validMenuChildList(List<MenuChild> menuChildList) {
         return menuChildList.stream().allMatch(x ->
-                Strings.isNotBlank(x.getTitle())
-                        && Strings.isNotBlank(x.getIcon())
-                        && Strings.isNotBlank(x.getPath())
+                StringUtils.isNotBlank(x.getTitle())
+                        && StringUtils.isNotBlank(x.getIcon())
+                        && StringUtils.isNotBlank(x.getPath())
         );
     }
 

@@ -2,16 +2,16 @@ package com.baiyi.opscloud.datasource.aliyun.converter;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeImagesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
+import com.baiyi.opscloud.core.util.TimeUtil;
 import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
-import com.baiyi.opscloud.core.util.TimeUtil;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import org.apache.logging.log4j.util.Strings;
-import org.springframework.util.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
+
 import java.util.Date;
 
 /**
@@ -66,7 +66,7 @@ public class ComputeAssetConverter {
             return entity.getPublicIpAddress().get(0);
         if (entity.getEipAddress() != null)
             return entity.getEipAddress().getIpAddress();
-        return Strings.EMPTY;
+        return StringUtils.EMPTY;
     }
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeImagesResponse.Image entity) {

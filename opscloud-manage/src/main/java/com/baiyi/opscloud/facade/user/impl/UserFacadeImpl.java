@@ -43,7 +43,6 @@ import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -273,7 +272,7 @@ public class UserFacadeImpl implements UserFacade {
         if (!StringUtils.isEmpty(pre.getPassword()))
             RegexUtil.checkPasswordRule(pre.getPassword());
         if (!RegexUtil.isPhone(user.getPhone()))
-            pre.setPhone(Strings.EMPTY);
+            pre.setPhone(StringUtils.EMPTY);
         if (StringUtils.isEmpty(user.getUuid())) {
             pre.setUuid(IdUtil.buildUUID());
         }

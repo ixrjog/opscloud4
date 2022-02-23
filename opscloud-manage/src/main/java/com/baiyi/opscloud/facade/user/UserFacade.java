@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.AMVO;
 import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
-import org.apache.logging.log4j.util.Strings;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public interface UserFacade {
     DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery);
 
     default UserVO.User getUserDetails() {
-        return getUserDetailsByUsername(Strings.EMPTY);
+        return getUserDetailsByUsername(StringUtils.EMPTY);
     }
 
     UserVO.User getUserDetailsByUsername(String username);
