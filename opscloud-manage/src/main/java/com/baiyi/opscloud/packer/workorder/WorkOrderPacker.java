@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkOrder;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderGroup;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderVO;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.workorder.WorkOrderGroupService;
 import com.baiyi.opscloud.service.workorder.WorkOrderService;
 import lombok.RequiredArgsConstructor;
@@ -20,19 +21,18 @@ import java.util.stream.Collectors;
  */
 @Component
 @RequiredArgsConstructor
-public class WorkOrderPacker {
+public class WorkOrderPacker implements IWrapper<WorkOrderVO.WorkOrder> {
 
     private final WorkOrderService workOrderService;
 
     private final WorkOrderGroupService workOrderGroupService;
 
-    public WorkOrderVO.WorkOrder wrap(WorkOrder workOrder, IExtend iExtend) {
-        WorkOrderVO.WorkOrder vo = BeanCopierUtil.copyProperties(workOrder, WorkOrderVO.WorkOrder.class);
+    @Override
+    public void wrap(WorkOrderVO.WorkOrder workOrder, IExtend iExtend) {
         if (iExtend.getExtend()) {
-            WorkOrderGroup workOrderGroup = workOrderGroupService.getById(vo.getWorkOrderGroupId());
-            vo.setWorkOrderGroup(BeanCopierUtil.copyProperties(workOrderGroup, WorkOrderVO.Group.class));
+            WorkOrderGroup workOrderGroup = workOrderGroupService.getById(workOrder.getWorkOrderGroupId());
+            workOrder.setWorkOrderGroup(BeanCopierUtil.copyProperties(workOrderGroup, WorkOrderVO.Group.class));
         }
-        return vo;
     }
 
     public WorkOrderVO.Group wrap(WorkOrderGroup workOrderGroup) {

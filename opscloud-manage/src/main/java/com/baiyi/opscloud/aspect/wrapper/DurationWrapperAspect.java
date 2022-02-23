@@ -1,8 +1,7 @@
 package com.baiyi.opscloud.aspect.wrapper;
 
-import com.baiyi.opscloud.common.annotation.AgoWrapper;
+import com.baiyi.opscloud.common.annotation.DurationWrapper;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
-import com.baiyi.opscloud.common.util.time.AgoUtil;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.base.ShowTime;
 import lombok.extern.slf4j.Slf4j;
@@ -13,30 +12,33 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
+
 /**
  * @Author baiyi
- * @Date 2022/2/23 11:08 AM
+ * @Date 2022/2/23 1:10 PM
  * @Version 1.0
  */
 @Aspect
 @Component
 @Slf4j
-public class AgoWrapperAspect {
+public class DurationWrapperAspect {
 
-    @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.AgoWrapper)")
+    @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.DurationWrapper)")
     public void annotationPoint() {
     }
 
-    @Around("@annotation(agoWrapper)")
-    public Object around(ProceedingJoinPoint joinPoint, AgoWrapper agoWrapper) throws CommonRuntimeException {
+    @Around("@annotation(durationWrapper)")
+    public Object around(ProceedingJoinPoint joinPoint, DurationWrapper durationWrapper) throws CommonRuntimeException {
         Object result;
         try {
             result = joinPoint.proceed();
         } catch (Throwable e) {
             throw new CommonRuntimeException(e.getMessage());
         }
-        boolean extend = agoWrapper.extend();
-        ShowTime.IAgo targetAgo = null;
+        boolean extend = durationWrapper.extend();
+        ShowTime.IDuration targetDuration = null;
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String[] params = methodSignature.getParameterNames();// 获取参数名称
         Object[] args = joinPoint.getArgs();// 获取参数值
@@ -48,22 +50,25 @@ public class AgoWrapperAspect {
                         continue;
                     }
                 }
-                if (targetAgo == null) {
-                    if (arg instanceof ShowTime.IAgo) {
-                        targetAgo = (ShowTime.IAgo) arg;
+                if (targetDuration == null) {
+                    if (arg instanceof ShowTime.IDuration) {
+                        targetDuration = (ShowTime.IDuration) arg;
                     }
                 }
             }
         }
-        if (extend && targetAgo != null) {
-            wrap(targetAgo);
+        if (extend && targetDuration != null) {
+            wrap(targetDuration);
         }
         return result;
     }
 
-    public void wrap(ShowTime.IAgo iAgo) {
-        if (iAgo.getAgoTime() == null) return;
-        iAgo.setAgo(AgoUtil.format(iAgo.getAgoTime()));
+    private void wrap(ShowTime.IDuration iDuration) {
+        if (iDuration.getStartTime() == null || iDuration.getEndTime() == null) return;
+        long diffTime = iDuration.getEndTime().getTime() - iDuration.getStartTime().getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("GMT+0:00"));
+        iDuration.setDuration(formatter.format(diffTime));
     }
 
 }

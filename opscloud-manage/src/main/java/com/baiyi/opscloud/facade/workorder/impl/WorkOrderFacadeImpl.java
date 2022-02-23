@@ -40,7 +40,9 @@ public class WorkOrderFacadeImpl implements WorkOrderFacade {
     @Override
     public DataTable<WorkOrderVO.WorkOrder> queryWorkOrderPage(WorkOrderParam.WorkOrderPageQuery pageQuery) {
         DataTable<WorkOrder> table = workOrderService.queryPageByParam(pageQuery);
-        return new DataTable<>(table.getData().stream().map(e -> workOrderPacker.wrap(e, pageQuery)).collect(Collectors.toList()), table.getTotalNum());
+        List<WorkOrderVO.WorkOrder> data = BeanCopierUtil.copyListProperties(table.getData(), WorkOrderVO.WorkOrder.class).stream()
+                .peek(e -> workOrderPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override

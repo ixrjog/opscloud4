@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.packer.task;
 
 import com.baiyi.opscloud.common.annotation.AgoWrapper;
-import com.baiyi.opscloud.common.util.time.DurationUtil;
+import com.baiyi.opscloud.common.annotation.DurationWrapper;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.task.ServerTaskVO;
 import com.baiyi.opscloud.packer.IWrapper;
@@ -26,10 +26,10 @@ public class ServerTaskPacker implements IWrapper<ServerTaskVO.ServerTask> {
 
     @Override
     @AgoWrapper
+    @DurationWrapper
     public void wrap(ServerTaskVO.ServerTask serverTask, IExtend iExtend) {
         if (iExtend.getExtend()) {
             serverTaskMemberPacker.wrap(serverTask);
-            DurationUtil.wrap(serverTask); // 时长
             ansiblePlaybookPacker.wrap(serverTask); // playbook
             userPacker.wrap(serverTask); // user
         }

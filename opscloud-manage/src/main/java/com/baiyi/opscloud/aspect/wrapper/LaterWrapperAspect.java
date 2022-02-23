@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.aspect.wrapper;
 
-import com.baiyi.opscloud.common.annotation.AgoWrapper;
+import com.baiyi.opscloud.common.annotation.LaterWrapper;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
-import com.baiyi.opscloud.common.util.time.AgoUtil;
+import com.baiyi.opscloud.common.util.time.LaterUtil;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.base.ShowTime;
 import lombok.extern.slf4j.Slf4j;
@@ -15,28 +15,28 @@ import org.springframework.stereotype.Component;
 
 /**
  * @Author baiyi
- * @Date 2022/2/23 11:08 AM
+ * @Date 2022/2/23 11:33 AM
  * @Version 1.0
  */
 @Aspect
 @Component
 @Slf4j
-public class AgoWrapperAspect {
+public class LaterWrapperAspect {
 
-    @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.AgoWrapper)")
+    @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.LaterWrapper)")
     public void annotationPoint() {
     }
 
-    @Around("@annotation(agoWrapper)")
-    public Object around(ProceedingJoinPoint joinPoint, AgoWrapper agoWrapper) throws CommonRuntimeException {
+    @Around("@annotation(laterWrapper)")
+    public Object around(ProceedingJoinPoint joinPoint, LaterWrapper laterWrapper) throws CommonRuntimeException {
         Object result;
         try {
             result = joinPoint.proceed();
         } catch (Throwable e) {
             throw new CommonRuntimeException(e.getMessage());
         }
-        boolean extend = agoWrapper.extend();
-        ShowTime.IAgo targetAgo = null;
+        boolean extend = laterWrapper.extend();
+        ShowTime.ILater targetLater = null;
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String[] params = methodSignature.getParameterNames();// 获取参数名称
         Object[] args = joinPoint.getArgs();// 获取参数值
@@ -48,22 +48,22 @@ public class AgoWrapperAspect {
                         continue;
                     }
                 }
-                if (targetAgo == null) {
-                    if (arg instanceof ShowTime.IAgo) {
-                        targetAgo = (ShowTime.IAgo) arg;
+                if (targetLater == null) {
+                    if (arg instanceof ShowTime.ILater) {
+                        targetLater = (ShowTime.ILater) arg;
                     }
                 }
             }
         }
-        if (extend && targetAgo != null) {
-            wrap(targetAgo);
+        if (extend && targetLater != null) {
+            wrap(targetLater);
         }
         return result;
     }
 
-    public void wrap(ShowTime.IAgo iAgo) {
-        if (iAgo.getAgoTime() == null) return;
-        iAgo.setAgo(AgoUtil.format(iAgo.getAgoTime()));
+    public void wrap(ShowTime.ILater iLater) {
+        if (iLater.getExpiredTime() == null) return;
+        iLater.setLater(LaterUtil.format(iLater.getExpiredTime()));
     }
 
 }
