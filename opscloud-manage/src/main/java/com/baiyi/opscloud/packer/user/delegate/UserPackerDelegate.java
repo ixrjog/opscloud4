@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.AccessToken;
 import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.packer.auth.AuthRolePacker;
@@ -55,7 +56,7 @@ public class UserPackerDelegate {
         Date now = new Date();
         List<AccessTokenVO.AccessToken> tokens = BeanCopierUtil.copyListProperties(accessTokens, AccessTokenVO.AccessToken.class).stream()
                 .filter(e -> e.getExpiredTime().getTime() > now.getTime())
-                .peek(userAccessTokenPacker::wrap)
+                .peek(e -> userAccessTokenPacker.wrap(e, SimpleExtend.EXTEND))
                 .collect(Collectors.toList());
         user.setAccessTokens(tokens);
     }

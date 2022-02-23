@@ -25,6 +25,11 @@ import java.util.Objects;
 @Slf4j
 public class DesensitizeAspect {
 
+    /**
+     * '*'脱敏符
+     */
+    public static final String STAR = "*";
+
     @Pointcut("@annotation(com.baiyi.opscloud.domain.annotation.DesensitizedMethod)")
     public void action() {
     }
@@ -58,13 +63,28 @@ public class DesensitizeAspect {
                 if (StringUtils.isEmpty(value)) return value;
                 if (RegexUtil.isPhone(value)) {
                     StringBuilder sb = new StringBuilder(value);
-                    return sb.replace(3, 7, "****").toString();
+                    return sb.replace(3, 7, getSymbol(4)).toString();
                 }
                 return value;
             case PASSWORD:
                 return StringUtils.EMPTY;
+            case TOKEN:
+                return getSymbol(6);
             default:
                 return StringUtils.EMPTY;
         }
+    }
+
+    /**
+     * 获取符号
+     *
+     * @param number 符号个数
+     */
+    private String getSymbol(int number) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < number; i++) {
+            sb.append(STAR);
+        }
+        return sb.toString();
     }
 }

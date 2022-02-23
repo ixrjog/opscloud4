@@ -32,7 +32,6 @@ import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
 import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
-import com.baiyi.opscloud.packer.user.UserAccessTokenPacker;
 import com.baiyi.opscloud.packer.user.UserPacker;
 import com.baiyi.opscloud.packer.user.am.AmPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
@@ -66,8 +65,6 @@ public class UserFacadeImpl implements UserFacade {
     private final UserService userService;
 
     private final AccessTokenService accessTokenService;
-
-    private final UserAccessTokenPacker userAccessTokenPacker;
 
     private final UserPacker userPacker;
 
@@ -233,9 +230,7 @@ public class UserFacadeImpl implements UserFacade {
                 .comment(accessToken.getComment())
                 .build();
         accessTokenService.add(pre);
-        AccessTokenVO.AccessToken result = BeanCopierUtil.copyProperties(pre, AccessTokenVO.AccessToken.class);
-        userAccessTokenPacker.wrap(result, false);
-        return result;
+        return BeanCopierUtil.copyProperties(pre, AccessTokenVO.AccessToken.class);
     }
 
     @Override

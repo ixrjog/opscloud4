@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.packer.user;
 
 import com.baiyi.opscloud.common.annotation.LaterWrapper;
+import com.baiyi.opscloud.domain.annotation.DesensitizedMethod;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.packer.IWrapper;
@@ -16,19 +17,7 @@ public class UserAccessTokenPacker implements IWrapper<AccessTokenVO.AccessToken
 
     @Override
     @LaterWrapper
+    @DesensitizedMethod
     public void wrap(AccessTokenVO.AccessToken accessToken, IExtend iExtend) {
-        accessToken.setToken("******");
     }
-
-    /**
-     * @param accessToken
-     * @param isSecret    是否脱敏
-     */
-    @LaterWrapper
-    public void wrap(AccessTokenVO.AccessToken accessToken, boolean isSecret) {
-        if (isSecret) {
-            accessToken.setToken("******");
-        }
-    }
-
 }
