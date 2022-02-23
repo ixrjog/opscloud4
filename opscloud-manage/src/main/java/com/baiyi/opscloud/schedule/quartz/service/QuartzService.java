@@ -28,21 +28,22 @@ public class QuartzService {
     private Scheduler scheduler;
 
     @PostConstruct
-    public void scheduleJob() {
-        try {
-            GroupMatcher<JobKey> matcher = GroupMatcher.anyJobGroup();
-            Set<JobKey> jobKeys = scheduler.getJobKeys(matcher);
-            for (JobKey jobKey : jobKeys) {
-                List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
-                for (Trigger trigger : triggers) {
-                    if (trigger instanceof CronTrigger) {
-                        scheduler.rescheduleJob(trigger.getKey(), trigger);
-                    }
-                }
-            }
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
+    public void scheduleJob() throws SchedulerException {
+        scheduler.start();
+//        try {
+//            GroupMatcher<JobKey> matcher = GroupMatcher.anyJobGroup();
+//            Set<JobKey> jobKeys = scheduler.getJobKeys(matcher);
+//            for (JobKey jobKey : jobKeys) {
+//                List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
+//                for (Trigger trigger : triggers) {
+//                    if (trigger instanceof CronTrigger) {
+//                        scheduler.rescheduleJob(trigger.getKey(), trigger);
+//                    }
+//                }
+//            }
+//        } catch (SchedulerException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**
@@ -54,11 +55,13 @@ public class QuartzService {
      * @param jobTime  时间表达式 （如：0/5 * * * * ? ）
      * @param jobData  参数
      */
-    public void addJob(Class<? extends QuartzJobBean> jobClass, String group, String jobName, String jobTime, Map jobData) {
+    public void addJob(Class<? extends QuartzJobBean> jobClass, String group, String jobName, String jobTime, String jobDescription, Map jobData) {
         // 创建jobDetail实例，绑定Job实现类
         // 指明job的名称，所在组的名称，以及绑定job类
         // 任务名称和组构成任务key
-        JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(jobName, group)
+        JobDetail jobDetail = JobBuilder.newJob(jobClass)
+                .withIdentity(jobName, group)
+                .withDescription(jobDescription)
                 .build();
         // 设置job参数
         if (!CollectionUtils.isEmpty(jobData)) {
@@ -88,7 +91,7 @@ public class QuartzService {
      * @param group
      * @param jobTime
      */
-    public void updateJob(String jobName, String group, String jobTime) {
+    public void updateJob(String group, String jobName, String jobTime) {
         try {
             TriggerKey triggerKey = TriggerKey.triggerKey(jobName, group);
             CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
