@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -46,6 +47,10 @@ public class AmazonEc2Drive {
         while (true) {
             DescribeInstancesResult response = buildAmazonEC2(aws, regionId).describeInstances(request);
             response.getReservations().forEach(e -> e.getInstances().forEach(i -> {
+                // 获取不到IP
+                // 销毁状态 i.getState().getCode() == 48
+                if (StringUtils.isEmpty(i.getPrivateIpAddress()))
+                    return;
                 final Gson builder = new GsonBuilder()
                         .registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (jsonElement, type, context) -> new Date(jsonElement.getAsJsonPrimitive().getAsLong())).create();
                 Ec2Instance.Instance instance = builder.fromJson(JSONUtil.writeValueAsString(i), Ec2Instance.Instance.class);
