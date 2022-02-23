@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.sys.impl;
 
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.sys.CredentialParam;
 import com.baiyi.opscloud.domain.vo.sys.CredentialVO;
@@ -13,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -38,7 +41,13 @@ public class CredentialFacadeImpl implements CredentialFacade {
     @Override
     public DataTable<CredentialVO.Credential> queryCredentialPage(CredentialParam.CredentialPageQuery pageQuery) {
         DataTable<com.baiyi.opscloud.domain.generator.opscloud.Credential> table = credentialService.queryPageByParam(pageQuery);
-        return new DataTable<>(CredentialPacker.wrapVOList(table.getData()), table.getTotalNum());
+        List<CredentialVO.Credential> data = BeanCopierUtil.copyListProperties(table.getData(), CredentialVO.Credential.class).stream().peek(e -> {
+            e.setCredential("");
+            e.setCredential2("");
+            e.setPassphrase("");
+            e.setQuantityUsed(CredentialCustomerFactory.countByCredentialId(e.getId()));
+        }).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override

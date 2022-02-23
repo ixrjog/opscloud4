@@ -37,6 +37,11 @@ public class AgoUtil {
         }
     }
 
+    /**
+     * 废弃:改用@AgoWrapper
+     * @param iAgo
+     */
+    @Deprecated
     public static void wrap(ShowTime.IAgo iAgo) {
         if (iAgo.getAgoTime() == null) return;
         iAgo.setAgo(format(iAgo.getAgoTime()));

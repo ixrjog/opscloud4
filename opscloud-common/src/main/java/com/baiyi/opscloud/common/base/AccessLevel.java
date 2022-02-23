@@ -12,7 +12,7 @@ public enum AccessLevel {
     DEV(40),
     BASE(10);
 
-    private int level;
+    private final int level;
 
     AccessLevel(int level) {
         this.level = level;

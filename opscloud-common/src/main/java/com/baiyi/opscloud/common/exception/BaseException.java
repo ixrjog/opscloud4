@@ -37,4 +37,5 @@ public abstract class BaseException extends RuntimeException {
         super(errorEnum.getMessage());
         this.code = errorEnum.getCode();
     }
+
 }
