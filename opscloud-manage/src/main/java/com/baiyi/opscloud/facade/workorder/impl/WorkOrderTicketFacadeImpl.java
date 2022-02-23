@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.workorder.impl;
 
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.common.util.WorkflowUtil;
 import com.baiyi.opscloud.domain.DataTable;
@@ -69,14 +70,21 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     @Override
     public DataTable<WorkOrderTicketVO.Ticket> queryTicketPage(WorkOrderTicketParam.TicketPageQuery pageQuery) {
         DataTable<WorkOrderTicket> table = ticketService.queryPageByParam(pageQuery);
-        return new DataTable<>(table.getData().stream().map(e -> ticketPacker.wrap(e, pageQuery)).collect(Collectors.toList()), table.getTotalNum());
+        List<WorkOrderTicketVO.Ticket> data = BeanCopierUtil.copyListProperties(table.getData(), WorkOrderTicketVO.Ticket.class).stream().peek(e ->
+                ticketPacker.wrap(e, pageQuery)
+        ).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
     public DataTable<WorkOrderTicketVO.Ticket> queryMyTicketPage(WorkOrderTicketParam.MyTicketPageQuery pageQuery) {
         pageQuery.setUsername(SessionUtil.getUsername());
         DataTable<WorkOrderTicket> table = ticketService.queryPageByParam(pageQuery);
-        return new DataTable<>(table.getData().stream().map(e -> ticketPacker.wrap(e, pageQuery)).collect(Collectors.toList()), table.getTotalNum());
+
+        List<WorkOrderTicketVO.Ticket> data = BeanCopierUtil.copyListProperties(table.getData(), WorkOrderTicketVO.Ticket.class).stream().peek(e ->
+                ticketPacker.wrap(e, pageQuery)
+        ).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Transactional(rollbackFor = {Exception.class})

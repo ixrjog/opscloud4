@@ -12,7 +12,6 @@ import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsRocketMqTopic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -32,7 +31,7 @@ public class AliyunOnsRocketMqTopicDrive {
 
     private final AliyunClient aliyunClient;
 
-    public static final String QUERY_ALL_TOPIC = Strings.EMPTY;
+    public static final String QUERY_ALL_TOPIC = StringUtils.EMPTY;
 
     public List<OnsRocketMqTopic.Topic> listTopic(String regionId, AliyunConfig.Aliyun aliyun, String instanceId) throws ClientException {
         return listTopic(regionId, aliyun, instanceId, QUERY_ALL_TOPIC);

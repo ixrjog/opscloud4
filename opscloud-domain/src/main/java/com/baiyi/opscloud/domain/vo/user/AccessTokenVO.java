@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.domain.vo.user;
 
+import com.baiyi.opscloud.domain.annotation.DesensitizedField;
+import com.baiyi.opscloud.domain.constants.SensitiveTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.base.ShowTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -37,6 +39,7 @@ public class AccessTokenVO {
         private Boolean valid;
 
         @ApiModelProperty(value = "令牌")
+        @DesensitizedField(type = SensitiveTypeEnum.TOKEN)
         private String token;
 
         @ApiModelProperty(value = "令牌标识")

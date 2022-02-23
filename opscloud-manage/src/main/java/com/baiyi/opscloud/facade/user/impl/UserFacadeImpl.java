@@ -32,7 +32,6 @@ import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
 import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
-import com.baiyi.opscloud.packer.user.UserAccessTokenPacker;
 import com.baiyi.opscloud.packer.user.UserPacker;
 import com.baiyi.opscloud.packer.user.am.AmPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
@@ -43,7 +42,6 @@ import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -67,8 +65,6 @@ public class UserFacadeImpl implements UserFacade {
     private final UserService userService;
 
     private final AccessTokenService accessTokenService;
-
-    private final UserAccessTokenPacker userAccessTokenPacker;
 
     private final UserPacker userPacker;
 
@@ -226,15 +222,15 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public AccessTokenVO.AccessToken grantUserAccessToken(AccessTokenVO.AccessToken accessToken) {
-        AccessToken at = AccessToken.builder()
+        AccessToken pre = AccessToken.builder()
                 .username(SessionUtil.getUsername())
                 .tokenId(IdUtil.buildUUID())
                 .token(PasswordUtil.getRandomPW(32))
                 .expiredTime(accessToken.getExpiredTime())
                 .comment(accessToken.getComment())
                 .build();
-        accessTokenService.add(at);
-        return userAccessTokenPacker.wrapToVO(at, false);
+        accessTokenService.add(pre);
+        return BeanCopierUtil.copyProperties(pre, AccessTokenVO.AccessToken.class);
     }
 
     @Override
@@ -273,7 +269,7 @@ public class UserFacadeImpl implements UserFacade {
         if (!StringUtils.isEmpty(pre.getPassword()))
             RegexUtil.checkPasswordRule(pre.getPassword());
         if (!RegexUtil.isPhone(user.getPhone()))
-            pre.setPhone(Strings.EMPTY);
+            pre.setPhone(StringUtils.EMPTY);
         if (StringUtils.isEmpty(user.getUuid())) {
             pre.setUuid(IdUtil.buildUUID());
         }

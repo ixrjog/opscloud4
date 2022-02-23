@@ -11,5 +11,7 @@ public enum SensitiveTypeEnum {
     MOBILE_PHONE,
     // 密码
     PASSWORD,
+    // 令牌
+    TOKEN,
     ;
 }

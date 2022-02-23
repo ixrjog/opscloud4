@@ -12,7 +12,6 @@ import java.util.Map;
  */
 public class YamlVars {
 
-
     @Data
     @Builder
     @AllArgsConstructor

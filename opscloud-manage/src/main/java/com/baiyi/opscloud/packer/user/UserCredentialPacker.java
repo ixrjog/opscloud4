@@ -1,19 +1,21 @@
 package com.baiyi.opscloud.packer.user;
 
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.UserCredential;
+import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.user.UserCredentialService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -23,15 +25,15 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component
-public class UserCredentialPacker {
+@RequiredArgsConstructor
+public class UserCredentialPacker implements IWrapper<UserVO.User> {
 
-    @Resource
-    private UserCredentialService userCredentialService;
+    private final UserCredentialService userCredentialService;
 
-    @Resource
-    private DsInstanceAssetFacade dsInstanceAssetFacade;
+    private final DsInstanceAssetFacade dsInstanceAssetFacade;
 
-    public void wrap(UserVO.User user) {
+    @Override
+    public void wrap(UserVO.User user, IExtend iExtend) {
         List<UserCredential> userCredentials = userCredentialService.queryByUserId(user.getId());
         UserCredentialVO.CredentialDetails credentialDetails = UserCredentialVO.CredentialDetails.builder()
                 .credentialMap(buildCredentialMap(userCredentials))

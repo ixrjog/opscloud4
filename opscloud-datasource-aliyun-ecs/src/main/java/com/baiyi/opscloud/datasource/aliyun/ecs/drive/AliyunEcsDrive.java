@@ -7,7 +7,7 @@ import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class AliyunEcsDrive {
                 instanceList.addAll(response.getInstances());
                 nextToken = response.getNextToken();
                 describe.setNextToken(nextToken);
-            } while (Strings.isNotBlank(nextToken));
+            } while (StringUtils.isNotBlank(nextToken));
         } catch (ClientException e) {
             e.printStackTrace();
         }

@@ -2,9 +2,7 @@ package com.baiyi.opscloud.packer.application;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.kubernetes.provider.KubernetesPodProvider;
-import com.baiyi.opscloud.datasource.packer.DsInstancePacker;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.IExtend;
@@ -33,7 +31,7 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
 
     private final DsInstanceService dsInstanceService;
 
-    private final DsInstancePacker dsInstancePacker;
+    private final ApplicationResourceInstancePacker applicationResourceInstancePacker;
 
     /**
      * wrapPodByDeployment
@@ -54,15 +52,7 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
             }
         } catch (NullPointerException ignored) {
         }
-        wrapResourceInstance(resource);
-    }
-
-    public void wrapResourceInstance(ApplicationResourceVO.Resource r) {
-        if (r.getBusinessType() == BusinessTypeEnum.ASSET.getType()) {
-            DatasourceInstanceAsset asset = dsInstanceAssetService.getById(r.getBusinessId());
-            r.setInstanceUuid(asset.getInstanceUuid());
-            dsInstancePacker.wrap(r);
-        }
+        applicationResourceInstancePacker.wrap(resource);
     }
 
 }
