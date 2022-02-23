@@ -1,13 +1,14 @@
 package com.baiyi.opscloud.packer.workorder;
 
+import com.baiyi.opscloud.common.annotation.AgoWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.time.AgoUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderVO;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.packer.user.UserAvatarPacker;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.workorder.helper.TicketApproverHelper;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class TicketPacker {
+public class TicketPacker implements IWrapper<WorkOrderTicketVO.Ticket> {
 
     private final UserService userService;
 
@@ -37,16 +38,14 @@ public class TicketPacker {
 
     private final TicketApproverHelper ticketApproverHelper;
 
-    public WorkOrderTicketVO.Ticket wrap(WorkOrderTicket workOrderTicket, IExtend iExtend) {
-        WorkOrderTicketVO.Ticket ticket = BeanCopierUtil.copyProperties(workOrderTicket, WorkOrderTicketVO.Ticket.class);
-        if (iExtend.getExtend()) {
-            AgoUtil.wrap(ticket);
-            workOrderPacker.wrap(ticket);
-            User user = userService.getByUsername(workOrderTicket.getUsername());
-            ticket.setCreateUser(toCreateUser(workOrderTicket));
-            ticketApproverHelper.wrap(ticket);
-        }
-        return ticket;
+    @Override
+    @AgoWrapper
+    public void wrap(WorkOrderTicketVO.Ticket ticket, IExtend iExtend) {
+        if (!iExtend.getExtend()) return;
+        workOrderPacker.wrap(ticket);
+        User user = userService.getByUsername(ticket.getUsername());
+        ticket.setCreateUser(toCreateUser(ticket.getUsername()));
+        ticketApproverHelper.wrap(ticket);
     }
 
     /**
@@ -91,7 +90,7 @@ public class TicketPacker {
                 .build();
         ticketApproverHelper.wrap(ticket);
         WorkOrderTicketVO.TicketView ticketView = WorkOrderTicketVO.TicketView.builder()
-                .createUser(toCreateUser(workOrderTicket))
+                .createUser(toCreateUser(workOrderTicket.getUsername()))
                 .ticket(ticket)
                 .build();
         workOrderPacker.wrap(ticketView);
@@ -101,8 +100,8 @@ public class TicketPacker {
         return ticketView;
     }
 
-    private UserVO.User toCreateUser(WorkOrderTicket workOrderTicket) {
-        User user = userService.getByUsername(workOrderTicket.getUsername());
+    private UserVO.User toCreateUser(String username) {
+        User user = userService.getByUsername(username);
         UserVO.User userVO = BeanCopierUtil.copyProperties(user, UserVO.User.class);
         userAvatarPacker.wrap(userVO);
         return userVO;

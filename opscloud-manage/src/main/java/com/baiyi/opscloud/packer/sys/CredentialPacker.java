@@ -14,9 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * @Author baiyi
  * @Date 2021/5/17 3:49 下午
@@ -36,22 +33,14 @@ public class CredentialPacker {
         if (IdUtil.isEmpty(iCredential.getCredentialId())) return;
         com.baiyi.opscloud.domain.generator.opscloud.Credential credential = credentialService.getById(iCredential.getCredentialId());
         if (credential == null) return;
-        iCredential.setCredential(toVO(credential));
-    }
-
-    private static CredentialVO.Credential toVO(com.baiyi.opscloud.domain.generator.opscloud.Credential credential) {
         CredentialVO.Credential vo = BeanCopierUtil.copyProperties(credential, CredentialVO.Credential.class);
         vo.setCredential("");
         vo.setCredential2("");
         vo.setPassphrase("");
         vo.setQuantityUsed(CredentialCustomerFactory.countByCredentialId(vo.getId()));
-        return vo;
+        iCredential.setCredential(vo);
     }
-
-    public static List<CredentialVO.Credential> wrapVOList(List<com.baiyi.opscloud.domain.generator.opscloud.Credential> data) {
-        return data.stream().map(CredentialPacker::toVO).collect(Collectors.toList());
-    }
-
+    
     public CredentialVO.Credential wrap(com.baiyi.opscloud.domain.generator.opscloud.Credential credential) {
         CredentialVO.Credential vo = BeanCopierUtil.copyProperties(credential, CredentialVO.Credential.class);
         secretPacker.wrap(vo);

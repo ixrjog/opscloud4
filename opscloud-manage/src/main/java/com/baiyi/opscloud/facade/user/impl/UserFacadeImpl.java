@@ -225,15 +225,17 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public AccessTokenVO.AccessToken grantUserAccessToken(AccessTokenVO.AccessToken accessToken) {
-        AccessToken at = AccessToken.builder()
+        AccessToken pre = AccessToken.builder()
                 .username(SessionUtil.getUsername())
                 .tokenId(IdUtil.buildUUID())
                 .token(PasswordUtil.getRandomPW(32))
                 .expiredTime(accessToken.getExpiredTime())
                 .comment(accessToken.getComment())
                 .build();
-        accessTokenService.add(at);
-        return userAccessTokenPacker.wrapToVO(at, false);
+        accessTokenService.add(pre);
+        AccessTokenVO.AccessToken result = BeanCopierUtil.copyProperties(pre, AccessTokenVO.AccessToken.class);
+        userAccessTokenPacker.wrap(result, false);
+        return result;
     }
 
     @Override
