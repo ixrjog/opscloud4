@@ -23,5 +23,20 @@
             <artifactId>console-table-builder</artifactId>
             <version>1.2</version>
         </dependency>
+
+<!--        https://www.mail-archive.com/commits@mina.apache.org/msg09428.html-->
+<!--        +* [ed25519-java](https://github.com/str4d/ed25519-java)-->
+<!--        +Required for supporting-->
+<!--        [ssh-ed25519](https://tools.ietf.org/html/draft-bjh21-ssh-ed25519-02) keys and-->
+<!--        [ed25519-sha-512](https://tools.ietf.org/html/draft-josefsson-eddsa-ed25519-02)-->
+<!--        signatures. **Note:** the required Maven module(s) are defined as `optional` so-->
+<!--        must be added as an **explicit** dependency in order to be included in the-->
+<!--        classpath:-->
+        <dependency>
+            <groupId>net.i2p.crypto</groupId>
+            <artifactId>eddsa</artifactId>
+            <version>0.3.0</version>
+        </dependency>
+
     </dependencies>
 </project>
