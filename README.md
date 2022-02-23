@@ -1,7 +1,7 @@
 Welcome to the opscloud wiki!
 
 # OpsCloud4.0 IaC基础架构即代码
-<img src="https://img.shields.io/badge/version-4.0.7-brightgreen.svg"></img>
+<img src="https://img.shields.io/badge/version-4.0.8-brightgreen.svg"></img>
 <img src="https://img.shields.io/badge/java-8-brightgreen.svg"></img> 
 <img src="https://img.shields.io/badge/springboot-2.4.13-brightgreen.svg"></img> 
 <img src="https://img.shields.io/badge/mysql-8-brightgreen.svg"></img> 
@@ -13,14 +13,9 @@ Welcome to the opscloud wiki!
 + 前端Vue, github.com/ixrjog/opscloud4-web
 
 ### 开发环境
-+ MacBook M1PRO(8C/14C) / macOS Monterey
-+ IntelliJ IDEA 2021.3 (Ultimate Edition)
-+ WebStorm 2021.3
-
-### 4.0.8版本
-+ 运维工单（钉钉通知，自定义审批节点，自动处理工单）
-+ AWS数据源接入(EC2,IAM等)
-+ 堡垒机密钥增强rsa-4096
++ MacBook M1 PRO / macOS Monterey
++ IntelliJ IDEA 2021.3.2 (Ultimate Edition)
++ WebStorm 2021.3.2
 
 ### 系统
 #### 环境管理
@@ -82,24 +77,18 @@ Welcome to the opscloud wiki!
 #### <span style="color:green">平台演示视频1</span>
 <video src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/video/opscloud4-1.mov" width="400px" height="300px" controls="controls"></video>
 
-#### 优势
-+ 高安全性（关键数据加密）
-+ 代码即文档
-+ 集群架构
-+ 堡垒机集成
-+ 全API实现资产数据同步
-
 #### 核心功能
 + 事件驱动
 + 万物皆资产
   + 多实例支持
-  + 多云支持（目前只支持阿里云，有计划接入腾讯云，AWS，vSphere7）
-  + 抽象数据源实例资产
+  + 多云支持（阿里云，AWS）
++ 运维工单 
 + 堡垒机
   + 远程桌面RDP,VNC(需安装apache-guacamole)
   + Web终端（支持多开，会话复制，命令同步）
-  + Ssh服务器
-    + 支持快速登录（Gitlab公钥资产认证）
+  + SSH-Server(命令行终端)
+    + 支持RSA-4096bit密钥，支持ED25519密钥 
+    + 支持用户关联Gitlab账户中配置的公钥，无需配置即可登录
     + 展示服务器环境，标签，授权账户
     + 支持Kubernetes容器登录（容器堡垒机）
     + 支持查看Kubernetes容器日志
