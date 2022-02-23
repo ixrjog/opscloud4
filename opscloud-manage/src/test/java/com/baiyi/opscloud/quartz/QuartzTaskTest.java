@@ -1,16 +1,20 @@
 package com.baiyi.opscloud.quartz;
 
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.schedule.quartz.ScheduleJob;
 import com.baiyi.opscloud.schedule.quartz.job.AssetPullJob;
-import com.baiyi.opscloud.schedule.quartz.job.ExampleJob;
 import com.baiyi.opscloud.schedule.quartz.service.QuartzService;
+import com.baiyi.opscloud.service.datasource.DsInstanceService;
+import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
 import org.quartz.SchedulerException;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -22,6 +26,43 @@ public class QuartzTaskTest extends BaseUnit {
     @Resource
     private QuartzService quartzService;
 
+    @Resource
+    private DsInstanceService dsInstanceService;
+
+    @Test
+    void addDingtalkUserTask() {
+        dsInstanceService.listByInstanceType(DsTypeEnum.DINGTALK_APP.getName()).forEach(dsInstance -> {
+            Map<String, Object> map = ImmutableMap.<String, Object>builder()
+                    .put("assetType", DsAssetTypeConstants.DINGTALK_USER.name())
+                    .put("instanceId", dsInstance.getId())
+                    .build();
+            quartzService.addJob(
+                    AssetPullJob.class,
+                    dsInstance.getUuid(),
+                    DsAssetTypeConstants.DINGTALK_USER.name(),
+                    "0 0 10,11,19 * * ?",
+                    "同步钉钉用户（每天10、11、19点开始任务）",
+                    map);
+        });
+    }
+
+    @Test
+    void addDingtalkDeptTask() {
+        dsInstanceService.listByInstanceType(DsTypeEnum.DINGTALK_APP.getName()).forEach(dsInstance -> {
+            Map<String, Object> map = ImmutableMap.<String, Object>builder()
+                    .put("assetType", DsAssetTypeConstants.DINGTALK_DEPARTMENT.name())
+                    .put("instanceId", dsInstance.getId())
+                    .build();
+            quartzService.addJob(
+                    AssetPullJob.class,
+                    dsInstance.getUuid(),
+                    DsAssetTypeConstants.DINGTALK_DEPARTMENT.name(),
+                    "0 0 9,18 * * ?",
+                    "同步钉钉组织架构（每天9、18点开始任务）",
+                    map);
+        });
+    }
+
     @Test
     void taskTest() throws SchedulerException {
         HashMap<String, Object> map = new HashMap<>();
@@ -29,7 +70,7 @@ public class QuartzTaskTest extends BaseUnit {
         map.put("instanceId", 10);
 //        quartzService.deleteJob("job", "test");
 //        quartzService.pauseJob("job", "test");
-        quartzService.addJob(ExampleJob.class, "test", "JOB_1", "*/1 * * * * ?", map);
+//        quartzService.addJob(ExampleJob.class, "test", "JOB_1", "0/10 * * * * ?","测试任务"， map);
         List<ScheduleJob> list = quartzService.getAllJob();
         print(list);
         while (true) {
@@ -54,7 +95,7 @@ public class QuartzTaskTest extends BaseUnit {
         HashMap<String, Object> map = new HashMap<>();
         map.put("assetType", "KUBERNETES_NAMESPACE");
         map.put("instanceId", 10);
-        quartzService.addJob(AssetPullJob.class, "Asset", "ASSET_KUBERNETES_NAMESPACE_1", "*/1 * * * * ?", map);
+        quartzService.addJob(AssetPullJob.class, "Asset", "ASSET_KUBERNETES_NAMESPACE_1", "*/1 * * * * ?", "测试任务", map);
         List<ScheduleJob> list = quartzService.getAllJob();
         print(list);
         while (true) {
