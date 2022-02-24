@@ -12,16 +12,12 @@
     <artifactId>opscloud-datasource-zabbix</artifactId>
 
     <dependencies>
+
         <dependency>
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.13</version>
-        </dependency>
     </dependencies>
 
 </project>

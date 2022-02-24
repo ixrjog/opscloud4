@@ -12,6 +12,7 @@
     <artifactId>opscloud-datasource-gitlab</artifactId>
 
     <dependencies>
+
         <dependency>
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-core</artifactId>
@@ -28,6 +29,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
     </dependencies>
 
 </project>

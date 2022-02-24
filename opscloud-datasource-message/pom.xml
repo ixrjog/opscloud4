@@ -22,6 +22,7 @@
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-core</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-dingtalk</artifactId>

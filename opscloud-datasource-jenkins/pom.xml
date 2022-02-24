@@ -22,6 +22,7 @@
             <artifactId>jenkins-client</artifactId>
             <version>0.3.8</version>
         </dependency>
+
     </dependencies>
 
 </project>
