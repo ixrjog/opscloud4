@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.domain.vo.sys;
 
+import com.baiyi.opscloud.domain.annotation.DesensitizedField;
+import com.baiyi.opscloud.domain.constants.SensitiveTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.base.ISecret;
 import io.swagger.annotations.ApiModel;
@@ -33,8 +35,11 @@ public class CredentialVO {
         private Integer kind;
         private String username;
         private String fingerprint;
+        @DesensitizedField(type = SensitiveTypeEnum.PASSWORD)
         private String credential;
+        @DesensitizedField(type = SensitiveTypeEnum.PASSWORD)
         private String credential2;
+        @DesensitizedField(type = SensitiveTypeEnum.PASSWORD)
         private String passphrase;
         private String comment;
 

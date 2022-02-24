@@ -5,9 +5,11 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.SSHUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
+import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.sys.CredentialVO;
-import com.baiyi.opscloud.factory.credential.CredentialCustomerFactory;
+import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.packer.secret.SecretPacker;
+import com.baiyi.opscloud.packer.sys.delegate.CredentialPackerDelegate;
 import com.baiyi.opscloud.service.sys.CredentialService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +23,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class CredentialPacker {
+public class CredentialPacker implements IWrapper<CredentialVO.Credential> {
 
     private final StringEncryptor stringEncryptor;
 
@@ -29,18 +31,22 @@ public class CredentialPacker {
 
     private final CredentialService credentialService;
 
+    private final CredentialPackerDelegate credentialPackerDelegate;
+
+    @Override
+    public void wrap(CredentialVO.Credential credential, IExtend iExtend) {
+        credentialPackerDelegate.wrap(credential, iExtend);
+    }
+
     public void wrap(CredentialVO.ICredential iCredential) {
         if (IdUtil.isEmpty(iCredential.getCredentialId())) return;
         com.baiyi.opscloud.domain.generator.opscloud.Credential credential = credentialService.getById(iCredential.getCredentialId());
         if (credential == null) return;
-        CredentialVO.Credential vo = BeanCopierUtil.copyProperties(credential, CredentialVO.Credential.class);
-        vo.setCredential("");
-        vo.setCredential2("");
-        vo.setPassphrase("");
-        vo.setQuantityUsed(CredentialCustomerFactory.countByCredentialId(vo.getId()));
-        iCredential.setCredential(vo);
+        CredentialVO.Credential credentialVO = BeanCopierUtil.copyProperties(credential, CredentialVO.Credential.class);
+        wrap(credentialVO);
+        iCredential.setCredential(credentialVO);
     }
-    
+
     public CredentialVO.Credential wrap(com.baiyi.opscloud.domain.generator.opscloud.Credential credential) {
         CredentialVO.Credential vo = BeanCopierUtil.copyProperties(credential, CredentialVO.Credential.class);
         secretPacker.wrap(vo);
