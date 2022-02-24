@@ -17,9 +17,9 @@ public class ResponseExceptionHandler {
         return new HttpResult(exception.getCode(), exception.getMessage());
     }
 
-
     @ExceptionHandler(value = {EncryptionOperationNotPossibleException.class})
     public HttpResult handleRuntimeException(EncryptionOperationNotPossibleException exception) {
         return new HttpResult(999, "加密/解密错误");
     }
+
 }

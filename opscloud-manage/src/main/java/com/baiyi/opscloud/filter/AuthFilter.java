@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.stream.Stream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -58,17 +59,7 @@ public class AuthFilter extends OncePerRequestFilter {
                 return;
             }
             //静态资源不拦截
-            if (resourceName.endsWith(".js")
-                    || resourceName.endsWith(".md")
-                    || resourceName.endsWith(".css")
-                    || resourceName.endsWith(".woff")
-                    || resourceName.endsWith(".otf")
-                    || resourceName.endsWith(".eot")
-                    || resourceName.endsWith(".ttf")
-                    || resourceName.endsWith(".svg")
-                    || resourceName.endsWith(".jpg")
-                    || resourceName.endsWith(".png")
-                    || resourceName.endsWith(".html")) {
+            if (Stream.of(".js", ".md", ".css", ".woff", ".otf", ".eot", ".ttf", ".svg", ".jpg", ".png", ".html").anyMatch(resourceName::endsWith)) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -101,10 +92,7 @@ public class AuthFilter extends OncePerRequestFilter {
     }
 
     private boolean checkWhitelist(String resourceName) {
-        for (String resource : whiteConfig.getUrls())
-            if (resourceName.indexOf(resource) == 0)
-                return true;
-        return false;
+        return whiteConfig.getUrls().stream().anyMatch(resource -> resourceName.indexOf(resource) == 0);
     }
 
     private void setHeaders(HttpServletRequest request, HttpServletResponse response) {
@@ -116,6 +104,5 @@ public class AuthFilter extends OncePerRequestFilter {
         // 30 min
         // response.addHeader("Access-Control-Max-Age", "1800");
     }
-
 
 }

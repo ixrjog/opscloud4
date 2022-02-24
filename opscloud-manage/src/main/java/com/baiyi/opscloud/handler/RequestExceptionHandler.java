@@ -20,4 +20,5 @@ public class RequestExceptionHandler {
     public HttpResult handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         return new HttpResult(ErrorEnum.SYSTEM_ERROR.getCode(), exception.getBindingResult().getAllErrors().get(0).getDefaultMessage());
     }
+
 }

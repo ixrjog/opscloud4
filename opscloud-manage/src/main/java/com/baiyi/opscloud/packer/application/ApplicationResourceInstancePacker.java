@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.packer.application;
 
-import com.baiyi.opscloud.datasource.kubernetes.provider.KubernetesPodProvider;
 import com.baiyi.opscloud.datasource.packer.DsInstancePacker;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -8,7 +7,6 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
-import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,11 +19,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ApplicationResourceInstancePacker implements IWrapper<ApplicationResourceVO.Resource> {
 
-    private final KubernetesPodProvider kubernetesPodProvider;
-
     private final DsInstanceAssetService dsInstanceAssetService;
-
-    private final DsInstanceService dsInstanceService;
 
     private final DsInstancePacker dsInstancePacker;
 
