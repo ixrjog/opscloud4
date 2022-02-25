@@ -149,6 +149,9 @@ public class UserFacadeImpl implements UserFacade {
         User newUser = this.toDO(user);
 //        if (StringUtils.isEmpty(newUser.getPassword()))
 //            throw new CommonRuntimeException("密码不能为空");
+        // 校验用户名
+        RegexUtil.isUsernameRule(newUser.getUsername());
+
         userService.add(newUser);
         user.setId(newUser.getId()); // 给切面提供businessId
 
