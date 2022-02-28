@@ -43,6 +43,8 @@ public interface UserService {
 
     void updateBySelective(User user);
 
+    void updateMfa(User user);
+
     default List<User> listActive() {
         return listByIsActive(true);
     }

@@ -9,6 +9,7 @@ import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
+import com.baiyi.opscloud.domain.vo.user.mfa.MfaVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -184,6 +185,28 @@ public class UserVO {
         }
 
         private UserPermissionVO.UserPermission userPermission;
+    }
+
+    @Builder
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
+    public static class UserMFA {
+
+        private Integer id;
+
+        private String username;
+
+        @ApiModelProperty(value = "用户是否启用MFA")
+        private Boolean mfa;
+
+        @ApiModelProperty(value = "是否强制用户启用MFA")
+        private Boolean forceMfa;
+
+        @ApiModelProperty(value = "用户MFA配置")
+        private MfaVO.MFA userMfa;
+
     }
 
 }

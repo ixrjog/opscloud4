@@ -67,4 +67,6 @@ public interface UserFacade {
 
     List<AMVO.XAM> queryAmsUser(String username, String amType);
 
+    UserVO.UserMFA getUserMFA();
+
 }

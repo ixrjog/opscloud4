@@ -123,7 +123,8 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
 
     @Override
     public void updateLogin(User user) {
-        userMapper.updateByPrimaryKey(user);
+        userMapper.updateByPrimaryKeySelective(user);
+       // userMapper.updateByPrimaryKey(user);
     }
 
     @Override
@@ -153,6 +154,11 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
     @Encrypt
     @EventPublisher(eventAction = EventActionTypeEnum.UPDATE)
     public void updateBySelective(User user) {
+        userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    @Override
+    public void updateMfa(User user) {
         userMapper.updateByPrimaryKeySelective(user);
     }
 

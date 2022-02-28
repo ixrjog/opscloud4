@@ -70,6 +70,17 @@ public class User {
      */
     private String phone;
 
+    /**
+     * 启用MFA
+     */
+    private Boolean mfa;
+
+    /**
+     * 强制启用MFA
+     */
+    @Column(name = "force_mfa")
+    private Boolean forceMfa;
+
     @Column(name = "created_by")
     private String createdBy;
 

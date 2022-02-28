@@ -13,6 +13,8 @@ public interface UserCredentialService {
 
     List<UserCredential> queryByUserIdAndType(Integer userId, int credentialType);
 
+    int countByUserIdAndType(Integer userId, int credentialType);
+
     List<UserCredential> queryByUserId(Integer userId);
 
     UserCredential getById(Integer id);

@@ -25,6 +25,9 @@ public class LoginParam {
         @ApiModelProperty(value = "密码")
         private String password;
 
+        @ApiModelProperty(value = "一次性密码(OTP)")
+        private String otp;
+
         public boolean isEmptyPassword() {
             return StringUtils.isEmpty(password);
         }

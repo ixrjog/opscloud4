@@ -66,7 +66,7 @@ public class UserController {
     @ApiOperation(value = "保存用户凭证")
     @PostMapping(value = "/credential/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> saveUserCredential(@RequestBody @Valid UserCredentialVO.Credential credential) {
-        userCredentialFacade.saveUserCredential(credential);
+        userCredentialFacade.saveCredential(credential);
         return HttpResult.SUCCESS;
     }
 
@@ -220,6 +220,12 @@ public class UserController {
     public HttpResult<Boolean> revokeAmPolicy(@RequestBody @Valid UserAmParam.RevokePolicy revokePolicy) {
         userAmFacade.revokePolicy(revokePolicy);
         return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "用户查询MFA详情")
+    @GetMapping(value = "/mfa/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<UserVO.UserMFA> getUserMFA() {
+        return new HttpResult<>(userFacade.getUserMFA());
     }
 
 }

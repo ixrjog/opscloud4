@@ -30,6 +30,15 @@ public class UserCredentialServiceImpl implements UserCredentialService {
     }
 
     @Override
+    public int countByUserIdAndType(Integer userId, int credentialType) {
+        Example example = new Example(UserCredential.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("userId", userId);
+        criteria.andEqualTo("credentialType", credentialType);
+        return userCredentialMapper.selectCountByExample(example);
+    }
+
+    @Override
     public List<UserCredential> queryByUserId(Integer userId) {
         Example example = new Example(UserCredential.class);
         Example.Criteria criteria = example.createCriteria();

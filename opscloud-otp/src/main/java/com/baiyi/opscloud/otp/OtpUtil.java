@@ -15,6 +15,7 @@ import java.time.Instant;
 
 /**
  * OTP 工具类
+ *
  * @Author baiyi
  * @Date 2022/2/25 9:31 AM
  * @Version 1.0
@@ -22,6 +23,8 @@ import java.time.Instant;
 public class OtpUtil {
 
     private static final Duration duration = Duration.ofSeconds(30L);
+
+    private static final String QR_CODE = "otpauth://totp/${ACCOUNT}?secret=${OTP_SK}";
 
     private OtpUtil() {
     }
@@ -57,12 +60,25 @@ public class OtpUtil {
 
     /**
      * 转换Key
+     *
      * @param otpSecretKeyStr
      * @return
      * @throws OtpException.DecodingException
      */
     public static SecretKey toKey(String otpSecretKeyStr) throws OtpException.DecodingException {
         return new SecretKeySpec(Base32StringUtil.decode(otpSecretKeyStr), "HmacSHA1");
+    }
+
+    /**
+     * 转换二维码
+     *
+     * @param account
+     * @param otpSk
+     * @return otpauth://totp/客户端显示的账户信息?secret=secretBase32
+     */
+    public static String toQRCode(String account, String otpSk) {
+        return QR_CODE.replace("${ACCOUNT}", account)
+                .replace("${OTP_SK}", otpSk);
     }
 
 }

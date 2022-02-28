@@ -12,6 +12,7 @@ import com.baiyi.opscloud.domain.vo.auth.LogVO;
 import com.baiyi.opscloud.facade.auth.AuthFacade;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import com.baiyi.opscloud.facade.auth.UserTokenFacade;
+import com.baiyi.opscloud.facade.auth.maf.MfaAuthHelper;
 import com.baiyi.opscloud.service.auth.AuthResourceService;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
 import com.baiyi.opscloud.service.user.AccessTokenService;
@@ -19,9 +20,10 @@ import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.user.UserTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang3.StringUtils;
+
 import java.util.Date;
 
 import static com.baiyi.opscloud.common.base.Global.SUPER_ADMIN;
@@ -53,6 +55,8 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     private final StringEncryptor stringEncryptor;
 
     private final DsAuthManager authProviderManager;
+
+    private final MfaAuthHelper mfaAuthHelper;
 
     @Override
     public void tryUserHasResourceAuthorize(String token, String resourceName) {
@@ -118,16 +122,27 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     public LogVO.Login login(LoginParam.Login loginParam) {
         User user = userService.getByUsername(loginParam.getUsername());
         // 尝试使用authProvider 认证
+
         if (authProviderManager.tryLogin(user, loginParam)) {
+            boolean bindMfa = false;
+            if (user.getMfa()) {
+                mfaAuthHelper.verify(user, loginParam);
+            } else {
+                bindMfa = mfaAuthHelper.tryBind(user, loginParam);
+            }
             // 更新用户登录信息
             user.setPassword(stringEncryptor.encrypt(loginParam.getPassword()));
             user.setLastLogin(new Date()); // 更新用户登录时间
+            if (bindMfa) {
+                user.setMfa(true);
+            }
             userService.updateLogin(user);
             return userTokenFacade.userLogin(user);
         } else {
             throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_FAILURE); // 登录失败
         }
     }
+
 
     @Override
     public void logout() {

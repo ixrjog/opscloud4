@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.user.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
+import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.domain.DataTable;
@@ -25,20 +26,22 @@ import com.baiyi.opscloud.domain.vo.user.AMVO;
 import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
+import com.baiyi.opscloud.domain.vo.user.mfa.MfaVO;
 import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
+import com.baiyi.opscloud.facade.user.UserCredentialFacade;
 import com.baiyi.opscloud.facade.user.UserFacade;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
+import com.baiyi.opscloud.facade.user.convertor.UserConvertor;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
+import com.baiyi.opscloud.otp.OtpUtil;
 import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.packer.user.UserPacker;
 import com.baiyi.opscloud.packer.user.am.AmPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
-import com.baiyi.opscloud.service.user.AccessTokenService;
-import com.baiyi.opscloud.service.user.UserGroupService;
-import com.baiyi.opscloud.service.user.UserPermissionService;
-import com.baiyi.opscloud.service.user.UserService;
+import com.baiyi.opscloud.service.user.*;
+import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -83,6 +86,10 @@ public class UserFacadeImpl implements UserFacade {
     private final UserPermissionService userPermissionService;
 
     private final AmPacker amPacker;
+
+    private final UserCredentialFacade userCredentialFacade;
+
+    private final UserCredentialService userCredentialService;
 
     @Override
     public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {
@@ -146,7 +153,7 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     @AssetBusinessRelation // 资产绑定业务对象
     public UserVO.User addUser(UserVO.User user) {
-        User newUser = this.toDO(user);
+        User newUser = UserConvertor.toDO(user);
 //        if (StringUtils.isEmpty(newUser.getPassword()))
 //            throw new CommonRuntimeException("密码不能为空");
         // 校验用户名
@@ -174,7 +181,7 @@ public class UserFacadeImpl implements UserFacade {
                 throw new CommonRuntimeException("权限不足:需要管理员才能修改其他用户信息!");
             }
         }
-        User updateUser = this.toDO(user);
+        User updateUser = UserConvertor.toDO(user);
         updateUser.setUsername(checkUser.getUsername());
         userService.updateBySelective(updateUser);
     }
@@ -267,16 +274,32 @@ public class UserFacadeImpl implements UserFacade {
         return amPacker.toAms(vo, amType);
     }
 
-    private User toDO(UserVO.User user) {
-        User pre = BeanCopierUtil.copyProperties(user, User.class);
-        if (!StringUtils.isEmpty(pre.getPassword()))
-            RegexUtil.checkPasswordRule(pre.getPassword());
-        if (!RegexUtil.isPhone(user.getPhone()))
-            pre.setPhone(StringUtils.EMPTY);
-        if (StringUtils.isEmpty(user.getUuid())) {
-            pre.setUuid(IdUtil.buildUUID());
+    @Override
+    public UserVO.UserMFA getUserMFA() {
+        String username = SessionUtil.getUsername();
+        User user = userService.getByUsername(username);
+        MfaVO.MFA mfa;
+        if (!user.getMfa()) {
+            // 创建用户MFA凭据（不会重复申请）
+            userCredentialFacade.createMFACredential(user);
+            List<UserCredential> credentials = userCredentialService.queryByUserIdAndType(user.getId(), UserCredentialTypeEnum.OTP_SK.getType());
+            String otpSk = credentials.get(0).getCredential();
+            mfa = MfaVO.MFA.builder()
+                    .username(username)
+                    .qrcode(OtpUtil.toQRCode(Joiner.on("@").join(username, "opscloud"), otpSk))
+                    .secret(otpSk)
+                    .build();
+        } else {
+            // 用户已经启用MFA不再显示
+            mfa = MfaVO.MFA.NOT_SHOW;
         }
-        return pre;
+        return UserVO.UserMFA.builder()
+                .id(user.getId())
+                .username(username)
+                .mfa(user.getMfa()) // 是否启用MFA
+                .forceMfa(user.getForceMfa())
+                .userMfa(mfa)
+                .build();
     }
 
 }

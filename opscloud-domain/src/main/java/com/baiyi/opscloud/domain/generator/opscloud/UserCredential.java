@@ -1,10 +1,12 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
 
+@Builder
 @Data
 @Table(name = "user_credential")
 public class UserCredential {

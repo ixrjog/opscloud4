@@ -10,13 +10,21 @@ import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
  */
 public interface UserCredentialFacade {
 
-    void saveUserCredential(UserCredentialVO.Credential credential);
+    void saveCredential(UserCredentialVO.Credential credential);
 
     /**
      * 内部使用
+     *
      * @param credential
      * @param user
      */
-    void saveUserCredential(UserCredentialVO.Credential credential, User user);
+    void saveCredential(UserCredentialVO.Credential credential, User user);
+
+    /**
+     * 创建用户MFA凭据
+     *
+     * @param user
+     */
+    void createMFACredential(User user);
 
 }

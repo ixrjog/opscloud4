@@ -16,6 +16,8 @@
         <result column="last_login" jdbcType="TIMESTAMP" property="lastLogin"/>
         <result column="wechat" jdbcType="VARCHAR" property="wechat"/>
         <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="mfa" jdbcType="BIT" property="mfa"/>
+        <result column="force_mfa" jdbcType="BIT" property="forceMfa"/>
         <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
         <result column="source" jdbcType="VARCHAR" property="source"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
