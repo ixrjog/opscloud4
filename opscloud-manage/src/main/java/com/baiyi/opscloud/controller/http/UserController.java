@@ -228,4 +228,10 @@ public class UserController {
         return new HttpResult<>(userFacade.getUserMFA());
     }
 
+    @ApiOperation(value = "用户重置MFA")
+    @GetMapping(value = "/mfa/reset", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<UserVO.UserMFA> resetUserMFA() {
+        return new HttpResult<>(userFacade.resetUserMFA());
+    }
+
 }

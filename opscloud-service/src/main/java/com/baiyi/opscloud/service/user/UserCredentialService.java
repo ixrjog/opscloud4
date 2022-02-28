@@ -23,4 +23,6 @@ public interface UserCredentialService {
 
     void update(UserCredential userCredential);
 
+    void deleteById(int id);
+
 }

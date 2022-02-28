@@ -67,6 +67,16 @@ public interface UserFacade {
 
     List<AMVO.XAM> queryAmsUser(String username, String amType);
 
+    /**
+     * 用户查询MFA
+     * @return
+     */
     UserVO.UserMFA getUserMFA();
+
+    /**
+     * 用户重置MFA
+     * @return
+     */
+    UserVO.UserMFA resetUserMFA();
 
 }

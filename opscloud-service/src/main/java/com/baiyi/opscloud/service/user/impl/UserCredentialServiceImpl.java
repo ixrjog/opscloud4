@@ -61,4 +61,9 @@ public class UserCredentialServiceImpl implements UserCredentialService {
         userCredentialMapper.updateByPrimaryKey(userCredential);
     }
 
+    @Override
+    public void deleteById(int id) {
+        userCredentialMapper.deleteByPrimaryKey(id);
+    }
+
 }

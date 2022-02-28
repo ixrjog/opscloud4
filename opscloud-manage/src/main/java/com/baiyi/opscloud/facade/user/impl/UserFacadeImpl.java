@@ -47,6 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -158,7 +159,8 @@ public class UserFacadeImpl implements UserFacade {
 //            throw new CommonRuntimeException("密码不能为空");
         // 校验用户名
         RegexUtil.isUsernameRule(newUser.getUsername());
-
+        newUser.setMfa(false);
+        newUser.setForceMfa(false);
         userService.add(newUser);
         user.setId(newUser.getId()); // 给切面提供businessId
 
@@ -278,6 +280,32 @@ public class UserFacadeImpl implements UserFacade {
     public UserVO.UserMFA getUserMFA() {
         String username = SessionUtil.getUsername();
         User user = userService.getByUsername(username);
+        return createMfa(user);
+    }
+
+    @Transactional(rollbackFor = {CommonRuntimeException.class, Exception.class})
+    @Override
+    public UserVO.UserMFA resetUserMFA() {
+        String username = SessionUtil.getUsername();
+        User user = userService.getByUsername(username);
+        if (user.getForceMfa())
+            throw new CommonRuntimeException("MFA无法重置: 管理员强制启用!");
+        if (user.getMfa()) {
+            User userMfa = User.builder()
+                    .id(user.getId())
+                    .mfa(false)
+                    .build();
+            userService.updateMfa(userMfa);
+            user.setMfa(false);
+        }
+        List<UserCredential> credentials = userCredentialService.queryByUserIdAndType(user.getId(), UserCredentialTypeEnum.OTP_SK.getType());
+        if (!CollectionUtils.isEmpty(credentials)) {
+            credentials.forEach(e -> userCredentialService.deleteById(e.getId()));
+        }
+        return createMfa(user);
+    }
+
+    private UserVO.UserMFA createMfa(User user) {
         MfaVO.MFA mfa;
         if (!user.getMfa()) {
             // 创建用户MFA凭据（不会重复申请）
@@ -285,8 +313,8 @@ public class UserFacadeImpl implements UserFacade {
             List<UserCredential> credentials = userCredentialService.queryByUserIdAndType(user.getId(), UserCredentialTypeEnum.OTP_SK.getType());
             String otpSk = credentials.get(0).getCredential();
             mfa = MfaVO.MFA.builder()
-                    .username(username)
-                    .qrcode(OtpUtil.toQRCode(Joiner.on("@").join(username, "opscloud"), otpSk))
+                    .username(user.getUsername())
+                    .qrcode(OtpUtil.toQRCode(Joiner.on("@").join(user.getUsername(), "opscloud"), otpSk))
                     .secret(otpSk)
                     .build();
         } else {
@@ -295,7 +323,7 @@ public class UserFacadeImpl implements UserFacade {
         }
         return UserVO.UserMFA.builder()
                 .id(user.getId())
-                .username(username)
+                .username(user.getUsername())
                 .mfa(user.getMfa()) // 是否启用MFA
                 .forceMfa(user.getForceMfa())
                 .userMfa(mfa)
