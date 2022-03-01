@@ -87,15 +87,15 @@ Welcome to the opscloud wiki!
   + 远程桌面RDP,VNC(需安装apache-guacamole)
   + Web终端（支持多开，会话复制，命令同步）
   + SSH-Server(命令行终端)
-    + 支持RSA-4096bit密钥，支持ED25519密钥 
+    + 支持RSA-4096bit,ED25519密钥 
     + 支持用户关联Gitlab账户中配置的公钥，无需配置即可登录
     + 展示服务器环境，标签，授权账户
     + 支持Kubernetes容器登录（容器堡垒机）
     + 支持查看Kubernetes容器日志
-    + 以事件驱动的主动式堡垒机技术（通过事件ID登录服务器）
+    + 以事件驱动的主动式堡垒机（通过事件ID登录服务器）
 + 剧本任务
 + RBAC
-+ 集群架构
++ 集群架构(动态分布式任务)
 
 ### 帮助文档
 
