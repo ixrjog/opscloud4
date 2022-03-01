@@ -7,10 +7,10 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,39 +20,32 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class DsInstancePacker {
 
-    @Resource
-    private DsInstanceAssetService dsInstanceAssetService;
+    private final DsInstanceAssetService dsInstanceAssetService;
 
-    @Resource
-    private DsInstanceService dsInstanceService;
-
-    public static DsInstanceVO.Instance toVO(DatasourceInstance datasourceInstance) {
-        return BeanCopierUtil.copyProperties(datasourceInstance, DsInstanceVO.Instance.class);
-    }
+    private final DsInstanceService dsInstanceService;
 
     public void wrap(DsInstanceVO.IDsInstance iDsInstance) {
         if (StringUtils.isEmpty(iDsInstance.getInstanceUuid())) return;
         DatasourceInstance datasourceInstance = dsInstanceService.getByUuid(iDsInstance.getInstanceUuid());
         if (datasourceInstance == null) return;
-        iDsInstance.setInstance(toVO(datasourceInstance));
+        iDsInstance.setInstance(BeanCopierUtil.copyProperties(datasourceInstance, DsInstanceVO.Instance.class));
     }
 
     @TagsWrapper
     public void wrap(DsInstanceVO.Instance instance, IExtend iExtend) {
         if (iExtend.getExtend()) {
-            List<String> assetTypes = dsInstanceAssetService.queryInstanceAssetTypes(instance.getUuid());
-            instance.setAssetDetails(
-                    assetTypes.stream().map(e ->
+            List<DsInstanceVO.AssetDetail> assetDetails = dsInstanceAssetService.queryInstanceAssetTypes(instance.getUuid())
+                    .stream().map(e ->
                             DsInstanceVO.AssetDetail.builder()
                                     .assetType(e)
                                     .assetSize(dsInstanceAssetService.countByInstanceAssetType(instance.getUuid(), e))
                                     .build()
-                    ).collect(Collectors.toList())
-            );
+                    ).collect(Collectors.toList());
+            instance.setAssetDetails(assetDetails);
         }
     }
-
 
 }

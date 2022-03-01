@@ -20,10 +20,11 @@ public class InstanceConfigHelper {
 
     private final DsConfigService dsConfigService;
 
-    private final DsConfigHelper dsFactory;
+    private final DsConfigHelper dsConfigHelper;
 
     public BaseConfig getConfig(DatasourceInstance datasourceInstance) {
         DatasourceConfig datasourceConfig = dsConfigService.getById(datasourceInstance.getConfigId());
-        return dsFactory.build(datasourceConfig, GitlabConfig.class);
+        return dsConfigHelper.build(datasourceConfig, GitlabConfig.class);
     }
+    
 }
