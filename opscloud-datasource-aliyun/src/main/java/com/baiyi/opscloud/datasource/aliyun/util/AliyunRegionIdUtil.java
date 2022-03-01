@@ -25,5 +25,4 @@ public class AliyunRegionIdUtil {
         return regionIds;
     }
 
-
 }

@@ -26,5 +26,5 @@ public class InstanceConfigHelper {
         DatasourceConfig datasourceConfig = dsConfigService.getById(datasourceInstance.getConfigId());
         return dsConfigHelper.build(datasourceConfig, GitlabConfig.class);
     }
-    
+
 }

@@ -9,7 +9,7 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aliyun.converter.ComputeAssetConverter;
+import com.baiyi.opscloud.datasource.aliyun.convertor.ComputeAssetConvertor;
 import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamUserDrive;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamPolicy;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamUser;
@@ -97,7 +97,7 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<RamUser
 
 
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance entity) {
-        return ComputeAssetConverter.toAssetContainer(dsInstance, entity);
+        return ComputeAssetConvertor.toAssetContainer(dsInstance, entity);
     }
 
     @Override

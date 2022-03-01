@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.aliyun.converter;
+package com.baiyi.opscloud.datasource.aliyun.convertor;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeSecurityGroupsResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeVSwitchesResponse;
@@ -11,14 +11,14 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 
-import static com.baiyi.opscloud.datasource.aliyun.converter.ComputeAssetConverter.toGmtDate;
+import static com.baiyi.opscloud.datasource.aliyun.convertor.ComputeAssetConvertor.toGmtDate;
 
 /**
  * @Author 修远
  * @Date 2021/6/23 1:28 下午
  * @Since 1.0
  */
-public class VpcAssetConverter {
+public class VpcAssetConvertor {
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeVpcsResponse.Vpc entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
