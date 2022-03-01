@@ -67,7 +67,7 @@ public class BeanCopierUtil {
         List<T> target = new ArrayList<T>();
         for (Object obj : source) {
 
-            T targetObject = null;
+            T targetObject;
             try {
                 targetObject = targetClass.newInstance();
             } catch (Exception e) {

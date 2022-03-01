@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 
 import java.io.*;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Slf4j
@@ -43,7 +43,7 @@ public class IOUtil {
             if (StringUtils.isNotBlank(dir) && StringUtils.isNotBlank(context)) {
                 File file = new File(new File(dir), fileName);
                 /**为了为防止context在远程客户端使用HttpClient传输时乱码，对方采用UTF-8发送，这里写入时也采用UTF-8*/
-                FileUtils.write(file, context, Charset.forName("UTF-8"));
+                FileUtils.write(file, context, StandardCharsets.UTF_8);
                 result = true;
             }
         } catch (IOException e) {

@@ -4,6 +4,7 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.ITargetProvider;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
@@ -31,6 +32,7 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
 
     /**
      * 返回与目标资产建立关系的源资产
+     *
      * @param dsInstanceContext 数据源实例上下文
      * @param target            目标资产
      * @return
@@ -48,8 +50,9 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
 
     /**
      * 返回与源资产建立关系的目标资产
+     *
      * @param dsInstanceContext 数据源实例上下文
-     * @param source 源资产
+     * @param source            源资产
      * @return
      */
     protected List<T> listTarget(DsInstanceContext dsInstanceContext, S source) {
@@ -88,11 +91,21 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
         List<DatasourceInstanceAssetRelation> allRelations = dsInstanceAssetRelationService.queryTargetAsset(dsInstanceContext.getDsInstance().getUuid(), asset.getId());
         allRelations.forEach(e -> {
             if (!relationMap.containsKey(e.getId())) {
-                log.info("删除无效的资产绑定关系: datasource_instance_asset_relation_id = {}", e.getId());
-                dsInstanceAssetRelationService.deleteById(e.getId());
+                clearRelation(relationMap.get(e.getId()));
             }
         });
     }
+
+    // TODO 增加离职逻辑
+    private void clearRelation(DatasourceInstanceAssetRelation relation) {
+        if (DsAssetTypeConstants.USER.name().equals(relation.getRelationType())) {
+            // 用户解除关系可能离职
+
+        }
+        log.info("删除无效的资产绑定关系: datasource_instance_asset_relation_id = {}", relation.getId());
+        dsInstanceAssetRelationService.deleteById(relation.getId());
+    }
+
 
     private DatasourceInstanceAssetRelation enterEntity(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset, T target) {
         // 目标关系生产者

@@ -54,7 +54,7 @@ public class StringToDurationUtil {
     }
 
     private static ChronoUnit getUnit(String value) {
-        ChronoUnit unit = (ChronoUnit) UNITS.get(value.toLowerCase());
+        ChronoUnit unit = UNITS.get(value.toLowerCase());
         Assert.state(unit != null, "Unknown unit '" + value + "'");
         return unit;
     }
