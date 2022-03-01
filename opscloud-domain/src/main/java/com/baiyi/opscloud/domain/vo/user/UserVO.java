@@ -170,6 +170,12 @@ public class UserVO {
         @ApiModelProperty(value = "手机")
         private String phone;
 
+        @ApiModelProperty(value = "启用MFA")
+        private Boolean mfa;
+
+        @ApiModelProperty(value = "管理员强制启用MFA")
+        private Boolean forceMfa;
+
         @ApiModelProperty(value = "创建者")
         private String createdBy;
 
