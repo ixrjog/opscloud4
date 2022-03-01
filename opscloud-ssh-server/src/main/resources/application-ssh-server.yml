@@ -80,7 +80,7 @@ ssh:
     prompt:
       # in enum: com.github.fonimus.ssh.shell.PromptColor (black, red, green, yellow, blue, magenta, cyan, white, bright)
       color: white
-      text: 'opscloud shell>'
+      text: 'ssh-server>'
       local:
         # since 1.2.1, to let default local spring shell prompt when application starts
         enable: false
