@@ -18,7 +18,7 @@ public class AnsibleCommandArgsBuilder {
      * @return
      */
     public static CommandLine build(AnsibleConfig.Ansible ansible, AnsibleArgs.Command args) {
-        CommandLine commandLine = AnsibleArgsBuilder.build(ansible, args);
+        CommandLine commandLine = AnsibleArgumentsBuilder.build(ansible, args);
 
         if (args.isVersion())
             return commandLine;

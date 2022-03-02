@@ -10,7 +10,7 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.core.util.SystemEnvUtil;
 import com.baiyi.opscloud.datasource.ansible.args.AnsibleArgs;
-import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgsBuilder;
+import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgumentsBuilder;
 import com.baiyi.opscloud.datasource.ansible.entity.AnsibleExecuteResult;
 import com.baiyi.opscloud.datasource.ansible.executor.AnsibleExecutor;
 import com.baiyi.opscloud.domain.DataTable;
@@ -92,7 +92,7 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
                 .playbook(toSubscriptionPlaybookFile(ansible, datasourceInstanceAssetSubscription))
                 .inventory(SystemEnvUtil.renderEnvHome(ansible.getInventoryHost()))
                 .build();
-        CommandLine commandLine = AnsiblePlaybookArgsBuilder.build(ansible, args);
+        CommandLine commandLine = AnsiblePlaybookArgumentsBuilder.build(ansible, args);
         AnsibleExecuteResult er = AnsibleExecutor.execute(commandLine, TimeUtil.minuteTime * 2);
         try {
             datasourceInstanceAssetSubscription.setLastSubscriptionLog(er.getOutput().toString("utf8"));

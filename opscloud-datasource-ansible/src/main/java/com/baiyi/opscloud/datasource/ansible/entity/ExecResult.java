@@ -17,7 +17,6 @@ public class ExecResult {
     public static final ExecResult FAILED = ExecResult.builder()
             .exitCode(1).build();
 
-
     /**
      * 退出码 0 正常，1 异常  -1 任务执行中
      */

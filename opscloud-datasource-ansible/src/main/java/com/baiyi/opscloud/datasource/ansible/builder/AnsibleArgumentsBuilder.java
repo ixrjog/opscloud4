@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
  * @Date 2020/4/16 2:04 下午
  * @Version 1.0
  */
-public class AnsibleArgsBuilder {
+public class AnsibleArgumentsBuilder {
 
 
     public final static String ANSIBLE_HOSTS = "ansible_hosts";
@@ -53,30 +53,20 @@ public class AnsibleArgsBuilder {
         commandLine.addArgument(args.getPattern());
 
         commandLine.addArgument("--key-file");
-        if (!StringUtils.isEmpty(args.getKeyFile())) {
-            commandLine.addArgument(args.getKeyFile());
-        } else {
-            commandLine.addArgument(ansible.getPrivateKey());
-        }
+        commandLine.addArgument(StringUtils.isEmpty(args.getKeyFile()) ? ansible.getPrivateKey() : args.getKeyFile());
 
         // 指定主机文件，如果不指定则用默认主机文件
         commandLine.addArgument("-i");
-        if (!StringUtils.isEmpty(args.getInventory())) {
-            commandLine.addArgument(args.getInventory());
-        } else {
-            String hosts = Joiner.on("/").join(ansible.getData(), "inventory", ANSIBLE_HOSTS);
-            commandLine.addArgument(hosts);
-        }
+        commandLine.addArgument(StringUtils.isEmpty(args.getInventory()) ? Joiner.on("/").join(ansible.getData(), "inventory", ANSIBLE_HOSTS)
+                : args.getInventory());
 
+        // become
         commandLine.addArgument("--become");
         commandLine.addArgument("--become-method=sudo");
         commandLine.addArgument("--become-user");
-        if (StringUtils.isEmpty(args.getBecomeUser())) {
-            commandLine.addArgument("root");
-        } else {
-            commandLine.addArgument(args.getBecomeUser());
-        }
+        commandLine.addArgument(StringUtils.isEmpty(args.getBecomeUser()) ? "root" : args.getBecomeUser());
 
+        // forks
         if (args.getForks() != null && args.getForks() != 5) {
             commandLine.addArgument("-f");
             commandLine.addArgument(args.getForks().toString());

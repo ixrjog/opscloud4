@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * @Date 2020/4/12 1:14 下午
  * @Version 1.0
  */
-public class AnsiblePlaybookArgsBuilder {
+public class AnsiblePlaybookArgumentsBuilder {
 
     /**
      * @param ansible
@@ -24,7 +24,7 @@ public class AnsiblePlaybookArgsBuilder {
      * @return
      */
     public static CommandLine build(AnsibleConfig.Ansible ansible, AnsibleArgs.Playbook args) {
-        CommandLine commandLine = AnsibleArgsBuilder.buildPlaybook(ansible, new Gson().fromJson(JSONUtil.writeValueAsString(args), AnsibleArgs.Command.class));
+        CommandLine commandLine = AnsibleArgumentsBuilder.buildPlaybook(ansible, new Gson().fromJson(JSONUtil.writeValueAsString(args), AnsibleArgs.Command.class));
         if (args.isVersion())
             return commandLine;
         // 外部变量

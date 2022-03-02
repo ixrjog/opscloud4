@@ -20,7 +20,7 @@ public class AnsibleArgs {
      */
     @Data
     @Builder
-    public static class Playbook implements IAnsbileArgs {
+    public static class Playbook implements IArgs {
 
         /**
          * Playbook(s)
@@ -85,7 +85,7 @@ public class AnsibleArgs {
      */
     @Data
     @Builder
-    public static class Command implements IAnsbileArgs {
+    public static class Command implements IArgs {
 
         /**
          * host pattern
@@ -151,7 +151,7 @@ public class AnsibleArgs {
      * @Date 2021/8/31 10:50 上午
      * @Version 1.0
      */
-    public interface IAnsbileArgs {
+    public interface IArgs {
 
         String getInventory();
         String getKeyFile();
