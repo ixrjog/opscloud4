@@ -100,4 +100,35 @@
         )
     </select>
 
+    <select id="queryEmployeeResignPageByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserParam$EmployeeResignPageQuery"
+            resultMap="BaseResultMap">
+        select * from user
+        <where>
+            -- 排除无效用户
+            is_active = true
+            <if test="queryName != null and queryName != ''">
+            and ( username like "%" #{queryName} "%"
+                or name like "%" #{queryName} "%"
+                or display_name like "%" #{queryName} "%"
+                or email like "%" #{queryName} "%"
+                or phone like "%" #{queryName} "%"
+                or wechat like "%" #{queryName} "%" )
+            </if>
+            -- 数据源资产（钉钉用户）未关联
+            and id not in (
+              select business_id from business_asset_relation
+              where
+              asset_type = 'DINGTALK_USER'
+              and business_type = #{businessType}
+            )
+            -- 排除系统标签用户
+            and id not in (
+              select business_id from business_tag
+              where
+              business_type = #{businessType}
+              and tag_id = ( select id from tag where tag_key = #{FILTER_SYSTEM_TAG} ) )
+        </where>
+        order by create_time
+    </select>
+
 </mapper>

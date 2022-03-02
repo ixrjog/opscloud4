@@ -18,5 +18,7 @@ public enum WorkOrderKeyConstants {
     VPN,
     NEXUS,
     CONFLUENCE,
-    NACOS
+    NACOS,
+
+    SYS_EMPLOYEE_RESIGN
 }

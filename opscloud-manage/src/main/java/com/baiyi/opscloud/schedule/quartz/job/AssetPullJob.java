@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.schedule.quartz.job;
 
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.datasource.packer.DsInstancePacker;
@@ -70,7 +71,7 @@ public class AssetPullJob extends QuartzJobBean {
 
     private List<SimpleAssetProvider> getProviders(Integer instanceId, String assetType) {
         DatasourceInstance dsInstance = dsInstanceService.getById(instanceId);
-        DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);
+        DsInstanceVO.Instance instance = BeanCopierUtil.copyProperties(dsInstance, DsInstanceVO.Instance.class);
         dsInstancePacker.wrap(instance, SimpleExtend.EXTEND);
         return AssetProviderFactory.getProviders(instance.getInstanceType(), assetType);
     }

@@ -59,7 +59,6 @@ public class User {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @Column(name = "last_login")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastLogin;
 
@@ -92,14 +91,12 @@ public class User {
     /**
      * 创建时间
      */
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
     /**
      * 更新时间
      */
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 

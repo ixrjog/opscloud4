@@ -16,4 +16,6 @@ public interface UserMapper extends Mapper<User> {
 
     List<User> queryByTagKeys(@Param("tagKeys") List<String> tagKeys);
 
+    List<User> queryEmployeeResignPageByParam(UserParam.EmployeeResignPageQuery pageQuery);
+
 }

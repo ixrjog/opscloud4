@@ -59,4 +59,6 @@ public interface UserService {
 
     List<User> queryByTagKeys(List<String> tagKeys);
 
+    DataTable<User> queryPageByParam(UserParam.EmployeeResignPageQuery pageQuery);
+
 }

@@ -83,7 +83,7 @@ public class DsFacadeImpl implements DsFacade {
     @Override
     public DsInstanceVO.Instance queryDsInstanceById(int instanceId) {
         DatasourceInstance instance = dsInstanceService.getById(instanceId);
-        return DsInstancePacker.toVO(instance);
+        return BeanCopierUtil.copyProperties(instance, DsInstanceVO.Instance.class);
     }
 
     @Override

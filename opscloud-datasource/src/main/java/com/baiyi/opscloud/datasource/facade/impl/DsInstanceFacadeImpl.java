@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.datasource.facade.impl;
 
 import com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.factory.SetDsInstanceConfigFactory;
 import com.baiyi.opscloud.core.provider.base.asset.IAssetBusinessRelation;
@@ -53,7 +54,7 @@ public class DsInstanceFacadeImpl<T> implements DsInstanceFacade<T> {
 
     private List<SimpleAssetProvider> getProviders(Integer instanceId, String assetType) {
         DatasourceInstance dsInstance = dsInstanceService.getById(instanceId);
-        DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);
+        DsInstanceVO.Instance instance = BeanCopierUtil.copyProperties(dsInstance, DsInstanceVO.Instance.class);
         dsInstancePacker.wrap(instance, SimpleExtend.EXTEND);
         return AssetProviderFactory.getProviders(instance.getInstanceType(), assetType);
     }
@@ -61,7 +62,7 @@ public class DsInstanceFacadeImpl<T> implements DsInstanceFacade<T> {
     @Override
     public List<DatasourceInstanceAsset> pullAsset(String instanceUuid, String assetType, T entity) {
         DatasourceInstance dsInstance = dsInstanceService.getByUuid(instanceUuid);
-        DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);
+        DsInstanceVO.Instance instance = BeanCopierUtil.copyProperties(dsInstance, DsInstanceVO.Instance.class);
         dsInstancePacker.wrap(instance, SimpleExtend.EXTEND);
         List<SimpleAssetProvider> providers = AssetProviderFactory.getProviders(instance.getInstanceType(), assetType);
         assert providers != null;
@@ -79,7 +80,7 @@ public class DsInstanceFacadeImpl<T> implements DsInstanceFacade<T> {
     @Override
     public void scanAssetBusiness(DsAssetParam.ScanAssetBusiness scanAssetBusiness) {
         DatasourceInstance dsInstance = dsInstanceService.getById(scanAssetBusiness.getInstanceId());
-        DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);
+        DsInstanceVO.Instance instance = BeanCopierUtil.copyProperties(dsInstance, DsInstanceVO.Instance.class);
         dsInstancePacker.wrap(instance, SimpleExtend.EXTEND);
         List<SimpleAssetProvider> providers = AssetProviderFactory.getProviders(instance.getInstanceType(), scanAssetBusiness.getAssetType());
         assert providers != null;

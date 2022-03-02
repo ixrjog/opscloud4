@@ -183,4 +183,11 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
         return userMapper.queryByTagKeys(tagKeys);
     }
 
+    @Override
+    public DataTable<User> queryPageByParam(UserParam.EmployeeResignPageQuery pageQuery){
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<User> data = userMapper.queryEmployeeResignPageByParam(pageQuery);
+        return new DataTable<>(data, page.getTotal());
+    }
+
 }
