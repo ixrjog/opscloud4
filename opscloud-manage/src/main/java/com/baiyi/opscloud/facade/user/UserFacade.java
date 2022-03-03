@@ -79,4 +79,6 @@ public interface UserFacade {
      */
     UserVO.UserMFA resetUserMFA();
 
+    UserVO.UserMFA bindUserMFA(String otp);
+
 }

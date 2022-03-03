@@ -15,6 +15,7 @@ import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.SimpleRelation;
+import com.baiyi.opscloud.domain.param.auth.LoginParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
@@ -27,6 +28,7 @@ import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.domain.vo.user.mfa.MfaVO;
+import com.baiyi.opscloud.facade.auth.maf.MfaAuthHelper;
 import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
 import com.baiyi.opscloud.facade.user.UserCredentialFacade;
@@ -91,6 +93,8 @@ public class UserFacadeImpl implements UserFacade {
     private final UserCredentialFacade userCredentialFacade;
 
     private final UserCredentialService userCredentialService;
+
+    private final MfaAuthHelper mfaAuthHelper;
 
     @Override
     public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {
@@ -302,6 +306,19 @@ public class UserFacadeImpl implements UserFacade {
         if (!CollectionUtils.isEmpty(credentials)) {
             credentials.forEach(e -> userCredentialService.deleteById(e.getId()));
         }
+        return createMfa(user);
+    }
+
+    @Transactional(rollbackFor = {CommonRuntimeException.class, Exception.class})
+    @Override
+    public UserVO.UserMFA bindUserMFA(String otp) {
+        String username = SessionUtil.getUsername();
+        User user = userService.getByUsername(username);
+        if (user.getMfa())
+            throw new CommonRuntimeException("MFA无法绑定: 重复操作!");
+        mfaAuthHelper.verify(user, LoginParam.Login.builder().otp(otp).build());
+        user.setMfa(true);
+        userService.updateMfa(user);
         return createMfa(user);
     }
 

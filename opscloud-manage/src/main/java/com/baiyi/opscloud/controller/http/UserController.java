@@ -234,4 +234,10 @@ public class UserController {
         return new HttpResult<>(userFacade.resetUserMFA());
     }
 
+    @ApiOperation(value = "用户绑定MFA")
+    @GetMapping(value = "/mfa/bind", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<UserVO.UserMFA> bindUserMFA(@RequestParam @Valid String otp) {
+        return new HttpResult<>(userFacade.bindUserMFA(otp));
+    }
+
 }
