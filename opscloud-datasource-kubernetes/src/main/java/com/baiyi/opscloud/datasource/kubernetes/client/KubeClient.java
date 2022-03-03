@@ -30,6 +30,17 @@ public class KubeClient {
         return new DefaultKubernetesClient(config);
     }
 
+    public static KubernetesClient build(String url, String token) {
+        io.fabric8.kubernetes.client.Config config = new ConfigBuilder()
+                .withMasterUrl(url)
+                .withOauthToken(token)
+                .withTrustCerts(true)
+                .build();
+        config.setConnectionTimeout(CONNECTION_TIMEOUT);
+        config.setRequestTimeout(REQUEST_TIMEOUT);
+        return new DefaultKubernetesClient(config);
+    }
+
     private static String buildKubeconfigPath(KubernetesConfig.Kubernetes kubernetes) {
         String path = Joiner.on("/").join(kubernetes.getKubeconfig().getPath(), io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE);
         return SystemEnvUtil.renderEnvHome(path);
