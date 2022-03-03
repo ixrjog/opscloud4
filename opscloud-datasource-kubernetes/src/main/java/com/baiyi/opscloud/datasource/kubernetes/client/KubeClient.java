@@ -23,7 +23,6 @@ public class KubeClient {
         System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE,
                 buildKubeconfigPath(kubernetes));
         io.fabric8.kubernetes.client.Config config = new ConfigBuilder()
-                //.withMasterUrl kubeconfg中获取
                 .withTrustCerts(true)
                 .build();
         config.setConnectionTimeout(CONNECTION_TIMEOUT);
