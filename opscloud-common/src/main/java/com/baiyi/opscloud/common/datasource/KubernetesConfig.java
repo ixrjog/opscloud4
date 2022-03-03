@@ -25,10 +25,33 @@ public class KubernetesConfig extends BaseConfig {
     public static class Kubernetes {
 
         private String version;
+        private String provider;
+        private AmazonEks amazonEks;
         private Kubeconfig kubeconfig;
         private Namespace namespace;
         private Deployment deployment;
         private Service service;
+
+    }
+
+    /**
+     * amazonEks:
+     * region: us-east-1
+     * clusterName: eksworkshop-eksctl
+     * url: https://D1E85F6BCC9BC11111D2C1126ADA7970.yl4.eu-west-1.eks.amazonaws.com
+     * accessKeyId: ${credentialAccessKey}
+     * secretKey: ${credentialSecret}
+     */
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class AmazonEks {
+
+        private String region;
+        private String clusterName;
+        private String url;
+        private String accessKeyId;
+        private String secretKey;
 
     }
 

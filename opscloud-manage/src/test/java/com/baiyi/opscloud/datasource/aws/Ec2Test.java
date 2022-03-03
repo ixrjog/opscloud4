@@ -19,9 +19,7 @@ import com.baiyi.opscloud.datasource.aws.ec2.drive.AmazonEc2Drive;
 import com.baiyi.opscloud.datasource.aws.ec2.entity.Ec2Instance;
 import com.baiyi.opscloud.datasource.aws.ec2.helper.AmazonEc2InstanceTypeHelper;
 import com.baiyi.opscloud.datasource.aws.ec2.model.InstanceModel;
-import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import io.fabric8.kubernetes.api.model.NodeList;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
@@ -92,8 +90,8 @@ public class Ec2Test extends BaseAwsTest {
         String url = "https://D1E85F6BCC9BC11111D2C1126ADA7970.yl4.eu-west-1.eks.amazonaws.com";
         AwsConfig.Account account = getConfig().getAws().getAccount();
         String token = generateEksToken(clusterName, region, account.getAccessKeyId(), account.getSecretKey());
-        NodeList nodeList = KubeClient.build(url, token).nodes().list();
-        print(nodeList.getItems());
+       // NodeList nodeList = KubeClient.build(url, token).nodes().list();
+       // print(nodeList.getItems());
     }
 
     private String generateEksToken(String clusterName, String region, String accessKey, String secretKey) throws URISyntaxException {
