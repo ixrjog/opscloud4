@@ -8,6 +8,7 @@ import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.net.URISyntaxException;
 
@@ -23,14 +24,8 @@ public class KubeClient {
     public static final int REQUEST_TIMEOUT = 30 * 1000;
 
     public static KubernetesClient build(KubernetesConfig.Kubernetes kubernetes) {
-        if ("AmazonEKS".equals(kubernetes.getProvider())) {
-            try {
-                String token = AmazonEksProvider.generateEksToken(kubernetes.getAmazonEks());
-                return build(kubernetes.getAmazonEks().getUrl(), token);
-            } catch (URISyntaxException e) {
-            }
-            return null;
-        }
+        if(StringUtils.isNotBlank(kubernetes.getProvider()))
+            return buildByProvider(kubernetes);
         System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE,
                 buildKubeconfigPath(kubernetes));
         io.fabric8.kubernetes.client.Config config = new ConfigBuilder()
@@ -39,6 +34,22 @@ public class KubeClient {
         config.setConnectionTimeout(CONNECTION_TIMEOUT);
         config.setRequestTimeout(REQUEST_TIMEOUT);
         return new DefaultKubernetesClient(config);
+    }
+
+    /**
+     * 按供应商构建 client
+     * @param kubernetes
+     * @return
+     */
+    private static KubernetesClient buildByProvider(KubernetesConfig.Kubernetes kubernetes) {
+        if ("AmazonEKS".equalsIgnoreCase(kubernetes.getProvider())) {
+            try {
+                String token = AmazonEksProvider.generateEksToken(kubernetes.getAmazonEks());
+                return build(kubernetes.getAmazonEks().getUrl(), token);
+            } catch (URISyntaxException e) {
+            }
+        }
+        return null;
     }
 
     private static KubernetesClient build(String url, String token) {
@@ -56,4 +67,5 @@ public class KubeClient {
         String path = Joiner.on("/").join(kubernetes.getKubeconfig().getPath(), io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE);
         return SystemEnvUtil.renderEnvHome(path);
     }
+
 }

@@ -12,6 +12,7 @@ import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder
 import com.amazonaws.services.securitytoken.model.GetCallerIdentityRequest;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.google.common.base.Joiner;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,11 +25,13 @@ import java.util.Date;
  * @Date 2022/3/3 2:22 PM
  * @Version 1.0
  */
+@Slf4j
 public class AmazonEksProvider {
 
     /**
      * https://medium.com/@rschoening/eks-client-authentication-f17f39228dc
-     * STS签名
+     * STS签名Token
+     *
      * @param amazonEks
      * @return
      * @throws URISyntaxException
@@ -46,12 +49,16 @@ public class AmazonEksProvider {
         AWSStaticCredentialsProvider credentials = new AWSStaticCredentialsProvider(basicCredentials);
         Signer signer = SignerFactory.createSigner(SignerFactory.VERSION_FOUR_SIGNER, new SignerParams("sts", amazonEks.getRegion()));
         AWSSecurityTokenServiceClient stsClient = (AWSSecurityTokenServiceClient) AWSSecurityTokenServiceClientBuilder
-                .standard().withRegion(amazonEks.getRegion()).withCredentials(credentials).build();
+                .standard()
+                .withRegion(amazonEks.getRegion())
+                .withCredentials(credentials)
+                .build();
         SignerProvider signerProvider = new DefaultSignerProvider(stsClient, signer);
         PresignerParams presignerParams = new PresignerParams(uri, credentials, signerProvider, SdkClock.STANDARD);
         PresignerFacade presignerFacade = new PresignerFacade(presignerParams);
         URL url = presignerFacade.presign(defaultRequest, new Date(System.currentTimeMillis() + 60000));
         String encodedUrl = Base64.getUrlEncoder().withoutPadding().encodeToString(url.toString().getBytes());
+        log.info("Generate EKS Token : clusterName = {}", amazonEks.getClusterName());
         return Joiner.on(".").join("k8s-aws-v1", encodedUrl);
     }
 
