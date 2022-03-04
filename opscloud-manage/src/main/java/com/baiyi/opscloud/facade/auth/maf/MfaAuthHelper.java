@@ -46,7 +46,7 @@ public class MfaAuthHelper {
         List<UserCredential> credentials = userCredentialService.queryByUserIdAndType(user.getId(), UserCredentialTypeEnum.OTP_SK.getType());
         try {
             SecretKey key = OtpUtil.toKey(credentials.get(0).getCredential());
-            final String otp = OtpUtil.buildOtp(key);
+            final String otp = OtpUtil.generateOtp(key);
             if (!otp.equals(loginParam.getOtp()))
                 throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_OTP_FAILURE); // 登录失败
         } catch (OtpException.DecodingException e) {

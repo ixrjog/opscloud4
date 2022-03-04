@@ -58,7 +58,7 @@ public class UserCredentialFacadeImpl implements UserCredentialFacade {
         if (count > 0) return;
         String otpSK;
         try {
-            Key key = OtpUtil.buildOtpSK();
+            Key key = OtpUtil.generateOtpSK();
             otpSK = Base32StringUtil.encode(key.getEncoded());
         } catch (NoSuchAlgorithmException e) {
             throw new CommonRuntimeException("生成OTP-SecretKey错误: " + e.getMessage());

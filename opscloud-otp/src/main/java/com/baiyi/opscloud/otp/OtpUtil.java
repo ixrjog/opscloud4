@@ -36,7 +36,7 @@ public class OtpUtil {
      * @return OXUX4SRUEYZ3FCS4N3YSII23DISP3DI6
      * @throws NoSuchAlgorithmException
      */
-    public static Key buildOtpSK() throws NoSuchAlgorithmException {
+    public static Key generateOtpSK() throws NoSuchAlgorithmException {
         // 30S
         final TimeBasedOneTimePasswordGenerator totp = new TimeBasedOneTimePasswordGenerator(duration);
         //  final Key key;
@@ -49,7 +49,7 @@ public class OtpUtil {
         return keyGenerator.generateKey();
     }
 
-    public static String buildOtp(Key key) throws NoSuchAlgorithmException, InvalidKeyException {
+    public static String generateOtp(Key key) throws NoSuchAlgorithmException, InvalidKeyException {
         final TimeBasedOneTimePasswordGenerator totp = new TimeBasedOneTimePasswordGenerator(duration);
         final Instant now = Instant.now();
         final Instant later = now.plus(totp.getTimeStep());
