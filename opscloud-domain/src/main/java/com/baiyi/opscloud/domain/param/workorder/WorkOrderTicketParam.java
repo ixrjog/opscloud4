@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.vo.workorder.WorkflowVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -83,12 +84,14 @@ public class WorkOrderTicketParam {
     }
 
     @EqualsAndHashCode(callSuper = true)
+    @SuperBuilder
     @Data
     @ApiModel
     public static class SubmitTicket extends SaveTicket {
         private static final long serialVersionUID = -925558688216913781L;
     }
 
+    @SuperBuilder
     @Data
     @ApiModel
     public static class SaveTicket implements Serializable {

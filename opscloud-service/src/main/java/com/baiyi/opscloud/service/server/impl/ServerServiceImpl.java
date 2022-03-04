@@ -93,7 +93,7 @@ public class ServerServiceImpl extends AbstractBusinessService<Server> implement
     }
 
     @Override
-    public void delete(Integer id) {
+    public void deleteById(Integer id) {
         serverMapper.deleteByPrimaryKey(id);
     }
 

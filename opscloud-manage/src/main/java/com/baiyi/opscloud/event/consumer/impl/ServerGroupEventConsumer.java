@@ -1,11 +1,11 @@
-package com.baiyi.opscloud.event.customer.impl;
+package com.baiyi.opscloud.event.consumer.impl;
 
 import com.baiyi.opscloud.common.helper.TopicHelper;
 import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.datasource.manager.DsServerGroupManager;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.event.NoticeEvent;
+import com.baiyi.opscloud.common.event.NoticeEvent;
 import com.baiyi.opscloud.util.ServerTreeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class ServerGroupEventCustomer extends AbstractEventConsumer<ServerGroup> {
+public class ServerGroupEventConsumer extends AbstractEventConsumer<ServerGroup> {
 
     private final ServerTreeUtil serverTreeUtil;
 

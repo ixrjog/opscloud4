@@ -1,9 +1,9 @@
-package com.baiyi.opscloud.event.customer.impl;
+package com.baiyi.opscloud.event.consumer.impl;
 
 import com.baiyi.opscloud.datasource.manager.DsAccountManager;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.event.NoticeEvent;
+import com.baiyi.opscloud.common.event.NoticeEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class UserEventCustomer extends AbstractEventConsumer<User> {
+public class UserEventConsumer extends AbstractEventConsumer<User> {
 
     private final DsAccountManager dsAccountManager;
 

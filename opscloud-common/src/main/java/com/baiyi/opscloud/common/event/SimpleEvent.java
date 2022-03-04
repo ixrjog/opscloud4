@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.event;
+package com.baiyi.opscloud.common.event;
 
 import lombok.Builder;
 import lombok.Data;

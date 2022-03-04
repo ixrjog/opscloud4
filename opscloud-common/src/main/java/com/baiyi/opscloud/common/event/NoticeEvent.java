@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.event;
+package com.baiyi.opscloud.common.event;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

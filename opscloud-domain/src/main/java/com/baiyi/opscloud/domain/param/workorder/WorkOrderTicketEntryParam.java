@@ -15,7 +15,9 @@ import java.util.Map;
  */
 public class WorkOrderTicketEntryParam {
 
+    @Builder
     @Data
+    @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
     public static class EntryQuery {
@@ -30,7 +32,8 @@ public class WorkOrderTicketEntryParam {
         private String queryName;
 
         @ApiModelProperty(value = "查询条目数量")
-        private Integer length;
+        @Builder.Default
+        private Integer length = 20;
 
     }
 

@@ -1,7 +1,7 @@
-package com.baiyi.opscloud.event.customer;
+package com.baiyi.opscloud.event.consumer;
 
-import com.baiyi.opscloud.event.IEventType;
-import com.baiyi.opscloud.event.NoticeEvent;
+import com.baiyi.opscloud.common.event.IEventType;
+import com.baiyi.opscloud.common.event.NoticeEvent;
 
 /**
  * @Author baiyi

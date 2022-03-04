@@ -4,7 +4,6 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.ITargetProvider;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
@@ -29,6 +28,7 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
 
     @Resource
     private DsInstanceAssetRelationService dsInstanceAssetRelationService;
+
 
     /**
      * 返回与目标资产建立关系的源资产
@@ -96,16 +96,10 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
         });
     }
 
-    // TODO 增加离职逻辑
     private void clearRelation(DatasourceInstanceAssetRelation relation) {
-        if (DsAssetTypeConstants.USER.name().equals(relation.getRelationType())) {
-            // 用户解除关系可能离职
-
-        }
         log.info("删除无效的资产绑定关系: datasource_instance_asset_relation_id = {}", relation.getId());
         dsInstanceAssetRelationService.deleteById(relation.getId());
     }
-
 
     private DatasourceInstanceAssetRelation enterEntity(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset, T target) {
         // 目标关系生产者

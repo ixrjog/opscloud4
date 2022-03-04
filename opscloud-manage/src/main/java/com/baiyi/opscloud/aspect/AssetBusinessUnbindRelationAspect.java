@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.annotation.AssetBusinessUnbindRelation;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.facade.datasource.BusinessAssetRelationFacade;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -13,8 +14,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
 /**
  * 解除业务对象与资产的绑定关系
  *
@@ -22,13 +21,13 @@ import javax.annotation.Resource;
  * @Date 2021/8/10 11:40 上午
  * @Version 1.0
  */
+@Slf4j
 @Aspect
 @Component
-@Slf4j
+@RequiredArgsConstructor
 public class AssetBusinessUnbindRelationAspect {
 
-    @Resource
-    private BusinessAssetRelationFacade businessAssetRelationFacade;
+    private final BusinessAssetRelationFacade businessAssetRelationFacade;
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.domain.annotation.AssetBusinessUnbindRelation)")
     public void annotationPoint() {

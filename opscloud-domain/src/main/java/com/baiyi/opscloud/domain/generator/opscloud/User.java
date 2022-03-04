@@ -2,7 +2,6 @@ package com.baiyi.opscloud.domain.generator.opscloud;
 
 import com.baiyi.opscloud.domain.annotation.Decrypt;
 import com.baiyi.opscloud.domain.annotation.Encrypt;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -59,7 +58,8 @@ public class User {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    //@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "last_login")
     private Date lastLogin;
 
     private String wechat;

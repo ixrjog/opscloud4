@@ -27,7 +27,9 @@ public enum BusinessTypeEnum {
      **/
     APPLICATION(8, "APPLICATION"),
     DATASOURCE_INSTANCE(16, "数据源实例"),
-    USER_PERMISSION(100, "USER_PERMISSION");
+    USER_PERMISSION(100, "USER_PERMISSION"),
+    BUSINESS_ASSET_RELATION(101,"BUSINESS_ASSET_RELATION")
+    ;
 
     private final String name;
     private final int type;

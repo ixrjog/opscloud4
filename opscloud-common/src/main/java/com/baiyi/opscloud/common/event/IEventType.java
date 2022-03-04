@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.event;
+package com.baiyi.opscloud.common.event;
 
 /**
  * @Author baiyi

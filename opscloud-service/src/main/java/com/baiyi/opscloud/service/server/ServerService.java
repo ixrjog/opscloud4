@@ -29,7 +29,7 @@ public interface ServerService {
      */
     void update(Server server);
 
-    void delete(Integer id);
+    void deleteById(Integer id);
 
     /**
      * 删除并触发事件

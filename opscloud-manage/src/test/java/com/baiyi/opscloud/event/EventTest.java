@@ -1,9 +1,14 @@
 package com.baiyi.opscloud.event;
 
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.event.consumer.impl.kind.EmployeeResignConsumer;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
 import com.baiyi.opscloud.event.factory.EventFactory;
+import com.baiyi.opscloud.service.user.UserService;
 import org.junit.jupiter.api.Test;
+
+import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -12,11 +17,24 @@ import org.junit.jupiter.api.Test;
  */
 public class EventTest extends BaseUnit {
 
+    @Resource
+    private EmployeeResignConsumer employeeResignConsumer;
+
+    @Resource
+    private UserService userService;
+
     @Test
     void zabbixEventProcessListenerTest() {
         IEventProcess iEventProcess = EventFactory.getIEventProcessByEventType(EventTypeEnum.ZABBIX_PROBLEM);
         if (iEventProcess == null) return;
         iEventProcess.listener();
     }
+
+    @Test
+    void employeeResignConsumerTest() {
+        User user = userService.getByUsername("baiyitest");
+        employeeResignConsumer.generateTicket(user);
+    }
+
 
 }

@@ -1,13 +1,14 @@
 package com.baiyi.opscloud.aspect;
 
 import com.baiyi.opscloud.common.annotation.EventPublisher;
+import com.baiyi.opscloud.common.event.NoticeEvent;
+import com.baiyi.opscloud.common.event.SimpleEvent;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
-import com.baiyi.opscloud.event.NoticeEvent;
-import com.baiyi.opscloud.event.SimpleEvent;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.factory.business.BusinessServiceFactory;
 import com.baiyi.opscloud.factory.business.base.IBusinessService;
+import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,7 +17,6 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.Objects;
 
 /**
@@ -28,10 +28,10 @@ import java.util.Objects;
  */
 @Aspect
 @Component
+@RequiredArgsConstructor
 public class EventPublisherAspect {
 
-    @Resource
-    private ApplicationEventPublisher applicationEventPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.EventPublisher)")
     public void annotationPoint() {
@@ -59,7 +59,7 @@ public class EventPublisherAspect {
                     publishEvent(simpleEvent);
                 } else {
                     // 从参数获取
-                    publishEventBusiness(args[0], eventPublisher.eventAction().name());
+                    publishEvent(args[0], eventPublisher.eventAction().name());
                 }
             } else {
                 Object body = args[0];
@@ -74,7 +74,7 @@ public class EventPublisherAspect {
         return result;
     }
 
-    private void publishEventBusiness(Object message, String action) {
+    private void publishEvent(Object message, String action) {
         if (message instanceof BaseBusiness.IBusiness) {
             BaseBusiness.IBusiness ib = (BaseBusiness.IBusiness) message;
             Object body = getBody(ib);

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.event.customer;
+package com.baiyi.opscloud.event.consumer;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

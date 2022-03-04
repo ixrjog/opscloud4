@@ -1,11 +1,11 @@
-package com.baiyi.opscloud.event.customer.impl;
+package com.baiyi.opscloud.event.consumer.impl;
 
 import com.baiyi.opscloud.common.helper.TopicHelper;
 import com.baiyi.opscloud.domain.constants.EventActionTypeEnum;
-import com.baiyi.opscloud.event.IEvent;
-import com.baiyi.opscloud.event.NoticeEvent;
-import com.baiyi.opscloud.event.customer.EventConsumerFactory;
-import com.baiyi.opscloud.event.customer.IEventConsumer;
+import com.baiyi.opscloud.common.event.IEvent;
+import com.baiyi.opscloud.common.event.NoticeEvent;
+import com.baiyi.opscloud.event.consumer.EventConsumerFactory;
+import com.baiyi.opscloud.event.consumer.IEventConsumer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.annotation.Async;
 

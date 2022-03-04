@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.event.listener;
 
-import com.baiyi.opscloud.event.NoticeEvent;
-import com.baiyi.opscloud.event.customer.EventConsumerFactory;
-import com.baiyi.opscloud.event.customer.IEventConsumer;
+import com.baiyi.opscloud.common.event.NoticeEvent;
+import com.baiyi.opscloud.event.consumer.EventConsumerFactory;
+import com.baiyi.opscloud.event.consumer.IEventConsumer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
