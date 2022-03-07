@@ -44,7 +44,7 @@ public interface WorkOrderTicketFacade {
      * @param saveTicket
      * @return
      */
-    WorkOrderTicketVO.TicketView saveTicket(WorkOrderTicketParam.SaveTicket saveTicket);
+    WorkOrderTicketVO.TicketView saveTicket(WorkOrderTicketParam.SubmitTicket saveTicket);
 
     /**
      * 提交

@@ -105,7 +105,7 @@ public class WorkOrderController {
 
     @ApiOperation(value = "暂存工单票据")
     @PostMapping(value = "/ticket/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<WorkOrderTicketVO.TicketView> saveTicket(@RequestBody @Valid WorkOrderTicketParam.SaveTicket saveTicket) {
+    public HttpResult<WorkOrderTicketVO.TicketView> saveTicket(@RequestBody @Valid WorkOrderTicketParam.SubmitTicket saveTicket) {
         return new HttpResult<>(workOrderTicketFacade.saveTicket(saveTicket));
     }
 

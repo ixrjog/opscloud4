@@ -100,7 +100,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     }
 
     @Override
-    public WorkOrderTicketVO.TicketView saveTicket(WorkOrderTicketParam.SaveTicket saveTicket) {
+    public WorkOrderTicketVO.TicketView saveTicket(WorkOrderTicketParam.SubmitTicket saveTicket) {
         WorkOrderTicket workOrderTicket = ticketService.getById(saveTicket.getTicketId());
         preSaveHandle(workOrderTicket, saveTicket);
         return toTicketView(workOrderTicket);
@@ -153,7 +153,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         ticketNodeFacade.verifyWorkflowNodes(workOrder, workOrderTicket);
     }
 
-    private void preSaveHandle(WorkOrderTicket workOrderTicket, WorkOrderTicketParam.SaveTicket saveTicket) {
+    private void preSaveHandle(WorkOrderTicket workOrderTicket, WorkOrderTicketParam.SubmitTicket saveTicket) {
         if (workOrderTicket == null)
             throw new TicketCommonException("工单不存在！");
         final String username = SessionUtil.getUsername();
@@ -172,7 +172,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         });
     }
 
-    private void saveTicketComment(WorkOrderTicket workOrderTicket, WorkOrderTicketParam.SaveTicket saveTicket) {
+    private void saveTicketComment(WorkOrderTicket workOrderTicket, WorkOrderTicketParam.SubmitTicket saveTicket) {
         if (StringUtils.isEmpty(saveTicket.getComment())) {
             if (StringUtils.isEmpty(workOrderTicket.getComment()))
                 return;
