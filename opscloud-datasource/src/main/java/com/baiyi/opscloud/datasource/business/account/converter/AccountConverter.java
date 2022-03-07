@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.business.account.convert;
+package com.baiyi.opscloud.datasource.business.account.converter;
 
 import com.baiyi.opscloud.datasource.ldap.entity.LdapPerson;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
  * @Date 2021/8/11 2:56 下午
  * @Version 1.0
  */
-public class AccountConvert {
+public class AccountConverter {
 
     public static LdapPerson.Person toLdapPerson(User user){
         return LdapPerson.Person.builder()

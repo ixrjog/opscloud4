@@ -8,8 +8,8 @@ import com.baiyi.opscloud.datasource.InstanceConfigHelper;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
-import com.baiyi.opscloud.factory.gitlab.GitlabEventConsumeFactory;
-import com.baiyi.opscloud.factory.gitlab.IGitlabEventConsume;
+import com.baiyi.opscloud.factory.gitlab.GitlabEventConsumerFactory;
+import com.baiyi.opscloud.factory.gitlab.IGitlabEventConsumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -43,7 +43,7 @@ public class GitlabFacade extends BaseManager {
         }
         Optional<DatasourceInstance> optional = filterInstance();
         if (!optional.isPresent()) return; // 未配置 SystemHooks.SecretToken
-        IGitlabEventConsume eventConsume = GitlabEventConsumeFactory.getByEventName(systemHook.getEvent_name());
+        IGitlabEventConsumer eventConsume = GitlabEventConsumerFactory.getByEventName(systemHook.getEvent_name());
         if (eventConsume != null) eventConsume.consumeEventV4(optional.get(), systemHook);
 
     }

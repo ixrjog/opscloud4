@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class GitlabProjectEventConsume extends AbstractGitlabEventConsume {
+public class GitlabProjectEventConsumer extends AbstractGitlabEventConsumer {
 
     private final static GitlabEventNameEnum[] eventNameEnums = {
             GitlabEventNameEnum.PROJECT_CREATE,

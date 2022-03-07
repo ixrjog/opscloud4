@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.factory.gitlab.convert;
+package com.baiyi.opscloud.factory.gitlab.converter;
 
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.JSONUtil;
@@ -12,7 +12,7 @@ import com.baiyi.opscloud.zabbix.constant.SeverityType;
  * @Date 2021/10/29 1:45 下午
  * @Version 1.0
  */
-public class SystemHookConvert {
+public class SystemHookConverter {
 
     public static Event toEvent(DatasourceInstance instance, GitlabNotifyParam.SystemHook systemHook){
         return Event.builder()

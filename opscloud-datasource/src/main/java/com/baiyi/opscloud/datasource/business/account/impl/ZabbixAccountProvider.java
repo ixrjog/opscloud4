@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.business.account.impl;
 
-import com.baiyi.opscloud.datasource.business.account.convert.AccountConvert;
+import com.baiyi.opscloud.datasource.business.account.converter.AccountConverter;
 import com.baiyi.opscloud.datasource.business.account.impl.base.BaseZabbixAccountProvider;
 import com.baiyi.opscloud.datasource.business.account.util.ZabbixMediaUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
@@ -32,7 +32,7 @@ public class ZabbixAccountProvider extends BaseZabbixAccountProvider {
 
     @Override
     protected void doCreate(User user) {
-        zabbixV5UserDatasource.create(configContext.get(), AccountConvert.toZabbixUser(user), ZabbixMediaUtil.buildMedias(user), getUsrgrps(configContext.get(), user));
+        zabbixV5UserDatasource.create(configContext.get(), AccountConverter.toZabbixUser(user), ZabbixMediaUtil.buildMedias(user), getUsrgrps(configContext.get(), user));
         log.info("创建Zabbix用户: username = {}", user.getUsername());
     }
 
@@ -42,7 +42,7 @@ public class ZabbixAccountProvider extends BaseZabbixAccountProvider {
         if (zabbixUser == null) {
             doCreate(user);
         } else {
-            com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser.User updateUser = AccountConvert.toZabbixUser(user);
+            com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser.User updateUser = AccountConverter.toZabbixUser(user);
             updateUser.setUserid(zabbixUser.getUserid());
             zabbixV5UserDatasource.update(configContext.get(), updateUser, getUsrgrps(configContext.get(), user), ZabbixMediaUtil.buildMedias(user));
             // 清除缓存

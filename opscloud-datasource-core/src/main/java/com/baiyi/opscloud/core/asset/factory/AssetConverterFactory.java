@@ -14,9 +14,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Version 1.0
  */
 @Slf4j
-public class AssetConvertFactory {
+public class AssetConverterFactory {
 
-    private AssetConvertFactory() {
+    private AssetConverterFactory() {
     }
 
     private static final Map<String, IAssetConverter> context = new ConcurrentHashMap<>();

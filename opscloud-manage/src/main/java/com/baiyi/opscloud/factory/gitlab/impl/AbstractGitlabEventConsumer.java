@@ -8,11 +8,11 @@ import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
 import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import com.baiyi.opscloud.facade.datasource.SimpleDsAssetFacade;
 import com.baiyi.opscloud.facade.event.EventFacade;
-import com.baiyi.opscloud.factory.gitlab.GitlabEventConsumeFactory;
+import com.baiyi.opscloud.factory.gitlab.GitlabEventConsumerFactory;
 import com.baiyi.opscloud.factory.gitlab.GitlabEventNameEnum;
-import com.baiyi.opscloud.factory.gitlab.IGitlabEventConsume;
+import com.baiyi.opscloud.factory.gitlab.IGitlabEventConsumer;
 import com.baiyi.opscloud.factory.gitlab.context.GitlabEventContext;
-import com.baiyi.opscloud.factory.gitlab.convert.SystemHookConvert;
+import com.baiyi.opscloud.factory.gitlab.converter.SystemHookConverter;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -31,7 +31,7 @@ import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskP
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractGitlabEventConsume implements IGitlabEventConsume, InitializingBean {
+public abstract class AbstractGitlabEventConsumer implements IGitlabEventConsumer, InitializingBean {
 
     @Resource
     private EventFacade eventFacade;
@@ -79,7 +79,7 @@ public abstract class AbstractGitlabEventConsume implements IGitlabEventConsume,
      * 预处理
      */
     private void preHandle() {
-        Event event = SystemHookConvert.toEvent(eventContext.get().getInstance(), eventContext.get().getSystemHook());
+        Event event = SystemHookConverter.toEvent(eventContext.get().getInstance(), eventContext.get().getSystemHook());
         eventFacade.recordEvent(event);
         eventContext.get().setEvent(event);
     }
@@ -92,7 +92,7 @@ public abstract class AbstractGitlabEventConsume implements IGitlabEventConsume,
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        GitlabEventConsumeFactory.register(this);
+        GitlabEventConsumerFactory.register(this);
     }
 
 }

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.business.account.impl;
 
 import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.datasource.business.account.convert.AccountConvert;
+import com.baiyi.opscloud.datasource.business.account.converter.AccountConverter;
 import com.baiyi.opscloud.datasource.business.account.impl.base.AbstractAccountProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
@@ -43,13 +43,13 @@ public class LdapAccountProvider extends AbstractAccountProvider {
     @Override
     protected void doCreate(User user) {
         if (!personRepo.checkPersonInLdap(configContext.get(), user.getUsername()))
-            personRepo.create(configContext.get(), AccountConvert.toLdapPerson(user));
+            personRepo.create(configContext.get(), AccountConverter.toLdapPerson(user));
     }
 
     @Override
     protected void doUpdate(User user) {
         if (personRepo.checkPersonInLdap(configContext.get(), user.getUsername()))
-            personRepo.update(configContext.get(), AccountConvert.toLdapPerson(user));
+            personRepo.update(configContext.get(), AccountConverter.toLdapPerson(user));
     }
 
     @Override

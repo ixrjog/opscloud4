@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.core.asset.impl.base;
 
-import com.baiyi.opscloud.core.asset.factory.AssetConvertFactory;
+import com.baiyi.opscloud.core.asset.factory.AssetConverterFactory;
 import com.baiyi.opscloud.core.asset.IAssetConverter;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
@@ -70,6 +70,6 @@ public abstract class AbstractAssetToBO implements IAssetConverter, Initializing
 
     @Override
     public void afterPropertiesSet() {
-        AssetConvertFactory.register(this);
+        AssetConverterFactory.register(this);
     }
 }

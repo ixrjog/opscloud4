@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.baiyi.opscloud.core.asset.IAssetConverter;
-import com.baiyi.opscloud.core.asset.factory.AssetConvertFactory;
+import com.baiyi.opscloud.core.asset.factory.AssetConverterFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
@@ -64,7 +64,7 @@ public class DsAssetPacker implements IWrapperRelation<DsAssetVO.Asset> {
                 .stream().collect(Collectors.toMap(DatasourceInstanceAssetProperty::getName, DatasourceInstanceAssetProperty::getValue, (k1, k2) -> k1));
         asset.setProperties(properties);
         // 资产可转换为业务对象
-        IAssetConverter converter = AssetConvertFactory.getIAssetConvertByAssetType(asset.getAssetType());
+        IAssetConverter converter = AssetConverterFactory.getIAssetConvertByAssetType(asset.getAssetType());
         if (converter != null) {
             asset.setConvertBusinessTypes(converter.toBusinessTypes(asset));
         }

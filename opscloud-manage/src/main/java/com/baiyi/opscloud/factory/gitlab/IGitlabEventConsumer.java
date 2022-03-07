@@ -10,7 +10,7 @@ import java.util.List;
  * @Date 2021/5/6 10:37 上午
  * @Version 1.0
  */
-public interface IGitlabEventConsume {
+public interface IGitlabEventConsumer {
 
     List<String> getEventNames();
 

@@ -12,6 +12,5 @@ public enum GitlabEventNameEnum {
     PROJECT_RENAME,
     KEY_CREATE,
     KEY_DESTROY
-    ;
 
 }
