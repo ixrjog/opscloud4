@@ -119,9 +119,12 @@ public class KubernetesDeploymentDrive {
      * @return
      */
     public static Deployment createOrReplaceDeployment(KubernetesConfig.Kubernetes kubernetes, String namespace, Deployment deployment) {
-        return KubeClient.build(kubernetes).apps().deployments().inNamespace(namespace).createOrReplace(deployment);
+        return KubeClient.build(kubernetes)
+                .apps()
+                .deployments()
+                .inNamespace(namespace)
+                .createOrReplace(deployment);
     }
-
 
     public static Deployment createOrReplaceDeployment(KubernetesConfig.Kubernetes kubernetes, Deployment deployment) {
         return KubeClient.build(kubernetes).apps()

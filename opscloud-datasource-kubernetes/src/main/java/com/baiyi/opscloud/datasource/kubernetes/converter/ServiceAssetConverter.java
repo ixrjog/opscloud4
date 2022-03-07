@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.kubernetes.convert;
+package com.baiyi.opscloud.datasource.kubernetes.converter;
 
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
@@ -13,7 +13,7 @@ import io.fabric8.kubernetes.api.model.Service;
  * @Date 2021/12/7 6:11 PM
  * @Version 1.0
  */
-public class ServiceAssetConvert {
+public class ServiceAssetConverter {
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Service entity) {
         String namespace = entity.getMetadata().getNamespace();
@@ -32,7 +32,7 @@ public class ServiceAssetConvert {
                 .assetKey2(namespace) // namespace
                 .kind(entity.getKind())
                 .assetType(DsAssetTypeConstants.KUBERNETES_SERVICE.name())
-                .createdTime(DeploymentAssetConvert.toGmtDate(entity.getMetadata().getCreationTimestamp()))
+                .createdTime(DeploymentAssetConverter.toGmtDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
 
         return AssetContainerBuilder.newBuilder()

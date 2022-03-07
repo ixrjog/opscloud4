@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
-import com.baiyi.opscloud.datasource.kubernetes.convert.DeploymentAssetConvert;
+import com.baiyi.opscloud.datasource.kubernetes.converter.DeploymentAssetConverter;
 import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesDeploymentDrive;
 import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesNamespaceDrive;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
@@ -82,7 +82,7 @@ public class KubernetesDeploymentProvider extends BaseAssetProvider<Deployment> 
 
     @Override
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Deployment entity) {
-        return DeploymentAssetConvert.toAssetContainer(dsInstance, entity);
+        return DeploymentAssetConverter.toAssetContainer(dsInstance, entity);
     }
 
     @Override

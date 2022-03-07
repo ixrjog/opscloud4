@@ -7,7 +7,7 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.kubernetes.convert.PodAssetConvert;
+import com.baiyi.opscloud.datasource.kubernetes.converter.PodAssetConverter;
 import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesNamespaceDrive;
 import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesPodDrive;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
@@ -94,7 +94,7 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
 
     @Override
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Pod entity) {
-        return PodAssetConvert.toAssetContainer(dsInstance, entity);
+        return PodAssetConverter.toAssetContainer(dsInstance, entity);
     }
 
     @Override

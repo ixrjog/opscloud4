@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.kubernetes.convert;
+package com.baiyi.opscloud.datasource.kubernetes.converter;
 
 import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -17,7 +17,7 @@ import java.util.Date;
  * @Date 2021/6/25 4:22 下午
  * @Version 1.0
  */
-public class DeploymentAssetConvert {
+public class DeploymentAssetConverter {
 
     public static Date toGmtDate(String time) {
         return TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);

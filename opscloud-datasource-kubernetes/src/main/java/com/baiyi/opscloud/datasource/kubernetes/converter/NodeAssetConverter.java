@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.kubernetes.convert;
+package com.baiyi.opscloud.datasource.kubernetes.converter;
 
 import com.baiyi.opscloud.core.util.TimeUtil;
 import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @Date 2021/12/17 1:49 PM
  * @Version 1.0
  */
-public class NodeAssetConvert {
+public class NodeAssetConverter {
 
     public static Date toGmtDate(String time) {
         return TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);

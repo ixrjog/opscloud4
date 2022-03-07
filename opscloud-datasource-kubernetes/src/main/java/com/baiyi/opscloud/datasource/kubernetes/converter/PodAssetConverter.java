@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.kubernetes.convert;
+package com.baiyi.opscloud.datasource.kubernetes.converter;
 
 import com.baiyi.opscloud.common.util.time.AgoUtil;
 import com.baiyi.opscloud.core.util.TimeUtil;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @Date 2021/6/25 1:16 下午
  * @Version 1.0
  */
-public class PodAssetConvert {
+public class PodAssetConverter {
 
     public static Date toGmtDate(String time) {
         return TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
