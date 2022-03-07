@@ -23,25 +23,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BusinessAssetRelationFacadeImpl implements BusinessAssetRelationFacade {
 
-    private final BusinessAssetRelationService businessAssetRelationService;
+    private final BusinessAssetRelationService bizAssetRelationService;
 
     private final DsInstanceAssetService dsInstanceAssetService;
 
     @Override
     public void bindAsset(BusinessAssetRelationVO.IBusinessAssetRelation iBusinessAssetRelation) {
         BusinessAssetRelationVO.Relation relation = iBusinessAssetRelation.toBusinessAssetRelation();
-        if (businessAssetRelationService.getByUniqueKey(relation) != null) return;
+        if (bizAssetRelationService.getByUniqueKey(relation) != null) return;
         DatasourceInstanceAsset asset = dsInstanceAssetService.getById(iBusinessAssetRelation.getAssetId());
         if (asset == null) return;
         relation.setAssetType(asset.getAssetType());
-        businessAssetRelationService.add(BeanCopierUtil.copyProperties(relation, BusinessAssetRelation.class));
+        bizAssetRelationService.add(BeanCopierUtil.copyProperties(relation, BusinessAssetRelation.class));
     }
 
     @Override
     public void unbindAsset(BaseBusiness.IBusiness iBusiness) {
-        List<BusinessAssetRelation> businessAssetRelations = businessAssetRelationService.queryBusinessRelations(iBusiness);
+        List<BusinessAssetRelation> businessAssetRelations = bizAssetRelationService.queryBusinessRelations(iBusiness);
         if (CollectionUtils.isEmpty(businessAssetRelations)) return;
-        businessAssetRelations.forEach(e -> businessAssetRelationService.deleteById(e.getId()));
+        businessAssetRelations.forEach(e -> bizAssetRelationService.delete(e));
     }
 
 }

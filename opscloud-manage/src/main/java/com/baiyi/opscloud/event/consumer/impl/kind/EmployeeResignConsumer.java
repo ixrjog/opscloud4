@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.event.consumer.impl.kind;
 
+import com.baiyi.opscloud.common.annotation.SetSessionUser;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -43,6 +43,7 @@ public class EmployeeResignConsumer {
 
     private final WorkOrderTicketFacade workOrderTicketFacade;
 
+    @SetSessionUser // 设置会话用户为我（userId = 1）
     public void consume(BusinessAssetRelation eventData) {
         User user = userService.getById(eventData.getBusinessId());
         if (!user.getIsActive()) return;
@@ -59,7 +60,9 @@ public class EmployeeResignConsumer {
                     .businessId(eventData.getBusinessId())
                     .build();
             // 用户有钉钉资产绑定关系: 无法确认是否离职
-            if (!CollectionUtils.isEmpty(bizAssetRelationService.queryBusinessRelations(simpleBiz, DsAssetTypeConstants.DINGTALK_USER.name()))) {
+            List<BusinessAssetRelation> relations = bizAssetRelationService.queryBusinessRelations(simpleBiz, DsAssetTypeConstants.DINGTALK_USER.name());
+
+            if (!CollectionUtils.isEmpty(relations)) {
                 return;
             }
 
@@ -68,8 +71,6 @@ public class EmployeeResignConsumer {
     }
 
     public void generateTicket(User user) {
-        // TODO 此处待优化
-        SessionUtil.setUsername("baiyi");
         // 创建离职工单
         WorkOrderTicketParam.CreateTicket createTicket = WorkOrderTicketParam.CreateTicket.builder()
                 .workOrderKey(WorkOrderKeyConstants.SYS_EMPLOYEE_RESIGN.name())

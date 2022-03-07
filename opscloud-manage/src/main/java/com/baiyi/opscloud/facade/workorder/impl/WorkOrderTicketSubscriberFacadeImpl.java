@@ -44,7 +44,7 @@ public class WorkOrderTicketSubscriberFacadeImpl implements WorkOrderTicketSubsc
      * @param user
      */
     @Override
-    @Async(value = CORE)
+    //@Async(value = CORE)
     public void publish(WorkOrderTicket ticket, User user) {
         createSubscriber(ticket, user, SubscribeStatusConstants.CREATE);
     }

@@ -28,7 +28,9 @@ public interface BusinessAssetRelationService {
 
     void add(BusinessAssetRelation businessAssetRelation);
 
-    void deleteById(Integer id);
+    //  void deleteById(Integer id);
+
+    void delete(BusinessAssetRelation businessAssetRelation);
 
     /**
      * 查询资产的绑定列表

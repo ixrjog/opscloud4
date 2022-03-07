@@ -43,7 +43,7 @@ public class SimpleDsAssetFacadeImpl implements SimpleDsAssetFacade {
         // 删除业务对象绑定关系
         List<BusinessAssetRelation> businessAssetRelations = businessAssetRelationService.queryAssetRelations(id);
         if (!CollectionUtils.isEmpty(businessAssetRelations)) {
-            businessAssetRelations.forEach(e -> businessAssetRelationService.deleteById(e.getId()));
+            businessAssetRelations.forEach(e -> businessAssetRelationService.delete(e));
         }
         // 删除资产间关系
         List<DatasourceInstanceAssetRelation> datasourceInstanceAssetRelations = dsInstanceAssetRelationService.queryByAssetId(id);

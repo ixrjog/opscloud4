@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationService {
 
-    private final BusinessAssetRelationMapper businessAssetRelationMapper;
+    private final BusinessAssetRelationMapper bizAssetRelationMapper;
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -36,19 +36,25 @@ public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationSe
         criteria.andEqualTo("businessType", businessAssetRelation.getBusinessType())
                 .andEqualTo("businessId", businessAssetRelation.getBusinessId())
                 .andEqualTo("datasourceInstanceAssetId", businessAssetRelation.getDatasourceInstanceAssetId());
-        return businessAssetRelationMapper.selectOneByExample(example);
+        return bizAssetRelationMapper.selectOneByExample(example);
     }
 
     @Override
     public void add(BusinessAssetRelation businessAssetRelation) {
         if (businessAssetRelation.getBusinessId() == null || businessAssetRelation.getBusinessId() <= 0) return;
-        businessAssetRelationMapper.insert(businessAssetRelation);
+        bizAssetRelationMapper.insert(businessAssetRelation);
     }
+
+//    @Override
+//    @EventPublisher(eventAction = EventActionTypeEnum.DELETE)
+//    public void deleteById(Integer id) {
+//        businessAssetRelationMapper.deleteByPrimaryKey(id);
+//    }
 
     @Override
     @EventPublisher(eventAction = EventActionTypeEnum.DELETE)
-    public void deleteById(Integer id) {
-        businessAssetRelationMapper.deleteByPrimaryKey(id);
+    public void delete(BusinessAssetRelation bizAssetRelation) {
+        bizAssetRelationMapper.deleteByPrimaryKey(bizAssetRelation.getId());
     }
 
     @Override
@@ -57,7 +63,7 @@ public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationSe
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("datasourceInstanceAssetId", datasourceInstanceAssetId);
         if (businessType >= 0) criteria.andEqualTo("businessType", businessType);
-        return businessAssetRelationMapper.selectByExample(example);
+        return bizAssetRelationMapper.selectByExample(example);
     }
 
     @Override
@@ -66,7 +72,7 @@ public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationSe
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("businessType", businessType)
                 .andEqualTo("businessId", businessId);
-        return businessAssetRelationMapper.selectByExample(example);
+        return bizAssetRelationMapper.selectByExample(example);
     }
 
     @Override
@@ -76,7 +82,7 @@ public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationSe
         criteria.andEqualTo("businessType", iBusiness.getBusinessType())
                 .andEqualTo("businessId", iBusiness.getBusinessId())
                 .andEqualTo("assetType", assetType);
-        return businessAssetRelationMapper.selectByExample(example);
+        return bizAssetRelationMapper.selectByExample(example);
     }
 
 }

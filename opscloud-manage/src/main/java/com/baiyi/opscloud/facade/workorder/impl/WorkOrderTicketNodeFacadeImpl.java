@@ -34,7 +34,7 @@ public class WorkOrderTicketNodeFacadeImpl implements WorkOrderTicketNodeFacade 
     public void createWorkflowNodes(WorkOrder workOrder, WorkOrderTicket workOrderTicket) {
         WorkflowVO.Workflow workflowVO = WorkflowUtil.toWorkflowView(workOrder.getWorkflow());
         List<WorkOrderTicketNode> nodes = Lists.newArrayList();
-        workflowVO.getNodes().forEach(node -> {
+        for (WorkflowVO.Node node : workflowVO.getNodes()) {
             WorkOrderTicketNode workOrderTicketNode = WorkOrderTicketNode.builder()
                     .workOrderTicketId(workOrderTicket.getId())
                     .nodeName(node.getName())
@@ -43,7 +43,7 @@ public class WorkOrderTicketNodeFacadeImpl implements WorkOrderTicketNodeFacade 
                     .build();
             workOrderTicketNodeService.add(workOrderTicketNode);
             nodes.add(workOrderTicketNode);
-        });
+        }
     }
 
     @Override
