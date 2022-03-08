@@ -19,63 +19,69 @@ Welcome to the opscloud wiki!
 
 <img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/login_1.png"></img>
 
-### 系统
-#### 环境管理
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/sys/env.png"></img>
-#### 标签管理
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/sys/tag.png"></img>
-#### 集群管理
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/sys/instance.png"></img>
+<table>
+<tr>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/sys/env.png" alt="系统环境"></td>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/sys/tag.png" alt="标签管理"></td>
+</tr>
+<tr>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/sys/instance.png" alt="集群管理"></td>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/oc4-6.png" alt="服务器管理"></td>
+</tr>
+<tr>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/oc4-10.png" alt="远程控制(RDP/VNC)"></td>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/terminal/terminal-server.png" alt="服务器(批量操作,会话复制,高低权限,布局切换)"></td>
+</tr>
+<tr>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/terminal/terminal-server-2.png" alt="服务器(批量操作,会话复制,高低权限,布局切换)"></td>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/terminal/terminal-server-3.png" alt="服务器(批量操作,会话复制,高低权限,布局切换)"></td>
+</tr>
+<tr>
+<td><img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/terminal/terminal-pod.png" alt="容器(支持登录操作或只读查看日志)"></td>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/terminal/terminal-k8s-pod-2.png" alt="容器(支持登录操作或只读查看日志)"></td>
+</tr>
+<tr>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-help.png" alt="SSH-Server"></td>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-help-2.png" alt="SSH-Server"></td>
+</tr>
+<tr>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-event.png" alt="SSH-Server"></td>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-list.png" alt="SSH-Server"></td>
+</tr>
+<tr>
+<td><img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/ssh-server/ssh-server-list-k8s-pod.png" alt="SSH-Server"></td>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/terminal/terminal-audit.png" alt="审计"></td>
+</tr>
+<tr>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/playbook/playbook.png" alt="剧本"></td>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/playbook/playbook-2.png" alt="剧本"></td>
+</tr>
+<tr>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/playbook/playbook-3.png" alt="剧本"></td>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/playbook/playbook_log.png" alt="剧本"></td>
+</tr>
 
-### 服务器管理
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/oc4-6.png"></img>
+<tr>
+<td><img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/user/user.png" alt="用户"></td>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/user/user-details.png" alt="用户"></td>
+</tr>
 
-### 远程控制(RDP/VNC)
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/oc4-10.png"></img>
+<tr>
+<td><img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/user/user_mfa.png" alt="MFA"></td>
+<td><img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/datasource/instance.png" alt="数据源"></td>
+</tr>
 
-### Web-Terminal(Web终端)
+<tr>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/datasource/datasource-aliyun.png" alt="数据源"></td>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/datasource/datasource-aliyun-log.png" alt="数据源"></td>
+</tr>
 
-#### 服务器(批量操作,会话复制,高低权限,布局切换)
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/terminal/terminal-server.png"></img>
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/terminal/terminal-server-2.png"></img>
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/terminal/terminal-server-3.png"></img>
+<tr>
+<td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/datasource/datasource-zabbix-host.png" alt="数据源"></td>
+</tr>
+</table>
 
-#### 容器(支持登录操作或只读查看日志)
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/terminal/terminal-pod.png"></img>
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/terminal/terminal-k8s-pod-2.png"></img>
 
-### SSH-Server(命令行终端)
-#### 帮助命令`help`,命令参数提示
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-help.png"></img>
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-help-2.png"></img>
-
-#### 事件列表基于事件驱动实现
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-event.png"></img>
-
-#### 服务器列表命令`list`
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-list.png"></img>
-#### 容器组列表命令`list-k8s-pod`
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/ssh-server/ssh-server-list-k8s-pod.png"></img>
-
-### 审计
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/terminal/terminal-audit.png"></img>
-
-### 剧本
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/playbook/playbook.png"></img>
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/playbook/playbook-2.png"></img>
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/playbook/playbook-3.png"></img>
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/playbook/playbook_log.png"></img>
-
-### 用户
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/user/user.png"></img>
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/user/user-details.png"></img>
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/user/user_mfa.png"></img>
-
-### 数据源(万物皆资产)
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/datasource/instance.png"></img>
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/datasource/datasource-aliyun.png"></img>
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/datasource/datasource-aliyun-log.png"></img>
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/datasource/datasource-zabbix-host.png"></img>
 
 #### <span style="color:green">平台演示视频1</span>
 <video src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/video/opscloud4-1.mov" width="400px" height="300px" controls="controls"></video>
@@ -97,8 +103,8 @@ Welcome to the opscloud wiki!
     + 支持查看Kubernetes容器日志
     + 以事件驱动的主动式堡垒机（通过事件ID登录服务器）
 + 剧本任务
-+ RBAC
-+ 集群架构(动态分布式任务)
++ RBAC,MFA(OTP)
++ 集群架构
 
 ### 帮助文档
 
