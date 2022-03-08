@@ -143,7 +143,6 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
         throw new UnsupportedOperationException("资产类型转换错误！");
     }
 
-
     protected void doPull(int dsInstanceId) {
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
         List<T> entities = listEntities(dsInstanceContext);

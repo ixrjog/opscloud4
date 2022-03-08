@@ -52,6 +52,7 @@ public class OnsInstance {
                     .assetType(DsAssetTypeConstants.ONS_ROCKETMQ_INSTANCE.name())
                     .regionId(this.regionId)
                     .expiredTime(this.releaseTime != null ? new Date(this.releaseTime) : null) // 铂金版本过期时间
+                    .description(this.remark)
                     .build();
 
             return AssetContainerBuilder.newBuilder()
