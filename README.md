@@ -17,6 +17,8 @@ Welcome to the opscloud wiki!
 + IntelliJ IDEA 2021.3.2 (Ultimate Edition)
 + WebStorm 2021.3.2
 
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/login_1.png"></img>
+
 ### 系统
 #### 环境管理
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/sys/env.png"></img>
@@ -67,6 +69,7 @@ Welcome to the opscloud wiki!
 ### 用户
 <img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/user/user.png"></img>
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/user/user-details.png"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/user/user_mfa.png"></img>
 
 ### 数据源(万物皆资产)
 <img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/datasource/instance.png"></img>
