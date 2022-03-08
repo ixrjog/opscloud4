@@ -10,14 +10,14 @@ import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.param.event.EventParam;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
-import com.baiyi.opscloud.event.convert.EventConvert;
+import com.baiyi.opscloud.event.converter.EventConverter;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
 import com.baiyi.opscloud.event.process.base.AbstractEventProcess;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.zabbix.constant.SeverityType;
-import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5HostDrive;
-import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5ProblemDrive;
-import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5TriggerDrive;
+import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5HostDriver;
+import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5ProblemDriver;
+import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5TriggerDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixProblem;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
@@ -42,13 +42,13 @@ import java.util.stream.Collectors;
 public class ZabbixEventProcess extends AbstractEventProcess<ZabbixProblem.Problem> {
 
     @Resource
-    private ZabbixV5TriggerDrive zabbixV5TriggerDatasource;
+    private ZabbixV5TriggerDriver zabbixV5TriggerDatasource;
 
     @Resource
-    private ZabbixV5ProblemDrive zabbixV5ProblemDatasource;
+    private ZabbixV5ProblemDriver zabbixV5ProblemDatasource;
 
     @Resource
-    private ZabbixV5HostDrive zabbixV5HostDatasource;
+    private ZabbixV5HostDriver zabbixV5HostDatasource;
 
     private static final List<SeverityType> SEVERITY_TYPES = Lists.newArrayList(SeverityType.HIGH, SeverityType.DISASTER);
 
@@ -70,7 +70,7 @@ public class ZabbixEventProcess extends AbstractEventProcess<ZabbixProblem.Probl
     @Override
     protected Event toEvent(DatasourceInstance dsInstance, ZabbixProblem.Problem zabbixProblem) {
         ZabbixTrigger.Trigger trigger = zabbixV5TriggerDatasource.getById(getConfig(dsInstance.getUuid()).getZabbix(), zabbixProblem.getObjectid());
-        return EventConvert.toEvent(dsInstance, zabbixProblem, trigger);
+        return EventConverter.toEvent(dsInstance, zabbixProblem, trigger);
     }
 
     @Override

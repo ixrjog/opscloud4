@@ -5,9 +5,9 @@ import com.baiyi.opscloud.datasource.sonar.base.BaseSonarTest;
 import com.baiyi.opscloud.datasource.sonar.entity.SonarComponents;
 import com.baiyi.opscloud.datasource.sonar.entity.SonarMeasures;
 import com.baiyi.opscloud.datasource.sonar.entity.SonarProjects;
-import com.baiyi.opscloud.datasource.sonar.drive.SonarComponentsDrive;
-import com.baiyi.opscloud.datasource.sonar.drive.SonarMeasuresDrive;
-import com.baiyi.opscloud.datasource.sonar.drive.SonarProjectsDrive;
+import com.baiyi.opscloud.datasource.sonar.driver.SonarComponentsDriver;
+import com.baiyi.opscloud.datasource.sonar.driver.SonarMeasuresDriver;
+import com.baiyi.opscloud.datasource.sonar.driver.SonarProjectsDriver;
 import com.baiyi.opscloud.datasource.sonar.param.PagingParam;
 import org.junit.jupiter.api.Test;
 
@@ -21,13 +21,13 @@ import javax.annotation.Resource;
 public class SonarTest extends BaseSonarTest {
 
     @Resource
-    private SonarMeasuresDrive sonarMeasuresHandler;
+    private SonarMeasuresDriver sonarMeasuresHandler;
 
     @Resource
-    private SonarComponentsDrive sonarComponentsHandler;
+    private SonarComponentsDriver sonarComponentsHandler;
 
     @Resource
-    private SonarProjectsDrive sonarProjectsHandler;
+    private SonarProjectsDriver sonarProjectsHandler;
 
     @Test
     void searchProjectsTest() {

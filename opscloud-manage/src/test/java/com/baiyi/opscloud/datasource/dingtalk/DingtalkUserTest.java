@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.dingtalk;
 
 import com.baiyi.opscloud.datasource.dingtalk.base.BaseDingtalkTest;
-import com.baiyi.opscloud.datasource.dingtalk.drive.DingtalkUserDrive;
+import com.baiyi.opscloud.datasource.dingtalk.driver.DingtalkUserDriver;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkUser;
 import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkUserParam;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import javax.annotation.Resource;
 public class DingtalkUserTest extends BaseDingtalkTest {
 
     @Resource
-    private DingtalkUserDrive dingtalkUserDrive;
+    private DingtalkUserDriver dingtalkUserDrive;
 
     @Test
     void listUserTest() {

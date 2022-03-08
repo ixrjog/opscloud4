@@ -7,7 +7,7 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetChildProvider;
-import com.baiyi.opscloud.datasource.aws.iam.drive.AmazonIdentityManagementAccessKeyDrive;
+import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementAccessKeyDriver;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamAccessKey;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -29,7 +29,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_AWS_I
 public class AwsIamAccessKeyProvider extends AbstractAssetChildProvider<IamAccessKey.AccessKey> {
 
     @Resource
-    private AmazonIdentityManagementAccessKeyDrive amazonIMAccessKeyDrive;
+    private AmazonIdentityManagementAccessKeyDriver amazonIMAccessKeyDriver;
 
     @Resource
     private AwsIamAccessKeyProvider awsIamAccessKeyProvider;
@@ -52,7 +52,7 @@ public class AwsIamAccessKeyProvider extends AbstractAssetChildProvider<IamAcces
     @Override
     protected List<IamAccessKey.AccessKey> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
         AwsConfig.Aws config = buildConfig(dsInstanceContext.getDsConfig());
-        return  amazonIMAccessKeyDrive.listAccessKeys(config,asset.getAssetKey());
+        return  amazonIMAccessKeyDriver.listAccessKeys(config,asset.getAssetKey());
     }
 
     @Override

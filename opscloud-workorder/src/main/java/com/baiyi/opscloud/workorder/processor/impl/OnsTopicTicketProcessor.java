@@ -4,7 +4,7 @@ import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.ons.constants.OnsMessageTypeConstants;
-import com.baiyi.opscloud.datasource.aliyun.ons.drive.AliyunOnsRocketMqTopicDrive;
+import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsRocketMqTopicDriver;
 import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsRocketMqTopic;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
@@ -32,7 +32,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcessor<OnsRocketMqTopic.Topic, AliyunConfig> {
 
-    private final AliyunOnsRocketMqTopicDrive aliyunOnsRocketMqTopicDrive;
+    private final AliyunOnsRocketMqTopicDriver aliyunOnsRocketMqTopicDrive;
 
     @Override
     public String getKey() {

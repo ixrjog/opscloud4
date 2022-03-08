@@ -10,7 +10,7 @@ import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5UserDrive;
+import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5UserDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ZABBI
 public class ZabbixUserProvider extends AbstractAssetRelationProvider<ZabbixUser.User, ZabbixUserGroup.UserGroup> {
 
     @Resource
-    private ZabbixV5UserDrive zabbixV5UserDrive;
+    private ZabbixV5UserDriver zabbixV5UserDriver;
 
     @Resource
     private ZabbixUserProvider zabbixUserProvider;
@@ -47,12 +47,12 @@ public class ZabbixUserProvider extends AbstractAssetRelationProvider<ZabbixUser
     @Override
     protected List<ZabbixUser.User> listEntities(DsInstanceContext dsInstanceContext, ZabbixUserGroup.UserGroup target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixV5UserDrive.listByGroup(zabbix, target);
+        return zabbixV5UserDriver.listByGroup(zabbix, target);
     }
 
     @Override
     protected List<ZabbixUser.User> listEntities(DsInstanceContext dsInstanceContext) {
-        return zabbixV5UserDrive.list(buildConfig(dsInstanceContext.getDsConfig()));
+        return zabbixV5UserDriver.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override

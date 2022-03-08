@@ -11,7 +11,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.zabbix.provider.ZabbixHostProvider;
-import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5HostDrive;
+import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5HostDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 
 import javax.annotation.Resource;
@@ -27,7 +27,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ZABBI
 public abstract class AbstractZabbixHostProvider<T> extends AbstractAssetRelationProvider<ZabbixHost.Host, T> {
 
     @Resource
-    protected ZabbixV5HostDrive zabbixV5HostDrive;
+    protected ZabbixV5HostDriver zabbixV5HostDrive;
 
     @Resource
     private ZabbixHostProvider zabbixHostTargetGroupProvider;

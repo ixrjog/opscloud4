@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
 import com.baiyi.opscloud.zabbix.helper.ZabbixGroupHelper;
 import com.baiyi.opscloud.zabbix.ZabbixUtil;
-import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5ActionDrive;
+import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5ActionDriver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +32,7 @@ public class ZabbixServerGroupProvider extends AbstractServerGroupProvider {
     private ZabbixGroupHelper zabbixFacade;
 
     @Resource
-    private ZabbixV5ActionDrive zabbixV5ActionDatasource;
+    private ZabbixV5ActionDriver zabbixV5ActionDatasource;
 
     @Resource
     private BusinessPropertyHelper businessPropertyHelper;

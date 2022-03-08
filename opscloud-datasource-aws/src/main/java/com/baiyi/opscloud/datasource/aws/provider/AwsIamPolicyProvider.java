@@ -7,8 +7,8 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aws.iam.drive.AmazonIdentityManagementPolicyDrive;
-import com.baiyi.opscloud.datasource.aws.iam.drive.AmazonIdentityManagementUserDrive;
+import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementPolicyDriver;
+import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementUserDriver;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamPolicy;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamUser;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -30,10 +30,10 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_AWS_I
 public class AwsIamPolicyProvider extends AbstractAssetRelationProvider<IamPolicy.Policy, IamUser.User> {
 
     @Resource
-    private AmazonIdentityManagementPolicyDrive amazonIMPolicyDrive;
+    private AmazonIdentityManagementPolicyDriver amazonIMPolicyDriver;
 
     @Resource
-    private AmazonIdentityManagementUserDrive amazonIMUserDrive;
+    private AmazonIdentityManagementUserDriver amazonIMUserDriver;
 
     @Resource
     private AwsIamPolicyProvider awsIamPolicyProvider;
@@ -64,7 +64,7 @@ public class AwsIamPolicyProvider extends AbstractAssetRelationProvider<IamPolic
     @Override
     protected List<IamPolicy.Policy> listEntities(DsInstanceContext dsInstanceContext) {
         AwsConfig.Aws config = buildConfig(dsInstanceContext.getDsConfig());
-        return amazonIMPolicyDrive.listPolicies(config);
+        return amazonIMPolicyDriver.listPolicies(config);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class AwsIamPolicyProvider extends AbstractAssetRelationProvider<IamPolic
     @Override
     protected List<IamPolicy.Policy> listEntities(DsInstanceContext dsInstanceContext, IamUser.User target) {
         AwsConfig.Aws config = buildConfig(dsInstanceContext.getDsConfig());
-        return amazonIMPolicyDrive.listUserPolicies(config, target.getUserName());
+        return amazonIMPolicyDriver.listUserPolicies(config, target.getUserName());
     }
 
     @Override

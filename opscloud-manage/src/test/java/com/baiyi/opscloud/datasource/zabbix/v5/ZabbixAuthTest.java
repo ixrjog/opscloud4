@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.zabbix.v5;
 
 import com.baiyi.opscloud.datasource.zabbix.base.BaseZabbixTest;
-import com.baiyi.opscloud.zabbix.v5.drive.base.SimpleZabbixAuth;
+import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixAuth;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;

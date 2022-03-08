@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.aliyun;
 
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.base.BaseAliyunTest;
-import com.baiyi.opscloud.datasource.aliyun.dms.drive.AliyunDmsUserDrive;
+import com.baiyi.opscloud.datasource.aliyun.dms.driver.AliyunDmsUserDriver;
 import com.baiyi.opscloud.datasource.aliyun.dms.entity.DmsUser;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,7 @@ public class AliyunDmsTest extends BaseAliyunTest {
     void listUserTest() {
         AliyunConfig config = getConfig();
         try {
-            List<DmsUser.User> users = AliyunDmsUserDrive.listUser(config.getAliyun());
+            List<DmsUser.User> users = AliyunDmsUserDriver.listUser(config.getAliyun());
             System.out.println(users);
         } catch (Exception e) {
         }

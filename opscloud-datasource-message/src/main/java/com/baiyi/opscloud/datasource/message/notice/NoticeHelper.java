@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.datasource.message.notice;
 
 import com.baiyi.opscloud.common.util.BeetlUtil;
-import com.baiyi.opscloud.datasource.message.customer.IMessageCustomer;
-import com.baiyi.opscloud.datasource.message.customer.MessageCustomerFactory;
+import com.baiyi.opscloud.datasource.message.consumer.IMessageConsumer;
+import com.baiyi.opscloud.datasource.message.consumer.MessageConsumerFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.MessageTemplate;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
@@ -40,8 +40,8 @@ public class NoticeHelper {
             if (!StringUtils.isEmpty(user.getPassword())) contentMap.put("password", user.getPassword());
             try {
                 String text = BeetlUtil.renderTemplate(mt.getMsgTemplate(), contentMap);
-                IMessageCustomer iMessageCustomer =
-                        MessageCustomerFactory.getConsumerByInstanceType(instance.getInstanceType());
+                IMessageConsumer iMessageCustomer =
+                        MessageConsumerFactory.getConsumerByInstanceType(instance.getInstanceType());
                 if (iMessageCustomer == null) continue;
                 iMessageCustomer.send(instance, user, mt, text);
                 return;
@@ -64,8 +64,8 @@ public class NoticeHelper {
         try {
             // 渲染模板
             String text = BeetlUtil.renderTemplate(mt.getMsgTemplate(), contentMap);
-            IMessageCustomer iMessageCustomer =
-                    MessageCustomerFactory.getConsumerByInstanceType(instance.getInstanceType());
+            IMessageConsumer iMessageCustomer =
+                    MessageConsumerFactory.getConsumerByInstanceType(instance.getInstanceType());
             if (iMessageCustomer == null) return;
             iMessageCustomer.send(instance, user, mt, text);
             log.info("发送用户消息！instanceName = {}, username = {}", instance.getInstanceName(), user.getUsername());

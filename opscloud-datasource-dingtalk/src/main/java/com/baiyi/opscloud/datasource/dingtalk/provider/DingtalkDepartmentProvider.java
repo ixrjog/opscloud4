@@ -49,7 +49,7 @@ public class DingtalkDepartmentProvider extends AbstractDingtalkAssetProvider<Di
                 DingtalkDepartmentParam.GetDepartment getDepartment = DingtalkDepartmentParam.GetDepartment.builder()
                         .deptId(deptId)
                         .build();
-                DingtalkDepartment.GetDepartmentResponse getDepartmentResponse = dingtalkDepartmentDrive.get(dingtalk, getDepartment);
+                DingtalkDepartment.GetDepartmentResponse getDepartmentResponse = dingtalkDepartmentDriver.get(dingtalk, getDepartment);
                 if (getDepartmentResponse.getResult() != null)
                     entities.add(getDepartmentResponse.getResult());
             });

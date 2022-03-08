@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.jenkins;
 
 import com.baiyi.opscloud.datasource.jenkins.base.BaseJenkinsTest;
-import com.baiyi.opscloud.datasource.jenkins.drive.JenkinsUsersDrive;
+import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsUsersDriver;
 import com.baiyi.opscloud.datasource.jenkins.entity.JenkinsUser;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public class JenkinsUsersTest extends BaseJenkinsTest {
 
     @Resource
-    private JenkinsUsersDrive jenkinsUsersDrive;
+    private JenkinsUsersDriver jenkinsUsersDrive;
 
     @Test
     void getUserTest() {

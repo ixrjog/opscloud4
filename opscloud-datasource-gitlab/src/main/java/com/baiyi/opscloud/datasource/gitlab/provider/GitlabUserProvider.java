@@ -13,7 +13,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.baiyi.opscloud.datasource.gitlab.drive.GitlabUserDrive;
+import com.baiyi.opscloud.datasource.gitlab.driver.GitlabUserDriver;
 import com.google.common.collect.Lists;
 import org.gitlab.api.models.GitlabSSHKey;
 import org.gitlab.api.models.GitlabUser;
@@ -60,7 +60,7 @@ public class GitlabUserProvider extends AbstractAssetRelationProvider<GitlabUser
         GitlabConfig.Gitlab gitlab = buildConfig(dsInstanceContext.getDsConfig());
         List<GitlabUser> users = Lists.newArrayList();
         try {
-            users.add(GitlabUserDrive.getUser(gitlab, target.getUser().getId()));
+            users.add(GitlabUserDriver.getUser(gitlab, target.getUser().getId()));
         } catch (IOException ignored) {
         }
         return users;
@@ -69,7 +69,7 @@ public class GitlabUserProvider extends AbstractAssetRelationProvider<GitlabUser
 
     @Override
     protected List<GitlabUser> listEntities(DsInstanceContext dsInstanceContext) {
-        return GitlabUserDrive.queryUsers(buildConfig(dsInstanceContext.getDsConfig()));
+        return GitlabUserDriver.queryUsers(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override

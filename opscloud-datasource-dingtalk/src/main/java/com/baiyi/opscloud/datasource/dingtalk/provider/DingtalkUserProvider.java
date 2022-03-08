@@ -7,7 +7,7 @@ import com.baiyi.opscloud.common.util.EmailUtil;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.dingtalk.drive.DingtalkUserDrive;
+import com.baiyi.opscloud.datasource.dingtalk.driver.DingtalkUserDriver;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkUser;
 import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkUserParam;
 import com.baiyi.opscloud.datasource.dingtalk.provider.base.AbstractDingtalkAssetProvider;
@@ -46,7 +46,7 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
     private DingtalkUserProvider dingtalkUserProvider;
 
     @Resource
-    private DingtalkUserDrive dingtalkUserDrive;
+    private DingtalkUserDriver dingtalkUserDriver;
 
     @Resource
     private UserService userService;
@@ -88,7 +88,7 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
             DingtalkUserParam.QueryUserPage queryUserPage = DingtalkUserParam.QueryUserPage.builder()
                     .deptId(deptId)
                     .build();
-            DingtalkUser.UserResponse userResponse = dingtalkUserDrive.list(dingtalk, queryUserPage);
+            DingtalkUser.UserResponse userResponse = dingtalkUserDriver.list(dingtalk, queryUserPage);
 
             if (CollectionUtils.isEmpty(userResponse.getResult().getList())) return;
             Map<String, DingtalkUser.User> userMap = userResponse.getResult().getList().stream().collect(Collectors.toMap(DingtalkUser.User::getUserid, a -> a, (k1, k2) -> k1));

@@ -4,7 +4,7 @@ import com.aliyun.openservices.log.common.Project;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseConfig;
-import com.baiyi.opscloud.datasource.aliyun.log.drive.AliyunLogDrive;
+import com.baiyi.opscloud.datasource.aliyun.log.driver.AliyunLogDriver;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
@@ -27,7 +27,7 @@ public class AliyunLogTest extends BaseUnit {
     private DsConfigHelper dsFactory;
 
     @Resource
-    private AliyunLogDrive aliyunLogHandler;
+    private AliyunLogDriver aliyunLogHandler;
 
     @Test
     void listProjectTest() {

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.dingtalk;
 
 import com.baiyi.opscloud.datasource.dingtalk.base.BaseDingtalkTest;
-import com.baiyi.opscloud.datasource.dingtalk.drive.DingtalkTokenDrive;
+import com.baiyi.opscloud.datasource.dingtalk.driver.DingtalkTokenDriver;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkToken;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 public class DingtalkTokenTest extends BaseDingtalkTest {
 
     @Resource
-    private DingtalkTokenDrive dingtalkTokenDrive;
+    private DingtalkTokenDriver dingtalkTokenDrive;
 
     @Test
     void getTokenTest() {

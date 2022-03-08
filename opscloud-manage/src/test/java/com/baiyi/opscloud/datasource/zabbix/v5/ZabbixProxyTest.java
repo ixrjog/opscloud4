@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.zabbix.v5;
 
 import com.baiyi.opscloud.datasource.zabbix.base.BaseZabbixTest;
-import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5ProxyDrive;
+import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5ProxyDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixProxy;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +17,7 @@ public class ZabbixProxyTest extends BaseZabbixTest {
     private static final String PROXY_NAME = "hangzhou.proxy.zabbix.chuanyinet.com";
 
     @Resource
-    private ZabbixV5ProxyDrive zabbixV5ProxyDrive;
+    private ZabbixV5ProxyDriver zabbixV5ProxyDrive;
 
     @Test
     void getProxyTest() {

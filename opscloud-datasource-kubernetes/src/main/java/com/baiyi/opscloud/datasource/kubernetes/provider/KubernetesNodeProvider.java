@@ -8,7 +8,7 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.kubernetes.converter.NodeAssetConverter;
-import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesNodeDrive;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesNodeDriver;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -49,7 +49,7 @@ public class KubernetesNodeProvider extends BaseAssetProvider<Node> {
 
     @Override
     protected List<Node> listEntities(DsInstanceContext dsInstanceContext) {
-        return KubernetesNodeDrive.listNode(buildConfig(dsInstanceContext.getDsConfig()));
+        return KubernetesNodeDriver.listNode(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override

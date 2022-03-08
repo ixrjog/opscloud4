@@ -12,8 +12,8 @@ import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.util.ObjectUtil;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.zabbix.helper.ZabbixGroupHelper;
-import com.baiyi.opscloud.zabbix.v5.drive.*;
-import com.baiyi.opscloud.zabbix.v5.drive.base.SimpleZabbixV5HostDrive;
+import com.baiyi.opscloud.zabbix.v5.driver.*;
+import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixV5HostDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixProxy;
@@ -46,19 +46,19 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
     private ZabbixGroupHelper zabbixGroupHelper;
 
     @Resource
-    protected ZabbixV5HostDrive zabbixV5HostDrive;
+    protected ZabbixV5HostDriver zabbixV5HostDrive;
 
     @Resource
-    protected ZabbixV5HostMacroDrive zabbixV5HostMacroDrive;
+    protected ZabbixV5HostMacroDriver zabbixV5HostMacroDrive;
 
     @Resource
-    protected ZabbixV5HostTagDrive zabbixV5HostTagDrive;
+    protected ZabbixV5HostTagDriver zabbixV5HostTagDrive;
 
     @Resource
-    protected ZabbixV5ProxyDrive zabbixV5ProxyDrive;
+    protected ZabbixV5ProxyDriver zabbixV5ProxyDrive;
 
     @Resource
-    private ZabbixV5TemplateDrive zabbixV5TemplateDrive;
+    private ZabbixV5TemplateDriver zabbixV5TemplateDrive;
 
     @Resource
     private SimpleZabbixV5HostDrive simpleZabbixV5HostDrive;

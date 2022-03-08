@@ -5,8 +5,8 @@ import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamPolicy;
-import com.baiyi.opscloud.datasource.aws.iam.drive.AmazonIdentityManagementPolicyDrive;
-import com.baiyi.opscloud.datasource.aws.iam.drive.AmazonIdentityManagementUserDrive;
+import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementPolicyDriver;
+import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementUserDriver;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamPolicy;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamUser;
 import com.baiyi.opscloud.datasource.manager.base.NoticeManager;
@@ -28,10 +28,10 @@ import javax.annotation.Resource;
 public class IamProcessor extends AbstractAmProcessor {
 
     @Resource
-    private AmazonIdentityManagementUserDrive amazonIMUserDrive;
+    private AmazonIdentityManagementUserDriver amazonIMUserDrive;
 
     @Resource
-    private AmazonIdentityManagementPolicyDrive amazonIMPolicyDrive;
+    private AmazonIdentityManagementPolicyDriver amazonIMPolicyDrive;
 
     @Override
     public String getDsType() {

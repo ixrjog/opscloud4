@@ -9,7 +9,7 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aliyun.rds.drive.AliyunRdsInstanceDrive;
+import com.baiyi.opscloud.datasource.aliyun.rds.driver.AliyunRdsInstanceDriver;
 import com.baiyi.opscloud.datasource.aliyun.rds.entity.AliyunRds;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -33,7 +33,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
 public class AliyunRdsInstanceProvider extends BaseAssetProvider<AliyunRds.DBInstanceAttribute> {
 
     @Resource
-    private AliyunRdsInstanceDrive aliyunRdsInstanceDrive;
+    private AliyunRdsInstanceDriver aliyunRdsInstanceDriver;
 
     @Resource
     private AliyunRdsInstanceProvider aliyunRdsInstanceProvider;
@@ -64,7 +64,7 @@ public class AliyunRdsInstanceProvider extends BaseAssetProvider<AliyunRds.DBIns
         List<AliyunRds.DBInstanceAttribute> entities = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId -> {
             try {
-                entities.addAll(aliyunRdsInstanceDrive.listDbInstance(regionId, aliyun));
+                entities.addAll(aliyunRdsInstanceDriver.listDbInstance(regionId, aliyun));
             } catch (ClientException e) {
             }
         });

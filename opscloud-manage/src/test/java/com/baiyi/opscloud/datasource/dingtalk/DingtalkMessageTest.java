@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.dingtalk;
 
 import com.baiyi.opscloud.datasource.dingtalk.base.BaseDingtalkTest;
-import com.baiyi.opscloud.datasource.dingtalk.drive.DingtalkMessageDrive;
+import com.baiyi.opscloud.datasource.dingtalk.driver.DingtalkMessageDriver;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkMessage;
 import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkMessageParam;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import javax.annotation.Resource;
 public class DingtalkMessageTest extends BaseDingtalkTest {
 
     @Resource
-    private DingtalkMessageDrive dingtalkMessageDrive;
+    private DingtalkMessageDriver dingtalkMessageDrive;
 
     @Test
     void asyncSendTest() {

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.dingtalk;
 
 import com.baiyi.opscloud.common.datasource.DingtalkConfig;
 import com.baiyi.opscloud.datasource.dingtalk.base.BaseDingtalkTest;
-import com.baiyi.opscloud.datasource.dingtalk.drive.DingtalkDepartmentDrive;
+import com.baiyi.opscloud.datasource.dingtalk.driver.DingtalkDepartmentDriver;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkDepartment;
 import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkDepartmentParam;
 import com.google.common.collect.Sets;
@@ -20,7 +20,7 @@ import java.util.Set;
 public class DingtalkDeptTest extends BaseDingtalkTest {
 
     @Resource
-    private DingtalkDepartmentDrive dingtalkDepartmentDrive;
+    private DingtalkDepartmentDriver dingtalkDepartmentDrive;
 
     @Test
     void listSubIdTest() {

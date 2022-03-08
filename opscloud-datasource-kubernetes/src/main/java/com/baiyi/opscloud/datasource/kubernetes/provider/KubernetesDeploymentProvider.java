@@ -5,8 +5,8 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.kubernetes.converter.DeploymentAssetConverter;
-import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesDeploymentDrive;
-import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesNamespaceDrive;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesNamespaceDriver;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
@@ -53,10 +53,10 @@ public class KubernetesDeploymentProvider extends BaseAssetProvider<Deployment> 
     @Override
     protected List<Deployment> listEntities(DsInstanceContext dsInstanceContext) {
         KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
-        List<Namespace> namespaces = KubernetesNamespaceDrive.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
+        List<Namespace> namespaces = KubernetesNamespaceDriver.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
         List<Deployment> entities = Lists.newArrayList();
         namespaces.forEach(e ->
-                entities.addAll(KubernetesDeploymentDrive.listDeployment(kubernetes, e.getMetadata().getName()))
+                entities.addAll(KubernetesDeploymentDriver.listDeployment(kubernetes, e.getMetadata().getName()))
         );
         return entities;
     }

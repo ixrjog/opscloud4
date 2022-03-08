@@ -10,7 +10,7 @@ import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetChildProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.aliyun.convertor.VpcAssetConvertor;
-import com.baiyi.opscloud.datasource.aliyun.ecs.drive.AliyunVpcDrive;
+import com.baiyi.opscloud.datasource.aliyun.ecs.driver.AliyunVpcDriver;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -34,7 +34,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
 public class AliyunVSwitchProvider extends AbstractAssetChildProvider<DescribeVSwitchesResponse.VSwitch> {
 
     @Resource
-    private AliyunVpcDrive aliyunVpcDrive;
+    private AliyunVpcDriver aliyunVpcDriver;
 
     @Resource
     private AliyunVSwitchProvider aliyunVSwitchProvider;
@@ -64,7 +64,7 @@ public class AliyunVSwitchProvider extends AbstractAssetChildProvider<DescribeVS
     @Override
     protected List<DescribeVSwitchesResponse.VSwitch> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        return aliyunVpcDrive.listVSwitches(asset.getRegionId(), aliyun, asset);
+        return aliyunVpcDriver.listVSwitches(asset.getRegionId(), aliyun, asset);
     }
 
     @Override

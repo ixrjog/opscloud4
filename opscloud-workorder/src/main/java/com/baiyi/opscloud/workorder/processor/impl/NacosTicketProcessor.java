@@ -3,7 +3,7 @@ package com.baiyi.opscloud.workorder.processor.impl;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.NacosConfig;
 import com.baiyi.opscloud.core.InstanceHelper;
-import com.baiyi.opscloud.datasource.nacos.drive.NacosAuthDrive;
+import com.baiyi.opscloud.datasource.nacos.driver.NacosAuthDriver;
 import com.baiyi.opscloud.datasource.nacos.entity.NacosUser;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
@@ -33,7 +33,7 @@ import java.util.Optional;
 public class NacosTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcessor<DatasourceInstanceAsset, NacosConfig> {
 
     @Resource
-    private NacosAuthDrive nacosAuthDrive;
+    private NacosAuthDriver nacosAuthDrive;
 
     @Resource
     private InstanceHelper instanceHelper;

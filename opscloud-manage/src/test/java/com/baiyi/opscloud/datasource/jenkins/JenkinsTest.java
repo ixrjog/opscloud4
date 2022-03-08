@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.datasource.jenkins.drive.JenkinsServerDrive;
+import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.offbytwo.jenkins.model.Computer;
 import com.offbytwo.jenkins.model.ComputerWithDetails;
@@ -31,7 +31,7 @@ public class JenkinsTest extends BaseUnit {
     void logTest() {
         JenkinsConfig jenkinsDsInstanceConfig = (JenkinsConfig) getConfig();
         try {
-            Map<String, Computer> computerMap = JenkinsServerDrive.getComputers(jenkinsDsInstanceConfig.getJenkins());
+            Map<String, Computer> computerMap = JenkinsServerDriver.getComputers(jenkinsDsInstanceConfig.getJenkins());
 
             for (String s : computerMap.keySet()) {
                 Computer c = computerMap.get(s);

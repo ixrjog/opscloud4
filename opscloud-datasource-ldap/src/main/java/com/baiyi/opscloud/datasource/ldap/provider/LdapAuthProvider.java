@@ -6,7 +6,7 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.auth.BaseAuthProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.model.Authorization;
-import com.baiyi.opscloud.datasource.ldap.drive.LdapDrive;
+import com.baiyi.opscloud.datasource.ldap.driver.LdapDriver;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -20,11 +20,11 @@ import javax.annotation.Resource;
 public class LdapAuthProvider extends BaseAuthProvider {
 
     @Resource
-    private LdapDrive ldapDrive;
+    private LdapDriver ldapDriver;
 
     @Override
     protected boolean auth(DsInstanceContext dsInstanceContext, Authorization.Credential credential) {
-        return ldapDrive.loginCheck(buildConfig(dsInstanceContext.getDsConfig()), credential);
+        return ldapDriver.loginCheck(buildConfig(dsInstanceContext.getDsConfig()), credential);
     }
 
     private LdapConfig.Ldap buildConfig(DatasourceConfig dsConfig) {

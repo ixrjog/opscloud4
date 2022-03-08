@@ -8,8 +8,8 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamPolicyDrive;
-import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamUserDrive;
+import com.baiyi.opscloud.datasource.aliyun.ram.driver.AliyunRamPolicyDriver;
+import com.baiyi.opscloud.datasource.aliyun.ram.driver.AliyunRamUserDriver;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamPolicy;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamUser;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -36,10 +36,10 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
 public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<RamPolicy.Policy, RamUser.User> {
 
     @Resource
-    private AliyunRamPolicyDrive aliyunRamPolicyDrive;
+    private AliyunRamPolicyDriver aliyunRamPolicyDriver;
 
     @Resource
-    private AliyunRamUserDrive aliyunRamUserDrive;
+    private AliyunRamUserDriver aliyunRamUserDriver;
 
     @Resource
     private AliyunRamPolicyProvider aliyunRamPolicyProvider;
@@ -73,7 +73,7 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<RamPo
         List<RamPolicy.Policy> entities = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId -> {
             try {
-                entities.addAll(aliyunRamPolicyDrive.listPolicies(regionId, aliyun));
+                entities.addAll(aliyunRamPolicyDriver.listPolicies(regionId, aliyun));
             } catch (ClientException e) {
                 log.error("查询AliyunRAM策略错误！");
             }
@@ -99,7 +99,7 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<RamPo
     @Override
     protected List<RamPolicy.Policy> listEntities(DsInstanceContext dsInstanceContext, RamUser.User target) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        return aliyunRamUserDrive.listPoliciesForUser(aliyun.getRegionId(), aliyun, target.getUserName());
+        return aliyunRamUserDriver.listPoliciesForUser(aliyun.getRegionId(), aliyun, target.getUserName());
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.kubernetes.converter.NamespaceAssetConverter;
-import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesNamespaceDrive;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesNamespaceDriver;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
@@ -49,7 +49,7 @@ public class KubernetesNamespaceProvider extends BaseAssetProvider<Namespace> {
 
     @Override
     protected List<Namespace> listEntities(DsInstanceContext dsInstanceContext) {
-        return KubernetesNamespaceDrive.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
+        return KubernetesNamespaceDriver.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override

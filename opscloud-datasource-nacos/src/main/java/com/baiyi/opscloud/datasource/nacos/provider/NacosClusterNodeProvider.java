@@ -8,7 +8,7 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.nacos.drive.NacosClusterDrive;
+import com.baiyi.opscloud.datasource.nacos.driver.NacosClusterDriver;
 import com.baiyi.opscloud.datasource.nacos.entity.NacosCluster;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -31,7 +31,7 @@ public class NacosClusterNodeProvider extends BaseAssetProvider<NacosCluster.Nod
     private NacosClusterNodeProvider nacosClusterNodeProvider;
 
     @Resource
-    private NacosClusterDrive nacosClusterDrive;
+    private NacosClusterDriver nacosClusterDriver;
 
     @Override
     public String getInstanceType() {
@@ -51,7 +51,7 @@ public class NacosClusterNodeProvider extends BaseAssetProvider<NacosCluster.Nod
     protected List<NacosCluster.Node> listEntities(DsInstanceContext dsInstanceContext) {
 
         try {
-            NacosCluster.NodesResponse nodesResponse = nacosClusterDrive.listNodes(buildConfig(dsInstanceContext.getDsConfig()));
+            NacosCluster.NodesResponse nodesResponse = nacosClusterDriver.listNodes(buildConfig(dsInstanceContext.getDsConfig()));
             if (nodesResponse.getCode() == 200) {
                 return nodesResponse.getData();
             } else {

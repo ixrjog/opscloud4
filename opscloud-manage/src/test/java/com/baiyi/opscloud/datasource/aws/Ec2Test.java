@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.datasource.aws.base.BaseAwsTest;
-import com.baiyi.opscloud.datasource.aws.ec2.drive.AmazonEc2Drive;
+import com.baiyi.opscloud.datasource.aws.ec2.driver.AmazonEc2Driver;
 import com.baiyi.opscloud.datasource.aws.ec2.entity.Ec2Instance;
 import com.baiyi.opscloud.datasource.aws.ec2.helper.AmazonEc2InstanceTypeHelper;
 import com.baiyi.opscloud.datasource.aws.ec2.model.InstanceModel;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class Ec2Test extends BaseAwsTest {
 
     @Resource
-    private AmazonEc2Drive amazonEc2Drive;
+    private AmazonEc2Driver amazonEc2Drive;
 
     @Resource
     private AmazonEc2InstanceTypeHelper amazonEc2InstanceTypeHelper;

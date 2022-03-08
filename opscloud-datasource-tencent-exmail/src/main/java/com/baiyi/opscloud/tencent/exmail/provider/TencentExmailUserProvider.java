@@ -10,7 +10,7 @@ import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.baiyi.opscloud.tencent.exmail.drive.TencentExmailUserDrive;
+import com.baiyi.opscloud.tencent.exmail.driver.TencentExmailUserDriver;
 import com.baiyi.opscloud.tencent.exmail.entity.ExmailUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_TENCENT_EXMAIL_USER;
-import static com.baiyi.opscloud.tencent.exmail.drive.TencentExmailUserDrive.ALL_DEPARTMENT;
+import static com.baiyi.opscloud.tencent.exmail.driver.TencentExmailUserDriver.ALL_DEPARTMENT;
 
 /**
  * @Author baiyi
@@ -35,7 +35,7 @@ public class TencentExmailUserProvider extends BaseAssetProvider<ExmailUser> {
     @Resource
     private TencentExmailUserProvider tencentExmailUserProvider;
 
-    private final TencentExmailUserDrive tencentExmailUserDrive;
+    private final TencentExmailUserDriver tencentExmailUserDriver;
 
     @Override
     public String getInstanceType() {
@@ -54,7 +54,7 @@ public class TencentExmailUserProvider extends BaseAssetProvider<ExmailUser> {
     @Override
     protected List<ExmailUser> listEntities(DsInstanceContext dsInstanceContext) {
         TencentExmailConfig.Tencent tencent = buildConfig(dsInstanceContext.getDsConfig());
-        return tencentExmailUserDrive.list(tencent, ALL_DEPARTMENT);
+        return tencentExmailUserDriver.list(tencent, ALL_DEPARTMENT);
     }
 
     @Override

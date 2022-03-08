@@ -8,7 +8,7 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aliyun.redis.drive.AliyunRedisInstanceDrive;
+import com.baiyi.opscloud.datasource.aliyun.redis.driver.AliyunRedisInstanceDriver;
 import com.baiyi.opscloud.datasource.aliyun.redis.entity.AliyunRedis;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -32,7 +32,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
 public class AliyunRedisInstanceProvider extends BaseAssetProvider<AliyunRedis.KVStoreInstance> {
 
     @Resource
-    private AliyunRedisInstanceDrive aliyunRedisInstanceDrive;
+    private AliyunRedisInstanceDriver aliyunRedisInstanceDriver;
 
     @Resource
     private AliyunRedisInstanceProvider aliunRedisInstanceProvider;
@@ -62,7 +62,7 @@ public class AliyunRedisInstanceProvider extends BaseAssetProvider<AliyunRedis.K
         List<AliyunRedis.KVStoreInstance> entities = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId -> {
             try {
-                entities.addAll(aliyunRedisInstanceDrive.listInstance(regionId, aliyun));
+                entities.addAll(aliyunRedisInstanceDriver.listInstance(regionId, aliyun));
             } catch (ClientException e) {
             }
         });

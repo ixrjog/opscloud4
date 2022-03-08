@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.DingtalkConfig;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetBusinessRelationProvider;
-import com.baiyi.opscloud.datasource.dingtalk.drive.DingtalkDepartmentDrive;
+import com.baiyi.opscloud.datasource.dingtalk.driver.DingtalkDepartmentDriver;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkDepartment;
 import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkDepartmentParam;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -25,7 +25,7 @@ import java.util.Set;
 public abstract class AbstractDingtalkAssetProvider<T> extends AbstractAssetBusinessRelationProvider<T> {
 
     @Resource
-    protected DingtalkDepartmentDrive dingtalkDepartmentDrive;
+    protected DingtalkDepartmentDriver dingtalkDepartmentDriver;
 
     private static final long DEPT_ROOT_ID = 1L;
 
@@ -54,7 +54,7 @@ public abstract class AbstractDingtalkAssetProvider<T> extends AbstractAssetBusi
                     .deptId(deptId)
                     .build();
             queryDeptIdSet.remove(deptId);
-            DingtalkDepartment.DepartmentSubIdResponse departmentSubIdResponse = dingtalkDepartmentDrive.listSubId(dingtalk, listSubDepartmentId);
+            DingtalkDepartment.DepartmentSubIdResponse departmentSubIdResponse = dingtalkDepartmentDriver.listSubId(dingtalk, listSubDepartmentId);
             if (!CollectionUtils.isEmpty(departmentSubIdResponse.getResult().getDeptIdList())) {
                 subIdSet.addAll(departmentSubIdResponse.getResult().getDeptIdList());
                 queryDeptIdSet.addAll(departmentSubIdResponse.getResult().getDeptIdList());

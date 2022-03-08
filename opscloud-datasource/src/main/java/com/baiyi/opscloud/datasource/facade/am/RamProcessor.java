@@ -5,8 +5,8 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamPolicyDrive;
-import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamUserDrive;
+import com.baiyi.opscloud.datasource.aliyun.ram.driver.AliyunRamPolicyDriver;
+import com.baiyi.opscloud.datasource.aliyun.ram.driver.AliyunRamUserDriver;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamPolicy;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamUser;
 import com.baiyi.opscloud.datasource.manager.base.NoticeManager;
@@ -29,10 +29,10 @@ import javax.annotation.Resource;
 public class RamProcessor extends AbstractAmProcessor {
 
     @Resource
-    private AliyunRamUserDrive aliyunRamUserDrive;
+    private AliyunRamUserDriver aliyunRamUserDrive;
 
     @Resource
-    private AliyunRamPolicyDrive aliyunRamPolicyDrive;
+    private AliyunRamPolicyDriver aliyunRamPolicyDrive;
 
     @Override
     public String getDsType() {

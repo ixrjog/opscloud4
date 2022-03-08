@@ -7,7 +7,7 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.nexus.drive.NexusAssetDrive;
+import com.baiyi.opscloud.datasource.nexus.driver.NexusAssetDriver;
 import com.baiyi.opscloud.datasource.nexus.entity.NexusAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -36,7 +36,7 @@ public class NexusAssetProvider extends BaseAssetProvider<NexusAsset.Item> {
     private NexusAssetProvider nexusAssetProvider;
 
     @Resource
-    private NexusAssetDrive nexusAssetDrive;
+    private NexusAssetDriver nexusAssetDriver;
 
     @Override
     public String getInstanceType() {
@@ -59,7 +59,7 @@ public class NexusAssetProvider extends BaseAssetProvider<NexusAsset.Item> {
         nexus.getRepositories().forEach(r -> {
             String continuationToken = "";
             while (true) {
-                NexusAsset.Assets assets = nexusAssetDrive.list(nexus, r.getName(), continuationToken);
+                NexusAsset.Assets assets = nexusAssetDriver.list(nexus, r.getName(), continuationToken);
                 if (assets == null || CollectionUtils.isEmpty(assets.getItems()))
                     return;
                 entities.addAll(filter(nexus, assets.getItems()));

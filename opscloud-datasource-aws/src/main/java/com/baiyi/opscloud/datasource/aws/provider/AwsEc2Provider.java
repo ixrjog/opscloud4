@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.datasource.aws.provider;
 
-import com.amazonaws.services.ec2.model.Instance;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
@@ -8,7 +7,7 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetBusinessRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aws.ec2.drive.AmazonEc2Drive;
+import com.baiyi.opscloud.datasource.aws.ec2.driver.AmazonEc2Driver;
 import com.baiyi.opscloud.datasource.aws.ec2.entity.Ec2Instance;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -34,7 +33,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_AWS_E
 public class AwsEc2Provider extends AbstractAssetBusinessRelationProvider<Ec2Instance.Instance> {
 
     @Resource
-    private AmazonEc2Drive amazonEc2Drive;
+    private AmazonEc2Driver amazonEc2Driver;
 
     @Resource
     private AwsEc2Provider awsEc2Provider;
@@ -76,7 +75,7 @@ public class AwsEc2Provider extends AbstractAssetBusinessRelationProvider<Ec2Ins
             return Collections.emptyList();
         List<Ec2Instance.Instance> instanceList = Lists.newArrayList();
         aws.getRegionIds().forEach(regionId ->
-                instanceList.addAll(amazonEc2Drive.listInstances(regionId, aws))
+                instanceList.addAll(amazonEc2Driver.listInstances(regionId, aws))
         );
         return instanceList;
     }

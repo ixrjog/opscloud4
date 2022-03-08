@@ -7,8 +7,8 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.kubernetes.converter.ServiceAssetConverter;
-import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesNamespaceDrive;
-import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesServiceDrive;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesNamespaceDriver;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesServiceDriver;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -50,10 +50,10 @@ public class KubernetesServiceProvider extends BaseAssetProvider<Service> {
     @Override
     protected List<Service> listEntities(DsInstanceContext dsInstanceContext) {
         KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
-        List<Namespace> namespaces = KubernetesNamespaceDrive.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
+        List<Namespace> namespaces = KubernetesNamespaceDriver.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
         List<Service> entities = Lists.newArrayList();
         namespaces.forEach(e ->
-                entities.addAll(KubernetesServiceDrive.listService(kubernetes, e.getMetadata().getName()))
+                entities.addAll(KubernetesServiceDriver.listService(kubernetes, e.getMetadata().getName()))
         );
         return entities;
     }

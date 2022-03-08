@@ -9,8 +9,8 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetChildProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aliyun.ons.drive.AliyunOnsRocketMqInstanceDrive;
-import com.baiyi.opscloud.datasource.aliyun.ons.drive.AliyunOnsRocketMqTopicDrive;
+import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsRocketMqInstanceDriver;
+import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsRocketMqTopicDriver;
 import com.baiyi.opscloud.datasource.aliyun.util.AliyunRegionIdUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -38,10 +38,10 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
 public class AliyunOnsRocketMqTopicProvider extends AbstractAssetChildProvider<OnsRocketMqTopic.Topic> {
 
     @Resource
-    private AliyunOnsRocketMqInstanceDrive aliyunOnsRocketMqInstanceDrive;
+    private AliyunOnsRocketMqInstanceDriver aliyunOnsRocketMqInstanceDriver;
 
     @Resource
-    private AliyunOnsRocketMqTopicDrive aliyunOnsRocketMqTopicDrive;
+    private AliyunOnsRocketMqTopicDriver aliyunOnsRocketMqTopicDriver;
 
     @Resource
     private AliyunOnsRocketMqTopicProvider aliyunOnsRocketMqTopicProvider;
@@ -74,11 +74,11 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetChildProvider<O
         List<OnsRocketMqTopic.Topic> entities = Lists.newArrayList();
         regionIds.forEach(regionId -> {
             try {
-                List<OnsInstance.InstanceBaseInfo> instances = aliyunOnsRocketMqInstanceDrive.listInstance(regionId, aliyun);
+                List<OnsInstance.InstanceBaseInfo> instances = aliyunOnsRocketMqInstanceDriver.listInstance(regionId, aliyun);
                 if (!CollectionUtils.isEmpty(instances)) {
                     instances.forEach(instance -> {
                         try {
-                            entities.addAll(aliyunOnsRocketMqTopicDrive.listTopic(regionId, aliyun, instance.getInstanceId()));
+                            entities.addAll(aliyunOnsRocketMqTopicDriver.listTopic(regionId, aliyun, instance.getInstanceId()));
                         } catch (ClientException e) {
                         }
                     });
@@ -93,7 +93,7 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetChildProvider<O
     protected List<OnsRocketMqTopic.Topic> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         try {
-            return aliyunOnsRocketMqTopicDrive.listTopic(asset.getRegionId(), aliyun, asset.getAssetId());
+            return aliyunOnsRocketMqTopicDriver.listTopic(asset.getRegionId(), aliyun, asset.getAssetId());
         } catch (ClientException e) {
             return Collections.emptyList();
         }

@@ -10,7 +10,7 @@ import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5TriggerDrive;
+import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5TriggerDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ZABBI
 public class ZabbixTriggerProvider extends AbstractAssetRelationProvider<ZabbixTrigger.Trigger, ZabbixHost.Host> {
 
     @Resource
-    private ZabbixV5TriggerDrive zabbixV5TriggerDrive;
+    private ZabbixV5TriggerDriver zabbixV5TriggerDriver;
 
     @Resource
     private ZabbixTriggerProvider zabbixTriggerProvider;
@@ -47,12 +47,12 @@ public class ZabbixTriggerProvider extends AbstractAssetRelationProvider<ZabbixT
     @Override
     protected List<ZabbixTrigger.Trigger> listEntities(DsInstanceContext dsInstanceContext, ZabbixHost.Host target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixV5TriggerDrive.listByHost(zabbix, target);
+        return zabbixV5TriggerDriver.listByHost(zabbix, target);
     }
 
     @Override
     protected List<ZabbixTrigger.Trigger> listEntities(DsInstanceContext dsInstanceContext) {
-        return zabbixV5TriggerDrive.list(buildConfig(dsInstanceContext.getDsConfig()));
+        return zabbixV5TriggerDriver.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
 

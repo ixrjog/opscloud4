@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.ldap.repo.impl;
 
 import com.baiyi.opscloud.common.datasource.LdapConfig;
-import com.baiyi.opscloud.datasource.ldap.drive.LdapDrive;
+import com.baiyi.opscloud.datasource.ldap.driver.LdapDriver;
 import com.baiyi.opscloud.datasource.ldap.entity.LdapGroup;
 import com.baiyi.opscloud.datasource.ldap.repo.GroupRepo;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class GroupRepoImpl implements GroupRepo {
 
     @Resource
-    private LdapDrive ldapDrive;
+    private LdapDriver ldapDrive;
 
     @Override
     public List<LdapGroup.Group> getGroupList(LdapConfig.Ldap ldapConfig) {

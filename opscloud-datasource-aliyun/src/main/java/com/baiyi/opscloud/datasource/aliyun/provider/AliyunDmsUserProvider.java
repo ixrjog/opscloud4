@@ -7,8 +7,8 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aliyun.dms.drive.AliyunDmsTenantDrive;
-import com.baiyi.opscloud.datasource.aliyun.dms.drive.AliyunDmsUserDrive;
+import com.baiyi.opscloud.datasource.aliyun.dms.driver.AliyunDmsTenantDriver;
+import com.baiyi.opscloud.datasource.aliyun.dms.driver.AliyunDmsUserDriver;
 import com.baiyi.opscloud.datasource.aliyun.dms.entity.DmsUser;
 import com.baiyi.opscloud.datasource.aliyun.provider.push.AliyunDmsUserPushHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -61,10 +61,10 @@ public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
             Long tid = Optional.of(aliyun)
                     .map(AliyunConfig.Aliyun::getDms)
                     .map(AliyunConfig.Dms::getTid)
-                    .orElse(AliyunDmsTenantDrive.getTenant(aliyun).getTid());
+                    .orElse(AliyunDmsTenantDriver.getTenant(aliyun).getTid());
             users.forEach(r -> {
                 try {
-                    AliyunDmsUserDrive.registerUser(aliyun, tid, r);
+                    AliyunDmsUserDriver.registerUser(aliyun, tid, r);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -93,8 +93,8 @@ public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
             Long tid = Optional.of(aliyun)
                     .map(AliyunConfig.Aliyun::getDms)
                     .map(AliyunConfig.Dms::getTid)
-                    .orElse(AliyunDmsTenantDrive.getTenant(aliyun).getTid());
-            return AliyunDmsUserDrive.listUser(aliyun, tid);
+                    .orElse(AliyunDmsTenantDriver.getTenant(aliyun).getTid());
+            return AliyunDmsUserDriver.listUser(aliyun, tid);
         } catch (Exception e) {
         }
         return Collections.emptyList();

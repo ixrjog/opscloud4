@@ -9,7 +9,7 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aliyun.ons.drive.AliyunOnsRocketMqInstanceDrive;
+import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsRocketMqInstanceDriver;
 import com.baiyi.opscloud.datasource.aliyun.util.AliyunRegionIdUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -33,7 +33,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
 public class AliyunOnsRocketMqInstanceProvider extends BaseAssetProvider<OnsInstance.InstanceBaseInfo> {
 
     @Resource
-    private AliyunOnsRocketMqInstanceDrive aliyunOnsRocketMqInstanceDrive;
+    private AliyunOnsRocketMqInstanceDriver aliyunOnsRocketMqInstanceDriver;
 
     @Resource
     private AliyunOnsRocketMqInstanceProvider aliyunOnsRocketMqInstanceProvider;
@@ -63,7 +63,7 @@ public class AliyunOnsRocketMqInstanceProvider extends BaseAssetProvider<OnsInst
         List<OnsInstance.InstanceBaseInfo> entities = Lists.newArrayList();
         regionIds.forEach(regionId -> {
             try {
-                entities.addAll(aliyunOnsRocketMqInstanceDrive.listInstance(regionId, aliyun));
+                entities.addAll(aliyunOnsRocketMqInstanceDriver.listInstance(regionId, aliyun));
             } catch (ClientException e) {
             }
         });

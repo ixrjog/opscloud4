@@ -13,7 +13,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.baiyi.opscloud.datasource.gitlab.drive.GitlabGroupDrive;
+import com.baiyi.opscloud.datasource.gitlab.driver.GitlabGroupDriver;
 import com.google.common.collect.Lists;
 import org.gitlab.api.models.GitlabGroup;
 import org.gitlab.api.models.GitlabProject;
@@ -54,7 +54,7 @@ public class GitlabGroupProvider extends AbstractAssetRelationProvider<GitlabGro
     @Override
     protected List<GitlabGroup> listEntities(DsInstanceContext dsInstanceContext) {
         try {
-            return GitlabGroupDrive.queryGroups(buildConfig(dsInstanceContext.getDsConfig()));
+            return GitlabGroupDriver.queryGroups(buildConfig(dsInstanceContext.getDsConfig()));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

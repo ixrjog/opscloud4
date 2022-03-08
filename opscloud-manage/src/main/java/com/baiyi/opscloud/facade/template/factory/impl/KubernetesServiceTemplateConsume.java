@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.template.factory.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesServiceDrive;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesServiceDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTemplate;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -22,7 +22,7 @@ public class KubernetesServiceTemplateConsume extends AbstractTemplateConsume<Se
     protected Service produce(BusinessTemplate bizTemplate, String content) {
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
         KubernetesConfig.Kubernetes config = dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
-        return KubernetesServiceDrive.createOrReplaceService(config, content);
+        return KubernetesServiceDriver.createOrReplaceService(config, content);
     }
 
     @Override

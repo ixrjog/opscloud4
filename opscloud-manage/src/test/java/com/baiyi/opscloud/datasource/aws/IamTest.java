@@ -2,8 +2,8 @@ package com.baiyi.opscloud.datasource.aws;
 
 import com.baiyi.opscloud.common.util.PasswordUtil;
 import com.baiyi.opscloud.datasource.aws.base.BaseAwsTest;
-import com.baiyi.opscloud.datasource.aws.iam.drive.AmazonIdentityManagementPolicyDrive;
-import com.baiyi.opscloud.datasource.aws.iam.drive.AmazonIdentityManagementUserDrive;
+import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementPolicyDriver;
+import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementUserDriver;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamPolicy;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamUser;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
@@ -20,10 +20,10 @@ import java.util.List;
 public class IamTest extends BaseAwsTest {
 
     @Resource
-    private AmazonIdentityManagementPolicyDrive amazonIMPolicyDrive;
+    private AmazonIdentityManagementPolicyDriver amazonIMPolicyDrive;
 
     @Resource
-    private AmazonIdentityManagementUserDrive amazonIMUserDrive;
+    private AmazonIdentityManagementUserDriver amazonIMUserDrive;
 
     @Test
     void listPoliciesTest() {

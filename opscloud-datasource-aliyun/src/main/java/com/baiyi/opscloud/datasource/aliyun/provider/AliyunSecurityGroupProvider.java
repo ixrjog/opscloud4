@@ -10,7 +10,7 @@ import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetChildProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.aliyun.convertor.VpcAssetConvertor;
-import com.baiyi.opscloud.datasource.aliyun.ecs.drive.AliyunEcsDrive;
+import com.baiyi.opscloud.datasource.aliyun.ecs.driver.AliyunEcsDriver;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -34,7 +34,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
 public class AliyunSecurityGroupProvider extends AbstractAssetChildProvider<DescribeSecurityGroupsResponse.SecurityGroup> {
 
     @Resource
-    private AliyunEcsDrive aliyunEcsDrive;
+    private AliyunEcsDriver aliyunEcsDriver;
 
     @Resource
     private AliyunSecurityGroupProvider aliyunSecurityGroupProvider;
@@ -64,7 +64,7 @@ public class AliyunSecurityGroupProvider extends AbstractAssetChildProvider<Desc
     @Override
     protected List<DescribeSecurityGroupsResponse.SecurityGroup> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        return aliyunEcsDrive.listSecurityGroups(asset.getRegionId(), aliyun,asset);
+        return aliyunEcsDriver.listSecurityGroups(asset.getRegionId(), aliyun,asset);
     }
 
     @Override

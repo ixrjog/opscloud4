@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.datasource.nacos;
 
 import com.baiyi.opscloud.datasource.nacos.base.BaseNacosTest;
-import com.baiyi.opscloud.datasource.nacos.drive.NacosAuthDrive;
-import com.baiyi.opscloud.datasource.nacos.drive.NacosClusterDrive;
+import com.baiyi.opscloud.datasource.nacos.driver.NacosAuthDriver;
+import com.baiyi.opscloud.datasource.nacos.driver.NacosClusterDriver;
 import com.baiyi.opscloud.datasource.nacos.entity.*;
 import com.baiyi.opscloud.datasource.nacos.param.NacosPageParam;
 import org.junit.jupiter.api.Test;
@@ -18,10 +18,10 @@ import java.util.List;
 public class NacosTest extends BaseNacosTest {
 
     @Resource
-    private NacosAuthDrive nacosAuthDrive;
+    private NacosAuthDriver nacosAuthDrive;
 
     @Resource
-    private NacosClusterDrive nacosClusterDrive;
+    private NacosClusterDriver nacosClusterDrive;
 
     @Test
     void authLoginTest() {

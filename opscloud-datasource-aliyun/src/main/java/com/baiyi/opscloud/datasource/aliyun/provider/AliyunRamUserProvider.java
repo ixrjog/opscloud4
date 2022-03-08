@@ -10,7 +10,7 @@ import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.aliyun.convertor.ComputeAssetConvertor;
-import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamUserDrive;
+import com.baiyi.opscloud.datasource.aliyun.ram.driver.AliyunRamUserDriver;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamPolicy;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamUser;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
@@ -37,7 +37,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
 public class AliyunRamUserProvider extends AbstractAssetRelationProvider<RamUser.User, RamPolicy.Policy> {
 
     @Resource
-    private AliyunRamUserDrive aliyunRamUserDrive;
+    private AliyunRamUserDriver aliyunRamUserDriver;
 
     @Resource
     private AliyunRamUserProvider aliyunRamUserProvider;
@@ -70,7 +70,7 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<RamUser
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<RamUser.User> entities = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> entities.addAll(aliyunRamUserDrive.listUsers(regionId, aliyun)));
+        aliyun.getRegionIds().forEach(regionId -> entities.addAll(aliyunRamUserDriver.listUsers(regionId, aliyun)));
         return entities;
     }
 
@@ -92,7 +92,7 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<RamUser
     @Override
     protected List<RamUser.User> listEntities(DsInstanceContext dsInstanceContext, RamPolicy.Policy target) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        return aliyunRamUserDrive.listUsersForPolicy(aliyun.getRegionId(), aliyun, target.getPolicyType(), target.getPolicyName());
+        return aliyunRamUserDriver.listUsersForPolicy(aliyun.getRegionId(), aliyun, target.getPolicyType(), target.getPolicyName());
     }
 
 

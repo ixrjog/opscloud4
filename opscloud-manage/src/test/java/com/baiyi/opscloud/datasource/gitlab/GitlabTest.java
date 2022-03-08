@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.datasource.gitlab.drive.GitlabUserDrive;
+import com.baiyi.opscloud.datasource.gitlab.driver.GitlabUserDriver;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import org.gitlab.api.models.GitlabSSHKey;
 import org.gitlab.api.models.GitlabUser;
@@ -31,7 +31,7 @@ public class GitlabTest extends BaseUnit {
     @Test
     void userTest() {
         GitlabConfig gitlabDsInstanceConfig = (GitlabConfig) getConfig();
-        List<GitlabUser> userList = GitlabUserDrive.queryUsers(gitlabDsInstanceConfig.getGitlab());
+        List<GitlabUser> userList = GitlabUserDriver.queryUsers(gitlabDsInstanceConfig.getGitlab());
         for (GitlabUser gitlabUser : userList) {
             System.err.print(gitlabUser.getId());
 
@@ -42,7 +42,7 @@ public class GitlabTest extends BaseUnit {
     void userSSKTest() {
         GitlabConfig gitlabDsInstanceConfig = (GitlabConfig) getConfig();
         try {
-            List<GitlabSSHKey> keys = GitlabUserDrive.getUserSSHKeys(gitlabDsInstanceConfig.getGitlab(),112);
+            List<GitlabSSHKey> keys = GitlabUserDriver.getUserSSHKeys(gitlabDsInstanceConfig.getGitlab(),112);
             for (GitlabSSHKey key : keys) {
                 System.err.print(key.getId());
 

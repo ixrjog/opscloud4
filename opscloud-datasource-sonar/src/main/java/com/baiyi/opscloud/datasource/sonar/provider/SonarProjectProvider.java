@@ -7,7 +7,7 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.sonar.drive.SonarProjectsDrive;
+import com.baiyi.opscloud.datasource.sonar.driver.SonarProjectsDriver;
 import com.baiyi.opscloud.datasource.sonar.entity.SonarProjects;
 import com.baiyi.opscloud.datasource.sonar.entity.base.BaseSonarElement;
 import com.baiyi.opscloud.datasource.sonar.param.PagingParam;
@@ -34,7 +34,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_SONAR
 public class SonarProjectProvider extends BaseAssetProvider<BaseSonarElement.Project> {
 
     @Resource
-    private SonarProjectsDrive sonarProjectsDrive;
+    private SonarProjectsDriver sonarProjectsDriver;
 
     @Resource
     private SonarProjectProvider sonarProjectProvider;
@@ -58,9 +58,9 @@ public class SonarProjectProvider extends BaseAssetProvider<BaseSonarElement.Pro
         SonarConfig.Sonar sonar = buildConfig(dsInstanceContext.getDsConfig());
         List<BaseSonarElement.Project> entities = Lists.newArrayList();
         PagingParam pagingParam = PagingParam.builder().build();
-        sonarProjectsDrive.searchProjects(sonar, pagingParam);
+        sonarProjectsDriver.searchProjects(sonar, pagingParam);
         while (true) {
-            SonarProjects sonarProjects = sonarProjectsDrive.searchProjects(sonar, pagingParam);
+            SonarProjects sonarProjects = sonarProjectsDriver.searchProjects(sonar, pagingParam);
             List<BaseSonarElement.Project> components = sonarProjects.getComponents();
             if (CollectionUtils.isEmpty(components)) {
                 break;

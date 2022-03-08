@@ -3,7 +3,7 @@ package com.baiyi.opscloud.workorder.processor.impl;
 import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
-import com.baiyi.opscloud.datasource.aliyun.ons.drive.AliyunOnsRocketMqGroupDrive;
+import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsRocketMqGroupDriver;
 import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsRocketMqGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
@@ -29,7 +29,7 @@ import java.util.List;
 public class OnsGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcessor<OnsRocketMqGroup.Group, AliyunConfig> {
 
     @Resource
-    private AliyunOnsRocketMqGroupDrive aliyunOnsRocketMqGroupDrive;
+    private AliyunOnsRocketMqGroupDriver aliyunOnsRocketMqGroupDrive;
 
     @Override
     protected void processHandle(WorkOrderTicketEntry ticketEntry, OnsRocketMqGroup.Group entry) throws TicketProcessException {
