@@ -1,10 +1,12 @@
 package com.baiyi.opscloud.datasource.facade.am;
 
+import com.baiyi.opscloud.core.InstanceHelper;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import com.baiyi.opscloud.datasource.facade.UserAmFacade;
-import com.baiyi.opscloud.datasource.facade.am.base.IXamProcessor;
+import com.baiyi.opscloud.datasource.facade.am.base.IAccessManagementProcessor;
 import com.baiyi.opscloud.datasource.manager.base.NoticeManager;
+import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.user.UserAmParam;
 import com.baiyi.opscloud.service.user.UserService;
@@ -19,7 +21,7 @@ import javax.annotation.Resource;
  * @Date 2022/2/10 6:44 PM
  * @Version 1.0
  */
-public abstract class AbstractAmProcessor implements IXamProcessor, InitializingBean {
+public abstract class AbstractAccessManagementProcessor implements IAccessManagementProcessor, InitializingBean {
 
     public final static boolean CREATE_LOGIN_PROFILE = true;
 
@@ -38,6 +40,9 @@ public abstract class AbstractAmProcessor implements IXamProcessor, Initializing
     @Resource
     protected DsConfigHelper dsConfigHelper;
 
+    @Resource
+    private InstanceHelper instanceHelper;
+
     @Override
     public void createUser(UserAmParam.CreateUser createUser) {
         User user = userService.getByUsername(createUser.getUsername());
@@ -52,6 +57,10 @@ public abstract class AbstractAmProcessor implements IXamProcessor, Initializing
     @Override
     public void afterPropertiesSet() throws Exception {
         UserAmFacade.register(this);
+    }
+
+    protected boolean enableMFA(String instanceUuid) {
+        return instanceHelper.hasTagInInstance(instanceUuid, DsInstanceTagConstants.MFA.name());
     }
 
 }

@@ -16,7 +16,7 @@ import java.util.List;
  * @Date 2022/2/8 10:59 AM
  * @Version 1.0
  */
-public class AMVO {
+public class AccessManagementVO {
 
     /**
      * AWS IAM
@@ -26,7 +26,7 @@ public class AMVO {
     @SuperBuilder(toBuilder = true)
     @Data
     @ApiModel
-    public static class IAM extends XAM implements Serializable {
+    public static class IAM extends XAccessManagement implements Serializable {
 
         private static final long serialVersionUID = -5541945548323066174L;
         
@@ -42,7 +42,7 @@ public class AMVO {
     @SuperBuilder(toBuilder = true)
     @Data
     @ApiModel
-    public static class RAM extends XAM implements Serializable {
+    public static class RAM extends XAccessManagement implements Serializable {
 
         private static final long serialVersionUID = -2175343102360414610L;
         private final String type = DsAssetTypeConstants.RAM_USER.name();
@@ -52,7 +52,7 @@ public class AMVO {
     @SuperBuilder(toBuilder = true)
     @Data
     @ApiModel
-    public static class XAM implements Serializable {
+    public static class XAccessManagement implements Serializable {
 
         private static final long serialVersionUID = -8444786214672507521L;
         private String type;

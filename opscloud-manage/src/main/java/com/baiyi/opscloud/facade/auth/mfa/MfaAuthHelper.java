@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.facade.auth.maf;
+package com.baiyi.opscloud.facade.auth.mfa;
 
 import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;

@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.SimpleRelation;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
-import com.baiyi.opscloud.domain.vo.user.AMVO;
+import com.baiyi.opscloud.domain.vo.user.AccessManagementVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
@@ -30,13 +30,13 @@ import java.util.stream.Collectors;
  */
 @Component
 @RequiredArgsConstructor
-public class AmPacker {
+public class AccessManagementPacker {
 
     private final DsInstanceAssetService dsInstanceAssetService;
 
     private final DsAssetPacker dsAssetPacker;
 
-    public static final Map<String, Function<DsAssetVO.Asset, AMVO.XAM>> context = new ConcurrentHashMap<>();
+    public static final Map<String, Function<DsAssetVO.Asset, AccessManagementVO.XAccessManagement>> context = new ConcurrentHashMap<>();
 
     private static final DsAssetTypeConstants[] xamAssetTypes = {DsAssetTypeConstants.RAM_USER, DsAssetTypeConstants.IAM_USER};
 
@@ -46,9 +46,9 @@ public class AmPacker {
      * @param user
      */
     public void wrap(UserVO.User user) {
-        Map<String, List<AMVO.XAM>> amMap = Maps.newHashMap();
+        Map<String, List<AccessManagementVO.XAccessManagement>> amMap = Maps.newHashMap();
         Arrays.stream(xamAssetTypes).forEach(xamAssetType -> {
-            List<AMVO.XAM> xams = toAms(user, xamAssetType.name());
+            List<AccessManagementVO.XAccessManagement> xams = toAms(user, xamAssetType.name());
             if (CollectionUtils.isEmpty(xams)) return;
             if (amMap.containsKey(xamAssetType.name())) {
                 amMap.get(xamAssetType.name()).addAll(xams);
@@ -66,12 +66,12 @@ public class AmPacker {
      * @param xamType
      */
     public void wrap(UserVO.User user, String xamType) {
-        List<AMVO.XAM> xams = toAms(user, xamType);
+        List<AccessManagementVO.XAccessManagement> xams = toAms(user, xamType);
         if (!CollectionUtils.isEmpty(xams))
             user.setAms(xams);
     }
 
-    public List<AMVO.XAM> toAms(UserVO.User user, String xamType) {
+    public List<AccessManagementVO.XAccessManagement> toAms(UserVO.User user, String xamType) {
         if (!context.containsKey(xamType)) return Collections.emptyList();
         DatasourceInstanceAsset param = DatasourceInstanceAsset.builder()
                 .assetType(xamType)
@@ -85,7 +85,7 @@ public class AmPacker {
                 dsAssetPacker.wrap(e, SimpleExtend.EXTEND, SimpleRelation.RELATION)
         ).collect(Collectors.toList());
 
-        Function<DsAssetVO.Asset, AMVO.XAM> converter = context.get(xamType);
+        Function<DsAssetVO.Asset, AccessManagementVO.XAccessManagement> converter = context.get(xamType);
         return assets.stream().map(converter).collect(Collectors.toList());
     }
 

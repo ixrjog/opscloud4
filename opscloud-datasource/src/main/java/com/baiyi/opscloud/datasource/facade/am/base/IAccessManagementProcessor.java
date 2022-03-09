@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.param.user.UserAmParam;
  * @Date 2022/2/10 6:32 PM
  * @Version 1.0
  */
-public interface IXamProcessor {
+public interface IAccessManagementProcessor {
 
     void createUser(UserAmParam.CreateUser createUser);
 

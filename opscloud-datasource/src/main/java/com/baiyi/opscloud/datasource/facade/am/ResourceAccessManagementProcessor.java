@@ -16,9 +16,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.notice.message.CreateRamUserMessage;
 import com.baiyi.opscloud.domain.param.user.UserAmParam;
 import com.google.common.base.Joiner;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -26,16 +25,14 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
-public class RamProcessor extends AbstractAmProcessor {
+@RequiredArgsConstructor
+public class ResourceAccessManagementProcessor extends AbstractAccessManagementProcessor {
 
-    @Resource
-    private AliyunRamUserDriver aliyunRamUserDrive;
+    private final AliyunRamUserDriver aliyunRamUserDrive;
 
-    @Resource
-    private AliyunRamPolicyDriver aliyunRamPolicyDrive;
+    private final AliyunRamPolicyDriver aliyunRamPolicyDrive;
 
-    @Override
-    public String getDsType() {
+    public final String getDsType() {
         return DsTypeEnum.ALIYUN.name();
     }
 

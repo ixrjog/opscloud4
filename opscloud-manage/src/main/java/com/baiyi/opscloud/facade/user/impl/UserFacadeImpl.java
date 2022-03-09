@@ -20,24 +20,24 @@ import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
-import com.baiyi.opscloud.domain.vo.user.AMVO;
+import com.baiyi.opscloud.domain.vo.user.AccessManagementVO;
 import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.domain.vo.user.mfa.MfaVO;
-import com.baiyi.opscloud.facade.auth.maf.MfaAuthHelper;
+import com.baiyi.opscloud.facade.auth.mfa.MfaAuthHelper;
 import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
 import com.baiyi.opscloud.facade.user.UserCredentialFacade;
 import com.baiyi.opscloud.facade.user.UserFacade;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
-import com.baiyi.opscloud.facade.user.convertor.UserConvertor;
+import com.baiyi.opscloud.facade.user.converter.UserConverter;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
 import com.baiyi.opscloud.otp.OtpUtil;
 import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.packer.user.UserPacker;
-import com.baiyi.opscloud.packer.user.am.AmPacker;
+import com.baiyi.opscloud.packer.user.am.AccessManagementPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.user.*;
 import com.google.common.base.Joiner;
@@ -85,7 +85,7 @@ public class UserFacadeImpl implements UserFacade {
 
     private final UserPermissionService userPermissionService;
 
-    private final AmPacker amPacker;
+    private final AccessManagementPacker amPacker;
 
     private final UserCredentialFacade userCredentialFacade;
 
@@ -155,7 +155,7 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     @AssetBusinessRelation // 资产绑定业务对象
     public UserVO.User addUser(UserVO.User user) {
-        User newUser = UserConvertor.toDO(user);
+        User newUser = UserConverter.toDO(user);
 //        if (StringUtils.isEmpty(newUser.getPassword()))
 //            throw new CommonRuntimeException("密码不能为空");
         // 校验用户名
@@ -184,7 +184,7 @@ public class UserFacadeImpl implements UserFacade {
                 throw new CommonRuntimeException("权限不足:需要管理员才能修改其他用户信息!");
             }
         }
-        User updateUser = UserConvertor.toDO(user);
+        User updateUser = UserConverter.toDO(user);
         updateUser.setUsername(checkUser.getUsername());
         userService.updateBySelective(updateUser);
     }
@@ -270,7 +270,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public List<AMVO.XAM> queryAmsUser(String username, String amType) {
+    public List<AccessManagementVO.XAccessManagement> queryAmsUser(String username, String amType) {
         UserVO.User vo = UserVO.User.builder()
                 .username(username)
                 .build();

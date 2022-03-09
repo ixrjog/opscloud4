@@ -4,9 +4,9 @@ import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
-import com.baiyi.opscloud.domain.vo.user.AMVO;
-import com.baiyi.opscloud.packer.user.am.AmPacker;
-import com.baiyi.opscloud.packer.user.am.IToAMConverter;
+import com.baiyi.opscloud.domain.vo.user.AccessManagementVO;
+import com.baiyi.opscloud.packer.user.am.AccessManagementPacker;
+import com.baiyi.opscloud.packer.user.am.IAssetToAccessManagementConverter;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import org.springframework.beans.factory.InitializingBean;
@@ -19,7 +19,7 @@ import java.util.List;
  * @Date 2022/2/8 1:42 PM
  * @Version 1.0
  */
-public abstract class AbstractToAMConverter implements IToAMConverter, InitializingBean {
+public abstract class AbstractAssetToAccessManagementConverter implements IAssetToAccessManagementConverter, InitializingBean {
 
     @Resource
     protected DsInstanceService dsInstanceService;
@@ -31,11 +31,11 @@ public abstract class AbstractToAMConverter implements IToAMConverter, Initializ
     protected DsConfigHelper dsConfigHelper;
 
     @Override
-    public AMVO.XAM toAM(DsAssetVO.Asset asset) {
+    public AccessManagementVO.XAccessManagement toAM(DsAssetVO.Asset asset) {
         DatasourceInstance instance = dsInstanceService.getByUuid(asset.getInstanceUuid());
         DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getConfigId());
         List<DsAssetVO.Asset> policies = toPolicies(asset);
-        AMVO.XAM xam = AMVO.XAM.builder()
+        AccessManagementVO.XAccessManagement xam = AccessManagementVO.XAccessManagement.builder()
                 .instanceUuid(instance.getUuid())
                 .instanceName(instance.getInstanceName())
                 .username(asset.getAssetKey())
@@ -47,7 +47,7 @@ public abstract class AbstractToAMConverter implements IToAMConverter, Initializ
         return xam;
     }
 
-    abstract protected void wrap(AMVO.XAM xam,DatasourceConfig datasourceConfig);
+    abstract protected void wrap(AccessManagementVO.XAccessManagement xam, DatasourceConfig datasourceConfig);
 
     abstract protected List<DsAssetVO.Asset> toAccessKeys(DsAssetVO.Asset asset);
 
@@ -55,7 +55,7 @@ public abstract class AbstractToAMConverter implements IToAMConverter, Initializ
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        AmPacker.context.put(getAMType(), this::toAM);
+        AccessManagementPacker.context.put(getAMType(), this::toAM);
     }
 
 }

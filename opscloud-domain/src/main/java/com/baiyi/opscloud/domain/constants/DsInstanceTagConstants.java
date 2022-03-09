@@ -13,14 +13,14 @@ public enum DsInstanceTagConstants {
     AUTHORIZATION("Authorization"),
     ACCOUNT("Account"),
     NOTICE("Notice"),
-    SYSTEM("System");
+    SYSTEM("System"),
+    MFA("MFA");
 
     @Getter
     private final String tag;
 
     DsInstanceTagConstants(String tag) {
         this.tag = tag;
-
     }
 
 }

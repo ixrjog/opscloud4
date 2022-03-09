@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.facade.user.convertor;
+package com.baiyi.opscloud.facade.user.converter;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
@@ -12,9 +12,9 @@ import org.apache.commons.lang3.StringUtils;
  * @Date 2022/2/28 1:24 PM
  * @Version 1.0
  */
-public class UserConvertor {
+public class UserConverter {
 
-    private UserConvertor() {
+    private UserConverter() {
     }
 
     /**
@@ -33,4 +33,5 @@ public class UserConvertor {
         }
         return pre;
     }
+
 }

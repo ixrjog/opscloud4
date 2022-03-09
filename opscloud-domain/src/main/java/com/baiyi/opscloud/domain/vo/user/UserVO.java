@@ -119,11 +119,11 @@ public class UserVO {
 
         @ApiModelProperty(value = "云AM账户Map")
         @Builder.Default
-        private Map<String, List<AMVO.XAM>> amMap = Maps.newHashMap();
+        private Map<String, List<AccessManagementVO.XAccessManagement>> amMap = Maps.newHashMap();
 
         @ApiModelProperty(value = "云AM用户列表（某一类型）")
         @Builder.Default
-        private List<AMVO.XAM> ams = Lists.newArrayList();
+        private List<AccessManagementVO.XAccessManagement> ams = Lists.newArrayList();
 
         // 废弃
         @ApiModelProperty(value = "阿里云RAM用户列表")

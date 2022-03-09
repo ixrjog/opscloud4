@@ -15,9 +15,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.notice.message.CreateIamUserMessage;
 import com.baiyi.opscloud.domain.param.user.UserAmParam;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -25,13 +24,12 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
-public class IamProcessor extends AbstractAmProcessor {
+@RequiredArgsConstructor
+public class IdentityAndAccessManagementProcessor extends AbstractAccessManagementProcessor {
 
-    @Resource
-    private AmazonIdentityManagementUserDriver amazonIMUserDrive;
+    private final AmazonIdentityManagementUserDriver amazonIMUserDrive;
 
-    @Resource
-    private AmazonIdentityManagementPolicyDriver amazonIMPolicyDrive;
+    private final AmazonIdentityManagementPolicyDriver amazonIMPolicyDrive;
 
     @Override
     public String getDsType() {

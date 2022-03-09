@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.vo.auth.LogVO;
 import com.baiyi.opscloud.facade.auth.AuthFacade;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import com.baiyi.opscloud.facade.auth.UserTokenFacade;
-import com.baiyi.opscloud.facade.auth.maf.MfaAuthHelper;
+import com.baiyi.opscloud.facade.auth.mfa.MfaAuthHelper;
 import com.baiyi.opscloud.service.auth.AuthResourceService;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
 import com.baiyi.opscloud.service.user.AccessTokenService;

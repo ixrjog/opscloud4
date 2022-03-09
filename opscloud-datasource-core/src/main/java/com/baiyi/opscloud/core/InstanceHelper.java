@@ -28,24 +28,42 @@ public class InstanceHelper {
 
     private final SimpleTagService simpleTagService;
 
-    public DatasourceInstance getInstanceByUuid(String uuid){
+    public DatasourceInstance getInstanceByUuid(String uuid) {
         return dsInstanceService.getByUuid(uuid);
     }
 
     /**
      * 查询实例
      *
+     * @param filterInstanceTypes 实例类型
+     * @param tag                 符合的标签
      * @return
      */
     public List<DatasourceInstance> listInstance(DsTypeEnum[] filterInstanceTypes, String tag) {
         List<DatasourceInstance> instances = Lists.newArrayList();
         for (DsTypeEnum typeEnum : filterInstanceTypes) {
-            DsInstanceParam.DsInstanceQuery query =
-                    DsInstanceParam.DsInstanceQuery.builder().instanceType(typeEnum.getName()).build();
+            DsInstanceParam.DsInstanceQuery query = DsInstanceParam.DsInstanceQuery.builder()
+                    .instanceType(typeEnum.getName())
+                    .build();
             // 过滤掉没有标签的实例
-            instances.addAll(dsInstanceService.queryByParam(query).stream().filter(e -> simpleTagService.hasBusinessTag(tag, DATASOURCE_INSTANCE_TYPE, e.getId())).collect(Collectors.toList()));
+            instances.addAll(dsInstanceService.queryByParam(query).stream()
+                    .filter(e -> simpleTagService.hasBusinessTag(tag, DATASOURCE_INSTANCE_TYPE, e.getId()))
+                    .collect(Collectors.toList()));
         }
         return instances;
+    }
+
+    /**
+     * 实例是否有标签
+     *
+     * @param uuid
+     * @param tag
+     * @return
+     */
+    public boolean hasTagInInstance(String uuid, String tag) {
+        DatasourceInstance instance = getInstanceByUuid(uuid);
+        if (instance == null) return false;
+        return simpleTagService.hasBusinessTag(tag, DATASOURCE_INSTANCE_TYPE, instance.getId());
     }
 
 }

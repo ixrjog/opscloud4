@@ -3,13 +3,12 @@ package com.baiyi.opscloud.datasource.business.account.impl;
 import com.baiyi.opscloud.datasource.business.account.converter.AccountConverter;
 import com.baiyi.opscloud.datasource.business.account.impl.base.BaseZabbixAccountProvider;
 import com.baiyi.opscloud.datasource.business.account.util.ZabbixMediaUtil;
-import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
+import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5UserDriver;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -18,10 +17,10 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ZabbixAccountProvider extends BaseZabbixAccountProvider {
 
-    @Resource
-    private ZabbixV5UserDriver zabbixV5UserDatasource;
+    private final ZabbixV5UserDriver zabbixV5UserDatasource;
 
     public static final String ZABBIX_DEFAULT_USERGROUP = "users_default";
 

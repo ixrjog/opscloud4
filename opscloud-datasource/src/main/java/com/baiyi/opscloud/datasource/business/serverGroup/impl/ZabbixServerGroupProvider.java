@@ -3,20 +3,20 @@ package com.baiyi.opscloud.datasource.business.serverGroup.impl;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.datasource.business.account.impl.ZabbixAccountProvider;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
-import com.baiyi.opscloud.zabbix.helper.ZabbixGroupHelper;
 import com.baiyi.opscloud.zabbix.ZabbixUtil;
+import com.baiyi.opscloud.zabbix.helper.ZabbixGroupHelper;
 import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5ActionDriver;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.Optional;
 
 /**
@@ -26,19 +26,16 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ZabbixServerGroupProvider extends AbstractServerGroupProvider {
 
-    @Resource
-    private ZabbixGroupHelper zabbixFacade;
+    private final ZabbixGroupHelper zabbixFacade;
 
-    @Resource
-    private ZabbixV5ActionDriver zabbixV5ActionDatasource;
+    private final ZabbixV5ActionDriver zabbixV5ActionDatasource;
 
-    @Resource
-    private BusinessPropertyHelper businessPropertyHelper;
+    private final BusinessPropertyHelper businessPropertyHelper;
 
-    @Resource
-    private ZabbixAccountProvider zabbixAccountProvider;
+    private final ZabbixAccountProvider zabbixAccountProvider;
 
     protected static ThreadLocal<ZabbixConfig.Zabbix> configContext = new ThreadLocal<>();
 

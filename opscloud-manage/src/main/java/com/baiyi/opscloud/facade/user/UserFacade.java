@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
-import com.baiyi.opscloud.domain.vo.user.AMVO;
+import com.baiyi.opscloud.domain.vo.user.AccessManagementVO;
 import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import org.apache.commons.lang3.StringUtils;
@@ -65,7 +65,7 @@ public interface UserFacade {
 
     DataTable<UserVO.User> queryBusinessPermissionUserPage(UserBusinessPermissionParam.BusinessPermissionUserPageQuery pageQuery);
 
-    List<AMVO.XAM> queryAmsUser(String username, String amType);
+    List<AccessManagementVO.XAccessManagement> queryAmsUser(String username, String amType);
 
     /**
      * 用户查询MFA

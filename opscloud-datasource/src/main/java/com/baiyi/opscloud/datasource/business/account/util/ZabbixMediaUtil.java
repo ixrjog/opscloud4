@@ -29,29 +29,29 @@ public class ZabbixMediaUtil {
             if (RegexUtil.isEmail(user.getEmail())) {
                 medias.add(buildMailMedia(user.getEmail()));
             }
-            if(RegexUtil.isPhone(user.getPhone())){
+            if (RegexUtil.isPhone(user.getPhone())) {
                 medias.add(buildPhoneMedia(user.getPhone()));
             }
-        }catch (JsonProcessingException ignored){
+        } catch (JsonProcessingException ignored) {
         }
         return medias;
     }
 
-    private static ZabbixMedia.Media buildMailMedia(String mail) throws JsonProcessingException{
+    private static ZabbixMedia.Media buildMailMedia(String mail) throws JsonProcessingException {
         return ZabbixMedia.Media.builder()
                 .mediatypeid(String.valueOf(ZabbixMedia.MediaType.MAIL))
-                .sendto(toJsonNode(new String[] {mail}))
+                .sendto(toJsonNode(new String[]{mail}))
                 .build();
     }
 
-    private static ZabbixMedia.Media buildPhoneMedia(String phone) throws JsonProcessingException{
+    private static ZabbixMedia.Media buildPhoneMedia(String phone) throws JsonProcessingException {
         return ZabbixMedia.Media.builder()
                 .mediatypeid(String.valueOf(ZabbixMedia.MediaType.PHONE))
                 .sendto(toJsonNode(phone))
                 .build();
     }
 
-    private static JsonNode toJsonNode(Object obj) throws JsonProcessingException {
+    private static JsonNode toJsonNode(Object obj) {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.convertValue(obj, JsonNode.class);
     }

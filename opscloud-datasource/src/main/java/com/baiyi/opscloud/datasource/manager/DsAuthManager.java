@@ -1,20 +1,20 @@
 package com.baiyi.opscloud.datasource.manager;
 
-import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
-import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.core.factory.AuthProviderFactory;
-import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.core.provider.auth.BaseAuthProvider;
+import com.baiyi.opscloud.datasource.manager.base.BaseManager;
+import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.model.Authorization;
 import com.baiyi.opscloud.domain.param.auth.LoginParam;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
+import lombok.RequiredArgsConstructor;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -25,10 +25,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class DsAuthManager extends BaseManager {
 
-    @Resource
-    private StringEncryptor stringEncryptor;
+    private final StringEncryptor stringEncryptor;
 
     /**
      * 支持认证的实例类型

@@ -1,18 +1,17 @@
 package com.baiyi.opscloud.datasource.business.accountGroup.impl;
 
-import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.datasource.business.accountGroup.impl.base.AbstractAccountGroupProvider;
+import com.baiyi.opscloud.datasource.ldap.repo.GroupRepo;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.base.BaseBusiness;
-import com.baiyi.opscloud.datasource.ldap.repo.GroupRepo;
 import com.baiyi.opscloud.service.user.UserGroupService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -20,13 +19,12 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class LdapAccountGroupProvider extends AbstractAccountGroupProvider {
 
-    @Resource
-    private GroupRepo groupRepo;
+    private final GroupRepo groupRepo;
 
-    @Resource
-    private UserGroupService userGroupService;
+    private final UserGroupService userGroupService;
 
     protected static ThreadLocal<LdapConfig.Ldap> configContext = new ThreadLocal<>();
 

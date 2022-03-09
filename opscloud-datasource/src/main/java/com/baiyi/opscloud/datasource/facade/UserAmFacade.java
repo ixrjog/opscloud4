@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.facade;
 
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
-import com.baiyi.opscloud.datasource.facade.am.base.IXamProcessor;
+import com.baiyi.opscloud.datasource.facade.am.base.IAccessManagementProcessor;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.user.UserAmParam;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
@@ -24,9 +24,9 @@ public class UserAmFacade {
 
     private final DsInstanceService dsInstanceService;
 
-    private static final Map<String, IXamProcessor> context = new ConcurrentHashMap<>();
+    private static final Map<String, IAccessManagementProcessor> context = new ConcurrentHashMap<>();
 
-    public static void register(IXamProcessor bean) {
+    public static void register(IAccessManagementProcessor bean) {
         context.put(bean.getDsType(), bean);
         log.info("AM Processor注册: dsType = {} , beanName = {}  ", bean.getDsType(), bean.getClass().getSimpleName());
     }
@@ -36,7 +36,7 @@ public class UserAmFacade {
      * @param grantPolicy
      */
     public void grantPolicy(UserAmParam.GrantPolicy grantPolicy) {
-        IXamProcessor xamProcessor = getAmProcessorByInstanceUuid(grantPolicy.getInstanceUuid());
+        IAccessManagementProcessor xamProcessor = getAmProcessorByInstanceUuid(grantPolicy.getInstanceUuid());
         xamProcessor.grantPolicy(grantPolicy);
     }
 
@@ -45,16 +45,16 @@ public class UserAmFacade {
      * @param revokePolicy
      */
     public void revokePolicy(UserAmParam.RevokePolicy revokePolicy) {
-        IXamProcessor xamProcessor = getAmProcessorByInstanceUuid(revokePolicy.getInstanceUuid());
+        IAccessManagementProcessor xamProcessor = getAmProcessorByInstanceUuid(revokePolicy.getInstanceUuid());
         xamProcessor.revokePolicy(revokePolicy);
     }
 
     public void createUser(UserAmParam.CreateUser createUser) {
-        IXamProcessor xamProcessor = getAmProcessorByInstanceUuid(createUser.getInstanceUuid());
+        IAccessManagementProcessor xamProcessor = getAmProcessorByInstanceUuid(createUser.getInstanceUuid());
         xamProcessor.createUser(createUser);
     }
 
-    private IXamProcessor getAmProcessorByInstanceUuid(String uuid) {
+    private IAccessManagementProcessor getAmProcessorByInstanceUuid(String uuid) {
         DatasourceInstance instance = dsInstanceService.getByUuid(uuid);
         if (instance == null) {
             throw new CommonRuntimeException("数据源实例不存在！");

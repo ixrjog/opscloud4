@@ -1,20 +1,21 @@
 package com.baiyi.opscloud.datasource.manager;
 
-import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.business.account.AccountProviderFactory;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.datasource.manager.base.IManager;
 import com.baiyi.opscloud.datasource.manager.base.NoticeManager;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
+import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
-import org.apache.commons.lang3.StringUtils;
-import javax.annotation.Resource;
+
 import java.util.List;
 
 /**
@@ -26,6 +27,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class DsAccountManager extends BaseManager implements IManager<User> {
 
     /**
@@ -33,11 +35,9 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
      */
     private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.LDAP, DsTypeEnum.ZABBIX};
 
-    @Resource
-    private StringEncryptor stringEncryptor;
+    private final StringEncryptor stringEncryptor;
 
-    @Resource
-    private NoticeManager noticeManager;
+    private final NoticeManager noticeManager;
 
     @Override
     protected DsTypeEnum[] getFilterInstanceTypes() {

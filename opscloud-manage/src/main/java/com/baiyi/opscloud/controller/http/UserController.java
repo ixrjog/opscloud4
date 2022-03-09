@@ -197,7 +197,7 @@ public class UserController {
 
     @ApiOperation(value = "查询用户AM授权信息")
     @GetMapping(value = "/am/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<AMVO.XAM>> queryAmsByUser(@RequestParam @Valid String username, @Valid String amType) {
+    public HttpResult<List<AccessManagementVO.XAccessManagement>> queryAmsByUser(@RequestParam @Valid String username, @Valid String amType) {
         return new HttpResult<>(userFacade.queryAmsUser(username, amType));
     }
 

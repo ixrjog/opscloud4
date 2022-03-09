@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.packer.auth.AuthRolePacker;
 import com.baiyi.opscloud.packer.user.UserAccessTokenPacker;
 import com.baiyi.opscloud.packer.user.UserCredentialPacker;
-import com.baiyi.opscloud.packer.user.am.AmPacker;
+import com.baiyi.opscloud.packer.user.am.AccessManagementPacker;
 import com.baiyi.opscloud.service.user.AccessTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ public class UserPackerDelegate {
 
     private final UserAccessTokenPacker userAccessTokenPacker;
 
-    private final AmPacker amPacker;
+    private final AccessManagementPacker amPacker;
 
     private final AccessTokenService accessTokenService;
 
