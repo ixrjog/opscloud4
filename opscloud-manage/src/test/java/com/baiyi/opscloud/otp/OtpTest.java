@@ -69,7 +69,21 @@ public class OtpTest extends BaseUnit {
     @Test
     void test2() {
         try {
-            Key sk =  OtpUtil.generateOtpSK();
+            Key sk = OtpUtil.generateOtpSK();
+            print(Base32StringUtil.encode(sk.getEncoded()));
+            while (true) {
+                // SecretKey sk = OtpUtil.toKey("LACYXBI6WBQ4O5WW273USF5S7QMVMYBT");
+                log.info(OtpUtil.generateOtp(sk));
+                Thread.sleep(2000);
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    @Test
+    void test3() {
+        try {
+            Key sk = OtpUtil.toKey("");
             print(Base32StringUtil.encode(sk.getEncoded()));
             while (true) {
                 // SecretKey sk = OtpUtil.toKey("LACYXBI6WBQ4O5WW273USF5S7QMVMYBT");

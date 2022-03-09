@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DingtalkMessageDriver {
 
-    private final DingtalkTokenDriver dingtalkTokenDrive;
+    private final DingtalkTokenDriver dingtalkTokenDriver;
 
     private DingtalkMessageFeign buildFeign(DingtalkConfig.Dingtalk config) {
         return Feign.builder()
@@ -32,7 +32,7 @@ public class DingtalkMessageDriver {
     }
 
     public DingtalkMessage.MessageResponse asyncSend(DingtalkConfig.Dingtalk config, DingtalkMessageParam.AsyncSendMessage asyncSendMessage) {
-        DingtalkToken.TokenResponse tokenResponse = dingtalkTokenDrive.getToken(config);
+        DingtalkToken.TokenResponse tokenResponse = dingtalkTokenDriver.getToken(config);
         asyncSendMessage.setAgentId(Long.valueOf(config.getApp().getAgentId()));
         DingtalkMessageFeign dingtalkAPI = buildFeign(config);
         return dingtalkAPI.asyncSend(tokenResponse.getAccessToken(), asyncSendMessage);

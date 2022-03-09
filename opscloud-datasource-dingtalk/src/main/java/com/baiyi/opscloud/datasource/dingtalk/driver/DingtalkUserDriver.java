@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DingtalkUserDriver {
 
-    private final DingtalkTokenDriver dingtalkTokenDrive;
+    private final DingtalkTokenDriver dingtalkTokenDriver;
 
     private DingtalkUserFeign buildFeign(DingtalkConfig.Dingtalk config) {
         return Feign.builder()
@@ -32,7 +32,7 @@ public class DingtalkUserDriver {
     }
 
     public DingtalkUser.UserResponse list(DingtalkConfig.Dingtalk config, DingtalkUserParam.QueryUserPage queryUserPage) {
-        DingtalkToken.TokenResponse tokenResponse = dingtalkTokenDrive.getToken(config);
+        DingtalkToken.TokenResponse tokenResponse = dingtalkTokenDriver.getToken(config);
         DingtalkUserFeign dingtalkAPI = buildFeign(config);
         return dingtalkAPI.list(tokenResponse.getAccessToken(), queryUserPage);
     }

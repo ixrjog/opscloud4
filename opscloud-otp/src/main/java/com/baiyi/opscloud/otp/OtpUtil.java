@@ -24,7 +24,7 @@ public class OtpUtil {
 
     private static final Duration duration = Duration.ofSeconds(30L);
 
-    private static final String QR_CODE = "otpauth://totp/${ACCOUNT}?secret=${OTP_SK}";
+    private static final String QR_CODE = "otpauth://totp/OPSCLOUD@${ACCOUNT}?secret=${OTP_SK}?&issuer=OPSCLOUD";
 
     private OtpUtil() {
     }

@@ -49,7 +49,7 @@ public class IamTest extends BaseAwsTest {
                 .username("aaa-test")
                 .password(PasswordUtil.getPW(20))
                 .build();
-        IamUser.User createUser = amazonIMUserDrive.createUser(getConfig().getAws(), user, true);
+        IamUser.User createUser = amazonIMUserDrive.createUser(getConfig().getAws(), user, true, true);
         print(createUser);
     }
 

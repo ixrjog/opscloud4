@@ -24,6 +24,9 @@ public class UserCredential {
     @Column(name = "user_id")
     private Integer userId;
 
+    @Column(name = "instance_uuid")
+    private String instanceUuid;
+
     /**
      * 用户凭据分类
      */

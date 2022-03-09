@@ -89,7 +89,7 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
                 return iamUser;
         } catch (Exception ignore) {
         }
-        iamUser = amazonIMUserDrive.createUser(config, user, CREATE_LOGIN_PROFILE);
+        iamUser = amazonIMUserDrive.createUser(config, user, CREATE_LOGIN_PROFILE,enableMFA(instanceUuid));
         // 同步资产 IAM_USER
         dsInstanceFacade.pullAsset(instanceUuid, DsAssetTypeConstants.RAM_USER.name(), iamUser);
         CreateIamUserMessage message = CreateIamUserMessage.builder()

@@ -45,11 +45,11 @@ public class AliyunRamUserDriver {
      * @param createLoginProfile
      * @return RamUser.User
      */
-    public RamUser.User createUser(String regionId, AliyunConfig.Aliyun aliyun, User user, boolean createLoginProfile) {
+    public RamUser.User createUser(String regionId, AliyunConfig.Aliyun aliyun, User user, boolean createLoginProfile, boolean enableMFA) {
         try {
             CreateUserResponse.User createUser = createUser(regionId, aliyun, user);
             if (createLoginProfile)
-                createLoginProfile(regionId, aliyun, user, NO_PASSWORD_RESET_REQUIRED);
+                createLoginProfile(regionId, aliyun, user, NO_PASSWORD_RESET_REQUIRED, enableMFA);
             return BeanCopierUtil.copyProperties(createUser, RamUser.User.class);
         } catch (ClientException e) {
             throw new CommonRuntimeException("创建RAM用户错误: " + e.getMessage());
@@ -66,12 +66,13 @@ public class AliyunRamUserDriver {
      * @return
      * @throws ClientException
      */
-    private CreateLoginProfileResponse.LoginProfile createLoginProfile(String regionId, AliyunConfig.Aliyun aliyun, User user, boolean passwordResetRequired)
+    private CreateLoginProfileResponse.LoginProfile createLoginProfile(String regionId, AliyunConfig.Aliyun aliyun, User user, boolean passwordResetRequired, boolean mFABindRequired)
             throws ClientException {
         CreateLoginProfileRequest request = new CreateLoginProfileRequest();
         request.setUserName(user.getUsername());
         request.setPassword(user.getPassword());
         request.setPasswordResetRequired(passwordResetRequired);
+        request.setMFABindRequired(mFABindRequired);
         return aliyunClient.getAcsResponse(regionId, aliyun, request).getLoginProfile();
     }
 

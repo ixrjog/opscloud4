@@ -7,13 +7,13 @@ import com.baiyi.opscloud.datasource.dingtalk.driver.DingtalkMessageDriver;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkMessage;
 import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkMessageParam;
 import com.baiyi.opscloud.datasource.message.consumer.base.AbstractMessageConsumer;
-import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -23,10 +23,10 @@ import java.util.List;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class DingtalkAppMessageConsumer extends AbstractMessageConsumer<DingtalkConfig.Dingtalk> {
 
-    @Resource
-    private DingtalkMessageDriver dingtalkMessageDrive;
+    private final DingtalkMessageDriver dingtalkMessageDriver;
 
     private DatasourceInstanceAsset findAssetUser(DatasourceInstance instance, User user) {
         List<BusinessAssetRelation> relations =
@@ -42,21 +42,19 @@ public class DingtalkAppMessageConsumer extends AbstractMessageConsumer<Dingtalk
     @Override
     public void send(DatasourceInstance instance, User user, MessageTemplate mt, String text) {
         DatasourceInstanceAsset asset = findAssetUser(instance, user);
-        DingtalkMessageParam.Markdown markdown =
-                DingtalkMessageParam.Markdown.builder()
+        DingtalkMessageParam.Markdown markdown = DingtalkMessageParam.Markdown.builder()
                         .title(mt.getTitle())
                         .text(text)
                         .build();
         DingtalkMessageParam.Msg msg = DingtalkMessageParam.Msg.builder()
                 .markdown(markdown)
                 .build();
-        DingtalkMessageParam.AsyncSendMessage message =
-                DingtalkMessageParam.AsyncSendMessage.builder()
+        DingtalkMessageParam.AsyncSendMessage message = DingtalkMessageParam.AsyncSendMessage.builder()
                         .msg(msg)
                         .useridList(asset.getAssetId())
                         .build();
         // log.info("发送通知 : message = {}",JSONUtil.writeValueAsString(message));
-        DingtalkMessage.MessageResponse messageResponse = dingtalkMessageDrive.asyncSend(buildConfig(instance),
+        DingtalkMessage.MessageResponse messageResponse = dingtalkMessageDriver.asyncSend(buildConfig(instance),
                 message);
     }
 
