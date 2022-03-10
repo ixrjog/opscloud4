@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.facade.user;
+package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
@@ -10,6 +10,8 @@ import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
  */
 public interface UserCredentialFacade {
 
+    void clearCredential(int userId, String instanceUuid, int credentialType);
+
     void saveCredential(UserCredentialVO.Credential credential);
 
     /**
@@ -19,6 +21,7 @@ public interface UserCredentialFacade {
      * @param user
      */
     void saveCredential(UserCredentialVO.Credential credential, User user);
+
 
     /**
      * 创建用户MFA凭据

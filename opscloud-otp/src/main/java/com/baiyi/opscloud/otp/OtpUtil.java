@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.otp;
 
 import com.baiyi.opscloud.otp.exception.OtpException;
+import com.baiyi.opscloud.otp.model.OTPAccessCode;
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator;
 
 import javax.crypto.KeyGenerator;
@@ -52,10 +53,25 @@ public class OtpUtil {
     public static String generateOtp(Key key) throws NoSuchAlgorithmException, InvalidKeyException {
         final TimeBasedOneTimePasswordGenerator totp = new TimeBasedOneTimePasswordGenerator(duration);
         final Instant now = Instant.now();
-        final Instant later = now.plus(totp.getTimeStep());
-        // System.out.println("Current password: " + totp.generateOneTimePasswordString(key, now));
-        // System.out.println("Future password:  " + totp.generateOneTimePasswordString(key, later));
         return totp.generateOneTimePasswordString(key, now);
+    }
+
+    /**
+     * 绑定MFA专用，生成2组AccessCode
+     *
+     * @param key
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeyException
+     */
+    public static OTPAccessCode.AccessCode generateOtpAcccessCode(Key key) throws NoSuchAlgorithmException, InvalidKeyException {
+        final TimeBasedOneTimePasswordGenerator totp = new TimeBasedOneTimePasswordGenerator(duration);
+        final Instant now = Instant.now();
+        final Instant later = now.plus(totp.getTimeStep());
+        return OTPAccessCode.AccessCode.builder()
+                .currentPassword(totp.generateOneTimePasswordString(key, now))
+                .futurePassword(totp.generateOneTimePasswordString(key, later))
+                .build();
     }
 
     /**
@@ -67,6 +83,10 @@ public class OtpUtil {
      */
     public static SecretKey toKey(String otpSecretKeyStr) throws OtpException.DecodingException {
         return new SecretKeySpec(Base32StringUtil.decode(otpSecretKeyStr), "HmacSHA1");
+    }
+
+    public static SecretKey toKey(byte[] var1) throws OtpException.DecodingException {
+        return new SecretKeySpec(var1, "HmacSHA1");
     }
 
     /**

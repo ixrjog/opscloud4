@@ -37,5 +37,12 @@ public class EmployeeResignConsumerTest extends BaseUnit {
         bizAssetRelationService.delete(relation);
     }
 
+    @Test
+    void consumerTest2() {
+//        BusinessAssetRelation relation = bizAssetRelationService.getById(140);
+//        log.info("BusinessAssetRelation: id = {}", relation.getId());
+//        bizAssetRelationService.delete(relation);
+    }
+
 
 }

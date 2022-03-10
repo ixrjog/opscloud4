@@ -1,12 +1,16 @@
 package com.baiyi.opscloud.facade.user.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
+import com.baiyi.opscloud.common.builder.SimpleDictBuilder;
 import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.annotation.*;
+import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
+import com.baiyi.opscloud.domain.annotation.BusinessType;
+import com.baiyi.opscloud.domain.annotation.RevokeUserPermission;
+import com.baiyi.opscloud.domain.annotation.TagClear;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
@@ -25,10 +29,10 @@ import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.domain.vo.user.mfa.MfaVO;
+import com.baiyi.opscloud.facade.UserCredentialFacade;
 import com.baiyi.opscloud.facade.auth.mfa.MfaAuthHelper;
 import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
-import com.baiyi.opscloud.facade.user.UserCredentialFacade;
 import com.baiyi.opscloud.facade.user.UserFacade;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
@@ -50,6 +54,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
@@ -317,6 +322,34 @@ public class UserFacadeImpl implements UserFacade {
         user.setMfa(true);
         userService.updateMfa(user);
         return createMfa(user);
+    }
+
+    @Override
+    public UserVO.UserIAMMFA getUserIAMMFA() {
+        String username = SessionUtil.getUsername();
+        User user = userService.getByUsername(username);
+        final String defQrcode = "otpauth://totp/Amazon%20Web%20Services:${NAME}?secret=${SECRET}&issuer=Amazon%20Web%20Services";
+        List<MfaVO.MFA> userMfas = userCredentialService.queryByUserIdAndType(user.getId(), UserCredentialTypeEnum.IAM_OTP_SK.getType()).stream()
+                .map(e -> {
+                    String name = StringUtils.isNotBlank(e.getComment()) ? e.getComment() : username;
+                    Map<String, String> dict = SimpleDictBuilder.newBuilder()
+                            .putParam("NAME", name)
+                            .putParam("SECRET", e.getCredential())
+                            .build()
+                            .getDict();
+                    final String qrcode = TemplateUtil.render(defQrcode, dict);
+                    return MfaVO.MFA.builder()
+                            .title(e.getTitle())
+                            .secret(e.getCredential())
+                            .username(username)
+                            .qrcode(qrcode)
+                            .build();
+                }).collect(Collectors.toList());
+        return UserVO.UserIAMMFA.builder()
+                .username(username)
+                .mfa(CollectionUtils.isEmpty(userMfas))
+                .userMfas(userMfas)
+                .build();
     }
 
     private UserVO.UserMFA createMfa(User user) {

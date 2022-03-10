@@ -1,5 +1,7 @@
 Welcome to the opscloud wiki!
 
+![GitHub Stats Card](https://github-readme-stats.vercel.app/api?username=ixrjog&show_icons=true&theme=onedark)
+
 # OpsCloud4.0 IaC基础架构即代码
 <img src="https://img.shields.io/badge/version-4.0.8-brightgreen.svg"></img>
 <img src="https://img.shields.io/badge/java-8-brightgreen.svg"></img> 

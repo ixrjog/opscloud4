@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.facade.user.impl;
+package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
@@ -9,7 +9,6 @@ import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserCredential;
 import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
-import com.baiyi.opscloud.facade.user.UserCredentialFacade;
 import com.baiyi.opscloud.otp.Base32StringUtil;
 import com.baiyi.opscloud.otp.OtpUtil;
 import com.baiyi.opscloud.service.user.UserCredentialService;
@@ -18,10 +17,12 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -37,6 +38,16 @@ public class UserCredentialFacadeImpl implements UserCredentialFacade {
     private final UserService userService;
 
     @Override
+    public void clearCredential(int userId, String instanceUuid, int credentialType) {
+        List<UserCredential> credentials = userCredentialService.queryByUserIdAndType(userId, credentialType).stream()
+                .filter(e -> instanceUuid.equals(e.getInstanceUuid()))
+                .collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(credentials)) {
+            credentials.forEach(e -> userCredentialService.deleteById(e.getId()));
+        }
+    }
+
+    @Override
     public void saveCredential(UserCredentialVO.Credential credential) {
         User user = userService.getByUsername(SessionUtil.getUsername());
         if (user == null) return;
@@ -48,6 +59,13 @@ public class UserCredentialFacadeImpl implements UserCredentialFacade {
         credential.setUserId(user.getId());
         if (credential.getCredentialType() == UserCredentialTypeEnum.PUB_KEY.getType()) {
             savePubKey(credential);
+            return;
+        }
+        UserCredential userCredential = BeanCopierUtil.copyProperties(credential, UserCredential.class);
+        if (IdUtil.isEmpty(userCredential.getId())) {
+            userCredentialService.add(userCredential);
+        } else {
+            userCredentialService.update(userCredential);
         }
     }
 

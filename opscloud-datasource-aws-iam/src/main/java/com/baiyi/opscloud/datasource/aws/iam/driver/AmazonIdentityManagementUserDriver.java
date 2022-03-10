@@ -41,7 +41,7 @@ public class AmazonIdentityManagementUserDriver {
      *
      * @param config
      */
-    public IamUser.User createUser(AwsConfig.Aws config, com.baiyi.opscloud.domain.generator.opscloud.User user, boolean createLoginProfile, boolean enableMFA) {
+    public IamUser.User createUser(AwsConfig.Aws config, com.baiyi.opscloud.domain.generator.opscloud.User user, boolean createLoginProfile) {
         CreateUserRequest request = new CreateUserRequest();
         request.setUserName(user.getUsername());
         CreateUserResult result = buildAmazonIdentityManagement(config).createUser(request);

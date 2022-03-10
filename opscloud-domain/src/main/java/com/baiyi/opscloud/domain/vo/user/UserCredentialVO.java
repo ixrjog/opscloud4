@@ -39,8 +39,11 @@ public class UserCredentialVO {
         @ApiModelProperty(value = "主键")
         private Integer id;
 
-        @ApiModelProperty(value = "用户id")
+        @ApiModelProperty(value = "用户ID")
         private Integer userId;
+
+        @ApiModelProperty(value = "实例UUID")
+        private String instanceUuid;
 
         @ApiModelProperty(value = "标题")
         private String title;

@@ -1,12 +1,16 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Table(name = "user_credential")
 public class UserCredential {
@@ -46,11 +50,12 @@ public class UserCredential {
 
     private String fingerprint;
 
+    private String comment;
+
     @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 
     @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
-    private String comment;
 }

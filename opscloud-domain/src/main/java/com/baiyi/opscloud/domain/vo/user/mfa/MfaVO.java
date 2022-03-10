@@ -22,6 +22,8 @@ public class MfaVO {
 
         public static final MFA NOT_SHOW = MFA.builder().show(false).build();
 
+        private String title;
+
         @Builder.Default
         private Boolean show = true;
 

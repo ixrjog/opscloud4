@@ -69,16 +69,20 @@ public interface UserFacade {
 
     /**
      * 用户查询MFA
+     *
      * @return
      */
     UserVO.UserMFA getUserMFA();
 
     /**
      * 用户重置MFA
+     *
      * @return
      */
     UserVO.UserMFA resetUserMFA();
 
     UserVO.UserMFA bindUserMFA(String otp);
+
+    UserVO.UserIAMMFA getUserIAMMFA();
 
 }

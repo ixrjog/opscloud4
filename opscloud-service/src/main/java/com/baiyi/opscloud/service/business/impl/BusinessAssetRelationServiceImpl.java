@@ -85,4 +85,9 @@ public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationSe
         return bizAssetRelationMapper.selectByExample(example);
     }
 
+    @Override
+    public BusinessAssetRelation getById(Integer id) {
+        return bizAssetRelationMapper.selectByPrimaryKey(id);
+    }
+
 }

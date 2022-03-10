@@ -215,4 +215,23 @@ public class UserVO {
 
     }
 
+    @Builder
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
+    public static class UserIAMMFA {
+
+        private Integer id;
+
+        private String username;
+
+        @ApiModelProperty(value = "用户是否启用MFA")
+        private Boolean mfa;
+
+        @ApiModelProperty(value = "用户MFA配置")
+        private List<MfaVO.MFA> userMfas;
+
+    }
+
 }

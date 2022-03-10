@@ -12,6 +12,7 @@ import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.*;
+import com.baiyi.opscloud.facade.UserCredentialFacade;
 import com.baiyi.opscloud.facade.user.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -238,6 +239,12 @@ public class UserController {
     @GetMapping(value = "/mfa/bind", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<UserVO.UserMFA> bindUserMFA(@RequestParam @Valid String otp) {
         return new HttpResult<>(userFacade.bindUserMFA(otp));
+    }
+
+    @ApiOperation(value = "用户查询IAM-MFA详情")
+    @GetMapping(value = "/mfa/iam/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<UserVO.UserIAMMFA> getUserIAMMFA() {
+        return new HttpResult<>(userFacade.getUserIAMMFA());
     }
 
 }

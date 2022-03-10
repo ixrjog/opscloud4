@@ -41,7 +41,7 @@ public class BusinessAssetRelationFacadeImpl implements BusinessAssetRelationFac
     public void unbindAsset(BaseBusiness.IBusiness iBusiness) {
         List<BusinessAssetRelation> businessAssetRelations = bizAssetRelationService.queryBusinessRelations(iBusiness);
         if (CollectionUtils.isEmpty(businessAssetRelations)) return;
-        businessAssetRelations.forEach(e -> bizAssetRelationService.delete(e));
+        businessAssetRelations.forEach(bizAssetRelationService::delete);
     }
 
 }

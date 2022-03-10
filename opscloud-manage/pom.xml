@@ -60,11 +60,6 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-otp</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.baiyi</groupId>
             <artifactId>opscloud-kubernetes-terminal</artifactId>
         </dependency>
 

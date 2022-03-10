@@ -28,9 +28,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ResourceAccessManagementProcessor extends AbstractAccessManagementProcessor {
 
-    private final AliyunRamUserDriver aliyunRamUserDrive;
+    private final AliyunRamUserDriver aliyunRamUserDriver;
 
-    private final AliyunRamPolicyDriver aliyunRamPolicyDrive;
+    private final AliyunRamPolicyDriver aliyunRamPolicyDriver;
 
     public final String getDsType() {
         return DsTypeEnum.ALIYUN.name();
@@ -47,15 +47,15 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
         User user = userService.getByUsername(grantPolicy.getUsername());
         AliyunConfig.Aliyun aliyun = buildConfig(grantPolicy.getInstanceUuid());
         try {
-            RamUser.User ramUser = aliyunRamUserDrive.getUser(aliyun.getRegionId(), aliyun, grantPolicy.getUsername());
+            RamUser.User ramUser = aliyunRamUserDriver.getUser(aliyun.getRegionId(), aliyun, grantPolicy.getUsername());
             if (ramUser == null)
                 ramUser = createUser(aliyun, grantPolicy.getInstanceUuid(), user);
             RamPolicy.Policy ramPolicy = BeanCopierUtil.copyProperties(grantPolicy.getPolicy(), RamPolicy.Policy.class);
-            if (aliyunRamUserDrive.listUsersForPolicy(aliyun.getRegionId(), aliyun, ramPolicy.getPolicyType(), ramPolicy.getPolicyName())
+            if (aliyunRamUserDriver.listUsersForPolicy(aliyun.getRegionId(), aliyun, ramPolicy.getPolicyType(), ramPolicy.getPolicyName())
                     .stream().anyMatch(e -> e.getUserName().equals(grantPolicy.getUsername())))
                 throw new CommonRuntimeException("RAM用户授权策略错误: 重复授权！");
-            aliyunRamPolicyDrive.attachPolicyToUser(aliyun.getRegionId(), aliyun, ramUser.getUserName(), ramPolicy);
-            RamPolicy.Policy policy = aliyunRamPolicyDrive.getPolicy(aliyun.getRegionId(), aliyun, ramPolicy);
+            aliyunRamPolicyDriver.attachPolicyToUser(aliyun.getRegionId(), aliyun, ramUser.getUserName(), ramPolicy);
+            RamPolicy.Policy policy = aliyunRamPolicyDriver.getPolicy(aliyun.getRegionId(), aliyun, ramPolicy);
             // 同步资产 RAM_USER
             dsInstanceFacade.pullAsset(grantPolicy.getInstanceUuid(), DsAssetTypeConstants.RAM_USER.name(), ramUser);
         } catch (ClientException e) {
@@ -68,15 +68,15 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
         User user = userService.getByUsername(revokePolicy.getUsername());
         AliyunConfig.Aliyun aliyun = buildConfig(revokePolicy.getInstanceUuid());
         try {
-            RamUser.User ramUser = aliyunRamUserDrive.getUser(aliyun.getRegionId(), aliyun, revokePolicy.getUsername());
+            RamUser.User ramUser = aliyunRamUserDriver.getUser(aliyun.getRegionId(), aliyun, revokePolicy.getUsername());
             //    throw new CommonRuntimeException("RAM用户撤销授权策略错误：RAM账户不存在！");
             if (ramUser != null) {
                 RamPolicy.Policy ramPolicy = BeanCopierUtil.copyProperties(revokePolicy.getPolicy(), RamPolicy.Policy.class);
                 //    throw new CommonRuntimeException("RAM用户撤销授权策略错误： 未授权当前策略！");
-                if (aliyunRamUserDrive.listUsersForPolicy(aliyun.getRegionId(), aliyun, ramPolicy.getPolicyType(), ramPolicy.getPolicyName())
+                if (aliyunRamUserDriver.listUsersForPolicy(aliyun.getRegionId(), aliyun, ramPolicy.getPolicyType(), ramPolicy.getPolicyName())
                         .stream().anyMatch(e -> e.getUserName().equals(revokePolicy.getUsername()))) {
-                    aliyunRamPolicyDrive.detachPolicyFromUser(aliyun.getRegionId(), aliyun, ramUser.getUserName(), ramPolicy);
-                    RamPolicy.Policy policy = aliyunRamPolicyDrive.getPolicy(aliyun.getRegionId(), aliyun, ramPolicy);
+                    aliyunRamPolicyDriver.detachPolicyFromUser(aliyun.getRegionId(), aliyun, ramUser.getUserName(), ramPolicy);
+                    RamPolicy.Policy policy = aliyunRamPolicyDriver.getPolicy(aliyun.getRegionId(), aliyun, ramPolicy);
                 }
                 // 同步资产 RAM_USER
                 dsInstanceFacade.pullAsset(revokePolicy.getInstanceUuid(), DsAssetTypeConstants.RAM_USER.name(), ramUser);
@@ -90,12 +90,12 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
     public RamUser.User createUser(AliyunConfig.Aliyun aliyun, String instanceUuid, User user) {
         RamUser.User ramUser;
         try {
-            ramUser = aliyunRamUserDrive.getUser(aliyun.getRegionId(), aliyun, user.getUsername());
+            ramUser = aliyunRamUserDriver.getUser(aliyun.getRegionId(), aliyun, user.getUsername());
             if (ramUser != null)
                 return ramUser;
         } catch (ClientException ignore) {
         }
-        ramUser = aliyunRamUserDrive.createUser(aliyun.getRegionId(), aliyun, user, CREATE_LOGIN_PROFILE, enableMFA(instanceUuid));
+        ramUser = aliyunRamUserDriver.createUser(aliyun.getRegionId(), aliyun, user, CREATE_LOGIN_PROFILE, enableMFA(instanceUuid));
         // 同步资产 RAM_USER
         dsInstanceFacade.pullAsset(instanceUuid, DsAssetTypeConstants.RAM_USER.name(), ramUser);
         CreateRamUserMessage message = CreateRamUserMessage.builder()

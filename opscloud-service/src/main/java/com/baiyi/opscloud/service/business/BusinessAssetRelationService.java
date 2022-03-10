@@ -60,5 +60,6 @@ public interface BusinessAssetRelationService {
 
     List<BusinessAssetRelation> queryBusinessRelations(BaseBusiness.IBusiness iBusiness, String assetType);
 
+    BusinessAssetRelation getById(Integer id);
 
 }
