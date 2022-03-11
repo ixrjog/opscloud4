@@ -24,6 +24,7 @@ public class WorkOrderReportVO {
     public static class Report {
         private String cName;
         private Integer value;
+        private String color;
     }
 
     @Data
@@ -33,11 +34,29 @@ public class WorkOrderReportVO {
     @ApiModel
     public static class MonthReport implements Serializable {
         private static final long serialVersionUID = -7642429717526988404L;
+
         @ApiModelProperty(value = "日期")
-        private List<String> dateCatList;
+        private List<String> dateCat;
 
         @ApiModelProperty(value = "工单名称月度统计")
-        private Map<String, List<Integer>> nameStatistics;
+        private Map<String, MonthStatistics> nameCat;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
+    public static class MonthStatistics implements Serializable {
+
+        private static final long serialVersionUID = -4917800861585712502L;
+
+        @ApiModelProperty(value = "月度统计")
+        private List<Integer> values;
+
+        @ApiModelProperty(value = "类目颜色")
+        private String color;
+
     }
 
 }

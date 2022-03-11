@@ -55,7 +55,7 @@
     </resultMap>
 
     <select id="queryReportByName" resultMap="ReportResultMap">
-        select a1.name as `c_name`, count(*) as `value`
+        select a1.name as `c_name`, count(*) as `value`, a1.color
         from work_order_ticket a0
                  join work_order a1 on a1.id = a0.work_order_id
         where a0.ticket_phase = 'SUCCESS'
@@ -76,6 +76,5 @@
         group by `c_name`
         order by `c_name`;
     </select>
-
 
 </mapper>

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.service.workorder.impl;
 
+import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrder;
@@ -9,6 +10,7 @@ import com.baiyi.opscloud.service.workorder.WorkOrderService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -56,6 +58,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     }
 
     @Override
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1HOUR, key = "'workorder_id_' + #id", unless = "#result == null")
     public WorkOrder getById(int id) {
         return workOrderMapper.selectByPrimaryKey(id);
     }

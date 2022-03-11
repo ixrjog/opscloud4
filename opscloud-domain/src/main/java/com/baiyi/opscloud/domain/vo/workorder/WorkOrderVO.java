@@ -56,6 +56,9 @@ public class WorkOrderVO {
         @ApiModelProperty(value = "状态 0 正常 1 开发 2 停用 3")
         private Integer status;
 
+        @ApiModelProperty(value = "报表颜色")
+        private String color;
+
         @ApiModelProperty(value = "说明")
         private String comment;
 

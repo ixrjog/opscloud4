@@ -13,6 +13,7 @@
     <result column="work_order_group_id" jdbcType="INTEGER" property="workOrderGroupId" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="color" jdbcType="VARCHAR" property="color"/>
     <result column="comment" jdbcType="VARCHAR" property="comment" />
     <result column="is_active" jdbcType="BIT" property="isActive" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />

@@ -3,11 +3,13 @@ package com.baiyi.opscloud.domain.generator.opscloud;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @Table(name = "work_order")
-public class WorkOrder {
+public class WorkOrder implements Serializable {
+    private static final long serialVersionUID = -20798480896238199L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -55,6 +57,8 @@ public class WorkOrder {
      */
     @Column(name = "is_active")
     private Boolean isActive;
+
+    private String color;
 
     /**
      * 说明
