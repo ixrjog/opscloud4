@@ -10,6 +10,7 @@ import com.baiyi.opscloud.service.workorder.WorkOrderService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -72,6 +73,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     }
 
     @Override
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_1HOUR, key = "'workorder_id_' + #workOrder.id")
     public void update(WorkOrder workOrder) {
         workOrderMapper.updateByPrimaryKey(workOrder);
     }
