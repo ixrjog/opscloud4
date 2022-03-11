@@ -190,4 +190,5 @@ public class SshShellTerminalDelegate implements Terminal {
     public void close() throws IOException {
         delegate().close();
     }
+
 }

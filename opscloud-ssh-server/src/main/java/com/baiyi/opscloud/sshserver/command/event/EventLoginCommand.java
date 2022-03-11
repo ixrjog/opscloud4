@@ -17,7 +17,6 @@ import com.baiyi.opscloud.sshcore.model.SessionIdMapper;
 import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshContext;
 import com.baiyi.opscloud.sshserver.SshShellCommandFactory;
-import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.opscloud.sshserver.annotation.SshShellComponent;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
@@ -25,6 +24,7 @@ import com.baiyi.opscloud.sshserver.command.event.base.EventContext;
 import com.baiyi.opscloud.sshserver.command.server.base.BaseServerCommand;
 import com.baiyi.opscloud.sshserver.util.TerminalUtil;
 import com.google.common.base.Joiner;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sshd.server.session.ServerSession;
 import org.jline.terminal.Size;
@@ -33,7 +33,6 @@ import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
-import javax.annotation.Resource;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
@@ -47,30 +46,25 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @SshShellComponent
 @ShellCommandGroup("Event")
+@RequiredArgsConstructor
 public class EventLoginCommand extends BaseServerCommand {
 
-    @Resource
-    private ServerCommandAudit auditCommandHandler;
+    private final ServerCommandAudit serverCommandAudit;
 
-    @Resource
-    private SshShellHelper helper;
+    private final HostSystemHandler hostSystemHandler;
 
-    @Resource
-    private HostSystemHandler hostSystemHandler;
-
-    @Resource
-    private SimpleTerminalSessionFacade simpleTerminalSessionFacade;
+    private final SimpleTerminalSessionFacade terminalSessionFacade;
 
     private String toInstanceId(ServerVO.Server serverVO) {
         return Joiner.on("#").join(serverVO.getDisplayName(), serverVO.getPrivateIp(), IdUtil.buildUUID());
     }
 
     @InvokeSessionUser(invokeAdmin = true)
-    @ShellMethod(value = "事件ID登录服务器", key = { "login-event"})
+    @ShellMethod(value = "事件ID登录服务器", key = {"login-event"})
     public void loginEvent(@ShellOption(help = "Event Id") int id,
-                      @ShellOption(help = "Account Name", defaultValue = "") String account,
-                      @ShellOption(value = {"-A", "--admin"}, help = "Admin") boolean admin) {
-        ServerSession serverSession = helper.getSshSession();
+                           @ShellOption(help = "Account Name", defaultValue = "") String account,
+                           @ShellOption(value = {"-A", "--admin"}, help = "Admin") boolean admin) {
+        ServerSession serverSession = sshShellHelper.getSshSession();
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
         Terminal terminal = getTerminal();
 
@@ -81,11 +75,11 @@ public class EventLoginCommand extends BaseServerCommand {
         ServerVO.Server serverVO = eventContext.getServerVO();
         String instanceId = toInstanceId(serverVO);
         try {
-            HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverVO, account,admin);
+            HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverVO, account, admin);
             hostSystem.setInstanceId(instanceId);
-            hostSystem.setTerminalSize(helper.terminalSize());
+            hostSystem.setTerminalSize(sshShellHelper.terminalSize());
             TerminalSessionInstance terminalSessionInstance = TerminalSessionInstanceBuilder.build(sessionId, hostSystem, InstanceSessionTypeEnum.SERVER);
-            simpleTerminalSessionFacade.recordTerminalSessionInstance(
+            terminalSessionFacade.recordTerminalSessionInstance(
                     terminalSessionInstance
             );
 
@@ -106,12 +100,12 @@ public class EventLoginCommand extends BaseServerCommand {
             } catch (Exception e) {
                 sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);
             } finally {
-                simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
+                terminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             }
         } catch (SshRuntimeException e) {
             throw e;
         }
-        auditCommandHandler.recordCommand(sessionId, instanceId);
+        serverCommandAudit.recordCommand(sessionId, instanceId);
         JSchSessionContainer.closeSession(sessionId, instanceId);
     }
 
@@ -141,7 +135,7 @@ public class EventLoginCommand extends BaseServerCommand {
     }
 
     private void sessionClosed(String logout, Instant inst1) {
-        helper.print(String.format(logout, Duration.between(inst1, Instant.now()).getSeconds()), PromptColor.RED);
+        sshShellHelper.print(String.format(logout, Duration.between(inst1, Instant.now()).getSeconds()), PromptColor.RED);
     }
 
     private boolean isClosed(String sessionId, String instanceId) {
@@ -155,6 +149,6 @@ public class EventLoginCommand extends BaseServerCommand {
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) throw new Exception();
         jSchSession.getCommander().print((char) ch);
-
     }
+
 }

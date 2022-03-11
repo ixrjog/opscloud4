@@ -65,4 +65,5 @@ public class SimpleTable {
     public interface SimpleTableBuilderListener {
         void onBuilt(TableBuilder tableBuilder);
     }
+
 }

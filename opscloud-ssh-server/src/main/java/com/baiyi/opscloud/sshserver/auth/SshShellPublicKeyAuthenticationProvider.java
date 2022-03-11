@@ -31,4 +31,5 @@ public class SshShellPublicKeyAuthenticationProvider extends AuthorizedKeysAuthe
         session.getIoSession().setAttribute(AUTHENTICATION_ATTRIBUTE, new SshAuthentication(username, username));
         return authenticated;
     }
+
 }

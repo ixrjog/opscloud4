@@ -45,4 +45,5 @@ public class EventContext {
     private Date updateTime;
 
     private String eventMessage;
+
 }

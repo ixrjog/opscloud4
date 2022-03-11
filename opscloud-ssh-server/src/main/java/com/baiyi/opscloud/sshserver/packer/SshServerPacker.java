@@ -52,4 +52,5 @@ public class SshServerPacker {
         server.setServerGroup(serverGroup);
         SimpleServerNameFacade.wrapDisplayName(server);
     }
+
 }

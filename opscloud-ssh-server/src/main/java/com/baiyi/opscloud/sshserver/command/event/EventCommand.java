@@ -25,6 +25,7 @@ import com.baiyi.opscloud.sshserver.command.server.base.BaseServerCommand;
 import com.baiyi.opscloud.sshserver.command.util.ServerUtil;
 import com.baiyi.opscloud.sshserver.util.ServerTableUtil;
 import com.google.common.collect.Maps;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jline.terminal.Terminal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,6 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -46,10 +46,10 @@ import java.util.Map;
 @Slf4j
 @SshShellComponent
 @ShellCommandGroup("Event")
+@RequiredArgsConstructor
 public class EventCommand extends BaseServerCommand {
 
-    @Resource
-    private EventBusinessService eventBusinessService;
+    private final EventBusinessService eventBusinessService;
 
     private Terminal terminal;
 
@@ -103,7 +103,7 @@ public class EventCommand extends BaseServerCommand {
                 eventBusinessService.deleteById(eventBusiness.getId());
                 continue;
             }
-            ServerVO.Server serverVO = BeanCopierUtil.copyProperties(server,ServerVO.Server.class);
+            ServerVO.Server serverVO = BeanCopierUtil.copyProperties(server, ServerVO.Server.class);
             sshServerPacker.wrap(serverVO);
             //ServerVO.Server serverVO = sshServerPacker.wrapToVO(server);
             eventContext.setServerVO(serverVO);
@@ -119,8 +119,8 @@ public class EventCommand extends BaseServerCommand {
             id++;
         }
         SessionCommandContext.setEventMapper(eventMapper);
-        helper.print(pt.toString());
-        helper.print(ServerTableUtil.buildFooter(table.getTotalNum(),
+        sshShellHelper.print(pt.toString());
+        sshShellHelper.print(ServerTableUtil.buildFooter(table.getTotalNum(),
                         pageQuery.getPage(),
                         pageQuery.getLength()),
                 PromptColor.GREEN);

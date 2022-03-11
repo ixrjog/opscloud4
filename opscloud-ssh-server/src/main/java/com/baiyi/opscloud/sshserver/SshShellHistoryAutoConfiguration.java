@@ -66,6 +66,7 @@ public class SshShellHistoryAutoConfiguration {
         @Lazy
         private History history;
 
+        @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
         @Bean
         @Primary
         public History history(LineReader lineReader, @Qualifier(HISTORY_FILE) File historyFile) {
@@ -78,5 +79,6 @@ public class SshShellHistoryAutoConfiguration {
             history.save();
         }
     }
+
 }
 

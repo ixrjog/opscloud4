@@ -148,4 +148,5 @@ public class ExtendedShell extends Shell {
     public interface ShellNotifier {
         boolean shouldStop();
     }
+
 }

@@ -41,4 +41,5 @@ public class TerminalUtil {
         assert jSchSession != null;
         RemoteInvokeHandler.setChannelPtySize((ChannelShell) jSchSession.getChannel(), size);
     }
+
 }

@@ -66,4 +66,5 @@ public class ExtendedCompletionProposal extends CompletionProposal {
         result = result * PRIME + (this.isComplete() ? 79 : 97);
         return result;
     }
+
 }

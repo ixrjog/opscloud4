@@ -746,4 +746,5 @@ public class SshShellHelper {
 
         private boolean stop;
     }
+
 }

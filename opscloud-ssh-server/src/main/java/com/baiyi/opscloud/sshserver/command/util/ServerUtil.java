@@ -19,6 +19,9 @@ import java.util.stream.Collectors;
  */
 public class ServerUtil {
 
+    private ServerUtil() {
+    }
+
     public static String toDisplayEnv(Env env) {
         if (env.getPromptColor() == null) {
             return env.getEnvName();

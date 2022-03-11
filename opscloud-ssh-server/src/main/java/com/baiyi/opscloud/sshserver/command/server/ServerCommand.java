@@ -36,7 +36,7 @@ public class ServerCommand extends BaseServerCommand {
                 .build();
         ListServerCommand commandContext = ListServerCommand.builder()
                 .sessionId(sessionId)
-                .username(helper.getSshSession().getUsername())
+                .username(sshShellHelper.getSshSession().getUsername())
                 .queryParam(pageQuery)
                 .build();
         doListServer(commandContext);
@@ -53,7 +53,7 @@ public class ServerCommand extends BaseServerCommand {
             pageQuery.setPage(pageQuery.getPage() > 1 ? pageQuery.getPage() - 1 : pageQuery.getPage());
             ListServerCommand listServerCommand = ListServerCommand.builder()
                     .sessionId(sessionId)
-                    .username(helper.getSshSession().getUsername())
+                    .username(sshShellHelper.getSshSession().getUsername())
                     .queryParam(pageQuery)
                     .build();
             doListServer(listServerCommand);
@@ -73,7 +73,7 @@ public class ServerCommand extends BaseServerCommand {
             pageQuery.setPage(pageQuery.getPage() + 1);
             ListServerCommand listServerCommand = ListServerCommand.builder()
                     .sessionId(sessionId)
-                    .username(helper.getSshSession().getUsername())
+                    .username(sshShellHelper.getSshSession().getUsername())
                     .queryParam(pageQuery)
                     .build();
             doListServer(listServerCommand);

@@ -17,11 +17,11 @@
 package com.baiyi.opscloud.sshserver;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Map enum color to jline ones
  */
+
 public enum PromptColor {
 
     BLACK(0),
@@ -43,7 +43,6 @@ public enum PromptColor {
     ;
 
     @Getter
-    @Setter
     private final int value;
 
     PromptColor(int value) {

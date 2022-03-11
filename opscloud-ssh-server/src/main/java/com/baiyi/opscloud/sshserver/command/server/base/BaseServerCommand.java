@@ -44,7 +44,7 @@ public class BaseServerCommand {
     private static final int COMMENT_MAX_SIZE = 20;
 
     @Resource
-    protected SshShellHelper helper;
+    protected SshShellHelper sshShellHelper;
 
     @Resource
     protected ServerService serverService;
@@ -56,6 +56,8 @@ public class BaseServerCommand {
     protected SshServerPacker sshServerPacker;
 
     private Terminal terminal;
+
+    private final static String[] TABLE_FIELD_NAMES = {"ID", "Server Name", "ServerGroup Name", "Env", "IP", "Tag", "Account", "Comment"};
 
     @Autowired
     @Lazy
@@ -71,16 +73,7 @@ public class BaseServerCommand {
     }
 
     protected void doListServer(ListServerCommand commandContext) {
-        PrettyTable pt = PrettyTable
-                .fieldNames("ID",
-                        "Server Name",
-                        "ServerGroup Name",
-                        "Env",
-                        "IP",
-                        "Tag",
-                        "Account",
-                        "Comment"
-                );
+        PrettyTable pt = PrettyTable.fieldNames(TABLE_FIELD_NAMES);
         ServerParam.UserPermissionServerPageQuery pageQuery = commandContext.getQueryParam();
         pageQuery.setUserId(com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin() ? null : com.baiyi.opscloud.common.util.SessionUtil.getUserId());
         pageQuery.setLength(terminal.getSize().getRows() - PAGE_FOOTER_SIZE);
@@ -103,8 +96,8 @@ public class BaseServerCommand {
             id++;
         }
         SessionCommandContext.setIdMapper(idMapper);
-        helper.print(pt.toString());
-        helper.print(ServerTableUtil.buildPagination(table.getTotalNum(),
+        sshShellHelper.print(pt.toString());
+        sshShellHelper.print(ServerTableUtil.buildPagination(table.getTotalNum(),
                         pageQuery.getPage(),
                         pageQuery.getLength()),
                 PromptColor.GREEN);
@@ -141,8 +134,7 @@ public class BaseServerCommand {
     }
 
     protected String buildSessionId() {
-        return SessionUtil.buildSessionId(helper.getSshSession().getIoSession());
+        return SessionUtil.buildSessionId(sshShellHelper.getSshSession().getIoSession());
     }
-
 
 }

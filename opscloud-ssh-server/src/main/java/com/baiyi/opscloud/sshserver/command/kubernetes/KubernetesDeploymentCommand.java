@@ -2,10 +2,10 @@ package com.baiyi.opscloud.sshserver.command.kubernetes;
 
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.sshcore.table.PrettyTable;
 import com.baiyi.opscloud.sshserver.PromptColor;
@@ -18,12 +18,12 @@ import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
 import com.baiyi.opscloud.sshserver.command.kubernetes.base.BaseKubernetesCommand;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -34,10 +34,13 @@ import java.util.Map;
 @Slf4j
 @SshShellComponent
 @ShellCommandGroup("Kubernetes")
+@RequiredArgsConstructor
 public class KubernetesDeploymentCommand extends BaseKubernetesCommand {
 
-    @Resource
-    private UserService userService;
+    private final UserService userService;
+
+    private final static String[] TABLE_FIELD_NAMES = {"ID", "Kubernetes Instance Name", "Namespace", "Deployment Name"};
+
 
     @CheckTerminalSize(cols = 116, rows = 10)
     @ScreenClear
@@ -53,23 +56,7 @@ public class KubernetesDeploymentCommand extends BaseKubernetesCommand {
                 .length(terminal.getSize().getRows() - PAGE_FOOTER_SIZE)
                 .build();
         DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
-
-//        DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
-//                .assetType(DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.name())
-//                .queryName(name)
-//                .isActive(true)
-//                .build();
-//        pageQuery.setLength(terminal.getSize().getRows() - PAGE_FOOTER_SIZE);
-//        pageQuery.setPage(1);
-        // DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
-
-        PrettyTable pt = PrettyTable
-                .fieldNames("ID",
-                        "Kubernetes Instance Name",
-                        "Namespace",
-                        "Deployment Name"
-                );
-
+        PrettyTable pt = PrettyTable.fieldNames(TABLE_FIELD_NAMES);
         Map<Integer, Integer> idMapper = Maps.newHashMap();
         Map<String, KubernetesDsInstance> kubernetesDsInstanceMap = Maps.newHashMap();
         int id = 1;

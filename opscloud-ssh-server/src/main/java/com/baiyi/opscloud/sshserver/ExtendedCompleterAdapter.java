@@ -78,4 +78,5 @@ public class ExtendedCompleterAdapter extends JLineShellAutoConfiguration.Comple
                 .map(s -> s.replaceAll("\\n+", " "))
                 .collect(Collectors.toList());
     }
+
 }

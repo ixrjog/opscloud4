@@ -128,6 +128,7 @@ public class SshShellAutoConfiguration {
         }
     }
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
     @Primary
     public ExtendedShell sshShell(@Qualifier("main") ResultHandler<Object> resultHandler, List<PostProcessor> postProcessors) {
@@ -189,6 +190,7 @@ public class SshShellAutoConfiguration {
      * @param lineReader jline line reader
      * @return terminal
      */
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean(TERMINAL_DELEGATE)
     @Primary
     public Terminal terminal(Terminal terminal, LineReader lineReader) {
@@ -232,6 +234,7 @@ public class SshShellAutoConfiguration {
      * @param environment    spring environment
      * @return shell application runner
      */
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
     @Primary
     public InteractiveShellApplicationRunner sshInteractiveShellApplicationRunner(LineReader lineReader,

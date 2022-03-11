@@ -34,16 +34,16 @@ import java.util.List;
 public class AbstractCommand {
 
     @Resource
-    private SshShellHelper helper;
+    private SshShellHelper sshShellHelper;
 
     @Resource
-    private SshShellProperties properties;
+    private SshShellProperties sshShellProperties;
 
     protected final CommandProperties commandProperties;
 
     public AbstractCommand(SshShellHelper helper, SshShellProperties properties, CommandProperties commandProperties) {
-        this.helper = helper;
-        this.properties = properties;
+        this.sshShellHelper = helper;
+        this.sshShellProperties = properties;
         this.commandProperties = commandProperties;
     }
 
@@ -62,14 +62,14 @@ public class AbstractCommand {
                 return Availability.unavailable("command not included (please check property '" +
                         SshShellProperties.SSH_SHELL_PREFIX + ".commands." + commandGroup + ".includes" + "')");
             }
-            if (helper.isLocalPrompt()) {
+            if (sshShellHelper.isLocalPrompt()) {
                 log.debug("Not an ssh session -> local prompt -> giving all rights");
                 return Availability.available();
             }
             SshAuthentication auth = SshShellCommandFactory.SSH_THREAD_CONTEXT.get().getAuthentication();
             List<String> authorities = auth != null ? auth.getAuthorities() : null;
-            if (commandProperties.isRestricted() && !helper.checkAuthorities(commandProperties.getAuthorizedRoles(),
-                    authorities, properties.getAuthentication() == SshShellProperties.AuthenticationType.simple)) {
+            if (commandProperties.isRestricted() && !sshShellHelper.checkAuthorities(commandProperties.getAuthorizedRoles(),
+                    authorities, sshShellProperties.getAuthentication() == SshShellProperties.AuthenticationType.simple)) {
                 return Availability.unavailable("command is forbidden for current user");
             }
             postAvailability();

@@ -28,6 +28,7 @@ import com.baiyi.opscloud.sshserver.config.SshServerArthasConfig;
 import com.baiyi.opscloud.sshserver.packer.SshServerPacker;
 import com.baiyi.opscloud.sshserver.util.TerminalUtil;
 import com.google.common.base.Joiner;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sshd.server.session.ServerSession;
@@ -38,7 +39,6 @@ import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
-import javax.annotation.Resource;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
@@ -52,30 +52,24 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @SshShellComponent
 @ShellCommandGroup("Server")
+@RequiredArgsConstructor
 public class ServerLoginCommand implements InitializingBean {
-
-    @Resource
-    private SshServerArthasConfig arthasConfig;
 
     private static String SERVER_EXECUTE_ARTHAS = "cd /tmp && curl -O https://arthas.aliyun.com/arthas-boot.jar && sudo su - app -c 'java -jar /tmp/arthas-boot.jar'\n";
 
-    @Resource
-    private ServerCommandAudit auditCommandHandler;
+    private final SshServerArthasConfig arthasConfig;
 
-    @Resource
-    private SshShellHelper helper;
+    private final ServerCommandAudit serverCommandAudit;
 
-    @Resource
-    private ServerService serverService;
+    private final SshShellHelper sshShellHelper;
 
-    @Resource
-    private HostSystemHandler hostSystemHandler;
+    private final ServerService serverService;
 
-    @Resource
-    private SshServerPacker sshServerPacker;
+    private final HostSystemHandler hostSystemHandler;
 
-    @Resource
-    private SimpleTerminalSessionFacade simpleTerminalSessionFacade;
+    private final SshServerPacker sshServerPacker;
+
+    private final SimpleTerminalSessionFacade terminalSessionFacade;
 
     private String toInstanceId(Server server) {
         ServerVO.Server serverVO = BeanCopierUtil.copyProperties(server,ServerVO.Server.class);
@@ -89,22 +83,19 @@ public class ServerLoginCommand implements InitializingBean {
                       @ShellOption(help = "Account Name", defaultValue = "") String account,
                       @ShellOption(value = {"-R", "--arthas"}, help = "Arthas") boolean arthas,
                       @ShellOption(value = {"-A", "--admin"}, help = "Admin") boolean admin) {
-        ServerSession serverSession = helper.getSshSession();
+        ServerSession serverSession = sshShellHelper.getSshSession();
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
         Terminal terminal = getTerminal();
-
         SshContext sshContext = getSshContext();
-
         Map<Integer, Integer> idMapper = SessionCommandContext.getIdMapper();
         Server server = serverService.getById(idMapper.get(id));
         String instanceId = toInstanceId(server);
-
         try {
             HostSystem hostSystem = hostSystemHandler.buildHostSystem(server, account, admin);
             hostSystem.setInstanceId(instanceId);
-            hostSystem.setTerminalSize(helper.terminalSize());
+            hostSystem.setTerminalSize(sshShellHelper.terminalSize());
             TerminalSessionInstance terminalSessionInstance = TerminalSessionInstanceBuilder.build(sessionId, hostSystem, InstanceSessionTypeEnum.SERVER);
-            simpleTerminalSessionFacade.recordTerminalSessionInstance(
+            terminalSessionFacade.recordTerminalSessionInstance(
                     terminalSessionInstance
             );
 
@@ -139,12 +130,12 @@ public class ServerLoginCommand implements InitializingBean {
                 // e.printStackTrace();
                 sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);
             } finally {
-                simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
+                terminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             }
         } catch (SshRuntimeException e) {
             throw e;
         }
-        auditCommandHandler.recordCommand(sessionId, instanceId);
+        serverCommandAudit.recordCommand(sessionId, instanceId);
         JSchSessionContainer.closeSession(sessionId, instanceId);
     }
 
@@ -174,7 +165,7 @@ public class ServerLoginCommand implements InitializingBean {
     }
 
     private void sessionClosed(String logout, Instant inst1) {
-        helper.print(String.format(logout, Duration.between(inst1, Instant.now()).getSeconds()), PromptColor.RED);
+        sshShellHelper.print(String.format(logout, Duration.between(inst1, Instant.now()).getSeconds()), PromptColor.RED);
     }
 
     private boolean isClosed(String sessionId, String instanceId) {

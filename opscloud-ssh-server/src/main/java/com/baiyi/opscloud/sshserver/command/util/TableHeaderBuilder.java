@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public class TableHeaderBuilder {
 
-    private List<TableHeader> headers = Lists.newArrayList();
+    private final List<TableHeader> headers = Lists.newArrayList();
 
     static public TableHeaderBuilder newBuilder() {
         return new TableHeaderBuilder();
@@ -35,22 +35,17 @@ public class TableHeaderBuilder {
 
     @Data
     public static class TableHeader {
-
         public TableHeader(String name, int length) {
             this.name = name;
             this.length = length;
         }
-
         private String name;
         private int length;
-
         public String toName() {
             return String.format(" %-" + length + "s|", name);
         }
-
         public String toLine() {
             return String.join("", Collections.nCopies(length + 1, "-"));
         }
-
     }
 }

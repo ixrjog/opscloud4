@@ -39,12 +39,12 @@ import java.util.List;
 @ShellCommandGroup("Built-In Commands")
 public class HistoryCommand implements History.Command {
 
-    private SshShellProperties properties;
+    private final SshShellProperties properties;
 
     @Resource
     private SshShellHelper helper;
 
-    private org.jline.reader.History history;
+    private final org.jline.reader.History history;
 
     public HistoryCommand(SshShellProperties properties, SshShellHelper helper,
                           @Lazy org.jline.reader.History history) {

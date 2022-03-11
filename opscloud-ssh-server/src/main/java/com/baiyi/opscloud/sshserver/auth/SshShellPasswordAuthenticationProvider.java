@@ -32,9 +32,7 @@ public class SshShellPasswordAuthenticationProvider implements SshShellAuthentic
     @Override
     public boolean authenticate(String username, String pass,
                                 ServerSession serverSession) throws PasswordChangeRequiredException {
-
         serverSession.getIoSession().setAttribute(AUTHENTICATION_ATTRIBUTE, new SshAuthentication(username, username));
-
         return username.equals(this.user) && pass.equals(this.password);
     }
 }
