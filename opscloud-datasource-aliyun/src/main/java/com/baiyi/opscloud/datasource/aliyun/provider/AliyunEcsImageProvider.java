@@ -8,7 +8,7 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aliyun.convertor.ComputeAssetConvertor;
+import com.baiyi.opscloud.datasource.aliyun.converter.ComputeAssetConverter;
 import com.baiyi.opscloud.datasource.aliyun.ecs.driver.AliyunEcsDriver;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -52,7 +52,7 @@ public class AliyunEcsImageProvider extends BaseAssetProvider<DescribeImagesResp
 
     @Override
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeImagesResponse.Image entity) {
-        return ComputeAssetConvertor.toAssetContainer(dsInstance, entity);
+        return ComputeAssetConverter.toAssetContainer(dsInstance, entity);
     }
 
     @Override
