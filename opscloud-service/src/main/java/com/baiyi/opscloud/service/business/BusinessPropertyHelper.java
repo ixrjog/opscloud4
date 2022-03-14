@@ -36,11 +36,10 @@ public class BusinessPropertyHelper {
     }
 
     public static String getManageIp(Server server, ServerProperty.Server property) {
-        String manageIp = Optional.ofNullable(property)
+        return Optional.ofNullable(property)
                 .map(ServerProperty.Server::getMetadata)
                 .map(ServerProperty.Metadata::getManageIp)
                 .orElse(server.getPrivateIp());
-        return StringUtils.isEmpty(manageIp) ? server.getPrivateIp() : manageIp;
     }
 
     public ServerProperty.Server getBusinessProperty(Server server) {
