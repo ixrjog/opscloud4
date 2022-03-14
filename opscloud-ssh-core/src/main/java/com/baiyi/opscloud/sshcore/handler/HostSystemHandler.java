@@ -6,14 +6,16 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.CredentialUtil;
 import com.baiyi.opscloud.common.util.ServerAccountUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.datasource.business.server.util.HostParamUtil;
 import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.model.SshCredential;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
+import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
 import com.baiyi.opscloud.service.server.ServerAccountService;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.service.sys.CredentialService;
@@ -23,9 +25,10 @@ import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.HostSystem;
 import com.baiyi.opscloud.sshcore.model.ServerNode;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
+
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +52,8 @@ public class HostSystemHandler {
     private final CredentialUtil credentialUtil;
 
     private final SshAccountHelper sshAccountHelper;
+
+    private final BusinessPropertyHelper bizPropertyHelper;
 
     private interface LoginType {
         int LOW_AUTHORITY = 0;
@@ -80,9 +85,9 @@ public class HostSystemHandler {
         SshCredential sshCredential;
         // 未指定账户
         if (StringUtils.isEmpty(account)) {
-            if(admin && isAdmin){
+            if (admin && isAdmin) {
                 sshCredential = getSshCredential(server, LoginType.HIGH_AUTHORITY);
-            }else{
+            } else {
                 sshCredential = getSshCredential(server, LoginType.LOW_AUTHORITY);
                 if (sshCredential == null && isAdmin)
                     sshCredential = getSshCredential(server, LoginType.HIGH_AUTHORITY);
@@ -98,7 +103,7 @@ public class HostSystemHandler {
         if (sshCredential == null)
             throw new SshRuntimeException(ErrorEnum.SSH_SERVER_NO_ACCOUNTS_AVAILABLE);
         return HostSystem.builder()
-                .host(server.getPrivateIp()) // 避免绕过未授权服务器
+                .host(HostParamUtil.getManageIp(server, bizPropertyHelper.getBusinessProperty(server))) // 避免绕过未授权服务器
                 .sshCredential(sshCredential)
                 .build();
     }
@@ -108,7 +113,7 @@ public class HostSystemHandler {
         Server server = serverService.getById(serverNode.getId());
         SshCredential sshCredential = buildSshCredential(message, server);
         return HostSystem.builder()
-                .host(server.getPrivateIp()) // 避免绕过未授权服务器
+                .host(HostParamUtil.getManageIp(server, bizPropertyHelper.getBusinessProperty(server))) // 避免绕过未授权服务器
                 .sshCredential(sshCredential)
                 .loginMessage(message)
                 .build();
