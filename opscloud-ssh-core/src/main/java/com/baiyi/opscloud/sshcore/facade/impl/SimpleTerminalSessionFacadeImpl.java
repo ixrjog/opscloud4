@@ -8,6 +8,10 @@ import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import com.baiyi.opscloud.sshcore.config.TerminalConfigurationProperties;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.RetryException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -17,6 +21,7 @@ import java.util.Date;
  * @Date 2021/7/21 2:34 下午
  * @Version 1.0
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SimpleTerminalSessionFacadeImpl implements SimpleTerminalSessionFacade {
@@ -28,7 +33,7 @@ public class SimpleTerminalSessionFacadeImpl implements SimpleTerminalSessionFac
     private final TerminalSessionInstanceService terminalSessionInstanceService;
 
     @Override
-    public void closeTerminalSessionInstance(TerminalSessionInstance terminalSessionInstance){
+    public void closeTerminalSessionInstance(TerminalSessionInstance terminalSessionInstance) {
         terminalSessionInstance.setCloseTime((new Date()));
         terminalSessionInstance.setInstanceClosed(true);
         terminalSessionInstance.setOutputSize(IOUtil.fileSize(terminalConfig.buildAuditLogPath(terminalSessionInstance.getSessionId(), terminalSessionInstance.getInstanceId())));
@@ -36,8 +41,13 @@ public class SimpleTerminalSessionFacadeImpl implements SimpleTerminalSessionFac
     }
 
     @Override
-    public void closeTerminalSessionInstance(TerminalSession terminalSession, String instanceId) {
+    @Retryable(value = RetryException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
+    public void closeTerminalSessionInstance(TerminalSession terminalSession, String instanceId) throws RetryException {
         TerminalSessionInstance terminalSessionInstance = terminalSessionInstanceService.getByUniqueKey(terminalSession.getSessionId(), instanceId);
+        if (terminalSessionInstance == null) {
+            log.error("实例未完成初始化用户就退出了: sessionId = {} , instanceId = {}", terminalSession.getSessionId(), instanceId);
+            throw new RetryException("实例未完成初始化用户就退出了: sessionId  = " + terminalSession.getSessionId());
+        }
         closeTerminalSessionInstance(terminalSessionInstance);
     }
 
