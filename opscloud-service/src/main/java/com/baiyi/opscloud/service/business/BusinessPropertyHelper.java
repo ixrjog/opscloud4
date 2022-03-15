@@ -24,22 +24,23 @@ public class BusinessPropertyHelper {
     @Resource
     private BusinessPropertyService businessPropertyService;
 
-    public static Integer getSshPort(ServerPack serverPack){
+    public static Integer getSshPort(ServerPack serverPack) {
         return Optional.ofNullable(serverPack.getProperty())
                 .map(ServerProperty.Server::getMetadata)
                 .map(ServerProperty.Metadata::getSshPort)
                 .orElse(22);
     }
 
-    public static String getManageIp(ServerPack serverPack){
-        return getManageIp(serverPack.getServer(),serverPack.getProperty());
+    public static String getManageIp(ServerPack serverPack) {
+        return getManageIp(serverPack.getServer(), serverPack.getProperty());
     }
 
     public static String getManageIp(Server server, ServerProperty.Server property) {
-        return Optional.ofNullable(property)
+        final String manageIp = Optional.ofNullable(property)
                 .map(ServerProperty.Server::getMetadata)
                 .map(ServerProperty.Metadata::getManageIp)
                 .orElse(server.getPrivateIp());
+        return StringUtils.isBlank(manageIp) ? server.getPrivateIp() : manageIp;
     }
 
     public ServerProperty.Server getBusinessProperty(Server server) {
