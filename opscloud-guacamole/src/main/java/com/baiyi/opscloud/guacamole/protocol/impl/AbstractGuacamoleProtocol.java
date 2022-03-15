@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.param.guacamole.GuacamoleParam;
 import com.baiyi.opscloud.guacamole.protocol.GuacamoleProtocolFactory;
 import com.baiyi.opscloud.guacamole.protocol.IGuacamoleProtocol;
-import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
+import com.baiyi.opscloud.service.business.BizPropertyHelper;
 import com.baiyi.opscloud.service.server.ServerAccountService;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.service.sys.CredentialService;
@@ -56,7 +56,7 @@ public abstract class AbstractGuacamoleProtocol implements IGuacamoleProtocol, I
     private ServerAccountService serverAccountService;
 
     @Resource
-    private BusinessPropertyHelper businessPropertyHelper;
+    private BizPropertyHelper businessPropertyHelper;
 
     /**
      * 支持认证的实例类型

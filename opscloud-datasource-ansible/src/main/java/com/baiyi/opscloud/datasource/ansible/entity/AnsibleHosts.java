@@ -11,7 +11,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
-import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
+import com.baiyi.opscloud.service.business.BizPropertyHelper;
 import com.google.common.base.Joiner;
 import lombok.Builder;
 import lombok.Data;
@@ -84,9 +84,9 @@ public class AnsibleHosts {
         private String toHostLine(ServerPack serverPack) {
             String serverName = SimpleServerNameFacade.toName(serverPack.getServer(), serverPack.getEnv());
             return Joiner.on(" ").skipNulls().join(
-                    BusinessPropertyHelper.getManageIp(serverPack),
+                    BizPropertyHelper.getManageIp(serverPack),
                     link("ansible_ssh_user", sshUser),
-                    link("ansible_ssh_port", String.valueOf(BusinessPropertyHelper.getSshPort(serverPack))),
+                    link("ansible_ssh_port", String.valueOf(BizPropertyHelper.getSshPort(serverPack))),
                     link("hostname", serverName),
                     "#", serverName, "\n");
         }

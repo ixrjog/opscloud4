@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
-import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
+import com.baiyi.opscloud.service.business.BizPropertyHelper;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.google.common.base.Joiner;
@@ -34,7 +34,7 @@ public abstract class BaseAlgorithm {
     private EnvService envService;
 
     @Resource
-    private BusinessPropertyHelper businessPropertyHelper;
+    private BizPropertyHelper businessPropertyHelper;
 
     protected ServerProperty.Server getBusinessProperty(ServerGroup serverGroup) {
         return businessPropertyHelper.getServerGroupProperty(serverGroup.getId());

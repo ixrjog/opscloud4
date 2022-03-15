@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.packer.server.ServerPacker;
-import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
+import com.baiyi.opscloud.service.business.BizPropertyHelper;
 import com.google.common.base.Joiner;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -65,7 +65,7 @@ public class ServerTreeUtil {
                 .id(serverName)
                 .disabled(isDisabled(serverPack.getServer()))
                 .server(vo)
-                .label(Joiner.on(":").join(serverName, BusinessPropertyHelper.getManageIp(serverPack)))
+                .label(Joiner.on(":").join(serverName, BizPropertyHelper.getManageIp(serverPack)))
                 .build();
     }
 

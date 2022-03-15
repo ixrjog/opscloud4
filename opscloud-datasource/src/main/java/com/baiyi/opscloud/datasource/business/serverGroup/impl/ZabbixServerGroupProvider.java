@@ -9,7 +9,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
-import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
+import com.baiyi.opscloud.service.business.BizPropertyHelper;
 import com.baiyi.opscloud.zabbix.ZabbixUtil;
 import com.baiyi.opscloud.zabbix.helper.ZabbixGroupHelper;
 import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5ActionDriver;
@@ -33,7 +33,7 @@ public class ZabbixServerGroupProvider extends AbstractServerGroupProvider {
 
     private final ZabbixV5ActionDriver zabbixV5ActionDatasource;
 
-    private final BusinessPropertyHelper businessPropertyHelper;
+    private final BizPropertyHelper businessPropertyHelper;
 
     private final ZabbixAccountProvider zabbixAccountProvider;
 

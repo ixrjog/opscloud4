@@ -9,6 +9,7 @@ import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.google.gson.JsonSyntaxException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import sun.net.util.IPAddressUtil;
 
 import javax.annotation.Resource;
 import java.util.Optional;
@@ -19,10 +20,12 @@ import java.util.Optional;
  * @Version 1.0
  */
 @Component
-public class BusinessPropertyHelper {
+public class BizPropertyHelper {
+
+    private final static String PUBLIC_IP = "publicIp";
 
     @Resource
-    private BusinessPropertyService businessPropertyService;
+    private BusinessPropertyService bizPropertyService;
 
     public static Integer getSshPort(ServerPack serverPack) {
         return Optional.ofNullable(serverPack.getProperty())
@@ -40,7 +43,12 @@ public class BusinessPropertyHelper {
                 .map(ServerProperty.Server::getMetadata)
                 .map(ServerProperty.Metadata::getManageIp)
                 .orElse(server.getPrivateIp());
-        return StringUtils.isBlank(manageIp) ? server.getPrivateIp() : manageIp;
+        if (StringUtils.isBlank(manageIp))
+            return server.getPrivateIp();
+        if (PUBLIC_IP.equalsIgnoreCase(manageIp)) {
+            return StringUtils.isNotBlank(server.getPublicIp()) ? server.getPublicIp() : server.getPrivateIp();
+        }
+        return IPAddressUtil.isIPv4LiteralAddress(manageIp) ? manageIp : server.getPrivateIp();
     }
 
     public ServerProperty.Server getBusinessProperty(Server server) {
@@ -63,7 +71,7 @@ public class BusinessPropertyHelper {
 
     private ServerProperty.Server getServerProperty(int serverId) {
         // BusinessPropertyUtil
-        BusinessProperty businessProperty = businessPropertyService.getByUniqueKey(BusinessTypeEnum.SERVER.getType(), serverId);
+        BusinessProperty businessProperty = bizPropertyService.getByUniqueKey(BusinessTypeEnum.SERVER.getType(), serverId);
         if (businessProperty != null) {
             if (!StringUtils.isEmpty(businessProperty.getProperty())) {
                 try {
@@ -77,7 +85,7 @@ public class BusinessPropertyHelper {
     }
 
     public ServerProperty.Server getServerGroupProperty(int serverGroupId) {
-        BusinessProperty businessProperty = businessPropertyService.getByUniqueKey(BusinessTypeEnum.SERVERGROUP.getType(), serverGroupId);
+        BusinessProperty businessProperty = bizPropertyService.getByUniqueKey(BusinessTypeEnum.SERVERGROUP.getType(), serverGroupId);
         if (businessProperty != null) {
             if (!StringUtils.isEmpty(businessProperty.getProperty())) {
                 try {

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.business.server.util;
 
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
-import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
+import com.baiyi.opscloud.service.business.BizPropertyHelper;
 import com.baiyi.opscloud.zabbix.v5.param.ZabbixHostParam;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class HostParamUtil {
     }
 
     public static String getManageIp(Server server, ServerProperty.Server property) {
-        return BusinessPropertyHelper.getManageIp(server, property);
+        return BizPropertyHelper.getManageIp(server, property);
     }
 
     public static List<ZabbixHostParam.Template> toTemplateParam(List<com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate.Template> templates) {

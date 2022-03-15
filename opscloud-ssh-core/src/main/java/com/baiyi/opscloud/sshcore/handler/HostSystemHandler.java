@@ -15,7 +15,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.model.SshCredential;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
-import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
+import com.baiyi.opscloud.service.business.BizPropertyHelper;
 import com.baiyi.opscloud.service.server.ServerAccountService;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.service.sys.CredentialService;
@@ -53,7 +53,7 @@ public class HostSystemHandler {
 
     private final SshAccountHelper sshAccountHelper;
 
-    private final BusinessPropertyHelper bizPropertyHelper;
+    private final BizPropertyHelper bizPropertyHelper;
 
     private interface LoginType {
         int LOW_AUTHORITY = 0;

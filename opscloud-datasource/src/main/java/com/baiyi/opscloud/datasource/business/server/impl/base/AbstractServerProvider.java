@@ -8,7 +8,7 @@ import com.baiyi.opscloud.datasource.business.server.factory.ServerProviderFacto
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
-import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
+import com.baiyi.opscloud.service.business.BizPropertyHelper;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.service.sys.EnvService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public abstract class AbstractServerProvider<T> extends SimpleDsInstanceProvider
     private EnvService envService;
 
     @Resource
-    private BusinessPropertyHelper businessPropertyHelper;
+    private BizPropertyHelper businessPropertyHelper;
 
     protected static ThreadLocal<DsInstanceContext> dsInstanceContext = new ThreadLocal<>();
 
