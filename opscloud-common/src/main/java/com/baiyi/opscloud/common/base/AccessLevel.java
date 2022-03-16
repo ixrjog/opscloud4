@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.common.base;
 
+import lombok.Getter;
+
 /**
  * @Author baiyi
  * @Date 2020/4/11 1:58 上午
@@ -10,15 +12,14 @@ public enum AccessLevel {
     ADMIN(100),
     OPS(50),
     DEV(40),
-    BASE(10);
+    BASE(10),
+    DEF(0);
 
+    @Getter
     private final int level;
 
     AccessLevel(int level) {
         this.level = level;
     }
 
-    public int getLevel() {
-        return this.level;
-    }
 }

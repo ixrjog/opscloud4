@@ -1,8 +1,10 @@
 package com.baiyi.opscloud.facade.auth.impl;
 
 
+import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
@@ -16,6 +18,7 @@ import com.baiyi.opscloud.domain.vo.auth.AuthResourceVO;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleResourceVO;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleVO;
 import com.baiyi.opscloud.facade.auth.AuthFacade;
+import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.packer.auth.AuthGroupPacker;
 import com.baiyi.opscloud.packer.auth.AuthResourcePacker;
 import com.baiyi.opscloud.packer.auth.AuthRolePacker;
@@ -57,11 +60,13 @@ public class AuthFacadeImpl implements AuthFacade {
 
     private final AuthUserRoleService authUserRoleService;
 
+    private final UserPermissionFacade userPermissionFacade;
+
     @Override
     public DataTable<AuthRoleVO.Role> queryRolePage(AuthRoleParam.AuthRolePageQuery pageQuery) {
         DataTable<AuthRole> table = authRoleService.queryPageByParam(pageQuery);
         List<AuthRoleVO.Role> data = BeanCopierUtil.copyListProperties(table.getData(), AuthRoleVO.Role.class);
-        return new DataTable<>(data , table.getTotalNum());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
@@ -152,30 +157,54 @@ public class AuthFacadeImpl implements AuthFacade {
         authResourceService.deleteById(id);
     }
 
+    /**
+     * 管理员不能授权比自己访问级别高的角色
+     *
+     * @param updateUserRole
+     */
     @Override
     public void updateUserRole(AuthUserRoleParam.UpdateUserRole updateUserRole) {
+        // 获取当前操作用户的操作权限
+        int accessLevel = userPermissionFacade.getUserAccessLevel(SessionUtil.getUsername());
+        // 至少需要OPS角色才能操作
+        if (accessLevel < AccessLevel.OPS.getLevel()) return;
         List<AuthUserRole> roles = authUserRoleService.queryByUsername(updateUserRole.getUsername());
         updateUserRole.getRoleIds().forEach(id -> {
-            if (checkAddUserRole(updateUserRole.getUsername(), roles, id)) {
-                AuthUserRole pre = new AuthUserRole();
-                pre.setUsername(updateUserRole.getUsername());
-                pre.setRoleId(id);
-                authUserRoleService.add(pre);
+            AuthRole authRole = authRoleService.getById(id);
+            // 访问级别不足
+            if (authRole == null || accessLevel < authRole.getAccessLevel()) {
+                return;
             }
+            // 用户已授权
+            if (hasRoleInUser(updateUserRole.getUsername(), roles, id)) {
+                return;
+            }
+            AuthUserRole pre = new AuthUserRole();
+            pre.setUsername(updateUserRole.getUsername());
+            pre.setRoleId(id);
+            authUserRoleService.add(pre);
         });
         roles.forEach(e -> authUserRoleService.deleteById(e.getId()));
     }
 
-    private boolean checkAddUserRole(String username, List<AuthUserRole> roles, Integer roleId) {
+    /**
+     * 迭代器
+     *
+     * @param username
+     * @param roles
+     * @param roleId
+     * @return
+     */
+    private boolean hasRoleInUser(String username, List<AuthUserRole> roles, Integer roleId) {
         Iterator<AuthUserRole> iter = roles.iterator();
         while (iter.hasNext()) {
             AuthUserRole authUserRole = iter.next();
             if (username.equals(authUserRole.getUsername()) && roleId.equals(authUserRole.getRoleId())) {
                 iter.remove();
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
 }

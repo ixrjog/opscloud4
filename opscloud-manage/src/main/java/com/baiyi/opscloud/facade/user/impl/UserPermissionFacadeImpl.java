@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.user.impl;
 
+import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
@@ -29,7 +30,7 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
     @Override
     public void revokeByUserId(int userId) {
         List<UserPermission> permissions = permissionService.queryByUserId(userId);
-        if(CollectionUtils.isEmpty(permissions)) return;
+        if (CollectionUtils.isEmpty(permissions)) return;
         permissions.forEach(permissionService::delete);
     }
 
@@ -63,7 +64,13 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
 
     @Override
     public int getUserAccessLevel(String username) {
-        return authRoleService.getRoleAccessLevelByUsername(username);
+        if (StringUtils.isEmpty(username))
+            return AccessLevel.ADMIN.getLevel();
+        try {
+            return authRoleService.getRoleAccessLevelByUsername(username);
+        } catch (Exception e) {
+            return AccessLevel.DEF.getLevel();
+        }
     }
 
 }
