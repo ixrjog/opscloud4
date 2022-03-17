@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.kubernetes.client;
 
+import com.baiyi.opscloud.common.constants.KubernetesProviders;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.core.util.SystemEnvUtil;
 import com.baiyi.opscloud.datasource.kubernetes.client.provider.AmazonEksProvider;
@@ -42,7 +43,7 @@ public class KubeClient {
      * @return
      */
     private static KubernetesClient buildByProvider(KubernetesConfig.Kubernetes kubernetes) {
-        if ("AmazonEKS".equalsIgnoreCase(kubernetes.getProvider())) {
+        if (KubernetesProviders.AMAZON_EKS.getDesc().equalsIgnoreCase(kubernetes.getProvider())) {
             try {
                 String token = AmazonEksProvider.generateEksToken(kubernetes.getAmazonEks());
                 return build(kubernetes.getAmazonEks().getUrl(), token);

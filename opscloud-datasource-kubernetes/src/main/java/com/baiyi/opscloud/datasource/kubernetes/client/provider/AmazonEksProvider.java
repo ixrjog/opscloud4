@@ -29,6 +29,12 @@ import java.util.Date;
 public class AmazonEksProvider {
 
     /**
+     * https://docs.aws.amazon.com/zh_cn/zh_cn/sdk-for-java/v1/developer-guide/prog-services-sts.html
+     * 对于 IAM 用户，临时凭证的有效期范围是 900 秒 (15 分钟) 到 129600 秒 (36 小时)。如果不指定有效期，则默认使用 43200 秒（12 小时）
+     *
+     * https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_enable-regions.html
+     * STS可用区
+     *
      * https://medium.com/@rschoening/eks-client-authentication-f17f39228dc
      * STS签名Token
      *

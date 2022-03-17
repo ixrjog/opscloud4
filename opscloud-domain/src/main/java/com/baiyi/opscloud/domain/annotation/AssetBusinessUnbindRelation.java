@@ -16,4 +16,5 @@ import java.lang.annotation.*;
 public @interface AssetBusinessUnbindRelation {
 
     BusinessTypeEnum type();
+
 }

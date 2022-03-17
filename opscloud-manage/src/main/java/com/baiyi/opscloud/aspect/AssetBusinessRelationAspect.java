@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.facade.datasource.BusinessAssetRelationFacade;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -12,8 +13,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
 /**
  * 业务对象绑定资产(User,UserGroup,Server,ServerGroup)
  *
@@ -21,13 +20,13 @@ import javax.annotation.Resource;
  * @Date 2021/8/6 5:31 下午
  * @Version 1.0
  */
+@Slf4j
 @Aspect
 @Component
-@Slf4j
+@RequiredArgsConstructor
 public class AssetBusinessRelationAspect {
 
-    @Resource
-    private BusinessAssetRelationFacade businessAssetRelationFacade;
+    private final BusinessAssetRelationFacade businessAssetRelationFacade;
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.domain.annotation.AssetBusinessRelation)")
     public void annotationPoint() {
@@ -56,6 +55,7 @@ public class AssetBusinessRelationAspect {
 
     /**
      * 业务对象与资产绑定（无需传入assetId）
+     *
      * @param bar
      */
     private void bindRelation(BusinessAssetRelationVO.IBusinessAssetRelation bar) {

@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.annotation.RevokeUserPermission;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -13,20 +14,18 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
 /**
  * @Author baiyi
  * @Date 2021/8/18 2:28 下午
  * @Version 1.0
  */
+@Slf4j
 @Aspect
 @Component
-@Slf4j
+@RequiredArgsConstructor
 public class RevokeUserPermissionAspect {
 
-    @Resource
-    private UserPermissionFacade userPermissionFacade;
+    private final UserPermissionFacade userPermissionFacade;
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.domain.annotation.RevokeUserPermission)")
     public void annotationPoint() {

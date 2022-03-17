@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.annotation.BusinessPropertyClear;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.service.business.BusinessPropertyService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -13,8 +14,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
 /**
  * 清理业务对象属性
  *
@@ -22,13 +21,13 @@ import javax.annotation.Resource;
  * @Date 2021/8/25 3:27 下午
  * @Version 1.0
  */
+@Slf4j
 @Aspect
 @Component
-@Slf4j
+@RequiredArgsConstructor
 public class BusinessPropertyClearAspect {
 
-    @Resource
-    private BusinessPropertyService businessPropertyService;
+    private final BusinessPropertyService bizPropertyService;
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.domain.annotation.BusinessPropertyClear)")
     public void annotationPoint() {
@@ -60,6 +59,6 @@ public class BusinessPropertyClearAspect {
 
     private void doClear(Integer businessType, Integer businessId) {
         log.info("清除业务属性: businessType = {} , businessId = {}", businessType, businessId);
-        businessPropertyService.deleteByBusinessTypeAndId(businessType, businessId);
+        bizPropertyService.deleteByBusinessTypeAndId(businessType, businessId);
     }
 }

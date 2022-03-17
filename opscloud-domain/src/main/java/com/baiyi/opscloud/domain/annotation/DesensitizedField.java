@@ -17,5 +17,6 @@ import java.lang.annotation.*;
 public @interface DesensitizedField {
 
     SensitiveTypeEnum type();
+
 }
 

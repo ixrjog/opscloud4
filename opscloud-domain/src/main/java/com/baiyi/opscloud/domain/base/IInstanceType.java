@@ -8,4 +8,5 @@ package com.baiyi.opscloud.domain.base;
 public interface IInstanceType {
 
     String getInstanceType();
+
 }

@@ -15,4 +15,5 @@ import java.lang.annotation.*;
 public @interface TagClear {
 
     BusinessTypeEnum value() default BusinessTypeEnum.COMMON;
+
 }

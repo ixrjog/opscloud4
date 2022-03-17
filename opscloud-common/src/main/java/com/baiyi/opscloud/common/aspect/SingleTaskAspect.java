@@ -6,6 +6,7 @@ import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.InstantUtil;
 import com.baiyi.opscloud.common.util.StringToDurationUtil;
 import com.baiyi.opscloud.domain.ErrorEnum;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -14,9 +15,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -25,15 +26,16 @@ import java.time.Instant;
  * @Date 2021/6/10 3:50 下午
  * @Version 1.0
  */
+@Slf4j
 @Aspect
 @Component
-@Slf4j
-public class SingleTaskAspect  implements Ordered {
+@RequiredArgsConstructor
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class SingleTaskAspect {
 
     private static final int RUNNING = 1;
 
-    @Resource
-    private RedisUtil redisUtil;
+    private final RedisUtil redisUtil;
 
     private String buildKey(String taskName) {
         return String.format("Opscloud.V4.SingleTask.%s", taskName);
@@ -83,11 +85,6 @@ public class SingleTaskAspect  implements Ordered {
 
     private boolean isLocked(String lockKey) {
         return redisUtil.get(lockKey) != null;
-    }
-
-    @Override
-    public int getOrder() {
-        return 1;
     }
 
 }

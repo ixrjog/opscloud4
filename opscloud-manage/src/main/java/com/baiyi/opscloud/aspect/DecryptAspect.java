@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.aspect;
 
 import com.baiyi.opscloud.domain.annotation.Decrypt;
+import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -8,7 +9,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.util.Objects;
 
@@ -19,10 +19,10 @@ import java.util.Objects;
  */
 @Aspect
 @Component
+@RequiredArgsConstructor
 public class DecryptAspect {
 
-    @Resource
-    private StringEncryptor stringEncryptor;
+    private final StringEncryptor stringEncryptor;
 
     @Pointcut("@annotation(com.baiyi.opscloud.domain.annotation.Decrypt)")
     public void action() {

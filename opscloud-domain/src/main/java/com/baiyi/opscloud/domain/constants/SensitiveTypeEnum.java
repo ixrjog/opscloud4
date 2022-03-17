@@ -12,6 +12,6 @@ public enum SensitiveTypeEnum {
     // 密码
     PASSWORD,
     // 令牌
-    TOKEN,
-    ;
+    TOKEN
+
 }

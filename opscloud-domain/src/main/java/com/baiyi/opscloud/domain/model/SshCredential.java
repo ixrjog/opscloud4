@@ -21,4 +21,5 @@ public class SshCredential {
     private Credential credential;
 
     private ServerAccount serverAccount;
+
 }

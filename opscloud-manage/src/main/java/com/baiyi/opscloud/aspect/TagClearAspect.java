@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.annotation.TagClear;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.service.tag.BusinessTagService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -12,8 +13,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * 清理业务对象标签
@@ -25,10 +24,10 @@ import javax.annotation.Resource;
 @Slf4j
 @Aspect
 @Component
+@RequiredArgsConstructor
 public class TagClearAspect {
 
-    @Resource
-    private BusinessTagService businessTagService;
+    private final BusinessTagService businessTagService;
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.domain.annotation.TagClear)")
     public void annotationPoint() {

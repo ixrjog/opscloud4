@@ -12,6 +12,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,7 +24,8 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class SetSessionUserAspect implements Ordered {
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class SetSessionUserAspect {
 
     private final UserService userService;
 
@@ -44,11 +46,6 @@ public class SetSessionUserAspect implements Ordered {
         }
         SessionUtil.setUsername(user.getUsername());
         SessionUtil.setUserId(user.getId());
-    }
-
-    @Override
-    public int getOrder() {
-        return 1;
     }
 
 }

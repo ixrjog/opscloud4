@@ -16,4 +16,5 @@ import java.lang.annotation.*;
 public  @interface RevokeUserPermission {
 
     BusinessTypeEnum value() default BusinessTypeEnum.COMMON;
+
 }

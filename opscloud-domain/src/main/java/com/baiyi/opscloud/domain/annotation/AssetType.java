@@ -17,4 +17,5 @@ import java.lang.annotation.*;
 public @interface AssetType {
 
     DsAssetTypeConstants value();
+
 }

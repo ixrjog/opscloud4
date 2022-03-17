@@ -27,10 +27,10 @@ import java.util.stream.Collectors;
  * @Date 2022/2/9 10:56 AM
  * @Version 1.0
  */
+@Slf4j
 @Aspect
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class TagsWrapperAspect {
 
     private final TagService tagService;

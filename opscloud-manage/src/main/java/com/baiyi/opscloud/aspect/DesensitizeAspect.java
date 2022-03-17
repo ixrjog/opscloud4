@@ -19,10 +19,9 @@ import java.util.Objects;
  * @Date 2021/6/11 10:56 上午
  * @Since 1.0
  */
-
+@Slf4j
 @Aspect
 @Component
-@Slf4j
 public class DesensitizeAspect {
 
     /**
@@ -56,6 +55,7 @@ public class DesensitizeAspect {
             }
         }
     }
+
 
     private String setNewValueForField(String value, SensitiveTypeEnum type) {
         switch (type) {

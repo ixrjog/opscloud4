@@ -42,5 +42,4 @@ public class AssetContainer implements ShowTime.IAgo {
     @Builder.Default
     private List<AssetContainer> children = Lists.newArrayList();
 
-
 }

@@ -2,6 +2,7 @@ package com.baiyi.opscloud.aspect;
 
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.facade.sys.InstanceFacade;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -9,9 +10,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
 
@@ -25,13 +25,14 @@ import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
 @Slf4j
 @Aspect
 @Component
-public class InstanceHealthAspect implements Ordered {
+@RequiredArgsConstructor
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class InstanceHealthAspect {
 
     @Value("${spring.profiles.active}")
     private String env;
 
-    @Resource
-    private InstanceFacade instanceFacade;
+    private final InstanceFacade instanceFacade;
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.domain.annotation.InstanceHealth)")
     public void annotationPoint() {
@@ -50,11 +51,6 @@ public class InstanceHealthAspect implements Ordered {
             }
         }
         return joinPoint.proceed();
-    }
-
-    @Override
-    public int getOrder() {
-        return 1;
     }
 
 }
