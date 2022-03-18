@@ -133,12 +133,12 @@ public class KubernetesDeploymentDriver {
                 .createOrReplace(deployment);
     }
 
-    public static Deployment replaceDeployment(KubernetesConfig.Kubernetes kubernetes, Deployment deployment) {
-        return KubeClient.build(kubernetes).apps()
-                .deployments()
-                .inNamespace(deployment.getMetadata().getNamespace())
-                .replace(deployment);
-    }
+//    public static Deployment replaceDeployment(KubernetesConfig.Kubernetes kubernetes, Deployment deployment) {
+//        return KubeClient.build(kubernetes).apps()
+//                .deployments()
+//                .inNamespace(deployment.getMetadata().getNamespace())
+//                .replace(deployment);
+//    }
 
     /**
      * 配置文件转换为无状态资源
