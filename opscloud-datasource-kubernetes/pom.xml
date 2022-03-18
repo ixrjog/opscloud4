@@ -23,14 +23,14 @@
         <dependency>
             <groupId>io.fabric8</groupId>
             <artifactId>kubernetes-client</artifactId>
-            <version>5.11.2</version>
+            <version>5.12.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.fabric8/kubernetes-model -->
         <dependency>
             <groupId>io.fabric8</groupId>
             <artifactId>kubernetes-model</artifactId>
-            <version>5.11.2</version>
+            <version>5.12.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.aliyun/cs20151215 -->
