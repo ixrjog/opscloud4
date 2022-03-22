@@ -12,7 +12,10 @@ public enum UserGroupConstants {
     VPN_USERS("vpn-users"),
     NEXUS_USERS("nexus-users"),
     NEXUS_DEVELOPER("nexus-developer"),
-    CONFLUENCE_USERS("confluence-users");
+    CONFLUENCE_USERS("confluence-users"),
+    GRAFANA_ADMIN("grafana-admin"),
+    GRAFANA_EDITOR_USERS("grafana-editor-users"),
+    GRAFANA_USERS("grafana-users");
 
     UserGroupConstants(String role) {
         this.role = role;

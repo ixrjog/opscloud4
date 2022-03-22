@@ -35,7 +35,11 @@ public abstract class UserGroupExtendedTicketEntryQuery extends BaseTicketEntryQ
             return entries;
         if (ticketProcessor instanceof AbstractUserGroupPermissionExtendedAbstractUserPermission) {
             Set<String> groupNames = ((AbstractUserGroupPermissionExtendedAbstractUserPermission) ticketProcessor).getGroupNames();
-            entries.addAll(groupNames.stream().map(this::getEntryByName).collect(Collectors.toList()));
+            entries.addAll(groupNames.stream()
+                    .map(this::getEntryByName)
+                    .filter(UserGroup::getAllowOrder)
+                    .collect(Collectors.toList())
+            );
         }
         return entries;
     }
@@ -58,4 +62,5 @@ public abstract class UserGroupExtendedTicketEntryQuery extends BaseTicketEntryQ
                 .comment(entry.getComment())
                 .build();
     }
+
 }
