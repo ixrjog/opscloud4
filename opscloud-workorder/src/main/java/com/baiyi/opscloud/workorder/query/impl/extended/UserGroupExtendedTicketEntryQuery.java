@@ -37,7 +37,7 @@ public abstract class UserGroupExtendedTicketEntryQuery extends BaseTicketEntryQ
             Set<String> groupNames = ((AbstractUserGroupPermissionExtendedAbstractUserPermission) ticketProcessor).getGroupNames();
             entries.addAll(groupNames.stream()
                     .map(this::getEntryByName)
-                    .filter(UserGroup::getAllowOrder)
+                    .filter(UserGroup::getAllowOrder) // 过滤不允许工单申请的用户组（角色）
                     .collect(Collectors.toList())
             );
         }

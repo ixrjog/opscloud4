@@ -73,9 +73,6 @@ public class SshShellCommandFactory implements Command {
 
     private final Map<ChannelSession, Thread> threads = new ConcurrentHashMap<>();
 
-//    @Resource
-//    private SshShellHelper helper;
-
     /**
      * Constructor
      *
@@ -88,6 +85,7 @@ public class SshShellCommandFactory implements Command {
      * @param environment          spring environment
      * @param properties           ssh shell properties
      */
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     public SshShellCommandFactory(SshShellListenerService shellListenerService,
                                   @Autowired(required = false) Banner banner,
                                   @Lazy PromptProvider promptProvider,

@@ -259,6 +259,8 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         WorkOrderTicket workOrderTicket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
         if (!OrderTicketPhaseCodeConstants.NEW.name().equals(workOrderTicket.getTicketPhase()))
             throw new TicketCommonException("只有新建工单才能修改或删除条目！");
+        if (!workOrderTicket.getUsername().equals(SessionUtil.getUsername()))
+            throw new TicketCommonException("不合法的请求: 只有工单创建人才能新增条目！");
         ticketEntryService.deleteById(ticketEntryId);
     }
 
