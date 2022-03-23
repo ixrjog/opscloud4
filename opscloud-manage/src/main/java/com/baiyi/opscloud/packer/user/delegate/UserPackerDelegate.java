@@ -2,6 +2,7 @@ package com.baiyi.opscloud.packer.user.delegate;
 
 import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.ExtendUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.AccessToken;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
@@ -40,6 +41,7 @@ public class UserPackerDelegate {
 
     @TagsWrapper
     public void wrap(UserVO.User user, IExtend iExtend) {
+        if (!ExtendUtil.isExtend(iExtend)) return;
         authRolePacker.wrap(user);
         userCredentialPacker.wrap(user);
         wrap(user);
