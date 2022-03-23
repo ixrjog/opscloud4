@@ -2,16 +2,21 @@ package com.baiyi.opscloud.quartz;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.util.CronUtil;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.baiyi.opscloud.schedule.quartz.ScheduleJob;
+import com.baiyi.opscloud.domain.vo.datasource.ScheduleVO;
 import com.baiyi.opscloud.schedule.quartz.job.AssetPullJob;
 import com.baiyi.opscloud.schedule.quartz.service.QuartzService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import org.junit.jupiter.api.Test;
 import org.quartz.SchedulerException;
+import org.springframework.scheduling.support.CronExpression;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,14 +69,40 @@ public class QuartzTaskTest extends BaseUnit {
     }
 
     @Test
+    void queryJobTest() throws SchedulerException {
+        String group = "e9f2acfe1d2945dd91262ba49df26984";
+        List<ScheduleVO.Job> scheduleJobs = quartzService.queryJob(group);
+        print(scheduleJobs);
+    }
+
+    @Test
+    void aaaTest() {
+        // 0 0 10,11,12,13,19 * * ?
+        final CronExpression cronExpression = CronExpression.parse("0 0 10,11,12,13,19 * * ?");
+        //  final LocalDateTime dateTime = cronExpression.next(LocalDateTime.now());
+        LocalDateTime dateTime = LocalDateTime.now();
+        for (int i = 1; i <= 5; i++) {
+            dateTime = cronExpression.next(dateTime);
+            DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String strDate2 = dtf2.format(dateTime);
+            print(strDate2);
+        }
+    }
+
+    @Test
+    void aaa2Test() {
+        print(CronUtil.recentTime("0 0 10,11,12,13,19 * * ?", 5));
+    }
+
+    @Test
     void taskTest() throws SchedulerException {
-        HashMap<String, Object> map = new HashMap<>();
+        HashMap<String, Object> map = Maps.newHashMap();
         map.put("assetType", "KUBERNETES_NAMESPACE");
         map.put("instanceId", 10);
 //        quartzService.deleteJob("job", "test");
 //        quartzService.pauseJob("job", "test");
 //        quartzService.addJob(ExampleJob.class, "test", "JOB_1", "0/10 * * * * ?","测试任务"， map);
-        List<ScheduleJob> list = quartzService.getAllJob();
+        List<ScheduleVO.Job> list = quartzService.getAllJob();
         print(list);
         while (true) {
             System.err.println("------");
@@ -96,7 +127,7 @@ public class QuartzTaskTest extends BaseUnit {
         map.put("assetType", "KUBERNETES_NAMESPACE");
         map.put("instanceId", 10);
         quartzService.addJob(AssetPullJob.class, "Asset", "ASSET_KUBERNETES_NAMESPACE_1", "*/1 * * * * ?", "测试任务", map);
-        List<ScheduleJob> list = quartzService.getAllJob();
+        List<ScheduleVO.Job> list = quartzService.getAllJob();
         print(list);
         while (true) {
             System.err.println("------");
