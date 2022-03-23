@@ -20,7 +20,6 @@ import org.apache.sshd.server.SshServer;
 import org.jline.reader.History;
 import org.jline.reader.LineReader;
 import org.jline.reader.impl.history.DefaultHistory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -35,6 +34,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.shell.SpringShellAutoConfiguration;
 import org.springframework.shell.jline.JLineShellAutoConfiguration;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 
@@ -62,7 +62,7 @@ public class SshShellHistoryAutoConfiguration {
     @Configuration
     public static class HistoryConfiguration {
 
-        @Autowired
+        @Resource
         @Lazy
         private History history;
 

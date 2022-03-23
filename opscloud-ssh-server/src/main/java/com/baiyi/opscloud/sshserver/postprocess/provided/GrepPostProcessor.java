@@ -25,8 +25,7 @@ import java.util.List;
  * Grep post processor
  */
 @Slf4j
-public class GrepPostProcessor
-        implements PostProcessor<String> {
+public class GrepPostProcessor implements PostProcessor<String> {
 
     @Override
     public String getName() {

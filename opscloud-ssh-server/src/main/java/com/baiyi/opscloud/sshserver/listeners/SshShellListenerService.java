@@ -28,7 +28,7 @@ import java.util.List;
 @Slf4j
 public class SshShellListenerService {
 
-    private List<SshShellListener> listeners;
+    private final List<SshShellListener> listeners;
 
     public SshShellListenerService(List<SshShellListener> listeners) {
         this.listeners = listeners == null ? new ArrayList<>() : listeners;

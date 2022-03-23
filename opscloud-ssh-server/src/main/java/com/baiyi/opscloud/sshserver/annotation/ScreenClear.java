@@ -7,7 +7,6 @@ import java.lang.annotation.*;
  * @Date 2021/7/2 6:22 下午
  * @Version 1.0
  */
-
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
