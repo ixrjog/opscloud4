@@ -28,9 +28,9 @@ import javax.annotation.Resource;
  * @Date 2021/6/28 2:54 下午
  * @Version 1.0
  */
+@Slf4j
 @Aspect
 @Component
-@Slf4j
 public class InvokeSessionUserAspect {
 
     @Resource

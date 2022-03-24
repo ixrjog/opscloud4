@@ -26,7 +26,7 @@ import java.util.List;
 @RequestMapping("/api/datasource/aliyun/log")
 @Api(tags = "数据源实例-阿里云日志服务")
 @RequiredArgsConstructor
-public class DatasourceAliyunLogController {
+public class DsAliyunLogController {
 
     private final AliyunLogFacade aliyunLogFacade;
 

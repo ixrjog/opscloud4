@@ -21,7 +21,6 @@ import com.baiyi.opscloud.sshserver.listeners.SshShellListenerService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sshd.common.Factory;
-import org.apache.sshd.common.session.SessionHeartbeatController;
 import org.apache.sshd.server.ExitCallback;
 import org.apache.sshd.server.Signal;
 import org.apache.sshd.server.channel.ChannelSession;
@@ -52,7 +51,6 @@ import org.springframework.shell.result.DefaultResultHandler;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 
 import static com.baiyi.opscloud.sshserver.SshShellCommandFactory.SSH_THREAD_CONTEXT;
 import static com.baiyi.opscloud.sshserver.auth.SshShellAuthenticationProvider.AUTHENTICATION_ATTRIBUTE;
@@ -62,8 +60,7 @@ import static com.baiyi.opscloud.sshserver.auth.SshShellAuthenticationProvider.A
  * Runnable for ssh shell session
  */
 @Slf4j
-public class SshShellRunnable
-        implements Factory<Command>, ChannelSessionAware, Runnable {
+public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, Runnable {
 
     private static final String SSH_ENV_COLUMNS = "COLUMNS";
 
@@ -209,8 +206,6 @@ public class SshShellRunnable
                         .build();
 
                 Object authenticationObject = session.getSession().getIoSession().getAttribute(AUTHENTICATION_ATTRIBUTE);
-                // 10秒发送空心跳
-                session.getSession().setSessionHeartbeat(SessionHeartbeatController.HeartbeatType.NONE, Duration.ofSeconds(10));
                 SshAuthentication authentication = null;
                 if (authenticationObject != null) {
                     if (!(authenticationObject instanceof SshAuthentication)) {

@@ -27,7 +27,7 @@ import java.util.List;
 @RequestMapping("/api/datasource")
 @Api(tags = "数据源")
 @RequiredArgsConstructor
-public class DatasourceController {
+public class DsController {
 
     private final DsFacade datasourceFacade;
 
@@ -83,7 +83,7 @@ public class DatasourceController {
         return new HttpResult<>(datasourceFacade.queryDsInstance(query));
     }
 
-    @ApiOperation(value = "id查询数据源实例")
+    @ApiOperation(value = "查询指定ID的数据源实例")
     @GetMapping(value = "/instance/id/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DsInstanceVO.Instance> queryDsInstanceById(@RequestParam int instanceId) {
         return new HttpResult<>(datasourceFacade.queryDsInstanceById(instanceId));

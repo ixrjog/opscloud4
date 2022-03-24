@@ -1,6 +1,10 @@
 package com.baiyi.opscloud.schedule.quartz.service;
 
-import com.baiyi.opscloud.schedule.quartz.ScheduleJob;
+import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.util.CronUtil;
+import com.baiyi.opscloud.domain.vo.datasource.ScheduleVO;
+import com.google.common.collect.Lists;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
@@ -9,11 +13,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @Author 修远
@@ -22,28 +26,14 @@ import java.util.Set;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class QuartzService {
 
-    @Resource
-    private Scheduler scheduler;
+    private final Scheduler scheduler;
 
     @PostConstruct
     public void scheduleJob() throws SchedulerException {
         scheduler.start();
-//        try {
-//            GroupMatcher<JobKey> matcher = GroupMatcher.anyJobGroup();
-//            Set<JobKey> jobKeys = scheduler.getJobKeys(matcher);
-//            for (JobKey jobKey : jobKeys) {
-//                List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
-//                for (Trigger trigger : triggers) {
-//                    if (trigger instanceof CronTrigger) {
-//                        scheduler.rescheduleJob(trigger.getKey(), trigger);
-//                    }
-//                }
-//            }
-//        } catch (SchedulerException e) {
-//            e.printStackTrace();
-//        }
     }
 
     /**
@@ -100,13 +90,13 @@ public class QuartzService {
             // 重启触发器
             scheduler.rescheduleJob(triggerKey, trigger);
         } catch (SchedulerException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
     /**
      * @param jobName
-     * @param group
+     * @param group   instanceUuid
      */
     public void deleteJob(String group, String jobName) {
         TriggerKey triggerKey = TriggerKey.triggerKey(
@@ -124,7 +114,7 @@ public class QuartzService {
             // 删除任务
             scheduler.deleteJob(jobKey);
         } catch (SchedulerException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
@@ -139,7 +129,7 @@ public class QuartzService {
             JobKey jobKey = JobKey.jobKey(jobName, group);
             scheduler.pauseJob(jobKey);
         } catch (SchedulerException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
@@ -154,7 +144,7 @@ public class QuartzService {
             JobKey jobKey = JobKey.jobKey(jobName, group);
             scheduler.resumeJob(jobKey);
         } catch (SchedulerException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
@@ -169,7 +159,46 @@ public class QuartzService {
             JobKey jobKey = JobKey.jobKey(jobName, group);
             scheduler.triggerJob(jobKey);
         } catch (SchedulerException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 指定条件查询计划中的任务列表
+     *
+     * @return
+     * @throws SchedulerException
+     */
+    public List<ScheduleVO.Job> queryJob(String group) throws SchedulerException {
+        GroupMatcher<JobKey> matcher = GroupMatcher.groupEquals(group);
+        Set<JobKey> jobKeys = scheduler.getJobKeys(matcher);
+        List<ScheduleVO.Job> jobs = Lists.newArrayList();
+        for (JobKey jobKey : jobKeys) {
+            List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
+            jobs.addAll(triggers.stream().map(e -> buildJob(jobKey, e)).collect(Collectors.toList()));
+        }
+        return jobs;
+    }
+
+    private ScheduleVO.Job buildJob(JobKey jobKey, Trigger trigger) {
+        try {
+            final Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
+            final JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+            ScheduleVO.Job job = ScheduleVO.Job.builder()
+                    .name(jobKey.getName())
+                    .group(jobKey.getGroup())
+                    .description(jobDetail.getDescription())
+                    .status(triggerState.name())
+                    .build();
+            if (trigger instanceof CronTrigger) {
+                CronTrigger cronTrigger = (CronTrigger) trigger;
+                job.setCronExpression(cronTrigger.getCronExpression());
+                job.setExecutionTime(CronUtil.recentTime(cronTrigger.getCronExpression(), 5));
+            }
+            return job;
+        } catch (SchedulerException e) {
+            log.error(e.getMessage());
+            throw new CommonRuntimeException(e.getMessage());
         }
     }
 
@@ -179,28 +208,15 @@ public class QuartzService {
      * @return
      * @throws SchedulerException
      */
-    public List<ScheduleJob> getAllJob() throws SchedulerException {
+    public List<ScheduleVO.Job> getAllJob() throws SchedulerException {
         GroupMatcher<JobKey> matcher = GroupMatcher.anyJobGroup();
         Set<JobKey> jobKeys = scheduler.getJobKeys(matcher);
-        List<ScheduleJob> jobList = new ArrayList<ScheduleJob>();
+        List<ScheduleVO.Job> jobs = Lists.newArrayList();
         for (JobKey jobKey : jobKeys) {
             List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
-            for (Trigger trigger : triggers) {
-                Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
-                ScheduleJob job = ScheduleJob.builder()
-                        .name(jobKey.getName())
-                        .group(jobKey.getGroup())
-                        .description("触发器: " + trigger.getKey())
-                        .status(triggerState.name())
-                        .build();
-                if (trigger instanceof CronTrigger) {
-                    CronTrigger cronTrigger = (CronTrigger) trigger;
-                    job.setCronExpression(cronTrigger.getCronExpression());
-                }
-                jobList.add(job);
-            }
+            jobs.addAll(triggers.stream().map(e -> buildJob(jobKey, e)).collect(Collectors.toList()));
         }
-        return jobList;
+        return jobs;
     }
 
     /**
@@ -209,15 +225,15 @@ public class QuartzService {
      * @return
      * @throws SchedulerException
      */
-    public List<ScheduleJob> getRunningJob() throws SchedulerException {
+    public List<ScheduleVO.Job> getRunningJob() throws SchedulerException {
         List<JobExecutionContext> executingJobs = scheduler.getCurrentlyExecutingJobs();
-        List<ScheduleJob> jobList = new ArrayList<ScheduleJob>(executingJobs.size());
+        List<ScheduleVO.Job> jobList = new ArrayList<>(executingJobs.size());
         for (JobExecutionContext executingJob : executingJobs) {
             JobDetail jobDetail = executingJob.getJobDetail();
             JobKey jobKey = jobDetail.getKey();
             Trigger trigger = executingJob.getTrigger();
             Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
-            ScheduleJob job = ScheduleJob.builder()
+            ScheduleVO.Job job = ScheduleVO.Job.builder()
                     .name(jobKey.getName())
                     .group(jobKey.getGroup())
                     .description("触发器: " + trigger.getKey())
@@ -231,4 +247,5 @@ public class QuartzService {
         }
         return jobList;
     }
+
 }

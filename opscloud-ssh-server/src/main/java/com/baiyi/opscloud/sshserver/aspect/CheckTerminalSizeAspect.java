@@ -23,9 +23,9 @@ import org.springframework.stereotype.Component;
  * @Date 2021/7/9 10:17 上午
  * @Version 1.0
  */
+@Slf4j
 @Aspect
 @Component
-@Slf4j
 public class CheckTerminalSizeAspect {
 
     private SshShellHelper helper;
@@ -73,4 +73,5 @@ public class CheckTerminalSizeAspect {
         joinPoint.proceed();
         return joinPoint;
     }
+
 }
