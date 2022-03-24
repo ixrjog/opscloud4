@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.terminal.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
+import com.baiyi.opscloud.interceptor.SupserAdminInterceptor;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
@@ -13,11 +14,14 @@ import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.websocket.Session;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
+ * 登录
+ *
  * @Author baiyi
  * @Date 2020/5/11 9:36 上午
  * @Version 1.0
@@ -26,13 +30,11 @@ import java.util.concurrent.Executors;
 @Component
 public class LoginProcessor extends AbstractServerTerminalProcessor<ServerMessage.Login> {
 
+    @Resource
+    private SupserAdminInterceptor sAInterceptor;
+
     private static final ExecutorService executor = Executors.newFixedThreadPool(4);
 
-    /**
-     * 登录
-     *
-     * @return
-     */
     @Override
     public String getState() {
         return MessageState.LOGIN.getState();
@@ -44,7 +46,8 @@ public class LoginProcessor extends AbstractServerTerminalProcessor<ServerMessag
         heartbeat(terminalSession.getSessionId());
         for (ServerNode serverNode : loginMessage.getServerNodes()) {
             executor.submit(() -> {
-                log.info("初始化serverNode: instanceId = {} ",serverNode.getInstanceId());
+                log.info("登录服务器节点: instanceId = {} ", serverNode.getInstanceId());
+                sAInterceptor.interceptLoginServer(serverNode.getId());
                 HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverNode, loginMessage);
                 RemoteInvokeHandler.openWebTerminal(terminalSession.getSessionId(), serverNode.getInstanceId(), hostSystem);
                 terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, hostSystem, InstanceSessionTypeEnum.SERVER));

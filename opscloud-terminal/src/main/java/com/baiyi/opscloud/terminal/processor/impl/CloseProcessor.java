@@ -12,6 +12,8 @@ import javax.websocket.Session;
 import java.util.Map;
 
 /**
+ * 关闭会话
+ *
  * @Author baiyi
  * @Date 2020/5/11 9:38 上午
  * @Version 1.0
@@ -19,11 +21,6 @@ import java.util.Map;
 @Component
 public class CloseProcessor extends AbstractServerTerminalProcessor<ServerMessage.BaseMessage> {
 
-    /**
-     * 关闭会话
-     *
-     * @return
-     */
     @Override
     public String getState() {
         return MessageState.CLOSE.getState();
@@ -38,7 +35,7 @@ public class CloseProcessor extends AbstractServerTerminalProcessor<ServerMessag
                 JSchSession jSchSession = sessionMap.get(instanceId);
                 jSchSession.getChannel().disconnect();
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, instanceId); // 设置关闭会话
-                auditServerCommandAudit.recordCommand(terminalSession.getSessionId(),instanceId);
+                auditServerCommandAudit.recordCommand(terminalSession.getSessionId(), instanceId);
             } catch (Exception e) {
                 e.printStackTrace();
             }

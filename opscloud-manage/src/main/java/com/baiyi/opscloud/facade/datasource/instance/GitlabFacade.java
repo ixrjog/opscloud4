@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.datasource.instance;
 
-import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
+import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.common.util.GitlabTokenUtil;
@@ -65,6 +65,6 @@ public class GitlabFacade extends BaseManager {
 
     @Override
     protected String getTag() {
-        return DsInstanceTagConstants.SYSTEM_HOOKS.getTag();
+        return TagConstants.SYSTEM_HOOKS.getTag();
     }
 }

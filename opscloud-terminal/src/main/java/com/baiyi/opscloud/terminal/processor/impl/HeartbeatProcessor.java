@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.websocket.Session;
 
 /**
+ * 心跳
  * @Author baiyi
  * @Date 2020/5/13 6:50 下午
  * @Version 1.0 HEARTBEAT
@@ -17,13 +18,6 @@ import javax.websocket.Session;
 @Slf4j
 @Component
 public class HeartbeatProcessor extends AbstractServerTerminalProcessor<ServerMessage.BaseMessage> {
-
-    /**
-     * 心跳
-     *
-     * @return
-     */
-
 
     @Override
     public String getState() {

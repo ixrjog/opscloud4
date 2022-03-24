@@ -6,7 +6,7 @@ import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.datasource.manager.base.IManager;
 import com.baiyi.opscloud.datasource.manager.base.NoticeManager;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
-import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
+import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
@@ -46,7 +46,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
 
     @Override
     protected String getTag() {
-        return DsInstanceTagConstants.ACCOUNT.getTag();
+        return TagConstants.ACCOUNT.getTag();
     }
 
     /**

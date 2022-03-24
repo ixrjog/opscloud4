@@ -9,23 +9,21 @@ import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
 import com.baiyi.opscloud.terminal.processor.AbstractServerTerminalProcessor;
 import com.google.gson.GsonBuilder;
 import com.jcraft.jsch.ChannelShell;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.Session;
 
 /**
+ * XTerm改变形体
+ *
  * @Author baiyi
  * @Date 2020/5/12 10:43 上午
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class ResizeProcessor extends AbstractServerTerminalProcessor<ServerMessage.Resize> {
-
-    /**
-     * XTerm改变形体
-     *
-     * @return
-     */
 
     @Override
     public String getState() {
@@ -39,7 +37,8 @@ public class ResizeProcessor extends AbstractServerTerminalProcessor<ServerMessa
             JSchSession jSchSession = JSchSessionContainer.getBySessionId(terminalSession.getSessionId(), resizeMessage.getInstanceId());
             assert jSchSession != null;
             RemoteInvokeHandler.setChannelPtySize((ChannelShell) jSchSession.getChannel(), resizeMessage);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
     }
 
@@ -47,5 +46,6 @@ public class ResizeProcessor extends AbstractServerTerminalProcessor<ServerMessa
     protected ServerMessage.Resize getMessage(String message) {
         return new GsonBuilder().create().fromJson(message, ServerMessage.Resize.class);
     }
+
 }
 

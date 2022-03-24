@@ -2,14 +2,17 @@ package com.baiyi.opscloud.facade.tag.impl;
 
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
 import com.baiyi.opscloud.domain.generator.opscloud.Tag;
 import com.baiyi.opscloud.domain.param.tag.BusinessTagParam;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.facade.tag.SimpleTagFacade;
+import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.packer.TagPacker;
 import com.baiyi.opscloud.service.tag.BusinessTagService;
 import com.baiyi.opscloud.service.tag.TagService;
@@ -37,6 +40,8 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
     private final BusinessTagService businessTagService;
 
     private final TagPacker tagPacker;
+
+    private final UserPermissionFacade userPermissionFacade;
 
     @Override
     public List<TagVO.Tag> queryTagByBusinessType(Integer businessType) {
@@ -90,7 +95,20 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
                 businessTagService.add(businessTag);
             }
         });
-        businessTags.forEach(e -> businessTagService.deleteById(e.getId()));
+        businessTags.forEach(this::deleteBizTag);
+    }
+
+    /**
+     * 增加业务逻辑 SA标签只有SUPER_ADMIN角色才能删除
+     * @param bizTag
+     */
+    private void deleteBizTag(BusinessTag bizTag) {
+        Tag tag = tagService.getById(bizTag.getTagId());
+        if (tag != null && TagConstants.SUPER_ADMIN.getTag().equals(tag.getTagKey())) {
+            int accessLevel = userPermissionFacade.getUserAccessLevel(SessionUtil.getUsername());
+            if (accessLevel < 100) return;
+        }
+        businessTagService.deleteById(bizTag.getId());
     }
 
     private boolean checkAddBusinessTag(List<BusinessTag> businessTags, Integer tagId) {

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.manager;
 
-import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
+import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.datasource.manager.base.IManager;
@@ -36,7 +36,7 @@ public class DsServerManager extends BaseManager implements IManager<Server> {
 
     @Override
     protected String getTag() {
-        return DsInstanceTagConstants.SERVER.getTag();
+        return TagConstants.SERVER.getTag();
     }
 
     @Override

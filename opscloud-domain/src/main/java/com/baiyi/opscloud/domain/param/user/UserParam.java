@@ -2,7 +2,7 @@ package com.baiyi.opscloud.domain.param.user;
 
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
+import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.IFilterTag;
 import com.baiyi.opscloud.domain.param.PageParam;
@@ -29,7 +29,7 @@ public class UserParam {
 
         private final Integer businessType = BusinessTypeEnum.USER.getType();
 
-        private final String FILTER_SYSTEM_TAG = DsInstanceTagConstants.SYSTEM.getTag();
+        private final String FILTER_SYSTEM_TAG = TagConstants.SYSTEM.getTag();
 
         @ApiModelProperty(value = "模糊查询")
         private String queryName;
@@ -54,7 +54,7 @@ public class UserParam {
 
         private final Integer businessType = BusinessTypeEnum.USER.getType();
 
-        private final String FILTER_SYSTEM_TAG = DsInstanceTagConstants.SYSTEM.getTag();
+        private final String FILTER_SYSTEM_TAG = TagConstants.SYSTEM.getTag();
 
         @ApiModelProperty(value = "模糊查询")
         private String queryName;
