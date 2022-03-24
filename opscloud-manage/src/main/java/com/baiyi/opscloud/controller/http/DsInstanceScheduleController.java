@@ -41,23 +41,29 @@ public class DsInstanceScheduleController {
 
     @ApiOperation(value = "暂停数据源实例任务")
     @PostMapping(value = "/pause", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> pauseSchedule(@RequestBody @Valid DsInstanceScheduleParam.updateJob param) {
+    public HttpResult<Boolean> pauseSchedule(@RequestBody @Valid DsInstanceScheduleParam.UpdateJob param) {
         scheduleFacade.pauseJob(param);
         return HttpResult.SUCCESS;
     }
 
     @ApiOperation(value = "恢复数据源实例任务")
     @PostMapping(value = "/resume", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> resumeSchedule(@RequestBody @Valid DsInstanceScheduleParam.updateJob param) {
+    public HttpResult<Boolean> resumeSchedule(@RequestBody @Valid DsInstanceScheduleParam.UpdateJob param) {
         scheduleFacade.resumeJob(param);
         return HttpResult.SUCCESS;
     }
 
     @ApiOperation(value = "删除数据源实例任务")
     @PostMapping(value = "/delete", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> deleteSchedule(@RequestBody @Valid DsInstanceScheduleParam.updateJob param) {
+    public HttpResult<Boolean> deleteSchedule(@RequestBody @Valid DsInstanceScheduleParam.UpdateJob param) {
         scheduleFacade.deleteJob(param);
         return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "检查Cron表达式")
+    @PostMapping(value = "/cron/check", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<String>> deleteSchedule(@RequestBody @Valid DsInstanceScheduleParam.CheckCron param) {
+        return new HttpResult<>(scheduleFacade.checkCron(param));
     }
 
 }

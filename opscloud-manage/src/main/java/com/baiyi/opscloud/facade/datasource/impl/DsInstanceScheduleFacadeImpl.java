@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.datasource.impl;
 
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.util.CronUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceScheduleParam;
 import com.baiyi.opscloud.domain.vo.datasource.ScheduleVO;
@@ -51,12 +52,12 @@ public class DsInstanceScheduleFacadeImpl implements DsInstanceScheduleFacade {
 
     @Override
     public void addJob(DsInstanceScheduleParam.AddJob param) {
-        if (jobClassMap.containsKey(param.getJobType()))
+        if (!jobClassMap.containsKey(param.getJobType()))
             throw new CommonRuntimeException("任务类型不存在！");
         DatasourceInstance instance = instanceService.getById(param.getInstanceId());
         if (instance == null)
             throw new CommonRuntimeException("数据源实例不存在！");
-        if (quartzService.checkJobExist(instance.getUuid(), param.getJobType()))
+        if (quartzService.checkJobExist(instance.getUuid(), param.getAssetType()))
             throw new CommonRuntimeException("任务已存在！");
         addJob(instance, param);
     }
@@ -69,26 +70,30 @@ public class DsInstanceScheduleFacadeImpl implements DsInstanceScheduleFacade {
         quartzService.addJob(
                 jobClassMap.get(param.getJobType()),
                 instance.getUuid(),
-                param.getJobType(),
+                param.getAssetType(),
                 param.getJobTime(),
                 param.getJobDescription(),
                 map);
     }
 
     @Override
-    public void pauseJob(DsInstanceScheduleParam.updateJob param) {
-        quartzService.pauseJob(param.getGroup(), param.getJobName());
+    public void pauseJob(DsInstanceScheduleParam.UpdateJob param) {
+        quartzService.pauseJob(param.getGroup(), param.getName());
     }
 
     @Override
-    public void resumeJob(DsInstanceScheduleParam.updateJob param) {
-        quartzService.resumeJob(param.getGroup(), param.getJobName());
+    public void resumeJob(DsInstanceScheduleParam.UpdateJob param) {
+        quartzService.resumeJob(param.getGroup(), param.getName());
     }
 
     @Override
-    public void deleteJob(DsInstanceScheduleParam.updateJob param) {
-        quartzService.deleteJob(param.getGroup(), param.getJobName());
+    public void deleteJob(DsInstanceScheduleParam.UpdateJob param) {
+        quartzService.deleteJob(param.getGroup(), param.getName());
     }
 
+    @Override
+    public List<String> checkCron(DsInstanceScheduleParam.CheckCron param) {
+        return CronUtil.recentTime(param.getJobTime(), 5);
+    }
 
 }

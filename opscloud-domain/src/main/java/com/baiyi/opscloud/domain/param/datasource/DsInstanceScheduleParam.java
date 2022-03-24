@@ -28,7 +28,7 @@ public class DsInstanceScheduleParam {
         @NotBlank(message = "资产类型不能为空")
         private String assetType;
 
-        @NotBlank(message = "资产类型不能为空")
+        @NotBlank(message = "Cron不能为空")
         private String jobTime;
 
         private String jobDescription;
@@ -37,12 +37,21 @@ public class DsInstanceScheduleParam {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class updateJob {
+    public static class UpdateJob {
 
         @NotNull(message = "任务组不能为空")
         private String group;
 
         @NotNull(message = "任务名不能为空")
-        private String jobName;
+        private String name;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class CheckCron {
+
+        @NotNull(message = "Cron不能为空")
+        private String jobTime;
     }
 }

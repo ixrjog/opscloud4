@@ -16,9 +16,11 @@ public interface DsInstanceScheduleFacade {
 
     void addJob(DsInstanceScheduleParam.AddJob param);
 
-    void pauseJob(DsInstanceScheduleParam.updateJob param);
+    void pauseJob(DsInstanceScheduleParam.UpdateJob param);
 
-    void resumeJob(DsInstanceScheduleParam.updateJob param);
+    void resumeJob(DsInstanceScheduleParam.UpdateJob param);
 
-    void deleteJob(DsInstanceScheduleParam.updateJob param);
+    void deleteJob(DsInstanceScheduleParam.UpdateJob param);
+
+    List<String> checkCron(DsInstanceScheduleParam.CheckCron param);
 }
