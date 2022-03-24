@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import javax.websocket.Session;
 
 /**
+ * 设置批量命令
+ *
  * @Author baiyi
  * @Date 2020/5/11 7:22 下午
  * @Version 1.0
@@ -19,12 +21,6 @@ import javax.websocket.Session;
 @Slf4j
 @Component
 public class BatchCommandProcessor extends AbstractServerTerminalProcessor<ServerMessage.BatchCommand> {
-
-    /**
-     * 设置批量命令
-     *
-     * @return
-     */
 
     @Override
     public String getState() {

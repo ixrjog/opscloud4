@@ -16,18 +16,14 @@ import org.springframework.stereotype.Component;
 import javax.websocket.Session;
 
 /**
+ * 复制会话
+ *
  * @Author baiyi
  * @Date 2020/5/13 10:24 上午
  * @Version 1.0
  */
 @Component
 public class DuplicateSessionProcessor extends AbstractServerTerminalProcessor<ServerMessage.DuplicateSession> {
-
-    /**
-     * 复制会话
-     *
-     * @return
-     */
 
     @Override
     public String getState() {
@@ -43,7 +39,6 @@ public class DuplicateSessionProcessor extends AbstractServerTerminalProcessor<S
         RemoteInvokeHandler.openWebTerminal(terminalSession.getSessionId(), baseMessage.getServerNode().getInstanceId(), hostSystem);
         terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, hostSystem, InstanceSessionTypeEnum.SERVER));
     }
-
 
     @Override
     protected ServerMessage.DuplicateSession getMessage(String message) {

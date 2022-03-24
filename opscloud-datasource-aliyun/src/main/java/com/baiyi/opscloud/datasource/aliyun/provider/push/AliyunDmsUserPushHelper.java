@@ -4,7 +4,7 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.aliyun.converter.DmsAssetConverter;
 import com.baiyi.opscloud.datasource.aliyun.dms.entity.DmsUser;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
+import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
@@ -85,7 +85,7 @@ public class AliyunDmsUserPushHelper {
                 .length(10000)
                 .build();
         DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
-        Tag tag = tagService.getByTagKey(DsInstanceTagConstants.SYSTEM.name());
+        Tag tag = tagService.getByTagKey(TagConstants.SYSTEM.name());
         return table.getData().stream().filter(e -> {
             if (tag == null) return true;
             BusinessTag businessTag = BusinessTag.builder()

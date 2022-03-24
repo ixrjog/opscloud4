@@ -7,7 +7,7 @@ import lombok.Getter;
  * @Date 2021/12/2 11:06 AM
  * @Version 1.0
  */
-public enum DsInstanceTagConstants {
+public enum TagConstants {
 
     SYSTEM_HOOKS("SystemHooks"),
     SERVER("Server"),
@@ -15,12 +15,13 @@ public enum DsInstanceTagConstants {
     ACCOUNT("Account"),
     NOTICE("Notice"),
     SYSTEM("System"),
-    MFA("MFA");
+    MFA("MFA"),
+    SUPER_ADMIN("SA");
 
     @Getter
     private final String tag;
 
-    DsInstanceTagConstants(String tag) {
+    TagConstants(String tag) {
         this.tag = tag;
     }
 

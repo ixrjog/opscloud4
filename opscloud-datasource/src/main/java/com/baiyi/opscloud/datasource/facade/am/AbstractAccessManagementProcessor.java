@@ -6,7 +6,7 @@ import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import com.baiyi.opscloud.datasource.facade.UserAmFacade;
 import com.baiyi.opscloud.datasource.facade.am.base.IAccessManagementProcessor;
 import com.baiyi.opscloud.datasource.manager.base.NoticeManager;
-import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
+import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.user.UserAmParam;
 import com.baiyi.opscloud.service.user.UserService;
@@ -60,7 +60,7 @@ public abstract class AbstractAccessManagementProcessor implements IAccessManage
     }
 
     protected boolean enableMFA(String instanceUuid) {
-        return instanceHelper.hasTagInInstance(instanceUuid, DsInstanceTagConstants.MFA.name());
+        return instanceHelper.hasTagInInstance(instanceUuid, TagConstants.MFA.name());
     }
 
 }

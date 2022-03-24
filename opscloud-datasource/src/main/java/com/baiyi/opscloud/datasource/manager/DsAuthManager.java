@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.core.factory.AuthProviderFactory;
 import com.baiyi.opscloud.core.provider.auth.BaseAuthProvider;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
-import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
+import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.model.Authorization;
@@ -42,7 +42,7 @@ public class DsAuthManager extends BaseManager {
 
     @Override
     protected String getTag() {
-        return DsInstanceTagConstants.AUTHORIZATION.getTag();
+        return TagConstants.AUTHORIZATION.getTag();
     }
 
     public boolean tryLogin(User user, LoginParam.Login loginParam) throws AuthRuntimeException {

@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.manager.base;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.InstanceHelper;
 import com.baiyi.opscloud.datasource.message.notice.NoticeHelper;
-import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
+import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.notice.INoticeMessage;
@@ -55,7 +55,7 @@ public class NoticeManager {
      */
     public void sendMessage(User user, String msgKey) {
         List<DatasourceInstance> instances = instanceHelper.listInstance(FILTER_INSTANCE_TYPES,
-                DsInstanceTagConstants.NOTICE.getTag());
+                TagConstants.NOTICE.getTag());
         if (!CollectionUtils.isEmpty(instances)) {
             noticeHelper.sendMessage(user, msgKey, instances);
         }
@@ -72,7 +72,7 @@ public class NoticeManager {
     public void sendMessage(User user, String msgKey, INoticeMessage iNoticeMessage) {
         try {
             List<DatasourceInstance> instances = instanceHelper.listInstance(FILTER_INSTANCE_TYPES,
-                    DsInstanceTagConstants.NOTICE.getTag());
+                    TagConstants.NOTICE.getTag());
             if (!CollectionUtils.isEmpty(instances)) {
                 noticeHelper.sendMessage(user, msgKey, instances, iNoticeMessage);
             }
