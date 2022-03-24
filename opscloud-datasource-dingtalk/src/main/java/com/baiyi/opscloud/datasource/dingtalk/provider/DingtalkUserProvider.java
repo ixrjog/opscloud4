@@ -30,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -141,7 +142,9 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
         if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
             return false;
-        if (preAsset.getIsActive() != asset.getIsActive())
+        if (!Objects.equals(preAsset.getIsActive(), asset.getIsActive()))
+            return false;
+        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
             return false;
         return true;
     }

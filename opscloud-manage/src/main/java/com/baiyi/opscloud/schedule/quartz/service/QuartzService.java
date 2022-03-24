@@ -139,7 +139,7 @@ public class QuartzService {
      * @param jobName
      * @param group
      */
-    public void resumeJob(String jobName, String group) {
+    public void resumeJob(String group, String jobName) {
         try {
             JobKey jobKey = JobKey.jobKey(jobName, group);
             scheduler.resumeJob(jobKey);
@@ -154,7 +154,7 @@ public class QuartzService {
      * @param jobName
      * @param group
      */
-    public void runJobNow(String jobName, String group) {
+    public void runJobNow(String group, String jobName) {
         try {
             JobKey jobKey = JobKey.jobKey(jobName, group);
             scheduler.triggerJob(jobKey);
@@ -246,6 +246,16 @@ public class QuartzService {
             jobList.add(job);
         }
         return jobList;
+    }
+
+    public Boolean checkJobExist(String group, String jobName) {
+        try {
+            JobKey jobKey = JobKey.jobKey(jobName, group);
+            return scheduler.getJobDetail(jobKey) != null;
+        } catch (SchedulerException e) {
+            log.error(e.getMessage());
+            return false;
+        }
     }
 
 }
