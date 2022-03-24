@@ -39,6 +39,7 @@ public abstract class AbstractSshChannelOutputTask implements IOutputTask {
         try {
             while (!isClosed) {
                 TimeUnit.MILLISECONDS.sleep(25L);
+
                 InputStream ins = baos.toInputStream();
                 if (ins instanceof ClosedInputStream)
                     continue;
