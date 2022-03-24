@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.schedule.quartz.service;
 
+import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.CronUtil;
 import com.baiyi.opscloud.domain.vo.datasource.ScheduleVO;
 import com.google.common.collect.Lists;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @Author 修远
@@ -173,24 +175,31 @@ public class QuartzService {
         List<ScheduleVO.Job> jobs = Lists.newArrayList();
         for (JobKey jobKey : jobKeys) {
             List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
-            for (Trigger trigger : triggers) {
-                final Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
-                final JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-                ScheduleVO.Job job = ScheduleVO.Job.builder()
-                        .name(jobKey.getName())
-                        .group(jobKey.getGroup())
-                        .description(jobDetail.getDescription())
-                        .status(triggerState.name())
-                        .build();
-                if (trigger instanceof CronTrigger) {
-                    CronTrigger cronTrigger = (CronTrigger) trigger;
-                    job.setCronExpression(cronTrigger.getCronExpression());
-                    job.setExecutionTime(CronUtil.recentTime(cronTrigger.getCronExpression(), 5));
-                }
-                jobs.add(job);
-            }
+            jobs.addAll(triggers.stream().map(e -> buildJob(jobKey, e)).collect(Collectors.toList()));
         }
         return jobs;
+    }
+
+    private ScheduleVO.Job buildJob(JobKey jobKey, Trigger trigger) {
+        try {
+            final Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
+            final JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+            ScheduleVO.Job job = ScheduleVO.Job.builder()
+                    .name(jobKey.getName())
+                    .group(jobKey.getGroup())
+                    .description(jobDetail.getDescription())
+                    .status(triggerState.name())
+                    .build();
+            if (trigger instanceof CronTrigger) {
+                CronTrigger cronTrigger = (CronTrigger) trigger;
+                job.setCronExpression(cronTrigger.getCronExpression());
+                job.setExecutionTime(CronUtil.recentTime(cronTrigger.getCronExpression(), 5));
+            }
+            return job;
+        } catch (SchedulerException e) {
+            log.error(e.getMessage());
+            throw new CommonRuntimeException(e.getMessage());
+        }
     }
 
     /**
@@ -202,25 +211,12 @@ public class QuartzService {
     public List<ScheduleVO.Job> getAllJob() throws SchedulerException {
         GroupMatcher<JobKey> matcher = GroupMatcher.anyJobGroup();
         Set<JobKey> jobKeys = scheduler.getJobKeys(matcher);
-        List<ScheduleVO.Job> jobList = Lists.newArrayList();
+        List<ScheduleVO.Job> jobs = Lists.newArrayList();
         for (JobKey jobKey : jobKeys) {
             List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
-            for (Trigger trigger : triggers) {
-                Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
-                ScheduleVO.Job job = ScheduleVO.Job.builder()
-                        .name(jobKey.getName())
-                        .group(jobKey.getGroup())
-                        .description("触发器: " + trigger.getKey())
-                        .status(triggerState.name())
-                        .build();
-                if (trigger instanceof CronTrigger) {
-                    CronTrigger cronTrigger = (CronTrigger) trigger;
-                    job.setCronExpression(cronTrigger.getCronExpression());
-                }
-                jobList.add(job);
-            }
+            jobs.addAll(triggers.stream().map(e -> buildJob(jobKey, e)).collect(Collectors.toList()));
         }
-        return jobList;
+        return jobs;
     }
 
     /**
