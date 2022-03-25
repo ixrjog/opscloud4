@@ -9,24 +9,24 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>opscloud-datasource-aliyun-ecs</artifactId>
+    <artifactId>opscloud-datasource-aws-sqs</artifactId>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
 
     <dependencies>
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-aliyun-core</artifactId>
+            <artifactId>opscloud-datasource-aws-core</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>aliyun-java-sdk-ecs</artifactId>
-            <version>4.24.14</version>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-sqs</artifactId>
+            <version>1.12.173</version>
         </dependency>
 
     </dependencies>
