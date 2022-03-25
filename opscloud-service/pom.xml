@@ -37,13 +37,13 @@
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>1.2.12</version>
+            <version>1.4.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.jasypt</groupId>
             <artifactId>jasypt</artifactId>
-            <version>1.9.2</version>
+            <version>1.9.3</version>
             <scope>compile</scope>
         </dependency>
 
