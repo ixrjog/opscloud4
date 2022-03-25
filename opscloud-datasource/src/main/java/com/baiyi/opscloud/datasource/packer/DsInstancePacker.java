@@ -5,6 +5,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
+import com.baiyi.opscloud.scheduler.QuartzService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,8 @@ public class DsInstancePacker {
 
     private final DsInstanceService dsInstanceService;
 
+    private final QuartzService quartzService;
+
     public void wrap(DsInstanceVO.IDsInstance iDsInstance) {
         if (StringUtils.isEmpty(iDsInstance.getInstanceUuid())) return;
         DatasourceInstance datasourceInstance = dsInstanceService.getByUuid(iDsInstance.getInstanceUuid());
@@ -45,6 +48,7 @@ public class DsInstancePacker {
                                     .build()
                     ).collect(Collectors.toList());
             instance.setAssetDetails(assetDetails);
+            instance.setJobSize(quartzService.queryInstanceJobSize(instance.getUuid()));
         }
     }
 

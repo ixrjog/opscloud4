@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.schedule.quartz.service;
+package com.baiyi.opscloud.scheduler;
 
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.CronUtil;
@@ -160,6 +160,21 @@ public class QuartzService {
             scheduler.triggerJob(jobKey);
         } catch (SchedulerException e) {
             log.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询数据源实例任务数量
+     * @param group
+     * @return
+     */
+    public int queryInstanceJobSize(String group) {
+        try {
+            GroupMatcher<JobKey> matcher = GroupMatcher.groupEquals(group);
+            Set<JobKey> jobKeys = scheduler.getJobKeys(matcher);
+            return jobKeys.size();
+        } catch (SchedulerException e) {
+            return 0;
         }
     }
 

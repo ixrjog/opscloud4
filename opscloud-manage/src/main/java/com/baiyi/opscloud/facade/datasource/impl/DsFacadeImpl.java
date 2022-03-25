@@ -64,8 +64,8 @@ public class DsFacadeImpl implements DsFacade {
 
     @Override
     public List<DsInstanceVO.Instance> queryDsInstance(DsInstanceParam.DsInstanceQuery query) {
-        List<DatasourceInstance> instanceList = dsInstanceService.queryByParam(query);
-        return BeanCopierUtil.copyListProperties(instanceList, DsInstanceVO.Instance.class)
+        List<DatasourceInstance> instances = dsInstanceService.queryByParam(query);
+        return BeanCopierUtil.copyListProperties(instances, DsInstanceVO.Instance.class)
                 .stream().peek(e -> dsInstancePacker.wrap(e, query)).collect(Collectors.toList());
     }
 
