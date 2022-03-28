@@ -21,4 +21,8 @@ public class BaseAwsTest extends BaseUnit {
         return dsConfigHelper.build(dsConfigHelper.getConfigByDsType(DsTypeEnum.AWS.getType()), AwsConfig.class);
     }
 
+    protected AwsConfig getConfigById(Integer id) {
+        return dsConfigHelper.build(dsConfigHelper.getConfigById(id), AwsConfig.class);
+    }
+
 }
