@@ -5,11 +5,12 @@ import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.common.util.GitlabTokenUtil;
 import com.baiyi.opscloud.config.properties.WhiteConfigurationProperties;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
-import org.springframework.stereotype.Component;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,13 +23,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 
 @Component
+@RequiredArgsConstructor
 public class AuthFilter extends OncePerRequestFilter {
 
-    @Resource
-    private UserAuthFacade userAuthFacade;
+    private final UserAuthFacade userAuthFacade;
 
-    @Resource
-    private WhiteConfigurationProperties whiteConfig;
+    private final WhiteConfigurationProperties whiteConfig;
 
     /**
      * 前端框架 token 名称
@@ -40,11 +40,10 @@ public class AuthFilter extends OncePerRequestFilter {
      */
     public static final String ACCESS_TOKEN = "AccessToken";
 
-
     public static final String GITLAB_TOKEN = "X-Gitlab-Token";
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         response.setContentType(APPLICATION_JSON_VALUE);
         if (!"options".equalsIgnoreCase(request.getMethod())) {
             String resourceName = request.getServletPath();
