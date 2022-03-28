@@ -9,7 +9,7 @@ import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.google.gson.JsonSyntaxException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import sun.net.util.IPAddressUtil;
+import com.baiyi.opscloud.common.util.IPAddressUtil;
 
 import javax.annotation.Resource;
 import java.util.Optional;

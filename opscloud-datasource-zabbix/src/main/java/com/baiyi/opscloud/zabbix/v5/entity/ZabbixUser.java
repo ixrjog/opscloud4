@@ -3,9 +3,9 @@ package com.baiyi.opscloud.zabbix.v5.entity;
 import com.baiyi.opscloud.core.asset.IToAsset;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.zabbix.v5.entity.base.ZabbixResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -112,8 +112,11 @@ public class ZabbixUser {
                 for (ZabbixMedia.Media media : this.medias) {
                     if ("1".equals(media.getMediatypeid())) {
                         //  String email = ZabbixMapper.mapperList(media.getSendto(), String.class).get(0);
-                        String email = ((List<String>) media.getSendto()).get(0);
-                        builder.paramProperty("email", email);
+                        try {
+                            String email = ((List<String>) media.getSendto()).get(0);
+                            builder.paramProperty("email", email);
+                        } catch (Exception e) {
+                        }
                         continue;
                     }
                     if ("3".equals(media.getMediatypeid())) {

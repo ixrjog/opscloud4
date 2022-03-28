@@ -2,7 +2,7 @@ package com.baiyi.opscloud.util;
 
 import com.baiyi.opscloud.BaseUnit;
 import org.junit.jupiter.api.Test;
-import sun.net.util.IPAddressUtil;
+import com.baiyi.opscloud.common.util.IPAddressUtil;
 
 /**
  * @Author baiyi
