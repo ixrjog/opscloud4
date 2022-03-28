@@ -28,7 +28,7 @@ import java.util.Map;
 public class AmazonSimpleQueueServiceDriver {
 
     /**
-     * 查询SQS信息
+     * 查询Queue信息
      *
      * @param config
      * @param regionId
@@ -51,7 +51,7 @@ public class AmazonSimpleQueueServiceDriver {
     }
 
     /**
-     * 获取SQS属性
+     * 获取Queue属性
      *
      * @param config
      * @param regionId
