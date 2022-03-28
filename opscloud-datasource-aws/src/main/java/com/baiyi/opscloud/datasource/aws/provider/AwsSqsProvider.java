@@ -60,7 +60,7 @@ public class AwsSqsProvider extends AbstractAssetBusinessRelationProvider<Simple
             return false;
 //        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
 //            return false;
-        if (!AssetUtil.equals(preAsset.getExpiredTime(), asset.getExpiredTime()))
+        if (!AssetUtil.equals(preAsset.getCreatedTime(), asset.getCreatedTime()))
             return false;
         return true;
     }
