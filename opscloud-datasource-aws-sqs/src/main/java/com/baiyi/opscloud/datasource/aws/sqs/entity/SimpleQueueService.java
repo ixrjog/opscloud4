@@ -39,7 +39,7 @@ public class SimpleQueueService {
 
         @Override
         public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
-
+            
             DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                     .instanceUuid(dsInstance.getUuid())
                     .assetId(this.queueUrl)
@@ -49,7 +49,7 @@ public class SimpleQueueService {
                     .regionId(this.regionId)
                     .kind("sqs")
                     .assetType(DsAssetTypeConstants.SQS.name())
-                    .createdTime(new Date(Long.parseLong(this.attributes.get("CreatedTimestamp"))))
+                    .createdTime(new Date(Long.parseLong(this.attributes.get("CreatedTimestamp")) * 1000))
                     .build();
 
             return AssetContainerBuilder.newBuilder()
