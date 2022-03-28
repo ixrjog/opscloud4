@@ -21,7 +21,7 @@ public class SqsTest extends BaseAwsTest {
     @Test
     void listQueuesTest() {
         // "eu-west-1" ap-east-1
-        AwsConfig.Aws awsConfig = getConfig().getAws();
+        AwsConfig.Aws awsConfig = getConfigById(23).getAws();
         List<String> queues = amazonSQSDriver.listQueues(awsConfig, "eu-west-1");
         print("size = " + queues.size());
         queues.forEach(this::print);
