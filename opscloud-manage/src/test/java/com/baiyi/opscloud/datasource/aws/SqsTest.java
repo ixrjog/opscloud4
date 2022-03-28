@@ -6,6 +6,8 @@ import com.baiyi.opscloud.datasource.aws.sqs.driver.AmazonSimpleQueueServiceDriv
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -14,6 +16,22 @@ import java.util.List;
  * @Version 1.0
  */
 public class SqsTest extends BaseAwsTest {
+
+    /**
+     * https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_verify_realName_result_loan_canary_queue
+     * https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_verify_realName_result_loan_perf_queue
+     * https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_verify_realName_result_loan_prod_queue
+     * https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_virtualbank_autowithdraw_process_canary_queue
+     * https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_virtualbank_autowithdraw_process_canary_sx_queue
+     * https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_virtualbank_autowithdraw_process_perf_queue
+     * https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_virtualbank_autowithdraw_process_prod_queue
+     * https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_virtualbank_autowithdraw_process_prod_sx_queue
+     * https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_virtualbank_autowithdraw_schedule_tigger_canary_queue
+     * https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_virtualbank_autowithdraw_schedule_tigger_canary_sx_queue
+     * https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_virtualbank_autowithdraw_schedule_tigger_perf_queue
+     * https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_virtualbank_autowithdraw_schedule_tigger_prod_queue
+     * https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_virtualbank_autowithdraw_schedule_tigger_prod_sx_queue
+     */
 
     @Resource
     private AmazonSimpleQueueServiceDriver amazonSQSDriver;
@@ -25,6 +43,20 @@ public class SqsTest extends BaseAwsTest {
         List<String> queues = amazonSQSDriver.listQueues(awsConfig, "eu-west-1");
         print("size = " + queues.size());
         queues.forEach(this::print);
+    }
+
+    @Test
+    void get(){
+        AwsConfig.Aws awsConfig = getConfigById(23).getAws();
+        String queueUrl = "https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_virtualbank_autowithdraw_schedule_tigger_prod_sx_queue";
+        print(amazonSQSDriver.getQueueAttributes(awsConfig,"eu-west-1",queueUrl));
+    }
+
+    @Test
+    void dddd() throws MalformedURLException {
+        String queueUrl = "https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_virtualbank_autowithdraw_schedule_tigger_prod_sx_queue";
+        URL url =  new URL(queueUrl);
+        print(url);
     }
 
 }
