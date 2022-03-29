@@ -66,11 +66,11 @@ public class SimpleNotificationService {
 
     /**
      * {
-     *     "subscriptionArn":"arn:aws:sns:eu-west-1:502076313352:transsnet_close_account_perf_topic:01ec9677-aac8-4f1c-a4ca-90eae6b3defe",
-     *     "owner":"502076313352",
-     *     "protocol":"sqs",
-     *     "endpoint":"arn:aws:sqs:eu-west-1:502076313352:transsnet_close_account_perf_queue",
-     *     "topicArn":"arn:aws:sns:eu-west-1:502076313352:transsnet_close_account_perf_topic"
+     * "subscriptionArn":"arn:aws:sns:eu-west-1:502076313352:transsnet_close_account_perf_topic:01ec9677-aac8-4f1c-a4ca-90eae6b3defe",
+     * "owner":"502076313352",
+     * "protocol":"sqs",
+     * "endpoint":"arn:aws:sqs:eu-west-1:502076313352:transsnet_close_account_perf_queue",
+     * "topicArn":"arn:aws:sns:eu-west-1:502076313352:transsnet_close_account_perf_topic"
      * }
      */
     @Builder
@@ -109,6 +109,7 @@ public class SimpleNotificationService {
 
             return AssetContainerBuilder.newBuilder()
                     .paramAsset(asset)
+                    .paramProperty("protocol", this.protocol)
                     .build();
         }
     }
