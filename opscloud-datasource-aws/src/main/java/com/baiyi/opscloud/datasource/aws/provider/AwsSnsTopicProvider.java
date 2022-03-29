@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.aws.provider;
 
+import com.amazonaws.services.sns.model.Topic;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
@@ -7,8 +8,8 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetBusinessRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aws.sqs.driver.AmazonSimpleQueueServiceDriver;
-import com.baiyi.opscloud.datasource.aws.sqs.entity.SimpleQueueService;
+import com.baiyi.opscloud.datasource.aws.sqs.driver.AmazonSimpleNotificationServiceDriver;
+import com.baiyi.opscloud.datasource.aws.sqs.entity.SimpleNotificationService;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -23,25 +24,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_AWS_SQS;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_AWS_SNS_TOPIC;
+
 
 /**
  * @Author baiyi
- * @Date 2022/3/28 14:26
+ * @Date 2022/3/29 13:56
  * @Version 1.0
  */
 @Slf4j
 @Component
-public class AwsSqsProvider extends AbstractAssetBusinessRelationProvider<SimpleQueueService.Queue> {
+public class AwsSnsTopicProvider extends AbstractAssetBusinessRelationProvider<SimpleNotificationService.Topic> {
 
     @Resource
-    private AmazonSimpleQueueServiceDriver amazonSQSDriver;
+    private AmazonSimpleNotificationServiceDriver amazonSNSDriver;
 
     @Resource
-    private AwsSqsProvider awsSqsProvider;
+    private AwsSnsTopicProvider awsSnsTopicProvider;
 
     @Override
-    @SingleTask(name = PULL_AWS_SQS, lockTime = "1m")
+    @SingleTask(name = PULL_AWS_SNS_TOPIC, lockTime = "1m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -54,8 +56,8 @@ public class AwsSqsProvider extends AbstractAssetBusinessRelationProvider<Simple
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
         if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
             return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
-            return false;
+//        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
+//            return false;
         if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
             return false;
 //        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
@@ -66,23 +68,21 @@ public class AwsSqsProvider extends AbstractAssetBusinessRelationProvider<Simple
     }
 
     @Override
-    protected List<SimpleQueueService.Queue> listEntities(DsInstanceContext dsInstanceContext) {
+    protected List<SimpleNotificationService.Topic> listEntities(DsInstanceContext dsInstanceContext) {
         AwsConfig.Aws aws = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aws.getRegionIds()))
             return Collections.emptyList();
-        List<SimpleQueueService.Queue> entities = Lists.newArrayList();
+        List<SimpleNotificationService.Topic> entities = Lists.newArrayList();
         aws.getRegionIds().forEach(regionId -> {
-                    List<String> queues = amazonSQSDriver.listQueues(aws, regionId);
-                    entities.addAll(queues.stream().map(e -> {
-                                log.info("查询Queue属性: queueUrl = {}", e);
-                                Map<String, String> attributes = amazonSQSDriver.getQueueAttributes(aws, regionId, e);
-                                return SimpleQueueService.Queue.builder()
-                                        .queueUrl(e)
-                                        .regionId(regionId)
-                                        .attributes(attributes)
-                                        .build();
-                            }).collect(Collectors.toList())
-                    );
+                    List<Topic> topics = amazonSNSDriver.listTopics(aws, regionId);
+                    entities.addAll(topics.stream().map(e -> {
+                        Map<String, String> attributes = amazonSNSDriver.getTopicAttributes(aws, regionId, e.getTopicArn());
+                        return SimpleNotificationService.Topic.builder()
+                                .topicArn(e.getTopicArn())
+                                .regionId(regionId)
+                                .attributes(attributes)
+                                .build();
+                    }).collect(Collectors.toList()));
                 }
         );
         return entities;
@@ -95,12 +95,12 @@ public class AwsSqsProvider extends AbstractAssetBusinessRelationProvider<Simple
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeConstants.SQS.name();
+        return DsAssetTypeConstants.SNS_TOPIC.name();
     }
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(awsSqsProvider);
+        AssetProviderFactory.register(awsSnsTopicProvider);
     }
 
 }
