@@ -25,7 +25,7 @@ import java.util.Map;
 public class AmazonSimpleNotificationServiceDriver {
 
     /**
-     * 查询Topic信息
+     * 查询Topic列表
      *
      * @param config
      * @param regionId
@@ -60,4 +60,34 @@ public class AmazonSimpleNotificationServiceDriver {
         GetTopicAttributesResult result = AmazonSNSService.buildAmazonSNS(config, regionId).getTopicAttributes(request);
         return result.getAttributes();
     }
+
+    /**
+     * 查询Subscription列表
+     * @param config
+     * @param regionId
+     * @return
+     */
+    public List<Subscription> listSubscriptions(AwsConfig.Aws config, String regionId) {
+        ListSubscriptionsRequest request = new ListSubscriptionsRequest();
+        List<Subscription> subscriptions = Lists.newArrayList();
+        while (true) {
+            ListSubscriptionsResult result = AmazonSNSService.buildAmazonSNS(config, regionId).listSubscriptions(request);
+            subscriptions.addAll(result.getSubscriptions());
+            if (StringUtils.isNotBlank(result.getNextToken())) {
+                request.setNextToken(result.getNextToken());
+            } else {
+                break;
+            }
+        }
+        return subscriptions;
+    }
+
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1HOUR, key = "'accountId_' + #config.account.id + '_regionId' + #regionId + '_subscriptionArn_' + #subscriptionArn", unless = "#result == null")
+    public Map<String, String> getSubscriptionAttributes(AwsConfig.Aws config, String regionId, String subscriptionArn) {
+        GetSubscriptionAttributesRequest request = new GetSubscriptionAttributesRequest();
+        request.setSubscriptionArn(subscriptionArn);
+        GetSubscriptionAttributesResult result = AmazonSNSService.buildAmazonSNS(config, regionId).getSubscriptionAttributes(request);
+        return result.getAttributes();
+    }
+
 }

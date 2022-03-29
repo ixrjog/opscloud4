@@ -34,6 +34,7 @@ public enum DsAssetTypeConstants {
     IAM_ACCESS_KEY,
     SQS,
     SNS_TOPIC,
+    SNS_SUBSCRIPTION,
 
     GITLAB_USER,
     GITLAB_GROUP,

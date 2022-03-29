@@ -64,4 +64,53 @@ public class SimpleNotificationService {
         }
     }
 
+    /**
+     * {
+     *     "subscriptionArn":"arn:aws:sns:eu-west-1:502076313352:transsnet_close_account_perf_topic:01ec9677-aac8-4f1c-a4ca-90eae6b3defe",
+     *     "owner":"502076313352",
+     *     "protocol":"sqs",
+     *     "endpoint":"arn:aws:sqs:eu-west-1:502076313352:transsnet_close_account_perf_queue",
+     *     "topicArn":"arn:aws:sns:eu-west-1:502076313352:transsnet_close_account_perf_topic"
+     * }
+     */
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    public static class Subscription implements IToAsset, Serializable {
+
+        private static final long serialVersionUID = -1065834695056874611L;
+
+        private String subscriptionArn;
+
+        private String regionId;
+
+        private String protocol;
+
+        private String endpoint;
+
+        private String topicArn;
+
+        @Override
+        public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
+
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.subscriptionArn)
+                    // 订阅的主题
+                    .name(StringUtils.substringAfterLast(this.topicArn, ":"))
+                    // 终端节点
+                    .assetKey(this.endpoint)
+                    .assetKey2(this.topicArn)
+                    .regionId(this.regionId)
+                    .kind("snsSubscription")
+                    .assetType(DsAssetTypeConstants.SNS_SUBSCRIPTION.name())
+                    .build();
+
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset)
+                    .build();
+        }
+    }
+
 }
