@@ -1,9 +1,6 @@
 package com.baiyi.opscloud.datasource.aws.sqs.driver;
 
-import com.amazonaws.services.sqs.model.GetQueueAttributesRequest;
-import com.amazonaws.services.sqs.model.GetQueueAttributesResult;
-import com.amazonaws.services.sqs.model.ListQueuesRequest;
-import com.amazonaws.services.sqs.model.ListQueuesResult;
+import com.amazonaws.services.sqs.model.*;
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.datasource.aws.sqs.service.AmazonSQSService;
@@ -13,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +24,25 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class AmazonSimpleQueueServiceDriver {
+
+    /**
+     * https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_CreateQueue.html
+     *
+     * @param config
+     * @param regionId
+     * @param queueName
+     * @param attributes queueUrl
+     * @return
+     */
+    public String createQueue(AwsConfig.Aws config, String regionId, String queueName, Map<String, String> attributes) {
+        CreateQueueRequest request = new CreateQueueRequest();
+        request.setQueueName(queueName);
+        if (!CollectionUtils.isEmpty(attributes)){
+            request.setAttributes(attributes);
+        }
+        CreateQueueResult result = AmazonSQSService.buildAmazonSQS(config, regionId).createQueue(request);
+        return result.getQueueUrl();
+    }
 
     /**
      * 查询Queue信息
