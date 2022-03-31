@@ -219,4 +219,27 @@ public class AliyunRamUserDriver {
         return false;
     }
 
+    /**
+     * 更新 RAM 用户的基本信息
+     *
+     * @param regionId
+     * @param aliyun
+     * @param ramUser
+     */
+    public void updateUser(String regionId, AliyunConfig.Aliyun aliyun, RamUser.User ramUser) {
+        UpdateUserRequest request = new UpdateUserRequest();
+        request.setUserName(ramUser.getUserName());
+        // 修改Email
+        if (StringUtils.isNotBlank(ramUser.getEmail()))
+            request.setNewEmail(ramUser.getEmail());
+        // 修改显示名
+        if (StringUtils.isNotBlank(ramUser.getDisplayName()))
+            request.setNewDisplayName(ramUser.getDisplayName());
+        try {
+            UpdateUserResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
+        } catch (ClientException e) {
+            log.error(e.getMessage());
+        }
+    }
+
 }
