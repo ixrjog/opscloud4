@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.server.impl;
 
+import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
@@ -92,6 +93,14 @@ public class ServerAccountFacadeImpl implements ServerAccountFacade {
             }
         }
         return false;
+    }
+
+    @Override
+    public void deleteServerAccountById(Integer id) {
+        if (accountPermissionService.countByServerAccountId(id) != 0) {
+            throw new CommonRuntimeException("服务器账户删除错误: 账户使用中！");
+        }
+        accountService.deleteById(id);
     }
 
 }

@@ -52,4 +52,12 @@ public class ServerAccountController {
         serverAccountFacade.updateServerAccount(account);
         return HttpResult.SUCCESS;
     }
+
+    @ApiOperation(value = "删除指定的服务器账户")
+    @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteServerAccountById(@RequestParam int id) {
+        serverAccountFacade.deleteServerAccountById(id);
+        return HttpResult.SUCCESS;
+    }
+
 }

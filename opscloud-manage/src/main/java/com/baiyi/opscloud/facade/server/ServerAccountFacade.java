@@ -18,4 +18,7 @@ public interface ServerAccountFacade {
     void updateServerAccount(ServerAccountVO.Account account);
 
     void updateServerAccountPermission(ServerAccountParam.UpdateServerAccountPermission updatePermission);
+
+    void deleteServerAccountById(Integer id);
+
 }

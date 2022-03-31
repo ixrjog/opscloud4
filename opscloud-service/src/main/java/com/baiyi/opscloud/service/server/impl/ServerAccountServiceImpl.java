@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class ServerAccountServiceImpl  extends AbstractCredentialCustomer implements ServerAccountService {
+public class ServerAccountServiceImpl extends AbstractCredentialCustomer implements ServerAccountService {
 
     private final ServerAccountMapper accountMapper;
 
@@ -71,8 +71,8 @@ public class ServerAccountServiceImpl  extends AbstractCredentialCustomer implem
 
     @Override
     public ServerAccount getPermissionServerAccountByUsernameAndProtocol(Integer serverId,
-                                                               String username,
-                                                               String protocol) {
+                                                                         String username,
+                                                                         String protocol) {
         return accountMapper.getPermissionServerAccountByUsernameAndProtocol(serverId, username, protocol);
     }
 
@@ -82,6 +82,11 @@ public class ServerAccountServiceImpl  extends AbstractCredentialCustomer implem
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("credentialId", credentialId);
         return accountMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        accountMapper.deleteByPrimaryKey(id);
     }
 
 }

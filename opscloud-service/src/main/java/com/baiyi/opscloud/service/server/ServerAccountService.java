@@ -28,4 +28,6 @@ public interface ServerAccountService extends ICredentialCustomer {
                                                                   String username,
                                                                   String protocol);
 
+    void deleteById(Integer id);
+
 }
