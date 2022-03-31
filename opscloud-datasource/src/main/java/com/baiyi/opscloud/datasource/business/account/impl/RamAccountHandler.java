@@ -1,15 +1,18 @@
 package com.baiyi.opscloud.datasource.business.account.impl;
 
 import com.aliyuncs.exceptions.ClientException;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.ram.driver.AliyunRamAccessKeyDriver;
 import com.baiyi.opscloud.datasource.aliyun.ram.driver.AliyunRamUserDriver;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.AccessKey;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamUser;
-import com.baiyi.opscloud.datasource.business.account.impl.base.AbstractZabbixAccountHandler;
+import com.baiyi.opscloud.datasource.business.account.impl.base.AbstractAccountHandler;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,11 +27,13 @@ import java.util.Optional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class RamAccountHandler extends AbstractZabbixAccountHandler {
+public class RamAccountHandler extends AbstractAccountHandler {
 
     private final AliyunRamUserDriver aliyunRamUserDriver;
 
     private final AliyunRamAccessKeyDriver aliyunRamAccessKeyDriver;
+
+    private final DsInstanceAssetService assetService;
 
     protected static ThreadLocal<AliyunConfig.Aliyun> configContext = new ThreadLocal<>();
 
@@ -63,7 +68,7 @@ public class RamAccountHandler extends AbstractZabbixAccountHandler {
                 aliyunRamUserDriver.deleteUser(aliyun.getRegionId(), aliyun, user.getUsername());
             }
         } catch (ClientException e) {
-            log.info("删除RAM用户错误: username = {} , message = {}", user.getUsername(), e.getMessage());
+            log.info("删除 RAM 用户错误: username = {} , message = {}", user.getUsername(), e.getMessage());
         }
     }
 
@@ -75,6 +80,16 @@ public class RamAccountHandler extends AbstractZabbixAccountHandler {
     @Override
     public void doRevoke(User user, BaseBusiness.IBusiness businessResource) {
         // Not Supported
+    }
+
+    @Override
+    protected int getBusinessResourceType() {
+        return BusinessTypeEnum.COMMON.getType();
+    }
+
+    @Override
+    public String getInstanceType() {
+        return DsTypeEnum.ALIYUN.getName();
     }
 
 }
