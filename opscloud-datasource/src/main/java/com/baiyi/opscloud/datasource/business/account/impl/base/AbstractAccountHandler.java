@@ -23,7 +23,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractAccountProvider extends SimpleDsInstanceProvider implements IAccount, InitializingBean {
+public abstract class AbstractAccountHandler extends SimpleDsInstanceProvider implements IAccount, InitializingBean {
 
     @Resource
     protected DsConfigHelper dsConfigHelper;

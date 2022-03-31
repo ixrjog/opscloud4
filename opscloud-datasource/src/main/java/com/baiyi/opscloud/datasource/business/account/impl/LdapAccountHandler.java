@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.business.account.impl;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.datasource.business.account.converter.AccountConverter;
-import com.baiyi.opscloud.datasource.business.account.impl.base.AbstractAccountProvider;
+import com.baiyi.opscloud.datasource.business.account.impl.base.AbstractAccountHandler;
 import com.baiyi.opscloud.datasource.ldap.repo.GroupRepo;
 import com.baiyi.opscloud.datasource.ldap.repo.PersonRepo;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class LdapAccountProvider extends AbstractAccountProvider {
+public class LdapAccountHandler extends AbstractAccountHandler {
 
     private final PersonRepo personRepo;
 

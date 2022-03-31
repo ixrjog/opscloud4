@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
-import com.baiyi.opscloud.datasource.business.account.impl.LdapAccountProvider;
+import com.baiyi.opscloud.datasource.business.account.impl.LdapAccountHandler;
 import com.baiyi.opscloud.datasource.business.accountGroup.AccountGroupProviderFactory;
 import com.baiyi.opscloud.datasource.business.accountGroup.IAccountGroup;
 import com.baiyi.opscloud.datasource.ldap.driver.LdapDriver;
@@ -72,7 +72,7 @@ public class LdapTest extends BaseUnit {
 //
 
     @Resource
-    private LdapAccountProvider ldapAccountProvider;
+    private LdapAccountHandler ldapAccountProvider;
 
 
     @Test

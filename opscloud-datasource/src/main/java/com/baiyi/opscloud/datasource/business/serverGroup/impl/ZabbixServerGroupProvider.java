@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.business.serverGroup.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.datasource.business.account.impl.ZabbixAccountProvider;
+import com.baiyi.opscloud.datasource.business.account.impl.ZabbixAccountHandler;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -35,7 +35,7 @@ public class ZabbixServerGroupProvider extends AbstractServerGroupProvider {
 
     private final BizPropertyHelper businessPropertyHelper;
 
-    private final ZabbixAccountProvider zabbixAccountProvider;
+    private final ZabbixAccountHandler zabbixAccountProvider;
 
     protected static ThreadLocal<ZabbixConfig.Zabbix> configContext = new ThreadLocal<>();
 

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.business.account.impl;
 
 import com.baiyi.opscloud.datasource.business.account.converter.AccountConverter;
-import com.baiyi.opscloud.datasource.business.account.impl.base.BaseZabbixAccountProvider;
+import com.baiyi.opscloud.datasource.business.account.impl.base.AbstractZabbixAccountHandler;
 import com.baiyi.opscloud.datasource.business.account.util.ZabbixMediaUtil;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
@@ -18,32 +18,32 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ZabbixAccountProvider extends BaseZabbixAccountProvider {
+public class ZabbixAccountHandler extends AbstractZabbixAccountHandler {
 
-    private final ZabbixV5UserDriver zabbixV5UserDatasource;
+    private final ZabbixV5UserDriver zabbixV5UserDriver;
 
     public static final String ZABBIX_DEFAULT_USERGROUP = "users_default";
 
     private void postCacheEvict(com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser.User zabbixUser, User user) {
-        zabbixV5UserDatasource.evictById(configContext.get(), zabbixUser.getUserid());
-        zabbixV5UserDatasource.evictByUsername(configContext.get(), user.getUsername());
+        zabbixV5UserDriver.evictById(configContext.get(), zabbixUser.getUserid());
+        zabbixV5UserDriver.evictByUsername(configContext.get(), user.getUsername());
     }
 
     @Override
     protected void doCreate(User user) {
-        zabbixV5UserDatasource.create(configContext.get(), AccountConverter.toZabbixUser(user), ZabbixMediaUtil.buildMedias(user), getUsrgrps(configContext.get(), user));
+        zabbixV5UserDriver.create(configContext.get(), AccountConverter.toZabbixUser(user), ZabbixMediaUtil.buildMedias(user), getUsrgrps(configContext.get(), user));
         log.info("创建Zabbix用户: username = {}", user.getUsername());
     }
 
     @Override
     protected void doUpdate(User user) {
-       com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser.User zabbixUser = zabbixV5UserDatasource.getByUsername(configContext.get(), user.getUsername());
+       com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser.User zabbixUser = zabbixV5UserDriver.getByUsername(configContext.get(), user.getUsername());
         if (zabbixUser == null) {
             doCreate(user);
         } else {
             com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser.User updateUser = AccountConverter.toZabbixUser(user);
             updateUser.setUserid(zabbixUser.getUserid());
-            zabbixV5UserDatasource.update(configContext.get(), updateUser, getUsrgrps(configContext.get(), user), ZabbixMediaUtil.buildMedias(user));
+            zabbixV5UserDriver.update(configContext.get(), updateUser, getUsrgrps(configContext.get(), user), ZabbixMediaUtil.buildMedias(user));
             // 清除缓存
             postCacheEvict(zabbixUser,user);
             log.info("更新Zabbix用户: username = {}", user.getUsername());
@@ -52,9 +52,9 @@ public class ZabbixAccountProvider extends BaseZabbixAccountProvider {
 
     @Override
     protected void doDelete(User user) {
-        com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser.User zabbixUser = zabbixV5UserDatasource.getByUsername(configContext.get(), user.getUsername());
+        com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser.User zabbixUser = zabbixV5UserDriver.getByUsername(configContext.get(), user.getUsername());
         if (zabbixUser == null) return;
-        zabbixV5UserDatasource.delete(configContext.get(), user.getUsername());
+        zabbixV5UserDriver.delete(configContext.get(), user.getUsername());
         // 清除缓存
         postCacheEvict(zabbixUser,user);
         log.info("删除Zabbix用户: username = {}", user.getUsername());
@@ -62,11 +62,11 @@ public class ZabbixAccountProvider extends BaseZabbixAccountProvider {
 
     @Override
     public void doGrant(User user, BaseBusiness.IBusiness businessResource) {
-        com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser.User zabbixUser = zabbixV5UserDatasource.getByUsername(configContext.get(), user.getUsername());
+        com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser.User zabbixUser = zabbixV5UserDriver.getByUsername(configContext.get(), user.getUsername());
         if (zabbixUser == null) {
             doCreate(user);
         } else {
-            zabbixV5UserDatasource.update(configContext.get(), zabbixUser, getUsrgrps(configContext.get(), user));
+            zabbixV5UserDriver.update(configContext.get(), zabbixUser, getUsrgrps(configContext.get(), user));
             // 清除缓存
             postCacheEvict(zabbixUser,user);
             log.info("更新Zabbix用户: username = {}", user.getUsername());
