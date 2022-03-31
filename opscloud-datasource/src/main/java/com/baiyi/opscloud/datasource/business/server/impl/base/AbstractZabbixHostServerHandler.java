@@ -13,7 +13,7 @@ import com.baiyi.opscloud.domain.util.ObjectUtil;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.zabbix.helper.ZabbixGroupHelper;
 import com.baiyi.opscloud.zabbix.v5.driver.*;
-import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixV5HostDrive;
+import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixV5HostDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixProxy;
@@ -40,28 +40,28 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractZabbixHostServerProvider extends AbstractServerProvider<ZabbixConfig.Zabbix> {
+public abstract class AbstractZabbixHostServerHandler extends AbstractServerHandler<ZabbixConfig.Zabbix> {
 
     @Resource
     private ZabbixGroupHelper zabbixGroupHelper;
 
     @Resource
-    protected ZabbixV5HostDriver zabbixV5HostDrive;
+    protected ZabbixV5HostDriver zabbixV5HostDriver;
 
     @Resource
-    protected ZabbixV5HostMacroDriver zabbixV5HostMacroDrive;
+    protected ZabbixV5HostMacroDriver zabbixV5HostMacroDriver;
 
     @Resource
-    protected ZabbixV5HostTagDriver zabbixV5HostTagDrive;
+    protected ZabbixV5HostTagDriver zabbixV5HostTagDriver;
 
     @Resource
-    protected ZabbixV5ProxyDriver zabbixV5ProxyDrive;
+    protected ZabbixV5ProxyDriver zabbixV5ProxyDriver;
 
     @Resource
-    private ZabbixV5TemplateDriver zabbixV5TemplateDrive;
+    private ZabbixV5TemplateDriver zabbixV5TemplateDriver;
 
     @Resource
-    private SimpleZabbixV5HostDrive simpleZabbixV5HostDrive;
+    private SimpleZabbixV5HostDriver simpleZabbixV5HostDriver;
 
     protected static ThreadLocal<ZabbixConfig.Zabbix> configContext = new ThreadLocal<>();
 
@@ -81,7 +81,7 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
     protected void doCreate(Server server, ServerProperty.Server property) {
         if (!property.enabledZabbix()) return;
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
-                .method(SimpleZabbixV5HostDrive.HostAPIMethod.CREATE)
+                .method(SimpleZabbixV5HostDriver.HostAPIMethod.CREATE)
                 .putParam("host", SimpleServerNameFacade.toServerName(server))
                 .putParam("interfaces", HostParamUtil.buildInterfaceParam(server, property))
                 .putParam("groups", buildHostGroupParam(configContext.get(), server))
@@ -90,7 +90,7 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
                 .putParamSkipEmpty("proxy_hostid", getProxyHostid(property))
                 .putParamSkipEmpty("macros", property.getZabbix().toMacros())
                 .build();
-        ZabbixHost.CreateHostResponse response = simpleZabbixV5HostDrive.createHandle(configContext.get(), request);
+        ZabbixHost.CreateHostResponse response = simpleZabbixV5HostDriver.createHandle(configContext.get(), request);
         if (CollectionUtils.isEmpty(response.getResult().getHostids())) {
             log.error("ZabbixHost创建失败!");
         }
@@ -102,7 +102,7 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
         // 更新主机名
         if (!hostName.equals(host.getName())) {
             requestBuilder.putParam("host", hostName);
-            zabbixV5HostDrive.evictHostByIp(configContext.get(), HostParamUtil.getManageIp(server, property));
+            zabbixV5HostDriver.evictHostByIp(configContext.get(), HostParamUtil.getManageIp(server, property));
         }
         putProxyUpdateParam(property, host, requestBuilder);
         putTemplateUpdateParam(property, host, requestBuilder);
@@ -116,8 +116,8 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
         Map<String, Object> params = request.getParams();
         // 空参数则不更新主机
         if (params.keySet().stream().anyMatch(k -> ObjectUtil.isNotEmpty(params.get(k)))) {
-            zabbixV5HostDrive.updateHost(configContext.get(), host, request);
-            zabbixV5HostDrive.evictHostByIp(configContext.get(), manageIp);
+            zabbixV5HostDriver.updateHost(configContext.get(), host, request);
+            zabbixV5HostDriver.evictHostByIp(configContext.get(), manageIp);
         }
     }
 
@@ -128,7 +128,7 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
     }
 
     private void putTagUpdateParam(Server server, ZabbixHost.Host host, ZabbixRequestBuilder requestBuilder) {
-        ZabbixHost.Host hostTag = zabbixV5HostTagDrive.getHostTag(configContext.get(), host);
+        ZabbixHost.Host hostTag = zabbixV5HostTagDriver.getHostTag(configContext.get(), host);
         Env env = getEnv(server);
         if (!CollectionUtils.isEmpty(hostTag.getTags())) {
             Optional<ZabbixHost.HostTag> optionalHostTag = hostTag.getTags().stream().filter(e -> e.getTag().equals("env")).findFirst();
@@ -141,7 +141,7 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
                 .value(env.getEnvName())
                 .build();
         requestBuilder.putParam("tags", Lists.newArrayList(tag));
-        zabbixV5HostTagDrive.evictHostTag(configContext.get(), host);  //清理缓存
+        zabbixV5HostTagDriver.evictHostTag(configContext.get(), host);  //清理缓存
     }
 
     /**
@@ -151,13 +151,13 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
      * @param host
      */
     private void putTemplateUpdateParam(ServerProperty.Server property, ZabbixHost.Host host, ZabbixRequestBuilder requestBuilder) {
-        List<ZabbixTemplate.Template> zabbixTemplates = zabbixV5TemplateDrive.getByHost(configContext.get(), host);
+        List<ZabbixTemplate.Template> zabbixTemplates = zabbixV5TemplateDriver.getByHost(configContext.get(), host);
         if (ZabbixTemplateUtil.hostTemplateEquals(zabbixTemplates, property)) return; // 判断主机模板与配置是否相同，相同则跳过更新
         Set<String> templateNamSet = Sets.newHashSet();
         zabbixTemplates.forEach(t -> templateNamSet.add(t.getName()));
         property.getZabbix().getTemplates().forEach(n -> {
             if (!templateNamSet.contains(n)) {
-                ZabbixTemplate.Template zabbixTemplate = zabbixV5TemplateDrive.getByName(configContext.get(), n);
+                ZabbixTemplate.Template zabbixTemplate = zabbixV5TemplateDriver.getByName(configContext.get(), n);
                 if (zabbixTemplate != null) {
                     zabbixTemplates.add(zabbixTemplate);
                     templateNamSet.add(n);
@@ -171,7 +171,7 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
             clearTemplates(zabbixTemplates, property); // 清理模版
             requestBuilder.putParamSkipEmpty("templates_clear", HostParamUtil.toTemplateParam(zabbixTemplates));
         }
-        zabbixV5TemplateDrive.evictHostTemplate(configContext.get(), host); //清理缓存
+        zabbixV5TemplateDriver.evictHostTemplate(configContext.get(), host); //清理缓存
     }
 
     private void clearTemplates(List<ZabbixTemplate.Template> templates, ServerProperty.Server property) {
@@ -212,7 +212,7 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
                 .map(ServerProperty.Zabbix::getProxyName).orElse(null);
         if (StringUtils.isEmpty(proxyName))
             return null;
-        return zabbixV5ProxyDrive.getProxy(configContext.get(), proxyName);
+        return zabbixV5ProxyDriver.getProxy(configContext.get(), proxyName);
     }
 
     protected ZabbixHostParam.Tag buildTagsParam(Server server) {
@@ -223,7 +223,7 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
     }
 
     protected List<ZabbixHostParam.Template> buildTemplatesParam(ZabbixConfig.Zabbix zabbix, ServerProperty.Server property) {
-        return zabbixV5TemplateDrive.listByNames(zabbix, property.getZabbix().getTemplates()).stream().map(e ->
+        return zabbixV5TemplateDriver.listByNames(zabbix, property.getZabbix().getTemplates()).stream().map(e ->
                 ZabbixHostParam.Template.builder()
                         .templateid(e.getTemplateid())
                         .build()

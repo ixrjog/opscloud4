@@ -10,9 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2021/8/19 11:11 上午
  * @Version 1.0
  */
-public class ServerProviderFactory {
+public class ServerHandlerFactory {
 
-    private ServerProviderFactory() {
+    private ServerHandlerFactory() {
     }
 
     private static final Map<String, IServer> context = new ConcurrentHashMap<>();

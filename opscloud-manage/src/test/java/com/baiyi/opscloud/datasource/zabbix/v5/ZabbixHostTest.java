@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.zabbix.v5;
 
-import com.baiyi.opscloud.datasource.business.server.impl.ZabbixHostServerProvider;
+import com.baiyi.opscloud.datasource.business.server.impl.ZabbixHostServerHandler;
 import com.baiyi.opscloud.datasource.zabbix.base.BaseZabbixTest;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -28,7 +28,7 @@ public class ZabbixHostTest extends BaseZabbixTest {
     private ZabbixV5HostDriver zabbixV5HostDrive;
 
     @Resource
-    private ZabbixHostServerProvider zabbixHostServerProvider;
+    private ZabbixHostServerHandler zabbixHostServerProvider;
 
     @Resource
     private DsInstanceService dsInstanceService;

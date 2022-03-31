@@ -8,9 +8,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2021/8/11 1:40 下午
  * @Version 1.0
  */
-public class AccountProviderFactory {
+public class AccountHandlerFactory {
 
-    private AccountProviderFactory() {
+    private AccountHandlerFactory() {
     }
 
     private static final Map<String, IAccount> context = new ConcurrentHashMap<>();

@@ -27,15 +27,15 @@ import java.util.Optional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ZabbixServerGroupProvider extends AbstractServerGroupProvider {
+public class ZabbixServerGroupHandler extends AbstractServerGroupHandler {
 
-    private final ZabbixGroupHelper zabbixFacade;
+    private final ZabbixGroupHelper zabbixGroupHelper;
 
-    private final ZabbixV5ActionDriver zabbixV5ActionDatasource;
+    private final ZabbixV5ActionDriver zabbixV5ActionDriver;
 
     private final BizPropertyHelper businessPropertyHelper;
 
-    private final ZabbixAccountHandler zabbixAccountProvider;
+    private final ZabbixAccountHandler zabbixAccountHandler;
 
     protected static ThreadLocal<ZabbixConfig.Zabbix> configContext = new ThreadLocal<>();
 
@@ -56,13 +56,13 @@ public class ZabbixServerGroupProvider extends AbstractServerGroupProvider {
                 .map(ServerProperty.Zabbix::getEnabled)
                 .orElse(false);
         if (!enable) return;
-        zabbixFacade.getOrCreateHostGroup(configContext.get(), serverGroup.getName());
+        zabbixGroupHelper.getOrCreateHostGroup(configContext.get(), serverGroup.getName());
         String usergroupName = ZabbixUtil.toUsergrpName(serverGroup.getName());
-        zabbixFacade.getOrCreateUserGroup(configContext.get(), usergroupName);
+        zabbixGroupHelper.getOrCreateUserGroup(configContext.get(), usergroupName);
         // 创建动作
-        String actionName = zabbixV5ActionDatasource.buildActionName(usergroupName);
-        if (zabbixV5ActionDatasource.getActionByName(configContext.get(), actionName) == null)
-            zabbixV5ActionDatasource.create(configContext.get(), actionName, usergroupName);
+        String actionName = zabbixV5ActionDriver.buildActionName(usergroupName);
+        if (zabbixV5ActionDriver.getActionByName(configContext.get(), actionName) == null)
+            zabbixV5ActionDriver.create(configContext.get(), actionName, usergroupName);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class ZabbixServerGroupProvider extends AbstractServerGroupProvider {
      */
     @Override
     protected void doGrant(User user, BaseBusiness.IBusiness businessResource) {
-        zabbixAccountProvider.grant(dsInstanceContext.get().getDsInstance(), user, businessResource);
+        zabbixAccountHandler.grant(dsInstanceContext.get().getDsInstance(), user, businessResource);
     }
 
     /**
@@ -93,7 +93,7 @@ public class ZabbixServerGroupProvider extends AbstractServerGroupProvider {
      */
     @Override
     protected void doRevoke(User user, BaseBusiness.IBusiness businessResource) {
-        zabbixAccountProvider.revoke(dsInstanceContext.get().getDsInstance(), user, businessResource);
+        zabbixAccountHandler.revoke(dsInstanceContext.get().getDsInstance(), user, businessResource);
     }
 
     @Override

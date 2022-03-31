@@ -4,7 +4,7 @@ import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.datasource.business.server.IServer;
-import com.baiyi.opscloud.datasource.business.server.factory.ServerProviderFactory;
+import com.baiyi.opscloud.datasource.business.server.factory.ServerHandlerFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
@@ -22,7 +22,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractServerProvider<T> extends SimpleDsInstanceProvider implements IServer, InitializingBean {
+public abstract class AbstractServerHandler<T> extends SimpleDsInstanceProvider implements IServer, InitializingBean {
 
     @Resource
     protected DsConfigHelper dsConfigHelper;
@@ -34,7 +34,7 @@ public abstract class AbstractServerProvider<T> extends SimpleDsInstanceProvider
     private EnvService envService;
 
     @Resource
-    private BizPropertyHelper businessPropertyHelper;
+    private BizPropertyHelper bizPropertyHelper;
 
     protected static ThreadLocal<DsInstanceContext> dsInstanceContext = new ThreadLocal<>();
 
@@ -50,7 +50,7 @@ public abstract class AbstractServerProvider<T> extends SimpleDsInstanceProvider
     }
 
     protected ServerProperty.Server getBusinessProperty(Server server) {
-        return businessPropertyHelper.getBusinessProperty(server);
+        return bizPropertyHelper.getBusinessProperty(server);
     }
 
     protected ServerGroup getServerGroup(Server server) {
@@ -111,7 +111,7 @@ public abstract class AbstractServerProvider<T> extends SimpleDsInstanceProvider
 
     @Override
     public void afterPropertiesSet() {
-        ServerProviderFactory.register(this);
+        ServerHandlerFactory.register(this);
     }
 
 }

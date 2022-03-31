@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @Date 2021/12/27 3:58 PM
  * @Version 1.0
  */
-public abstract class AbstractZabbixV5ProxyDrive {
+public abstract class AbstractZabbixV5ProxyDriver {
 
     public interface ProxyAPIMethod {
         String GET = "proxy.get";

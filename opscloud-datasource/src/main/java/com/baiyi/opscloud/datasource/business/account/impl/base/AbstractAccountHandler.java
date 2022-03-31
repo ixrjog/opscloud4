@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.business.account.impl.base;
 
-import com.baiyi.opscloud.datasource.business.account.AccountProviderFactory;
+import com.baiyi.opscloud.datasource.business.account.AccountHandlerFactory;
 import com.baiyi.opscloud.datasource.business.account.IAccount;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
@@ -92,6 +92,6 @@ public abstract class AbstractAccountHandler extends SimpleDsInstanceProvider im
 
     @Override
     public void afterPropertiesSet() {
-        AccountProviderFactory.register(this);
+        AccountHandlerFactory.register(this);
     }
 }

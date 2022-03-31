@@ -2,7 +2,7 @@ package com.baiyi.opscloud.zabbix.v5.driver;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.v5.driver.base.AbstractZabbixV5UserDrive;
+import com.baiyi.opscloud.zabbix.v5.driver.base.AbstractZabbixV5UserDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixMedia;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
@@ -27,7 +27,7 @@ import java.util.UUID;
  */
 @Slf4j
 @Component
-public class ZabbixV5UserDriver extends AbstractZabbixV5UserDrive {
+public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
 
     @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_user_name_' + #username")
     public void evictByUsername(ZabbixConfig.Zabbix config, String username) {

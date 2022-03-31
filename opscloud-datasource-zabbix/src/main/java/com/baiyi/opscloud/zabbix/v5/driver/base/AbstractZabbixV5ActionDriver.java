@@ -19,7 +19,7 @@ import javax.annotation.Resource;
  * @Date 2021/11/19 4:14 下午
  * @Version 1.0
  */
-public abstract class AbstractZabbixV5ActionDrive {
+public abstract class AbstractZabbixV5ActionDriver {
 
     public static final String ACTION_NAME_PREFIX = "Report problems to";
 

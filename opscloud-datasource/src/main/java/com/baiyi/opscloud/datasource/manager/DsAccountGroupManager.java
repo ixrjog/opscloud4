@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.manager;
 
 import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.datasource.business.accountGroup.AccountGroupProviderFactory;
+import com.baiyi.opscloud.datasource.business.accountGroup.AccountGroupHandlerFactory;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.datasource.manager.base.IManager;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -46,7 +46,7 @@ public class DsAccountGroupManager extends BaseManager implements IManager<UserG
             log.info("{} 数据源账户组管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> AccountGroupProviderFactory.getIAccountGroupByInstanceType(e.getInstanceType()).create(e, userGroup));
+        instances.forEach(e -> AccountGroupHandlerFactory.getIAccountGroupByInstanceType(e.getInstanceType()).create(e, userGroup));
     }
 
     @Override
@@ -66,7 +66,7 @@ public class DsAccountGroupManager extends BaseManager implements IManager<UserG
             log.info("{} 数据源账户组管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> AccountGroupProviderFactory.getIAccountGroupByInstanceType(e.getInstanceType()).grant(e, user, businessResource));
+        instances.forEach(e -> AccountGroupHandlerFactory.getIAccountGroupByInstanceType(e.getInstanceType()).grant(e, user, businessResource));
     }
 
     @Override
@@ -76,7 +76,7 @@ public class DsAccountGroupManager extends BaseManager implements IManager<UserG
             log.info("{} 数据源账户组管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> AccountGroupProviderFactory.getIAccountGroupByInstanceType(e.getInstanceType()).revoke(e, user, businessResource));
+        instances.forEach(e -> AccountGroupHandlerFactory.getIAccountGroupByInstanceType(e.getInstanceType()).revoke(e, user, businessResource));
     }
 
 }

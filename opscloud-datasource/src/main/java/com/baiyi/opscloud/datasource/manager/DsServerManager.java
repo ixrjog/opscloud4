@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.datasource.manager.base.IManager;
-import com.baiyi.opscloud.datasource.business.server.factory.ServerProviderFactory;
+import com.baiyi.opscloud.datasource.business.server.factory.ServerHandlerFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
@@ -46,7 +46,7 @@ public class DsServerManager extends BaseManager implements IManager<Server> {
             log.info("{} 数据源服务器管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> ServerProviderFactory.getIServerByInstanceType(e.getInstanceType()).create(e, server));
+        instances.forEach(e -> ServerHandlerFactory.getIServerByInstanceType(e.getInstanceType()).create(e, server));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class DsServerManager extends BaseManager implements IManager<Server> {
             log.info("{} 数据源服务器管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> ServerProviderFactory.getIServerByInstanceType(e.getInstanceType()).update(e, server));
+        instances.forEach(e -> ServerHandlerFactory.getIServerByInstanceType(e.getInstanceType()).update(e, server));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class DsServerManager extends BaseManager implements IManager<Server> {
             log.info("{} 数据源服务器管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> ServerProviderFactory.getIServerByInstanceType(e.getInstanceType()).delete(e, server));
+        instances.forEach(e -> ServerHandlerFactory.getIServerByInstanceType(e.getInstanceType()).delete(e, server));
     }
 
     @Override
