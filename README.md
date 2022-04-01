@@ -16,9 +16,48 @@ Welcome to the opscloud wiki!
   + [github.com/ixrjog/opscloud4-web](github.com/ixrjog/opscloud4-web)
 
 ### 开发环境
-+ MacBook M1 PRO / macOS Monterey
-+ IntelliJ IDEA 2021.3.2 (Ultimate Edition)
-+ WebStorm 2021.3.2
++ MacBook M1 PRO (macOS Monterey 12.3)
++ IntelliJ IDEA 2021.3.3 (Ultimate Edition)
++ WebStorm 2021.3.3
+
+#### 主要功能
++ 动态数据源
+  + Zabbix、Nacos、LDAP、Jenkins、Guacamole、Ansible、Nexus、Gitlab、Sonar
+  + `Kubernetes`
+    + ACK、EKS
+  + `Aliyun`
+    + ECS、Image、VPC、RAM[User、Policy]、RDS[Instance、Database、Redis]、DMS[User]、ONS[Instance、Topic、Group]、Log
+  + `AWS`
+    + EC2、IAM[User、Policy]、SQS[Queue]、SNS[Topic、Subscription]
++ 远程控制
+  + 远程桌面[RDP,VNC]
+    + apache-guacamole
+  + WebTerminal
+    + 支持多开、会话复制、命令同步
+  + SSH-Server
+    + 原生SSH协议实现，支持ED25519密钥
+    + 简化用户登录，自动关联用户Gitlab账户中配置的公钥
+    + 展示服务器环境，标签，授权账户
+    + 支持Kubernetes容器登录或直接查看容器日志
+    + 以事件驱动技术
+    + 部署架构
+```mermaid
+flowchart LR
+    A[User] -->|SSH:22| B{SLB}
+    B-->|TCP:2222| C[Opscloud Server] 
+    B-->|TCP:2222| D[Opscloud Server] 
+```
++ 服务器批量任务
+  + Ansible Playbook
+  + 单服务器多线程实现，任务日志更加清晰
++ RBAC,MFA(OTP)
++ 集群架构
+  + 实例健康检查接口 /api/instance/health/lb-check (GET) 
+  + 分布式调度任务(Quartz)、定时任务分布式锁(Shedlock)、任务并发锁(Redis)
+  + 高性能、可伸缩、高可用性(可管理数万台服务器，并保持集群的SLA99.99%)
++ API文档
+  + example.com/doc.html
+  + API Token
 
 <img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/login_1.png"></img>
 
@@ -86,37 +125,6 @@ Welcome to the opscloud wiki!
 
 #### <span style="color:green">平台演示视频1</span>
 <video src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/video/opscloud4-1.mov" width="400px" height="300px" controls="controls"></video>
-
-#### 主要功能
-+ 动态数据源
-  + Zabbix、Nacos、LDAP、Jenkins、Guacamole、Ansible、Nexus、Gitlab、Sonar
-  + `Kubernetes`
-    + ACK、EKS 
-  + `Aliyun`
-    + ECS、Image、VPC、RAM[User、Policy]、RDS[Instance、Database、Redis]、DMS[User]、ONS[Instance、Topic、Group]、Log
-  + `AWS`
-    + EC2、IAM[User、Policy]、SQS[Queue]、SNS[Topic、Subscription]
-+ 远程控制
-  + 远程桌面[RDP,VNC]
-    + apache-guacamole
-  + WebTerminal
-    + 支持多开、会话复制、命令同步
-  + SSH-Server
-    + 原生SSH协议实现，支持ED25519密钥
-    + 简化用户登录，自动关联用户Gitlab账户中配置的公钥
-    + 展示服务器环境，标签，授权账户
-    + 支持Kubernetes容器登录或直接查看容器日志
-    + 以事件驱动技术
-    
-```mermaid
-flowchart LR
-    A[User] -->|SSH:22| B{SLB}
-    B-->|TCP:2222| C[Opscloud Server] 
-    B-->|TCP:2222| D[Opscloud Server] 
-```
-+ 剧本任务
-+ RBAC,MFA(OTP)
-+ 集群架构
 
 ### 帮助文档
 
