@@ -14,8 +14,6 @@ target/
 static/
 
 ### 含隐私
-application-dev.yml
-application.properties
 JasyptUtilsTest.java
 EncryptorTest.java
 opscloud-manage/src/test/java/com/baiyi/opscloud/encryptor/*
