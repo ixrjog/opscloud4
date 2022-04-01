@@ -31,6 +31,9 @@ public class SimpleQueueService {
 
         private static final long serialVersionUID = -6375013141277179377L;
 
+        // 工单使用
+        private String queueName;
+
         private String queueUrl;
 
         private String regionId;

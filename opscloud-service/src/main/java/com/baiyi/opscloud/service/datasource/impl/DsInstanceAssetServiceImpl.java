@@ -132,6 +132,8 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
             criteria.andLike("assetKey", SQLUtil.toLike(asset.getAssetKey()));
         if (!StringUtils.isEmpty(asset.getAssetKey2()))
             criteria.andEqualTo("assetKey2", asset.getAssetKey2());
+        if (!StringUtils.isEmpty(asset.getRegionId()))
+            criteria.andEqualTo("regionId", asset.getRegionId());
         example.setOrderByClause("create_time");
         return dsInstanceAssetMapper.selectByExample(example);
     }

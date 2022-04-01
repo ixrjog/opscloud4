@@ -46,6 +46,13 @@ public class SqsTest extends BaseAwsTest {
     }
 
     @Test
+    void getQueueTest() {
+        AwsConfig.Aws awsConfig = getConfigById(23).getAws();
+        String  url = amazonSQSDriver.getQueue(awsConfig,"ap-east-1","newedge_bill_notify_process_test_queue");
+        print(url);
+    }
+
+    @Test
     void getQueueAttributesTest(){
         AwsConfig.Aws awsConfig = getConfigById(23).getAws();
         String queueUrl = "https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_virtualbank_autowithdraw_schedule_tigger_prod_sx_queue";

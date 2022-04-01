@@ -37,7 +37,7 @@ public class AmazonSimpleQueueServiceDriver {
     public String createQueue(AwsConfig.Aws config, String regionId, String queueName, Map<String, String> attributes) {
         CreateQueueRequest request = new CreateQueueRequest();
         request.setQueueName(queueName);
-        if (!CollectionUtils.isEmpty(attributes)){
+        if (!CollectionUtils.isEmpty(attributes)) {
             request.setAttributes(attributes);
         }
         CreateQueueResult result = AmazonSQSService.buildAmazonSQS(config, regionId).createQueue(request);
@@ -45,7 +45,7 @@ public class AmazonSimpleQueueServiceDriver {
     }
 
     /**
-     * 查询Queue信息
+     * 查询Queue list信息
      *
      * @param config
      * @param regionId
@@ -65,6 +65,23 @@ public class AmazonSimpleQueueServiceDriver {
             }
         }
         return queues;
+    }
+
+    /**
+     * 通过QueueName 查询 QueueUrl
+     *
+     * @param config
+     * @param regionId
+     * @param queueName
+     * @return
+     */
+    public String getQueue(AwsConfig.Aws config, String regionId, String queueName) {
+        try {
+            GetQueueUrlResult result = AmazonSQSService.buildAmazonSQS(config, regionId).getQueueUrl(queueName);
+            return result.getQueueUrl();
+        } catch (QueueDoesNotExistException e) {
+            return StringUtils.EMPTY;
+        }
     }
 
     /**
