@@ -6,13 +6,14 @@ Welcome to the opscloud wiki!
 <img src="https://img.shields.io/badge/version-4.0.8-brightgreen.svg"></img>
 <img src="https://img.shields.io/badge/java-8-brightgreen.svg"></img> 
 <img src="https://img.shields.io/badge/springboot-2.4.13-brightgreen.svg"></img> 
-<img src="https://img.shields.io/badge/mysql-8-brightgreen.svg"></img> 
-
+<img src="https://img.shields.io/badge/mysql-8-brightgreen.svg"></img>
 <br>
 
-### 项目语言&仓库
-+ 服务端Java, github.com/ixrjog/opscloud4
-+ 前端Vue, github.com/ixrjog/opscloud4-web
+### 项目仓库
++ 服务端(Java)
+  + [github.com/ixrjog/opscloud4](github.com/ixrjog/opscloud4)
++ 前端(Vue)
+  + [github.com/ixrjog/opscloud4-web](github.com/ixrjog/opscloud4-web)
 
 ### 开发环境
 + MacBook M1 PRO / macOS Monterey
@@ -83,27 +84,36 @@ Welcome to the opscloud wiki!
 </tr>
 </table>
 
-
-
 #### <span style="color:green">平台演示视频1</span>
 <video src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/video/opscloud4-1.mov" width="400px" height="300px" controls="controls"></video>
 
-#### 核心功能
-+ 事件驱动
-+ 万物皆资产
-  + 多实例支持
-  + 多云支持（阿里云，AWS）
-+ 运维工单 
-+ 堡垒机
-  + 远程桌面RDP,VNC(需安装apache-guacamole)
-  + Web终端（支持多开，会话复制，命令同步）
-  + SSH-Server(命令行终端)
-    + 支持RSA-4096bit,ED25519密钥 
-    + 支持用户关联Gitlab账户中配置的公钥，无需配置即可登录
+#### 主要功能
++ 动态数据源
+  + Zabbix、Nacos、LDAP、Jenkins、Guacamole、Ansible、Nexus、Gitlab、Sonar
+  + `Kubernetes`
+    + ACK、EKS 
+  + `Aliyun`
+    + ECS、Image、VPC、RAM[User、Policy]、RDS[Instance、Database、Redis]、DMS[User]、ONS[Instance、Topic、Group]、Log
+  + `AWS`
+    + EC2、IAM[User、Policy]、SQS[Queue]、SNS[Topic、Subscription]
++ 远程控制
+  + 远程桌面[RDP,VNC]
+    + apache-guacamole
+  + WebTerminal
+    + 支持多开、会话复制、命令同步
+  + SSH-Server
+    + 原生SSH协议实现，支持ED25519密钥
+    + 简化用户登录，自动关联用户Gitlab账户中配置的公钥
     + 展示服务器环境，标签，授权账户
-    + 支持Kubernetes容器登录（容器堡垒机）
-    + 支持查看Kubernetes容器日志
-    + 以事件驱动的主动式堡垒机（通过事件ID登录服务器）
+    + 支持Kubernetes容器登录或直接查看容器日志
+    + 以事件驱动技术
+    
+```mermaid
+flowchart LR
+    A[User] -->|SSH:22| B{SLB}
+    B-->|TCP:2222| C[Opscloud Server] 
+    B-->|TCP:2222| D[Opscloud Server] 
+```
 + 剧本任务
 + RBAC,MFA(OTP)
 + 集群架构
