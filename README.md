@@ -2,7 +2,7 @@ Welcome to the opscloud wiki!
 
 ![GitHub Stats Card](https://github-readme-stats.vercel.app/api?username=ixrjog&show_icons=true&theme=onedark)
 
-# OpsCloud4.0 IaC基础架构即代码
+# OpsCloud4.0 云上运维
 <img src="https://img.shields.io/badge/version-4.0.8-brightgreen.svg"></img>
 <img src="https://img.shields.io/badge/java-8-brightgreen.svg"></img> 
 <img src="https://img.shields.io/badge/springboot-2.4.13-brightgreen.svg"></img> 
@@ -22,7 +22,7 @@ Welcome to the opscloud wiki!
 
 #### 主要功能
 + 动态数据源
-  + Zabbix、Nacos、LDAP、Jenkins、Guacamole、Ansible、Nexus、Gitlab、Sonar
+  + Zabbix、Nacos、LDAP、Jenkins、Guacamole、Ansible、Nexus、Gitlab、Sonar、Dingtalk、TencentExmail
   + `Kubernetes`
     + ACK、EKS
   + `Aliyun`
@@ -54,7 +54,10 @@ flowchart LR
 + 集群架构
   + 实例健康检查接口 /api/instance/health/lb-check (GET) 
   + 分布式调度任务(Quartz)、定时任务分布式锁(Shedlock)、任务并发锁(Redis)
-  + 高性能、可伸缩、高可用性(可管理数万台服务器，并保持集群的SLA99.99%)
+  + 高性能、可伸缩、高可用性
+    + 集群SLA99.99%
+    + 无管理服务器上限
+    + 无Kubernetes集群上限
 + API文档
   + example.com/doc.html
   + API Token
