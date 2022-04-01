@@ -2,7 +2,7 @@ package com.baiyi.opscloud.zabbix.v5.driver;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.v5.driver.base.AbstractZabbixV5ActionDrive;
+import com.baiyi.opscloud.zabbix.v5.driver.base.AbstractZabbixV5ActionDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixAction;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
@@ -30,7 +30,7 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class ZabbixV5ActionDriver extends AbstractZabbixV5ActionDrive {
+public class ZabbixV5ActionDriver extends AbstractZabbixV5ActionDriver {
 
     @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_action_name_' + #actionName")
     public void evictActionByName(ZabbixConfig.Zabbix config, String actionName) {

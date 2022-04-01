@@ -1,14 +1,14 @@
-package com.baiyi.opscloud.datasource.business.accountGroup.impl.base;
+package com.baiyi.opscloud.datasource.business.serverGroup.impl;
 
-import com.baiyi.opscloud.datasource.business.accountGroup.AccountGroupProviderFactory;
-import com.baiyi.opscloud.datasource.business.accountGroup.IAccountGroup;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
+import com.baiyi.opscloud.datasource.business.serverGroup.IServerGroup;
+import com.baiyi.opscloud.datasource.business.serverGroup.factory.ServerGroupHandlerFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
-import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -16,10 +16,10 @@ import javax.annotation.Resource;
 
 /**
  * @Author baiyi
- * @Date 2021/9/14 5:42 下午
+ * @Date 2021/8/24 1:44 下午
  * @Version 1.0
  */
-public abstract class AbstractAccountGroupProvider extends SimpleDsInstanceProvider implements IAccountGroup, InitializingBean {
+public abstract class AbstractServerGroupHandler extends SimpleDsInstanceProvider implements IServerGroup, InitializingBean {
 
     @Resource
     protected DsConfigHelper dsConfigHelper;
@@ -34,50 +34,50 @@ public abstract class AbstractAccountGroupProvider extends SimpleDsInstanceProvi
     }
 
     @Override
-    public void create(DatasourceInstance dsInstance, UserGroup userGroup) {
+    public void create(DatasourceInstance dsInstance, ServerGroup serverGroup) {
         pre(dsInstance);
-        doCreate(userGroup);
+        doCreate(serverGroup);
     }
 
     @Override
-    public void update(DatasourceInstance dsInstance, UserGroup userGroup) {
+    public void update(DatasourceInstance dsInstance, ServerGroup serverGroup) {
+        pre(dsInstance);
+        doUpdate(serverGroup);
     }
 
     @Override
-    public void delete(DatasourceInstance dsInstance, UserGroup userGroup) {
+    public void delete(DatasourceInstance dsInstance, ServerGroup serverGroup) {
+        pre(dsInstance);
+        doDelete(serverGroup);
     }
 
     @Override
     public void grant(DatasourceInstance dsInstance, User user, BaseBusiness.IBusiness businessResource) {
-        if (getBusinessResourceType() == businessResource.getBusinessType()) {
-            pre(dsInstance);
-            doGrant(user, businessResource);
-        }
+        pre(dsInstance);
+        doGrant(user, businessResource);
     }
 
     @Override
     public void revoke(DatasourceInstance dsInstance, User user, BaseBusiness.IBusiness businessResource) {
-        if (getBusinessResourceType() == businessResource.getBusinessType()) {
-            pre(dsInstance);
-            doRevoke(user, businessResource);
-        }
+        pre(dsInstance);
+        doRevoke(user, businessResource);
     }
 
-    protected abstract void doCreate(UserGroup userGroup);
+    protected abstract void doCreate(ServerGroup serverGroup);
 
-    protected abstract void doUpdate(UserGroup userGroup);
+    protected abstract void doUpdate(ServerGroup serverGroup);
 
-    protected abstract void doDelete(UserGroup userGroup);
+    protected abstract void doDelete(ServerGroup serverGroup);
 
-    public abstract void doGrant(User user, BaseBusiness.IBusiness businessResource);
+    protected abstract void doGrant(User user, BaseBusiness.IBusiness businessResource);
 
-    public abstract void doRevoke(User user, BaseBusiness.IBusiness businessResource);
+    protected abstract void doRevoke(User user, BaseBusiness.IBusiness businessResource);
 
     protected abstract int getBusinessResourceType();
 
     @Override
     public void afterPropertiesSet() {
-        AccountGroupProviderFactory.register(this);
+        ServerGroupHandlerFactory.register(this);
     }
-}
 
+}

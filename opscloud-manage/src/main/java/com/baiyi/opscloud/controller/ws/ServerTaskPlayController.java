@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.controller.ws;
 
-import com.baiyi.opscloud.datasource.ansible.play.ITaskPlayProcess;
+import com.baiyi.opscloud.datasource.ansible.play.ITaskPlayProcessor;
 import com.baiyi.opscloud.datasource.ansible.play.ServerTaskPlayFactory;
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
@@ -63,7 +63,7 @@ public class ServerTaskPlayController extends SimpleAuthentication {
     public void onMessage(String message, Session session) {
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;
         String state = getState(message);
-        ITaskPlayProcess iTaskPlayProcess = ServerTaskPlayFactory.getProcessByKey(state);
+        ITaskPlayProcessor iTaskPlayProcess = ServerTaskPlayFactory.getProcessByKey(state);
         if (iTaskPlayProcess != null) iTaskPlayProcess.process(message, session);
     }
 

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.business.account.impl.base;
 
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.datasource.business.account.impl.ZabbixAccountProvider;
+import com.baiyi.opscloud.datasource.business.account.impl.ZabbixAccountHandler;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * @Date 2021/8/24 9:56 上午
  * @Version 1.0
  */
-public abstract class BaseZabbixAccountProvider extends AbstractAccountProvider {
+public abstract class AbstractZabbixAccountHandler extends AbstractAccountHandler {
 
     @Resource
     private ServerGroupService serverGroupService;
@@ -43,7 +43,7 @@ public abstract class BaseZabbixAccountProvider extends AbstractAccountProvider 
     protected List<Map<String, String>> getUsrgrps(ZabbixConfig.Zabbix zabbix, User user) {
         List<Map<String, String>> userGroups = toUsrgrps(zabbix, queryUserPermission(user, BusinessTypeEnum.SERVERGROUP.getType()));
         if (CollectionUtils.isEmpty(userGroups))
-            userGroups.add(buildUsrgrp(zabbixFacade.getOrCreateUserGroup(zabbix, ZabbixAccountProvider.ZABBIX_DEFAULT_USERGROUP).getUsrgrpid()));
+            userGroups.add(buildUsrgrp(zabbixFacade.getOrCreateUserGroup(zabbix, ZabbixAccountHandler.ZABBIX_DEFAULT_USERGROUP).getUsrgrpid()));
         return userGroups;
     }
 

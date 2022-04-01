@@ -118,4 +118,18 @@ public class AmazonIdentityManagementUserDriver {
         return AmazonIdentityManagementService.buildAmazonIdentityManagement(aws);
     }
 
+    /**
+     * 删除登录配置文件
+     * https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeleteLoginProfile.html
+     *
+     * @param config
+     * @param userName
+     * @return
+     */
+    public void deleteLoginProfile(AwsConfig.Aws config, String userName) {
+        DeleteLoginProfileRequest request = new DeleteLoginProfileRequest();
+        request.setUserName(userName);
+        DeleteLoginProfileResult result = buildAmazonIdentityManagement(config).deleteLoginProfile(request);
+    }
+
 }

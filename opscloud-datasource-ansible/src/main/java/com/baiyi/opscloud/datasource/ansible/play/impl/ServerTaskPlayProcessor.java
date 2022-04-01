@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.ansible.play.impl;
 
 import com.baiyi.opscloud.common.util.IOUtil;
-import com.baiyi.opscloud.datasource.ansible.play.AbstractTaskPlayProcess;
+import com.baiyi.opscloud.datasource.ansible.play.AbstractTaskPlayProcessor;
 import com.baiyi.opscloud.datasource.ansible.play.PlayOutputMessage;
 import com.baiyi.opscloud.datasource.ansible.play.enums.TaskMessageState;
 import com.baiyi.opscloud.datasource.ansible.play.message.ServerTaskPlayMessage;
@@ -24,7 +24,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ServerTaskPlayProcess extends AbstractTaskPlayProcess<ServerTaskPlayMessage> {
+public class ServerTaskPlayProcessor extends AbstractTaskPlayProcessor<ServerTaskPlayMessage> {
 
     private final ServerTaskMemberService serverTaskMemberService;
 

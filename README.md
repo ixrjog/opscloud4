@@ -2,24 +2,66 @@ Welcome to the opscloud wiki!
 
 ![GitHub Stats Card](https://github-readme-stats.vercel.app/api?username=ixrjog&show_icons=true&theme=onedark)
 
-# OpsCloud4.0 IaC基础架构即代码
+# OpsCloud4.0 云上运维
 <img src="https://img.shields.io/badge/version-4.0.8-brightgreen.svg"></img>
 <img src="https://img.shields.io/badge/java-8-brightgreen.svg"></img> 
 <img src="https://img.shields.io/badge/springboot-2.4.13-brightgreen.svg"></img> 
-<img src="https://img.shields.io/badge/mysql-8-brightgreen.svg"></img> 
-
+<img src="https://img.shields.io/badge/mysql-8-brightgreen.svg"></img>
 <br>
 
-### 项目语言&仓库
-+ 服务端Java, github.com/ixrjog/opscloud4
-+ 前端Vue, github.com/ixrjog/opscloud4-web
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/login_1.png" width="600"></img>
+
+### 项目仓库
++ 服务端(Java)
+  + [github.com/ixrjog/opscloud4](github.com/ixrjog/opscloud4)
++ 前端(Vue)
+  + [github.com/ixrjog/opscloud4-web](github.com/ixrjog/opscloud4-web)
 
 ### 开发环境
-+ MacBook M1 PRO / macOS Monterey
-+ IntelliJ IDEA 2021.3.2 (Ultimate Edition)
-+ WebStorm 2021.3.2
++ MacBook M1 PRO (macOS Monterey 12.3)
++ IntelliJ IDEA 2021.3.3 (Ultimate Edition)
++ WebStorm 2021.3.3
 
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/login_1.png"></img>
+#### 主要功能
++ 动态数据源
+  + Zabbix、Nacos、LDAP、Jenkins、Guacamole、Ansible、Nexus、Gitlab、Sonar、Dingtalk、TencentExmail
+  + `Kubernetes`
+    + ACK、EKS
+  + `Aliyun`
+    + ECS、Image、VPC、RAM[User、Policy]、RDS[Instance、Database、Redis]、DMS[User]、ONS[Instance、Topic、Group]、Log
+  + `AWS`
+    + EC2、IAM[User、Policy]、SQS[Queue]、SNS[Topic、Subscription]
++ 远程控制
+  + 远程桌面[RDP、VNC]
+    + apache-guacamole
+  + WebTerminal
+    + 支持多开、会话复制、命令同步、会话心跳
+  + SSH-Server
+    + 原生SSH协议实现，支持ED25519密钥
+    + 简化用户登录，自动关联用户Gitlab账户中配置的公钥
+    + 展示服务器环境，标签，授权账户
+    + 支持Kubernetes容器登录或直接查看容器日志
+    + 以事件驱动技术
+    + 部署架构
+```mermaid
+flowchart LR
+    A[User] -->|SSH:22| B{SLB}
+    B-->|TCP:2222| C[Opscloud Server] 
+    B-->|TCP:2222| D[Opscloud Server] 
+```
++ 服务器批量任务
+  + Ansible Playbook
+  + 单服务器多线程实现，任务日志更加清晰
++ RBAC,MFA(OTP)
++ 集群架构
+  + 实例健康检查接口 /api/instance/health/lb-check (GET) 
+  + 分布式调度任务(Quartz)、定时任务分布式锁(Shedlock)、任务并发锁(Redis)
+  + 高性能、可伸缩、高可用性
+    + 集群SLA99.99%
+    + 无资产管理上限
++ API文档
+  + example.com/doc.html
+  + API Token
 
 <table>
 <tr>
@@ -83,30 +125,8 @@ Welcome to the opscloud wiki!
 </tr>
 </table>
 
-
-
 #### <span style="color:green">平台演示视频1</span>
 <video src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/video/opscloud4-1.mov" width="400px" height="300px" controls="controls"></video>
-
-#### 核心功能
-+ 事件驱动
-+ 万物皆资产
-  + 多实例支持
-  + 多云支持（阿里云，AWS）
-+ 运维工单 
-+ 堡垒机
-  + 远程桌面RDP,VNC(需安装apache-guacamole)
-  + Web终端（支持多开，会话复制，命令同步）
-  + SSH-Server(命令行终端)
-    + 支持RSA-4096bit,ED25519密钥 
-    + 支持用户关联Gitlab账户中配置的公钥，无需配置即可登录
-    + 展示服务器环境，标签，授权账户
-    + 支持Kubernetes容器登录（容器堡垒机）
-    + 支持查看Kubernetes容器日志
-    + 以事件驱动的主动式堡垒机（通过事件ID登录服务器）
-+ 剧本任务
-+ RBAC,MFA(OTP)
-+ 集群架构
 
 ### 帮助文档
 

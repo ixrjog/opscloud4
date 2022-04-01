@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
-public class SimpleZabbixV5HostDrive {
+public class SimpleZabbixV5HostDriver {
 
     @Resource
     private SimpleZabbixAuth simpleZabbixAuth;

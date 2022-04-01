@@ -5,8 +5,8 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
-import com.baiyi.opscloud.datasource.business.account.impl.LdapAccountProvider;
-import com.baiyi.opscloud.datasource.business.accountGroup.AccountGroupProviderFactory;
+import com.baiyi.opscloud.datasource.business.account.impl.LdapAccountHandler;
+import com.baiyi.opscloud.datasource.business.accountGroup.AccountGroupHandlerFactory;
 import com.baiyi.opscloud.datasource.business.accountGroup.IAccountGroup;
 import com.baiyi.opscloud.datasource.ldap.driver.LdapDriver;
 import com.baiyi.opscloud.datasource.ldap.entity.LdapGroup;
@@ -72,7 +72,7 @@ public class LdapTest extends BaseUnit {
 //
 
     @Resource
-    private LdapAccountProvider ldapAccountProvider;
+    private LdapAccountHandler ldapAccountProvider;
 
 
     @Test
@@ -93,7 +93,7 @@ public class LdapTest extends BaseUnit {
                 .businessId(userGroup.getId())
                 .businessType(BusinessTypeEnum.USERGROUP.getType())
                 .build();
-        IAccountGroup iAccountGroup = AccountGroupProviderFactory.getIAccountGroupByInstanceType(DsTypeEnum.LDAP.name());
+        IAccountGroup iAccountGroup = AccountGroupHandlerFactory.getIAccountGroupByInstanceType(DsTypeEnum.LDAP.name());
         // iAccountGroup.create(dsInstance,userGroup);
         iAccountGroup.grant(dsInstance, user, businessResource);
     }
@@ -103,7 +103,7 @@ public class LdapTest extends BaseUnit {
         // nexus-admin nexus-developer nexus-users
         UserGroup userGroup = userGroupService.getByName("nexus-users");
         DatasourceInstance dsInstance = dsInstanceService.getById(2);
-        IAccountGroup iAccountGroup = AccountGroupProviderFactory.getIAccountGroupByInstanceType(DsTypeEnum.LDAP.name());
+        IAccountGroup iAccountGroup = AccountGroupHandlerFactory.getIAccountGroupByInstanceType(DsTypeEnum.LDAP.name());
         iAccountGroup.create(dsInstance,userGroup);
 
     }

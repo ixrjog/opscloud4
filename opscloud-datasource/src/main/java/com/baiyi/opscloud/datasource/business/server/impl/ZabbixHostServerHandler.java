@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.business.server.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.datasource.business.server.impl.base.AbstractZabbixHostServerProvider;
+import com.baiyi.opscloud.datasource.business.server.impl.base.AbstractZabbixHostServerHandler;
 import com.baiyi.opscloud.datasource.business.server.util.HostParamUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class ZabbixHostServerProvider extends AbstractZabbixHostServerProvider {
+public class ZabbixHostServerHandler extends AbstractZabbixHostServerHandler {
 
     @Override
     protected void doCreate(Server server) {
@@ -30,7 +30,7 @@ public class ZabbixHostServerProvider extends AbstractZabbixHostServerProvider {
         ServerProperty.Server property = getBusinessProperty(server);
         if (!property.enabledZabbix()) return;
         String manageIp = HostParamUtil.getManageIp(server, property);
-        ZabbixHost.Host host = zabbixV5HostDrive.getByIp(configContext.get(), manageIp);
+        ZabbixHost.Host host = zabbixV5HostDriver.getByIp(configContext.get(), manageIp);
         if (host == null) {
             doCreate(server, property);
         } else {
@@ -43,15 +43,15 @@ public class ZabbixHostServerProvider extends AbstractZabbixHostServerProvider {
         ServerProperty.Server property = getBusinessProperty(server);
         String manageIp = HostParamUtil.getManageIp(server, property);
         try {
-            com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost.Host host = zabbixV5HostDrive.getByIp(configContext.get(), manageIp);
+            com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost.Host host = zabbixV5HostDriver.getByIp(configContext.get(), manageIp);
             if (host == null) {
                 return;
             }
-            zabbixV5HostDrive.deleteById(configContext.get(), host.getHostid());
-            zabbixV5HostDrive.evictHostById(configContext.get(), host.getHostid());
+            zabbixV5HostDriver.deleteById(configContext.get(), host.getHostid());
+            zabbixV5HostDriver.evictHostById(configContext.get(), host.getHostid());
         } catch (Exception ignored) {
         } finally {
-            zabbixV5HostDrive.evictHostByIp(configContext.get(), manageIp);
+            zabbixV5HostDriver.evictHostByIp(configContext.get(), manageIp);
         }
     }
 

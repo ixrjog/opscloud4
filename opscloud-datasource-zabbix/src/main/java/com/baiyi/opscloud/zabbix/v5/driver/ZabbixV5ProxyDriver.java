@@ -2,7 +2,7 @@ package com.baiyi.opscloud.zabbix.v5.driver;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.v5.driver.base.AbstractZabbixV5ProxyDrive;
+import com.baiyi.opscloud.zabbix.v5.driver.base.AbstractZabbixV5ProxyDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixProxy;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
@@ -23,7 +23,7 @@ import org.springframework.util.CollectionUtils;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ZabbixV5ProxyDriver extends AbstractZabbixV5ProxyDrive {
+public class ZabbixV5ProxyDriver extends AbstractZabbixV5ProxyDriver {
 
     /**
      * 查询Zabbix代理

@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 
@@ -41,6 +42,10 @@ public class RamUser {
         private String updateDate; // ListUsersResponse
 
         private String attachDate; // ListEntitiesForPolicy
+
+        public boolean needUpdate() {
+            return StringUtils.isNotBlank(this.displayName) || StringUtils.isNotBlank(this.email);
+        }
 
         @Override
         public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {

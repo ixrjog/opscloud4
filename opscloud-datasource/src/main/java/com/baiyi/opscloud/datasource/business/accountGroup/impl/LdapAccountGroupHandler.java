@@ -1,11 +1,9 @@
-package com.baiyi.opscloud.datasource.business.account.impl;
+package com.baiyi.opscloud.datasource.business.accountGroup.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.LdapConfig;
-import com.baiyi.opscloud.datasource.business.account.converter.AccountConverter;
-import com.baiyi.opscloud.datasource.business.account.impl.base.AbstractAccountProvider;
+import com.baiyi.opscloud.datasource.business.accountGroup.impl.base.AbstractAccountGroupHandler;
 import com.baiyi.opscloud.datasource.ldap.repo.GroupRepo;
-import com.baiyi.opscloud.datasource.ldap.repo.PersonRepo;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -17,14 +15,12 @@ import org.springframework.stereotype.Component;
 
 /**
  * @Author baiyi
- * @Date 2021/8/11 2:09 下午
+ * @Date 2021/9/14 5:45 下午
  * @Version 1.0
  */
 @Component
 @RequiredArgsConstructor
-public class LdapAccountProvider extends AbstractAccountProvider {
-
-    private final PersonRepo personRepo;
+public class LdapAccountGroupHandler extends AbstractAccountGroupHandler {
 
     private final GroupRepo groupRepo;
 
@@ -38,21 +34,23 @@ public class LdapAccountProvider extends AbstractAccountProvider {
     }
 
     @Override
-    protected void doCreate(User user) {
-        if (!personRepo.checkPersonInLdap(configContext.get(), user.getUsername()))
-            personRepo.create(configContext.get(), AccountConverter.toLdapPerson(user));
+    protected void doCreate(UserGroup userGroup) {
+        try {
+            groupRepo.create(configContext.get(), userGroup.getName());
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
-    protected void doUpdate(User user) {
-        if (personRepo.checkPersonInLdap(configContext.get(), user.getUsername()))
-            personRepo.update(configContext.get(), AccountConverter.toLdapPerson(user));
+    protected void doUpdate(UserGroup userGroup) {
     }
 
     @Override
-    protected void doDelete(User user) {
-        if (personRepo.checkPersonInLdap(configContext.get(), user.getUsername()))
-            personRepo.delete(configContext.get(), user.getUsername());
+    protected void doDelete(UserGroup userGroup) {
+        try {
+            groupRepo.delete(configContext.get(), userGroup.getName());
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
@@ -78,4 +76,5 @@ public class LdapAccountProvider extends AbstractAccountProvider {
     public String getInstanceType() {
         return DsTypeEnum.LDAP.getName();
     }
+
 }

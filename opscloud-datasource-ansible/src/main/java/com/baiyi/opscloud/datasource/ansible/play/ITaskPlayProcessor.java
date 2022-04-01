@@ -7,7 +7,7 @@ import javax.websocket.Session;
  * @Date 2021/9/26 5:23 下午
  * @Version 1.0
  */
-public interface ITaskPlayProcess {
+public interface ITaskPlayProcessor {
 
     /**
      * @param message
@@ -16,4 +16,5 @@ public interface ITaskPlayProcess {
     void process(String message, Session session);
 
     String getState();
+
 }

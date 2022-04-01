@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.business.account.impl.base;
 
-import com.baiyi.opscloud.datasource.business.account.AccountProviderFactory;
+import com.baiyi.opscloud.datasource.business.account.AccountHandlerFactory;
 import com.baiyi.opscloud.datasource.business.account.IAccount;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
@@ -23,7 +23,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractAccountProvider extends SimpleDsInstanceProvider implements IAccount, InitializingBean {
+public abstract class AbstractAccountHandler extends SimpleDsInstanceProvider implements IAccount, InitializingBean {
 
     @Resource
     protected DsConfigHelper dsConfigHelper;
@@ -92,6 +92,6 @@ public abstract class AbstractAccountProvider extends SimpleDsInstanceProvider i
 
     @Override
     public void afterPropertiesSet() {
-        AccountProviderFactory.register(this);
+        AccountHandlerFactory.register(this);
     }
 }
