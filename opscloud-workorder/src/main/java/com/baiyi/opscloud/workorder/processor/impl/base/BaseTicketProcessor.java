@@ -23,6 +23,7 @@ import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -69,9 +70,13 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
         if (ticketEntryService.countByTicketUniqueKey(ticketEntry) != 0)
             throw new TicketVerifyException("校验工单条目失败: 重复申请!");
         verifyHandle(ticketEntry);
+        verifyHandle(ticketEntry.getProperties());
     }
 
     abstract protected void verifyHandle(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException;
+
+    protected void verifyHandle(Map<String, String> properties) throws TicketVerifyException{
+    }
 
     /**
      * 查询创建人
