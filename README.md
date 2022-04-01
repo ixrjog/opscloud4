@@ -30,7 +30,7 @@ Welcome to the opscloud wiki!
   + `AWS`
     + EC2、IAM[User、Policy]、SQS[Queue]、SNS[Topic、Subscription]
 + 远程控制
-  + 远程桌面[RDP,VNC]
+  + 远程桌面[RDP、VNC]
     + apache-guacamole
   + WebTerminal
     + 支持多开、会话复制、命令同步
