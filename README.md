@@ -9,6 +9,8 @@ Welcome to the opscloud wiki!
 <img src="https://img.shields.io/badge/mysql-8-brightgreen.svg"></img>
 <br>
 
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/login_1.png" width="600"></img>
+
 ### 项目仓库
 + 服务端(Java)
   + [github.com/ixrjog/opscloud4](github.com/ixrjog/opscloud4)
@@ -33,7 +35,7 @@ Welcome to the opscloud wiki!
   + 远程桌面[RDP、VNC]
     + apache-guacamole
   + WebTerminal
-    + 支持多开、会话复制、命令同步
+    + 支持多开、会话复制、命令同步、会话心跳
   + SSH-Server
     + 原生SSH协议实现，支持ED25519密钥
     + 简化用户登录，自动关联用户Gitlab账户中配置的公钥
@@ -56,13 +58,10 @@ flowchart LR
   + 分布式调度任务(Quartz)、定时任务分布式锁(Shedlock)、任务并发锁(Redis)
   + 高性能、可伸缩、高可用性
     + 集群SLA99.99%
-    + 无管理服务器上限
-    + 无Kubernetes集群上限
+    + 无资产管理上限
 + API文档
   + example.com/doc.html
   + API Token
-
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/login_1.png"></img>
 
 <table>
 <tr>
