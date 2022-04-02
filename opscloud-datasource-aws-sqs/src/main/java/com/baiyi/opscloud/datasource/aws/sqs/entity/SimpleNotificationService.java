@@ -30,6 +30,9 @@ public class SimpleNotificationService {
 
         private static final long serialVersionUID = 7688439944039959106L;
 
+        // 工单使用
+        private String topic;
+
         private String topicArn;
 
         private String regionId;
