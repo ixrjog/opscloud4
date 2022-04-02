@@ -65,7 +65,7 @@ public class UserController {
         return new HttpResult<>(userFacade.getUserDetailsByUsername(username));
     }
 
-    @ApiOperation(value = "保存用户凭证")
+    @ApiOperation(value = "保存用户凭据")
     @PostMapping(value = "/credential/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> saveUserCredential(@RequestBody @Valid UserCredentialVO.Credential credential) {
         userCredentialFacade.saveCredential(credential);

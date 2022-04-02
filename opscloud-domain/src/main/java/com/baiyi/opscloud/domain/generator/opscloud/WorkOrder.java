@@ -61,6 +61,11 @@ public class WorkOrder implements Serializable {
     private String color;
 
     /**
+     * 文档地址
+     */
+    private String docs;
+
+    /**
      * 说明
      */
     private String comment;

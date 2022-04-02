@@ -11,13 +11,13 @@ Welcome to the opscloud wiki!
 
 <img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/login_1.png" width="600"></img>
 
-### 项目仓库
+#### 项目仓库
 + 服务端(Java)
   + [github.com/ixrjog/opscloud4](github.com/ixrjog/opscloud4)
 + 前端(Vue)
   + [github.com/ixrjog/opscloud4-web](github.com/ixrjog/opscloud4-web)
 
-### 开发环境
+#### 开发环境
 + MacBook M1 PRO (macOS Monterey 12.3)
 + IntelliJ IDEA 2021.3.3 (Ultimate Edition)
 + WebStorm 2021.3.3
@@ -128,11 +128,11 @@ flowchart LR
 #### <span style="color:green">平台演示视频1</span>
 <video src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/video/opscloud4-1.mov" width="400px" height="300px" controls="controls"></video>
 
-### 帮助文档
+#### 帮助文档
 
 <a style="color:#2b669a" href="https://www.kancloud.cn/ixrjog/opscloud4/2361886" target="_blank">传送门:https://www.kancloud.cn/ixrjog/opscloud4/2361886</a>
 
-### Thanks to JetBrains
+#### Thanks to JetBrains
 <a href="https://www.jetbrains.com" target="_blank">
   <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/jetbrains-logos/jetbrains-variant-2.svg"></img>
 </a>

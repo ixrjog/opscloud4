@@ -47,7 +47,7 @@ public class WorkOrderVO {
         @ApiModelProperty(value = "工单Key")
         private String workOrderKey;
 
-        @ApiModelProperty(value = "帮助文档id")
+        @ApiModelProperty(value = "帮助文档ID")
         private Integer sysDocumentId;
 
         @ApiModelProperty(value = "工单组ID")
@@ -61,6 +61,9 @@ public class WorkOrderVO {
 
         @ApiModelProperty(value = "说明")
         private String comment;
+
+        @ApiModelProperty(value = "文档地址")
+        private String docs;
 
         private Boolean isActive;
 
