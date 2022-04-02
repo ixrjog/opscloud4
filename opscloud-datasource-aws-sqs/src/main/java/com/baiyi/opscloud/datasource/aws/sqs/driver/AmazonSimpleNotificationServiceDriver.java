@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,26 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class AmazonSimpleNotificationServiceDriver {
+
+
+    /**
+     * https://docs.aws.amazon.com/sns/latest/api/API_CreateTopic.html
+     * 创建SNS主题
+     *
+     * @param config
+     * @param regionId
+     * @param topic
+     * @param attributes
+     * @return
+     */
+    public String createTopic(AwsConfig.Aws config, String regionId, String topic, Map<String, String> attributes) {
+        CreateTopicRequest request = new CreateTopicRequest();
+        request.setName(topic);
+        if (!CollectionUtils.isEmpty(attributes))
+            request.setAttributes(attributes);
+        CreateTopicResult result = AmazonSNSService.buildAmazonSNS(config, regionId).createTopic(request);
+        return result.getTopicArn();
+    }
 
     /**
      * 查询Topic列表
@@ -48,6 +69,7 @@ public class AmazonSimpleNotificationServiceDriver {
 
     /**
      * 获取Topic属性
+     *
      * @param config
      * @param regionId
      * @param topicArn
@@ -63,6 +85,7 @@ public class AmazonSimpleNotificationServiceDriver {
 
     /**
      * 查询Subscription列表
+     *
      * @param config
      * @param regionId
      * @return
