@@ -2,6 +2,7 @@ package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.datasource.aws.sqs.driver.AmazonSimpleNotificationServiceDriver;
 import com.baiyi.opscloud.datasource.aws.sqs.entity.SimpleNotificationService;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -35,10 +36,21 @@ public class SnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
     protected void processHandle(WorkOrderTicketEntry ticketEntry, SimpleNotificationService.Topic entry) throws TicketProcessException {
         AwsConfig.Aws config = getDsConfig(ticketEntry, AwsConfig.class).getAws();
         try {
-            String name = amazonSnsDriver.createTopic(config, entry.getRegionId(), entry.getTopic(), entry.getAttributes());
+            String topicArn = amazonSnsDriver.createTopic(config, entry.getRegionId(), entry.getTopic(), entry.getAttributes());
             log.info("工单创建数据源实例资产: instanceUuid = {} , entry = {}", ticketEntry.getInstanceUuid(), entry);
-            if (StringUtils.isBlank(name))
+            if (StringUtils.isBlank(topicArn))
                 throw new TicketProcessException("工单创建数据源实例资产失败");
+            Map<String, String> attributes = amazonSnsDriver.getTopicAttributes(config, entry.getRegionId(), topicArn);
+            if (CollectionUtils.isEmpty(attributes))
+                throw new TicketProcessException("SNS主题创建失败: 工单创建数据源实例资产失败");
+            SimpleNotificationService.Topic topic = SimpleNotificationService.Topic.builder()
+                    .topicArn(topicArn)
+                    .regionId(entry.getRegionId())
+                    .attributes(attributes)
+                    .build();
+            pullAsset(ticketEntry, topic);
+            ticketEntry.setContent(JSONUtil.writeValueAsString(topic));
+            ticketEntryService.update(ticketEntry);
         } catch (Exception e) {
             throw new TicketProcessException("工单创建数据源实例资产失败: " + e.getMessage());
         }
@@ -121,19 +133,6 @@ public class SnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, SimpleNotificationService.Topic entry) throws TicketProcessException {
         processHandle(ticketEntry, entry);
-        AwsConfig.Aws config = getDsConfig(ticketEntry, AwsConfig.class).getAws();
-        try {
-            Map<String, String> attributes = amazonSnsDriver.getTopicAttributes(config, entry.getRegionId(), entry.getTopicArn());
-            if (CollectionUtils.isEmpty(attributes))
-                throw new TicketProcessException("SNS主题创建失败: 工单创建数据源实例资产失败");
-            pullAsset(ticketEntry, SimpleNotificationService.Topic.builder()
-                    .topicArn(entry.getTopicArn())
-                    .regionId(entry.getRegionId())
-                    .attributes(attributes)
-                    .build());
-        } catch (Exception e) {
-            throw new TicketProcessException("SNS主题创建失败: topic = " + entry.getTopic());
-        }
     }
 
 }

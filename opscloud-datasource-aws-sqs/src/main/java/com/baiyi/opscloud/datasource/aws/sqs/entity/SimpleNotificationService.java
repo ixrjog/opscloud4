@@ -57,6 +57,7 @@ public class SimpleNotificationService {
                     .paramAsset(asset)
                     // 显示名（可能为空）
                     .paramProperty("DisplayName", this.attributes.get("DisplayName"))
+                    .paramProperty("FifoTopic",this.attributes.get("FifoTopic"))
                     // .paramProperty("Owner", this.attributes.get("Owner"))
                     // .paramProperty("SubscriptionsPending", this.attributes.get("SubscriptionsPending"))
                     // .paramProperty("SubscriptionsConfirmed", this.attributes.get("SubscriptionsConfirmed"))
