@@ -2,9 +2,8 @@ package com.baiyi.opscloud.workorder.validator.attribute;
 
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Map;
 
 /**
@@ -14,35 +13,32 @@ import java.util.Map;
  */
 @Data
 @Builder
-public class QueueAttributes {
+public class QueueAttributes implements IAttributeValidator {
 
-    @NotNull
-    @Size(max = 900, message = "交付延迟时间应介于 0 秒至 15 分钟之间")
-    private String delaySeconds;
+    // 校验工单条目失败: 消息保留周期应介于1分钟至14天之间、最大消息大小应介于1KB和256KB之间
 
-    @NotNull
-    @Size(min = 1024, max = 262144, message = "最大消息大小应介于 1 KB 和 256 KB之间")
-    private String maximumMessageSize;
+    @Range(max = 900, message = "交付延迟时间应介于0秒至15分钟之间")
+    private Integer delaySeconds;
 
-    @NotNull
-    @Size(min = 60, max = 1209600, message = "消息保留周期应介于 1 分钟至 14 天之间")
-    private String messageRetentionPeriod;
+    @Range(min = 1024, max = 262144, message = "最大消息大小应介于1KB和256KB之间")
+    private Integer maximumMessageSize;
 
-    @NotNull
-    @Size(max = 20, message = "接收消息等待时间应介于 0 至 20 秒之间")
-    private String receiveMessageWaitTimeSeconds;
+    @Range(min = 60, max = 1209600, message = "消息保留周期应介于1分钟至14天之间")
+    private Integer messageRetentionPeriod;
 
-    @NotNull
-    @Size(max = 43200, message = "可见性超时时间应介于 0 秒至 12 小时之间")
-    private String visibilityTimeout;
+    @Range(max = 20, message = "接收消息等待时间应介于0至20秒之间")
+    private Integer receiveMessageWaitTimeSeconds;
+
+    @Range(max = 43200, message = "可见性超时时间应介于0秒至12小时之间")
+    private Integer visibilityTimeout;
 
     public static QueueAttributes toAttributes(Map<String, String> attributes) {
         return QueueAttributes.builder()
-                .delaySeconds(attributes.get("DelaySeconds"))
-                .maximumMessageSize(attributes.get("MaximumMessageSize"))
-                .messageRetentionPeriod("MessageRetentionPeriod")
-                .receiveMessageWaitTimeSeconds("ReceiveMessageWaitTimeSeconds")
-                .visibilityTimeout("VisibilityTimeout")
+                .delaySeconds(Integer.parseInt(attributes.get("DelaySeconds")))
+                .maximumMessageSize(Integer.parseInt(attributes.get("MaximumMessageSize")))
+                .messageRetentionPeriod(Integer.parseInt(attributes.get("MessageRetentionPeriod")))
+                .receiveMessageWaitTimeSeconds(Integer.parseInt(attributes.get("ReceiveMessageWaitTimeSeconds")))
+                .visibilityTimeout(Integer.parseInt(attributes.get("VisibilityTimeout")))
                 .build();
     }
 

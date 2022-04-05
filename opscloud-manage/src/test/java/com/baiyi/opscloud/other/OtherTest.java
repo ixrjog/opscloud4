@@ -64,13 +64,16 @@ public class OtherTest extends BaseUnit {
 
     @Test
     void ddd2() {
+        // 校验工单条目失败: 消息保留周期应介于1分钟至14天之间、最大消息大小应介于1KB和256KB之间
         Map<String, String> attributes = Maps.newHashMap();
         attributes.put("DelaySeconds", "1");
-        attributes.put("MaximumMessageSize", "1");
+        attributes.put("MaximumMessageSize", "262144");
+        // 60
         attributes.put("MessageRetentionPeriod", "1");
         attributes.put("ReceiveMessageWaitTimeSeconds", "1");
         attributes.put("VisibilityTimeout", "1");
         queueValidator.validate(attributes);
     }
+
 
 }

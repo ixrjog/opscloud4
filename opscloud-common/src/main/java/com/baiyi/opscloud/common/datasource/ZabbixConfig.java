@@ -30,6 +30,8 @@ public class ZabbixConfig extends BaseConfig {
         private String zone;
         private Operation operation;
         private List<String> severityTypes;
+        // IP段范围
+        private List<String> regions;
     }
 
     @Data
