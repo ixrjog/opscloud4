@@ -11,6 +11,7 @@ import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExtendedBaseTicketProcessor;
+import com.baiyi.opscloud.workorder.validator.QueueValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +32,9 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
 
     @Resource
     private AmazonSimpleQueueServiceDriver amazonSqsDriver;
+
+    @Resource
+    private QueueValidator queueValidator;
 
     @Override
     protected void processHandle(WorkOrderTicketEntry ticketEntry, SimpleQueueService.Queue entry) throws TicketProcessException {
@@ -83,25 +87,9 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
         }
     }
 
-    private void propertyCheck(Map<String, String> properties, String key, Integer min, Integer max, String errMsg) throws TicketVerifyException {
-        try {
-            if (properties.containsKey(key)) {
-                int value = Integer.parseInt(properties.get(key));
-                if (value < min || value > max)
-                    throw new TicketVerifyException("校验工单条目失败: " + errMsg);
-            }
-        } catch (NumberFormatException e) {
-            throw new TicketVerifyException("校验工单条目失败: " + key + "只能为整数！");
-        }
-    }
-
     @Override
     protected void verifyHandle(Map<String, String> properties) throws TicketVerifyException {
-        propertyCheck(properties, "DelaySeconds", 0, 900, "交付延迟时间应介于 0 秒至 15 分钟之间！");
-        propertyCheck(properties, "MaximumMessageSize", 1024, 262144, "最大消息大小应介于 1 KB 和 256 KB之间！");
-        propertyCheck(properties, "MessageRetentionPeriod", 60, 1209600, "消息保留周期应介于 1 分钟至 14 天之间！");
-        propertyCheck(properties, "ReceiveMessageWaitTimeSeconds", 0, 20, "接收消息等待时间应介于 0 至 20 秒之间！");
-        propertyCheck(properties, "VisibilityTimeout", 0, 43200, "可见性超时时间应介于 0 秒至 12 小时之间！");
+        queueValidator.validate(properties);
     }
 
     @Override
