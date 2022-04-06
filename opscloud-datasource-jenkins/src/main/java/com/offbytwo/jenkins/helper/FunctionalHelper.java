@@ -11,7 +11,7 @@ public final class FunctionalHelper {
         // intentionally empty.
     }
 
-    public static final <T extends BaseModel> Function<T, T> SET_CLIENT(JenkinsHttpConnection client) {
+    public static <T extends BaseModel> Function<T, T> SET_CLIENT(JenkinsHttpConnection client) {
         return s -> {
             s.setClient(client);
             return s;

@@ -58,13 +58,13 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
 
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-    private URI uri;
-    private CloseableHttpClient client;
+    private final URI uri;
+    private final CloseableHttpClient client;
     private HttpContext localContext;
-    private HttpResponseValidator httpResponseValidator;
+    private final HttpResponseValidator httpResponseValidator;
     // private HttpResponseContentExtractor contentExtractor;
 
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
     private String context;
 
     private String jenkinsVersion;
@@ -88,7 +88,7 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
         this.httpResponseValidator = new HttpResponseValidator();
         // this.contentExtractor = new HttpResponseContentExtractor();
         this.jenkinsVersion = EMPTY_VERSION;
-        LOGGER.debug("uri={}", uri.toString());
+        LOGGER.debug("uri={}", uri);
     }
 
     /**

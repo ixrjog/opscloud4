@@ -99,11 +99,9 @@ public class Build extends BaseModel {
     }
 
     /**
-     * 
      * @return The information from Jenkins. In cases the build has never run
-     *         {@link #BUILD_HAS_NEVER_RUN} will be returned.
-     * @throws IOException
-     *             in case of an error.
+     * {@link #BUILD_HAS_NEVER_RUN} will be returned.
+     * @throws IOException in case of an error.
      */
     public com.offbytwo.jenkins.model.BuildWithDetails details() throws IOException {
         return client.get(url, BuildWithDetails.class);
@@ -112,6 +110,7 @@ public class Build extends BaseModel {
     /**
      * This is to get the information about {@link com.offbytwo.jenkins.model.TestReport}
      * for a Maven Job type.
+     *
      * @return {@link com.offbytwo.jenkins.model.TestReport}
      * @throws IOException in case of an error.
      */
@@ -120,8 +119,9 @@ public class Build extends BaseModel {
     }
 
     /**
-     * This is to get the information about run tests for a 
+     * This is to get the information about run tests for a
      * non Maven job type.
+     *
      * @return {@link com.offbytwo.jenkins.model.TestResult}
      * @throws IOException in case of an error.
      */
@@ -141,7 +141,7 @@ public class Build extends BaseModel {
      * get is not allowed.
      */
 
-    public String Stop() throws HttpResponseException, IOException {
+    public String Stop() throws IOException {
         try {
 
             return client.get(url + "stop");
@@ -154,7 +154,8 @@ public class Build extends BaseModel {
         }
     }
 
-    /** Stops the build which is currently in progress.  This version takes in
+    /**
+     * Stops the build which is currently in progress.  This version takes in
      * a crumbFlag.  In some cases , an error is thrown which reads
      * "No valid crumb was included in the request".  This stop method is used incase
      * those issues occur
@@ -162,7 +163,7 @@ public class Build extends BaseModel {
      * @param crumbFlag flag used to specify if a crumb is passed into for the request
      * @return the client url
      * @throws HttpResponseException in case of an error.
-     * @throws IOException in case of an error.
+     * @throws IOException           in case of an error.
      */
     public String Stop(boolean crumbFlag) throws HttpResponseException, IOException {
         try {
@@ -177,11 +178,11 @@ public class Build extends BaseModel {
         }
     }
 
-    private void stopPost(boolean crumbFlag) throws HttpResponseException, IOException {
+    private void stopPost(boolean crumbFlag) throws IOException {
         client.post(url + "stop", crumbFlag);
     }
 
-    private void stopPost() throws HttpResponseException, IOException {
+    private void stopPost() throws IOException {
         client.post(url + "stop");
     }
 

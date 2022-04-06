@@ -9,12 +9,11 @@ package com.offbytwo.jenkins.helper;
  * @author Karl Heinz Marbaise
  */
 public class JenkinsVersion implements Comparable<JenkinsVersion> {
-    private ComparableVersion cv;
+    private final ComparableVersion cv;
     private String literalVersion;
 
-    public final static JenkinsVersion create(String version) {
-        JenkinsVersion jv = new JenkinsVersion(version);
-        return jv;
+    public static JenkinsVersion create(String version) {
+        return new JenkinsVersion(version);
     }
 
     public JenkinsVersion() {
@@ -29,7 +28,7 @@ public class JenkinsVersion implements Comparable<JenkinsVersion> {
     /**
      * This will check if the current instance version is <code>&gt;</code> the
      * given version.
-     * 
+     *
      * @param version The version to compare with.
      * @return true or false.
      */
@@ -45,7 +44,7 @@ public class JenkinsVersion implements Comparable<JenkinsVersion> {
     /**
      * This will check if the current instance version is <code>&gt;=</code> the
      * given version.
-     * 
+     *
      * @param version The version to compare with.
      * @return true or false.
      */
@@ -61,7 +60,7 @@ public class JenkinsVersion implements Comparable<JenkinsVersion> {
     /**
      * This will check if the current instance version is <code>&lt;</code> the
      * given version.
-     * 
+     *
      * @param version The version to compare with.
      * @return true or false.
      */
@@ -77,7 +76,7 @@ public class JenkinsVersion implements Comparable<JenkinsVersion> {
     /**
      * This will check if the current instance version is <code>&lt;=</code> the
      * given version.
-     * 
+     *
      * @param version The version to compare with.
      * @return true or false.
      */
@@ -93,7 +92,7 @@ public class JenkinsVersion implements Comparable<JenkinsVersion> {
     /**
      * This will check if the current instance version is <code>=</code> the
      * given version.
-     * 
+     *
      * @param version The version to compare with.
      * @return true or false.
      */

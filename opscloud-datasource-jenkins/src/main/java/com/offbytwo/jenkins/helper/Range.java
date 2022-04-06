@@ -81,7 +81,7 @@ public final class Range {
     }
 
     public static final class FromBuilder {
-        private Range range;
+        private final Range range;
 
         public FromBuilder(Range range) {
             this.range = range;
@@ -101,7 +101,7 @@ public final class Range {
     }
 
     public static final class ToBuilder {
-        private Range range;
+        private final Range range;
 
         public ToBuilder(Range range) {
             this.range = range;
@@ -113,7 +113,7 @@ public final class Range {
     }
 
     public static final class Builder {
-        private Range range;
+        private final Range range;
 
         protected Builder() {
             this.range = new Range();

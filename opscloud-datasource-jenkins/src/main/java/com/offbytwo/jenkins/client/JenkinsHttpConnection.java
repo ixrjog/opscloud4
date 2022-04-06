@@ -30,7 +30,7 @@ public interface JenkinsHttpConnection extends Closeable {
      * {@inheritDoc}
      */
     @Override
-    public void close();
+    void close();
 
 
     /**

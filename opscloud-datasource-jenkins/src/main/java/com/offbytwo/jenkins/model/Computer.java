@@ -14,13 +14,14 @@ import java.util.List;
 
 /**
  * @author Kelly Plummer
- *
  */
 public class Computer extends BaseModel {
 
     private String displayName;
 
     private List<Computer> computers;
+
+    private static final String BUILT_IN_NODE_NAME = "built-in node";
 
     public Computer() {
     }
@@ -47,8 +48,8 @@ public class Computer extends BaseModel {
 
     public ComputerWithDetails details() throws IOException {
         String name;
-        if ("master".equals(displayName)) {
-            name = "(master)";
+        if (BUILT_IN_NODE_NAME.equalsIgnoreCase(displayName)) {
+            name = "(built-in)";
         } else {
             name = EncodingUtils.encode(displayName);
         }
