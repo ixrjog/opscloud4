@@ -7,10 +7,12 @@ import com.baiyi.opscloud.datasource.aws.sqs.driver.AmazonSimpleNotificationServ
 import com.baiyi.opscloud.datasource.aws.sqs.entity.SimpleNotificationService;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExtendedBaseTicketProcessor;
+import com.google.common.base.Splitter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -57,29 +59,43 @@ public class SnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException {
+    public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         SimpleNotificationService.Topic entry = this.toEntry(ticketEntry.getContent());
-        if (StringUtils.isEmpty(entry.getTopic()))
+        String topic = entry.getTopic();
+        if (StringUtils.isEmpty(topic))
             throw new TicketVerifyException("校验工单条目失败: 未指定SNS主题名称!");
-        if (!entry.getTopic().matches("[0-9a-z_]{7,256}"))
+
+        if (topic.endsWith(".fifo")) {
+            if (!"true".equals(ticketEntry.getProperties().get("FifoTopic")))
+                throw new TicketVerifyException("校验工单条目失败: FIFO 主题 FifoTopic 值必须为 true!");
+            List<String> strings = Splitter.on(".fifo").splitToList(topic);
+            topic = strings.get(0);
+        } else {
+            if ("true".equals(ticketEntry.getProperties().get("FifoTopic")))
+                throw new TicketVerifyException("校验工单条目失败: FIFO 主题名称必须以“.fifo”结尾");
+        }
+
+        if (!topic.matches("[0-9a-z_]{7,256}"))
             throw new TicketVerifyException("校验工单条目失败: SNS主题名称不合规!");
+
         switch (entry.getRegionId()) {
             case "ap-northeast-2":
-                if (!entry.getTopic().endsWith("_dev_topic"))
+                if (!topic.endsWith("_dev_topic"))
                     throw new TicketVerifyException("校验工单条目失败: 开发环境SNS主题名称必须以 _dev_topic 结尾！");
                 break;
             case "ap-east-1":
-                if (!entry.getTopic().endsWith("_test_topic"))
+                if (!topic.endsWith("_test_topic"))
                     throw new TicketVerifyException("校验工单条目失败: 测试环境SNS主题名称必须以 _test_topic 结尾！");
                 break;
             case "eu-west-1":
-                if (!entry.getTopic().endsWith("_canary_topic")
-                        || entry.getTopic().endsWith("_prod_topic"))
+                if (!topic.endsWith("_canary_topic")
+                        || topic.endsWith("_prod_topic"))
                     throw new TicketVerifyException("校验工单条目失败: 灰度、生产SNS主题名称必须以 _canary_topic 或 _prod_topic 结尾！");
                 break;
             default:
                 throw new TicketVerifyException("校验工单条目失败: 该可用区下不支持新建SNS主题！");
         }
+
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .assetType(getAssetType())
                 .instanceUuid(ticketEntry.getInstanceUuid())
@@ -92,27 +108,6 @@ public class SnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
                 throw new TicketVerifyException("校验工单条目失败: 该地域SQS已存在！");
             }
         }
-    }
-
-    private void propertyCheck(Map<String, String> properties, String key, Integer min, Integer max, String errMsg) throws TicketVerifyException {
-        try {
-            if (properties.containsKey(key)) {
-                int value = Integer.parseInt(properties.get(key));
-                if (value < min || value > max)
-                    throw new TicketVerifyException("校验工单条目失败: " + errMsg);
-            }
-        } catch (NumberFormatException e) {
-            throw new TicketVerifyException("校验工单条目失败: " + key + "只能为整数！");
-        }
-    }
-
-    @Override
-    protected void verifyHandle(Map<String, String> properties) throws TicketVerifyException {
-        propertyCheck(properties, "DelaySeconds", 0, 900, "交付延迟时间应介于 0 秒至 15 分钟之间！");
-        propertyCheck(properties, "MaximumMessageSize", 1024, 262144, "最大消息大小应介于 1 KB 和 256 KB之间！");
-        propertyCheck(properties, "MessageRetentionPeriod", 60, 1209600, "消息保留周期应介于 1 分钟至 14 天之间！");
-        propertyCheck(properties, "ReceiveMessageWaitTimeSeconds", 0, 20, "接收消息等待时间应介于 0 至 20 秒之间！");
-        propertyCheck(properties, "VisibilityTimeout", 0, 43200, "可见性超时时间应介于 0 秒至 12 小时之间！");
     }
 
     @Override

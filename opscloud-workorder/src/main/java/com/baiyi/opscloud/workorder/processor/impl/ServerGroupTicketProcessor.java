@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
-import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
@@ -31,7 +30,7 @@ public class ServerGroupTicketProcessor extends AbstractUserPermissionExtendedBa
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException {
+    public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         ServerGroup entry = this.toEntry(ticketEntry.getContent());
         if (StringUtils.isEmpty(entry.getName()))
             throw new TicketVerifyException("校验工单条目失败: 未指定服务器组名称!");
