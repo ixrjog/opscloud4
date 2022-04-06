@@ -157,7 +157,7 @@ public class JenkinsServer implements Closeable {
 
         return jobs.stream()
                 .map(SET_CLIENT(this.client))
-                .collect(toMap(s -> s.getName(), s -> s));
+                .collect(toMap(Job::getName, s -> s));
     }
 
     /**
@@ -198,7 +198,7 @@ public class JenkinsServer implements Closeable {
 
                 return view;
             })
-            .collect(Collectors.toMap(s -> s.getName(), v -> v));
+            .collect(Collectors.toMap(View::getName, v -> v));
     }
 
     /**

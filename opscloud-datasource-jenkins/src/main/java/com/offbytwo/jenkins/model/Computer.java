@@ -6,8 +6,8 @@
 
 package com.offbytwo.jenkins.model;
 
+import com.baiyi.opscloud.datasource.jenkins.util.ComputerNameUtil;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.offbytwo.jenkins.client.util.EncodingUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,8 +20,6 @@ public class Computer extends BaseModel {
     private String displayName;
 
     private List<Computer> computers;
-
-    private static final String BUILT_IN_NODE_NAME = "built-in node";
 
     public Computer() {
     }
@@ -47,12 +45,7 @@ public class Computer extends BaseModel {
     }
 
     public ComputerWithDetails details() throws IOException {
-        String name;
-        if (BUILT_IN_NODE_NAME.equalsIgnoreCase(displayName)) {
-            name = "(built-in)";
-        } else {
-            name = EncodingUtils.encode(displayName);
-        }
+        String name = ComputerNameUtil.toName(displayName);
         // TODO: Check if depth=2 is a good idea or if it could be solved
         // better.
         ComputerWithDetails computerWithDetails = client.get("/computer/" + name + "/?depth=2",

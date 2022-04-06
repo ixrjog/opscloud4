@@ -17,9 +17,9 @@ public class JobConfiguration {
 
     private String configXml;
 
-    private Document doc;
+    private final Document doc;
 
-    private SAXReader reader;
+    private final SAXReader reader;
 
     public JobConfiguration(String configXml) throws DocumentException {
         this.configXml = configXml;

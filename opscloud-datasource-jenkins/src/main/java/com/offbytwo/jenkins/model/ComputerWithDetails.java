@@ -6,6 +6,7 @@
 
 package com.offbytwo.jenkins.model;
 
+import com.baiyi.opscloud.datasource.jenkins.util.ComputerNameUtil;
 import com.offbytwo.jenkins.client.util.EncodingUtils;
 
 import java.io.IOException;
@@ -73,13 +74,7 @@ public class ComputerWithDetails extends Computer {
     public com.offbytwo.jenkins.model.LoadStatistics getLoadStatistics() throws IOException {
         // TODO: Think about the following handling, cause that has also being
         // done in Computer#details().
-        String name;
-        if ("master".equals(displayName)) {
-            name = "(master)";
-        } else {
-            name = EncodingUtils.encode(displayName);
-        }
-
+        String name = ComputerNameUtil.toName(displayName);
         // TODO: ?depth=2 good idea or could this being done better?
         return client.get("/computer/" + name + "/" + "loadStatistics/?depth=2", LoadStatistics.class);
     }

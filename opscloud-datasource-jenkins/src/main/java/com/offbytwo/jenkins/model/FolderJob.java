@@ -52,7 +52,7 @@ public class FolderJob extends com.offbytwo.jenkins.model.Job {
         //FIXME: Check for null of jobs? Can that happen?
         return jobs.stream()
                 .map(SET_CLIENT(this.client))
-                .collect(Collectors.toMap(k -> k.getName(), Function.identity()));
+                .collect(Collectors.toMap(Job::getName, Function.identity()));
     }
 
     /**

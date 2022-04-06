@@ -25,7 +25,7 @@ public class JobWithDetails extends com.offbytwo.jenkins.model.Job {
 
     private boolean buildable;
 
-    private List<Build> builds = Collections.emptyList();
+    private final List<Build> builds = Collections.emptyList();
 
     private Build firstBuild;
 
@@ -85,13 +85,9 @@ public class JobWithDetails extends com.offbytwo.jenkins.model.Job {
      *         executed yet return {@link Collections#emptyList()}.
      */
     public List<Build> getBuilds() {
-        if (builds == null) {
-            return Collections.emptyList();
-        } else {
-            return builds.stream()
-                    .map(s -> buildWithClient(s))
-                    .collect(toList());
-        }
+        return builds.stream()
+                .map(this::buildWithClient)
+                .collect(toList());
     }
 
     /**
@@ -120,7 +116,7 @@ public class JobWithDetails extends com.offbytwo.jenkins.model.Job {
                 return Collections.emptyList();
             } else {
                 return builds.stream()
-                        .map(s -> buildWithClient(s))
+                        .map(this::buildWithClient)
                         .collect(toList());
             }
         } catch (HttpResponseException e) {
@@ -166,7 +162,7 @@ public class JobWithDetails extends com.offbytwo.jenkins.model.Job {
                 return Collections.emptyList();
             } else {
                 return builds.stream()
-                        .map(s -> buildWithClient(s))
+                        .map(this::buildWithClient)
                         .collect(toList());
             }
         } catch (HttpResponseException e) {
