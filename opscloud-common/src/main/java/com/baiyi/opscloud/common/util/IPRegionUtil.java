@@ -1,10 +1,16 @@
 package com.baiyi.opscloud.common.util;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2022/4/6 10:14
  * @Version 1.0
  */
+@Slf4j
 public class IPRegionUtil {
 
     private IPRegionUtil() {
@@ -12,9 +18,8 @@ public class IPRegionUtil {
 
 
     /**
-     *
      * @param network 192.168.5.100
-     * @param mask 192.168.0.0/16
+     * @param mask    192.168.0.0/16
      * @return
      */
     public static boolean isInRange(String network, String mask) {
@@ -34,6 +39,23 @@ public class IPRegionUtil {
                 | (Integer.parseInt(maskIps[2]) << 8)
                 | Integer.parseInt(maskIps[3]);
         return (ipAddr & mask1) == (cidrIpAddr & mask1);
+    }
+
+    public static boolean isInRanges(String network, List<String> masks) {
+        // 不配置Regions则默认包含
+        if (CollectionUtils.isEmpty(masks))
+            return true;
+        for (String mask : masks) {
+            try {
+                if (!IPRegionUtil.isInRange(network, mask))
+                    return false;
+            } catch (Exception e) {
+                // 格式错误
+                log.error(e.getMessage());
+            }
+        }
+        return true;
+
     }
 
 }

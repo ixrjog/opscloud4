@@ -11,7 +11,6 @@ import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 /**
  * @Author baiyi
@@ -26,19 +25,7 @@ public class ZabbixHostServerHandler extends AbstractZabbixHostServerHandler {
     private boolean isInRegions(Server server) {
         String network = server.getPrivateIp();
         ZabbixConfig.Zabbix zabbix = configContext.get();
-        // 不配置Regions则默认包含
-        if (CollectionUtils.isEmpty(zabbix.getRegions()))
-            return true;
-        for (String region : zabbix.getRegions()) {
-            try {
-                if (!IPRegionUtil.isInRange(network, region))
-                    return false;
-            } catch (Exception e) {
-                // regions格式错误
-                log.error(e.getMessage());
-            }
-        }
-        return true;
+        return IPRegionUtil.isInRanges(network, zabbix.getRegions());
     }
 
     @Override
