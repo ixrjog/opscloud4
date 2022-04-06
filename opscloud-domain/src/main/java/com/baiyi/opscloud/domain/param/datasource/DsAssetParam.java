@@ -32,6 +32,12 @@ public class DsAssetParam {
         @ApiModelProperty(value = "实例uuid")
         private String instanceUuid;
 
+        @ApiModelProperty(value = "regionId")
+        private String regionId;
+
+        @ApiModelProperty(value = "kind")
+        private String kind;
+
         @ApiModelProperty(value = "资产类型")
         @NotNull(message = "资产类型不能为空")
         private String assetType;

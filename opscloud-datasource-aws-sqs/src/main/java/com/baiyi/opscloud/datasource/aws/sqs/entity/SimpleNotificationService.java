@@ -110,13 +110,12 @@ public class SimpleNotificationService {
                     .assetKey(this.endpoint)
                     .assetKey2(this.topicArn)
                     .regionId(this.regionId)
-                    .kind("snsSubscription")
+                    .kind(this.protocol)
                     .assetType(DsAssetTypeConstants.SNS_SUBSCRIPTION.name())
                     .build();
 
             return AssetContainerBuilder.newBuilder()
                     .paramAsset(asset)
-                    .paramProperty("protocol", this.protocol)
                     .build();
         }
     }
