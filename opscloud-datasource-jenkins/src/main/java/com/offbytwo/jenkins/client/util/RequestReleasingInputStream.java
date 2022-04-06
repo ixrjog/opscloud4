@@ -41,6 +41,5 @@ public class RequestReleasingInputStream extends FilterInputStream {
     public void close() throws IOException {
         super.close();
         httpRequestBase.releaseConnection();
-
     }
 }

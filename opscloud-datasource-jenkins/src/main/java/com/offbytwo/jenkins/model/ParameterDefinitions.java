@@ -1,7 +1,8 @@
 package com.offbytwo.jenkins.model;
 
+import com.google.common.collect.Lists;
+
 import javax.xml.bind.annotation.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement(name = "parameterDefinitions")
@@ -13,7 +14,7 @@ public class ParameterDefinitions {
     List<StringParameterDefinition> stringParams;
 
     public ParameterDefinitions() {
-        stringParams = new ArrayList<StringParameterDefinition>();
+        stringParams = Lists.newArrayList();
     }
 
     public ParameterDefinitions(List<StringParameterDefinition> stringParams) {

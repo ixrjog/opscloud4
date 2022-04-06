@@ -1,7 +1,5 @@
 package com.offbytwo.jenkins.model;
 
-import com.offbytwo.jenkins.model.BaseModel;
-
 public class QueueReference extends BaseModel {
 
     private String queueItem;
