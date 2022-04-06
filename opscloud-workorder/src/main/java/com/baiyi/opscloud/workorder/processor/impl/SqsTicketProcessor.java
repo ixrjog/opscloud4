@@ -7,6 +7,7 @@ import com.baiyi.opscloud.datasource.aws.sqs.driver.AmazonSimpleQueueServiceDriv
 import com.baiyi.opscloud.datasource.aws.sqs.entity.SimpleQueueService;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
@@ -50,7 +51,7 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException {
+    public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         SimpleQueueService.Queue entry = this.toEntry(ticketEntry.getContent());
         if (StringUtils.isEmpty(entry.getQueueName()))
             throw new TicketVerifyException("校验工单条目失败: 未指定SQS名称!");
@@ -85,11 +86,7 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
                 throw new TicketVerifyException("校验工单条目失败: 该地域SQS已存在！");
             }
         }
-    }
-
-    @Override
-    protected void verifyHandle(Map<String, String> properties) throws TicketVerifyException {
-        queueValidator.validate(properties);
+        queueValidator.validate(ticketEntry.getProperties());
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsRocketMqTopicDri
 import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsRocketMqTopic;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
@@ -51,7 +52,7 @@ public class OnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException {
+    public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         OnsRocketMqTopic.Topic entry = this.toEntry(ticketEntry.getContent());
         if (StringUtils.isEmpty(entry.getTopic()))
             throw new TicketVerifyException("校验工单条目失败: 未指定Topic名称!");
