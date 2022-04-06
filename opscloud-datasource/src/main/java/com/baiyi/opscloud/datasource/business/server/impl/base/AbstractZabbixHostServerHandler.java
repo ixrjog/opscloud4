@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractZabbixHostServerHandler extends AbstractServerHandler<ZabbixConfig.Zabbix> {
+public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<ZabbixConfig.Zabbix> {
 
     @Resource
     private ZabbixGroupHelper zabbixGroupHelper;

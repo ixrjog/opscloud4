@@ -22,7 +22,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractServerHandler<T> extends SimpleDsInstanceProvider implements IServer, InitializingBean {
+public abstract class BaseServerHandler<T> extends SimpleDsInstanceProvider implements IServer, InitializingBean {
 
     @Resource
     protected DsConfigHelper dsConfigHelper;
