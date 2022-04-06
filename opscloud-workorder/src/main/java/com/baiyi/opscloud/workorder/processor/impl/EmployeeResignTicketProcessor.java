@@ -2,6 +2,7 @@ package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
@@ -36,7 +37,7 @@ public class EmployeeResignTicketProcessor extends BaseTicketProcessor<User> {
     }
 
     @Override
-    protected void verifyHandle(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException {
+    protected void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         // 判断是否有效用户
         User entry = this.toEntry(ticketEntry.getContent());
         User originalUser = userService.getById(ticketEntry.getBusinessId());

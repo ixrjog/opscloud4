@@ -7,6 +7,7 @@ import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsRocketMqGroupDri
 import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsRocketMqGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
@@ -43,7 +44,7 @@ public class OnsGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException {
+    public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         OnsRocketMqGroup.Group entry = this.toEntry(ticketEntry.getContent());
         if (StringUtils.isEmpty(entry.getGroupId()))
             throw new TicketVerifyException("校验工单条目失败: 未指定GID名称!");

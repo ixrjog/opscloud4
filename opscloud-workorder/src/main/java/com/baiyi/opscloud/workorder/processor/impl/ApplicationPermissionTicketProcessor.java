@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
-import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
@@ -26,7 +25,7 @@ public class ApplicationPermissionTicketProcessor extends AbstractUserPermission
     private ApplicationService applicationService;
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntry ticketEntry) throws TicketVerifyException {
+    public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         Application entry = this.toEntry(ticketEntry.getContent());
         if (StringUtils.isEmpty(entry.getApplicationKey()))
             throw new TicketVerifyException("校验工单条目失败: 未指定应用Key!");

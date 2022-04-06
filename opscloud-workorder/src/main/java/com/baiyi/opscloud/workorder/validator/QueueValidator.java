@@ -13,6 +13,7 @@ import java.util.Map;
 @Component
 public class QueueValidator extends AbstractAttributeValidator<QueueAttributes> {
 
+    @Override
     protected QueueAttributes toAttributes(Map<String, String> attributes) {
         return QueueAttributes.toAttributes(attributes);
     }

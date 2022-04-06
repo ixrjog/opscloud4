@@ -2,6 +2,7 @@ package com.baiyi.opscloud.workorder.processor.impl.extended;
 
 import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
+import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 
 import java.util.Set;
@@ -22,7 +23,7 @@ public abstract class AbstractUserGroupPermissionExtendedAbstractUserPermission 
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntry ticketEntry) {
+    public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
         UserGroup entry = this.toEntry(ticketEntry.getContent());
         checkName(entry);
     }
