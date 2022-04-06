@@ -7,7 +7,6 @@ import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.query.impl.extended.DatasourceAssetExtendedTicketEntryQuery;
-import com.google.common.base.Joiner;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,7 +32,7 @@ public class NacosEntryQuery extends DatasourceAssetExtendedTicketEntryQuery {
     @Override
     protected WorkOrderTicketVO.Entry toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, DatasourceInstanceAsset entry) {
         WorkOrderTicketVO.Entry ticketEntry = super.toEntry(entryQuery, entry);
-        ticketEntry.setComment(Joiner.on("-").join("Nacos开发者权限", entry.getName()));
+        ticketEntry.setComment("Nacos开发者权限");
         return ticketEntry;
     }
 

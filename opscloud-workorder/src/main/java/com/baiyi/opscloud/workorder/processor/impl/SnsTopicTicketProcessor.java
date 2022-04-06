@@ -67,7 +67,7 @@ public class SnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
 
         if (topic.endsWith(".fifo")) {
             if (!"true".equals(ticketEntry.getProperties().get("FifoTopic")))
-                throw new TicketVerifyException("校验工单条目失败: FIFO 主题 FifoTopic 值必须为 true!");
+                throw new TicketVerifyException("校验工单条目失败: .fifo 结尾必须为 FIFO 主题");
             List<String> strings = Splitter.on(".fifo").splitToList(topic);
             topic = strings.get(0);
         } else {
