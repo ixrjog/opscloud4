@@ -44,8 +44,9 @@ public class AnsibleSetConfigProvider extends AbstractSetDsInstanceConfigProvide
         AnsibleConfig.Ansible ansible = buildConfig(dsInstanceContext.getDsConfig());
         // 取配置文件路径
         ansible.getPrivateKey();
-        String privateKeyPath = SystemEnvUtil.renderEnvHome(ansible.getPrivateKey());
-        String privateKey = getPrivateKey(dsInstanceContext);
+        final String privateKeyPath = SystemEnvUtil.renderEnvHome(ansible.getPrivateKey());
+        // 写入文件增加一个换行符号
+        final String privateKey = getPrivateKey(dsInstanceContext) + "\n";
         IOUtil.writeFile(privateKey, privateKeyPath);
         // 修改文件权限
         try {
@@ -82,7 +83,6 @@ public class AnsibleSetConfigProvider extends AbstractSetDsInstanceConfigProvide
     private String getPrivateKey(DsInstanceContext dsInstanceContext) {
         if (dsInstanceContext.getDsConfig().getCredentialId() == null)
             throw new CommonRuntimeException("凭据没有配置！");
-
         //   CredentialKindEnum.SSH_USERNAME_WITH_KEY_PAIR.getKind();
         Credential credential = getCredential(dsInstanceContext.getDsConfig().getCredentialId());
         if (credential == null) {
@@ -95,6 +95,5 @@ public class AnsibleSetConfigProvider extends AbstractSetDsInstanceConfigProvide
             throw new CommonRuntimeException("凭据类型不符！");
         }
     }
-
 
 }
