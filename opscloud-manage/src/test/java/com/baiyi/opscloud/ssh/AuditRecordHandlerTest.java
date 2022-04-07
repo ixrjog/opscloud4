@@ -40,11 +40,14 @@ public class AuditRecordHandlerTest extends BaseUnit {
     @Test
     void podCommandTest() {
         testPodLog("06806244-f90f-4e19-8a1d-55f5b0ebc6a2", "account-dev-deployment-785f5657df-nj6t7#DEFAULT_CONTAINER#4558a7dabeb8420a952e1838bc6cf5e8");
+        print("-------------------------------------");
         testPodLog("28362479-a559-46a2-a303-9a53a1b8b869", "merchant-gateway-dev-74fccbc689-hnr5b#merchant-gateway-dev");
     }
 
     // \u001b
     // private static final String INPUT_REGEX = "#";
+
+    private static final String BS_REGEX = ".?\b\\u001b\\[J";
 
     private void testPodLog(String sessionId, String instanceId) {
         String path = terminalConfig.buildAuditLogPath(sessionId, instanceId);
@@ -56,6 +59,8 @@ public class AuditRecordHandlerTest extends BaseUnit {
                     boolean isInput = Pattern.matches(".*# \\u001b?.*", str);
                     if (isInput) {
                         print("匹配行 : " + str);
+                        String cmd = str.replaceFirst(".*# \\u001b?[\\[J]?", "");
+                        print("取命令 : " + cmd);
                     } else {
                         print("未匹配到行 : " + str);
                     }
