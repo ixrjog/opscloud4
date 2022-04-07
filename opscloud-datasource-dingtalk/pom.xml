@@ -23,12 +23,6 @@
             <artifactId>opscloud-datasource-core</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <artifactId>dingtalk-spring-boot-starter</artifactId>-->
-<!--            <groupId>com.taobao</groupId>-->
-<!--            <version>1.0</version>-->
-<!--        </dependency>-->
-
     </dependencies>
 
 </project>

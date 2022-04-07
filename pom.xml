@@ -165,11 +165,11 @@
         </dependency>
 
         <!--配置加密-->
-        <dependency>
-            <groupId>org.jasypt</groupId>
-            <artifactId>jasypt</artifactId>
-            <version>1.9.3</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.jasypt</groupId>-->
+<!--            <artifactId>jasypt</artifactId>-->
+<!--            <version>1.9.3</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>com.github.ulisesbocchio</groupId>
