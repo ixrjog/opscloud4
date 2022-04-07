@@ -113,4 +113,13 @@ public class AmazonSimpleNotificationServiceDriver {
         return result.getAttributes();
     }
 
+    public String subscribe(AwsConfig.Aws config, String regionId, String topicArn, String protocol, String endpoint) {
+        SubscribeRequest request = new SubscribeRequest();
+        request.setTopicArn(topicArn);
+        request.setProtocol(protocol);
+        request.setEndpoint(endpoint);
+        SubscribeResult result = AmazonSNSService.buildAmazonSNS(config, regionId).subscribe(request);
+        return result.getSubscriptionArn();
+    }
+
 }
