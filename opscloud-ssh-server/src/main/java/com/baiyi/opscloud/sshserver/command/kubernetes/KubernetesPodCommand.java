@@ -83,7 +83,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
 
     private final UserService userService;
 
-    private final PodCommandAudit auditPodCommandHandler;
+    private final PodCommandAudit podCommandAudit;
 
     private final static String[] TABLE_FIELD_NAMES = {"ID", "Kubernetes Instance", "Namespace", "Pod Name", "Pod IP", "Start Time", "Status", "Restart", "Container Name"};
 
@@ -300,7 +300,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
             log.error("用户关闭ssh-server: {}", e.getMessage());
         } finally {
             simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
-            auditPodCommandHandler.recordCommand(sessionId, instanceId);
+            podCommandAudit.recordCommand(sessionId, instanceId);
             execWatch.close();
             helper.print("\n用户退出容器！", PromptColor.GREEN);
         }
