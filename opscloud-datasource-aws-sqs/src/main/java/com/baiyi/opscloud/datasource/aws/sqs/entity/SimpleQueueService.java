@@ -42,7 +42,10 @@ public class SimpleQueueService {
 
         @Override
         public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
-            
+
+            // 标准 FIFO
+            String kind = "true".equals(this.attributes.get("FifoQueue")) ? "fifo" : "normal";
+
             DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                     .instanceUuid(dsInstance.getUuid())
                     .assetId(this.queueUrl)
@@ -50,7 +53,7 @@ public class SimpleQueueService {
                     .assetKey(this.queueUrl)
                     .assetKey2(attributes.get("QueueArn"))
                     .regionId(this.regionId)
-                    .kind("sqs")
+                    .kind(kind)
                     .assetType(DsAssetTypeConstants.SQS.name())
                     .createdTime(new Date(Long.parseLong(this.attributes.get("CreatedTimestamp")) * 1000))
                     .build();

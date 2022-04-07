@@ -25,6 +25,15 @@ public class WorkOrderTicketEntryParam {
         @ApiModelProperty(value = "数据实例UUID")
         private String instanceUuid;
 
+        @ApiModelProperty(value = "regionId")
+        private String regionId;
+
+        @ApiModelProperty(value = "kind")
+        private String kind;
+
+        @ApiModelProperty(value = "assetType")
+        private String assetType;
+
         @ApiModelProperty(value = "工单票据ID")
         private Integer workOrderTicketId;
 

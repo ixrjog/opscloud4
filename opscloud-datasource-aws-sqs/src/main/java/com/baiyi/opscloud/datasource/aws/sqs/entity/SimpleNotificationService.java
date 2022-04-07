@@ -42,6 +42,9 @@ public class SimpleNotificationService {
         @Override
         public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
 
+            // 标准 FIFO
+            String kind = "true".equals(this.attributes.get("FifoTopic")) ? "fifo" : "normal";
+
             DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                     .instanceUuid(dsInstance.getUuid())
                     .assetId(this.topicArn)
@@ -49,7 +52,7 @@ public class SimpleNotificationService {
                     .assetKey(this.topicArn)
                     .assetKey2(this.topicArn)
                     .regionId(this.regionId)
-                    .kind("snsTopic")
+                    .kind(kind)
                     .assetType(DsAssetTypeConstants.SNS_TOPIC.name())
                     .build();
 
@@ -57,7 +60,7 @@ public class SimpleNotificationService {
                     .paramAsset(asset)
                     // 显示名（可能为空）
                     .paramProperty("DisplayName", this.attributes.get("DisplayName"))
-                    .paramProperty("FifoTopic",this.attributes.get("FifoTopic"))
+                    .paramProperty("FifoTopic", this.attributes.get("FifoTopic"))
                     // .paramProperty("Owner", this.attributes.get("Owner"))
                     // .paramProperty("SubscriptionsPending", this.attributes.get("SubscriptionsPending"))
                     // .paramProperty("SubscriptionsConfirmed", this.attributes.get("SubscriptionsConfirmed"))
@@ -107,13 +110,12 @@ public class SimpleNotificationService {
                     .assetKey(this.endpoint)
                     .assetKey2(this.topicArn)
                     .regionId(this.regionId)
-                    .kind("snsSubscription")
+                    .kind(this.protocol)
                     .assetType(DsAssetTypeConstants.SNS_SUBSCRIPTION.name())
                     .build();
 
             return AssetContainerBuilder.newBuilder()
                     .paramAsset(asset)
-                    .paramProperty("protocol", this.protocol)
                     .build();
         }
     }
