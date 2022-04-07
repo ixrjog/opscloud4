@@ -13,9 +13,10 @@ import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExtendedBaseTicketProcessor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -58,7 +59,7 @@ public class OnsGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
                 .name(entry.getGroupId())
                 .build();
         List<DatasourceInstanceAsset> list = dsInstanceAssetService.queryAssetByAssetParam(asset);
-        if (CollectionUtils.isNotEmpty(list)) {
+        if (!CollectionUtils.isEmpty((list))) {
             if (list.stream().anyMatch(e -> e.getAssetId().equals(entry.getInstanceId()))) {
                 throw new TicketVerifyException("校验工单条目失败: GID已存在改ONS实例中");
             }

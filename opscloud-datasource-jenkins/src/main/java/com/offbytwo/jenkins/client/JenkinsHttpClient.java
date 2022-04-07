@@ -5,7 +5,9 @@
  */
 package com.offbytwo.jenkins.client;
 
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Joiner;
 import com.offbytwo.jenkins.client.util.EncodingUtils;
 import com.offbytwo.jenkins.client.util.RequestReleasingInputStream;
 import com.offbytwo.jenkins.client.util.ResponseUtils;
@@ -14,9 +16,8 @@ import com.offbytwo.jenkins.client.validator.HttpResponseValidator;
 import com.offbytwo.jenkins.model.BaseModel;
 import com.offbytwo.jenkins.model.Crumb;
 import com.offbytwo.jenkins.model.ExtractHeader;
-import net.sf.json.JSONObject;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -52,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+//import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 public class JenkinsHttpClient implements JenkinsHttpConnection {
 
@@ -74,7 +75,7 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
     /**
      * Create an unauthenticated Jenkins HTTP client
      *
-     * @param uri Location of the jenkins server (ex. http://localhost:8080)
+     * @param uri    Location of the jenkins server (ex. http://localhost:8080)
      * @param client Configured CloseableHttpClient to be used
      */
     public JenkinsHttpClient(URI uri, CloseableHttpClient client) {
@@ -94,7 +95,7 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
     /**
      * Create an unauthenticated Jenkins HTTP client
      *
-     * @param uri Location of the jenkins server (ex. http://localhost:8080)
+     * @param uri     Location of the jenkins server (ex. http://localhost:8080)
      * @param builder Configured HttpClientBuilder to be used
      */
     public JenkinsHttpClient(URI uri, HttpClientBuilder builder) {
@@ -113,7 +114,7 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
     /**
      * Create an authenticated Jenkins HTTP client
      *
-     * @param uri Location of the jenkins server (ex. http://localhost:8080)
+     * @param uri      Location of the jenkins server (ex. http://localhost:8080)
      * @param username Username to use when connecting
      * @param password Password or auth token to use when connecting
      */
@@ -124,14 +125,15 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
     /**
      * Create an authenticated Jenkins HTTP client
      *
-     * @param uri Location of the jenkins server (ex. http://localhost:8080)
-     * @param builder Configured HttpClientBuilder to be used
+     * @param uri      Location of the jenkins server (ex. http://localhost:8080)
+     * @param builder  Configured HttpClientBuilder to be used
      * @param username Username to use when connecting
      * @param password Password or auth token to use when connecting
      */
     public JenkinsHttpClient(URI uri, HttpClientBuilder builder, String username, String password) {
         this(uri, addAuthentication(builder, uri, username, password));
-        if (isNotBlank(username)) {
+
+        if (StringUtils.isNotBlank(username)) {
             localContext = new BasicHttpContext();
             localContext.setAttribute("preemptive-auth", new BasicScheme());
         }
@@ -234,7 +236,7 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
         }
 
         // Prepare file parameters
-        if(fileParams != null && !(fileParams.isEmpty())) {
+        if (fileParams != null && !(fileParams.isEmpty())) {
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 
@@ -295,10 +297,12 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
                 queryParams.add(param + "=" + EncodingUtils.formParameter(data.get(param)));
             }
 
-            queryParams.add("json=" + EncodingUtils.formParameter(JSONObject.fromObject(data).toString()));
+            // queryParams.add("json=" + EncodingUtils.formParameter(JSONObject.fromObject(data).toString()));
+            queryParams.add("json=" + EncodingUtils.formParameter(JSONUtil.writeValueAsString(data)));
             String value = mapper.writeValueAsString(data);
             StringEntity stringEntity = new StringEntity(value, ContentType.APPLICATION_FORM_URLENCODED);
-            request = new HttpPost(UrlUtils.toNoApiUri(uri, context, path) + StringUtils.join(queryParams, "&"));
+            //request = new HttpPost(UrlUtils.toNoApiUri(uri, context, path) + StringUtils.join(queryParams, "&"));
+            request = new HttpPost(UrlUtils.toNoApiUri(uri, context, path) + Joiner.on("&").join(queryParams));
             request.setEntity(stringEntity);
         } else {
             request = new HttpPost(UrlUtils.toNoApiUri(uri, context, path));
@@ -411,7 +415,7 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
      */
     @Override
     public void post(String path, boolean crumbFlag) throws IOException {
-        post(path, null, null,null, crumbFlag);
+        post(path, null, null, null, crumbFlag);
     }
 
     /**
@@ -444,19 +448,18 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
         }
     }
 
-    
+
     /**
      * Add authentication to supplied builder.
-     * @param builder the builder to configure
-     * @param uri the server URI
+     *
+     * @param builder  the builder to configure
+     * @param uri      the server URI
      * @param username the username
      * @param password the password
      * @return the passed in builder
      */
-    protected static HttpClientBuilder addAuthentication(final HttpClientBuilder builder, 
-            final URI uri, final String username,
-            String password) {
-        if (isNotBlank(username)) {
+    protected static HttpClientBuilder addAuthentication(final HttpClientBuilder builder, final URI uri, final String username, String password) {
+        if (StringUtils.isNotBlank(username)) {
             CredentialsProvider provider = new BasicCredentialsProvider();
             AuthScope scope = new AuthScope(uri.getHost(), uri.getPort(), "realm");
             UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username, password);
@@ -468,28 +471,26 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
         return builder;
     }
 
-    
     /**
      * Get the local context.
+     *
      * @return context
      */
     protected HttpContext getLocalContext() {
         return localContext;
     }
 
-    
+
     /**
      * Set the local context.
+     *
      * @param localContext the context
      */
     protected void setLocalContext(final HttpContext localContext) {
         this.localContext = localContext;
     }
 
-    
-    
-    
-    
+
     private <T extends BaseModel> T objectFromResponse(Class<T> cls, HttpResponse response) throws IOException {
         InputStream content = response.getEntity().getContent();
         byte[] bytes = IOUtils.toByteArray(content);

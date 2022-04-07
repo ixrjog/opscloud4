@@ -14,9 +14,9 @@ import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExtendedBaseTicketProcessor;
 import com.baiyi.opscloud.workorder.validator.QueueValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -81,7 +81,7 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
                 .regionId(entry.getRegionId())
                 .build();
         List<DatasourceInstanceAsset> list = dsInstanceAssetService.queryAssetByAssetParam(asset);
-        if (CollectionUtils.isNotEmpty(list)) {
+        if (!CollectionUtils.isEmpty(list)) {
             if (list.stream().anyMatch(e -> e.getName().equals(entry.getQueueName()))) {
                 throw new TicketVerifyException("校验工单条目失败: 该地域SQS已存在！");
             }
