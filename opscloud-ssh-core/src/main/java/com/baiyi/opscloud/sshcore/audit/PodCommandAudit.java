@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class PodCommandAudit extends AbstractCommandAudit {
 
-    private static final String INPUT_REGEX = ".*# \\u001b.*";
+    // fix 匹配\u001b 0次或1次
+    private static final String INPUT_REGEX = ".*# \\u001b?.*";
 
     private static final String BS_REGEX = ".?\b\\u001b\\[J";
 
