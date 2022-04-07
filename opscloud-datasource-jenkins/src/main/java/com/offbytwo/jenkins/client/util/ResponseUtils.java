@@ -20,10 +20,7 @@ public final class ResponseUtils {
     private ResponseUtils() {
         //do nothing
     }
-    
-    
-    
-    
+
     /**
      * Get Jenkins version from supplied response if any.
      * @param response the response
@@ -33,6 +30,5 @@ public final class ResponseUtils {
         final Header[] hdrs = response.getHeaders("X-Jenkins");
         return hdrs.length == 0 ? "" : hdrs[0].getValue();
     }
-    
-    
+
 }
