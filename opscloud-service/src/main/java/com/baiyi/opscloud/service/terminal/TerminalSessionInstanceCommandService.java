@@ -18,4 +18,5 @@ public interface TerminalSessionInstanceCommandService {
     List<TerminalSessionInstanceCommand> queryByInstanceId(Integer terminalSessionInstanceId);
 
     DataTable<TerminalSessionInstanceCommand> queryTerminalSessionInstanceCommandPage(TerminalSessionInstanceCommandParam.InstanceCommandPageQuery pageQuery);
+
 }

@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 /**
  * @Author baiyi
@@ -23,8 +23,8 @@ public class TerminalSessionInstanceCommandParam {
     @ApiModel
     public static class InstanceCommandPageQuery extends PageParam implements IExtend {
 
-        @ApiModelProperty(value = "会话实例id")
-        @Valid
+        @ApiModelProperty(value = "会话实例ID")
+        @Min(value = 1,message = "必需指定会话实例ID")
         private Integer terminalSessionInstanceId;
 
         @ApiModelProperty(value = "查询参数")
@@ -33,4 +33,5 @@ public class TerminalSessionInstanceCommandParam {
         private Boolean extend;
 
     }
+
 }
