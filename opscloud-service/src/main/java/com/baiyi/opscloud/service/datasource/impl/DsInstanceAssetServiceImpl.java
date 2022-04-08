@@ -141,6 +141,20 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
     }
 
     @Override
+    public List<DatasourceInstanceAsset> acqAssetByAssetParam(DatasourceInstanceAsset asset) {
+        Example example = new Example(DatasourceInstanceAsset.class);
+        Example.Criteria criteria = example.createCriteria();
+        if (!StringUtils.isEmpty(asset.getAssetType()))
+            criteria.andEqualTo("assetType", asset.getAssetType());
+        if (asset.getIsActive() != null)
+            criteria.andEqualTo("isActive", asset.getIsActive());
+        if (!StringUtils.isEmpty(asset.getAssetKey()))
+            criteria.andLike("assetKey", asset.getAssetKey());
+        example.setOrderByClause("create_time");
+        return dsInstanceAssetMapper.selectByExample(example);
+    }
+
+    @Override
     public List<String> queryInstanceAssetTypes(String instanceUuid) {
         return dsInstanceAssetMapper.queryInstanceAssetTypes(instanceUuid);
     }

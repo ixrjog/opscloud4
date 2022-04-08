@@ -33,6 +33,14 @@ public interface DsInstanceAssetService {
 
     List<DatasourceInstanceAsset> queryAssetByAssetParam(DatasourceInstanceAsset asset);
 
+    /**
+     * 不模糊匹配
+     *
+     * @param asset
+     * @return
+     */
+    List<DatasourceInstanceAsset> acqAssetByAssetParam(DatasourceInstanceAsset asset);
+
     DataTable<DatasourceInstanceAsset> queryPageByParam(DsAssetParam.UserPermissionAssetPageQuery pageQuery);
 
     int countByInstanceAssetType(String instanceUuid, String assetType);

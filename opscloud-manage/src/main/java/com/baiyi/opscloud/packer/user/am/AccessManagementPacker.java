@@ -78,7 +78,7 @@ public class AccessManagementPacker {
                 .assetKey(user.getUsername())
                 .isActive(true)
                 .build();
-        List<DatasourceInstanceAsset> data = dsInstanceAssetService.queryAssetByAssetParam(param);
+        List<DatasourceInstanceAsset> data = dsInstanceAssetService.acqAssetByAssetParam(param);
         if (CollectionUtils.isEmpty(data)) return Collections.emptyList();
 
         List<DsAssetVO.Asset> assets = BeanCopierUtil.copyListProperties(data, DsAssetVO.Asset.class).stream().peek(e ->
