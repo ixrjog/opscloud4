@@ -166,7 +166,7 @@ public class UserVO {
         @ApiModelProperty(value = "微信")
         private String wechat;
 
-        @DesensitizedField(type = SensitiveTypeEnum.MOBILE_PHONE)
+        // @DesensitizedField(type = SensitiveTypeEnum.MOBILE_PHONE)
         @ApiModelProperty(value = "手机")
         private String phone;
 
