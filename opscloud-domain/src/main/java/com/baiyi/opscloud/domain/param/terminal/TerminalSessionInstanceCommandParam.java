@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  * @Author baiyi
@@ -25,6 +26,7 @@ public class TerminalSessionInstanceCommandParam {
 
         @ApiModelProperty(value = "会话实例ID")
         @Min(value = 1,message = "必需指定会话实例ID")
+        @NotNull
         private Integer terminalSessionInstanceId;
 
         @ApiModelProperty(value = "查询参数")
