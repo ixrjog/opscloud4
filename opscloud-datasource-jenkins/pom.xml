@@ -30,6 +30,7 @@
             <artifactId>jackson-annotations</artifactId>
             <version>2.13.2</version>
         </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
@@ -49,39 +50,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jvnet.hudson</groupId>
-            <artifactId>xstream</artifactId>
-            <version>1.4.7-jenkins-1</version>
-            <scope>test</scope>
-        </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>net.sf.json-lib</groupId>-->
-<!--            <artifactId>json-lib</artifactId>-->
-<!--            <version>2.4</version>-->
-<!--            <classifier>jdk15</classifier>-->
-<!--        </dependency>-->
-
-        <!-- Musties -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.13</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-            <version>4.4.15</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
         </dependency>
@@ -90,12 +58,6 @@
             <groupId>jaxen</groupId>
             <artifactId>jaxen</artifactId>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>com.offbytwo.jenkins</groupId>-->
-<!--            <artifactId>jenkins-client</artifactId>-->
-<!--            <version>0.3.8</version>-->
-<!--        </dependency>-->
 
     </dependencies>
 
