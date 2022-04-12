@@ -159,16 +159,32 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     @AssetBusinessRelation // 资产绑定业务对象
+<<<<<<< HEAD
     public UserVO.User addUser(UserParam.CreateUser createUser) {
         User newUser = UserConverter.toDO(createUser);
+=======
+    public UserVO.User addUser(UserVO.User user) {
+        User newUser = UserConverter.toDO(user);
+        if (StringUtils.isNotBlank(newUser.getPassword())) {
+            RegexUtil.checkPasswordRule(newUser.getPassword());
+        } else {
+            newUser.setPassword(PasswordUtil.getPW(20));
+        }
+>>>>>>> 46ab26cdb71334eb6263a93e93e4d1aa8a32ee71
         // 校验用户名
         RegexUtil.isUsernameRule(newUser.getUsername());
         newUser.setMfa(false);
         newUser.setForceMfa(false);
         userService.add(newUser);
+<<<<<<< HEAD
         createUser.setId(newUser.getId()); // 给切面提供businessId
 
         UserVO.User userVO = BeanCopierUtil.copyProperties(createUser, UserVO.User.class);
+=======
+        // 给切面提供businessId
+        user.setId(newUser.getId());
+        UserVO.User userVO = BeanCopierUtil.copyProperties(user, UserVO.User.class);
+>>>>>>> 46ab26cdb71334eb6263a93e93e4d1aa8a32ee71
         userPacker.wrap(userVO, SimpleExtend.EXTEND);
         return userVO;
     }
