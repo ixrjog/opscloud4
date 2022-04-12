@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.user.converter;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
+import com.baiyi.opscloud.common.util.PasswordUtil;
 import com.baiyi.opscloud.common.util.RegexUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.user.UserParam;
@@ -20,6 +21,7 @@ public class UserConverter {
 
     /**
      * VO to DO
+     *
      * @param user
      * @return
      */
@@ -36,14 +38,17 @@ public class UserConverter {
     }
 
     public static User toDO(UserParam.CreateUser user) {
+        RegexUtil.isUsernameRule(user.getUsername());
         User pre = BeanCopierUtil.copyProperties(user, User.class);
-        if (!StringUtils.isEmpty(pre.getPassword()))
+        if (StringUtils.isNotEmpty(pre.getPassword())) {
             RegexUtil.checkPasswordRule(pre.getPassword());
+        } else {
+            pre.setPassword(PasswordUtil.getPW(20));
+        }
         if (!RegexUtil.isPhone(user.getPhone()))
             pre.setPhone(StringUtils.EMPTY);
-        if (StringUtils.isEmpty(user.getUuid())) {
+        if (StringUtils.isEmpty(user.getUuid()))
             pre.setUuid(IdUtil.buildUUID());
-        }
         return pre;
     }
 

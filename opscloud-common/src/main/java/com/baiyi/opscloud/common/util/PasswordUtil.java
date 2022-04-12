@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.common.util;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
 import java.util.Collections;
@@ -59,9 +60,7 @@ public class PasswordUtil {
         List<Character> lst = Lists.newArrayList();
         for (char value : c) lst.add(value);
         Collections.shuffle(lst);
-        StringBuilder resultStr = new StringBuilder();
-        for (Character character : lst) resultStr.append(character);
-        return resultStr.toString();
+        return Joiner.on("").join(lst);
     }
 
     /**

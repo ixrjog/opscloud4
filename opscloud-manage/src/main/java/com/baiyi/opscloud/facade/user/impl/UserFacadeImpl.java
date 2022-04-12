@@ -161,20 +161,11 @@ public class UserFacadeImpl implements UserFacade {
     @AssetBusinessRelation // 资产绑定业务对象
     public UserVO.User addUser(UserParam.CreateUser createUser) {
         User newUser = UserConverter.toDO(createUser);
-
-        if (StringUtils.isNotBlank(newUser.getPassword())) {
-            RegexUtil.checkPasswordRule(newUser.getPassword());
-        } else {
-            newUser.setPassword(PasswordUtil.getPW(20));
-        }
-        // 校验用户名
-        RegexUtil.isUsernameRule(newUser.getUsername());
         newUser.setMfa(false);
         newUser.setForceMfa(false);
         userService.add(newUser);
-
-        createUser.setId(newUser.getId()); // 给切面提供businessId
-
+        // 给切面提供businessId
+        createUser.setId(newUser.getId());
         UserVO.User userVO = BeanCopierUtil.copyProperties(createUser, UserVO.User.class);
         userPacker.wrap(userVO, SimpleExtend.EXTEND);
         return userVO;
