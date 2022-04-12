@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.apache.commons.lang3.StringUtils;
+
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -98,14 +99,14 @@ public class KubernetesTerminalController extends SimpleAuthentication {
         String state = getState(message);
         if (StringUtils.isEmpty(this.terminalSession.getUsername())) {
             if (MessageState.LOGIN.getState().equals(state))       // 鉴权并更新会话信息
-                setUser(authentication(new GsonBuilder().create().fromJson(message, SimpleLoginMessage.class)));
+                updateSessionUsername(hasLogin(new GsonBuilder().create().fromJson(message, SimpleLoginMessage.class)));
         } else {
             SessionUtil.setUsername(this.terminalSession.getUsername());
         }
         KubernetesTerminalProcessFactory.getProcessByKey(state).process(message, session, terminalSession);
     }
 
-    private void setUser(String username) {
+    private void updateSessionUsername(String username) {
         terminalSession.setUsername(username);
         terminalSessionService.update(terminalSession);
     }

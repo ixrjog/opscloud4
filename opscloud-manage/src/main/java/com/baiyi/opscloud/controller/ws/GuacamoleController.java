@@ -43,7 +43,7 @@ public final class GuacamoleController extends BaseGuacamoleTunnel {
         SimpleLoginMessage simpleLogin = SimpleLoginMessage.builder()
                 .token(token)
                 .build();
-        String username = simpleAuthentication.authentication(simpleLogin);
+        String username = simpleAuthentication.hasLogin(simpleLogin);
         return super.createTunnel(session, endpointConfig);
     }
 
