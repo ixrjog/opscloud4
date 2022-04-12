@@ -5,8 +5,8 @@ import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.jenkins.base.BaseJenkinsTest;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
-import com.offbytwo.jenkins.model.Computer;
-import com.offbytwo.jenkins.model.ComputerWithDetails;
+import com.baiyi.opscloud.datasource.jenkins.model.Computer;
+import com.baiyi.opscloud.datasource.jenkins.model.ComputerWithDetails;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;

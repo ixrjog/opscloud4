@@ -2,8 +2,8 @@ package com.baiyi.opscloud.datasource.jenkins.driver;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
-import com.offbytwo.jenkins.JenkinsServer;
-import com.offbytwo.jenkins.model.Computer;
+import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
+import com.baiyi.opscloud.datasource.jenkins.model.Computer;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

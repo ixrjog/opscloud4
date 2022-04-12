@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.jenkins.server;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
-import com.offbytwo.jenkins.JenkinsServer;
+import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
 
 import java.net.URI;
 import java.net.URISyntaxException;
