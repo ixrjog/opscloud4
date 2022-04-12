@@ -38,8 +38,10 @@ public class RegexUtil {
      * @param username
      * @return
      */
-    public static boolean isUsernameRule(String username) {
-        return username.matches(RegexMatches.USERNAME);
+    public static void isUsernameRule(String username) {
+        if (!username.matches(RegexMatches.USERNAME)) {
+            throw new CommonRuntimeException(ErrorEnum.USER_USERNAME_NON_COMPLIANCE_WITH_RULES);
+        }
     }
 
     /**
