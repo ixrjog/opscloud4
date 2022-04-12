@@ -15,8 +15,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
-import com.offbytwo.jenkins.model.Computer;
-import com.offbytwo.jenkins.model.ComputerWithDetails;
+import com.baiyi.opscloud.datasource.jenkins.model.Computer;
+import com.baiyi.opscloud.datasource.jenkins.model.ComputerWithDetails;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

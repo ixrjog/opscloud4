@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.jenkins.util;
 
-import com.offbytwo.jenkins.client.util.EncodingUtils;
+import com.baiyi.opscloud.datasource.jenkins.client.util.EncodingUtils;
 
 /**
  * @Author baiyi

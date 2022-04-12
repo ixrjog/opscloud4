@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.offbytwo.jenkins.model.ComputerWithDetails;
+import com.baiyi.opscloud.datasource.jenkins.model.ComputerWithDetails;
 
 /**
  * @Author baiyi
