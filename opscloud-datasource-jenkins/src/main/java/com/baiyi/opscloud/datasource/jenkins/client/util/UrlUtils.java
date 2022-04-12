@@ -53,7 +53,7 @@ public final class UrlUtils {
         if (sb.charAt(sb.length() - 1) != '/') sb.append('/');
         sb.append("job/");
         final String[] jobNameParts = jobName.split("/");
-        
+
         for (int i = 0; i < jobNameParts.length; i++) {
             sb.append(EncodingUtils.encode(jobNameParts[i]));
             if (i != jobNameParts.length - 1) sb.append('/');
@@ -115,9 +115,7 @@ public final class UrlUtils {
         sb.append(path2);
         return sb.toString();
     }
-    
-    
-    
+
     /**
      * Create a JSON URI from the supplied parameters.
      * @param uri the server URI
@@ -137,9 +135,7 @@ public final class UrlUtils {
         }
         return uri.resolve("/").resolve(p.replace(" ", "%20"));
     }
-    
-    
-    
+
     /**
      * Create a URI from the supplied parameters.
      * @param uri the server URI
@@ -151,7 +147,5 @@ public final class UrlUtils {
         final String p = path.matches("(?i)https?://.*") ? path : join(context, path);
         return uri.resolve("/").resolve(p);
     }
-    
-    
-    
+
 }

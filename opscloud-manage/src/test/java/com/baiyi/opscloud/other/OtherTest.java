@@ -43,7 +43,7 @@ public class OtherTest extends BaseUnit {
 
 
     @Test
-    void dddd() {
+    void test1() {
         ATest a = ATest.builder()
                 .id("1")
                 .build();
@@ -63,7 +63,7 @@ public class OtherTest extends BaseUnit {
     }
 
     @Test
-    void ddd2() {
+    void test2() {
         // 校验工单条目失败: 消息保留周期应介于1分钟至14天之间、最大消息大小应介于1KB和256KB之间
         Map<String, String> attributes = Maps.newHashMap();
         attributes.put("DelaySeconds", "1");

@@ -50,8 +50,8 @@ import java.util.*;
  * @author <a href="mailto:hboutemy@apache.org">Hervé Boutemy</a>
  * @see <a href="https://cwiki.apache.org/confluence/display/MAVENOLD/Versioning">"Versioning" on Maven Wiki</a>
  */
-public class ComparableVersion
-        implements Comparable<ComparableVersion> {
+public class ComparableVersion implements Comparable<ComparableVersion> {
+
     private String value;
 
     private String canonical;
@@ -127,10 +127,8 @@ public class ComparableVersion
     /**
      * Represents a string in the version item list, usually a qualifier.
      */
-    static class StringItem
-            implements Item {
-        private static final List<String> QUALIFIERS =
-                Arrays.asList("alpha", "beta", "milestone", "rc", "snapshot", "", "sp");
+    static class StringItem implements Item {
+        private static final List<String> QUALIFIERS = Arrays.asList("alpha", "beta", "milestone", "rc", "snapshot", "", "sp");
 
         private static final Properties ALIASES = new Properties();
 

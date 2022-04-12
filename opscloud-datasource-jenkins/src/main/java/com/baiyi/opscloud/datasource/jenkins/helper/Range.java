@@ -115,7 +115,7 @@ public final class Range {
     public static final class Builder {
         private final Range range;
 
-        protected Builder() {
+        private Builder() {
             this.range = new Range();
         }
 
@@ -130,8 +130,8 @@ public final class Range {
         }
 
         public Range only(int only) {
-            this.range.from = new Integer(only);
-            this.range.to = new Integer(only + 1);
+            this.range.from = only;
+            this.range.to = only + 1;
             return this.range;
         }
     }
