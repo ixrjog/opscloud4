@@ -1,11 +1,11 @@
 package com.baiyi.opscloud.domain.param.user;
 
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.IFilterTag;
 import com.baiyi.opscloud.domain.param.PageParam;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -82,7 +82,6 @@ public class UserBusinessPermissionParam {
         private Boolean filterTag;
 
     }
-
 
     @Data
     @EqualsAndHashCode(callSuper = true)

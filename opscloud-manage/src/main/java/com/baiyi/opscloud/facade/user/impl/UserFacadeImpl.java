@@ -159,18 +159,16 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     @AssetBusinessRelation // 资产绑定业务对象
-    public UserVO.User addUser(UserVO.User user) {
-        User newUser = UserConverter.toDO(user);
-//        if (StringUtils.isEmpty(newUser.getPassword()))
-//            throw new CommonRuntimeException("密码不能为空");
+    public UserVO.User addUser(UserParam.CreateUser createUser) {
+        User newUser = UserConverter.toDO(createUser);
         // 校验用户名
         RegexUtil.isUsernameRule(newUser.getUsername());
         newUser.setMfa(false);
         newUser.setForceMfa(false);
         userService.add(newUser);
-        user.setId(newUser.getId()); // 给切面提供businessId
+        createUser.setId(newUser.getId()); // 给切面提供businessId
 
-        UserVO.User userVO = BeanCopierUtil.copyProperties(user, UserVO.User.class);
+        UserVO.User userVO = BeanCopierUtil.copyProperties(createUser, UserVO.User.class);
         userPacker.wrap(userVO, SimpleExtend.EXTEND);
         return userVO;
     }
@@ -186,7 +184,7 @@ public class UserFacadeImpl implements UserFacade {
         if (!checkUser.getUsername().equals(SessionUtil.getUsername())) {
             int accessLevel = userPermissionFacade.getUserAccessLevel(SessionUtil.getUsername());
             if (accessLevel < AccessLevel.OPS.getLevel()) {
-                throw new CommonRuntimeException("权限不足:需要管理员才能修改其他用户信息!");
+                throw new CommonRuntimeException("权限不足: 需要管理员才能修改其他用户信息!");
             }
         }
         User updateUser = UserConverter.toDO(user);
