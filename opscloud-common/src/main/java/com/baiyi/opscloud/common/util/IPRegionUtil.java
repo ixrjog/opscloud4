@@ -47,15 +47,14 @@ public class IPRegionUtil {
             return true;
         for (String mask : masks) {
             try {
-                if (!IPRegionUtil.isInRange(network, mask))
-                    return false;
+                if (IPRegionUtil.isInRange(network, mask))
+                    return true;
             } catch (Exception e) {
                 // 格式错误
                 log.error(e.getMessage());
             }
         }
-        return true;
-
+        return false;
     }
 
 }
