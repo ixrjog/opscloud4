@@ -18,19 +18,21 @@ public class UserConverter {
     private UserConverter() {
     }
 
-    public static User toDO(UserParam.CreateUser user) {
-        RegexUtil.isUsernameRule(user.getUsername());
-        User pre = BeanCopierUtil.copyProperties(user, User.class);
-        if (StringUtils.isNotEmpty(pre.getPassword())) {
-            RegexUtil.checkPasswordRule(pre.getPassword());
+    public static User toDO(UserParam.CreateUser createUser) {
+        RegexUtil.isUsernameRule(createUser.getUsername());
+        User user = BeanCopierUtil.copyProperties(createUser, User.class);
+        if (StringUtils.isNotEmpty(user.getPassword())) {
+            RegexUtil.checkPasswordRule(user.getPassword());
         } else {
-            pre.setPassword(PasswordUtil.generatorPassword(20, true));
+            user.setPassword(PasswordUtil.generatorPassword(20, true));
         }
-        if (!RegexUtil.isPhone(user.getPhone()))
-            pre.setPhone(StringUtils.EMPTY);
-        if (StringUtils.isEmpty(user.getUuid()))
-            pre.setUuid(IdUtil.buildUUID());
-        return pre;
+        if (!RegexUtil.isPhone(createUser.getPhone()))
+            user.setPhone(StringUtils.EMPTY);
+        if (StringUtils.isEmpty(createUser.getUuid()))
+            user.setUuid(IdUtil.buildUUID());
+        user.setMfa(false);
+        user.setForceMfa(false);
+        return user;
     }
 
     public static User toDO(UserParam.UpdateUser updateUser) {

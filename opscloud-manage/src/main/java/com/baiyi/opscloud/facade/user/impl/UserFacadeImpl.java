@@ -165,8 +165,6 @@ public class UserFacadeImpl implements UserFacade {
     @AssetBusinessRelation
     public UserVO.User addUser(UserParam.CreateUser createUser) {
         User preCreateUser = UserConverter.toDO(createUser);
-        // preCreateUser.setMfa(false);
-        // preCreateUser.setForceMfa(false);
         userService.add(preCreateUser);
         if (BooleanUtils.isTrue(createUser.getNeedInitializeDefaultConfiguration())) {
             userHandler.postCreateUserHandle(preCreateUser);
