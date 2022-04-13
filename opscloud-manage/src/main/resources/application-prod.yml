@@ -8,6 +8,12 @@ logging:
 opscloud:
   version: 4.0.8
   dataPath: ${HOME}/opscloud-data
+  createUser:
+    roles:
+      - base
+    userGroups:
+      - vpn-users
+      - confluence-users
 
 # 白名单配置
 white:
