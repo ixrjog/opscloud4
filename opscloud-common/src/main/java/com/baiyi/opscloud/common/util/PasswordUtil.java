@@ -60,15 +60,15 @@ public class PasswordUtil {
      */
     private static String generatorSafePW(int length) {
         if (length < 8) length = 8;
-        String resultStr = getChar(NUM_CHAR, 1) +
+        String pwStr = getChar(NUM_CHAR, 1) +
                 getChar(UPPER_CHAR, 1) +
                 getChar(LOWER_CHAR, 1) +
                 getChar(SYBL_CHAR, 1) +
                 getChar(NUM_CHAR + UPPER_CHAR + LOWER_CHAR + SYBL_CHAR, length - 4);
-        return shuffleForSortingString(resultStr);
+        return shuffleForSortingString(pwStr);
     }
 
-    public static String shuffleForSortingString(String s) {
+    private static String shuffleForSortingString(String s) {
         char[] c = s.toCharArray();
         List<Character> lst = Lists.newArrayList();
         for (char value : c) lst.add(value);
