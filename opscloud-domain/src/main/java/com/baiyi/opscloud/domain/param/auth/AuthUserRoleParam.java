@@ -3,9 +3,7 @@ package com.baiyi.opscloud.domain.param.auth;
 import com.baiyi.opscloud.domain.param.PageParam;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -32,7 +30,9 @@ public class AuthUserRoleParam {
     }
 
     @Data
+    @Builder
     @NoArgsConstructor
+    @AllArgsConstructor
     @ApiModel
     public static class UpdateUserRole {
 

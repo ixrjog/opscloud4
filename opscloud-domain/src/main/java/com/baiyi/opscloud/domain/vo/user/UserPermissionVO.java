@@ -2,9 +2,7 @@ package com.baiyi.opscloud.domain.vo.user;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import io.swagger.annotations.ApiModel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -34,13 +32,14 @@ public class UserPermissionVO {
     }
 
     @Data
+    @Builder
     @NoArgsConstructor
+    @AllArgsConstructor
     @ApiModel
     public static class UserBusinessPermission {
 
         @NotNull(message = "用户id不能为空")
         private Integer userId;
-
 
         @NotNull(message = "业务类型不能为空")
         private Integer businessType;

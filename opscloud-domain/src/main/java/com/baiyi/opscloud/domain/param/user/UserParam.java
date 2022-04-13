@@ -87,10 +87,12 @@ public class UserParam {
             return username;
         }
 
-
         private Integer assetId;
 
         private Integer id;
+
+        @ApiModelProperty(value = "初始化默认配置", example = "false")
+        private Boolean needInitializeDefaultConfiguration;
 
         @ApiModelProperty(value = "用户名")
         private String username;

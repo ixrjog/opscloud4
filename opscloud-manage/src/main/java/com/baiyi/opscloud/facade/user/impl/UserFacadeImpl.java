@@ -38,6 +38,7 @@ import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
 import com.baiyi.opscloud.facade.user.converter.UserConverter;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
+import com.baiyi.opscloud.facade.user.handler.UserHandler;
 import com.baiyi.opscloud.otp.OtpUtil;
 import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.packer.user.UserPacker;
@@ -47,6 +48,7 @@ import com.baiyi.opscloud.service.user.*;
 import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -97,6 +99,8 @@ public class UserFacadeImpl implements UserFacade {
     private final UserCredentialService userCredentialService;
 
     private final MfaAuthHelper mfaAuthHelper;
+
+    private final UserHandler userHandler;
 
     @Override
     public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {
@@ -164,6 +168,9 @@ public class UserFacadeImpl implements UserFacade {
         // preCreateUser.setMfa(false);
         // preCreateUser.setForceMfa(false);
         userService.add(preCreateUser);
+        if (BooleanUtils.isTrue(createUser.getNeedInitializeDefaultConfiguration())) {
+            userHandler.postCreateUserHandle(preCreateUser);
+        }
         // 给切面提供businessId
         createUser.setId(preCreateUser.getId());
         UserVO.User userVO = BeanCopierUtil.copyProperties(createUser, UserVO.User.class);
