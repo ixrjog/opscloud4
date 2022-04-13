@@ -38,7 +38,7 @@ public interface UserFacade {
 
     UserVO.User addUser(UserParam.CreateUser createUser);
 
-    void updateUser(UserVO.User user);
+    void updateUser(UserParam.UpdateUser updateUser);
 
     void setUserActive(String username);
 

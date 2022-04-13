@@ -86,8 +86,8 @@ public class UserController {
 
     @ApiOperation(value = "更新用户")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateUser(@RequestBody @Valid UserVO.User user) {
-        userFacade.updateUser(user);
+    public HttpResult<Boolean> updateUser(@RequestBody @Valid UserParam.UpdateUser updateUser) {
+        userFacade.updateUser(updateUser);
         return HttpResult.SUCCESS;
     }
 

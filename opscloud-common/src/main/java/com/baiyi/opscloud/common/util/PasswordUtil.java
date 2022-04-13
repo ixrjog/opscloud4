@@ -44,7 +44,7 @@ public class PasswordUtil {
      * @param length 长度>=8
      * @return
      */
-    public static String getPW(int length) {
+    public static String generatorPW(int length) {
         if (length < 8) length = 8;
         StringBuilder resultStr = new StringBuilder()
                 .append(getChar(NUM_CHAR, 1))

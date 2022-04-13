@@ -158,7 +158,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    @AssetBusinessRelation // 资产绑定业务对象
+    @AssetBusinessRelation
     public UserVO.User addUser(UserParam.CreateUser createUser) {
         User newUser = UserConverter.toDO(createUser);
         newUser.setMfa(false);
@@ -174,20 +174,20 @@ public class UserFacadeImpl implements UserFacade {
     /**
      * 此处增强鉴权，只有管理员可以修改其他用户信息，否则只能修改本人信息
      *
-     * @param user
+     * @param updateUser
      */
     @Override
-    public void updateUser(UserVO.User user) {
-        User checkUser = userService.getById(user.getId());
+    public void updateUser(UserParam.UpdateUser updateUser) {
+        User checkUser = userService.getById(updateUser.getId());
         if (!checkUser.getUsername().equals(SessionUtil.getUsername())) {
             int accessLevel = userPermissionFacade.getUserAccessLevel(SessionUtil.getUsername());
             if (accessLevel < AccessLevel.OPS.getLevel()) {
                 throw new CommonRuntimeException("权限不足: 需要管理员才能修改其他用户信息!");
             }
         }
-        User updateUser = UserConverter.toDO(user);
+        User preUpdateUser = UserConverter.toDO(updateUser);
         updateUser.setUsername(checkUser.getUsername());
-        userService.updateBySelective(updateUser);
+        userService.updateBySelective(preUpdateUser);
     }
 
     @Override

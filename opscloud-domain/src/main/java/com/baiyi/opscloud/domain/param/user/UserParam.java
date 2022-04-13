@@ -20,7 +20,51 @@ import lombok.experimental.SuperBuilder;
  */
 public class UserParam {
 
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
     public static class UpdateUser {
+
+        private Integer id;
+
+        @ApiModelProperty(value = "用户名")
+        private String username;
+
+        @ApiModelProperty(value = "前端框架用户UUID")
+        private String uuid;
+
+        @ApiModelProperty(value = "密码")
+        private String password;
+
+        @ApiModelProperty(value = "姓名")
+        private String name;
+
+        @ApiModelProperty(value = "显示名")
+        private String displayName;
+
+        @ApiModelProperty(value = "邮箱")
+        private String email;
+
+        private Boolean isActive;
+
+        private String wechat;
+
+        @ApiModelProperty(value = "手机")
+        private String phone;
+
+        @ApiModelProperty(value = "启用MFA")
+        private Boolean mfa;
+
+        private Boolean forceMfa;
+
+        private String createdBy;
+
+        @ApiModelProperty(value = "数据源")
+        private String source;
+
+        private String comment;
 
     }
 
@@ -48,50 +92,38 @@ public class UserParam {
 
         private Integer id;
 
-        /**
-         * 用户名
-         */
+        @ApiModelProperty(value = "用户名")
         private String username;
 
-        /**
-         * 前端框架用户UUID
-         */
+        @ApiModelProperty(value = "前端框架用户UUID")
         private String uuid;
 
+        @ApiModelProperty(value = "密码")
         private String password;
 
-        /**
-         * 姓名
-         */
+        @ApiModelProperty(value = "姓名")
         private String name;
 
+        @ApiModelProperty(value = "显示名")
         private String displayName;
 
-        /**
-         * 邮箱
-         */
+        @ApiModelProperty(value = "邮箱")
         private String email;
         private final Boolean isActive = true;
 
         private String wechat;
 
-        /**
-         * 手机
-         */
+        @ApiModelProperty(value = "手机")
         private String phone;
 
-        /**
-         * 启用MFA
-         */
+        @ApiModelProperty(value = "启用MFA")
         private final Boolean mfa = false;
 
         private final Boolean forceMfa = false;
 
         private String createdBy;
 
-        /**
-         * 数据源
-         */
+        @ApiModelProperty(value = "数据源")
         private String source;
 
         private String comment;
