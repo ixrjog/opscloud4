@@ -109,6 +109,7 @@ public class UserParam {
 
         @ApiModelProperty(value = "邮箱")
         private String email;
+
         private final Boolean isActive = true;
 
         private String wechat;
@@ -119,6 +120,7 @@ public class UserParam {
         @ApiModelProperty(value = "启用MFA")
         private final Boolean mfa = false;
 
+        @ApiModelProperty(value = "强制启用MFA")
         private final Boolean forceMfa = false;
 
         private String createdBy;

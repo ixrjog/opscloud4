@@ -160,12 +160,12 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     @AssetBusinessRelation
     public UserVO.User addUser(UserParam.CreateUser createUser) {
-        User newUser = UserConverter.toDO(createUser);
-        newUser.setMfa(false);
-        newUser.setForceMfa(false);
-        userService.add(newUser);
+        User preCreateUser = UserConverter.toDO(createUser);
+        // preCreateUser.setMfa(false);
+        // preCreateUser.setForceMfa(false);
+        userService.add(preCreateUser);
         // 给切面提供businessId
-        createUser.setId(newUser.getId());
+        createUser.setId(preCreateUser.getId());
         UserVO.User userVO = BeanCopierUtil.copyProperties(createUser, UserVO.User.class);
         userPacker.wrap(userVO, SimpleExtend.EXTEND);
         return userVO;
@@ -239,7 +239,7 @@ public class UserFacadeImpl implements UserFacade {
         AccessToken pre = AccessToken.builder()
                 .username(SessionUtil.getUsername())
                 .tokenId(IdUtil.buildUUID())
-                .token(PasswordUtil.getRandomPW(32))
+                .token(PasswordUtil.generatorRandomPW(32))
                 .expiredTime(accessToken.getExpiredTime())
                 .comment(accessToken.getComment())
                 .build();
