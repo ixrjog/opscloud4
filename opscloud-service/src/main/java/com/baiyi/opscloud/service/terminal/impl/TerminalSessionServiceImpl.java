@@ -43,9 +43,11 @@ public class TerminalSessionServiceImpl implements TerminalSessionService {
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(pageQuery.getUsername())) {
             criteria.andLike("username", SQLUtil.toLike(pageQuery.getUsername()));
+        }else{
+            criteria.andIsNotNull("username");
         }
-        if(!StringUtils.isEmpty(pageQuery.getSessionType()))
-            criteria.andEqualTo("sessionType",pageQuery.getSessionType());
+        if (!StringUtils.isEmpty(pageQuery.getSessionType()))
+            criteria.andEqualTo("sessionType", pageQuery.getSessionType());
         example.setOrderByClause("create_time desc");
         List<TerminalSession> data = sessionMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
