@@ -57,7 +57,7 @@ public class BaseServerCommand {
 
     private Terminal terminal;
 
-    private final static String[] TABLE_FIELD_NAMES = {"ID", "Server Name", "ServerGroup Name", "Env", "IP", "Tag", "Account", "Comment"};
+    private final static String[] TABLE_FIELD_NAMES = {"ID", "Server", "ServerGroup", "Env", "IP", "Tag", "Account", "Comment"};
 
     @Autowired
     @Lazy
