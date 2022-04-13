@@ -24,7 +24,7 @@ public class UserConverter {
         if (StringUtils.isNotEmpty(pre.getPassword())) {
             RegexUtil.checkPasswordRule(pre.getPassword());
         } else {
-            pre.setPassword(PasswordUtil.generatorPW(20));
+            pre.setPassword(PasswordUtil.generatorPassword(20, true));
         }
         if (!RegexUtil.isPhone(user.getPhone()))
             pre.setPhone(StringUtils.EMPTY);

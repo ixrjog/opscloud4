@@ -239,7 +239,7 @@ public class UserFacadeImpl implements UserFacade {
         AccessToken pre = AccessToken.builder()
                 .username(SessionUtil.getUsername())
                 .tokenId(IdUtil.buildUUID())
-                .token(PasswordUtil.generatorRandomPW(32))
+                .token(PasswordUtil.generatorPassword(32, false))
                 .expiredTime(accessToken.getExpiredTime())
                 .comment(accessToken.getComment())
                 .build();

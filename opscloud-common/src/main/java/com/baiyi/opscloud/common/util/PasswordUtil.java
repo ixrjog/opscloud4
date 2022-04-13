@@ -20,20 +20,34 @@ public class PasswordUtil {
     private static final String LOWER_CHAR = "abcdefghijklmnopqrstuvwxyz";
     private static final String SYBL_CHAR = "!@#$%^&*()_+-="; //14
 
+
+    /**
+     * 生成密码
+     *
+     * @param length 密码长度
+     * @param safe   安全 包含至少1个大写，1个小写，1个数字，1个特殊字符（长度必须大于8）
+     * @return
+     */
+    public static String generatorPassword(int length, boolean safe) {
+        if (safe) {
+            return generatorSafePW(length);
+        }
+        return generatorPW(length);
+    }
+
     /**
      * 生成随机密码
      *
      * @param length 密码长度
      * @return
      */
-    public static String getRandomPW(int length) {
+    private static String generatorPW(int length) {
         if (length == 0) length = 20;
-        String str = PW_STR;
         Random random = new Random();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {
             int number = random.nextInt(62);
-            sb.append(str.charAt(number));
+            sb.append(PW_STR.charAt(number));
         }
         return sb.toString();
     }
@@ -44,15 +58,14 @@ public class PasswordUtil {
      * @param length 长度>=8
      * @return
      */
-    public static String generatorPW(int length) {
+    private static String generatorSafePW(int length) {
         if (length < 8) length = 8;
-        StringBuilder resultStr = new StringBuilder()
-                .append(getChar(NUM_CHAR, 1))
-                .append(getChar(UPPER_CHAR, 1))
-                .append(getChar(LOWER_CHAR, 1))
-                .append(getChar(SYBL_CHAR, 1))
-                .append(getChar(NUM_CHAR + UPPER_CHAR + LOWER_CHAR + SYBL_CHAR, length - 4));
-        return shuffleForSortingString(resultStr.toString());
+        String resultStr = getChar(NUM_CHAR, 1) +
+                getChar(UPPER_CHAR, 1) +
+                getChar(LOWER_CHAR, 1) +
+                getChar(SYBL_CHAR, 1) +
+                getChar(NUM_CHAR + UPPER_CHAR + LOWER_CHAR + SYBL_CHAR, length - 4);
+        return shuffleForSortingString(resultStr);
     }
 
     public static String shuffleForSortingString(String s) {
