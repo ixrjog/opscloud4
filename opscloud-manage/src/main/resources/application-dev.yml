@@ -17,6 +17,12 @@ opscloud:
       - vpn-users
       - confluence-users
 
+# auditPath 审计日志目录
+# openAudit :on 开启审计日志 off 关闭审计日志
+terminal:
+  auditPath: ${HOME}/opscloud-data/ssh/audit
+  openAudit: on
+
 # 白名单配置
 white:
   urls:
