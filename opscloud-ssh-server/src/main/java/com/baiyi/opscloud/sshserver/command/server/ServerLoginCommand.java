@@ -75,15 +75,15 @@ public class ServerLoginCommand implements InitializingBean {
     private final SupserAdminInterceptor sAInterceptor;
 
     private String toInstanceId(Server server) {
-        ServerVO.Server serverVO = BeanCopierUtil.copyProperties(server,ServerVO.Server.class);
+        ServerVO.Server serverVO = BeanCopierUtil.copyProperties(server, ServerVO.Server.class);
         sshServerPacker.wrap(serverVO);
         return Joiner.on("#").join(serverVO.getDisplayName(), server.getPrivateIp(), IdUtil.buildUUID());
     }
 
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "登录服务器(开启会话)", key = {"open", "login"})
-    public void login(@ShellOption(help = "Server Id", defaultValue = "1") int id,
-                      @ShellOption(help = "Account Name", defaultValue = "") String account,
+    public void login(@ShellOption(help = "ID", defaultValue = "1") int id,
+                      @ShellOption(help = "Account", defaultValue = "") String account,
                       @ShellOption(value = {"-R", "--arthas"}, help = "Arthas") boolean arthas,
                       @ShellOption(value = {"-A", "--admin"}, help = "Admin") boolean admin) {
         ServerSession serverSession = sshShellHelper.getSshSession();
@@ -137,6 +137,7 @@ public class ServerLoginCommand implements InitializingBean {
                 terminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             }
         } catch (SshRuntimeException e) {
+            log.error(e.getMessage());
             throw e;
         }
         serverCommandAudit.recordCommand(sessionId, instanceId);

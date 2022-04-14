@@ -27,7 +27,7 @@ public class ServerCommand extends BaseServerCommand {
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "查询授权服务器列表信息", key = {"ls", "list"})
-    public void listServer(@ShellOption(help = "Server Name", defaultValue = "") String name, @ShellOption(help = "IP", defaultValue = "") String ip) {
+    public void listServer(@ShellOption(help = "Server", defaultValue = "") String name, @ShellOption(help = "IP", defaultValue = "") String ip) {
         String sessionId = buildSessionId();
         ServerParam.UserPermissionServerPageQuery pageQuery = ServerParam.UserPermissionServerPageQuery.builder()
                 .name(name)

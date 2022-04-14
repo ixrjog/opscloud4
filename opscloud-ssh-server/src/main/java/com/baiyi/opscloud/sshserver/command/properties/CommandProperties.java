@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.baiyi.opscloud.sshserver.SshShellProperties.ADMIN_ROLE;
@@ -41,7 +41,7 @@ public class CommandProperties {
     private boolean restricted = true;
 
     // Do not change to singleton, it will become unmodifiable
-    private List<String> authorizedRoles = Arrays.asList(ADMIN_ROLE);
+    private List<String> authorizedRoles = Collections.singletonList(ADMIN_ROLE);
 
     /**
      * Possibility to include some sub commands only
@@ -77,4 +77,5 @@ public class CommandProperties {
         properties.setExcludes(excludes);
         return properties;
     }
+
 }

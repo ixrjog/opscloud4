@@ -21,9 +21,9 @@ import com.baiyi.opscloud.sshserver.annotation.SshShellComponent;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
 import com.baiyi.opscloud.sshserver.command.event.base.EventContext;
 import com.baiyi.opscloud.sshserver.command.event.util.SeverityUtil;
+import com.baiyi.opscloud.sshserver.command.pagination.TableFooter;
 import com.baiyi.opscloud.sshserver.command.server.base.BaseServerCommand;
 import com.baiyi.opscloud.sshserver.command.util.ServerUtil;
-import com.baiyi.opscloud.sshserver.util.ServerTableUtil;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,7 +77,7 @@ public class EventCommand extends BaseServerCommand {
                 .fieldNames("ID",
                         "Severity",
                         "Event Name",
-                        "Server Name",
+                        "Server",
                         "IP",
                         "Lastchange Time",
                         "Accounts"
@@ -105,7 +105,6 @@ public class EventCommand extends BaseServerCommand {
             }
             ServerVO.Server serverVO = BeanCopierUtil.copyProperties(server, ServerVO.Server.class);
             sshServerPacker.wrap(serverVO);
-            //ServerVO.Server serverVO = sshServerPacker.wrapToVO(server);
             eventContext.setServerVO(serverVO);
             eventMapper.put(id, eventContext);
             pt.addRow(id,
@@ -120,10 +119,12 @@ public class EventCommand extends BaseServerCommand {
         }
         SessionCommandContext.setEventMapper(eventMapper);
         sshShellHelper.print(pt.toString());
-        sshShellHelper.print(ServerTableUtil.buildFooter(table.getTotalNum(),
-                        pageQuery.getPage(),
-                        pageQuery.getLength()),
-                PromptColor.GREEN);
+        TableFooter.Footer.builder()
+                .totalNum(table.getTotalNum())
+                .page(pageQuery.getPage())
+                .length(pageQuery.getLength())
+                .build().print(sshShellHelper, PromptColor.GREEN);
+
     }
 
 }

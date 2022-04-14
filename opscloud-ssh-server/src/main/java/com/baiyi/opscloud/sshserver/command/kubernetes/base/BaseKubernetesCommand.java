@@ -24,7 +24,7 @@ public class BaseKubernetesCommand {
     protected static final int PAGE_FOOTER_SIZE = 6;
 
     @Resource
-    protected SshShellHelper helper;
+    protected SshShellHelper sshShellHelper;
 
     @Resource
     protected DsInstanceService dsInstanceService;

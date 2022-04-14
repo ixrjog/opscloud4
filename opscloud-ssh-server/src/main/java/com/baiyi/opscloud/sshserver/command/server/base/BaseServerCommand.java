@@ -13,9 +13,9 @@ import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.command.context.ListServerCommand;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
+import com.baiyi.opscloud.sshserver.command.pagination.TableFooter;
 import com.baiyi.opscloud.sshserver.command.util.ServerUtil;
 import com.baiyi.opscloud.sshserver.packer.SshServerPacker;
-import com.baiyi.opscloud.sshserver.util.ServerTableUtil;
 import com.baiyi.opscloud.sshserver.util.SessionUtil;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
@@ -29,6 +29,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.baiyi.opscloud.sshserver.constants.TableConstants.TABLE_SERVER_FIELD_NAMES;
 
 
 /**
@@ -57,8 +59,6 @@ public class BaseServerCommand {
 
     private Terminal terminal;
 
-    private final static String[] TABLE_FIELD_NAMES = {"ID", "Server", "ServerGroup", "Env", "IP", "Tag", "Account", "Comment"};
-
     @Autowired
     @Lazy
     public void setTerminal(Terminal terminal) {
@@ -73,7 +73,7 @@ public class BaseServerCommand {
     }
 
     protected void doListServer(ListServerCommand commandContext) {
-        PrettyTable pt = PrettyTable.fieldNames(TABLE_FIELD_NAMES);
+        PrettyTable pt = PrettyTable.fieldNames(TABLE_SERVER_FIELD_NAMES);
         ServerParam.UserPermissionServerPageQuery pageQuery = commandContext.getQueryParam();
         pageQuery.setUserId(com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin() ? null : com.baiyi.opscloud.common.util.SessionUtil.getUserId());
         pageQuery.setLength(terminal.getSize().getRows() - PAGE_FOOTER_SIZE);
@@ -97,10 +97,12 @@ public class BaseServerCommand {
         }
         SessionCommandContext.setIdMapper(idMapper);
         sshShellHelper.print(pt.toString());
-        sshShellHelper.print(ServerTableUtil.buildPagination(table.getTotalNum(),
-                        pageQuery.getPage(),
-                        pageQuery.getLength()),
-                PromptColor.GREEN);
+        TableFooter.Pagination.builder()
+                .needPageTurning(true)
+                .totalNum(table.getTotalNum())
+                .page(pageQuery.getPage())
+                .length(pageQuery.getLength())
+                .build().print(sshShellHelper, PromptColor.GREEN);
     }
 
     private String toCommentField(String comment) {

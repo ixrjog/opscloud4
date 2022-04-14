@@ -62,7 +62,7 @@ public class EventLoginCommand extends BaseServerCommand {
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "事件ID登录服务器", key = {"login-event"})
     public void loginEvent(@ShellOption(help = "Event Id") int id,
-                           @ShellOption(help = "Account Name", defaultValue = "") String account,
+                           @ShellOption(help = "Account", defaultValue = "") String account,
                            @ShellOption(value = {"-A", "--admin"}, help = "Admin") boolean admin) {
         ServerSession serverSession = sshShellHelper.getSshSession();
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
@@ -82,7 +82,6 @@ public class EventLoginCommand extends BaseServerCommand {
             terminalSessionFacade.recordTerminalSessionInstance(
                     terminalSessionInstance
             );
-
             RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, sshContext.getSshShellRunnable().getOs());
             TerminalUtil.rawModeSupportVintr(terminal);
             Instant inst1 = Instant.now(); // 计时
@@ -103,6 +102,7 @@ public class EventLoginCommand extends BaseServerCommand {
                 terminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             }
         } catch (SshRuntimeException e) {
+            log.error(e.getMessage());
             throw e;
         }
         serverCommandAudit.recordCommand(sessionId, instanceId);

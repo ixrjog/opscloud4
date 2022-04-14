@@ -16,7 +16,7 @@ import com.baiyi.opscloud.sshserver.annotation.SshShellComponent;
 import com.baiyi.opscloud.sshserver.command.context.KubernetesDsInstance;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
 import com.baiyi.opscloud.sshserver.command.kubernetes.base.BaseKubernetesCommand;
-import com.google.common.base.Joiner;
+import com.baiyi.opscloud.sshserver.command.pagination.TableFooter;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +25,8 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import java.util.Map;
+
+import static com.baiyi.opscloud.sshserver.constants.TableConstants.TABLE_KUBERNETES_DEPLOYMENT_FIELD_NAMES;
 
 /**
  * @Author baiyi
@@ -38,9 +40,6 @@ import java.util.Map;
 public class KubernetesDeploymentCommand extends BaseKubernetesCommand {
 
     private final UserService userService;
-
-    private final static String[] TABLE_FIELD_NAMES = {"ID", "Kubernetes Instance Name", "Namespace", "Deployment Name"};
-
 
     @CheckTerminalSize(cols = 116, rows = 10)
     @ScreenClear
@@ -56,7 +55,7 @@ public class KubernetesDeploymentCommand extends BaseKubernetesCommand {
                 .length(terminal.getSize().getRows() - PAGE_FOOTER_SIZE)
                 .build();
         DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
-        PrettyTable pt = PrettyTable.fieldNames(TABLE_FIELD_NAMES);
+        PrettyTable pt = PrettyTable.fieldNames(TABLE_KUBERNETES_DEPLOYMENT_FIELD_NAMES);
         Map<Integer, Integer> idMapper = Maps.newHashMap();
         Map<String, KubernetesDsInstance> kubernetesDsInstanceMap = Maps.newHashMap();
         int id = 1;
@@ -78,19 +77,12 @@ public class KubernetesDeploymentCommand extends BaseKubernetesCommand {
             id++;
         }
         SessionCommandContext.setIdMapper(idMapper);
-        helper.print(pt.toString());
-        helper.print(buildPagination(table.getTotalNum(),
-                        pageQuery.getPage(),
-                        pageQuery.getLength()),
-                PromptColor.GREEN);
+        sshShellHelper.print(pt.toString());
+        TableFooter.Pagination.builder()
+                .totalNum(table.getTotalNum())
+                .page(pageQuery.getPage())
+                .length(pageQuery.getLength())
+                .build().print(sshShellHelper, PromptColor.GREEN);
     }
 
-    public static String buildPagination(long totalNum, int page, int length) {
-        int tp = 0;
-        try {
-            tp = (int) (totalNum - 1) / length + 1;
-        } catch (Exception ignored) {
-        }
-        return Joiner.on(" ,").join("页码: " + page, "分页长度: " + length, "总页数: " + tp, "总数量: " + totalNum);
-    }
 }
