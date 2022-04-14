@@ -51,7 +51,7 @@ mybatis:
 ssh:
   arthas:
     server: "cd /tmp && curl -O https://arthas.aliyun.com/arthas-boot.jar && sudo su - app -c 'java -jar /tmp/arthas-boot.jar'\n"
-    # kubernetes: "java -jar /home/app/arthas-boot.jar\n"
+
   shell:
     enable: true
     # 'simple' or 'security'

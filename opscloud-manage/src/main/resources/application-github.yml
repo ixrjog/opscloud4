@@ -7,14 +7,12 @@ log:
     path: ${HOME}/logs
 
 opscloud:
-  version: 4.0.8
+  version: 4.0.9
   dataPath: ${HOME}/opscloud-data
   createUser:
     roles:
       - base
     userGroups:
-      - vpn-users
-      - confluence-users
 
 # auditPath 审计日志目录
 # openAudit :on 开启审计日志 off 关闭审计日志
