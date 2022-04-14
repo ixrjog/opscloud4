@@ -2,6 +2,7 @@ logging:
   level:
     # swagger 警告日志忽略
     io.swagger.models.parameters.AbstractSerializableParameter: error
+log:
   file:
     path: ${HOME}/logs
 
@@ -33,6 +34,10 @@ white:
     - /api/ws/server/task/play
 
 spring:
+  config:
+    activate:
+      on-profile:
+        - prod
   redis:
     host: r-d7obmf3lmgs0hpph5n.redis.eu-west-1.rds.aliyuncs.com
     port: 6379

@@ -1,11 +1,14 @@
-#server:
-#  servlet:
-#    context-path: /api
-
 knife4j:
   enable: true
 
 spring:
+  application:
+    name: opscloud
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  jmx:
+    enabled: false
   profiles:
     active: '@env@'
     include:
@@ -13,17 +16,22 @@ spring:
       - ssh-core
       - ssh-server
       - opscloud
-  application:
-    name: opscloud
-#  http:
-#    encoding:
-#      force: true
-#      charset: utf-8
-#      enabled: true
-  jackson:
-    time-zone: GMT+8
-  jmx:
-    enabled: false
+
+# 开发环境配置
+server:
+  # 服务端口
+  port: 80
+  servlet:
+    # 项目contextPath
+    context-path: /
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    threads:
+      # tomcat最大线程数，默认为200
+      max: 400
+      # Tomcat启动初始化的线程数，默认值25
+      min-spare: 30
 
 mapper:
   mappers:

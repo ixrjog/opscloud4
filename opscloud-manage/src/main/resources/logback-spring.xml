@@ -9,7 +9,7 @@
     <!-- 获取application.yml中的变量，使用方式${basedir}. 缺点，会额外生成一个bootstrap的日志文件目录。 取bootstrap中的文件，不会有问题 -->
     <!--<springProperty scope="" name="baseDir" source="spring.application.name"/>-->
     <springProperty scope="context" name="APP_NAME" source="spring.application.name"/>
-    <springProperty scope="context" name="LOG_FILE_PATH" source="logging.file.path"/>
+    <springProperty scope="context" name="LOG_FILE_PATH" source="log.file.path"/>
     <appender name="RollingInfoLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_FILE_PATH}/${APP_NAME}/info.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
