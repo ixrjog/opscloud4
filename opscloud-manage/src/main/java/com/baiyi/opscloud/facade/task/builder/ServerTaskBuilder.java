@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.facade.task.builder;
 
-import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerTask;
 import com.baiyi.opscloud.domain.param.task.ServerTaskParam;
 
@@ -16,7 +15,7 @@ public class ServerTaskBuilder {
     public static ServerTask newBuilder(ServerTaskParam.SubmitServerTask submitServerTask, String username) {
         return ServerTask.builder()
                 .instanceUuid(submitServerTask.getInstanceUuid())
-                .taskUuid(IdUtil.buildUUID())
+                .taskUuid(submitServerTask.getTaskUuid())
                 .ansiblePlaybookId(submitServerTask.getAnsiblePlaybookId())
                 .username(username)
                 .memberSize(submitServerTask.getServers().size())
