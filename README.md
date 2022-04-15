@@ -18,9 +18,9 @@ Welcome to the opscloud wiki!
   + [github.com/ixrjog/opscloud4-web](github.com/ixrjog/opscloud4-web)
 
 #### 开发环境
-+ MacBook M1 PRO (macOS Monterey 12.3)
-+ IntelliJ IDEA 2021.3.3 (Ultimate Edition)
-+ WebStorm 2021.3.3
++ MacBook M1 PRO (macOS Monterey 12.3.1)
++ IntelliJ IDEA 2022.1 (Ultimate Edition)
++ WebStorm 2022.1
 
 #### 主要功能
 + 动态数据源
@@ -38,10 +38,10 @@ Welcome to the opscloud wiki!
     + 支持多开、会话复制、命令同步、会话心跳
   + SSH-Server
     + 原生SSH协议实现，支持ED25519密钥
-    + 简化用户登录，自动关联用户Gitlab账户中配置的公钥
+    + 简化用户登录，自动关联用户Gitlab账户公钥
     + 展示服务器环境，标签，授权账户
     + 支持Kubernetes容器登录或直接查看容器日志
-    + 以事件驱动技术
+    + 事件驱动技术
     + 部署架构
 ```mermaid
 flowchart LR
