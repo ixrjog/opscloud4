@@ -63,7 +63,7 @@ public class CredentialServiceImpl implements CredentialService {
         if (!IdUtil.isEmpty(pageQuery.getKind())) {
             criteria.andEqualTo("kind", pageQuery.getKind());
         }
-        example.setOrderByClause("create_time");
+        example.setOrderByClause("kind, create_time");
         List<Credential> data = credentialMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }
