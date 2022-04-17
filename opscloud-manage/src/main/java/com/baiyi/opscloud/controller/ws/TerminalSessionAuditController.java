@@ -5,12 +5,11 @@ import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.terminal.audit.ITerminalAuditProcess;
 import com.baiyi.opscloud.terminal.audit.TerminalAuditProcessFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -39,7 +38,7 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
     public void onOpen(Session session) {
         sessionSet.add(session);
         int cnt = onlineCount.incrementAndGet(); // 在线数加1
-        log.info("终端会话审计有连接加入，当前连接数为：{}", cnt);
+        log.info("终端会话审计有连接加入: 当前连接数为 = {}", cnt);
         session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
         this.session = session;
     }
@@ -51,7 +50,7 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
     public void onClose() {
         sessionSet.remove(session);
         int cnt = onlineCount.decrementAndGet();
-        log.info("有连接关闭，当前连接数为：{}", cnt);
+        log.info("有连接关闭: 当前连接数为 = {}", cnt);
     }
 
     /**
@@ -76,22 +75,7 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("发生错误：{}，Session ID： {}", error.getMessage(), session.getId());
-    }
-
-    /**
-     * 发送消息，实践表明，每次浏览器刷新，session会发生变化。
-     *
-     * @param session
-     * @param message
-     */
-    public static void sendMessage(Session session, String message) {
-        try {
-            session.getBasicRemote().sendText(message);
-        } catch (IOException e) {
-            log.error("发送消息出错：{}", e.getMessage());
-            e.printStackTrace();
-        }
+        log.error("发生错误: e = {}，SessionID = {}", error.getMessage(), session.getId());
     }
 
 }

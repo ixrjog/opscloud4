@@ -14,13 +14,12 @@ import com.baiyi.opscloud.sshcore.message.base.SimpleLoginMessage;
 import com.baiyi.opscloud.sshcore.task.terminal.SentOutputTask;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -120,20 +119,6 @@ public class KubernetesWebTerminalController extends SimpleAuthentication {
     @OnError
     public void onError(Session session, Throwable error) {
         log.error("Kubernetes终端会话发生错误: instanceIP = {} , e = {}，sessionID = {}", serverInfo.getHostAddress(), error.getMessage(), session.getId());
-    }
-
-    /**
-     * 发送消息，实践表明，每次浏览器刷新，session会发生变化。
-     *
-     * @param session
-     * @param message
-     */
-    public static void sendMessage(Session session, String message) {
-        try {
-            session.getBasicRemote().sendText(message);
-        } catch (IOException e) {
-            log.error("Kubernetes终端会话发送消息出错: instanceIP = {} , e = {}", serverInfo.getHostAddress(), e.getMessage());
-        }
     }
 
 }

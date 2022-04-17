@@ -14,12 +14,12 @@ import com.baiyi.opscloud.sshcore.task.terminal.SentOutputTask;
 import com.baiyi.opscloud.terminal.factory.TerminalProcessFactory;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.apache.commons.lang3.StringUtils;
+
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -120,21 +120,6 @@ public class WebTerminalController extends SimpleAuthentication {
     public void onError(Session session, Throwable error) {
         log.error("发生错误：{}，Session ID： {}", error.getMessage(), session.getId());
         error.printStackTrace();
-    }
-
-    /**
-     * 发送消息，实践表明，每次浏览器刷新，session会发生变化。
-     *
-     * @param session
-     * @param message
-     */
-    public static void sendMessage(Session session, String message) {
-        try {
-            session.getBasicRemote().sendText(message);
-        } catch (IOException e) {
-            log.error("发送消息出错：{}", e.getMessage());
-            e.printStackTrace();
-        }
     }
 
 }
