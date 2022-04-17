@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 @ServerEndpoint(value = "/api/ws/kubernetes/terminal")
 @Component
-public class KubernetesTerminalController extends SimpleAuthentication {
+public class KubernetesWebTerminalController extends SimpleAuthentication {
 
     private static final AtomicInteger onlineCount = new AtomicInteger(0);
     // concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。
@@ -53,7 +53,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
 
     @Autowired
     public void setTerminalSessionService(TerminalSessionService terminalSessionService) {
-        KubernetesTerminalController.terminalSessionService = terminalSessionService;
+        KubernetesWebTerminalController.terminalSessionService = terminalSessionService;
     }
 
     /**
@@ -61,13 +61,13 @@ public class KubernetesTerminalController extends SimpleAuthentication {
      */
     @OnOpen
     public void onOpen(Session session) {
-        log.info("Kubernetes终端会话尝试链接，sessionId = {}", sessionId);
+        log.info("Kubernetes终端会话尝试链接: instanceIP = {} , sessionId = {}", serverInfo.getHostAddress(), sessionId);
         TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.KUBERNETES_TERMINAL);
         this.terminalSession = terminalSession;
         terminalSessionService.add(terminalSession);
         sessionSet.add(session);
         int cnt = onlineCount.incrementAndGet(); // 在线数加1
-        log.info("Kubernetes终端会话有连接加入，当前连接数为：{}", cnt);
+        log.info("Kubernetes终端会话有连接加入: instanceIP = {} , 当前连接数为 = {}", serverInfo.getHostAddress(), cnt);
         session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
         this.session = session;
         // 线程启动
@@ -84,7 +84,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
         KubernetesTerminalProcessFactory.getProcessByKey(MessageState.CLOSE.getState()).process("", session, terminalSession);
         sessionSet.remove(session);
         int cnt = onlineCount.decrementAndGet();
-        log.info("有连接关闭，当前连接数为：{}", cnt);
+        log.info("Kubernetes终端会话有连接关闭: instanceIP = {} , 当前连接数为 = {}", serverInfo.getHostAddress(), cnt);
     }
 
     /**
@@ -119,8 +119,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("发生错误：{}，Session ID： {}", error.getMessage(), session.getId());
-        error.printStackTrace();
+        log.error("Kubernetes终端会话发生错误: instanceIP = {} , e = {}，sessionID = {}", serverInfo.getHostAddress(), error.getMessage(), session.getId());
     }
 
     /**
@@ -133,44 +132,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
         try {
             session.getBasicRemote().sendText(message);
         } catch (IOException e) {
-            log.error("发送消息出错：{}", e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 群发消息
-     *
-     * @param message
-     * @throws IOException
-     */
-    public static void broadCastInfo(String message) throws IOException {
-        for (Session session : sessionSet) {
-            if (session.isOpen()) {
-                sendMessage(session, message);
-            }
-        }
-    }
-
-    /**
-     * 指定Session发送消息
-     *
-     * @param sessionId
-     * @param message
-     * @throws IOException
-     */
-    public static void sendMessage(String message, String sessionId) throws IOException {
-        Session session = null;
-        for (Session s : sessionSet) {
-            if (s.getId().equals(sessionId)) {
-                session = s;
-                break;
-            }
-        }
-        if (session != null) {
-            sendMessage(session, message);
-        } else {
-            log.warn("没有找到你指定ID的会话：{}", sessionId);
+            log.error("Kubernetes终端会话发送消息出错: instanceIP = {} , e = {}", serverInfo.getHostAddress(), e.getMessage());
         }
     }
 
