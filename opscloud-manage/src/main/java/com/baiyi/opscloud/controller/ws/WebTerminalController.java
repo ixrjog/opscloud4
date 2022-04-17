@@ -98,14 +98,14 @@ public class WebTerminalController extends SimpleAuthentication {
         String state = getState(message);
         if (StringUtils.isEmpty(this.terminalSession.getUsername())) {
             if (MessageState.LOGIN.getState().equals(state))       // 鉴权并更新会话信息
-                setUser(hasLogin(new GsonBuilder().create().fromJson(message, SimpleLoginMessage.class)));
+                updateSessionUsername(hasLogin(new GsonBuilder().create().fromJson(message, SimpleLoginMessage.class)));
         } else {
             SessionUtil.setUsername(this.terminalSession.getUsername());
         }
         TerminalProcessFactory.getProcessByKey(state).process(message, session, terminalSession);
     }
 
-    private void setUser(String username) {
+    private void updateSessionUsername(String username) {
         terminalSession.setUsername(username);
         terminalSessionService.update(terminalSession);
     }
