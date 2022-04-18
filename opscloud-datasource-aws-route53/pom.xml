@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>opscloud-datasource-aws</artifactId>
+    <artifactId>opscloud-datasource-aws-route53</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -20,30 +20,16 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-core</artifactId>
+            <artifactId>opscloud-datasource-aws-core</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-aws-ec2</artifactId>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-route53</artifactId>
+            <version>1.12.196</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-aws-iam</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-aws-sqs</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-aws-route53</artifactId>
-        </dependency>
-
 
     </dependencies>
+
 
 </project>
