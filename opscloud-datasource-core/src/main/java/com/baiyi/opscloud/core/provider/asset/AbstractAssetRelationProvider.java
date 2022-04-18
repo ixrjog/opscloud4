@@ -42,9 +42,7 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
     private AbstractAssetRelationProvider<T, S> getTargetProvider() {
         List<AbstractAssetRelationProvider<T, S>> providers = AssetProviderFactory.getProviders(getInstanceType(), getTargetAssetKey());
         assert providers != null;
-        Optional<AbstractAssetRelationProvider<T, S>> optional = providers.stream()
-                .filter(e -> e.getTargetAssetKey().equals(this.getAssetType()))
-                .findFirst();
+        Optional<AbstractAssetRelationProvider<T, S>> optional = providers.stream().filter(e -> e.getTargetAssetKey().equals(this.getAssetType())).findFirst();
         return optional.orElse(null);
     }
 
@@ -69,11 +67,9 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
         List<DatasourceInstanceAssetRelation> validRelations = Lists.newArrayList();
         if (!CollectionUtils.isEmpty(targets)) {
             targets.forEach(target -> {
-                        DatasourceInstanceAssetRelation relation = enterEntity(dsInstanceContext, asset, target);
-                        if (relation != null)
-                            validRelations.add(relation);
-                    }
-            );
+                DatasourceInstanceAssetRelation relation = enterEntity(dsInstanceContext, asset, target);
+                if (relation != null) validRelations.add(relation);
+            });
         }
         clearInvalidRelations(dsInstanceContext, asset, validRelations);
         return asset;
@@ -88,12 +84,9 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
      */
     private void clearInvalidRelations(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset, List<DatasourceInstanceAssetRelation> validRelations) {
         Map<Integer, DatasourceInstanceAssetRelation> relationMap = validRelations.stream().collect(Collectors.toMap(DatasourceInstanceAssetRelation::getId, a -> a, (k1, k2) -> k1));
-        List<DatasourceInstanceAssetRelation> allRelations = dsInstanceAssetRelationService.queryTargetAsset(dsInstanceContext.getDsInstance().getUuid(), asset.getId());
-        allRelations.forEach(e -> {
-            if (!relationMap.containsKey(e.getId())) {
-                clearRelation(relationMap.get(e.getId()));
-            }
-        });
+        List<DatasourceInstanceAssetRelation> invalidRelations = dsInstanceAssetRelationService.queryTargetAsset(dsInstanceContext.getDsInstance().getUuid(), asset.getId()).stream().filter(e -> !relationMap.containsKey(e.getId())).collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(invalidRelations)) return;
+        invalidRelations.forEach(this::clearRelation);
     }
 
     private void clearRelation(DatasourceInstanceAssetRelation relation) {
@@ -107,12 +100,7 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
         AssetContainer assetContainer = targetAssetProvider.toAssetContainer(dsInstanceContext.getDsInstance(), target);
         DatasourceInstanceAsset targetAsset = dsInstanceAssetService.getByUniqueKey(assetContainer.getAsset());
         if (targetAsset == null) return null;
-        DatasourceInstanceAssetRelation relation = DatasourceInstanceAssetRelation.builder()
-                .instanceUuid(dsInstanceContext.getDsInstance().getUuid())
-                .sourceAssetId(asset.getId())
-                .targetAssetId(targetAsset.getId())
-                .relationType(getTargetAssetKey())
-                .build();
+        DatasourceInstanceAssetRelation relation = DatasourceInstanceAssetRelation.builder().instanceUuid(dsInstanceContext.getDsInstance().getUuid()).sourceAssetId(asset.getId()).targetAssetId(targetAsset.getId()).relationType(getTargetAssetKey()).build();
         return enterRelation(relation);
     }
 
