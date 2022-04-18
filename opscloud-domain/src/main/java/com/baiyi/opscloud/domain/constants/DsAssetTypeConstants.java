@@ -45,6 +45,7 @@ public enum DsAssetTypeConstants {
     V_SWITCH,
     ECS_IMAGE,
     ECS_SG,
+    ALIYUN_DOMAIN,
 
     KUBERNETES_NAMESPACE,
     KUBERNETES_NODE,

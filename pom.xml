@@ -31,6 +31,7 @@
         <module>opscloud-datasource-aliyun-rds</module>
         <module>opscloud-datasource-aliyun-ons</module>
         <module>opscloud-datasource-aliyun-redis</module>
+        <module>opscloud-datasource-aliyun-domain</module>
         <module>opscloud-datasource-tencent-exmail</module>
         <module>opscloud-datasource-nexus</module>
         <module>opscloud-workorder</module>
@@ -339,6 +340,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-aliyun-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aliyun-domain</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

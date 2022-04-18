@@ -53,5 +53,10 @@
             <artifactId>opscloud-datasource-aliyun-dms</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-aliyun-domain</artifactId>
+        </dependency>
+
     </dependencies>
 </project>
