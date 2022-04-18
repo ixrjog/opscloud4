@@ -29,7 +29,6 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
     @Resource
     private DsInstanceAssetRelationService dsInstanceAssetRelationService;
 
-
     /**
      * 返回与目标资产建立关系的源资产
      *
