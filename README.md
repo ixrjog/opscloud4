@@ -59,6 +59,7 @@ flowchart LR
   + 高性能、可伸缩、高可用性
     + 集群SLA99.99%
     + 无资产管理上限
++ 标签驱动、事件驱动 
 + API文档
   + example.com/doc.html
   + API Token
