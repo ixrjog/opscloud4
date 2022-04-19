@@ -12,10 +12,11 @@ import com.baiyi.opscloud.service.auth.AuthUserRoleService;
 import com.baiyi.opscloud.service.sys.MenuChildService;
 import com.baiyi.opscloud.service.sys.MenuService;
 import com.google.common.collect.Lists;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import javax.annotation.Resource;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -29,19 +30,16 @@ import java.util.stream.Collectors;
  */
 
 @Component
+@RequiredArgsConstructor
 public class MenuPacker {
 
-    @Resource
-    private MenuService menuService;
+    private final MenuService menuService;
 
-    @Resource
-    private MenuChildService menuChildService;
+    private final MenuChildService menuChildService;
 
-    @Resource
-    private AuthRoleMenuService authRoleMenuService;
+    private final AuthRoleMenuService authRoleMenuService;
 
-    @Resource
-    private AuthUserRoleService authUserRoleService;
+    private final AuthUserRoleService authUserRoleService;
 
     public List<Menu> toDOList(List<MenuVO.Menu> menuList) {
         return BeanCopierUtil.copyListProperties(menuList, Menu.class);
@@ -121,7 +119,7 @@ public class MenuPacker {
     }
 
     public List<MenuVO.Menu> toVOList(String username) {
-        if(StringUtils.isEmpty(username))
+        if (StringUtils.isEmpty(username))
             return Collections.emptyList();
         List<AuthUserRole> authUserRoleList = authUserRoleService.queryByUsername(username);
         if (CollectionUtils.isEmpty(authUserRoleList))

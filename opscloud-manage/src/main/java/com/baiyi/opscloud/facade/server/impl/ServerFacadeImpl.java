@@ -68,11 +68,12 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
 
     @Override
     @EnvWrapper(extend = true, wrapResult = true)
-    @AssetBusinessRelation // 资产绑定业务对象
+    @AssetBusinessRelation
     public ServerVO.Server addServer(ServerVO.Server server) {
         Server pre = toDO(server);
         serverService.add(pre);
-        server.setId(pre.getId()); // 绑定资产
+        // 绑定资产
+        server.setId(pre.getId());
         return BeanCopierUtil.copyProperties(pre, ServerVO.Server.class);
     }
 
@@ -107,8 +108,9 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     @Override
     public DataTable<ServerVO.Server> queryUserRemoteServerPage(ServerParam.UserRemoteServerPageQuery pageQuery) {
         DataTable<Server> table = serverService.queryUserRemoteServerPage(pageQuery);
-        List<ServerVO.Server> data = BeanCopierUtil.copyListProperties(table.getData(), ServerVO.Server.class).stream().peek(e ->
-                serverPacker.wrap(e, pageQuery)
+        List<ServerVO.Server> data = BeanCopierUtil.copyListProperties(table.getData(), ServerVO.Server.class)
+                .stream()
+                .peek(e -> serverPacker.wrap(e, pageQuery)
         ).collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }

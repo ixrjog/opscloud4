@@ -47,8 +47,9 @@ public class DsInstanceAssetFacadeImpl implements DsInstanceAssetFacade {
         DatasourceInstance dsInstance = dsInstanceService.getById(pageQuery.getInstanceId());
         pageQuery.setInstanceUuid(dsInstance.getUuid());
         DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
-        List<DsAssetVO.Asset> data = BeanCopierUtil.copyListProperties(table.getData(), DsAssetVO.Asset.class).stream().peek(e ->
-                dsAssetPacker.wrap(e, pageQuery, pageQuery)
+        List<DsAssetVO.Asset> data = BeanCopierUtil.copyListProperties(table.getData(), DsAssetVO.Asset.class)
+                .stream()
+                .peek(e -> dsAssetPacker.wrap(e, pageQuery, pageQuery)
         ).collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
@@ -68,11 +69,8 @@ public class DsInstanceAssetFacadeImpl implements DsInstanceAssetFacade {
                     .name(username)
                     .build();
             List<DatasourceInstanceAsset> sshKeyAssets = dsInstanceAssetService.queryAssetByAssetParam(asset);
-
-            result.addAll(sshKeyAssets.stream().map(a ->
-                    dsAssetPacker.wrap(i, a)
-            ).collect(Collectors.toList()));
-
+            result.addAll(sshKeyAssets.stream().map(a -> dsAssetPacker.wrap(i, a))
+                    .collect(Collectors.toList()));
         });
         return result;
     }
@@ -89,6 +87,5 @@ public class DsInstanceAssetFacadeImpl implements DsInstanceAssetFacade {
         asset.setIsActive(!asset.getIsActive());
         dsInstanceAssetService.update(asset);
     }
-
 
 }

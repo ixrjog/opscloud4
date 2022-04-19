@@ -80,8 +80,10 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
     @Override
     public DataTable<ServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.ServerGroupPageQuery pageQuery) {
         DataTable<ServerGroup> table = serverGroupService.queryPageByParam(pageQuery);
-        List<ServerGroupVO.ServerGroup> data = BeanCopierUtil.copyListProperties(table.getData(), ServerGroupVO.ServerGroup.class).stream()
-                .peek(e -> serverGroupPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        List<ServerGroupVO.ServerGroup> data = BeanCopierUtil.copyListProperties(table.getData(), ServerGroupVO.ServerGroup.class)
+                .stream()
+                .peek(e -> serverGroupPacker.wrap(e, pageQuery))
+                .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
@@ -93,8 +95,9 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
         query.setLength(pageQuery.getLength());
         query.setPage(pageQuery.getPage());
         DataTable<ServerGroupVO.ServerGroup> table = queryServerGroupPage(query);
-        return new DataTable<>(table.getData().stream().map(e ->
-                ApplicationResourceVO.Resource.builder()
+        return new DataTable<>(table.getData()
+                .stream()
+                .map(e -> ApplicationResourceVO.Resource.builder()
                         .name(e.getName())
                         .applicationId(pageQuery.getApplicationId())
                         .resourceType(getApplicationResType())
@@ -109,8 +112,10 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
     public DataTable<UserVO.IUserPermission> queryUserBusinessPermissionPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
         pageQuery.setBusinessType(getBusinessType());
         DataTable<ServerGroup> table = serverGroupService.queryPageByParam(pageQuery);
-        List<ServerGroupVO.ServerGroup> data = BeanCopierUtil.copyListProperties(table.getData(), ServerGroupVO.ServerGroup.class).stream()
-                .peek(e -> serverGroupPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        List<ServerGroupVO.ServerGroup> data = BeanCopierUtil.copyListProperties(table.getData(), ServerGroupVO.ServerGroup.class)
+                .stream()
+                .peek(e -> serverGroupPacker.wrap(e, pageQuery))
+                .collect(Collectors.toList());
         if (pageQuery.getAuthorized())
             data.forEach(e -> {
                 e.setUserId(pageQuery.getUserId());
@@ -154,8 +159,10 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
     @Override
     public DataTable<ServerGroupTypeVO.ServerGroupType> queryServerGroupTypePage(ServerGroupTypeParam.ServerGroupTypePageQuery pageQuery) {
         DataTable<ServerGroupType> table = serverGroupTypeService.queryPageByParam(pageQuery);
-        List<ServerGroupTypeVO.ServerGroupType> data = BeanCopierUtil.copyListProperties(table.getData(),ServerGroupTypeVO.ServerGroupType.class).stream()
-                .peek(e->serverGroupTypePacker.wrap(e,pageQuery)).collect(Collectors.toList());
+        List<ServerGroupTypeVO.ServerGroupType> data = BeanCopierUtil.copyListProperties(table.getData(),ServerGroupTypeVO.ServerGroupType.class)
+                .stream()
+                .peek(e->serverGroupTypePacker.wrap(e,pageQuery))
+                .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
@@ -181,15 +188,13 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
         // 过滤空服务器组
         int accessLevel = userPermissionFacade.getUserAccessLevel(user.getUsername());
         queryParam.setIsAdmin(accessLevel >= AccessLevel.OPS.getLevel());
-
-        List<ServerGroup> groups
-                = serverGroupService.queryUserServerGroupTreeByParam(queryParam).stream()
+        List<ServerGroup> groups = serverGroupService.queryUserServerGroupTreeByParam(queryParam)
+                .stream()
                 .filter(g -> serverService.countByServerGroupId(g.getId()) != 0)
                 .collect(Collectors.toList());
 
         List<ServerTreeVO.Tree> treeList = Lists.newArrayList();
         AtomicInteger treeSize = new AtomicInteger();
-
         for (ServerGroup group : groups) {
             Map<String, List<ServerPack>> serverGroupMap = serverAlgorithm.grouping(group);
             treeList.add(serverTreeUtil.wrap(group, serverGroupMap));
@@ -222,4 +227,5 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
         super.afterPropertiesSet();
         UserBusinessPermissionFactory.register(this);
     }
+
 }

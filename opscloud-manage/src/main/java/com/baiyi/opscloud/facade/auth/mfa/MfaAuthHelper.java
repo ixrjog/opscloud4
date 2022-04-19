@@ -50,11 +50,11 @@ public class MfaAuthHelper {
             if (!otp.equals(loginParam.getOtp()))
                 throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_OTP_FAILURE); // 登录失败
         } catch (OtpException.DecodingException e) {
-            throw new AuthRuntimeException("MFA认证失败：Decoding Exception!");
+            throw new AuthRuntimeException("MFA认证失败: Decoding Exception!");
         } catch (NoSuchAlgorithmException e2) {
-            throw new AuthRuntimeException("MFA认证失败：No Such Algorithm Exception!");
+            throw new AuthRuntimeException("MFA认证失败: No Such Algorithm Exception!");
         } catch (InvalidKeyException e3) {
-            throw new AuthRuntimeException("MFA认证失败：Invalid Key Exception!");
+            throw new AuthRuntimeException("MFA认证失败: Invalid Key Exception!");
         }
     }
 

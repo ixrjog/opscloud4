@@ -41,7 +41,7 @@ import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskP
  * @Date 2021/9/16 5:32 下午
  * @Version 1.0
  */
-@Service
+@Service("aliyunLogFacade")
 @RequiredArgsConstructor
 public class AliyunLogFacadeImpl implements AliyunLogFacade {
 

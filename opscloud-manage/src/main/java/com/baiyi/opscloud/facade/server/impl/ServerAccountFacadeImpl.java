@@ -78,7 +78,6 @@ public class ServerAccountFacadeImpl implements ServerAccountFacade {
                         .build();
                 accountPermissionService.add(permission);
             }
-
         });
         permissions.forEach(e -> accountPermissionService.deleteById(e.getId()));
     }

@@ -53,8 +53,11 @@ public class GitlabFacade extends BaseManager {
         if (CollectionUtils.isEmpty(instances)) return Optional.empty();
         return instances.stream().filter(i -> {
             GitlabConfig gitlabDsInstanceConfig = (GitlabConfig) instanceConfigHelper.getConfig(i);
-            Optional<String> tokenOptional = Optional.ofNullable(gitlabDsInstanceConfig.getGitlab()).map(GitlabConfig.Gitlab::getSystemHooks).map(GitlabConfig.SystemHooks::getToken);
-            return tokenOptional.filter(s -> GitlabTokenUtil.getToken().equals(s)).isPresent();
+            Optional<String> tokenOptional = Optional.ofNullable(gitlabDsInstanceConfig.getGitlab())
+                    .map(GitlabConfig.Gitlab::getSystemHooks)
+                    .map(GitlabConfig.SystemHooks::getToken);
+            return tokenOptional.filter(s -> GitlabTokenUtil.getToken().equals(s))
+                    .isPresent();
         }).findFirst();
     }
 

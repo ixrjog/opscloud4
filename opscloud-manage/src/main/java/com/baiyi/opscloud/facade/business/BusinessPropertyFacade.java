@@ -12,4 +12,5 @@ public interface BusinessPropertyFacade {
     void add(BusinessPropertyVO.Property property);
 
     void update(BusinessPropertyVO.Property property);
+
 }

@@ -44,44 +44,37 @@ public class MenuFacadeImpl implements MenuFacade {
     @Override
     public void saveMenu(MenuParam.MenuSave param) {
         List<Menu> menuList = menuPacker.toDOList(param.getMenuList());
-        if (!validMenuList(menuList))
-            throw new CommonRuntimeException(ErrorEnum.MENU_CONTENT_EMPTY);
+        if (!validMenuList(menuList)) throw new CommonRuntimeException(ErrorEnum.MENU_CONTENT_EMPTY);
         menuList.forEach(menu -> {
             menu.setSeq(menuList.indexOf(menu));
-            if (menu.getId() == null)
+            if (menu.getId() == null) {
                 menuService.add(menu);
-            else
+            } else {
                 menuService.update(menu);
+            }
         });
     }
 
     private Boolean validMenuList(List<Menu> menuList) {
-        return menuList.stream().allMatch(x ->
-                StringUtils.isNotBlank(x.getIcon())
-                        && StringUtils.isNotBlank(x.getTitle())
-        );
+        return menuList.stream().allMatch(x -> StringUtils.isNotBlank(x.getIcon()) && StringUtils.isNotBlank(x.getTitle()));
     }
 
     @Override
     public void saveMenuChild(MenuParam.MenuChildSave param) {
         List<MenuChild> menuChildList = menuPacker.toChildDOList(param.getMenuChildList());
-        if (!validMenuChildList(menuChildList))
-            throw new CommonRuntimeException(ErrorEnum.MENU_CHILD_CONTENT_EMPTY);
+        if (!validMenuChildList(menuChildList)) throw new CommonRuntimeException(ErrorEnum.MENU_CHILD_CONTENT_EMPTY);
         menuChildList.forEach(menuChild -> {
             menuChild.setSeq(menuChildList.indexOf(menuChild));
-            if (menuChild.getId() == null)
+            if (menuChild.getId() == null) {
                 menuChildService.add(menuChild);
-            else
+            } else {
                 menuChildService.update(menuChild);
+            }
         });
     }
 
     private Boolean validMenuChildList(List<MenuChild> menuChildList) {
-        return menuChildList.stream().allMatch(x ->
-                StringUtils.isNotBlank(x.getTitle())
-                        && StringUtils.isNotBlank(x.getIcon())
-                        && StringUtils.isNotBlank(x.getPath())
-        );
+        return menuChildList.stream().allMatch(x -> StringUtils.isNotBlank(x.getTitle()) && StringUtils.isNotBlank(x.getIcon()) && StringUtils.isNotBlank(x.getPath()));
     }
 
     @Override
