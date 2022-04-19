@@ -143,7 +143,6 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
         }
     }
 
-
     @Override
     public void logout() {
         log.info("用户登出: username = {}", SessionUtil.getUsername());

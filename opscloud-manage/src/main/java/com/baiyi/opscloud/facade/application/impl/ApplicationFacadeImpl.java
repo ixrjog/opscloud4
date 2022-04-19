@@ -76,8 +76,10 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
             pageQuery.setUserId(userService.getByUsername(SessionUtil.getUsername()).getId());
         }
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
-        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class).stream()
-                .peek(e -> applicationPacker.wrap(e)).collect(Collectors.toList());
+        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class)
+                .stream()
+                .peek(applicationPacker::wrap)
+                .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
@@ -152,8 +154,10 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     public DataTable<UserVO.IUserPermission> queryUserBusinessPermissionPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
         pageQuery.setBusinessType(getBusinessType());
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
-        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class).stream()
-                .peek(e -> applicationPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class)
+                .stream()
+                .peek(e -> applicationPacker.wrap(e, pageQuery))
+                .collect(Collectors.toList());
         if (pageQuery.getAuthorized()) {
             data.forEach(e -> {
                 e.setUserId(pageQuery.getUserId());

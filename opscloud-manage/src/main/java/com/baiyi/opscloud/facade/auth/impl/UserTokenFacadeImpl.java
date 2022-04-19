@@ -54,4 +54,5 @@ public class UserTokenFacadeImpl implements UserTokenFacade {
         userTokenService.add(userToken);
         return userToken;
     }
+    
 }
