@@ -100,7 +100,7 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
         dsInstanceFacade.pullAsset(instanceUuid, DsAssetTypeConstants.RAM_USER.name(), ramUser);
         CreateRamUserMessage message = CreateRamUserMessage.builder()
                 .aliyunName(aliyun.getAccount().getName())
-                .loginUrl(aliyun.getAccount().getLoginUrl())
+                .loginUrl(aliyun.getAccount().getLoginUrl(aliyun.getVersion()))
                 .username(Joiner.on("").join(ramUser.getUserName(), aliyun.getAccount().getDomain()))
                 .password(user.getPassword())
                 .build();

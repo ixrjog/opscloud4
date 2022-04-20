@@ -55,9 +55,9 @@ spring:
   datasource:
     druid:
       opscloud:
-        url: jdbc:mysql://mysql.opscloud.com:3306/opscloud4-prod?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
-        username: opscloud4
-        password: 'avdf31ASEmT0z*MfiW2qcyLYw77mDUl6'
+        url: jdbc:mysql://mysql.opscloud.com:3306/opscloud4-github?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+        username: opscloud4_github
+        password: '6Ln7N9uPYOyfNmF1'
         initial-size: 5
         min-idle: 5
         max-active: 20
@@ -84,6 +84,5 @@ jasypt:
   encryptor:
     algorithm: PBEWithMD5AndDES
     iv-generator-classname: 'org.jasypt.iv.NoIvGenerator'
-    # 密钥
-    # 可以通过命令参数指定 `java -jar -Djasypt.encryptor.password=${password}`
+    # 加密密钥，可以通过命令参数指定 `java -jar -Djasypt.encryptor.password=${password}`
     password: '1^Z!NxcB4s!0Sxz&URokZ6DdZnNn#acO#ELjM&kvun^LV!yCB%ec*^NJ%5xvCGlJ6&SHGtKN#Gs!fK%lq8aQYpfLlwkFrvQrcp1VzYGt74vdVcMmUk73%HCrOV07IZw0'

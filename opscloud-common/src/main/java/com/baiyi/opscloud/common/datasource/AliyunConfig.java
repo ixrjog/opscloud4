@@ -18,7 +18,8 @@ import java.util.Set;
 @Data
 public class AliyunConfig extends BaseConfig {
 
-    private static final String RAM_LOGIN_URL = "https://signin.aliyun.com/${COMPANY}.onaliyun.com/login.htm";
+    // signin.aliyun.com
+    private static final String RAM_LOGIN_URL = "https://signin.${VERSION}.com/${COMPANY}.onaliyun.com/login.htm";
 
     public static final String DMS_ENDPOINT = "dms-enterprise.aliyuncs.com";
 
@@ -28,6 +29,7 @@ public class AliyunConfig extends BaseConfig {
     @NoArgsConstructor
     @ApiModel
     public static class Aliyun {
+        private String version;
         private Account account;
         private String regionId;
         private Set<String> regionIds; // 可用区
@@ -54,8 +56,10 @@ public class AliyunConfig extends BaseConfig {
          *
          * @return
          */
-        public String getLoginUrl() {
-            return RAM_LOGIN_URL.replace("${COMPANY}", StringUtils.isEmpty(this.company) ? this.uid : this.company);
+        public String getLoginUrl(String version) {
+            return RAM_LOGIN_URL
+                    .replace("${VERSION}",StringUtils.isEmpty(version) ? "aliyun" : version)
+                    .replace("${COMPANY}", StringUtils.isEmpty(this.company) ? this.uid : this.company);
         }
     }
 
