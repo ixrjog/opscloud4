@@ -45,7 +45,7 @@ public class MFADelegate {
             log.info("尝试启用IAM虚拟MFA: username = {} , serialNumber = {}", user.getUsername(), vMFADevice.getSerialNumber());
             String secretKeyStr = new String(vMFADevice.getBase32StringSeed().array());
             SecretKey key = OtpUtil.toKey(secretKeyStr);
-            OTPAccessCode.AccessCode accessCode = OtpUtil.generateOtpAcccessCode(key);
+            OTPAccessCode.AccessCode accessCode = OtpUtil.generateOtpAccessCode(key);
             EnableMFADeviceResult result = amazonIMMFADriver.enableMFADevice(config, user, vMFADevice.getSerialNumber(), accessCode.getCurrentPassword(), accessCode.getFuturePassword());
             log.info("启用虚拟MFA设备成功: username = {} , requestId = {}", user.getUsername(), result.getSdkResponseMetadata().getRequestId());
         } catch (Exception e) {

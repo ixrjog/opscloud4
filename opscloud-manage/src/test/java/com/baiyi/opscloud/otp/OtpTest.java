@@ -45,15 +45,15 @@ public class OtpTest extends BaseUnit {
             // LACYXBI6WBQ4O5WW273USF5S7QMVMYBT
             key = keyGenerator.generateKey();
 
-
             log.info("Algorithm = {} , Encoded = {} , Format = {}", key.getAlgorithm(), Base32StringUtil.encode(key.getEncoded()), key.getFormat());
 
 //            print("getAlgorithm() = " ,  key.getAlgorithm(),key.getEncoded(),key.getFormat());
 //            print("Encoded = " + key.getEncoded());
 //            print("Format = " + key.getFormat());
-            final Instant now = Instant.now();
-            final Instant later = now.plus(totp.getTimeStep());
 
+            final Instant now = Instant.now();
+            final Instant before = now.plus(totp.getTimeStep());
+            final Instant later = now.plus(totp.getTimeStep());
             System.out.println("Current password: " + totp.generateOneTimePasswordString(key, now));
             System.out.println("Future password:  " + totp.generateOneTimePasswordString(key, later));
         } catch (NoSuchAlgorithmException e) {

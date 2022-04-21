@@ -16,7 +16,9 @@ public enum TagConstants {
     NOTICE("Notice"),
     SYSTEM("System"),
     MFA("MFA"),
-    SUPER_ADMIN("SA");
+    SUPER_ADMIN("SA"),
+    // 阿里云数据库管理
+    DMS("DMS");
 
     @Getter
     private final String tag;

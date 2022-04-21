@@ -13,8 +13,7 @@ import java.util.Locale;
 public class Base32StringUtil {
     // singleton
 
-    private static final Base32StringUtil INSTANCE =
-            new Base32StringUtil("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"); // RFC 4648/3548
+    private static final Base32StringUtil INSTANCE = new Base32StringUtil("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"); // RFC 4648/3548
 
     static Base32StringUtil getInstance() {
         return INSTANCE;
@@ -27,7 +26,7 @@ public class Base32StringUtil {
     private final int SHIFT;
     private final HashMap<Character, Integer> CHAR_MAP;
 
-    static final String SEPARATOR = "-";
+    private static final String SEPARATOR = "-";
 
     protected Base32StringUtil(String alphabet) {
         this.ALPHABET = alphabet;
@@ -77,7 +76,6 @@ public class Base32StringUtil {
             }
         }
         // We'll ignore leftover bits for now.
-        //
         // if (next != outLength || bitsLeft >= SHIFT) {
         //  throw new DecodingException("Bits left: " + bitsLeft);
         // }
@@ -130,6 +128,5 @@ public class Base32StringUtil {
     public Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
-
 
 }
