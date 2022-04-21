@@ -102,6 +102,7 @@ public class DsAssetParam {
 
     }
 
+    @SuperBuilder(toBuilder = true)
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor

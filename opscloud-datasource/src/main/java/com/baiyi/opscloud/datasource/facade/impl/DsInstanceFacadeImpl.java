@@ -46,6 +46,7 @@ public class DsInstanceFacadeImpl<T> implements DsInstanceFacade<T> {
     }
 
     @Override
+    @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
     public void pushAsset(DsAssetParam.PushAsset pushAsset) {
         List<SimpleAssetProvider> providers = getProviders(pushAsset.getInstanceId(), pushAsset.getAssetType());
         assert providers != null;

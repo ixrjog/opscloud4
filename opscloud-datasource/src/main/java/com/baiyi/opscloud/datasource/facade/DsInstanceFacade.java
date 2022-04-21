@@ -12,8 +12,16 @@ import java.util.List;
  */
 public interface DsInstanceFacade<T> {
 
+    /**
+     * 拉取资产
+     * @param pullAsset
+     */
     void pullAsset(DsAssetParam.PullAsset pullAsset);
 
+    /**
+     * 推送资产
+     * @param pushAsset
+     */
     void pushAsset(DsAssetParam.PushAsset pushAsset);
 
     List<DatasourceInstanceAsset> pullAsset(String instanceUuid, String assetType, T entity);

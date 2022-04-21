@@ -62,9 +62,9 @@ public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
                     .map(AliyunConfig.Aliyun::getDms)
                     .map(AliyunConfig.Dms::getTid)
                     .orElse(AliyunDmsTenantDriver.getTenant(aliyun).getTid());
-            users.forEach(r -> {
+            users.forEach(dmsUser -> {
                 try {
-                    AliyunDmsUserDriver.registerUser(aliyun, tid, r);
+                    AliyunDmsUserDriver.registerUser(aliyun, tid, dmsUser);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
