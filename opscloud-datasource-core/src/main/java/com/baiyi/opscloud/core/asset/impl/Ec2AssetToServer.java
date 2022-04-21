@@ -8,6 +8,7 @@ import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -27,15 +28,20 @@ public class Ec2AssetToServer extends AbstractAssetToBO {
         return DsAssetTypeConstants.EC2.name();
     }
 
+    @Override
     protected BusinessAssetRelationVO.IBusinessAssetRelation toBO(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum) {
         String platform = asset.getProperties().get("platformDetails");
-        Optional<OsTypeConstants> osTypeOptional = Arrays.stream(OsTypeConstants.values()).filter(t -> platform.startsWith(t.getDesc())).findFirst();
+        Optional<OsTypeConstants> osTypeOptional = Arrays.stream(OsTypeConstants.values())
+                .filter(t -> platform.startsWith(t.getDesc())
+                        || platform.endsWith(t.getDesc())
+                )
+                .findFirst();
         return ServerVO.Server.builder()
                 .name(asset.getName())
                 .privateIp(asset.getAssetKey())
                 .publicIp(asset.getAssetKey2())
                 .envType(getDefaultEnvType())
-                .osType(osTypeOptional.map(OsTypeConstants::getDesc).orElse(""))
+                .osType(osTypeOptional.map(OsTypeConstants::getDesc).orElse(StringUtils.EMPTY))
                 .area(asset.getZone())
                 .build();
     }

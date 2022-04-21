@@ -32,6 +32,7 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
 
     private final AliyunRamPolicyDriver aliyunRamPolicyDriver;
 
+    @Override
     public final String getDsType() {
         return DsTypeEnum.ALIYUN.name();
     }
