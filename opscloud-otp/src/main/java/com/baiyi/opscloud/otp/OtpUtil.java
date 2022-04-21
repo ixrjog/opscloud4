@@ -23,7 +23,7 @@ import java.time.Instant;
  */
 public class OtpUtil {
 
-    private static final Duration duration = Duration.ofSeconds(30L);
+    private static final Duration DURATION = Duration.ofSeconds(30L);
 
     private static final String QR_CODE = "otpauth://totp/OPSCLOUD@${ACCOUNT}?secret=${OTP_SK}?&issuer=OPSCLOUD";
 
@@ -39,7 +39,7 @@ public class OtpUtil {
      */
     public static Key generateOtpSK() throws NoSuchAlgorithmException {
         // 30S
-        final TimeBasedOneTimePasswordGenerator totp = new TimeBasedOneTimePasswordGenerator(duration);
+        final TimeBasedOneTimePasswordGenerator totp = new TimeBasedOneTimePasswordGenerator(DURATION);
         //  final Key key;
         final KeyGenerator keyGenerator = KeyGenerator.getInstance(totp.getAlgorithm());
         // Key length should match the length of the HMAC output (160 bits for SHA-1, 256 bits
@@ -51,7 +51,7 @@ public class OtpUtil {
     }
 
     public static String generateOtp(Key key) throws NoSuchAlgorithmException, InvalidKeyException {
-        final TimeBasedOneTimePasswordGenerator totp = new TimeBasedOneTimePasswordGenerator(duration);
+        final TimeBasedOneTimePasswordGenerator totp = new TimeBasedOneTimePasswordGenerator(DURATION);
         final Instant now = Instant.now();
         return totp.generateOneTimePasswordString(key, now);
     }
@@ -64,8 +64,8 @@ public class OtpUtil {
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeyException
      */
-    public static OTPAccessCode.AccessCode generateOtpAcccessCode(Key key) throws NoSuchAlgorithmException, InvalidKeyException {
-        final TimeBasedOneTimePasswordGenerator totp = new TimeBasedOneTimePasswordGenerator(duration);
+    public static OTPAccessCode.AccessCode generateOtpAccessCode(Key key) throws NoSuchAlgorithmException, InvalidKeyException {
+        final TimeBasedOneTimePasswordGenerator totp = new TimeBasedOneTimePasswordGenerator(DURATION);
         final Instant now = Instant.now();
         final Instant later = now.plus(totp.getTimeStep());
         return OTPAccessCode.AccessCode.builder()

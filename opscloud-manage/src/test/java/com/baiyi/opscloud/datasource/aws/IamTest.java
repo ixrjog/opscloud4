@@ -118,7 +118,7 @@ public class IamTest extends BaseAwsTest {
                 .username("baiyitest")
                 .build();
         SecretKey key = OtpUtil.toKey("HFDS7SESXSB3APVVS33V5TFYBUW7NP42F5XWCAN7BWEMYFRZIX5VRVROVIELVFRD");
-        OTPAccessCode.AccessCode ac = OtpUtil.generateOtpAcccessCode(key);
+        OTPAccessCode.AccessCode ac = OtpUtil.generateOtpAccessCode(key);
         EnableMFADeviceResult r = amazonIMMFADriver.enableMFADevice(getConfig().getAws(), user, serialNumber, ac.getCurrentPassword(), ac.getFuturePassword());
         print(r);
     }
