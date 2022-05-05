@@ -158,7 +158,7 @@ public class IOUtil {
 
     public static String getPath(String path) {
         if (path == null || path.equals("")) return "";
-        String[] a = path.split("\\/");
+        String[] a = path.split("/");
         path = path.replace(a[a.length - 1], "");
         return path;
     }

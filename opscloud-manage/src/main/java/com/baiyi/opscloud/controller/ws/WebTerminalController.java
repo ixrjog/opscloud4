@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.controller.ws;
 
 import com.baiyi.opscloud.common.model.HostInfo;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
@@ -9,6 +10,7 @@ import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionBuilder;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.enums.SessionTypeEnum;
+import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.message.base.SimpleLoginMessage;
 import com.baiyi.opscloud.sshcore.task.terminal.SentOutputTask;
 import com.baiyi.opscloud.terminal.factory.TerminalProcessFactory;
@@ -119,7 +121,11 @@ public class WebTerminalController extends SimpleAuthentication {
     @OnError
     public void onError(Session session, Throwable error) {
         log.error("发生错误：{}，Session ID： {}", error.getMessage(), session.getId());
-        error.printStackTrace();
+        ServerMessage.BaseMessage closeMessage = ServerMessage.BaseMessage.builder()
+                .state(MessageState.CLOSE.getState())
+                .build();
+        TerminalProcessFactory.getProcessByKey(MessageState.CLOSE.getState())
+                .process(JSONUtil.writeValueAsString(closeMessage), session, terminalSession);
     }
 
 }
