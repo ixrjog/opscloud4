@@ -41,30 +41,17 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     @Override
     public DataTable<ServerVO.Server> queryServerPage(ServerParam.ServerPageQuery pageQuery) {
         DataTable<Server> table = serverService.queryServerPage(pageQuery);
-        List<ServerVO.Server> data = BeanCopierUtil.copyListProperties(table.getData(), ServerVO.Server.class).stream().peek(e ->
-                serverPacker.wrap(e, pageQuery)
-        ).collect(Collectors.toList());
+        List<ServerVO.Server> data = BeanCopierUtil.copyListProperties(table.getData(), ServerVO.Server.class).stream().peek(e -> serverPacker.wrap(e, pageQuery)).collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
     public DataTable<ApplicationResourceVO.Resource> queryResourcePage(ApplicationResourceParam.ResourcePageQuery pageQuery) {
-        ServerParam.ServerPageQuery query = ServerParam.ServerPageQuery.builder()
-                .queryName(pageQuery.getQueryName())
-                .build();
+        ServerParam.ServerPageQuery query = ServerParam.ServerPageQuery.builder().queryName(pageQuery.getQueryName()).build();
         query.setLength(pageQuery.getLength());
         query.setPage(pageQuery.getPage());
         DataTable<ServerVO.Server> table = queryServerPage(query);
-        return new DataTable<>(table.getData().stream().map(e ->
-                ApplicationResourceVO.Resource.builder()
-                        .name(e.getDisplayName())
-                        .applicationId(pageQuery.getApplicationId())
-                        .businessId(e.getBusinessId())
-                        .resourceType(getApplicationResType())
-                        .businessType(getBusinessType())
-                        .comment(e.getPrivateIp())
-                        .build()
-        ).collect(Collectors.toList()), table.getTotalNum());
+        return new DataTable<>(table.getData().stream().map(e -> ApplicationResourceVO.Resource.builder().name(e.getDisplayName()).applicationId(pageQuery.getApplicationId()).businessId(e.getBusinessId()).resourceType(getApplicationResType()).businessType(getBusinessType()).comment(e.getPrivateIp()).build()).collect(Collectors.toList()), table.getTotalNum());
     }
 
     @Override
@@ -85,10 +72,14 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
         if (!originalServer.getSerialNumber().equals(pre.getSerialNumber())) {
             // 判断SN是否重复
             if (serverService.getByUniqueKey(pre.getEnvType(), pre.getSerialNumber(), pre.getServerGroupId()) != null) {
-                throw new CommonRuntimeException("更新服务器错误: SerialNumber冲突 ");
+                throw new CommonRuntimeException("更新服务器错误: SerialNumber冲突!");
             }
         }
-        serverService.update(pre);
+        try {
+            serverService.update(pre);
+        } catch (Exception e) {
+            throw new CommonRuntimeException("更新服务器错误: 请确认IP、SerialNumber等字段是否有冲突!");
+        }
     }
 
     private Server toDO(ServerVO.Server server) {
@@ -97,10 +88,8 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
             Server maxSerialNumberServer = serverService.getMaxSerialNumberServer(pre.getServerGroupId(), pre.getEnvType());
             pre.setSerialNumber(null == maxSerialNumberServer ? 1 : maxSerialNumberServer.getSerialNumber() + 1);
         }
-        if (pre.getMonitorStatus() == null)
-            pre.setMonitorStatus(-1);
-        if (pre.getServerStatus() == null)
-            pre.setServerStatus(1);
+        if (pre.getMonitorStatus() == null) pre.setMonitorStatus(-1);
+        if (pre.getServerStatus() == null) pre.setServerStatus(1);
         return pre;
     }
 
@@ -116,10 +105,7 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     @Override
     public DataTable<ServerVO.Server> queryUserRemoteServerPage(ServerParam.UserRemoteServerPageQuery pageQuery) {
         DataTable<Server> table = serverService.queryUserRemoteServerPage(pageQuery);
-        List<ServerVO.Server> data = BeanCopierUtil.copyListProperties(table.getData(), ServerVO.Server.class)
-                .stream()
-                .peek(e -> serverPacker.wrap(e, pageQuery)
-                ).collect(Collectors.toList());
+        List<ServerVO.Server> data = BeanCopierUtil.copyListProperties(table.getData(), ServerVO.Server.class).stream().peek(e -> serverPacker.wrap(e, pageQuery)).collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
