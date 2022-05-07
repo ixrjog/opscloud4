@@ -11,9 +11,9 @@ import com.baiyi.opscloud.datasource.aliyun.dms.driver.AliyunDmsTenantDriver;
 import com.baiyi.opscloud.datasource.aliyun.dms.driver.AliyunDmsUserDriver;
 import com.baiyi.opscloud.datasource.aliyun.dms.entity.DmsUser;
 import com.baiyi.opscloud.datasource.aliyun.provider.push.AliyunDmsUserPushHelper;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_DMS_USER;
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PUSH_ALIYUN_DMS_USER;
 
 /**
@@ -41,7 +40,7 @@ public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
     private AliyunDmsUserPushHelper aliyunDmsUserPushHelper;
 
     @Override
-    @SingleTask(name = PULL_ALIYUN_DMS_USER, lockTime = "2m")
+   // @SingleTask(name = PULL_ALIYUN_DMS_USER, lockTime = "2m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -66,7 +65,7 @@ public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
                 try {
                     AliyunDmsUserDriver.registerUser(aliyun, tid, dmsUser);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error("注册用户错误: nickName = {} , e = {}", dmsUser.nickName, e.getMessage());
                 }
             });
             this.doPull(dsInstanceId);
@@ -96,6 +95,7 @@ public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
                     .orElse(AliyunDmsTenantDriver.getTenant(aliyun).getTid());
             return AliyunDmsUserDriver.listUser(aliyun, tid);
         } catch (Exception e) {
+            log.error("获取条目错误: e = {}", e.getMessage());
         }
         return Collections.emptyList();
     }

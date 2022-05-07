@@ -36,15 +36,17 @@ public class AliyunDmsUserDriver {
         ListUsersRequest request = new ListUsersRequest()
                 .setPageSize(PAGE_SIZE)
                 .setTid(tid);
-        long size = PAGE_SIZE;
+        long size = 0;
         int pageNumber = 1;
         List<DmsUser.User> users = Lists.newArrayList();
-        while (PAGE_SIZE <= size) {
+        while (true) {
             request.setPageNumber(pageNumber);
             ListUsersResponse response = client.listUsers(request);
             List<ListUsersResponseBody.ListUsersResponseBodyUserListUser> list = response.getBody().getUserList().getUser();
             users.addAll(BeanCopierUtil.copyListProperties(list, DmsUser.User.class));
-            size = response.getBody().getTotalCount();
+            if(users.size() >= response.getBody().getTotalCount()){
+                break;
+            }
             pageNumber++;
         }
         return users;
