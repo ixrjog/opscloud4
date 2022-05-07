@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_DMS_USER;
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PUSH_ALIYUN_DMS_USER;
 
 /**
@@ -40,7 +41,7 @@ public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
     private AliyunDmsUserPushHelper aliyunDmsUserPushHelper;
 
     @Override
-   // @SingleTask(name = PULL_ALIYUN_DMS_USER, lockTime = "2m")
+    @SingleTask(name = PULL_ALIYUN_DMS_USER, lockTime = "2m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
