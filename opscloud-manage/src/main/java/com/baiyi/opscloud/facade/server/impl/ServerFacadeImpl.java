@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.server.impl;
 
 import com.baiyi.opscloud.common.annotation.EnvWrapper;
+import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
@@ -80,6 +81,13 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     @Override
     public void updateServer(ServerVO.Server server) {
         Server pre = toDO(server);
+        Server originalServer = serverService.getById(pre.getId());
+        if (!originalServer.getSerialNumber().equals(pre.getSerialNumber())) {
+            // 判断SN是否重复
+            if (serverService.getByUniqueKey(pre.getEnvType(), pre.getSerialNumber(), pre.getServerGroupId()) != null) {
+                throw new CommonRuntimeException("更新服务器错误: SerialNumber冲突 ");
+            }
+        }
         serverService.update(pre);
     }
 
@@ -111,7 +119,7 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
         List<ServerVO.Server> data = BeanCopierUtil.copyListProperties(table.getData(), ServerVO.Server.class)
                 .stream()
                 .peek(e -> serverPacker.wrap(e, pageQuery)
-        ).collect(Collectors.toList());
+                ).collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 

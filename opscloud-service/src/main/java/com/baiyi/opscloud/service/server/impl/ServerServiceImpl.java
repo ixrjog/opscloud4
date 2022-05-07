@@ -40,6 +40,16 @@ public class ServerServiceImpl extends AbstractBusinessService<Server> implement
     }
 
     @Override
+    public Server getByUniqueKey(Integer envType,Integer serialNumber,Integer serverGroupId) {
+        Example example = new Example(Server.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("envType",envType)
+                .andEqualTo("serialNumber",serialNumber)
+                .andEqualTo("serverGroupId",serverGroupId);
+        return serverMapper.selectOneByExample(example);
+    }
+
+    @Override
     public Server getByPrivateIp(String privateIp) {
         Example example = new Example(Server.class);
         Example.Criteria criteria = example.createCriteria();
