@@ -1,0 +1,95 @@
+package com.baiyi.opscloud.datasource.manager;
+
+import com.baiyi.opscloud.common.constants.ServerMonitorStatusEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.ZabbixConfig;
+import com.baiyi.opscloud.common.util.IPRegionUtil;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.datasource.manager.base.BaseManager;
+import com.baiyi.opscloud.domain.constants.TagConstants;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.Server;
+import com.baiyi.opscloud.service.datasource.DsConfigService;
+import com.baiyi.opscloud.service.server.ServerService;
+import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5HostDriver;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * @Author baiyi
+ * @Date 2022/5/9 10:06
+ * @Version 1.0
+ */
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class ZabbixInstanceManager extends BaseManager {
+
+    private final DsConfigService dsConfigService;
+
+    private final DsConfigHelper dsConfigHelper;
+
+    private final ZabbixV5HostDriver zabbixV5HostDriver;
+
+    private final ServerService serverService;
+
+    /**
+     * 过滤实例类型
+     */
+    private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.ZABBIX};
+
+    @Override
+    protected DsTypeEnum[] getFilterInstanceTypes() {
+        return FILTER_INSTANCE_TYPES;
+    }
+
+    @Override
+    protected String getTag() {
+        return TagConstants.SERVER.getTag();
+    }
+
+    public void updateServerMonitorStatus(List<Server> servers) {
+        if (CollectionUtils.isEmpty(servers)) return;
+        List<DatasourceInstance> instances = listInstance();
+        if (CollectionUtils.isEmpty(instances)) return;
+        List<ZabbixConfig> zabbixConfigs = instances.stream().map(i -> {
+            DatasourceConfig datasourceConfig = dsConfigService.getById(i.getConfigId());
+            return dsConfigHelper.build(datasourceConfig, ZabbixConfig.class);
+        }).collect(Collectors.toList());
+        servers.forEach(s -> {
+            // 只遍历有效服务器
+            if (s.getIsActive()) {
+                zabbixConfigs.forEach(c -> {
+                    if (IPRegionUtil.isInRanges(s.getPrivateIp(), c.getZabbix().getRegions())) {
+                        ZabbixHost.Host host = zabbixV5HostDriver.getByIp(c.getZabbix(), s.getPrivateIp());
+                        if (host == null) {
+                            updateServerMonitorStatus(s, ServerMonitorStatusEnum.NOT_CREATED);
+                        } else {
+                            if (host.getStatus() == ServerMonitorStatusEnum.MONITORED.getStatus()) {
+                                updateServerMonitorStatus(s, ServerMonitorStatusEnum.MONITORED);
+                            } else {
+                                updateServerMonitorStatus(s, ServerMonitorStatusEnum.UNMONITORED);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private void updateServerMonitorStatus(Server server, ServerMonitorStatusEnum serverMonitorStatusEnum) {
+        if (serverMonitorStatusEnum.getStatus() != server.getMonitorStatus()) {
+            log.info("更新服务器监控状态: ip = {} , monitorStatus = {}", server.getPrivateIp(), serverMonitorStatusEnum.getStatus());
+            server.setMonitorStatus(serverMonitorStatusEnum.getStatus());
+            serverService.update(server);
+        }
+    }
+
+}

@@ -17,6 +17,8 @@ public interface ServerFacade {
 
     void updateServer(ServerVO.Server server);
 
+    void scanServerMonitoringStatus();
+
     void deleteServerById(Integer id);
 
     DataTable<ServerVO.Server> queryUserRemoteServerPage(ServerParam.UserRemoteServerPageQuery queryParam);

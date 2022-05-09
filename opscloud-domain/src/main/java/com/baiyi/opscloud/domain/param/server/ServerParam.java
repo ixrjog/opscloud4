@@ -44,6 +44,9 @@ public class ServerParam {
         @ApiModelProperty(value = "状态")
         private Integer serverStatus;
 
+        @ApiModelProperty(value = "监控状态")
+        private Integer monitorStatus;
+
         @ApiModelProperty(value = "标签id")
         private Integer tagId;
 

@@ -53,6 +53,13 @@ public class ServerController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "扫描服务器监控状态")
+    @PutMapping(value = "/monitor/scan",  produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> scanServerMonitorStatus() {
+        serverFacade.scanServerMonitoringStatus();
+        return HttpResult.SUCCESS;
+    }
+
     @ApiOperation(value = "删除指定的服务器")
     @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteServerById(@RequestParam int id) {

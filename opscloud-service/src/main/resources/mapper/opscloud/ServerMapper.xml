@@ -54,6 +54,9 @@
             <if test="serverStatus != null">
                 and a0.server_status = #{serverStatus}
             </if>
+            <if test="monitorStatus != null">
+                and a0.monitor_status = #{monitorStatus}
+            </if>
         </where>
     </select>
 

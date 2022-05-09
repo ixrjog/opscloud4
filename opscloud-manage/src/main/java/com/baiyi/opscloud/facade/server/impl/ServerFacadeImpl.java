@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.annotation.EnvWrapper;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
+import com.baiyi.opscloud.datasource.manager.ZabbixInstanceManager;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.*;
 import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
@@ -18,10 +19,13 @@ import com.baiyi.opscloud.factory.resource.base.AbstractApplicationResourceQuery
 import com.baiyi.opscloud.packer.server.ServerPacker;
 import com.baiyi.opscloud.service.server.ServerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi
@@ -37,6 +41,8 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     private final ServerService serverService;
 
     private final ServerPacker serverPacker;
+
+    private final ZabbixInstanceManager zabbixInstanceManager;
 
     @Override
     public DataTable<ServerVO.Server> queryServerPage(ServerParam.ServerPageQuery pageQuery) {
@@ -80,6 +86,13 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
         } catch (Exception e) {
             throw new CommonRuntimeException("更新服务器错误: 请确认IP、SerialNumber等字段是否有冲突!");
         }
+    }
+
+    @Async(CORE)
+    @Override
+    public void scanServerMonitoringStatus() {
+        List<Server> servers = serverService.selectAll();
+        zabbixInstanceManager.updateServerMonitorStatus(servers);
     }
 
     private Server toDO(ServerVO.Server server) {

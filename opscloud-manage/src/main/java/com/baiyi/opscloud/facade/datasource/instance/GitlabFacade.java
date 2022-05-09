@@ -1,20 +1,23 @@
 package com.baiyi.opscloud.facade.datasource.instance;
 
-import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.common.util.GitlabTokenUtil;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.InstanceConfigHelper;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
+import com.baiyi.opscloud.domain.constants.TagConstants;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
 import com.baiyi.opscloud.factory.gitlab.GitlabEventConsumerFactory;
 import com.baiyi.opscloud.factory.gitlab.IGitlabEventConsumer;
+import com.baiyi.opscloud.service.datasource.DsConfigService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +31,10 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class GitlabFacade extends BaseManager {
+
+    private final DsConfigService dsConfigService;
+
+    private final DsConfigHelper dsConfigHelper;
 
     /**
      * 支持SystemHooks标签的实例类型
@@ -52,7 +59,8 @@ public class GitlabFacade extends BaseManager {
         List<DatasourceInstance> instances = super.listInstance();
         if (CollectionUtils.isEmpty(instances)) return Optional.empty();
         return instances.stream().filter(i -> {
-            GitlabConfig gitlabDsInstanceConfig = (GitlabConfig) instanceConfigHelper.getConfig(i);
+            DatasourceConfig datasourceConfig = dsConfigService.getById(i.getConfigId());
+            GitlabConfig gitlabDsInstanceConfig = dsConfigHelper.build(datasourceConfig,GitlabConfig.class);
             Optional<String> tokenOptional = Optional.ofNullable(gitlabDsInstanceConfig.getGitlab())
                     .map(GitlabConfig.Gitlab::getSystemHooks)
                     .map(GitlabConfig.SystemHooks::getToken);

@@ -40,6 +40,11 @@ public class ServerServiceImpl extends AbstractBusinessService<Server> implement
     }
 
     @Override
+    public List<Server> selectAll() {
+        return serverMapper.selectAll();
+    }
+
+    @Override
     public Server getByUniqueKey(Integer envType,Integer serialNumber,Integer serverGroupId) {
         Example example = new Example(Server.class);
         Example.Criteria criteria = example.createCriteria();

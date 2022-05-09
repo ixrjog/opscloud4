@@ -15,6 +15,8 @@ public interface ServerService {
 
     Server getById(Integer id);
 
+    List<Server> selectAll();
+
     Server getByUniqueKey(Integer envType, Integer serialNumber, Integer serverGroupId);
 
     Server getByPrivateIp(String privateIp);

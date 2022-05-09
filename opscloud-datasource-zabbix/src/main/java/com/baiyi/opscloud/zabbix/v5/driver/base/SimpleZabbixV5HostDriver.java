@@ -5,6 +5,7 @@ import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.feign.ZabbixHostFeign;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
 import feign.Feign;
+import feign.Request;
 import feign.Retryer;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
@@ -35,6 +36,7 @@ public class SimpleZabbixV5HostDriver {
                 .retryer(new Retryer.Default(3000, 3000, 3))
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
+                .options(new Request.Options())
                 .target(ZabbixHostFeign.class, config.getUrl());
     }
 
