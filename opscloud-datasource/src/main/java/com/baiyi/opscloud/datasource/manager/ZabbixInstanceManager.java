@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -63,25 +64,26 @@ public class ZabbixInstanceManager extends BaseManager {
             DatasourceConfig datasourceConfig = dsConfigService.getById(i.getConfigId());
             return dsConfigHelper.build(datasourceConfig, ZabbixConfig.class);
         }).collect(Collectors.toList());
-        servers.forEach(s -> {
-            // 只遍历有效服务器
-            if (s.getIsActive()) {
-                zabbixConfigs.forEach(c -> {
-                    if (IPRegionUtil.isInRanges(s.getPrivateIp(), c.getZabbix().getRegions())) {
-                        ZabbixHost.Host host = zabbixV5HostDriver.getByIp(c.getZabbix(), s.getPrivateIp());
-                        if (host == null) {
-                            updateServerMonitorStatus(s, ServerMonitorStatusEnum.NOT_CREATED);
-                        } else {
-                            if (host.getStatus() == ServerMonitorStatusEnum.MONITORED.getStatus()) {
-                                updateServerMonitorStatus(s, ServerMonitorStatusEnum.MONITORED);
-                            } else {
-                                updateServerMonitorStatus(s, ServerMonitorStatusEnum.UNMONITORED);
-                            }
-                        }
-                    }
-                });
+        servers.forEach(s -> updateServerMonitorStatus(s, zabbixConfigs));
+    }
+
+    private void updateServerMonitorStatus(Server server, List<ZabbixConfig> zabbixConfigs) {
+        // 只遍历有效服务器
+        if (!server.getIsActive()) return;
+        Optional<ZabbixConfig> optionalZabbixConfig = zabbixConfigs.stream().filter(c -> IPRegionUtil.isInRanges(server.getPrivateIp(), c.getZabbix().getRegions())).findFirst();
+        // 未匹配路由规则
+        if (!optionalZabbixConfig.isPresent()) return;
+        ZabbixConfig zabbixConfig = optionalZabbixConfig.get();
+        ZabbixHost.Host host = zabbixV5HostDriver.getByIp(zabbixConfig.getZabbix(), server.getPrivateIp());
+        if (host == null) {
+            updateServerMonitorStatus(server, ServerMonitorStatusEnum.NOT_CREATED);
+        } else {
+            if (host.getStatus() == ServerMonitorStatusEnum.MONITORED.getStatus()) {
+                updateServerMonitorStatus(server, ServerMonitorStatusEnum.MONITORED);
+            } else {
+                updateServerMonitorStatus(server, ServerMonitorStatusEnum.UNMONITORED);
             }
-        });
+        }
     }
 
     private void updateServerMonitorStatus(Server server, ServerMonitorStatusEnum serverMonitorStatusEnum) {
