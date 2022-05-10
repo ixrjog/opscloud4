@@ -57,6 +57,10 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
             throw new TicketVerifyException("校验工单条目失败: 未指定SQS名称!");
         if (!entry.getQueueName().matches("[0-9a-z_]{7,80}"))
             throw new TicketVerifyException("校验工单条目失败: SQS名称不合规!");
+
+        if (!entry.getQueueName().startsWith("transsnet_"))
+            throw new TicketVerifyException("校验工单条目失败: SQS名称必须以 transsnet_ 开始！");
+        
         switch (entry.getRegionId()) {
             case "ap-northeast-2":
                 if (!entry.getQueueName().endsWith("_dev_queue"))
