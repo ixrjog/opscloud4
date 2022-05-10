@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.packer.application;
 
+import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
@@ -34,6 +35,7 @@ public class ApplicationPacker implements IWrapper<ApplicationVO.Application> {
     private final ApplicationResourceInstancePacker applicationResourceInstancePacker;
 
     @Override
+    @TagsWrapper
     public void wrap(ApplicationVO.Application application, IExtend iExtend) {
         if (!iExtend.getExtend()) return;
         List<ApplicationResource> applicationResourceList = applicationResourceService.queryByApplication(application.getId());
@@ -50,6 +52,7 @@ public class ApplicationPacker implements IWrapper<ApplicationVO.Application> {
      * @param application
      */
     @Override
+    @TagsWrapper(extend = true)
     public void wrap(ApplicationVO.Application application) {
         List<ApplicationResource> resources = applicationResourceService.queryByApplication(application.getId(), DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name());
         List<ApplicationResourceVO.Resource> data = BeanCopierUtil.copyListProperties(resources, ApplicationResourceVO.Resource.class).stream()

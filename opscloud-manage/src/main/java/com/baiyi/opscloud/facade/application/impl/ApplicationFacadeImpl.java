@@ -7,6 +7,7 @@ import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
+import com.baiyi.opscloud.domain.annotation.TagClear;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
@@ -131,6 +132,7 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     }
 
     @Override
+    @TagClear
     public void deleteApplication(Integer id) {
         if (!CollectionUtils.isEmpty(applicationResourceService.queryByApplication(id)))
             throw new CommonRuntimeException(ErrorEnum.APPLICATION_RES_IS_NOT_EMPTY);
