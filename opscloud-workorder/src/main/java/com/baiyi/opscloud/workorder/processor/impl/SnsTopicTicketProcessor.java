@@ -75,6 +75,9 @@ public class SnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
                 throw new TicketVerifyException("校验工单条目失败: FIFO 主题名称必须以“.fifo”结尾");
         }
 
+        if (!topic.startsWith("transsnet_"))
+            throw new TicketVerifyException("校验工单条目失败: SNS主题名称必须以 transsnet_ 开始！");
+
         if (!topic.matches("[0-9a-z_]{7,256}"))
             throw new TicketVerifyException("校验工单条目失败: SNS主题名称不合规!");
 
