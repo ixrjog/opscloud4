@@ -12,6 +12,7 @@ import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
 import com.baiyi.opscloud.facade.business.BusinessDocumentFacade;
 import com.baiyi.opscloud.service.business.BusinessDocumentService;
 import com.baiyi.opscloud.service.server.ServerService;
+import com.baiyi.opscloud.util.ServerTreeUtil;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -32,6 +33,9 @@ public class BusinessDocumentFacadeImpl implements BusinessDocumentFacade {
 
     @Resource
     private ServerService serverService;
+
+    @Resource
+    private ServerTreeUtil serverTreeUtil;
 
     @Override
     @BizDocWrapper(extend = true, wrapResult = true)
@@ -61,6 +65,7 @@ public class BusinessDocumentFacadeImpl implements BusinessDocumentFacade {
     private void evictCache(BaseBusiness.IBusiness iBusiness) {
         if (BusinessTypeEnum.SERVERGROUP.getType() == iBusiness.getBusinessType()) {
             serverGroupingAlgorithm.evictGrouping(iBusiness.getBusinessId());
+            serverTreeUtil.evictWrap(iBusiness.getBusinessId());
             return;
         }
         if (BusinessTypeEnum.SERVER.getType() == iBusiness.getBusinessType()) {

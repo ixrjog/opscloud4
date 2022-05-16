@@ -200,7 +200,6 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
             treeList.add(serverTreeUtil.wrap(group, serverGroupMap));
             treeSize.addAndGet(serverTreeUtil.getServerGroupMapSize(serverGroupMap));
         }
-
         return ServerTreeVO.ServerTree.builder()
                 .userId(user.getId())
                 .tree(treeList)
