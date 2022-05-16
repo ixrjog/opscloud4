@@ -1,7 +1,11 @@
 package com.baiyi.opscloud.terminal.processor.impl;
 
+import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
+import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.interceptor.SupserAdminInterceptor;
+import com.baiyi.opscloud.service.business.BizPropertyHelper;
+import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
@@ -33,6 +37,12 @@ public class LoginProcessor extends AbstractServerTerminalProcessor<ServerMessag
     @Resource
     private SupserAdminInterceptor sAInterceptor;
 
+    @Resource
+    private BizPropertyHelper bizPropertyHelper;
+
+    @Resource
+    private ServerService serverService;
+
     private static final ExecutorService executor = Executors.newFixedThreadPool(4);
 
     @Override
@@ -49,7 +59,9 @@ public class LoginProcessor extends AbstractServerTerminalProcessor<ServerMessag
                 log.info("登录服务器节点: instanceId = {} ", serverNode.getInstanceId());
                 sAInterceptor.interceptLoginServer(serverNode.getId());
                 HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverNode, loginMessage);
-                RemoteInvokeHandler.openWebTerminal(terminalSession.getSessionId(), serverNode.getInstanceId(), hostSystem);
+                Server server = serverService.getById(serverNode.getId());
+                ServerProperty.Server serverProperty = bizPropertyHelper.getBusinessProperty(server);
+                RemoteInvokeHandler.openWebTerminal(terminalSession.getSessionId(), serverNode.getInstanceId(), hostSystem, serverProperty);
                 terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, hostSystem, InstanceSessionTypeEnum.SERVER));
             });
         }
