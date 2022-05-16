@@ -28,6 +28,10 @@ public class HostParamUtil {
         return BizPropertyHelper.getManageIp(server, property);
     }
 
+    public static int getSshPort( ServerProperty.Server property) {
+        return BizPropertyHelper.getSshPort(property);
+    }
+
     public static List<ZabbixHostParam.Template> toTemplateParam(List<com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate.Template> templates) {
         return templates.stream().map(e -> ZabbixHostParam.Template.builder().templateid(e.getTemplateid()).build())
                 .collect(Collectors.toList());

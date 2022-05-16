@@ -2,9 +2,7 @@ package com.baiyi.opscloud.terminal.processor.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.interceptor.SupserAdminInterceptor;
-import com.baiyi.opscloud.service.business.BizPropertyHelper;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
@@ -37,8 +35,8 @@ public class LoginProcessor extends AbstractServerTerminalProcessor<ServerMessag
     @Resource
     private SupserAdminInterceptor sAInterceptor;
 
-    @Resource
-    private BizPropertyHelper bizPropertyHelper;
+//    @Resource
+//    private BizPropertyHelper bizPropertyHelper;
 
     @Resource
     private ServerService serverService;
@@ -60,8 +58,8 @@ public class LoginProcessor extends AbstractServerTerminalProcessor<ServerMessag
                 sAInterceptor.interceptLoginServer(serverNode.getId());
                 HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverNode, loginMessage);
                 Server server = serverService.getById(serverNode.getId());
-                ServerProperty.Server serverProperty = bizPropertyHelper.getBusinessProperty(server);
-                RemoteInvokeHandler.openWebTerminal(terminalSession.getSessionId(), serverNode.getInstanceId(), hostSystem, serverProperty);
+               //  ServerProperty.Server serverProperty = bizPropertyHelper.getBusinessProperty(server);
+                RemoteInvokeHandler.openWebTerminal(terminalSession.getSessionId(), serverNode.getInstanceId(), hostSystem);
                 terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, hostSystem, InstanceSessionTypeEnum.SERVER));
             });
         }

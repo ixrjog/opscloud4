@@ -51,6 +51,13 @@ public class BizPropertyHelper {
         return IPAddressUtil.isIPv4LiteralAddress(manageIp) ? manageIp : server.getPrivateIp();
     }
 
+    public static int getSshPort(ServerProperty.Server property) {
+        return Optional.ofNullable(property)
+                .map(ServerProperty.Server::getMetadata)
+                .map(ServerProperty.Metadata::getSshPort)
+                .orElse(22);
+    }
+
     public ServerProperty.Server getBusinessProperty(Server server) {
         ServerProperty.Server serverProperty = getServerProperty(server.getId());
         ServerProperty.Server serverGroupProperty = getServerGroupProperty(server.getServerGroupId());

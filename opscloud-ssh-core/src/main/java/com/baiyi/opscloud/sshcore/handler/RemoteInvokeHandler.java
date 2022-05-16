@@ -3,7 +3,6 @@ package com.baiyi.opscloud.sshcore.handler;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
-import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.*;
 import com.baiyi.opscloud.sshcore.task.kubernetes.WatchKubernetesTerminalOutputTask;
@@ -23,7 +22,6 @@ import org.jline.terminal.Size;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -65,68 +63,6 @@ public class RemoteInvokeHandler {
                 break;
         }
     }
-
-    public static void openWebTerminal(String sessionId, String instanceId, HostSystem hostSystem, ServerProperty.Server serverProperty) {
-        JSch jsch = new JSch();
-
-        hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
-        hostSystem.setInstanceId(instanceId);
-        try {
-            if (hostSystem.getSshCredential() == null) return;
-            final String  ip = Optional.ofNullable(serverProperty)
-                    .map(ServerProperty.Server::getMetadata)
-                    .map(ServerProperty.Metadata::getManageIp)
-                    .orElse(hostSystem.getHost());
-
-            final int sshPort = Optional.ofNullable(serverProperty)
-                    .map(ServerProperty.Server::getMetadata)
-                    .map(ServerProperty.Metadata::getSshPort)
-                    .orElse(SSH_PORT);
-            Session session = jsch.getSession(hostSystem.getSshCredential().getServerAccount().getUsername(),  ip ,
-                    sshPort);
-            invokeSshCredential(hostSystem, jsch, session);
-            SessionConfigUtil.setDefault(session); // 默认设置
-            ChannelShell channel = (ChannelShell) session.openChannel("shell");
-            ChannelShellUtil.setDefault(channel);
-
-            setChannelPtySize(channel, hostSystem.getLoginMessage());
-
-            // new session output
-            SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
-            // 启动线程处理会话
-            Runnable run = new WatchWebTerminalOutputTask(sessionOutput, channel.getInputStream());
-            Thread thread = new Thread(run);
-            thread.start();
-
-            OutputStream inputToChannel = channel.getOutputStream();
-
-            JSchSession jSchSession = JSchSession.builder()
-                    .sessionId(sessionId)
-                    .instanceId(instanceId)
-                    .commander(new PrintStream(inputToChannel, true))
-                    .inputToChannel(inputToChannel)
-                    .channel(channel)
-                    .hostSystem(hostSystem)
-                    .build();
-            jSchSession.setSessionOutput(sessionOutput);
-            JSchSessionContainer.addSession(jSchSession);
-
-            channel.connect();
-        } catch (Exception e) {
-            log.info(e.toString(), e);
-            if (e.getMessage().toLowerCase().contains("userauth fail")) {
-                hostSystem.setStatusCd(HostSystem.PUBLIC_KEY_FAIL_STATUS);
-            } else if (e.getMessage().toLowerCase().contains("auth fail") || e.getMessage().toLowerCase().contains("auth cancel")) {
-                hostSystem.setStatusCd(HostSystem.AUTH_FAIL_STATUS);
-            } else if (e.getMessage().toLowerCase().contains("unknownhostexception")) {
-                hostSystem.setErrorMsg("DNS Lookup Failed");
-                hostSystem.setStatusCd(HostSystem.HOST_FAIL_STATUS);
-            } else {
-                hostSystem.setStatusCd(HostSystem.GENERIC_FAIL_STATUS);
-            }
-        }
-    }
-
 
     /**
      * Web Terminal

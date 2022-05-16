@@ -14,6 +14,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.model.SshCredential;
+import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.service.business.BizPropertyHelper;
 import com.baiyi.opscloud.service.server.ServerAccountService;
@@ -112,8 +113,10 @@ public class HostSystemHandler {
         message.setAdmin(SessionUtil.getIsAdmin());
         Server server = serverService.getById(serverNode.getId());
         SshCredential sshCredential = buildSshCredential(message, server);
+        ServerProperty.Server serverProperty = bizPropertyHelper.getBusinessProperty(server);
         return HostSystem.builder()
-                .host(HostParamUtil.getManageIp(server, bizPropertyHelper.getBusinessProperty(server))) // 避免绕过未授权服务器
+                .host(HostParamUtil.getManageIp(server, serverProperty)) // 避免绕过未授权服务器
+                .port(HostParamUtil.getSshPort(serverProperty))
                 .sshCredential(sshCredential)
                 .loginMessage(message)
                 .build();
