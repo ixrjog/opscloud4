@@ -71,6 +71,7 @@ public class BusinessDocumentFacadeImpl implements BusinessDocumentFacade {
         if (BusinessTypeEnum.SERVER.getType() == iBusiness.getBusinessType()) {
             Server server = serverService.getById(iBusiness.getBusinessId());
             serverGroupingAlgorithm.evictGrouping(server.getServerGroupId());
+            serverTreeUtil.evictWrap(server.getServerGroupId());
         }
     }
 
