@@ -23,10 +23,10 @@ import org.springframework.stereotype.Component;
  * @Date 2022/2/9 9:14 AM
  * @Version 1.0
  */
+@Slf4j
 @Aspect
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class EnvWrapperAspect {
 
     private final EnvService envService;

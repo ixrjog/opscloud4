@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.packer;
 
+import com.baiyi.opscloud.common.annotation.BizDocWrapper;
 import com.baiyi.opscloud.common.annotation.EnvWrapper;
 import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.domain.param.IExtend;
@@ -16,6 +17,7 @@ public class ServerPackerDelegate {
 
     @EnvWrapper
     @TagsWrapper
+    @BizDocWrapper
     public void wrap(ServerVO.Server server, IExtend iExtend) {
     }
 

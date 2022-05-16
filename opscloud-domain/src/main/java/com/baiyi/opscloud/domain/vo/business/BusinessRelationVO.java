@@ -48,4 +48,5 @@ public class BusinessRelationVO {
 
         private String relationType;
     }
+
 }

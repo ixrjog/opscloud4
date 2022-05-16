@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.base.IAllowOrder;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
+import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
@@ -41,10 +42,14 @@ public class ServerGroupVO {
             IAllowOrder,
             BusinessPropertyVO.IBusinessProperty,
             BusinessAssetRelationVO.IBusinessAssetRelation, // 资产与业务对象绑定关系
+            BusinessDocumentVO.IBusinessDocument,
             Serializable {
 
         private static final long serialVersionUID = 5059407999240740609L;
+
         private final Integer businessType = BusinessTypeEnum.SERVERGROUP.getType();
+
+        private BusinessDocumentVO.Document document;
 
         @Override
         public String getBusinessUniqueKey() {

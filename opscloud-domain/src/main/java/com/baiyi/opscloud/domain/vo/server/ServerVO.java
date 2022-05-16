@@ -3,6 +3,7 @@ package com.baiyi.opscloud.domain.vo.server;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
+import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
@@ -38,6 +39,7 @@ public class ServerVO {
             ServerAccountVO.IAccount,
             BusinessAssetRelationVO.IBusinessAssetRelation, // 资产与业务对象绑定关系
             BusinessPropertyVO.IBusinessProperty,
+            BusinessDocumentVO.IBusinessDocument,
             Serializable {
 
         @Override
@@ -46,6 +48,8 @@ public class ServerVO {
         }
 
         private static final long serialVersionUID = -1011261913967456450L;
+
+        private BusinessDocumentVO.Document document;
 
         private List<TagVO.Tag> tags;
 

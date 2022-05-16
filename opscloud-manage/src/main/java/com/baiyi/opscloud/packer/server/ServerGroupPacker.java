@@ -3,8 +3,10 @@ package com.baiyi.opscloud.packer.server;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.packer.IWrapper;
+import com.baiyi.opscloud.packer.ServerGroupPackerDelegate;
 import com.baiyi.opscloud.packer.business.BusinessPropertyPacker;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.service.server.ServerService;
@@ -28,8 +30,11 @@ public final class ServerGroupPacker implements IWrapper<ServerGroupVO.ServerGro
 
     private final BusinessPropertyPacker businessPropertyPacker;
 
+    private final ServerGroupPackerDelegate serverGroupPackerDelegate;
+
     @Override
     public void wrap(ServerGroupVO.ServerGroup serverGroup, IExtend iExtend) {
+        serverGroupPackerDelegate.wrap(serverGroup, SimpleExtend.EXTEND); // 代理
         serverGroupTypePacker.wrap(serverGroup);
         businessPropertyPacker.wrap(serverGroup);
         serverGroup.setServerSize(serverService.countByServerGroupId(serverGroup.getId()));

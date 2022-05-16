@@ -33,7 +33,7 @@ public class AnsiblePlaybookVO {
 
         private Integer id;
 
-        @ApiModelProperty(value = "剧本uuid")
+        @ApiModelProperty(value = "剧本UUID")
         private String playbookUuid;
 
         @ApiModelProperty(value = "剧本名称")
