@@ -48,17 +48,16 @@ public class BusinessController {
         return new HttpResult<>(businessDocumentFacade.getById(id));
     }
 
-    @ApiOperation(value = "新增业务文档")
-    @PostMapping(value = "/document/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addBusinessDocument(@RequestBody @Valid BusinessDocumentVO.Document document) {
-        businessDocumentFacade.add(document);
-        return HttpResult.SUCCESS;
+    @ApiOperation(value = "按UniqueKey查询业务文档")
+    @GetMapping(value = "/document/unique/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<BusinessDocumentVO.Document> getBusinessDocumentByUniqueKey(@RequestParam @Valid Integer businessType, Integer businessId) {
+        return new HttpResult<>(businessDocumentFacade.getByUniqueKey(businessType, businessId));
     }
 
-    @ApiOperation(value = "更新业务文档")
-    @PutMapping(value = "/document/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateBusinessDocument(@RequestBody @Valid BusinessDocumentVO.Document document) {
-        businessDocumentFacade.update(document);
+    @ApiOperation(value = "保存业务文档")
+    @PostMapping(value = "/document/save", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> saveBusinessDocument(@RequestBody @Valid BusinessDocumentVO.Document document) {
+        businessDocumentFacade.save(document);
         return HttpResult.SUCCESS;
     }
 

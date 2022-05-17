@@ -11,8 +11,9 @@ public interface BusinessDocumentFacade {
 
     BusinessDocumentVO.Document getById(int id);
 
-    void add(BusinessDocumentVO.Document document);
+    BusinessDocumentVO.Document getByUniqueKey(Integer businessType, Integer businessId);
 
-    void update(BusinessDocumentVO.Document document);
+    void save(BusinessDocumentVO.Document document);
+
 
 }

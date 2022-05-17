@@ -15,6 +15,7 @@ public interface BusinessDocumentService {
     void update(BusinessDocument businessDocument);
 
     BusinessDocument getById(int id);
+
     BusinessDocument getByBusiness(BaseBusiness.IBusiness iBusiness);
 
 }

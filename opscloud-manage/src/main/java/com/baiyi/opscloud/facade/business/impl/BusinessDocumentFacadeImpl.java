@@ -5,6 +5,7 @@ import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
+import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessDocument;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
@@ -45,7 +46,27 @@ public class BusinessDocumentFacadeImpl implements BusinessDocumentFacade {
     }
 
     @Override
-    public void add(BusinessDocumentVO.Document document) {
+    @BizDocWrapper(extend = true, wrapResult = true)
+    public BusinessDocumentVO.Document getByUniqueKey(Integer businessType, Integer businessId) {
+        SimpleBusiness simpleBusiness = SimpleBusiness.builder()
+                .businessType(businessType)
+                .businessId(businessId)
+                .build();
+        BusinessDocument businessDocument = businessDocumentService.getByBusiness(simpleBusiness);
+        return BeanCopierUtil.copyProperties(businessDocument, BusinessDocumentVO.Document.class);
+    }
+
+    @Override
+    public void save(BusinessDocumentVO.Document document) {
+        BusinessDocument businessDocument = BeanCopierUtil.copyProperties(document, BusinessDocument.class);
+        if (businessDocumentService.getByBusiness(document) != null) {
+            this.update(document);
+        } else {
+            this.add(document);
+        }
+    }
+
+    private void add(BusinessDocumentVO.Document document) {
         BusinessDocument businessDocument = BeanCopierUtil.copyProperties(document, BusinessDocument.class);
         if (businessDocumentService.getByBusiness(document) != null) {
             throw new CommonRuntimeException("业务文档已存在!");
@@ -54,8 +75,7 @@ public class BusinessDocumentFacadeImpl implements BusinessDocumentFacade {
         evictCache(document);
     }
 
-    @Override
-    public void update(BusinessDocumentVO.Document document) {
+    private void update(BusinessDocumentVO.Document document) {
         BusinessDocument businessDocument = businessDocumentService.getByBusiness(document);
         businessDocument.setContent(document.getContent());
         businessDocumentService.update(businessDocument);
