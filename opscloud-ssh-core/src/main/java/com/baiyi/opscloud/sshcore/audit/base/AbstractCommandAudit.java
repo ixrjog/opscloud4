@@ -6,6 +6,7 @@ import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceCommandService
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
 import com.baiyi.opscloud.sshcore.audit.InstanceCommandBuilder;
 import com.baiyi.opscloud.sshcore.config.TerminalConfigurationProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
@@ -20,6 +21,7 @@ import java.util.regex.Pattern;
  * @Date 2021/7/28 4:31 下午
  * @Version 1.0
  */
+@Slf4j
 public abstract class AbstractCommandAudit {
 
     @Resource
@@ -47,6 +49,7 @@ public abstract class AbstractCommandAudit {
         String str;
         InstanceCommandBuilder builder = null;
         String regex = getInputRegex();
+
         try {
             LineNumberReader reader = new LineNumberReader(new FileReader(commanderLogPath));
             while ((str = reader.readLine()) != null) {
@@ -70,7 +73,7 @@ public abstract class AbstractCommandAudit {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("审计文件不存在: {}", commanderLogPath);
         }
     }
 
