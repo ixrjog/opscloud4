@@ -2,6 +2,7 @@ package com.baiyi.opscloud.service.business.impl;
 
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessDocument;
+import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
 import com.baiyi.opscloud.mapper.opscloud.BusinessDocumentMapper;
 import com.baiyi.opscloud.service.business.BusinessDocumentService;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,15 @@ public class BusinessDocumentServiceImpl implements BusinessDocumentService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("businessType", iBusiness.getBusinessType()).andEqualTo("businessId", iBusiness.getBusinessId());
         return bizDocumentMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public void deleteByUniqueKey(Integer businessType, Integer businessId) {
+        Example example = new Example(BusinessDocument.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("businessType", businessType);
+        criteria.andEqualTo("businessId", businessId);
+        bizDocumentMapper.deleteByExample(example);
     }
 
 }

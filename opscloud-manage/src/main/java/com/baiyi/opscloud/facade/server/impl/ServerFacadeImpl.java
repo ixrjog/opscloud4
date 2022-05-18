@@ -107,7 +107,7 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     }
 
     @TagClear
-    @BusinessPropertyClear
+    @BusinessObjectClear
     @Override
     public void deleteServerById(Integer id) {
         Server server = serverService.getById(id);

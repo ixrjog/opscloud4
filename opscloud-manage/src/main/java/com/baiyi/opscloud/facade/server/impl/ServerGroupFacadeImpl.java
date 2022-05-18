@@ -139,7 +139,7 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
     }
 
     @TagClear
-    @BusinessPropertyClear
+    @BusinessObjectClear
     @RevokeUserPermission
     @Override
     public void deleteServerGroupById(int id) {

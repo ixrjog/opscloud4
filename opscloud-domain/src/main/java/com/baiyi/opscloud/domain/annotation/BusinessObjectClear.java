@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface BusinessPropertyClear {
+public @interface BusinessObjectClear {
 
     BusinessTypeEnum value() default BusinessTypeEnum.COMMON;
 

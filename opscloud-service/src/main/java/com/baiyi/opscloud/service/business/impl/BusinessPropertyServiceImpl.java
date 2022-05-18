@@ -54,7 +54,7 @@ public class BusinessPropertyServiceImpl implements BusinessPropertyService {
     }
 
     @Override
-    public void deleteByBusinessTypeAndId(Integer businessType, Integer businessId) {
+    public void deleteByUniqueKey(Integer businessType, Integer businessId) {
         Example example = new Example(BusinessTag.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("businessType", businessType);

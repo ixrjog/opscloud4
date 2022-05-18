@@ -18,4 +18,6 @@ public interface BusinessDocumentService {
 
     BusinessDocument getByBusiness(BaseBusiness.IBusiness iBusiness);
 
+    void deleteByUniqueKey(Integer businessType, Integer businessId);
+
 }
