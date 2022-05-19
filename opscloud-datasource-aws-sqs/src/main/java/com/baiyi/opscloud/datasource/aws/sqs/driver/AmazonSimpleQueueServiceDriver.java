@@ -101,4 +101,8 @@ public class AmazonSimpleQueueServiceDriver {
         return result.getAttributes();
     }
 
+    public void setQueueAttributes(AwsConfig.Aws config, String regionId, String queueUrl) {
+        SetQueueAttributesRequest request = new SetQueueAttributesRequest();
+    }
+
 }
