@@ -33,8 +33,8 @@ public class DingtalkUserAssetToUser extends AbstractAssetToBO {
         Pair<String, String> pair = DingtalkUtil.cutDingtalkName(asset.getName());
         return UserVO.User.builder()
                 .username(EmailUtil.toUsername(asset.getAssetKey2()))
-                .name(StringUtils.isNotBlank(pair.getLeft()) ? pair.getLeft() : pair.getRight())
-                .displayName(StringUtils.isNotBlank(pair.getRight()) ? pair.getRight() : pair.getLeft())
+                .displayName(StringUtils.isNotBlank(pair.getLeft()) ? pair.getLeft() : pair.getRight())
+                .name(StringUtils.isNotBlank(pair.getRight()) ? pair.getRight() : pair.getLeft())
                 .email(asset.getAssetKey2())
                 .phone(asset.getProperties().get("mobile"))
                 .build();
