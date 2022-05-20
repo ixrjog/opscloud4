@@ -60,7 +60,7 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
 
         if (!entry.getQueueName().startsWith("transsnet_"))
             throw new TicketVerifyException("校验工单条目失败: SQS名称必须以 transsnet_ 开始！");
-        
+
         switch (entry.getRegionId()) {
             case "ap-northeast-2":
                 if (!entry.getQueueName().endsWith("_dev_queue"))
@@ -71,8 +71,8 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
                     throw new TicketVerifyException("校验工单条目失败: 测试环境SQS名称必须以 _test_queue 结尾！");
                 break;
             case "eu-west-1":
-                if (!entry.getQueueName().endsWith("_canary_queue")
-                        || !entry.getQueueName().endsWith("_prod_queue"))
+                if (!(entry.getQueueName().endsWith("_canary_queue")
+                        || entry.getQueueName().endsWith("_prod_queue")))
                     throw new TicketVerifyException("校验工单条目失败: 灰度、生产SQS名称必须以 _canary_queue 或 _prod_queue 结尾！");
                 break;
             default:
