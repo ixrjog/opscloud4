@@ -92,7 +92,7 @@ public class SnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
                 break;
             case "eu-west-1":
                 if (!topic.endsWith("_canary_topic")
-                        || topic.endsWith("_prod_topic"))
+                        || !topic.endsWith("_prod_topic"))
                     throw new TicketVerifyException("校验工单条目失败: 灰度、生产SNS主题名称必须以 _canary_topic 或 _prod_topic 结尾！");
                 break;
             default:

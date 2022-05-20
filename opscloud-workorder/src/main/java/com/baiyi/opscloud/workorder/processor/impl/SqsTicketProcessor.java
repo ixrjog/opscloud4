@@ -72,7 +72,7 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
                 break;
             case "eu-west-1":
                 if (!entry.getQueueName().endsWith("_canary_queue")
-                        || entry.getQueueName().endsWith("_prod_queue"))
+                        || !entry.getQueueName().endsWith("_prod_queue"))
                     throw new TicketVerifyException("校验工单条目失败: 灰度、生产SQS名称必须以 _canary_queue 或 _prod_queue 结尾！");
                 break;
             default:
