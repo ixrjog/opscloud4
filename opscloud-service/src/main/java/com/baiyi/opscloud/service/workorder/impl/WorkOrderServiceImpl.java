@@ -32,8 +32,8 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     public DataTable<WorkOrder> queryPageByParam(WorkOrderParam.WorkOrderPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(WorkOrder.class);
+        Example.Criteria criteria = example.createCriteria();
         if (IdUtil.isNotEmpty(pageQuery.getWorkOrderGroupId())) {
-            Example.Criteria criteria = example.createCriteria();
             criteria.andEqualTo("workOrderGroupId", pageQuery.getWorkOrderGroupId());
         }
         example.setOrderByClause("work_order_group_id, seq");

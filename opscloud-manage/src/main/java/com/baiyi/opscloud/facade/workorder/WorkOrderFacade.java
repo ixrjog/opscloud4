@@ -6,12 +6,16 @@ import com.baiyi.opscloud.domain.param.workorder.WorkOrderParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderViewVO;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2022/1/6 10:54 AM
  * @Version 1.0
  */
 public interface WorkOrderFacade {
+
+    List<WorkOrderVO.WorkOrder> getWorkOrderOptions();
 
     /**
      * 工单分页查询
@@ -39,12 +43,14 @@ public interface WorkOrderFacade {
 
     /**
      * 保存工单组
+     *
      * @param group
      */
     void saveWorkOrderGroup(WorkOrderVO.Group group);
 
     /**
      * 删除工单组
+     *
      * @param workOrderGroupId
      */
     void deleteWorkOrderGroup(Integer workOrderGroupId);
@@ -52,6 +58,7 @@ public interface WorkOrderFacade {
 
     /**
      * 保存工单组
+     *
      * @param workOrder
      */
     void updateWorkOrder(WorkOrderVO.WorkOrder workOrder);

@@ -39,6 +39,12 @@ public class WorkOrderController {
 
     private final WorkOrderReportFacade workOrderReportFacade;
 
+    @ApiOperation(value = "查询工单选项")
+    @GetMapping(value = "/options/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<WorkOrderVO.WorkOrder>> getWorkOrderOptions() {
+        return new HttpResult<>(workOrderFacade.getWorkOrderOptions());
+    }
+
     @ApiOperation(value = "分页查询工单配置")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<WorkOrderVO.WorkOrder>> queryWorkOrderPage(@RequestBody @Valid WorkOrderParam.WorkOrderPageQuery pageQuery) {

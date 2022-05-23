@@ -37,6 +37,9 @@
             <if test="ticketStatus != null">
                 ticket_status = #{ticketStatus}
             </if>
+            <if test="workOrderId != null">
+                work_order_id = #{workOrderId}
+            </if>
             <if test="ticketPhase != null and ticketPhase != ''">
                 and ticket_phase = #{ticketPhase}
             </if>

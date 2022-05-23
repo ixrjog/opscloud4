@@ -38,18 +38,22 @@ public class WorkOrderFacadeImpl implements WorkOrderFacade {
     private final WorkOrderGroupPacker workOrderGroupPacker;
 
     @Override
+    public List<WorkOrderVO.WorkOrder> getWorkOrderOptions() {
+        List<WorkOrder> workOrders = workOrderService.queryAll();
+        return BeanCopierUtil.copyListProperties(workOrders, WorkOrderVO.WorkOrder.class);
+    }
+
+    @Override
     public DataTable<WorkOrderVO.WorkOrder> queryWorkOrderPage(WorkOrderParam.WorkOrderPageQuery pageQuery) {
         DataTable<WorkOrder> table = workOrderService.queryPageByParam(pageQuery);
-        List<WorkOrderVO.WorkOrder> data = BeanCopierUtil.copyListProperties(table.getData(), WorkOrderVO.WorkOrder.class).stream()
-                .peek(e -> workOrderPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        List<WorkOrderVO.WorkOrder> data = BeanCopierUtil.copyListProperties(table.getData(), WorkOrderVO.WorkOrder.class).stream().peek(e -> workOrderPacker.wrap(e, pageQuery)).collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
     public DataTable<WorkOrderVO.Group> queryWorkOrderGroupPage(WorkOrderGroupParam.WorkOrderGroupPageQuery pageQuery) {
         DataTable<WorkOrderGroup> table = workOrderGroupService.queryPageByParam(pageQuery);
-        List<WorkOrderVO.Group> data = BeanCopierUtil.copyListProperties(table.getData(), WorkOrderVO.Group.class).stream()
-                .peek(e -> workOrderGroupPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        List<WorkOrderVO.Group> data = BeanCopierUtil.copyListProperties(table.getData(), WorkOrderVO.Group.class).stream().peek(e -> workOrderGroupPacker.wrap(e, pageQuery)).collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
@@ -57,17 +61,14 @@ public class WorkOrderFacadeImpl implements WorkOrderFacade {
     public WorkOrderViewVO.View getWorkOrderView() {
         List<WorkOrderGroup> groups = workOrderGroupService.queryAll();
         List<WorkOrderVO.Group> workOrderGroups = groups.stream().map(workOrderPacker::wrap).collect(Collectors.toList());
-        return WorkOrderViewVO.View.builder()
-                .workOrderGroups(workOrderGroups)
-                .build();
+        return WorkOrderViewVO.View.builder().workOrderGroups(workOrderGroups).build();
     }
 
     @Override
     public void saveWorkOrderGroup(WorkOrderVO.Group group) {
         WorkOrderGroup newWorkOrderGroup = BeanCopierUtil.copyProperties(group, WorkOrderGroup.class);
         if (group.getId() == null) {
-            if (group.getSeq() == null)
-                newWorkOrderGroup.setSeq(workOrderGroupService.count() + 1);
+            if (group.getSeq() == null) newWorkOrderGroup.setSeq(workOrderGroupService.count() + 1);
             workOrderGroupService.add(newWorkOrderGroup);
         } else {
             workOrderGroupService.update(newWorkOrderGroup);
@@ -87,4 +88,5 @@ public class WorkOrderFacadeImpl implements WorkOrderFacade {
         WorkOrder newWorkOrder = BeanCopierUtil.copyProperties(workOrder, WorkOrder.class);
         workOrderService.update(newWorkOrder);
     }
+
 }
