@@ -8,6 +8,8 @@ import com.google.common.base.Joiner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
+
 /**
  * @Author baiyi
  * @Date 2020/5/30 2:53 下午
@@ -38,7 +40,7 @@ public class SimpleServerNameFacade {
     }
 
     public static String toName(Server server, Env env) {
-        if (env == null || env.getEnvName().equals("prod")) {
+        if (env == null || ENV_PROD.equals(env.getEnvName())) {
             return Joiner.on("-").join(server.getName(), server.getSerialNumber());
         } else {
             return Joiner.on("-").join(server.getName(), env.getEnvName(), server.getSerialNumber());
@@ -46,7 +48,7 @@ public class SimpleServerNameFacade {
     }
 
     public static String toServerName(ServerVO.Server server) {
-        if (server.getEnv() == null || server.getEnv().getEnvName().equals("prod")) {
+        if (server.getEnv() == null || ENV_PROD.equals(server.getEnv().getEnvName())) {
             return Joiner.on("-").join(server.getName(), server.getSerialNumber());
         } else {
             return Joiner.on("-").join(server.getName(), server.getEnv().getEnvName(), server.getSerialNumber());
@@ -60,7 +62,7 @@ public class SimpleServerNameFacade {
      */
     public static String toHostname(Server server) {
         Env env = envService.getByEnvType(server.getEnvType());
-        if (env == null || env.getEnvName().equals("prod")) {
+        if (env == null || ENV_PROD.equals(env.getEnvName())) {
             return server.getName();
         } else {
             return Joiner.on("-").join(server.getName(), env.getEnvName());

@@ -8,6 +8,8 @@ import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.aop.framework.AopContext;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -77,7 +79,9 @@ public class AmazonSimpleQueueServiceDriver {
      */
     public String getQueue(AwsConfig.Aws config, String regionId, String queueName) {
         try {
-            GetQueueUrlResult result = AmazonSQSService.buildAmazonSQS(config, regionId).getQueueUrl(queueName);
+            GetQueueUrlRequest request = new GetQueueUrlRequest();
+            request.setQueueName(queueName);
+            GetQueueUrlResult result = AmazonSQSService.buildAmazonSQS(config, regionId).getQueueUrl(request);
             return result.getQueueUrl();
         } catch (QueueDoesNotExistException e) {
             return StringUtils.EMPTY;
@@ -101,8 +105,17 @@ public class AmazonSimpleQueueServiceDriver {
         return result.getAttributes();
     }
 
-    public void setQueueAttributes(AwsConfig.Aws config, String regionId, String queueUrl) {
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_1HOUR, key = "'accountId_' + #config.account.id + '_regionId' + #regionId + '_queueUrl_' + #queueUrl")
+    public void evictWrap(AwsConfig.Aws config, String regionId, String queueUrl) {
+    }
+
+    public void setQueueAttributes(AwsConfig.Aws config, String regionId, String queueUrl, Map<String, String> attributes) {
         SetQueueAttributesRequest request = new SetQueueAttributesRequest();
+        request.setQueueUrl(queueUrl);
+        request.setAttributes(attributes);
+        AmazonSQSService.buildAmazonSQS(config, regionId).setQueueAttributes(request);
+        ((AmazonSimpleQueueServiceDriver) AopContext.currentProxy()).evictWrap(config, regionId, queueUrl);
+        ((AmazonSimpleQueueServiceDriver) AopContext.currentProxy()).getQueueAttributes(config, regionId, queueUrl);
     }
 
 }

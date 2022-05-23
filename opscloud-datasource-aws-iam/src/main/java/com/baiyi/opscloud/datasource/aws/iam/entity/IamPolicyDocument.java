@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.aws.iam.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author 修远
@@ -19,7 +20,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class IamPolicyDocument {
 
     @JsonProperty("Version")
@@ -29,13 +30,13 @@ public class IamPolicyDocument {
     private String id;
 
     @JsonProperty("Statement")
-    private List<Statement> statementList;
+    private List<Statement> Statement;
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Statement {
 
         @JsonProperty("Sid")
@@ -45,26 +46,39 @@ public class IamPolicyDocument {
         private String effect;
 
         @JsonProperty("Principal")
-        private String principal;
+        private Object principal;
 
         @JsonProperty("NotPrincipal")
-        private String notPrincipal;
+        private Object notPrincipal;
 
         @JsonProperty("Action")
-        private String action;
+        private Object action;
 
         @JsonProperty("NotAction")
-        private String notAction;
+        private Object notAction;
 
         @JsonProperty("Resource")
-        private String resource;
+        private Object resource;
 
         @JsonProperty("NotResource")
-        private String notResource;
+        private Object notResource;
 
         @JsonProperty("Condition")
-        private String condition;
+        private Condition condition;
 
     }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class Condition {
+
+        @JsonProperty("ArnLike")
+        private Map<String, String> arnLike;
+
+    }
+
 
 }

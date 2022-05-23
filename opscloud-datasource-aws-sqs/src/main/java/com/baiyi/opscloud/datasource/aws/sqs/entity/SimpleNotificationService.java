@@ -98,6 +98,9 @@ public class SimpleNotificationService {
 
         private String topicArn;
 
+        // 工单使用
+        private String queueName;
+
         @Override
         public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
 
