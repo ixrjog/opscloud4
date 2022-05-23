@@ -7,6 +7,8 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
+import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
+
 /**
  * @Author baiyi
  * @Date 2021/2/1 11:33 上午
@@ -40,7 +42,7 @@ public class ConditionsBuilder {
         ZabbixActionParam.Condition conditionC = ZabbixActionParam.Condition.builder()
                 .conditiontype(Conditiontype.EVENT_TAG_VALUE.getType()) // 26 - event tag value.
                 .operator(OperatorType.EQUALS.getType()) // 0 - (default) equals;
-                .value("prod")
+                .value(ENV_PROD)
                 .value2("env")
                 .formulaid("C")
                 .build();
