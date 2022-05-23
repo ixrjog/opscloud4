@@ -7,8 +7,11 @@ import com.baiyi.opscloud.event.factory.EventFactory;
 import com.baiyi.opscloud.schedule.task.base.AbstractTask;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
 
 /**
  * @Author baiyi
@@ -19,15 +22,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class ZabbixProblemEventListenerTask extends AbstractTask {
 
+    @Value("${spring.profiles.active}")
+    private String env;
+
     @InstanceHealth // 实例健康检查，高优先级
     @Scheduled(initialDelay = 8000, fixedRate = 120 * 1000)
     @SchedulerLock(name = "zabbix_problem_event_listener_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
     public void listenerTask() {
-        IEventProcess iEventProcess = EventFactory.getIEventProcessByEventType(EventTypeEnum.ZABBIX_PROBLEM);
-        if (iEventProcess == null) return;
-        log.info("定时任务开始: 监听zabbix问题！");
-        iEventProcess.listener();
-        log.info("定时任务结束: 监听zabbix问题！");
+        // 非生产环境不执行任务
+        if (ENV_PROD.equals(env)) {
+            IEventProcess iEventProcess = EventFactory.getIEventProcessByEventType(EventTypeEnum.ZABBIX_PROBLEM);
+            if (iEventProcess == null) return;
+            log.info("定时任务开始: 监听zabbix问题！");
+            iEventProcess.listener();
+            log.info("定时任务结束: 监听zabbix问题！");
+        }
     }
 
 }
