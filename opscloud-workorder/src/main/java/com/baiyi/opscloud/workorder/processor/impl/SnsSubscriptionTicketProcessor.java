@@ -85,15 +85,15 @@ public class SnsSubscriptionTicketProcessor extends AbstractDsAssetExtendedBaseT
                 .build();
         amazonSqsDriver.setQueueAttributes(config, regionId, queueUrl, newPolicy);
         return subscriptionArn;
-
     }
 
     private String getPolicyDoc(Map<String, String> attributes, String topicArn, String endpoint) {
         if (StringUtils.isNotBlank(attributes.get("Policy"))) {
             IamPolicyDocument policyDocument = JSONUtil.readValue(attributes.get("Policy"), IamPolicyDocument.class);
             try {
+                assert policyDocument != null;
                 List<IamPolicyDocument.Statement> statementList = policyDocument.getStatement();
-                if (statementList.stream().noneMatch(x -> x.getSid().equals(Joiner.on("-").join(DEFAULT_SID, topicArn)))) {
+                if (statementList.stream().noneMatch(e -> e.getSid().equals(Joiner.on("-").join(DEFAULT_SID, topicArn)))) {
                     statementList.add(buildStatement(topicArn, endpoint));
                     policyDocument.setStatement(statementList);
                 }
