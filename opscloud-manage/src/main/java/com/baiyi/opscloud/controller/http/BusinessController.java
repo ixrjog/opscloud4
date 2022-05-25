@@ -50,7 +50,7 @@ public class BusinessController {
 
     @ApiOperation(value = "按UniqueKey查询业务文档")
     @GetMapping(value = "/document/unique/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<BusinessDocumentVO.Document> getBusinessDocumentByUniqueKey(@RequestParam @Valid Integer businessType, Integer businessId) {
+    public HttpResult<BusinessDocumentVO.Document> getBusinessDocumentByUniqueKey(@RequestParam @Valid Integer businessType, @Valid Integer businessId) {
         return new HttpResult<>(businessDocumentFacade.getByUniqueKey(businessType, businessId));
     }
 
