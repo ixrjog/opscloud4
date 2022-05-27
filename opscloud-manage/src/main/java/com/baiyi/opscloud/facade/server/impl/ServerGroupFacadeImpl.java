@@ -105,7 +105,7 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
                         .businessId(e.getBusinessId())
                         .comment(e.getComment())
                         .build()
-        ).collect(Collectors.toList()), table.getTotalNum());
+                ).collect(Collectors.toList()), table.getTotalNum());
     }
 
     @Override
@@ -152,6 +152,7 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
 
     private ServerGroup toDO(ServerGroupVO.ServerGroup serverGroup) {
         ServerGroup pre = BeanCopierUtil.copyProperties(serverGroup, ServerGroup.class);
+        pre.setName(pre.getName().trim());
         RegexUtil.tryServerGroupNameRule(pre.getName()); // 名称规范
         return pre;
     }
@@ -159,9 +160,9 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
     @Override
     public DataTable<ServerGroupTypeVO.ServerGroupType> queryServerGroupTypePage(ServerGroupTypeParam.ServerGroupTypePageQuery pageQuery) {
         DataTable<ServerGroupType> table = serverGroupTypeService.queryPageByParam(pageQuery);
-        List<ServerGroupTypeVO.ServerGroupType> data = BeanCopierUtil.copyListProperties(table.getData(),ServerGroupTypeVO.ServerGroupType.class)
+        List<ServerGroupTypeVO.ServerGroupType> data = BeanCopierUtil.copyListProperties(table.getData(), ServerGroupTypeVO.ServerGroupType.class)
                 .stream()
-                .peek(e->serverGroupTypePacker.wrap(e,pageQuery))
+                .peek(e -> serverGroupTypePacker.wrap(e, pageQuery))
                 .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }

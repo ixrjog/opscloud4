@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -79,7 +80,7 @@ public class ServerGroupVO {
         private Integer id;
 
         @ApiModelProperty(value = "组名称")
-        @NotNull(message = "组名称不能为空")
+        @NotBlank(message = "组名称不能为空")
         private String name;
 
         @ApiModelProperty(value = "组类型", example = "1")

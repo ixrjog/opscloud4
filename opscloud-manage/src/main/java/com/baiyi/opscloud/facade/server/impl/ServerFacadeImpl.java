@@ -97,6 +97,7 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
 
     private Server toDO(ServerVO.Server server) {
         Server pre = BeanCopierUtil.copyProperties(server, Server.class);
+        pre.setName(pre.getName().trim());
         if (IdUtil.isEmpty(pre.getSerialNumber())) {
             Server maxSerialNumberServer = serverService.getMaxSerialNumberServer(pre.getServerGroupId(), pre.getEnvType());
             pre.setSerialNumber(null == maxSerialNumberServer ? 1 : maxSerialNumberServer.getSerialNumber() + 1);

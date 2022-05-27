@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -78,7 +79,7 @@ public class ServerVO {
         private Integer id = 0;
 
         @ApiModelProperty(value = "服务器名称")
-        @NotNull(message = "服务器名称不能为空")
+        @NotBlank(message = "服务器名称不能为空")
         private String name;
 
         @ApiModelProperty(value = "显示名称")
