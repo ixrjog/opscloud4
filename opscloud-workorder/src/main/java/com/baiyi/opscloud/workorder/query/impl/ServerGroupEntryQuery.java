@@ -50,6 +50,7 @@ public class ServerGroupEntryQuery extends BaseTicketEntryQuery<ServerGroup> {
                 .content(JSONUtil.writeValueAsString(entry))
                 .entry(entry)
                 .comment(entry.getComment())
+                .role("admin")
                 .build();
     }
 
