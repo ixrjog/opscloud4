@@ -68,7 +68,7 @@ public class ServerGroupingAlgorithm extends BaseAlgorithm {
     }
 
     /**
-     * 取服务器分组map，不含重复的主机分组模式
+     * ServerTree 取服务器分组map，不含重复的主机分组模式
      * server-pord-1
      * server-pord-2
      * server-pord(不包含)
@@ -81,7 +81,7 @@ public class ServerGroupingAlgorithm extends BaseAlgorithm {
         log.info("服务器分组: serverGroupName = {}", serverGroup.getName());
         Map<String, List<ServerPack>> serverMap = groupingByEnv(serverGroup);
         if (serverMap.isEmpty()) return serverMap;
-        int subgroup = 2; // 分2组
+        int subgroup = getSubgroup(serverGroup); // 分2组
         Set<String> keSet = Sets.newHashSet(serverMap.keySet());
         for (String k : keSet) {
             List<ServerPack> servers = serverMap.get(k);
