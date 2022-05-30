@@ -153,7 +153,7 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
     private ServerGroup toDO(ServerGroupVO.ServerGroup serverGroup) {
         ServerGroup pre = BeanCopierUtil.copyProperties(serverGroup, ServerGroup.class);
         pre.setName(pre.getName().trim());
-        RegexUtil.tryServerGroupNameRule(pre.getName()); // 名称规范
+        RegexUtil.tryServerGroupNameRule(pre.getName());
         return pre;
     }
 
