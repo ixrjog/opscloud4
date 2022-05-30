@@ -12,6 +12,7 @@ opscloud:
   createUser:
     roles:
       - base
+      - dev
     userGroups:
       - vpn-users
       - confluence-users
