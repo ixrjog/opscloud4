@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.event.process.base;
+package com.baiyi.opscloud.event.handler.base;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
 import com.baiyi.opscloud.domain.param.event.EventParam;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
-import com.baiyi.opscloud.event.IEventProcess;
+import com.baiyi.opscloud.event.IEventHandler;
 import com.baiyi.opscloud.event.factory.EventFactory;
 import com.baiyi.opscloud.service.event.EventBusinessService;
 import com.baiyi.opscloud.service.event.EventService;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsInstanceProvider implements IEventProcess, InitializingBean {
+public abstract class AbstractEventHandler<E extends IRecover> extends SimpleDsInstanceProvider implements IEventHandler, InitializingBean {
 
     protected static final int dsInstanceBusinessType = BusinessTypeEnum.DATASOURCE_INSTANCE.getType();
 
@@ -51,7 +51,7 @@ public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsI
     protected DsConfigHelper dsFactory;
 
     @Resource
-    private SimpleTagService baseTagService;
+    private SimpleTagService simpleTagService;
 
     @Resource
     protected ServerService serverService;
@@ -119,7 +119,7 @@ public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsI
                     log.error("回顾事件错误，查询事件失败; eventId = {}", e.getEventId());
                 }
                 if (eventMessage != null && !eventMessage.isRecover()) {
-                    return; // 没有恢复
+                    // 没有恢复
                 } else {
                     e.setIsActive(false);
                     e.setExpiredTime(new Date());
@@ -188,7 +188,7 @@ public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsI
         // 过滤掉没有标签的实例
         instances.addAll(
                 dsInstanceService.queryByParam(query).stream().filter(e ->
-                        baseTagService.hasBusinessTag(EVENT_TAG, dsInstanceBusinessType, e.getId())
+                        simpleTagService.hasBusinessTag(EVENT_TAG, dsInstanceBusinessType, e.getId())
                 ).collect(Collectors.toList())
         );
         return instances;

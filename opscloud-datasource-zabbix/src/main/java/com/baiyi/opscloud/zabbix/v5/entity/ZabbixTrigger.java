@@ -68,7 +68,6 @@ public class ZabbixTrigger {
             return value == 0;
         }
 
-
         @Override
         public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
             DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()

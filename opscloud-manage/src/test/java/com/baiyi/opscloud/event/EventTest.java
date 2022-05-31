@@ -25,7 +25,7 @@ public class EventTest extends BaseUnit {
 
     @Test
     void zabbixEventProcessListenerTest() {
-        IEventProcess iEventProcess = EventFactory.getIEventProcessByEventType(EventTypeEnum.ZABBIX_PROBLEM);
+        IEventHandler iEventProcess = EventFactory.getIEventProcessByEventType(EventTypeEnum.ZABBIX_PROBLEM);
         if (iEventProcess == null) return;
         iEventProcess.listener();
     }
@@ -35,6 +35,5 @@ public class EventTest extends BaseUnit {
         User user = userService.getByUsername("baiyitest");
         employeeResignConsumer.generateTicket(user);
     }
-
 
 }

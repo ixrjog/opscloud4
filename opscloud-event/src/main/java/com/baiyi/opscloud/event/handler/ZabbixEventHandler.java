@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.event.process;
+package com.baiyi.opscloud.event.handler;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.param.event.EventParam;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.event.converter.EventConverter;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
-import com.baiyi.opscloud.event.process.base.AbstractEventProcess;
+import com.baiyi.opscloud.event.handler.base.AbstractEventHandler;
 import com.baiyi.opscloud.zabbix.constant.SeverityType;
 import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5HostDriver;
 import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5ProblemDriver;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class ZabbixEventProcess extends AbstractEventProcess<ZabbixProblem.Problem> {
+public class ZabbixEventHandler extends AbstractEventHandler<ZabbixProblem.Problem> {
 
     @Resource
     private ZabbixV5TriggerDriver zabbixV5TriggerDatasource;

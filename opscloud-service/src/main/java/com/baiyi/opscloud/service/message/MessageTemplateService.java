@@ -13,7 +13,7 @@ public interface MessageTemplateService {
 
     MessageTemplate getById(Integer id);
 
-    MessageTemplate getByUniqueKey(String msgKey,  String consumer,String msgType);
+    MessageTemplate getByUniqueKey(String msgKey, String consumer, String msgType);
 
     List<MessageTemplate> getByMsgKeyAndType(String msgKey, String msgType);
 

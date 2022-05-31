@@ -10,7 +10,7 @@ import com.baiyi.opscloud.event.enums.EventTypeEnum;
  * @Date 2021/10/9 3:10 下午
  * @Version 1.0
  */
-public interface IEventProcess {
+public interface IEventHandler {
 
     DataTable<Event> listEvent(EventParam.UserPermissionEventPageQuery pageQuery);
 

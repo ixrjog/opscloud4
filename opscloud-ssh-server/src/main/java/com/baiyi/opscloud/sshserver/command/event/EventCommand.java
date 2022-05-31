@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.EventBusiness;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.param.event.EventParam;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
-import com.baiyi.opscloud.event.IEventProcess;
+import com.baiyi.opscloud.event.IEventHandler;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
 import com.baiyi.opscloud.event.factory.EventFactory;
 import com.baiyi.opscloud.service.event.EventBusinessService;
@@ -82,7 +82,7 @@ public class EventCommand extends BaseServerCommand {
                         "Lastchange Time",
                         "Accounts"
                 );
-        IEventProcess iEventProcess = EventFactory.getIEventProcessByEventType(EventTypeEnum.ZABBIX_PROBLEM);
+        IEventHandler iEventProcess = EventFactory.getIEventProcessByEventType(EventTypeEnum.ZABBIX_PROBLEM);
         DataTable<Event> table = iEventProcess.listEvent(pageQuery);
         Map<Integer, EventContext> eventMapper = Maps.newHashMap();
         int id = 1;
