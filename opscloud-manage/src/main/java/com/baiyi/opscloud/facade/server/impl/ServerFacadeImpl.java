@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.annotation.EnvWrapper;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
+import com.baiyi.opscloud.common.util.RegexUtil;
 import com.baiyi.opscloud.datasource.manager.ZabbixInstanceManager;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.*;
@@ -101,6 +102,7 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     private Server toDO(ServerVO.Server server) {
         Server pre = BeanCopierUtil.copyProperties(server, Server.class);
         pre.setName(pre.getName().trim());
+        RegexUtil.tryServerNameRule(pre.getName());
         if (IdUtil.isEmpty(pre.getSerialNumber())) {
             Server maxSerialNumberServer = serverService.getMaxSerialNumberServer(pre.getServerGroupId(), pre.getEnvType());
             pre.setSerialNumber(null == maxSerialNumberServer ? 1 : maxSerialNumberServer.getSerialNumber() + 1);

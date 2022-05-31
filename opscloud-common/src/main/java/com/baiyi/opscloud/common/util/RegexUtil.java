@@ -3,6 +3,7 @@ package com.baiyi.opscloud.common.util;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import org.apache.commons.lang3.StringUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +17,7 @@ public class RegexUtil {
     private interface RegexMatches {
         String PHONE = "^1[3456789]\\d{9}$";
         String USERNAME = "[a-zA-Z][\\w]{3,15}";
-        String SERVER_NAME = "[a-z][\\d0-9a-z-]{1,55}";
+        String SERVER_NAME = "[a-zA-Z][\\d0-9a-zA-Z-]{1,55}";
         String SERVER_GROUP_NAME = "group_[a-z][\\d0-9a-z-]{2,64}";
         String EMAIL = "[A-z0-9-_\\.]+@([\\w]+[\\w-]*)(\\.[\\w]+[-\\w]*)+";
         String JOB_KEY = "[a-z0-9-_]{3,64}";
@@ -55,12 +56,9 @@ public class RegexUtil {
             throw new CommonRuntimeException(ErrorEnum.SERVERGROUP_NAME_NON_COMPLIANCE_WITH_RULES);
     }
 
-    public static boolean isUserGroupNameRule(String userGroupName) {
-        return isServerNameRule(userGroupName);
-    }
-
-    public static boolean isServerNameRule(String serverName) {
-        return serverName.matches(RegexMatches.SERVER_NAME);
+    public static void tryServerNameRule(String serverName) {
+        if (!serverName.matches(RegexMatches.SERVER_NAME))
+            throw new CommonRuntimeException(ErrorEnum.SERVERGROUP_NAME_NON_COMPLIANCE_WITH_RULES);
     }
 
     public static boolean isEmail(String email) {
