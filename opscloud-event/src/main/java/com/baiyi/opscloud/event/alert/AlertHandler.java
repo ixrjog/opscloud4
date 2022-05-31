@@ -104,10 +104,11 @@ public class AlertHandler extends SimpleDsInstanceProvider {
             ZabbixConfig zabbixConfig = dsConfigHelper.build(datasourceConfig, ZabbixConfig.class);
             String cacheKey = Joiner.on("#").join(PREFIX, key);
             if (redisUtil.hasKey(cacheKey)) {
+                log.info("告警静默: cacheKey = " + cacheKey);
                 return; // 静默
             }
             dingtalkSendHelper.send(zabbixConfig.getZabbix(), msg);
-            redisUtil.set(cacheKey, TimeUtil.minuteTime * 10 / 1000);
+            redisUtil.set(cacheKey, true, TimeUtil.minuteTime * 10 / 1000);
         }
     }
 
