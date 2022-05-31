@@ -10,7 +10,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.util.ObjectUtil;
-import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.zabbix.helper.ZabbixGroupHelper;
 import com.baiyi.opscloud.zabbix.v5.driver.*;
 import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixV5HostDriver;
@@ -82,7 +81,7 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
         if (!property.enabledZabbix()) return;
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .method(SimpleZabbixV5HostDriver.HostAPIMethod.CREATE)
-                .putParam("host", SimpleServerNameFacade.toServerName(server))
+                .putParam("host", server.getDisplayName())
                 .putParam("interfaces", HostParamUtil.buildInterfaceParam(server, property))
                 .putParam("groups", buildHostGroupParam(configContext.get(), server))
                 .putParam("templates", buildTemplatesParam(configContext.get(), property))
@@ -97,7 +96,7 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
     }
 
     protected void updateHost(Server server, ServerProperty.Server property, ZabbixHost.Host host, String manageIp) {
-        String hostName = SimpleServerNameFacade.toServerName(server);
+        String hostName = server.getDisplayName();
         ZabbixRequestBuilder requestBuilder = ZabbixRequestBuilder.builder();
         // 更新主机名
         if (!hostName.equals(host.getName())) {

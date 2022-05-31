@@ -6,11 +6,10 @@ import com.baiyi.opscloud.core.asset.IToAsset;
 import com.baiyi.opscloud.core.util.SystemEnvUtil;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.service.business.BizPropertyHelper;
 import com.google.common.base.Joiner;
 import lombok.Builder;
@@ -82,7 +81,7 @@ public class AnsibleHosts {
         }
 
         private String toHostLine(ServerPack serverPack) {
-            String serverName = SimpleServerNameFacade.toName(serverPack.getServer(), serverPack.getEnv());
+            String serverName = serverPack.getServer().getDisplayName();
             return Joiner.on(" ").skipNulls().join(
                     BizPropertyHelper.getManageIp(serverPack),
                     link("ansible_ssh_user", sshUser),

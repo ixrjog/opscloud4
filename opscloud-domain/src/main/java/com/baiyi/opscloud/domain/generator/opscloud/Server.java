@@ -28,6 +28,12 @@ public class Server implements Serializable {
     private String name;
 
     /**
+     * 显示名称
+     */
+    @Column(name = "display_name")
+    private String displayName;
+
+    /**
      * 服务器组id
      */
     @Column(name = "server_group_id")

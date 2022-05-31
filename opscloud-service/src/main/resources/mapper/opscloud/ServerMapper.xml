@@ -7,6 +7,7 @@
         -->
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="display_name" jdbcType="VARCHAR" property="displayName"/>
         <result column="server_group_id" jdbcType="INTEGER" property="serverGroupId"/>
         <result column="os_type" jdbcType="VARCHAR" property="osType"/>
         <result column="env_type" jdbcType="INTEGER" property="envType"/>
@@ -35,7 +36,7 @@
                 a1.business_type = 1 and a1.tag_id = #{tagId}
             </if>
             <if test="queryName != null and queryName != ''">
-                and ( a0.name like "%" #{queryName} "%"
+                and ( a0.display_name like "%" #{queryName} "%"
                  or a0.private_ip like "%" #{queryName} "%"
                  or a0.public_ip like "%" #{queryName} "%" )
             </if>
@@ -70,7 +71,7 @@
                 = #{businessType} )
             </if>
             <if test="name != null and name != ''">
-                and name like "%" #{name} "%"
+                and display_name like "%" #{name} "%"
             </if>
             <if test="queryIp != null and queryIp != ''">
                 and ( private_ip like "%" #{queryIp} "%" or public_ip like "%" #{queryIp} "%" )
@@ -91,7 +92,7 @@
                and  server_group_id in ( select business_id from user_permission where user_id = #{userId} and business_type = #{businessType} )
             </if>
             <if test="queryName != null and queryName != ''">
-                and ( name like "%" #{queryName} "%"
+                and ( display_name like "%" #{queryName} "%"
                 or private_ip like "%" #{queryName} "%"
                 or public_ip like "%" #{queryName} "%" )
             </if>

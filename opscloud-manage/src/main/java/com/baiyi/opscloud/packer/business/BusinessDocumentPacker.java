@@ -5,7 +5,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
-import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.service.server.ServerService;
@@ -30,7 +29,7 @@ public class BusinessDocumentPacker implements IWrapper<BusinessDocumentVO.Docum
         if (document == null) return;
         if (BusinessTypeEnum.SERVER.getType() == document.getBusinessType()) {
             Server server = serverService.getById(document.getBusinessId());
-            document.setDisplayName(SimpleServerNameFacade.toServerName(server));
+            document.setDisplayName(server.getDisplayName());
             return;
         }
         if (BusinessTypeEnum.SERVERGROUP.getType() == document.getBusinessType()) {

@@ -35,6 +35,8 @@ public interface ServerService {
      */
     void update(Server server);
 
+    void updateNotEvent(Server server);
+
     void deleteById(Integer id);
 
     /**

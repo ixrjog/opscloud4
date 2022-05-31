@@ -13,7 +13,6 @@ import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.event.converter.EventConverter;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
 import com.baiyi.opscloud.event.process.base.AbstractEventProcess;
-import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.zabbix.constant.SeverityType;
 import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5HostDriver;
 import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5ProblemDriver;
@@ -80,8 +79,7 @@ public class ZabbixEventProcess extends AbstractEventProcess<ZabbixProblem.Probl
         if (CollectionUtils.isEmpty(zabbixConfig.getZabbix().getSeverityTypes())) {
             severityTypes = SEVERITY_TYPES;
         } else {
-            severityTypes =
-                    zabbixConfig.getZabbix().getSeverityTypes().stream().map(SeverityType::getByName).collect(Collectors.toList());
+            severityTypes = zabbixConfig.getZabbix().getSeverityTypes().stream().map(SeverityType::getByName).collect(Collectors.toList());
         }
         return zabbixV5ProblemDatasource.list(zabbixConfig.getZabbix(), severityTypes);
     }
@@ -103,18 +101,19 @@ public class ZabbixEventProcess extends AbstractEventProcess<ZabbixProblem.Probl
         log.info("Zabbix Trigger 存在: problemId = {}, triggerId = {}", problem.getEventid(), problem.getObjectid());
         List<ZabbixHost.Host> hosts = trigger.getHosts();
         if (!CollectionUtils.isEmpty(hosts)) {
-            for (ZabbixHost.Host h : hosts) {
-                ZabbixHost.Host zabbixHost = zabbixV5HostDatasource.getById(config.getZabbix(), h.getHostid());
-                List<ZabbixHost.HostInterface> interfaces = zabbixHost.getInterfaces();
-                // filter type = agent interface
-                Optional<ZabbixHost.HostInterface> optional = interfaces.stream().filter(i -> i.getType() == 1).findFirst();
-                if (optional.isPresent()) {
-                    Server server = serverService.getByPrivateIp(optional.get().getIp());
-                    if (server != null) {
-                        ServerVO.Server iBusiness = BeanCopierUtil.copyProperties(server, ServerVO.Server.class);
-                        recordEventBusiness(event, iBusiness, SimpleServerNameFacade.toServerName(iBusiness));
-                    }
-                }
+            hosts.forEach(h -> recordEventBusiness(config, event, h));
+        }
+    }
+
+    private void recordEventBusiness(ZabbixConfig zabbixConfig, Event event, ZabbixHost.Host host) {
+        ZabbixHost.Host zabbixHost = zabbixV5HostDatasource.getById(zabbixConfig.getZabbix(), host.getHostid());
+        List<ZabbixHost.HostInterface> interfaces = zabbixHost.getInterfaces();
+        Optional<ZabbixHost.HostInterface> optional = interfaces.stream().filter(i -> i.getType() == 1).findFirst();
+        if (optional.isPresent()) {
+            Server server = serverService.getByPrivateIp(optional.get().getIp());
+            if (server != null) {
+                ServerVO.Server iBusiness = BeanCopierUtil.copyProperties(server, ServerVO.Server.class);
+                recordEventBusiness(event, iBusiness, iBusiness.getDisplayName());
             }
         }
     }

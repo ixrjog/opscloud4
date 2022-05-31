@@ -108,6 +108,11 @@ public class ServerServiceImpl extends AbstractBusinessService<Server> implement
     }
 
     @Override
+    public void updateNotEvent(Server server) {
+        serverMapper.updateByPrimaryKey(server);
+    }
+
+    @Override
     public void deleteById(Integer id) {
         serverMapper.deleteByPrimaryKey(id);
     }

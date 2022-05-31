@@ -15,6 +15,7 @@ import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.server.ServerFacade;
+import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.factory.resource.base.AbstractApplicationResourceQuery;
 import com.baiyi.opscloud.packer.server.ServerPacker;
 import com.baiyi.opscloud.service.server.ServerService;
@@ -65,6 +66,7 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     @AssetBusinessRelation
     public ServerVO.Server addServer(ServerVO.Server server) {
         Server pre = toDO(server);
+        pre.setDisplayName(SimpleServerNameFacade.toServerName(pre));
         serverService.add(pre);
         // 绑定资产
         server.setId(pre.getId());
@@ -82,6 +84,7 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
             }
         }
         try {
+            pre.setDisplayName(SimpleServerNameFacade.toServerName(pre));
             serverService.update(pre);
         } catch (Exception e) {
             throw new CommonRuntimeException("更新服务器错误: 请确认IP、SerialNumber等字段是否有冲突!");
