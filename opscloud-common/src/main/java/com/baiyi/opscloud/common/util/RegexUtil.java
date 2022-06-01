@@ -17,7 +17,7 @@ public class RegexUtil {
     private interface RegexMatches {
         String PHONE = "^1[3456789]\\d{9}$";
         String USERNAME = "[a-zA-Z][\\w]{3,15}";
-        String SERVER_NAME = "[a-zA-Z][\\d0-9a-zA-Z-]{1,55}";
+        String SERVER_NAME = "[a-zA-Z][\\d0-9a-zA-Z-.]{1,55}";
         String SERVER_GROUP_NAME = "group_[a-z][\\d0-9a-z-]{2,64}";
         String EMAIL = "[A-z0-9-_\\.]+@([\\w]+[\\w-]*)(\\.[\\w]+[-\\w]*)+";
         String JOB_KEY = "[a-z0-9-_]{3,64}";
@@ -58,7 +58,7 @@ public class RegexUtil {
 
     public static void tryServerNameRule(String serverName) {
         if (!serverName.matches(RegexMatches.SERVER_NAME))
-            throw new CommonRuntimeException(ErrorEnum.SERVERGROUP_NAME_NON_COMPLIANCE_WITH_RULES);
+            throw new CommonRuntimeException(ErrorEnum.SERVER_NAME_NON_COMPLIANCE_WITH_RULES);
     }
 
     public static boolean isEmail(String email) {
