@@ -81,9 +81,13 @@ public class AlertHandler extends SimpleDsInstanceProvider {
     }
 
     private void instanceSend(DatasourceInstance instance) {
+        DatasourceConfig datasourceConfig = dsConfigHelper.getConfigByInstanceUuid(instance.getUuid());
+        ZabbixConfig zabbixConfig = dsConfigHelper.build(datasourceConfig, ZabbixConfig.class);
         Map<String, List<Event>> eventMap = Maps.newHashMap();
         Map<String, String> hostMap = Maps.newHashMap();
-        List<Event> events = eventService.queryEventByInstance(instance.getUuid());
+        List<Event> events = eventService.queryEventByInstance(instance.getUuid())
+                .stream().filter(e -> e.getPriority() >= zabbixConfig.getZabbix().getNotice().getPriority())
+                .collect(Collectors.toList());
         if (CollectionUtils.isEmpty(events)) return;
         events.forEach(event -> {
             List<EventBusiness> eventBusinesses = eventBusinessService.queryByEventId(event.getId());
@@ -98,18 +102,18 @@ public class AlertHandler extends SimpleDsInstanceProvider {
                 insertHostMap(hostMap, key, eventBusiness);
             });
         });
-        for (String key : eventMap.keySet()) {
-            String msg = renderTemplate(key, eventMap.get(key), hostMap);
-            DatasourceConfig datasourceConfig = dsConfigHelper.getConfigByInstanceUuid(instance.getUuid());
-            ZabbixConfig zabbixConfig = dsConfigHelper.build(datasourceConfig, ZabbixConfig.class);
-            String cacheKey = Joiner.on("#").join(PREFIX, key);
-            if (redisUtil.hasKey(cacheKey)) {
-                log.info("告警静默: cacheKey = " + cacheKey);
-                return; // 静默
-            }
-            dingtalkSendHelper.send(zabbixConfig.getZabbix(), msg);
-            redisUtil.set(cacheKey, true, TimeUtil.minuteTime * 10 / 1000);
+        eventMap.keySet().forEach(key -> send(key, eventMap, hostMap, zabbixConfig));
+    }
+
+    private void send(String key, Map<String, List<Event>> eventMap, Map<String, String> hostMap, ZabbixConfig zabbixConfig) {
+        String msg = renderTemplate(key, eventMap.get(key), hostMap);
+        String cacheKey = Joiner.on("#").join(PREFIX, key);
+        if (redisUtil.hasKey(cacheKey)) {
+            log.info("告警静默: cacheKey = " + cacheKey);
+            return; // 静默
         }
+        dingtalkSendHelper.send(zabbixConfig.getZabbix(), msg);
+        redisUtil.set(cacheKey, true, TimeUtil.minuteTime * 10 / 1000);
     }
 
     private String renderTemplate(String host, List<Event> events, Map<String, String> hostMap) {
@@ -132,11 +136,10 @@ public class AlertHandler extends SimpleDsInstanceProvider {
 
     private void insertHostMap(Map<String, String> hostMap, String key, EventBusiness eventBusiness) {
         if (hostMap.containsKey(key)) return;
-        if (eventBusiness.getBusinessType() == BusinessTypeEnum.SERVER.getType()) {
-            Server server = serverService.getById(eventBusiness.getBusinessId());
-            if (server != null) {
-                hostMap.put(key, server.getPrivateIp());
-            }
+        if (eventBusiness.getBusinessType() != BusinessTypeEnum.SERVER.getType()) return;
+        Server server = serverService.getById(eventBusiness.getBusinessId());
+        if (server != null) {
+            hostMap.put(key, server.getPrivateIp());
         }
     }
 
