@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.aliyun.openservices</groupId>
             <artifactId>aliyun-log</artifactId>
-            <version>0.6.68</version>
+            <version>0.6.69</version>
         </dependency>
 
         <dependency>

@@ -21,13 +21,13 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-sts</artifactId>
-            <version>1.12.187</version>
+            <version>1.12.220</version>
         </dependency>
 
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-core</artifactId>
-            <version>1.12.187</version>
+            <version>1.12.220</version>
         </dependency>
 
     </dependencies>
