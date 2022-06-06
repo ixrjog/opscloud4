@@ -65,14 +65,14 @@ public class AnsibleHosts {
     public static class Group {
 
         private ServerGroup serverGroup;
-        
+
         private Map<String, List<ServerPack>> serverMap;
 
         private String sshUser;
 
         public String format() {
             StringBuilder result = new StringBuilder(Joiner.on(" ").skipNulls().join("#", serverGroup.getName(), serverGroup.getComment(), "\n"));
-            serverMap.forEach((k,v) -> {
+            serverMap.forEach((k, v) -> {
                 result.append("[").append(k).append("]\n");
                 v.forEach(s -> result.append(toHostLine(s)));
                 result.append("\n");
@@ -83,7 +83,8 @@ public class AnsibleHosts {
         private String toHostLine(ServerPack serverPack) {
             String serverName = serverPack.getServer().getDisplayName();
             return Joiner.on(" ").skipNulls().join(
-                    BizPropertyHelper.getManageIp(serverPack),
+                    // IP 对齐
+                    String.format(String.format("%-15s", BizPropertyHelper.getManageIp(serverPack))),
                     link("ansible_ssh_user", sshUser),
                     link("ansible_ssh_port", String.valueOf(BizPropertyHelper.getSshPort(serverPack))),
                     link("hostname", serverName),

@@ -8,7 +8,7 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.ansible.args.AnsibleArgs;
+import com.baiyi.opscloud.datasource.ansible.builder.args.AnsibleArgs;
 import com.baiyi.opscloud.datasource.ansible.builder.AnsibleCommandArgsBuilder;
 import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgumentsBuilder;
 import com.baiyi.opscloud.datasource.ansible.entity.AnsibleExecuteResult;

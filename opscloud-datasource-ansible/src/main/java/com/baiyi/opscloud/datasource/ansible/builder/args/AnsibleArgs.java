@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.ansible.args;
+package com.baiyi.opscloud.datasource.ansible.builder.args;
 
 import com.google.common.collect.Maps;
 import lombok.Builder;

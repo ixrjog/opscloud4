@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.ansible.builder;
 
 
-import com.baiyi.opscloud.datasource.ansible.args.AnsibleArgs;
+import com.baiyi.opscloud.datasource.ansible.builder.args.AnsibleArgs;
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.google.common.base.Joiner;
 import org.apache.commons.exec.CommandLine;
