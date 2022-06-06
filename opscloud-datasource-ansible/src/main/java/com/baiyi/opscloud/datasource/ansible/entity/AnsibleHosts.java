@@ -16,8 +16,10 @@ import lombok.Builder;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @Author baiyi
@@ -71,20 +73,27 @@ public class AnsibleHosts {
         private String sshUser;
 
         public String format() {
-            StringBuilder result = new StringBuilder(Joiner.on(" ").skipNulls().join("#", serverGroup.getName(), serverGroup.getComment(), "\n"));
+            StringBuilder result = new StringBuilder(
+                    Joiner.on(" ")
+                            .skipNulls()
+                            .join("#", serverGroup.getName(), serverGroup.getComment(), "\n")
+            );
             serverMap.forEach((k, v) -> {
                 result.append("[").append(k).append("]\n");
-                v.forEach(s -> result.append(toHostLine(s)));
+                // 计算IP最长长度
+                Optional<ServerPack> spOptional = v.stream().max(Comparator.comparingInt(s -> BizPropertyHelper.getManageIp(s).length()));
+                v.forEach(s -> result.append(toHostLine(s, spOptional.map(serverPack -> BizPropertyHelper.getManageIp(serverPack).length()).orElse(15))));
                 result.append("\n");
             });
             return result.toString();
         }
 
-        private String toHostLine(ServerPack serverPack) {
+        private String toHostLine(ServerPack serverPack, int length) {
             String serverName = serverPack.getServer().getDisplayName();
+            final String fmt = "%-" + length + "s";
             return Joiner.on(" ").skipNulls().join(
                     // IP 对齐
-                    String.format(String.format("%-15s", BizPropertyHelper.getManageIp(serverPack))),
+                    String.format(fmt, BizPropertyHelper.getManageIp(serverPack)),
                     link("ansible_ssh_user", sshUser),
                     link("ansible_ssh_port", String.valueOf(BizPropertyHelper.getSshPort(serverPack))),
                     link("hostname", serverName),
@@ -95,7 +104,6 @@ public class AnsibleHosts {
             if (StringUtils.isEmpty(v)) return null;
             return Joiner.on("=").join(k, v);
         }
-
     }
 
 }
