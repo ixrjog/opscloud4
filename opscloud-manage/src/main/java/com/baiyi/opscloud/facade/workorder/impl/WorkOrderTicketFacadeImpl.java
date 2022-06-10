@@ -149,6 +149,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         String key = SendAuditNotice.buildKey(outApproveTicket.getTicketId(), outApproveTicket.getUsername());
         if (!redisUtil.hasKey(key)) return;
         String token = (String) redisUtil.get(key);
+        redisUtil.del(key);
         if(!token.equals(outApproveTicket.getToken())) return;
         SessionUtil.setUsername(outApproveTicket.getUsername());
         WorkOrderTicketParam.ApproveTicket approveTicket = WorkOrderTicketParam.ApproveTicket.builder()
