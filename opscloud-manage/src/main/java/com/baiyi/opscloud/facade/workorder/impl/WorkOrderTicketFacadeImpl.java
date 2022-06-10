@@ -169,7 +169,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
             return new HttpResult(e);
         }
         HttpResult hr = new HttpResult(true);
-        hr.setMsg("审批完成");
+        hr.setMsg("Approval completed");
         return hr;
     }
 

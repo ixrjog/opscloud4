@@ -197,7 +197,7 @@ public enum ErrorEnum {
     WORKORDER_TICKET_PHASE_ERROR(70001, "工单阶段不正确"),
     WORKORDER_TICKET_NOT_THE_CURRENT_APPROVER(70001, "不是当前审批人"),
     WORKORDER_TICKET_ENTRIES_EXISTS(70001, "工单条目未填写"),
-    WORKORDER_INVALID_TOKEN(70001,"工单执行错误: 无效的令牌"),
+    WORKORDER_INVALID_TOKEN(70001,"Work order approval failed: invalid token!"),
 
 
     KEYBOX_PUBLIC_KEY_IS_EMPTY(60001, "公钥不能为空！"),
