@@ -28,15 +28,14 @@ public class OutApiController {
 
     @ApiOperation(value = "审批工单票据")
     @GetMapping(value = "/ticket/approve", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> approveTicket(@RequestParam Integer ticketId, String username, String approvalType, String token) {
+    public HttpResult approveTicket(@RequestParam Integer ticketId, String username, String approvalType, String token) {
         WorkOrderTicketParam.OutApproveTicket outApproveTicket = WorkOrderTicketParam.OutApproveTicket.builder()
                 .ticketId(ticketId)
                 .username(username)
                 .approvalType(approvalType)
                 .token(token)
                 .build();
-        workOrderTicketFacade.approveTicket(outApproveTicket);
-        return HttpResult.SUCCESS;
+        return workOrderTicketFacade.approveTicket(outApproveTicket);
     }
 
 }

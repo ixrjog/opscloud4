@@ -197,6 +197,8 @@ public enum ErrorEnum {
     WORKORDER_TICKET_PHASE_ERROR(70001, "工单阶段不正确"),
     WORKORDER_TICKET_NOT_THE_CURRENT_APPROVER(70001, "不是当前审批人"),
     WORKORDER_TICKET_ENTRIES_EXISTS(70001, "工单条目未填写"),
+    WORKORDER_INVALID_TOKEN(70001,"工单执行错误: 无效的令牌"),
+
 
     KEYBOX_PUBLIC_KEY_IS_EMPTY(60001, "公钥不能为空！"),
     KEYBOX_PRIVATE_KEY_IS_EMPTY(60001, "私钥不能为空！"),
@@ -260,8 +262,8 @@ public enum ErrorEnum {
     ROLE_MENU_SAVE_FAIL(999, "保存角色菜单失败"),
     ;
 
-    private int code;
-    private String message;
+    private final int code;
+    private final String message;
 
     ErrorEnum(int code, String message) {
         this.code = code;

@@ -1,10 +1,12 @@
 package com.baiyi.opscloud.facade.workorder.impl;
 
+import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.common.util.WorkflowUtil;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam;
@@ -144,20 +146,31 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     }
 
     @Override
-    public void approveTicket(WorkOrderTicketParam.OutApproveTicket outApproveTicket) {
+    public HttpResult approveTicket(WorkOrderTicketParam.OutApproveTicket outApproveTicket) {
         // 鉴权
         String key = SendAuditNotice.buildKey(outApproveTicket.getTicketId(), outApproveTicket.getUsername());
-        if (!redisUtil.hasKey(key)) return;
+        if (!redisUtil.hasKey(key)) {
+            return new HttpResult(ErrorEnum.WORKORDER_INVALID_TOKEN);
+        }
         String token = (String) redisUtil.get(key);
         redisUtil.del(key);
-        if(!token.equals(outApproveTicket.getToken())) return;
+        if (!token.equals(outApproveTicket.getToken())) {
+            return new HttpResult(ErrorEnum.WORKORDER_INVALID_TOKEN);
+        }
         SessionUtil.setUsername(outApproveTicket.getUsername());
         WorkOrderTicketParam.ApproveTicket approveTicket = WorkOrderTicketParam.ApproveTicket.builder()
                 .ticketId(outApproveTicket.getTicketId())
                 .approvalType(outApproveTicket.getApprovalType())
                 .approvalComment(ApprovalTypeConstants.getDesc(outApproveTicket.getApprovalType()))
                 .build();
-        this.approveTicket(approveTicket);
+        try {
+            this.approveTicket(approveTicket);
+        } catch (Exception e) {
+            return new HttpResult(e);
+        }
+        HttpResult hr = new HttpResult(true);
+        hr.setMsg("审批完成");
+        return hr;
     }
 
     @Override

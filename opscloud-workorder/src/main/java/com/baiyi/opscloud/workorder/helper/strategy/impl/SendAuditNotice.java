@@ -121,8 +121,8 @@ public class SendAuditNotice extends AbstractSendNotice {
                 .ticketId(ticket.getId())
                 .createUser(userDisplayName)
                 .workOrderName(workOrder.getName())
-                .apiAgree("111")
-                .apiReject("2222")
+                //.apiAgree("111")
+                //.apiReject("2222")
                 .ticketEntities(ticketEntries)
                 .build();
     }
