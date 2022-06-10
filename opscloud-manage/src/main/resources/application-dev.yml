@@ -16,6 +16,9 @@ opscloud:
     userGroups:
       - vpn-users
       - confluence-users
+  outapi:
+    workorder:
+      approval: 'http://127.0.0.1:8080/api/out/ticket/approve?ticketId=%s&username=%s&approvalType=%s&token=%s'
 
 # auditPath 审计日志目录
 # openAudit :on 开启审计日志 off 关闭审计日志
@@ -39,6 +42,7 @@ white:
     - /api/ws/kubernetes/terminal
     - /api/ws/terminal/session/audit
     - /api/ws/server/task/play
+    - /api/out/ticket/approve
 
 spring:
   config:

@@ -31,6 +31,21 @@ public class OpscloudConfigurationProperties {
         private List<String> userGroups;
     }
 
+    /**
+     * outapi:
+     * workorder:
+     * approval
+     */
+    @Data
+    public static class Outapi {
+        private Workorder workorder;
+    }
+
+    @Data
+    public static class Workorder {
+        private String approval;
+    }
+
     public interface Paths {
         String ANSIBLE_PLAYBOOK = "ansible/playbook";
         String SERVER_TASK_LOG = "logs/serverTask";
@@ -39,6 +54,7 @@ public class OpscloudConfigurationProperties {
     private String version;
     private String dataPath; // Opscloud数据目录
     private CreateUser createUser;
+    private Outapi outapi;
 
     /**
      * 获取Ansible playbook 路径

@@ -10,13 +10,10 @@ import com.baiyi.opscloud.domain.notice.INoticeMessage;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
-
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi
@@ -68,7 +65,7 @@ public class NoticeManager {
      * @param msgKey
      * @param iNoticeMessage
      */
-    @Async(value = CORE)
+    //@Async(value = CORE)
     public void sendMessage(User user, String msgKey, INoticeMessage iNoticeMessage) {
         try {
             List<DatasourceInstance> instances = instanceHelper.listInstance(FILTER_INSTANCE_TYPES,

@@ -11,6 +11,7 @@
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="subscribe_status" jdbcType="VARCHAR" property="subscribeStatus" />
     <result column="is_active" jdbcType="BIT" property="isActive" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
     <result column="comment" jdbcType="VARCHAR" property="comment" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />

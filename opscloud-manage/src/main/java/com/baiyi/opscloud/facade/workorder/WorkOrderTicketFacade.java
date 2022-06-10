@@ -62,6 +62,12 @@ public interface WorkOrderTicketFacade {
      */
     WorkOrderTicketVO.TicketView approveTicket(WorkOrderTicketParam.ApproveTicket approveTicket);
 
+    /**
+     * 移动端审批
+     * @param outApproveTicket
+     */
+    void approveTicket(WorkOrderTicketParam.OutApproveTicket outApproveTicket);
+
 
     WorkOrderTicketVO.TicketView getTicketEntries(int ticketId, String workOrderKey);
 

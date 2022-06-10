@@ -10,7 +10,9 @@ import com.baiyi.opscloud.workorder.model.TicketNoticeModel;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
+import java.util.List;
 import java.util.Set;
 
 import static com.baiyi.opscloud.datasource.manager.base.NoticeManager.MsgKeys.TICKET_END;
@@ -26,7 +28,14 @@ public class SendEndNotice extends AbstractSendNotice {
     @Override
     public void send(WorkOrderTicket ticket) {
         User user = userService.getByUsername(ticket.getUsername());
-        send(Lists.newArrayList(user), TICKET_END, buildNoticeMessage(ticket));
+        send(ticket.getId(), Lists.newArrayList(user), TICKET_END, buildNoticeMessage(ticket));
+    }
+
+    protected void send(Integer ticketId, List<User> users, String msgKey, INoticeMessage noticeMessage) {
+        if (CollectionUtils.isEmpty(users)) return;
+        users.forEach(user ->
+            noticeManager.sendMessage(user, msgKey, noticeMessage)
+        );
     }
 
     @Override

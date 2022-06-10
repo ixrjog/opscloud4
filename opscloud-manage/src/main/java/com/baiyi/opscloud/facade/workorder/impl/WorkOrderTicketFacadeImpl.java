@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.workorder.impl;
 
+import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.common.util.WorkflowUtil;
@@ -22,6 +23,7 @@ import com.baiyi.opscloud.workorder.constants.NodeTypeConstants;
 import com.baiyi.opscloud.workorder.constants.OrderTicketPhaseCodeConstants;
 import com.baiyi.opscloud.workorder.exception.TicketCommonException;
 import com.baiyi.opscloud.workorder.helper.TicketNoticeHelper;
+import com.baiyi.opscloud.workorder.helper.strategy.impl.SendAuditNotice;
 import com.baiyi.opscloud.workorder.processor.ITicketProcessor;
 import com.baiyi.opscloud.workorder.processor.factory.WorkOrderTicketProcessorFactory;
 import com.baiyi.opscloud.workorder.query.factory.WorkOrderTicketEntryQueryFactory;
@@ -66,6 +68,8 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     private final WorkOrderTicketSubscriberFacade ticketSubscriberFacade;
 
     private final TicketNoticeHelper ticketNoticeHelper;
+
+    private final RedisUtil redisUtil;
 
     @Override
     public DataTable<WorkOrderTicketVO.Ticket> queryTicketPage(WorkOrderTicketParam.TicketPageQuery pageQuery) {
@@ -137,6 +141,22 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         // 工单通知
         ticketNoticeHelper.send(ticket);
         return toTicketView(ticket);
+    }
+
+    @Override
+    public void approveTicket(WorkOrderTicketParam.OutApproveTicket outApproveTicket) {
+        // 鉴权
+        String key = SendAuditNotice.buildKey(outApproveTicket.getTicketId(), outApproveTicket.getUsername());
+        if (!redisUtil.hasKey(key)) return;
+        String token = (String) redisUtil.get(key);
+        if(!token.equals(outApproveTicket.getToken())) return;
+        SessionUtil.setUsername(outApproveTicket.getUsername());
+        WorkOrderTicketParam.ApproveTicket approveTicket = WorkOrderTicketParam.ApproveTicket.builder()
+                .ticketId(outApproveTicket.getTicketId())
+                .approvalType(outApproveTicket.getApprovalType())
+                .approvalComment(ApprovalTypeConstants.getDesc(outApproveTicket.getApprovalType()))
+                .build();
+        this.approveTicket(approveTicket);
     }
 
     @Override

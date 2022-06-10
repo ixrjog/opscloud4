@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.workorder.helper.strategy.base;
 
 import com.baiyi.opscloud.datasource.manager.base.NoticeManager;
-import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.notice.INoticeMessage;
 import com.baiyi.opscloud.service.user.UserService;
@@ -9,17 +8,17 @@ import com.baiyi.opscloud.service.workorder.WorkOrderService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketEntryService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketNodeService;
 import com.baiyi.opscloud.workorder.helper.TicketNoticeHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @Author baiyi
  * @Date 2022/1/27 4:47 PM
  * @Version 1.0
  */
+@Slf4j
 public abstract class AbstractSendNotice implements ISendNotice, InitializingBean {
 
     @Resource
@@ -38,11 +37,6 @@ public abstract class AbstractSendNotice implements ISendNotice, InitializingBea
     protected NoticeManager noticeManager;
 
     abstract protected INoticeMessage buildNoticeMessage(WorkOrderTicket ticket);
-
-    protected void send(List<User> users, String msgKey, INoticeMessage noticeMessage) {
-        if (CollectionUtils.isEmpty(users)) return;
-        users.forEach(user -> noticeManager.sendMessage(user, msgKey, noticeMessage));
-    }
 
     @Override
     public void afterPropertiesSet() throws Exception {

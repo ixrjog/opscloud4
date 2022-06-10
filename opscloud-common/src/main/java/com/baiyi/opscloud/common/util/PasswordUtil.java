@@ -41,7 +41,7 @@ public class PasswordUtil {
      * @param length 密码长度
      * @return
      */
-    private static String generatorPW(int length) {
+    public static String generatorPW(int length) {
         if (length == 0) length = 20;
         Random random = new Random();
         StringBuilder sb = new StringBuilder();

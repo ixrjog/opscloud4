@@ -33,6 +33,7 @@ public class TicketNoticeModel implements INoticeMessage {
          * <% for(ticketEntry in ticketEntities){ %>
          * + ${ticketEntry.name}  ${ticketEntry.comment}
          * <% } %>
+         * [审批同意](${apiAgree})     [审批拒绝](${apiReject})
          * <p>
          * [点击查看(仅支持PC)](https://oc.chuanyinet.com/index.html#/workorder)
          */
@@ -40,6 +41,8 @@ public class TicketNoticeModel implements INoticeMessage {
         private Integer ticketId; // 工单ID
         private String workOrderName;  // 工单名称
         private String createUser; // 工单创建者显示名称
+        private String apiAgree; // 同意
+        private String apiReject; // 拒绝
         private List<WorkOrderTicketEntry> ticketEntities; // 工单条目
 
     }

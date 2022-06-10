@@ -48,6 +48,11 @@ public class WorkOrderTicketSubscriber {
     private Boolean isActive;
 
     /**
+     * 移动端审批令牌
+     */
+    private String token;
+
+    /**
      * 说明
      */
     private String comment;

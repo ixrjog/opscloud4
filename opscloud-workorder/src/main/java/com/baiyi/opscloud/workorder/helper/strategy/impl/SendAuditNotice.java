@@ -1,9 +1,15 @@
 package com.baiyi.opscloud.workorder.helper.strategy.impl;
 
+import com.baiyi.opscloud.common.config.properties.OpscloudConfigurationProperties;
+import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.common.util.WorkflowUtil;
+import com.baiyi.opscloud.datasource.manager.base.NoticeManager;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.notice.INoticeMessage;
 import com.baiyi.opscloud.domain.vo.workorder.WorkflowVO;
+import com.baiyi.opscloud.service.workorder.WorkOrderTicketSubscriberService;
+import com.baiyi.opscloud.workorder.constants.ApprovalTypeConstants;
 import com.baiyi.opscloud.workorder.constants.NodeTypeConstants;
 import com.baiyi.opscloud.workorder.constants.OrderTicketPhaseCodeConstants;
 import com.baiyi.opscloud.workorder.helper.strategy.base.AbstractSendNotice;
@@ -11,8 +17,11 @@ import com.baiyi.opscloud.workorder.model.TicketNoticeModel;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,8 +33,24 @@ import static com.baiyi.opscloud.datasource.manager.base.NoticeManager.MsgKeys.T
  * @Date 2022/1/27 4:46 PM
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class SendAuditNotice extends AbstractSendNotice {
+
+    @Resource
+    private WorkOrderTicketSubscriberService ticketSubscriberService;
+
+    @Resource
+    private RedisUtil redisUtil;
+
+    @Resource
+    private OpscloudConfigurationProperties opscloudConfigurationProperties;
+
+    public final static String KEY_PREFIX = "Opscloud.V4.workOrder#ticketId.%s.username.%s";
+
+    public static String buildKey(Integer ticketId, String username) {
+        return String.format(KEY_PREFIX, ticketId, username);
+    }
 
     @Override
     public Set<String> getPhases() {
@@ -43,14 +68,44 @@ public class SendAuditNotice extends AbstractSendNotice {
             if (NodeTypeConstants.SYS.getCode() == workflowNode.getType()) {
                 // 广播
                 List<User> auditUsers = userService.queryByTagKeys(workflowNode.getTags());
-                send(auditUsers, TICKET_APPROVE, noticeMessage);
+                send(ticket.getId(), auditUsers, TICKET_APPROVE, noticeMessage);
             }
             if (NodeTypeConstants.USER_LIST.getCode() == workflowNode.getType()) {
                 // 单播
                 User auditUser = userService.getByUsername(node.getUsername());
-                send(Lists.newArrayList(auditUser), TICKET_APPROVE, noticeMessage);
+                send(ticket.getId(), Lists.newArrayList(auditUser), TICKET_APPROVE, noticeMessage);
             }
         }
+    }
+
+    protected void send(Integer ticketId, List<User> users, String msgKey, INoticeMessage noticeMessage) {
+        if (CollectionUtils.isEmpty(users)) return;
+        TicketNoticeModel.ApproveNoticeMessage approveNoticeMessage = (TicketNoticeModel.ApproveNoticeMessage) noticeMessage;
+        users.forEach(user -> {
+            if (NoticeManager.MsgKeys.TICKET_APPROVE.equals(msgKey)) {
+                // 有效期1day
+                try {
+                    WorkOrderTicketSubscriber queryParam = WorkOrderTicketSubscriber.builder()
+                            .username(user.getUsername())
+                            .workOrderTicketId(ticketId)
+                            .subscribeStatus("AUDIT")
+                            .build();
+                    WorkOrderTicketSubscriber subscriber = ticketSubscriberService.getByUniqueKey(queryParam);
+                    if (subscriber != null && !"-".equals(subscriber.getToken())) {
+                        redisUtil.set(buildKey(ticketId, user.getUsername()), subscriber.getToken(), TimeUtil.dayTime / 1000);
+                        String api = opscloudConfigurationProperties.getOutapi().getWorkorder().getApproval();
+                        String apiAgree = String.format(api, ticketId, user.getUsername(), ApprovalTypeConstants.AGREE.name(), subscriber.getToken());
+                        String apiReject = String.format(api, ticketId, user.getUsername(), ApprovalTypeConstants.REJECT.name(), subscriber.getToken());
+                        approveNoticeMessage.setApiAgree(apiAgree);
+                        approveNoticeMessage.setApiReject(apiReject);
+                        noticeManager.sendMessage(user, msgKey, approveNoticeMessage);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.error("工单移动端审批Token写入失败！");
+                }
+            }
+        });
     }
 
     @Override
@@ -66,8 +121,11 @@ public class SendAuditNotice extends AbstractSendNotice {
                 .ticketId(ticket.getId())
                 .createUser(userDisplayName)
                 .workOrderName(workOrder.getName())
+                .apiAgree("111")
+                .apiReject("2222")
                 .ticketEntities(ticketEntries)
                 .build();
     }
+
 
 }
