@@ -2,8 +2,8 @@ package com.baiyi.opscloud.kubernetes.terminal.processor.impl;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.kubernetes.terminal.processor.AbstractKubernetesTerminalProcessor;
 import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalProcessFactory;
+import com.baiyi.opscloud.kubernetes.terminal.processor.AbstractKubernetesTerminalProcessor;
 import com.baiyi.opscloud.sshcore.ITerminalProcessor;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
@@ -34,8 +34,6 @@ public class KubernetesTerminalLoginProcessor extends AbstractKubernetesTerminal
         String CONTAINER_TERMINAL = "CONTAINER_TERMINAL";
     }
 
-    private static final ExecutorService executor = Executors.newFixedThreadPool(4);
-
     /**
      * 登录
      *
@@ -48,27 +46,34 @@ public class KubernetesTerminalLoginProcessor extends AbstractKubernetesTerminal
 
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
-        KubernetesMessage.Login loginMessage = getMessage(message);
-        heartbeat(terminalSession.getSessionId());
-        KubernetesResource kubernetesResource = loginMessage.getData();
-        kubernetesResource.getPods().forEach(pod ->
-                pod.getContainers().forEach(container -> {
-                    executor.submit(() -> {
-                        log.info("初始化容器终端: sessionType = {} , container = {} ", loginMessage.getSessionType(), container.getName());
-                        KubernetesConfig kubernetesDsInstanceConfig = buildConfig(kubernetesResource);
-                        if (loginMessage.getSessionType().equals(SessionType.CONTAINER_LOG)) {
-                            processLog(kubernetesDsInstanceConfig.getKubernetes(), terminalSession, kubernetesResource, pod, container);
-                            return;
-                        }
-                        if (loginMessage.getSessionType().equals(SessionType.CONTAINER_TERMINAL)) {
-                            processTerminal(kubernetesDsInstanceConfig.getKubernetes(), terminalSession, pod, container);
-                            return;
-                        }
-                        // 会话类型不正确,直接关闭
-                        KubernetesTerminalProcessFactory.getProcessByKey(MessageState.CLOSE.getState()).process(message, session, terminalSession);
-                    });
-                })
-        );
+        ExecutorService executor = Executors.newFixedThreadPool(4);
+        try {
+            KubernetesMessage.Login loginMessage = getMessage(message);
+            heartbeat(terminalSession.getSessionId());
+            KubernetesResource kubernetesResource = loginMessage.getData();
+            kubernetesResource.getPods().forEach(pod ->
+                    pod.getContainers().forEach(container -> {
+                        executor.submit(() -> {
+                            log.info("初始化容器终端: sessionType = {} , container = {} ", loginMessage.getSessionType(), container.getName());
+                            KubernetesConfig kubernetesDsInstanceConfig = buildConfig(kubernetesResource);
+                            if (loginMessage.getSessionType().equals(SessionType.CONTAINER_LOG)) {
+                                processLog(kubernetesDsInstanceConfig.getKubernetes(), terminalSession, kubernetesResource, pod, container);
+                                return;
+                            }
+                            if (loginMessage.getSessionType().equals(SessionType.CONTAINER_TERMINAL)) {
+                                processTerminal(kubernetesDsInstanceConfig.getKubernetes(), terminalSession, pod, container);
+                                return;
+                            }
+                            // 会话类型不正确,直接关闭
+                            KubernetesTerminalProcessFactory.getProcessByKey(MessageState.CLOSE.getState()).process(message, session, terminalSession);
+                        });
+                    })
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            executor.shutdown();
+        }
     }
 
     private String toInstanceId(KubernetesResource.Pod pod, KubernetesResource.Container container) {

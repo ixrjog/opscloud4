@@ -150,6 +150,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                 }
             }
         }
+        fixedThreadPool.shutdown();
         traceEndOfTask(serverTask);
     }
 

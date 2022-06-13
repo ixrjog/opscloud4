@@ -62,19 +62,24 @@ public class WebTerminalController extends SimpleAuthentication {
      */
     @OnOpen
     public void onOpen(Session session) {
-        log.info("终端会话尝试链接，sessionId = {}", sessionId);
-        TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.WEB_TERMINAL);
-        terminalSessionService.add(terminalSession);
-        this.terminalSession = terminalSession;
-        sessionSet.get().add(session);
-        int cnt = onlineCount.incrementAndGet(); // 在线数加1
-        log.info("有连接加入，当前连接数为：{}", cnt);
-        session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
-        this.session = session;
-        // 线程启动
-        Runnable run = new SentOutputTask(sessionId, session);
-        Thread thread = new Thread(run);
-        thread.start();
+        try {
+            log.info("WebTerm尝试连接，sessionId = {}", sessionId);
+            TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.WEB_TERMINAL);
+            terminalSessionService.add(terminalSession);
+            this.terminalSession = terminalSession;
+            sessionSet.get().add(session);
+            int cnt = onlineCount.incrementAndGet(); // 在线数加1
+            log.info("WebTerm有连接加入，当前连接数为：{}", cnt);
+            session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
+            this.session = session;
+            // 线程启动
+            Runnable run = new SentOutputTask(sessionId, session);
+            Thread thread = new Thread(run);
+            thread.start();
+        } catch (Exception e) {
+            log.error("WebTerm创建连接错误！");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -82,10 +87,15 @@ public class WebTerminalController extends SimpleAuthentication {
      */
     @OnClose
     public void onClose() {
-        TerminalProcessFactory.getProcessByKey(MessageState.CLOSE.getState()).process("", session, terminalSession);
-        sessionSet.get().remove(session);
-        int cnt = onlineCount.decrementAndGet();
-        log.info("有连接关闭，当前连接数为：{}", cnt);
+        try {
+            TerminalProcessFactory.getProcessByKey(MessageState.CLOSE.getState()).process("", session, terminalSession);
+            sessionSet.get().remove(session);
+            int cnt = onlineCount.decrementAndGet();
+            log.info("有连接关闭当前连接数为: {}", cnt);
+        } catch (Exception e) {
+            log.error("WebTerm OnClose错误！");
+            e.printStackTrace();
+        }
     }
 
     /**

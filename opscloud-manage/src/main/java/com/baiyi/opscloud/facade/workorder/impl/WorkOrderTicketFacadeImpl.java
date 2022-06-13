@@ -166,13 +166,15 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         try {
             this.approveTicket(approveTicket);
         } catch (Exception e) {
-            HttpResult hr = new HttpResult(false);
-            hr.setMsg("Approval failed");
-            return hr;
+           return HttpResult.builder()
+                    .success(false)
+                    .msg("Approval failed")
+                    .build();
         }
-        HttpResult hr = new HttpResult(true);
-        hr.setMsg("Approval completed");
-        return hr;
+        return HttpResult.builder()
+                .success(true)
+                .msg("Approval completed")
+                .build();
     }
 
     @Override

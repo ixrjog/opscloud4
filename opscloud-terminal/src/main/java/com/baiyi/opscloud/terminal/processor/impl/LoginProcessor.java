@@ -35,13 +35,8 @@ public class LoginProcessor extends AbstractServerTerminalProcessor<ServerMessag
     @Resource
     private SupserAdminInterceptor sAInterceptor;
 
-//    @Resource
-//    private BizPropertyHelper bizPropertyHelper;
-
     @Resource
     private ServerService serverService;
-
-    private static final ExecutorService executor = Executors.newFixedThreadPool(4);
 
     @Override
     public String getState() {
@@ -50,18 +45,24 @@ public class LoginProcessor extends AbstractServerTerminalProcessor<ServerMessag
 
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
-        ServerMessage.Login loginMessage = getMessage(message);
-        heartbeat(terminalSession.getSessionId());
-        for (ServerNode serverNode : loginMessage.getServerNodes()) {
-            executor.submit(() -> {
-                log.info("登录服务器节点: instanceId = {} ", serverNode.getInstanceId());
-                sAInterceptor.interceptLoginServer(serverNode.getId());
-                HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverNode, loginMessage);
-                Server server = serverService.getById(serverNode.getId());
-               //  ServerProperty.Server serverProperty = bizPropertyHelper.getBusinessProperty(server);
-                RemoteInvokeHandler.openWebTerminal(terminalSession.getSessionId(), serverNode.getInstanceId(), hostSystem);
-                terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, hostSystem, InstanceSessionTypeEnum.SERVER));
-            });
+        ExecutorService executor = Executors.newFixedThreadPool(4);
+        try {
+            ServerMessage.Login loginMessage = getMessage(message);
+            heartbeat(terminalSession.getSessionId());
+            for (ServerNode serverNode : loginMessage.getServerNodes()) {
+                executor.submit(() -> {
+                    log.info("登录服务器节点: instanceId = {} ", serverNode.getInstanceId());
+                    sAInterceptor.interceptLoginServer(serverNode.getId());
+                    HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverNode, loginMessage);
+                    Server server = serverService.getById(serverNode.getId());
+                    RemoteInvokeHandler.openWebTerminal(terminalSession.getSessionId(), serverNode.getInstanceId(), hostSystem);
+                    terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, hostSystem, InstanceSessionTypeEnum.SERVER));
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            executor.shutdown();
         }
     }
 
