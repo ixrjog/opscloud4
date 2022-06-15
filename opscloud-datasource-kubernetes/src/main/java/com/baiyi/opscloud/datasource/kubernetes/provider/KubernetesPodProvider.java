@@ -51,12 +51,12 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
         return dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
     }
 
-    public List<AssetContainer> queryAssetsByDeployment(int dsInstanceId, String namespace,String deployment) {
+    public List<AssetContainer> queryAssetsByDeployment(int dsInstanceId, String namespace, String deployment) {
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
         KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
         List<Pod> pods = KubernetesPodDriver.listPod(kubernetes, namespace, deployment);
-        return pods.stream().map(e->
-                toAssetContainer(dsInstanceContext.getDsInstance(),e)
+        return pods.stream().map(e ->
+                toAssetContainer(dsInstanceContext.getDsInstance(), e)
         ).collect(Collectors.toList());
     }
 
@@ -94,7 +94,9 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
 
     @Override
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Pod entity) {
-        return PodAssetConverter.toAssetContainer(dsInstance, entity);
+        DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstance.getId());
+        KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
+        return PodAssetConverter.toAssetContainer(dsInstance, kubernetes, entity);
     }
 
     @Override

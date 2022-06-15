@@ -29,6 +29,7 @@ public class KubernetesConfig extends BaseConfig {
         private AmazonEks amazonEks;
         private Kubeconfig kubeconfig;
         private Namespace namespace;
+        private Container container;
         private Deployment deployment;
         private Service service;
 
@@ -66,6 +67,13 @@ public class KubernetesConfig extends BaseConfig {
     @NoArgsConstructor
     @ApiModel
     public static class Namespace {
+        private List<String> ignore;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Container {
         private List<String> ignore;
     }
 

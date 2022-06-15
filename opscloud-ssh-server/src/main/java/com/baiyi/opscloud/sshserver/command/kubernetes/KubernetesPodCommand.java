@@ -61,6 +61,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -183,15 +184,18 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                 for (Pod pod : pods) {
                     Map<String, Boolean> podStatusMap = pod.getStatus().getConditions().stream().collect(Collectors.toMap(PodCondition::getType, a -> Boolean.valueOf(a.getStatus()), (k1, k2) -> k1));
                     String podName = pod.getMetadata().getName();
+
+                    Set<String> names = pod.getSpec().getContainers().stream().map(Container::getName).collect(Collectors.toList())
+                            .stream().filter(n -> tryIgnoreName(kubernetesDsInstanceMap
+                                    .get(instanceUuid).getKubernetesDsInstanceConfig().getKubernetes(), n)).collect(Collectors.toSet());
                     PodContext podContext = PodContext.builder()
                             .podName(podName)
                             .instanceUuid(instanceUuid)
                             .namespace(pod.getMetadata().getNamespace())
                             .podIp(pod.getStatus().getPodIP())
+                            .containerNames(names)
                             .build();
                     podMapper.put(seq, podContext);
-                    List<String> names = pod.getSpec().getContainers().stream().map(Container::getName).collect(Collectors.toList());
-
                     pt.addRow(seq,
                             kubernetesDsInstanceMap.get(instanceUuid).getDsInstance().getInstanceName(),
                             toNamespaceStr(pod.getMetadata().getNamespace()),
@@ -211,6 +215,15 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         }
         SessionCommandContext.setPodMapper(podMapper);
         sshShellHelper.print(pt.toString());
+    }
+
+    private static boolean tryIgnoreName(KubernetesConfig.Kubernetes kubernetes, String containerName) {
+        if (kubernetes.getContainer() == null || org.springframework.util.CollectionUtils.isEmpty(kubernetes.getContainer().getIgnore()))
+            return true;
+        for (String name : kubernetes.getContainer().getIgnore()) {
+            if (containerName.startsWith(name)) return false;
+        }
+        return true;
     }
 
     @CheckTerminalSize(cols = 130, rows = 10)
@@ -234,6 +247,19 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         Map<Integer, PodContext> podMapper = SessionCommandContext.getPodMapper();
         PodContext podContext = podMapper.get(id);
         KubernetesConfig kubernetesDsInstanceConfig = buildConfig(podContext.getInstanceUuid());
+        if (StringUtils.isEmpty(name)) {
+            List<String> names = podContext.getContainerNames().stream().filter(n -> tryIgnoreName(kubernetesDsInstanceConfig.getKubernetes(), n)).collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(names)) {
+                sshShellHelper.print("无效的容器名称！", PromptColor.RED);
+                return;
+            }
+            if (names.size() > 1) {
+                sshShellHelper.print("多容器必须指定容器名称: --name ${containerName}", PromptColor.RED);
+                return;
+            }
+            name = names.get(0);
+        }
+
         KubernetesPodDriver.SimpleListener listener = new KubernetesPodDriver.SimpleListener();
         ServerSession serverSession = sshShellHelper.getSshSession();
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
