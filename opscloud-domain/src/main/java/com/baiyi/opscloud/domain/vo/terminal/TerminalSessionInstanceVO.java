@@ -41,7 +41,10 @@ public class TerminalSessionInstanceVO {
         private String hostIp;
         @ApiModelProperty(value = "会话日志大小")
         private Long outputSize;
+        @ApiModelProperty(value = "是否关闭")
         private Boolean instanceClosed;
+        @ApiModelProperty(value = "命令数量")
+        private Integer commandSize;
         @ApiModelProperty(value = "会话实例开启时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date openTime;

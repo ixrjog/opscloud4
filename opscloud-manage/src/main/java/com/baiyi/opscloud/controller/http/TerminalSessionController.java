@@ -42,4 +42,5 @@ public class TerminalSessionController {
     public HttpResult<DataTable<TerminalSessionInstanceCommandVO.Command>> queryTerminalSessionCommandPage(@RequestBody @Valid TerminalSessionInstanceCommandParam.InstanceCommandPageQuery pageQuery) {
         return new HttpResult<>(terminalSessionFacade.queryTerminalSessionCommandPage(pageQuery));
     }
+
 }

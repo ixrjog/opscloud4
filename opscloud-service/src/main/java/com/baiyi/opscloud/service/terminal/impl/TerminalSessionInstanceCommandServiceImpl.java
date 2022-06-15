@@ -40,6 +40,14 @@ public class TerminalSessionInstanceCommandServiceImpl implements TerminalSessio
     }
 
     @Override
+    public int countByTerminalSessionInstanceId(Integer terminalSessionInstanceId) {
+        Example example = new Example(TerminalSessionInstanceCommand.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("terminalSessionInstanceId", terminalSessionInstanceId);
+        return commandMapper.selectCountByExample(example);
+    }
+
+    @Override
     public DataTable<TerminalSessionInstanceCommand> queryTerminalSessionInstanceCommandPage(TerminalSessionInstanceCommandParam.InstanceCommandPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(TerminalSessionInstanceCommand.class);

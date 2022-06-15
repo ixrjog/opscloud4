@@ -43,8 +43,8 @@ public class WebTerminalController extends SimpleAuthentication {
     private final String sessionId = UUID.randomUUID().toString();
 
     private Session session = null;
-    // 超时时间1H
-    public static final Long WEBSOCKET_TIMEOUT = TimeUtil.hourTime;
+    // 超时时间15分钟
+    public static final Long WEBSOCKET_TIMEOUT = TimeUtil.minuteTime * 15;
 
     private static final HostInfo serverInfo = HostInfo.build();
 
