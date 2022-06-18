@@ -49,7 +49,11 @@ public class ServerAccountFacadeImpl implements ServerAccountFacade {
     @Override
     public void addServerAccount(ServerAccountVO.Account account) {
         ServerAccount serverAccount = toServerAccount(account);
-        accountService.add(serverAccount);
+        try {
+            accountService.add(serverAccount);
+        } catch (Exception e) {
+            throw new CommonRuntimeException("新增账户错误: 请确认账户名称和类型是否重复！");
+        }
     }
 
     @Override
