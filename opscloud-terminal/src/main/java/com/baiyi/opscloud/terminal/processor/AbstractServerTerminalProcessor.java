@@ -24,7 +24,7 @@ import javax.annotation.Resource;
 public abstract class AbstractServerTerminalProcessor<T extends ServerMessage.BaseMessage> implements ITerminalProcessor, InitializingBean {
 
     @Resource
-    protected ServerCommandAudit auditServerCommandAudit;
+    protected ServerCommandAudit serverCommandAudit;
 
     @Resource
     protected TerminalSessionInstanceService terminalSessionInstanceService;

@@ -55,7 +55,6 @@ public abstract class AbstractOutputTask implements IOutputTask {
         return TaskUtil.toBytes(chars);
     }
 
-
     /**
      * 审计日志
      *

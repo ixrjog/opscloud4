@@ -30,7 +30,7 @@ public class LogoutProcessor extends AbstractServerTerminalProcessor<ServerMessa
         //  recordAuditLog(terminalSession, baseMessage.getInstanceId()); // 写审计日志
         //  AuditRecordHandler.formatCommanderLog(terminalSession.getSessionId(),baseMessage.getInstanceId());
         simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, baseMessage.getInstanceId()); // 设置关闭会话
-        auditServerCommandAudit.recordCommand(terminalSession.getSessionId(),baseMessage.getInstanceId());
+        serverCommandAudit.recordCommand(terminalSession.getSessionId(),baseMessage.getInstanceId());
         JSchSessionContainer.closeSession(terminalSession.getSessionId(), baseMessage.getInstanceId());
     }
 

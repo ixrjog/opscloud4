@@ -61,7 +61,7 @@ public class HostSystemHandler {
         int HIGH_AUTHORITY = 1;
     }
 
-    private boolean checkAdmin(Server server) {
+    private boolean verifyAdmin(Server server) {
         boolean isAdmin = SessionUtil.getIsAdmin();
         if (!isAdmin) {
             UserPermission query = UserPermission.builder()
@@ -82,7 +82,7 @@ public class HostSystemHandler {
     }
 
     public HostSystem buildHostSystem(Server server, String account, boolean admin) throws SshRuntimeException {
-        boolean isAdmin = checkAdmin(server);
+        boolean isAdmin = verifyAdmin(server);
         SshCredential sshCredential;
         // 未指定账户
         if (StringUtils.isEmpty(account)) {
@@ -172,4 +172,5 @@ public class HostSystemHandler {
                 .credential(credential)
                 .build();
     }
+
 }
