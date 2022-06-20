@@ -144,6 +144,19 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     }
 
     @Override
+    public LogVO.Login simpleLogin(LoginParam.Login loginParam) {
+        User user = userService.getByUsername(loginParam.getUsername());
+        // 尝试使用authProvider 认证
+        if (authProviderManager.tryLogin(user, loginParam)) {
+           return LogVO.Login.builder()
+                    .name(loginParam.getUsername())
+                    .build();
+        } else {
+            throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_FAILURE); // 登录失败
+        }
+    }
+
+    @Override
     public void logout() {
         log.info("用户登出: username = {}", SessionUtil.getUsername());
         userTokenFacade.revokeUserToken(SessionUtil.getUsername());

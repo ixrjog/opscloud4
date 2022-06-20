@@ -35,6 +35,13 @@ public class LogController {
         return new HttpResult<>(userAuthFacade.login(loginParam));
     }
 
+    @ApiOperation(value = "用户登录接口（外部认证使用不返回Token）")
+    @PostMapping(value = "/simple/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<LogVO.Login> simpleLogin(@RequestBody LoginParam.Login loginParam) {
+        return new HttpResult<>(userAuthFacade.simpleLogin(loginParam));
+    }
+
+
     @ApiOperation(value = "用户登出接口")
     @GetMapping(value = "/logout", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> logout() {
