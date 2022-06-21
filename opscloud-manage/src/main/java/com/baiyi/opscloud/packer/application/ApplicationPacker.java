@@ -48,7 +48,7 @@ public class ApplicationPacker implements IWrapper<ApplicationVO.Application> {
     }
 
     /**
-     * wrapByKubernetes
+     * 包装Kubernetes
      * @param application
      */
     @Override

@@ -69,7 +69,7 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     }
 
     @Override
-    public DataTable<ApplicationVO.Application> queryApplicationPageByWebTerminal(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
+    public DataTable<ApplicationVO.Application> queryApplicationKubernetesPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
         pageQuery.setBusinessType(getBusinessType());
         if (isAdmin(SessionUtil.getUsername())) {
             pageQuery.setAdmin(true);
