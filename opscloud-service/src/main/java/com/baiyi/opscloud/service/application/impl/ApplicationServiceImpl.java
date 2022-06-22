@@ -34,8 +34,10 @@ public class ApplicationServiceImpl implements ApplicationService {
         if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
             Example.Criteria criteria = example.createCriteria();
             criteria.andLike("name", SQLUtil.toLike(pageQuery.getQueryName()));
+            example.setOrderByClause(String.format("replace( name, '%s', '' )", pageQuery.getQueryName()));
+        } else {
+            example.setOrderByClause("create_time");
         }
-        example.setOrderByClause("create_time");
         List<Application> data = applicationMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }

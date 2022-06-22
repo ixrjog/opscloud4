@@ -24,18 +24,16 @@
                 1 = 1
             </when>
             <when test="authorized">
-                id in ( select business_id from user_permission where business_type = #{businessType} and user_id =
-                #{userId})
+                id in ( select business_id from user_permission where business_type = #{businessType} and user_id = #{userId})
             </when>
             <otherwise>
-                id not in ( select business_id from user_permission where business_type = #{businessType} and user_id =
-                #{userId})
+                id not in ( select business_id from user_permission where business_type = #{businessType} and user_id = #{userId})
             </otherwise>
         </choose>
         <if test="queryName != null and queryName != ''">
             and name like "%" #{queryName} "%"
+            order by replace( name, #{queryName}, '' )
         </if>
-        order by create_time
     </select>
 
 </mapper>

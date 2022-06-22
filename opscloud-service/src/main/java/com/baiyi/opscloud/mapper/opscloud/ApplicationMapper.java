@@ -9,4 +9,5 @@ import java.util.List;
 public interface ApplicationMapper extends Mapper<Application> {
 
     List<Application> queryUserPermissionApplicationByParam(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery);
+
 }

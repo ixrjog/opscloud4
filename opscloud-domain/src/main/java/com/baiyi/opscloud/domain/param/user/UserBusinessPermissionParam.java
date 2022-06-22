@@ -31,6 +31,9 @@ public class UserBusinessPermissionParam {
         @ApiModelProperty(value = "查询名称")
         private String queryName;
 
+        @ApiModelProperty(value = "应用ID")
+        private Integer applicationId;
+
         @ApiModelProperty(value = "用户id")
 //        @NotNull(message = "用户id不能为空")
         private Integer userId;
