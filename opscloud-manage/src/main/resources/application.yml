@@ -22,9 +22,12 @@ server:
   tomcat:
     # tomcat的URI编码
     uri-encoding: UTF-8
+    accept-count: 1000
+    max-connections: 2000
+    max-http-form-post-size: 209715200
     threads:
       # tomcat最大线程数，默认为200
-      max: 400
+      max: 1000
       # Tomcat启动初始化的线程数，默认值25
       min-spare: 30
 
