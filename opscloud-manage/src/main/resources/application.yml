@@ -29,7 +29,7 @@ server:
       # tomcat最大线程数，默认为200
       max: 1000
       # Tomcat启动初始化的线程数，默认值25
-      min-spare: 30
+      min-spare: 100
 
 mapper:
   mappers:
