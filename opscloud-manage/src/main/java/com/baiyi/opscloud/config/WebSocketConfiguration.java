@@ -57,4 +57,5 @@ public class WebSocketConfiguration implements ServletContextInitializer {
          */
         servletContext.setInitParameter("org.apache.tomcat.websocket.executorMaxSize","1000");
     }
+
 }

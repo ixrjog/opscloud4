@@ -35,4 +35,5 @@ public class InitialRedisConfiguration implements ApplicationContextAware {
             configurableApplicationContext.close();
         }
     }
+
 }
