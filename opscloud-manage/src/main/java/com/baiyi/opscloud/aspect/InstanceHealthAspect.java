@@ -41,11 +41,10 @@ public class InstanceHealthAspect {
     public Object around(ProceedingJoinPoint joinPoint, InstanceHealth instanceHealth) throws Throwable {
         if (ENV_PROD.equals(env)) {
             if (instanceFacade.isHealth()) {
-                log.info("InstanceHealthAspect: passed !");
+                log.debug("Opscloud instance health examination: passed !");
                 return joinPoint.proceed();
             } else {
-                // throw new CommonRuntimeException("InstanceHealthAspect: 当前实例不可用！");
-                log.error("InstanceHealthAspect: 当前实例不可用 !");
+                log.info("Opscloud instance health examination: down !");
                 return joinPoint;
             }
         }
