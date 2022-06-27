@@ -80,15 +80,9 @@
             </properties>
         </profile>
         <profile>
-            <id>test</id>
+            <id>github</id>
             <properties>
-                <env>test</env>
-            </properties>
-        </profile>
-        <profile>
-            <id>open</id>
-            <properties>
-                <env>open</env>
+                <env>github</env>
             </properties>
         </profile>
         <profile>

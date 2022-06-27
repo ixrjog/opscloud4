@@ -3,6 +3,7 @@ package com.baiyi.opscloud.datasource.gitlab.driver;
 import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.datasource.gitlab.factory.GitlabFactory;
 import org.gitlab.api.GitlabAPI;
+import org.gitlab.api.models.CreateUserRequest;
 import org.gitlab.api.models.GitlabSSHKey;
 import org.gitlab.api.models.GitlabUser;
 
@@ -15,6 +16,14 @@ import java.util.List;
  * @Version 1.0
  */
 public class GitlabUserDriver {
+
+    public static GitlabUser createUser(GitlabConfig.Gitlab gitlab, CreateUserRequest request) throws IOException {
+        return buildAPI(gitlab).createUser(request);
+    }
+
+    public static List<GitlabUser> findUser(GitlabConfig.Gitlab gitlab, String emailOrUsername) throws IOException {
+        return buildAPI(gitlab).findUsers(emailOrUsername);
+    }
 
     public static GitlabUser getUser(GitlabConfig.Gitlab gitlab, Integer userId) throws IOException {
         return buildAPI(gitlab).getUser(userId);
@@ -35,4 +44,5 @@ public class GitlabUserDriver {
     private static GitlabAPI buildAPI(GitlabConfig.Gitlab gitlab) {
         return GitlabFactory.buildGitlabAPI(gitlab);
     }
+
 }

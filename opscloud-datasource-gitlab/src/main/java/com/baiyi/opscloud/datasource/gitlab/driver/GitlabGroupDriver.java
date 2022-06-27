@@ -3,7 +3,9 @@ package com.baiyi.opscloud.datasource.gitlab.driver;
 import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.datasource.gitlab.factory.GitlabFactory;
 import org.gitlab.api.GitlabAPI;
+import org.gitlab.api.models.GitlabAccessLevel;
 import org.gitlab.api.models.GitlabGroup;
+import org.gitlab.api.models.GitlabGroupMember;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,6 +25,18 @@ public class GitlabGroupDriver {
 //        GitlabProject gitlabProject = buildAPI(gitlab).getProject(projectId);
 //        gitlabProject.
 //    }
+
+    private static void addGroupMember(GitlabConfig.Gitlab gitlab, Integer groupId, Integer userId, GitlabAccessLevel accessLevel) throws IOException {
+        buildAPI(gitlab).addGroupMember(groupId, userId, accessLevel);
+    }
+
+    private static void deleteGroupMember(GitlabConfig.Gitlab gitlab, Integer groupId, Integer userId) throws IOException {
+        buildAPI(gitlab).deleteGroupMember(groupId, userId);
+    }
+
+    private static List<GitlabGroupMember> getGroupMember(GitlabConfig.Gitlab gitlab, Integer groupId) {
+        return buildAPI(gitlab).getGroupMembers(groupId);
+    }
 
     private static GitlabAPI buildAPI(GitlabConfig.Gitlab gitlab) {
         return GitlabFactory.buildGitlabAPI(gitlab);

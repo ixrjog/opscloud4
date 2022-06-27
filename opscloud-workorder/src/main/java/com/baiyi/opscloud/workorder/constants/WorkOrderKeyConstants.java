@@ -23,6 +23,7 @@ public enum WorkOrderKeyConstants {
     GRAFANA,
     CONFLUENCE,
     NACOS,
-
+    GITLAB_PROJECT,
+    GITLAB_GROUP,
     SYS_EMPLOYEE_RESIGN
 }
