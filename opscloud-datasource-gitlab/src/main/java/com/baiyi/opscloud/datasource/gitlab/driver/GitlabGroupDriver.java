@@ -26,15 +26,15 @@ public class GitlabGroupDriver {
 //        gitlabProject.
 //    }
 
-    private static void addGroupMember(GitlabConfig.Gitlab gitlab, Integer groupId, Integer userId, GitlabAccessLevel accessLevel) throws IOException {
+    public static void addGroupMember(GitlabConfig.Gitlab gitlab, Integer groupId, Integer userId, GitlabAccessLevel accessLevel) throws IOException {
         buildAPI(gitlab).addGroupMember(groupId, userId, accessLevel);
     }
 
-    private static void deleteGroupMember(GitlabConfig.Gitlab gitlab, Integer groupId, Integer userId) throws IOException {
+    public static void deleteGroupMember(GitlabConfig.Gitlab gitlab, Integer groupId, Integer userId) throws IOException {
         buildAPI(gitlab).deleteGroupMember(groupId, userId);
     }
 
-    private static List<GitlabGroupMember> getGroupMember(GitlabConfig.Gitlab gitlab, Integer groupId) {
+    public static List<GitlabGroupMember> getGroupMembers(GitlabConfig.Gitlab gitlab, Integer groupId) {
         return buildAPI(gitlab).getGroupMembers(groupId);
     }
 

@@ -45,9 +45,6 @@ public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTic
     @Resource
     private InstanceHelper instanceHelper;
 
-    // private static final String RANDOM_PASSWORD = null;
-
-
     @Override
     protected void processHandle(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
         GitlabConfig.Gitlab config = getDsConfig(ticketEntry, GitlabConfig.class).getGitlab();

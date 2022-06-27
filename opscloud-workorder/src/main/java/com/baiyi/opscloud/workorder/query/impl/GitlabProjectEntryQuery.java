@@ -32,6 +32,7 @@ public class GitlabProjectEntryQuery extends DatasourceAssetExtendedTicketEntryQ
     @Override
     protected WorkOrderTicketVO.Entry toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, DatasourceInstanceAsset entry) {
         WorkOrderTicketVO.Entry ticketEntry = super.toEntry(entryQuery, entry);
+        ticketEntry.setName(entry.getAssetKey());
         ticketEntry.setRole("DEVELOPER");
         ticketEntry.setComment(entry.getDescription());
         return ticketEntry;
