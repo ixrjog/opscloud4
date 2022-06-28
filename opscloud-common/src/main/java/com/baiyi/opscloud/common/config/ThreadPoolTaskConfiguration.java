@@ -21,8 +21,8 @@ public class ThreadPoolTaskConfiguration {
     // https://blog.csdn.net/xie19900123/article/details/81771793
 
     public interface TaskPools {
-        String CORE = "CORE";
-        String EXECUTOR = "EXECUTOR";
+        String CORE = "coreExecutor";
+        String COMMON = "commonExecutor";
         String TERMINAL = "terminalExecutor";
     }
 
@@ -37,7 +37,7 @@ public class ThreadPoolTaskConfiguration {
     /**
      * 线程池名前缀
      */
-    private static final String threadNamePrefix = "Async-Service-";
+    private static final String THREAD_NAME_PREFIX = "async-exec-";
 
     @Bean(name = CORE)
     public ThreadPoolTaskExecutor coreExecutor() {
@@ -56,7 +56,7 @@ public class ThreadPoolTaskConfiguration {
         executor.setMaxPoolSize(200); // 最大线程数
         executor.setQueueCapacity(queueCapacity);
         executor.setKeepAliveSeconds(keepAliveTime);
-        executor.setThreadNamePrefix(threadNamePrefix);
+        executor.setThreadNamePrefix(THREAD_NAME_PREFIX);
         // 而在一些场景下，若需要在关闭线程池时等待当前调度任务完成后才开始关闭，可以通过简单的配置，进行优雅的停机策略配置。关键就是通过
         executor.setWaitForTasksToCompleteOnShutdown(true);
         // 线程池对拒绝任务的处理策略
@@ -68,7 +68,7 @@ public class ThreadPoolTaskConfiguration {
         return executor;
     }
 
-    @Bean(name = EXECUTOR)
+    @Bean(name = COMMON)
     public ThreadPoolTaskExecutor commonExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         /**
@@ -85,7 +85,7 @@ public class ThreadPoolTaskConfiguration {
         executor.setMaxPoolSize(400); // 最大线程数
         executor.setQueueCapacity(queueCapacity);
         executor.setKeepAliveSeconds(keepAliveTime);
-        executor.setThreadNamePrefix(threadNamePrefix);
+        executor.setThreadNamePrefix(THREAD_NAME_PREFIX);
         // 而在一些场景下，若需要在关闭线程池时等待当前调度任务完成后才开始关闭，可以通过简单的配置，进行优雅的停机策略配置。关键就是通过
         executor.setWaitForTasksToCompleteOnShutdown(true);
         // 线程池对拒绝任务的处理策略

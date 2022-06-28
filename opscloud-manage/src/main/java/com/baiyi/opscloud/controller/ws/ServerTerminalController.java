@@ -3,6 +3,7 @@ package com.baiyi.opscloud.controller.ws;
 import com.baiyi.opscloud.common.model.HostInfo;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.util.ThreadPoolTaskExecutorPrint;
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
@@ -36,7 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 @ServerEndpoint(value = "/api/ws/terminal")
 @Component
-public class WebTerminalController extends SimpleAuthentication {
+public class ServerTerminalController extends SimpleAuthentication {
 
     private static final AtomicInteger onlineCount = new AtomicInteger(0);
     // concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。
@@ -56,14 +57,16 @@ public class WebTerminalController extends SimpleAuthentication {
 
     private static ThreadPoolTaskExecutor terminalExecutor;
 
+    private static final String IF_NAME = "Server terminal";
+
     @Autowired
     public void setTerminalSessionService(TerminalSessionService terminalSessionService) {
-        WebTerminalController.terminalSessionService = terminalSessionService;
+        ServerTerminalController.terminalSessionService = terminalSessionService;
     }
 
     @Resource
     public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor terminalExecutor) {
-        WebTerminalController.terminalExecutor = terminalExecutor;
+        ServerTerminalController.terminalExecutor = terminalExecutor;
     }
 
     /**
@@ -72,22 +75,23 @@ public class WebTerminalController extends SimpleAuthentication {
     @OnOpen
     public void onOpen(Session session) {
         try {
-            log.info("Web terminal session try to connect: instanceIP = {} , sessionId = {}", serverInfo.getHostAddress(), sessionId);
+            log.info("{} session try to connect: instanceIP = {} , sessionId = {}", IF_NAME, serverInfo.getHostAddress(), sessionId);
             TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.WEB_TERMINAL);
             terminalSessionService.add(terminalSession);
             this.terminalSession = terminalSession;
             sessionSet.get().add(session);
             int cnt = onlineCount.incrementAndGet(); // 在线数加1
-            log.info("Web terminal session connection join: instanceIP = {} , connections = {}", serverInfo.getHostAddress(), cnt);
+            log.info("{} session connection join: instanceIP = {} , connections = {}", IF_NAME, serverInfo.getHostAddress(), cnt);
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
             this.session = session;
             // 线程启动
             Runnable run = new SentOutputTask(sessionId, session);
             terminalExecutor.execute(run);
-           //  Thread thread = new Thread(run);
-           //  thread.start();
+            ThreadPoolTaskExecutorPrint.print(terminalExecutor, "terminalExecutor");
+            //  Thread thread = new Thread(run);
+            //  thread.start();
         } catch (Exception e) {
-            log.error("Web terminal create connection error！");
+            log.error("{} create connection error！", IF_NAME);
             e.printStackTrace();
         }
     }
@@ -101,9 +105,9 @@ public class WebTerminalController extends SimpleAuthentication {
             TerminalProcessFactory.getProcessByKey(MessageState.CLOSE.getState()).process("", session, terminalSession);
             sessionSet.get().remove(session);
             int cnt = onlineCount.decrementAndGet();
-            log.info("有连接关闭当前连接数为: {}", cnt);
+            log.info("{} session connection closed: instanceIP = {} , connections = {}",IF_NAME, serverInfo.getHostAddress(), cnt);
         } catch (Exception e) {
-            log.error("WebTerm OnClose错误！");
+            log.error("{} OnClose error！",IF_NAME);
             e.printStackTrace();
         }
     }
@@ -140,7 +144,11 @@ public class WebTerminalController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("发生错误：{}，Session ID： {}", error.getMessage(), session.getId());
+        log.error("{} error: instanceIP = {} , e = {}，sessionID = {}",
+                IF_NAME,
+                serverInfo.getHostAddress(),
+                error.getMessage(),
+                session.getId());
         error.printStackTrace();
         ServerMessage.BaseMessage closeMessage = ServerMessage.BaseMessage.builder()
                 .state(MessageState.CLOSE.getState())

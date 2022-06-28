@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.controller.ws;
 
 import com.baiyi.opscloud.common.model.HostInfo;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.util.ThreadPoolTaskExecutorPrint;
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
@@ -10,6 +12,7 @@ import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionBuilder;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.enums.SessionTypeEnum;
+import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.message.base.SimpleLoginMessage;
 import com.baiyi.opscloud.sshcore.task.terminal.SentOutputTask;
 import com.google.gson.GsonBuilder;
@@ -34,7 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 @ServerEndpoint(value = "/api/ws/kubernetes/terminal")
 @Component
-public class KubernetesWebTerminalController extends SimpleAuthentication {
+public class KubernetesTerminalController extends SimpleAuthentication {
 
     private static final AtomicInteger onlineCount = new AtomicInteger(0);
     // concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。
@@ -54,14 +57,16 @@ public class KubernetesWebTerminalController extends SimpleAuthentication {
 
     private static ThreadPoolTaskExecutor terminalExecutor;
 
+    private static final String IF_NAME = "Kubernetes terminal";
+
     @Autowired
     public void setTerminalSessionService(TerminalSessionService terminalSessionService) {
-        KubernetesWebTerminalController.terminalSessionService = terminalSessionService;
+        KubernetesTerminalController.terminalSessionService = terminalSessionService;
     }
 
     @Resource
     public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor terminalExecutor) {
-        KubernetesWebTerminalController.terminalExecutor = terminalExecutor;
+        KubernetesTerminalController.terminalExecutor = terminalExecutor;
     }
 
     /**
@@ -70,23 +75,24 @@ public class KubernetesWebTerminalController extends SimpleAuthentication {
     @OnOpen
     public void onOpen(Session session) {
         try {
-            log.info("Kubernetes web terminal session try to connect: instanceIP = {} , sessionId = {}", serverInfo.getHostAddress(), sessionId);
+            log.info("{} session try to connect: instanceIP = {} , sessionId = {}", IF_NAME, serverInfo.getHostAddress(), sessionId);
             TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.KUBERNETES_TERMINAL);
             this.terminalSession = terminalSession;
             terminalSessionService.add(terminalSession);
             sessionSet.add(session);
             int cnt = onlineCount.incrementAndGet(); // 在线数加1
-            log.info("Kubernetes web terminal session connection join: instanceIP = {} , connections = {}", serverInfo.getHostAddress(), cnt);
+            log.info("{} session connection join: instanceIP = {} , connections = {}", IF_NAME, serverInfo.getHostAddress(), cnt);
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
             this.session = session;
             // 线程启动
-//        Runnable run = new SentOutputTask(sessionId, session); 
-//        Thread thread = new Thread(run);
-//        thread.start();
+            //        Runnable run = new SentOutputTask(sessionId, session);
+            //        Thread thread = new Thread(run);
+            //        thread.start();
             Runnable run = new SentOutputTask(sessionId, session);
             terminalExecutor.execute(run);
+            ThreadPoolTaskExecutorPrint.print(terminalExecutor, "terminalExecutor");
         } catch (Exception e) {
-            log.error("Kubernetes web terminal create connection error！");
+            log.error("{} create connection error！", IF_NAME);
             e.printStackTrace();
         }
     }
@@ -99,7 +105,7 @@ public class KubernetesWebTerminalController extends SimpleAuthentication {
         KubernetesTerminalProcessFactory.getProcessByKey(MessageState.CLOSE.getState()).process("", session, terminalSession);
         sessionSet.remove(session);
         int cnt = onlineCount.decrementAndGet();
-        log.info("Kubernetes终端会话有连接关闭: instanceIP = {} , 当前连接数为 = {}", serverInfo.getHostAddress(), cnt);
+        log.info("{} session connection closed: instanceIP = {} , connections = {}", IF_NAME, serverInfo.getHostAddress(), cnt);
     }
 
     /**
@@ -134,7 +140,14 @@ public class KubernetesWebTerminalController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("Kubernetes终端会话发生错误: instanceIP = {} , e = {}，sessionID = {}", serverInfo.getHostAddress(), error.getMessage(), session.getId());
+        log.error("{} onError: instanceIP = {} , e = {}，sessionID = {}",
+                IF_NAME,
+                serverInfo.getHostAddress(),
+                error.getMessage(),
+                session.getId());
+        KubernetesMessage.BaseMessage closeMessage = KubernetesMessage.BaseMessage.CLOSE;
+        KubernetesTerminalProcessFactory.getProcessByKey(MessageState.CLOSE.getState())
+                .process(JSONUtil.writeValueAsString(closeMessage), session, terminalSession);
     }
 
 }
