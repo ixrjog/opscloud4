@@ -55,7 +55,7 @@ public class ServerTerminalController extends SimpleAuthentication {
 
     private TerminalSession terminalSession;
 
-    private static ThreadPoolTaskExecutor terminalExecutor;
+    private static ThreadPoolTaskExecutor serverTerminalExecutor;
 
     private static final String IF_NAME = "Server terminal";
 
@@ -65,8 +65,8 @@ public class ServerTerminalController extends SimpleAuthentication {
     }
 
     @Resource
-    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor terminalExecutor) {
-        ServerTerminalController.terminalExecutor = terminalExecutor;
+    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor serverTerminalExecutor) {
+        ServerTerminalController.serverTerminalExecutor = serverTerminalExecutor;
     }
 
     /**
@@ -86,8 +86,8 @@ public class ServerTerminalController extends SimpleAuthentication {
             this.session = session;
             // 线程启动
             Runnable run = new SentOutputTask(sessionId, session);
-            terminalExecutor.execute(run);
-            ThreadPoolTaskExecutorPrint.print(terminalExecutor, "terminalExecutor");
+            serverTerminalExecutor.execute(run);
+            ThreadPoolTaskExecutorPrint.print(serverTerminalExecutor, "serverTermExecutor");
             //  Thread thread = new Thread(run);
             //  thread.start();
         } catch (Exception e) {

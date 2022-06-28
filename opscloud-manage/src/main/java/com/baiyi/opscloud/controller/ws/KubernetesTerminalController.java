@@ -55,7 +55,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
 
     private static TerminalSessionService terminalSessionService;
 
-    private static ThreadPoolTaskExecutor terminalExecutor;
+    private static ThreadPoolTaskExecutor kubernetesTerminalExecutor;
 
     private static final String IF_NAME = "Kubernetes terminal";
 
@@ -65,8 +65,8 @@ public class KubernetesTerminalController extends SimpleAuthentication {
     }
 
     @Resource
-    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor terminalExecutor) {
-        KubernetesTerminalController.terminalExecutor = terminalExecutor;
+    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor kubernetesTerminalExecutor) {
+        KubernetesTerminalController.kubernetesTerminalExecutor = kubernetesTerminalExecutor;
     }
 
     /**
@@ -89,8 +89,8 @@ public class KubernetesTerminalController extends SimpleAuthentication {
             //        Thread thread = new Thread(run);
             //        thread.start();
             Runnable run = new SentOutputTask(sessionId, session);
-            terminalExecutor.execute(run);
-            ThreadPoolTaskExecutorPrint.print(terminalExecutor, "terminalExecutor");
+            kubernetesTerminalExecutor.execute(run);
+            ThreadPoolTaskExecutorPrint.print(kubernetesTerminalExecutor, "k8sTermExecutor");
         } catch (Exception e) {
             log.error("{} create connection error！", IF_NAME);
             e.printStackTrace();
