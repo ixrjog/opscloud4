@@ -27,7 +27,7 @@ public class ExampleJob extends QuartzJobBean {
         //任务开始时间
         Instant instant = Instant.now();
         try {
-            log.info("11111 instanceId = {}", jobDataMap.get("instanceId"));
+            log.info("instanceId = {}", jobDataMap.get("instanceId"));
             //任务执行总时长
             log.error("任务执行完毕，任务ID：" + jobExecutionContext.getJobDetail() + "  总共耗时：" + InstantUtil.timerSeconds(instant) + "毫秒");
         } catch (Exception e) {
@@ -35,4 +35,5 @@ public class ExampleJob extends QuartzJobBean {
 
         }
     }
+
 }

@@ -25,7 +25,7 @@ public class AlertNoticeTask extends AbstractTask {
 
     @InstanceHealth // 实例健康检查，高优先级
     @Scheduled(initialDelay = 12000, fixedRate = 60 * 1000)
-    @SchedulerLock(name = "alert_notice_task_1", lockAtMostFor = "1m", lockAtLeastFor = "1m")
+    @SchedulerLock(name = "alert_notice_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
     public void alertNoticeTask() {
         // 非生产环境不执行任务
         if (ENV_PROD.equals(env)) {
