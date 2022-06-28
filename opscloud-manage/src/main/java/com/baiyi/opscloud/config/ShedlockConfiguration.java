@@ -18,6 +18,7 @@ import javax.sql.DataSource;
 @EnableSchedulerLock(defaultLockAtMostFor = "10M")
 public class ShedlockConfiguration {
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
     public LockProvider lockProvider(DataSource dataSource) {
         return new JdbcTemplateLockProvider(
