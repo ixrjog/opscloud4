@@ -6,8 +6,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.EXECUTOR;
+import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.*;
 
 
 /**
@@ -24,6 +23,7 @@ public class ThreadPoolTaskConfiguration {
     public interface TaskPools {
         String CORE = "CORE";
         String EXECUTOR = "EXECUTOR";
+        String TERMINAL = "terminalExecutor";
     }
 
     /**
@@ -40,7 +40,7 @@ public class ThreadPoolTaskConfiguration {
     private static final String threadNamePrefix = "Async-Service-";
 
     @Bean(name = CORE)
-    public ThreadPoolTaskExecutor getExecutor() {
+    public ThreadPoolTaskExecutor coreExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         /**
          * 那么poolSize、corePoolSize、maximumPoolSize三者的关系是如何的呢？
@@ -53,7 +53,7 @@ public class ThreadPoolTaskConfiguration {
          * 所以通过上面的描述可知corePoolSize<=maximumPoolSize，poolSize<=maximumPoolSize；而poolSize和corePoolSize无法比较，poolSize是有可能比corePoolSize大的。
          */
         executor.setCorePoolSize(20); // 核心线程数（默认线程数）
-        executor.setMaxPoolSize(426); // 最大线程数
+        executor.setMaxPoolSize(200); // 最大线程数
         executor.setQueueCapacity(queueCapacity);
         executor.setKeepAliveSeconds(keepAliveTime);
         executor.setThreadNamePrefix(threadNamePrefix);
@@ -69,7 +69,7 @@ public class ThreadPoolTaskConfiguration {
     }
 
     @Bean(name = EXECUTOR)
-    public ThreadPoolTaskExecutor getCommonExecutor() {
+    public ThreadPoolTaskExecutor commonExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         /**
          * 那么poolSize、corePoolSize、maximumPoolSize三者的关系是如何的呢？
@@ -82,7 +82,7 @@ public class ThreadPoolTaskConfiguration {
          * 所以通过上面的描述可知corePoolSize<=maximumPoolSize，poolSize<=maximumPoolSize；而poolSize和corePoolSize无法比较，poolSize是有可能比corePoolSize大的。
          */
         executor.setCorePoolSize(50); // 核心线程数（默认线程数）
-        executor.setMaxPoolSize(500); // 最大线程数
+        executor.setMaxPoolSize(400); // 最大线程数
         executor.setQueueCapacity(queueCapacity);
         executor.setKeepAliveSeconds(keepAliveTime);
         executor.setThreadNamePrefix(threadNamePrefix);
@@ -94,7 +94,35 @@ public class ThreadPoolTaskConfiguration {
         // 初始化
         executor.setAwaitTerminationSeconds(60);
         executor.initialize();
+        return executor;
+    }
 
+    @Bean(name = TERMINAL)
+    public ThreadPoolTaskExecutor terminalExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        /**
+         * 那么poolSize、corePoolSize、maximumPoolSize三者的关系是如何的呢？
+         * 当新提交一个任务时：
+         * （1）如果poolSize<corePoolSize，新增加一个线程处理新的任务。
+         * （2）如果poolSize=corePoolSize，新任务会被放入阻塞队列等待。
+         * （3）如果阻塞队列的容量达到上限，且这时poolSize<maximumPoolSize，新增线程来处理任务。
+         * （4）如果阻塞队列满了，且poolSize=maximumPoolSize，那么线程池已经达到极限，会根据饱和策略RejectedExecutionHandler拒绝新的任务。
+         *
+         * 所以通过上面的描述可知corePoolSize<=maximumPoolSize，poolSize<=maximumPoolSize；而poolSize和corePoolSize无法比较，poolSize是有可能比corePoolSize大的。
+         */
+        executor.setCorePoolSize(10); // 核心线程数（默认线程数）
+        executor.setMaxPoolSize(300); // 最大线程数
+        executor.setQueueCapacity(0);
+        executor.setKeepAliveSeconds(keepAliveTime);
+        executor.setThreadNamePrefix("term-exec-");
+        // 而在一些场景下，若需要在关闭线程池时等待当前调度任务完成后才开始关闭，可以通过简单的配置，进行优雅的停机策略配置。关键就是通过
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        // 线程池对拒绝任务的处理策略
+        // CallerRunsPolicy：由调用线程（提交任务的线程）处理该任务
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        // 初始化
+        executor.setAwaitTerminationSeconds(60);
+        executor.initialize();
         return executor;
     }
 

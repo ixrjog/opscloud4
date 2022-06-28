@@ -18,8 +18,10 @@ import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.util.UUID;
@@ -52,9 +54,16 @@ public class WebTerminalController extends SimpleAuthentication {
 
     private TerminalSession terminalSession;
 
+    private static ThreadPoolTaskExecutor terminalExecutor;
+
     @Autowired
     public void setTerminalSessionService(TerminalSessionService terminalSessionService) {
         WebTerminalController.terminalSessionService = terminalSessionService;
+    }
+
+    @Resource
+    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor terminalExecutor) {
+        WebTerminalController.terminalExecutor = terminalExecutor;
     }
 
     /**
@@ -63,21 +72,22 @@ public class WebTerminalController extends SimpleAuthentication {
     @OnOpen
     public void onOpen(Session session) {
         try {
-            log.info("WebTerm尝试连接，sessionId = {}", sessionId);
+            log.info("Web terminal session try to connect: instanceIP = {} , sessionId = {}", serverInfo.getHostAddress(), sessionId);
             TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.WEB_TERMINAL);
             terminalSessionService.add(terminalSession);
             this.terminalSession = terminalSession;
             sessionSet.get().add(session);
             int cnt = onlineCount.incrementAndGet(); // 在线数加1
-            log.info("WebTerm有连接加入，当前连接数为：{}", cnt);
+            log.info("Web terminal session connection join: instanceIP = {} , connections = {}", serverInfo.getHostAddress(), cnt);
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
             this.session = session;
             // 线程启动
             Runnable run = new SentOutputTask(sessionId, session);
-            Thread thread = new Thread(run);
-            thread.start();
+            terminalExecutor.execute(run);
+           //  Thread thread = new Thread(run);
+           //  thread.start();
         } catch (Exception e) {
-            log.error("WebTerm创建连接错误！");
+            log.error("Web terminal create connection error！");
             e.printStackTrace();
         }
     }

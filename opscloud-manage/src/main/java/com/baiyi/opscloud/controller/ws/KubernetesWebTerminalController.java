@@ -16,8 +16,10 @@ import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.util.UUID;
@@ -50,9 +52,16 @@ public class KubernetesWebTerminalController extends SimpleAuthentication {
 
     private static TerminalSessionService terminalSessionService;
 
+    private static ThreadPoolTaskExecutor terminalExecutor;
+
     @Autowired
     public void setTerminalSessionService(TerminalSessionService terminalSessionService) {
         KubernetesWebTerminalController.terminalSessionService = terminalSessionService;
+    }
+
+    @Resource
+    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor terminalExecutor) {
+        KubernetesWebTerminalController.terminalExecutor = terminalExecutor;
     }
 
     /**
@@ -60,19 +69,26 @@ public class KubernetesWebTerminalController extends SimpleAuthentication {
      */
     @OnOpen
     public void onOpen(Session session) {
-        log.info("Kubernetes终端会话尝试链接: instanceIP = {} , sessionId = {}", serverInfo.getHostAddress(), sessionId);
-        TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.KUBERNETES_TERMINAL);
-        this.terminalSession = terminalSession;
-        terminalSessionService.add(terminalSession);
-        sessionSet.add(session);
-        int cnt = onlineCount.incrementAndGet(); // 在线数加1
-        log.info("Kubernetes终端会话有连接加入: instanceIP = {} , 当前连接数为 = {}", serverInfo.getHostAddress(), cnt);
-        session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
-        this.session = session;
-        // 线程启动
-        Runnable run = new SentOutputTask(sessionId, session);
-        Thread thread = new Thread(run);
-        thread.start();
+        try {
+            log.info("Kubernetes web terminal session try to connect: instanceIP = {} , sessionId = {}", serverInfo.getHostAddress(), sessionId);
+            TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.KUBERNETES_TERMINAL);
+            this.terminalSession = terminalSession;
+            terminalSessionService.add(terminalSession);
+            sessionSet.add(session);
+            int cnt = onlineCount.incrementAndGet(); // 在线数加1
+            log.info("Kubernetes web terminal session connection join: instanceIP = {} , connections = {}", serverInfo.getHostAddress(), cnt);
+            session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
+            this.session = session;
+            // 线程启动
+//        Runnable run = new SentOutputTask(sessionId, session); 
+//        Thread thread = new Thread(run);
+//        thread.start();
+            Runnable run = new SentOutputTask(sessionId, session);
+            terminalExecutor.execute(run);
+        } catch (Exception e) {
+            log.error("Kubernetes web terminal create connection error！");
+            e.printStackTrace();
+        }
     }
 
     /**
