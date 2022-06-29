@@ -7,7 +7,7 @@ import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.*;
 import com.baiyi.opscloud.sshcore.task.kubernetes.WatchKubernetesTerminalOutputTask;
 import com.baiyi.opscloud.sshcore.task.ssh.WatchSshServerOutputTask;
-import com.baiyi.opscloud.sshcore.task.terminal.WatchWebTerminalOutputTask;
+import com.baiyi.opscloud.sshcore.task.terminal.WatchServerTerminalOutputTask;
 import com.baiyi.opscloud.sshcore.util.ChannelShellUtil;
 import com.baiyi.opscloud.sshcore.util.SessionConfigUtil;
 import com.jcraft.jsch.ChannelShell;
@@ -91,7 +91,7 @@ public class RemoteInvokeHandler {
             // new session output
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
             // 启动线程处理会话
-            Runnable run = new WatchWebTerminalOutputTask(sessionOutput, channel.getInputStream());
+            Runnable run = new WatchServerTerminalOutputTask(sessionOutput, channel.getInputStream());
             Thread thread = new Thread(run);
             thread.start();
 

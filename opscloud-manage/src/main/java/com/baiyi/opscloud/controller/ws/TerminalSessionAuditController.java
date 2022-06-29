@@ -75,7 +75,7 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("发生错误: e = {}，SessionID = {}", error.getMessage(), session.getId());
+        log.debug("发生错误: e = {}，SessionID = {}", error.getMessage(), session.getId());
     }
 
 }

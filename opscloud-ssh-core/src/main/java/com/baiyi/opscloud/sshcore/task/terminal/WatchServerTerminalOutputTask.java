@@ -39,9 +39,9 @@ import java.io.InputStream;
  * Task to watch for output read from the ssh session stream
  */
 @Slf4j
-public class WatchWebTerminalOutputTask extends AbstractOutputTask {
+public class WatchServerTerminalOutputTask extends AbstractOutputTask {
 
-    public WatchWebTerminalOutputTask(SessionOutput sessionOutput, InputStream outFromChannel) {
+    public WatchServerTerminalOutputTask(SessionOutput sessionOutput, InputStream outFromChannel) {
         super(sessionOutput, outFromChannel);
     }
 

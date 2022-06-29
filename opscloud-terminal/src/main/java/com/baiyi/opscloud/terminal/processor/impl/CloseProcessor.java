@@ -33,7 +33,12 @@ public class CloseProcessor extends AbstractServerTerminalProcessor<ServerMessag
         for (String instanceId : sessionMap.keySet())
             try {
                 JSchSession jSchSession = sessionMap.get(instanceId);
-                jSchSession.getChannel().disconnect();
+                if (jSchSession.getChannel() != null)
+                    jSchSession.getChannel().disconnect();
+                jSchSession.setChannel(null);
+                jSchSession.setInputToChannel(null);
+                jSchSession.setCommander(null);
+                jSchSession = null;
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, instanceId); // 设置关闭会话
                 serverCommandAudit.recordCommand(terminalSession.getSessionId(), instanceId);
             } catch (Exception e) {
