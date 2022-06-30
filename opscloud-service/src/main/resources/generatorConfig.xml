@@ -90,9 +90,9 @@
             注意：大小写敏感问题。
          -->
 
-        <table tableName="business_document">
+        <table tableName="sys_nav">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
-            <!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
+            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>
         </table>
 
     </context>
