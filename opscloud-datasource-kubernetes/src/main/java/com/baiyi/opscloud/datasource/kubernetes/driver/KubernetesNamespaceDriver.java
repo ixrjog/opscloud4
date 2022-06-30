@@ -23,6 +23,13 @@ public class KubernetesNamespaceDriver {
         ).collect(Collectors.toList());
     }
 
+    public static Namespace getNamespace(KubernetesConfig.Kubernetes kubernetes, String namespace) {
+        return KubeClient.build(kubernetes)
+                .namespaces()
+                .withName(namespace)
+                .get();
+    }
+
     private static boolean filter(KubernetesConfig.Kubernetes kubernetes, Namespace namespace) {
         for (String s : kubernetes.getNamespace().getIgnore()) {
             if (namespace.getMetadata().getName().equalsIgnoreCase(s))
@@ -30,4 +37,5 @@ public class KubernetesNamespaceDriver {
         }
         return true;
     }
+
 }

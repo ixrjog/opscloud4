@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
+import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -24,7 +25,9 @@ public class ApplicationResourceVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class Resource extends BaseVO implements DsInstanceVO.IDsInstance {
+    public static class Resource extends BaseVO implements DsInstanceVO.IDsInstance, TagVO.ITags {
+
+        private List<TagVO.Tag> tags;
 
         private DsInstanceVO.Instance instance;
 
@@ -62,6 +65,6 @@ public class ApplicationResourceVO {
          */
         @Builder.Default
         private Boolean checked = false;
-        
+
     }
 }

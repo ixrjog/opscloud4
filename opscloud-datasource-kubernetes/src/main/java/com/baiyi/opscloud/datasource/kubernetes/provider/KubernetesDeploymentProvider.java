@@ -31,10 +31,10 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_KUBER
  * @Version 1.0
  */
 @Component
-public class KubernetesDeploymentProvider2 extends AbstractAssetRelationProvider<Deployment, Namespace> {
+public class KubernetesDeploymentProvider extends AbstractAssetRelationProvider<Deployment, Namespace> {
 
     @Resource
-    private KubernetesDeploymentProvider2 kubernetesDeploymentProvider2;
+    private KubernetesDeploymentProvider kubernetesDeploymentProvider;
 
     @Override
     @SingleTask(name = PULL_KUBERNETES_DEPLOYMENT, lockTime = "5m")
@@ -88,7 +88,7 @@ public class KubernetesDeploymentProvider2 extends AbstractAssetRelationProvider
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(kubernetesDeploymentProvider2);
+        AssetProviderFactory.register(kubernetesDeploymentProvider);
     }
 
     @Override
