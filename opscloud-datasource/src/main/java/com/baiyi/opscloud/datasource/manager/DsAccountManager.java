@@ -33,7 +33,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
     /**
      * 支持账户管理的实例类型
      */
-    private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.LDAP, DsTypeEnum.ZABBIX};
+    private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.LDAP, DsTypeEnum.ZABBIX, DsTypeEnum.ALIYUN, DsTypeEnum.AWS};
 
     private final StringEncryptor stringEncryptor;
 

@@ -45,7 +45,7 @@ public class DsAccountManagerTest extends BaseUnit {
 
     private User buildTestUser(){
 
-
+//
 //        return  User.builder()
 //                .username("test2021")
 //                .email("test202122222@qq.com")
@@ -54,7 +54,7 @@ public class DsAccountManagerTest extends BaseUnit {
 //                .displayName("我是测试账户2222")
 //                .build();
 
-        return userService.getByUsername("test2024");
+        return userService.getByUsername("jinzhengjie");
     }
 
 }

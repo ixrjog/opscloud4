@@ -104,7 +104,7 @@ public class RamAccountHandler extends AbstractAccountHandler {
                 aliyunRamUserDriver.deleteUser(aliyun.getRegionId(), aliyun, user.getUsername());
             }
         } catch (ClientException e) {
-            log.info("删除 RAM 用户错误: username = {} , message = {}", user.getUsername(), e.getMessage());
+            log.error("删除 RAM 用户错误: username = {} , message = {}", user.getUsername(), e.getMessage());
         }
     }
 
