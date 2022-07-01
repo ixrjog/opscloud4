@@ -5,7 +5,6 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.ram.driver.AliyunRamAccessKeyDriver;
 import com.baiyi.opscloud.datasource.aliyun.ram.driver.AliyunRamUserDriver;
-import com.baiyi.opscloud.datasource.aliyun.ram.entity.AccessKey;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamUser;
 import com.baiyi.opscloud.datasource.business.account.impl.base.AbstractAccountHandler;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @Author baiyi
@@ -94,15 +92,16 @@ public class RamAccountHandler extends AbstractAccountHandler {
         try {
             RamUser.User ramUser = aliyunRamUserDriver.getUser(aliyun.getRegionId(), aliyun, user.getUsername());
             if (ramUser == null) return;
-            Optional<AccessKey.Key> optionalKey = aliyunRamAccessKeyDriver.listAccessKeys(aliyun.getRegionId(), aliyun, user.getUsername()).stream()
-                    .filter(k -> "Active".equals(k.getStatus())).findFirst();
-            if (optionalKey.isPresent()) {
-                // 用户有(有效的)AK，禁止 Web 控制台登录
-                aliyunRamUserDriver.deleteLoginProfile(aliyun.getRegionId(), aliyun, user.getUsername());
-            } else {
-                // 用户无AK，直接删除账户
-                aliyunRamUserDriver.deleteUser(aliyun.getRegionId(), aliyun, user.getUsername());
-            }
+//            Optional<AccessKey.Key> optionalKey = aliyunRamAccessKeyDriver.listAccessKeys(aliyun.getRegionId(), aliyun, user.getUsername()).stream()
+//                    .filter(k -> "Active".equals(k.getStatus())).findFirst();
+//            if (optionalKey.isPresent()) {
+//                // 用户有(有效的)AK，禁止 Web 控制台登录
+//                aliyunRamUserDriver.deleteLoginProfile(aliyun.getRegionId(), aliyun, user.getUsername());
+//            } else {
+//                // 用户无AK，直接删除账户
+//                aliyunRamUserDriver.deleteUser(aliyun.getRegionId(), aliyun, user.getUsername());
+//            }
+            aliyunRamUserDriver.deleteLoginProfile(aliyun.getRegionId(), aliyun, user.getUsername());
         } catch (ClientException e) {
             log.error("删除 RAM 用户错误: username = {} , message = {}", user.getUsername(), e.getMessage());
         }
