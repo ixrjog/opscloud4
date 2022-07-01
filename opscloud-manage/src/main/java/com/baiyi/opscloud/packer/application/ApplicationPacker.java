@@ -32,7 +32,7 @@ public class ApplicationPacker implements IWrapper<ApplicationVO.Application> {
 
     private final ApplicationResourcePacker resourcePacker;
 
-    private final ApplicationResourceInstancePacker applicationResourceInstancePacker;
+    private final ApplicationResourceDsInstancePacker applicationResourceInstancePacker;
 
     @Override
     @TagsWrapper

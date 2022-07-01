@@ -17,12 +17,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class ApplicationResourceInstancePacker implements IWrapper<ApplicationResourceVO.Resource> {
+public class ApplicationResourceDsInstancePacker implements IWrapper<ApplicationResourceVO.Resource> {
 
     private final DsInstanceAssetService dsInstanceAssetService;
 
     private final DsInstancePacker dsInstancePacker;
 
+    /**
+     * 注入数据源实例信息
+     * @param resource
+     * @param iExtend
+     */
     @Override
     public void wrap(ApplicationResourceVO.Resource resource, IExtend iExtend) {
         if (resource.getBusinessType() == BusinessTypeEnum.ASSET.getType()) {

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.param.tag;
 
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -18,7 +19,7 @@ public class BusinessTagParam {
     @Data
     @Builder
     @ApiModel
-    public static class UpdateBusinessTags {
+    public static class UpdateBusinessTags implements BaseBusiness.IBusiness {
 
         @ApiModelProperty(value = "业务类型", example = "1")
         private Integer businessType;

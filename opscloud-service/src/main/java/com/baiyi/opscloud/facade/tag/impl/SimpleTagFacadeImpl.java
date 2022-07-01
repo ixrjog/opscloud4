@@ -84,7 +84,7 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
 
     @Override
     public void updateBusinessTags(BusinessTagParam.UpdateBusinessTags updateBusinessTags) {
-        List<BusinessTag> businessTags = businessTagService.queryByParam(updateBusinessTags);
+        List<BusinessTag> businessTags = businessTagService.queryByBusiness(updateBusinessTags);
         updateBusinessTags.getTagIds().forEach(tagId -> {
             if (checkAddBusinessTag(businessTags, tagId)) {
                 BusinessTag businessTag = BusinessTag.builder()

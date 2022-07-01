@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.tag.impl;
 
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
-import com.baiyi.opscloud.domain.param.tag.BusinessTagParam;
 import com.baiyi.opscloud.mapper.opscloud.BusinessTagMapper;
 import com.baiyi.opscloud.service.tag.BusinessTagService;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +22,11 @@ public class BusinessTagServiceImpl implements BusinessTagService {
     private final BusinessTagMapper businessTagMapper;
 
     @Override
-    public List<BusinessTag> queryByParam(BusinessTagParam.UpdateBusinessTags queryParam) {
+    public List<BusinessTag> queryByBusiness(BaseBusiness.IBusiness iBusiness) {
         Example example = new Example(BusinessTag.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("businessType", queryParam.getBusinessType());
-        criteria.andEqualTo("businessId", queryParam.getBusinessId());
+        criteria.andEqualTo(BaseBusiness.BUSINESS_TYPE, iBusiness.getBusinessType());
+        criteria.andEqualTo(BaseBusiness.BUSINESS_ID, iBusiness.getBusinessId());
         return businessTagMapper.selectByExample(example);
     }
 
@@ -44,8 +44,8 @@ public class BusinessTagServiceImpl implements BusinessTagService {
     public void deleteByBusinessTypeAndId(Integer businessType, Integer businessId) {
         Example example = new Example(BusinessTag.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("businessType", businessType);
-        criteria.andEqualTo("businessId", businessId);
+        criteria.andEqualTo(BaseBusiness.BUSINESS_TYPE, businessType);
+        criteria.andEqualTo(BaseBusiness.BUSINESS_ID, businessId);
         businessTagMapper.deleteByExample(example);
     }
 
@@ -53,8 +53,8 @@ public class BusinessTagServiceImpl implements BusinessTagService {
     public int countByBusinessTag(BusinessTag businessTag) {
         Example example = new Example(BusinessTag.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("businessType", businessTag.getBusinessType())
-                .andEqualTo("businessId", businessTag.getBusinessId())
+        criteria.andEqualTo(BaseBusiness.BUSINESS_TYPE, businessTag.getBusinessType())
+                .andEqualTo(BaseBusiness.BUSINESS_ID, businessTag.getBusinessId())
                 .andEqualTo("tagId", businessTag.getTagId());
         return businessTagMapper.selectCountByExample(example);
     }

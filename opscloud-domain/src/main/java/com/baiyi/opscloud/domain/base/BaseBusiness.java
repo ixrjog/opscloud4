@@ -7,6 +7,10 @@ package com.baiyi.opscloud.domain.base;
  */
 public class BaseBusiness {
 
+    public static final String BUSINESS_TYPE = "businessType";
+
+    public static final String BUSINESS_ID = "businessId";
+
     public interface IBusiness extends IBusinessType {
         Integer getBusinessId();
     }

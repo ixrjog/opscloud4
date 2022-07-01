@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.tag;
 
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
-import com.baiyi.opscloud.domain.param.tag.BusinessTagParam;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface BusinessTagService {
 
-    List<BusinessTag> queryByParam(BusinessTagParam.UpdateBusinessTags queryParam);
+    List<BusinessTag> queryByBusiness(BaseBusiness.IBusiness iBusiness);
 
     void add(BusinessTag businessTag);
 
