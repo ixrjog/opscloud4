@@ -38,14 +38,14 @@ public class KubernetesTerminalCommandProcessor extends AbstractKubernetesTermin
         if (StringUtils.isEmpty(commandMessage.getCommand()))
             return;
         if (!isBatch(terminalSession)) {
-            printCommand(terminalSession.getSessionId(), commandMessage.getInstanceId(), commandMessage.getCommand());
+            sendCommand(terminalSession.getSessionId(), commandMessage.getInstanceId(), commandMessage.getCommand());
         } else {
             Map<String, KubernetesSession> sessionMap = KubernetesSessionContainer.getBySessionId(terminalSession.getSessionId());
-            sessionMap.keySet().parallelStream().forEach(e -> printCommand(terminalSession.getSessionId(), e, commandMessage.getCommand()));
+            sessionMap.keySet().parallelStream().forEach(e -> sendCommand(terminalSession.getSessionId(), e, commandMessage.getCommand()));
         }
     }
 
-    private void printCommand(String sessionId, String instanceId, String cmd) {
+    private void sendCommand(String sessionId, String instanceId, String cmd) {
         KubernetesSession kubernetesSession = KubernetesSessionContainer.getBySessionId(sessionId, instanceId);
         if (kubernetesSession == null) return;
         try {

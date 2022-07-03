@@ -5,7 +5,6 @@ import com.baiyi.opscloud.datasource.kubernetes.provider.KubernetesPodProvider;
 import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
@@ -80,16 +79,11 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
         List<DatasourceInstanceAssetRelation> assetRelations = assetRelationService.queryTargetAsset(asset.getInstanceUuid(),asset.getId());
         if (CollectionUtils.isEmpty(assetRelations)) return;
         Set<Integer> tagIdSet = Sets.newHashSet();
-        for (DatasourceInstanceAssetRelation e : assetRelations) {
-            DatasourceInstanceAsset targetAsset = assetService.getById(e.getTargetAssetId());
-            List<BusinessTag> businessTags = businessTagService.queryByBusiness(SimpleBusiness.builder()
-                    .businessType(BusinessTypeEnum.ASSET.getType())
-                    .businessId(targetAsset.getId())
-                    .build());
-            if (!CollectionUtils.isEmpty(businessTags)) {
-                businessTags.forEach(t -> tagIdSet.add(t.getTagId()));
-            }
-        }
+        assetRelations.stream().map(e ->
+                assetService.getById(e.getTargetAssetId())).map(targetAsset -> businessTagService.queryByBusiness(SimpleBusiness.builder()
+                .businessType(BusinessTypeEnum.ASSET.getType())
+                .businessId(targetAsset.getId())
+                .build())).filter(businessTags -> !CollectionUtils.isEmpty(businessTags)).forEach(businessTags -> businessTags.forEach(t -> tagIdSet.add(t.getTagId())));
         List<TagVO.Tag> tags = tagIdSet.stream().map(tagId ->
                 BeanCopierUtil.copyProperties(tagService.getById(tagId), TagVO.Tag.class)
         ).collect(Collectors.toList());

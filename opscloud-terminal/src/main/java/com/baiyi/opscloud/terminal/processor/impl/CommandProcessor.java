@@ -38,14 +38,14 @@ public class CommandProcessor extends AbstractServerTerminalProcessor<ServerMess
         if (StringUtils.isEmpty(commandMessage.getData()))
             return;
         if (!needBatch(terminalSession)) {
-            printCommand(terminalSession.getSessionId(), commandMessage.getInstanceId(), commandMessage.getData());
+            sendCommand(terminalSession.getSessionId(), commandMessage.getInstanceId(), commandMessage.getData());
         } else {
             Map<String, JSchSession> sessionMap = JSchSessionContainer.getBySessionId(terminalSession.getSessionId());
-            sessionMap.keySet().parallelStream().forEach(e -> printCommand(terminalSession.getSessionId(), e, commandMessage.getData()));
+            sessionMap.keySet().parallelStream().forEach(e -> sendCommand(terminalSession.getSessionId(), e, commandMessage.getData()));
         }
     }
 
-    private void printCommand(String sessionId, String instanceId, String cmd) {
+    private void sendCommand(String sessionId, String instanceId, String cmd) {
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) return;
         jSchSession.getCommander().print(cmd);

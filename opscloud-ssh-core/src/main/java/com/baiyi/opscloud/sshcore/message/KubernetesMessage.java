@@ -27,6 +27,13 @@ public class KubernetesMessage {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @JsonIgnoreProperties
+    public static class BatchCommand extends BaseMessage {
+        private Boolean isBatch; // 会话批量指令
+    }
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @JsonIgnoreProperties
     public static class Resize extends BaseMessage implements ISessionType, ITerminalSize {
         private KubernetesResource data;
         private String sessionType;
