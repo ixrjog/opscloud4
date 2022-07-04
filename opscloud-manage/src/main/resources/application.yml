@@ -124,7 +124,7 @@ ssh:
     extended-file-provider: true
     history-file: ${home}/opscloud-data/ssh-server/sshShellHistory.log
     # since 1.3.0, set to false to have one file per user (<history-directory>/sshShellHistory-<user>.log)
-    shared-history: true
+    shared-history: false
     # since 1.3.0, only if shared-history is set to false
     history-directory: ${home}/opscloud-data/ssh-server
     host-key-file: ${home}/opscloud-data/ssh-server/hostKey.ser
