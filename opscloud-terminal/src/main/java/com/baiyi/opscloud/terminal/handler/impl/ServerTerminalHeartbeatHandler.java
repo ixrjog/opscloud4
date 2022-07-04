@@ -1,9 +1,9 @@
-package com.baiyi.opscloud.terminal.processor.impl;
+package com.baiyi.opscloud.terminal.handler.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
-import com.baiyi.opscloud.terminal.processor.AbstractServerTerminalProcessor;
+import com.baiyi.opscloud.terminal.handler.AbstractServerTerminalHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +17,7 @@ import javax.websocket.Session;
  */
 @Slf4j
 @Component
-public class HeartbeatProcessor extends AbstractServerTerminalProcessor<ServerMessage.BaseMessage> {
+public class ServerTerminalHeartbeatHandler extends AbstractServerTerminalHandler<ServerMessage.BaseMessage> {
 
     @Override
     public String getState() {
@@ -25,13 +25,13 @@ public class HeartbeatProcessor extends AbstractServerTerminalProcessor<ServerMe
     }
 
     @Override
-    public void process(String message, Session session, TerminalSession terminalSession) {
+    public void handle(String message, Session session, TerminalSession terminalSession) {
         //  log.info("收到前端心跳");
         heartbeat(terminalSession.getSessionId());
     }
 
     @Override
-    protected ServerMessage.BaseMessage getMessage(String message) {
+    protected ServerMessage.BaseMessage toMessage(String message) {
         return null;
     }
 

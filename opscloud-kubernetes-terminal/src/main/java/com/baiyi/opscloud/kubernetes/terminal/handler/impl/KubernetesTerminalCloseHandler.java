@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.kubernetes.terminal.processor.impl;
+package com.baiyi.opscloud.kubernetes.terminal.handler.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.kubernetes.terminal.processor.AbstractKubernetesTerminalProcessor;
-import com.baiyi.opscloud.sshcore.ITerminalProcessor;
+import com.baiyi.opscloud.kubernetes.terminal.handler.AbstractKubernetesTerminalMessageHandler;
+import com.baiyi.opscloud.sshcore.ITerminalMessageHandler;
 import com.baiyi.opscloud.sshcore.audit.PodCommandAudit;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class KubernetesTerminalCloseProcessor extends AbstractKubernetesTerminalProcessor<KubernetesMessage.BaseMessage> implements ITerminalProcessor {
+public class KubernetesTerminalCloseHandler extends AbstractKubernetesTerminalMessageHandler<KubernetesMessage.BaseMessage> implements ITerminalMessageHandler {
 
     @Resource
     private PodCommandAudit podCommandAudit;
@@ -34,7 +34,7 @@ public class KubernetesTerminalCloseProcessor extends AbstractKubernetesTerminal
     }
 
     @Override
-    public void process(String message, Session session, TerminalSession terminalSession) {
+    public void handle(String message, Session session, TerminalSession terminalSession) {
         Map<String, KubernetesSession> sessionMap = KubernetesSessionContainer.getBySessionId(terminalSession.getSessionId());
         if (sessionMap == null) return;
         for (String instanceId : sessionMap.keySet())
@@ -59,7 +59,7 @@ public class KubernetesTerminalCloseProcessor extends AbstractKubernetesTerminal
     }
 
     @Override
-    protected KubernetesMessage.BaseMessage getMessage(String message) {
+    protected KubernetesMessage.BaseMessage toMessage(String message) {
         return KubernetesMessage.BaseMessage.CLOSE;
     }
 }

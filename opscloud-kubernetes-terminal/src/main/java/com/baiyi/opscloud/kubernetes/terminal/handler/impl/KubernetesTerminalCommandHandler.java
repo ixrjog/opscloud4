@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.kubernetes.terminal.processor.impl;
+package com.baiyi.opscloud.kubernetes.terminal.handler.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.kubernetes.terminal.processor.AbstractKubernetesTerminalProcessor;
-import com.baiyi.opscloud.sshcore.ITerminalProcessor;
+import com.baiyi.opscloud.kubernetes.terminal.handler.AbstractKubernetesTerminalMessageHandler;
+import com.baiyi.opscloud.sshcore.ITerminalMessageHandler;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.KubernetesSession;
@@ -20,7 +20,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component
-public class KubernetesTerminalCommandProcessor extends AbstractKubernetesTerminalProcessor<KubernetesMessage.Command> implements ITerminalProcessor {
+public class KubernetesTerminalCommandHandler extends AbstractKubernetesTerminalMessageHandler<KubernetesMessage.Command> implements ITerminalMessageHandler {
 
     /**
      * 登录
@@ -33,11 +33,11 @@ public class KubernetesTerminalCommandProcessor extends AbstractKubernetesTermin
     }
 
     @Override
-    public void process(String message, Session session, TerminalSession terminalSession) {
-        KubernetesMessage.Command commandMessage = getMessage(message);
+    public void handle(String message, Session session, TerminalSession terminalSession) {
+        KubernetesMessage.Command commandMessage = toMessage(message);
         if (StringUtils.isEmpty(commandMessage.getCommand()))
             return;
-        if (!isBatch(terminalSession)) {
+        if (!hasBatchFlag(terminalSession)) {
             sendCommand(terminalSession.getSessionId(), commandMessage.getInstanceId(), commandMessage.getCommand());
         } else {
             Map<String, KubernetesSession> sessionMap = KubernetesSessionContainer.getBySessionId(terminalSession.getSessionId());
@@ -55,8 +55,13 @@ public class KubernetesTerminalCommandProcessor extends AbstractKubernetesTermin
         }
     }
 
+    protected Boolean hasBatchFlag(TerminalSession terminalSession) {
+        Boolean isBatch = KubernetesSessionContainer.getBatchFlagBySessionId(terminalSession.getSessionId());
+        return isBatch != null && isBatch;
+    }
+
     @Override
-    protected KubernetesMessage.Command getMessage(String message) {
+    protected KubernetesMessage.Command toMessage(String message) {
         return new GsonBuilder().create().fromJson(message, KubernetesMessage.Command.class);
     }
 

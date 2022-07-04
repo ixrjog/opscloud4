@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.terminal.processor.impl;
+package com.baiyi.opscloud.terminal.handler.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
@@ -11,7 +11,7 @@ import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.HostSystem;
 import com.baiyi.opscloud.sshcore.model.ServerNode;
-import com.baiyi.opscloud.terminal.processor.AbstractServerTerminalProcessor;
+import com.baiyi.opscloud.terminal.handler.AbstractServerTerminalHandler;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
  */
 @Slf4j
 @Component
-public class LoginProcessor extends AbstractServerTerminalProcessor<ServerMessage.Login> {
+public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<ServerMessage.Login> {
 
     @Resource
     private SupserAdminInterceptor sAInterceptor;
@@ -44,10 +44,10 @@ public class LoginProcessor extends AbstractServerTerminalProcessor<ServerMessag
     }
 
     @Override
-    public void process(String message, Session session, TerminalSession terminalSession) {
+    public void handle(String message, Session session, TerminalSession terminalSession) {
         ExecutorService executor = Executors.newFixedThreadPool(4);
         try {
-            ServerMessage.Login loginMessage = getMessage(message);
+            ServerMessage.Login loginMessage = toMessage(message);
             heartbeat(terminalSession.getSessionId());
             for (ServerNode serverNode : loginMessage.getServerNodes()) {
                 executor.submit(() -> {
@@ -67,7 +67,7 @@ public class LoginProcessor extends AbstractServerTerminalProcessor<ServerMessag
     }
 
     @Override
-    protected ServerMessage.Login getMessage(String message) {
+    protected ServerMessage.Login toMessage(String message) {
         return new GsonBuilder().create().fromJson(message, ServerMessage.Login.class);
     }
 

@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.util.ThreadPoolTaskExecutorPrint;
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalProcessFactory;
+import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalMessageHandlerFactory;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionBuilder;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
@@ -86,8 +86,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
             //        Runnable run = new SentOutputTask(sessionId, session);
             //        Thread thread = new Thread(run);
             //        thread.start();
-            Runnable run = new SentOutputTask(sessionId, session);
-            kubernetesTerminalExecutor.execute(run);
+            kubernetesTerminalExecutor.execute(new SentOutputTask(sessionId, session));
             ThreadPoolTaskExecutorPrint.print(kubernetesTerminalExecutor, "k8sTermExecutor");
         } catch (Exception e) {
             log.error("{} create connection error！", IF_NAME);
@@ -100,7 +99,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
      */
     @OnClose
     public void onClose() {
-        KubernetesTerminalProcessFactory.getProcessByKey(MessageState.CLOSE.getState()).process("", session, terminalSession);
+        KubernetesTerminalMessageHandlerFactory.getHandlerByState(MessageState.CLOSE.getState()).handle("", session, terminalSession);
         sessionSet.remove(session);
         int cnt = onlineCount.decrementAndGet();
         log.info("{} session connection closed: instanceIP = {} , connections = {}", IF_NAME, serverInfo.getHostAddress(), cnt);
@@ -122,7 +121,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
         } else {
             SessionUtil.setUsername(this.terminalSession.getUsername());
         }
-        KubernetesTerminalProcessFactory.getProcessByKey(state).process(message, session, terminalSession);
+        KubernetesTerminalMessageHandlerFactory.getHandlerByState(state).handle(message, session, terminalSession);
     }
 
     private void updateSessionUsername(String username) {

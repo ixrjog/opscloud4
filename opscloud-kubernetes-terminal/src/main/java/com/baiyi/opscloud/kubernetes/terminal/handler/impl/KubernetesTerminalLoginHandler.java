@@ -1,10 +1,10 @@
-package com.baiyi.opscloud.kubernetes.terminal.processor.impl;
+package com.baiyi.opscloud.kubernetes.terminal.handler.impl;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalProcessFactory;
-import com.baiyi.opscloud.kubernetes.terminal.processor.AbstractKubernetesTerminalProcessor;
-import com.baiyi.opscloud.sshcore.ITerminalProcessor;
+import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalMessageHandlerFactory;
+import com.baiyi.opscloud.kubernetes.terminal.handler.AbstractKubernetesTerminalMessageHandler;
+import com.baiyi.opscloud.sshcore.ITerminalMessageHandler;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
  */
 @Slf4j
 @Component
-public class KubernetesTerminalLoginProcessor extends AbstractKubernetesTerminalProcessor<KubernetesMessage.Login> implements ITerminalProcessor {
+public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMessageHandler<KubernetesMessage.Login> implements ITerminalMessageHandler {
 
     public interface SessionType {
         String CONTAINER_LOG = "CONTAINER_LOG";
@@ -45,10 +45,10 @@ public class KubernetesTerminalLoginProcessor extends AbstractKubernetesTerminal
     }
 
     @Override
-    public void process(String message, Session session, TerminalSession terminalSession) {
+    public void handle(String message, Session session, TerminalSession terminalSession) {
         ExecutorService executor = Executors.newFixedThreadPool(4);
         try {
-            KubernetesMessage.Login loginMessage = getMessage(message);
+            KubernetesMessage.Login loginMessage = toMessage(message);
             heartbeat(terminalSession.getSessionId());
             KubernetesResource kubernetesResource = loginMessage.getData();
             kubernetesResource.getPods().forEach(pod ->
@@ -65,7 +65,7 @@ public class KubernetesTerminalLoginProcessor extends AbstractKubernetesTerminal
                                 return;
                             }
                             // 会话类型不正确,直接关闭
-                            KubernetesTerminalProcessFactory.getProcessByKey(MessageState.CLOSE.getState()).process(message, session, terminalSession);
+                            KubernetesTerminalMessageHandlerFactory.getHandlerByState(MessageState.CLOSE.getState()).handle(message, session, terminalSession);
                         });
                     })
             );
@@ -110,7 +110,7 @@ public class KubernetesTerminalLoginProcessor extends AbstractKubernetesTerminal
 
 
     @Override
-    protected KubernetesMessage.Login getMessage(String message) {
+    protected KubernetesMessage.Login toMessage(String message) {
         return new GsonBuilder().create().fromJson(message, KubernetesMessage.Login.class);
     }
 

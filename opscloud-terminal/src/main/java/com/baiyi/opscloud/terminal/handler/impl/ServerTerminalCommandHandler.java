@@ -1,11 +1,11 @@
-package com.baiyi.opscloud.terminal.processor.impl;
+package com.baiyi.opscloud.terminal.handler.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
-import com.baiyi.opscloud.terminal.processor.AbstractServerTerminalProcessor;
+import com.baiyi.opscloud.terminal.handler.AbstractServerTerminalHandler;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @Component
 @Slf4j
-public class CommandProcessor extends AbstractServerTerminalProcessor<ServerMessage.Command> {
+public class ServerTerminalCommandHandler extends AbstractServerTerminalHandler<ServerMessage.Command> {
 
     /**
      * 发送指令
@@ -33,16 +33,21 @@ public class CommandProcessor extends AbstractServerTerminalProcessor<ServerMess
     }
 
     @Override
-    public void process(String message, Session session, TerminalSession terminalSession) {
-        ServerMessage.Command commandMessage = getMessage(message);
+    public void handle(String message, Session session, TerminalSession terminalSession) {
+        ServerMessage.Command commandMessage = toMessage(message);
         if (StringUtils.isEmpty(commandMessage.getData()))
             return;
-        if (!needBatch(terminalSession)) {
+        if (!hasBatchFlag(terminalSession)) {
             sendCommand(terminalSession.getSessionId(), commandMessage.getInstanceId(), commandMessage.getData());
         } else {
             Map<String, JSchSession> sessionMap = JSchSessionContainer.getBySessionId(terminalSession.getSessionId());
             sessionMap.keySet().parallelStream().forEach(e -> sendCommand(terminalSession.getSessionId(), e, commandMessage.getData()));
         }
+    }
+
+    protected Boolean hasBatchFlag(TerminalSession terminalSession) {
+        Boolean needBatch = JSchSessionContainer.getBatchFlagBySessionId(terminalSession.getSessionId());
+        return needBatch != null && needBatch;
     }
 
     private void sendCommand(String sessionId, String instanceId, String cmd) {
@@ -52,7 +57,7 @@ public class CommandProcessor extends AbstractServerTerminalProcessor<ServerMess
     }
 
     @Override
-    protected ServerMessage.Command getMessage(String message) {
+    protected ServerMessage.Command toMessage(String message) {
         return new GsonBuilder().create().fromJson(message, ServerMessage.Command.class);
     }
 

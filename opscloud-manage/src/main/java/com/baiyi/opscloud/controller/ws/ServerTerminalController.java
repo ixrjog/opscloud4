@@ -12,7 +12,7 @@ import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.enums.SessionTypeEnum;
 import com.baiyi.opscloud.sshcore.message.base.SimpleLoginMessage;
 import com.baiyi.opscloud.sshcore.task.terminal.SentOutputTask;
-import com.baiyi.opscloud.terminal.factory.TerminalProcessFactory;
+import com.baiyi.opscloud.terminal.factory.ServerTerminalMessageHandlerFactory;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -83,14 +83,13 @@ public class ServerTerminalController extends SimpleAuthentication {
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
             this.session = session;
             // 线程启动
-            Runnable run = new SentOutputTask(sessionId, session);
-            serverTerminalExecutor.execute(run);
+            serverTerminalExecutor.execute(new SentOutputTask(sessionId, session));
             ThreadPoolTaskExecutorPrint.print(serverTerminalExecutor, "serverTermExecutor");
             //  Thread thread = new Thread(run);
             //  thread.start();
         } catch (Exception e) {
             log.error("{} create connection error！", IF_NAME);
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
@@ -100,7 +99,7 @@ public class ServerTerminalController extends SimpleAuthentication {
     @OnClose
     public void onClose() {
         try {
-            TerminalProcessFactory.getProcessByKey(MessageState.CLOSE.getState()).process("", session, terminalSession);
+            ServerTerminalMessageHandlerFactory.getHandlerByState(MessageState.CLOSE.getState()).handle("", session, terminalSession);
             sessionSet.get().remove(session);
             int cnt = onlineCount.decrementAndGet();
             log.info("{} session connection closed: instanceIP = {} , connections = {}",IF_NAME, serverInfo.getHostAddress(), cnt);
@@ -126,7 +125,7 @@ public class ServerTerminalController extends SimpleAuthentication {
         } else {
             SessionUtil.setUsername(this.terminalSession.getUsername());
         }
-        TerminalProcessFactory.getProcessByKey(state).process(message, session, terminalSession);
+        ServerTerminalMessageHandlerFactory.getHandlerByState(state).handle(message, session, terminalSession);
     }
 
     private void updateSessionUsername(String username) {

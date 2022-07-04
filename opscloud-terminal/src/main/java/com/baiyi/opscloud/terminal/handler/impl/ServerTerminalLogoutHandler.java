@@ -1,10 +1,10 @@
-package com.baiyi.opscloud.terminal.processor.impl;
+package com.baiyi.opscloud.terminal.handler.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
-import com.baiyi.opscloud.terminal.processor.AbstractServerTerminalProcessor;
+import com.baiyi.opscloud.terminal.handler.AbstractServerTerminalHandler;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +17,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class LogoutProcessor extends AbstractServerTerminalProcessor<ServerMessage.Logout> {
+public class ServerTerminalLogoutHandler extends AbstractServerTerminalHandler<ServerMessage.Logout> {
 
     @Override
     public String getState() {
@@ -25,8 +25,8 @@ public class LogoutProcessor extends AbstractServerTerminalProcessor<ServerMessa
     }
 
     @Override
-    public void process(String message, Session session, TerminalSession terminalSession) {
-        ServerMessage.Logout baseMessage = getMessage(message);
+    public void handle(String message, Session session, TerminalSession terminalSession) {
+        ServerMessage.Logout baseMessage = toMessage(message);
         //  recordAuditLog(terminalSession, baseMessage.getInstanceId()); // 写审计日志
         //  AuditRecordHandler.formatCommanderLog(terminalSession.getSessionId(),baseMessage.getInstanceId());
         simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, baseMessage.getInstanceId()); // 设置关闭会话
@@ -35,7 +35,7 @@ public class LogoutProcessor extends AbstractServerTerminalProcessor<ServerMessa
     }
 
     @Override
-    protected ServerMessage.Logout getMessage(String message) {
+    protected ServerMessage.Logout toMessage(String message) {
         return new GsonBuilder().create().fromJson(message, ServerMessage.Logout.class);
     }
 

@@ -13,16 +13,15 @@ import java.util.Map;
 @Data
 public class KubernetesSessionContainer {
 
-
     private static Map<String, Map<String, KubernetesSession>> kubernetesSessionMap = new HashedMap<>();
 
     private static Map<String, Boolean> batchMap = new HashedMap<>();
 
-    public static void setBatch(String sessionId, Boolean isBatch) {
+    public static void setBatchFlag(String sessionId, Boolean isBatch) {
         batchMap.put(sessionId, isBatch);
     }
 
-    public static Boolean getBatchBySessionId(String sessionId) {
+    public static Boolean getBatchFlagBySessionId(String sessionId) {
         return batchMap.get(sessionId);
     }
 

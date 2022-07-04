@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.kubernetes.terminal.processor.impl;
+package com.baiyi.opscloud.kubernetes.terminal.handler.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.kubernetes.terminal.processor.AbstractKubernetesTerminalProcessor;
-import com.baiyi.opscloud.sshcore.ITerminalProcessor;
+import com.baiyi.opscloud.kubernetes.terminal.handler.AbstractKubernetesTerminalMessageHandler;
+import com.baiyi.opscloud.sshcore.ITerminalMessageHandler;
 import com.baiyi.opscloud.sshcore.audit.PodCommandAudit;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
@@ -19,7 +19,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class KubernetesTerminalLogoutProcessor extends AbstractKubernetesTerminalProcessor<KubernetesMessage.Logout> implements ITerminalProcessor {
+public class KubernetesTerminalLogoutHandler extends AbstractKubernetesTerminalMessageHandler<KubernetesMessage.Logout> implements ITerminalMessageHandler {
 
     @Resource
     private PodCommandAudit podCommandAudit;
@@ -35,15 +35,15 @@ public class KubernetesTerminalLogoutProcessor extends AbstractKubernetesTermina
     }
 
     @Override
-    public void process(String message, Session session, TerminalSession terminalSession) {
-        KubernetesMessage.Logout baseMessage = getMessage(message);
+    public void handle(String message, Session session, TerminalSession terminalSession) {
+        KubernetesMessage.Logout baseMessage = toMessage(message);
         simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, baseMessage.getInstanceId());  // 设置关闭会话
         KubernetesSessionContainer.closeSession(terminalSession.getSessionId(), baseMessage.getInstanceId());
         podCommandAudit.recordCommand(terminalSession.getSessionId(), baseMessage.getInstanceId());
     }
 
     @Override
-    protected KubernetesMessage.Logout getMessage(String message) {
+    protected KubernetesMessage.Logout toMessage(String message) {
         return new GsonBuilder().create().fromJson(message, KubernetesMessage.Logout.class);
     }
 }

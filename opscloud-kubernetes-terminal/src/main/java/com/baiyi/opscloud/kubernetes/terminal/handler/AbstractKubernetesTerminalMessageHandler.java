@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.kubernetes.terminal.processor;
+package com.baiyi.opscloud.kubernetes.terminal.handler;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
@@ -6,15 +6,13 @@ import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalProcessFactory;
+import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalMessageHandlerFactory;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
-import com.baiyi.opscloud.sshcore.ITerminalProcessor;
+import com.baiyi.opscloud.sshcore.ITerminalMessageHandler;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.KubernetesResource;
-import com.baiyi.opscloud.sshcore.model.KubernetesSessionContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -26,7 +24,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractKubernetesTerminalProcessor<T extends KubernetesMessage.BaseMessage> implements ITerminalProcessor, InitializingBean {
+public abstract class AbstractKubernetesTerminalMessageHandler<T extends KubernetesMessage.BaseMessage> implements ITerminalMessageHandler, InitializingBean {
 
     @Resource
     protected TerminalSessionService terminalSessionService;
@@ -40,7 +38,7 @@ public abstract class AbstractKubernetesTerminalProcessor<T extends KubernetesMe
     @Resource
     private DsConfigHelper dsConfigHelper;
 
-    abstract protected T getMessage(String message);
+    abstract protected T toMessage(String message);
 
     protected KubernetesConfig buildConfig(KubernetesResource kubernetesResource) {
         DatasourceInstanceAsset asset = getAssetByResource(kubernetesResource);
@@ -60,11 +58,6 @@ public abstract class AbstractKubernetesTerminalProcessor<T extends KubernetesMe
         throw new CommonRuntimeException("类型不符合");
     }
 
-    protected Boolean isBatch(TerminalSession terminalSession) {
-        Boolean isBatch = KubernetesSessionContainer.getBatchBySessionId(terminalSession.getSessionId());
-        return isBatch != null && isBatch;
-    }
-
     protected void heartbeat(String sessionId) {
         // redisUtil.set(TerminalKeyUtil.buildSessionHeartbeatKey(sessionId), true, 60L);
     }
@@ -74,7 +67,7 @@ public abstract class AbstractKubernetesTerminalProcessor<T extends KubernetesMe
      */
     @Override
     public void afterPropertiesSet() {
-        KubernetesTerminalProcessFactory.register(this);
+        KubernetesTerminalMessageHandlerFactory.register(this);
     }
 
 }

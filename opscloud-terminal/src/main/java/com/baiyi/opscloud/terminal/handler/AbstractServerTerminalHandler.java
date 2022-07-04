@@ -1,14 +1,12 @@
-package com.baiyi.opscloud.terminal.processor;
+package com.baiyi.opscloud.terminal.handler;
 
-import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
+import com.baiyi.opscloud.sshcore.ITerminalMessageHandler;
 import com.baiyi.opscloud.sshcore.audit.ServerCommandAudit;
-import com.baiyi.opscloud.sshcore.ITerminalProcessor;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import com.baiyi.opscloud.sshcore.handler.HostSystemHandler;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
-import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
-import com.baiyi.opscloud.terminal.factory.TerminalProcessFactory;
+import com.baiyi.opscloud.terminal.factory.ServerTerminalMessageHandlerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -21,7 +19,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractServerTerminalProcessor<T extends ServerMessage.BaseMessage> implements ITerminalProcessor, InitializingBean {
+public abstract class AbstractServerTerminalHandler<T extends ServerMessage.BaseMessage> implements ITerminalMessageHandler, InitializingBean {
 
     @Resource
     protected ServerCommandAudit serverCommandAudit;
@@ -35,12 +33,7 @@ public abstract class AbstractServerTerminalProcessor<T extends ServerMessage.Ba
     @Resource
     protected SimpleTerminalSessionFacade simpleTerminalSessionFacade;
 
-    abstract protected T getMessage(String message);
-
-    protected Boolean needBatch(TerminalSession terminalSession) {
-        Boolean needBatch = JSchSessionContainer.getBatchBySessionId(terminalSession.getSessionId());
-        return needBatch != null && needBatch;
-    }
+    abstract protected T toMessage(String message);
 
     protected void heartbeat(String sessionId) {
        // redisUtil.set(TerminalKeyUtil.buildSessionHeartbeatKey(sessionId), true, 60L);
@@ -51,7 +44,7 @@ public abstract class AbstractServerTerminalProcessor<T extends ServerMessage.Ba
      */
     @Override
     public void afterPropertiesSet() {
-        TerminalProcessFactory.register(this);
+        ServerTerminalMessageHandlerFactory.register(this);
     }
 
 }

@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.kubernetes.terminal.processor.impl;
+package com.baiyi.opscloud.kubernetes.terminal.handler.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.kubernetes.terminal.processor.AbstractKubernetesTerminalProcessor;
-import com.baiyi.opscloud.sshcore.ITerminalProcessor;
+import com.baiyi.opscloud.kubernetes.terminal.handler.AbstractKubernetesTerminalMessageHandler;
+import com.baiyi.opscloud.sshcore.ITerminalMessageHandler;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.KubernetesSession;
@@ -18,7 +18,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class KubernetesTerminalResizeProcessor extends AbstractKubernetesTerminalProcessor<KubernetesMessage.Resize> implements ITerminalProcessor {
+public class KubernetesTerminalResizeHandler extends AbstractKubernetesTerminalMessageHandler<KubernetesMessage.Resize> implements ITerminalMessageHandler {
 
     /**
      * 调整终端
@@ -31,8 +31,8 @@ public class KubernetesTerminalResizeProcessor extends AbstractKubernetesTermina
     }
 
     @Override
-    public void process(String message, Session session, TerminalSession terminalSession) {
-        KubernetesMessage.Resize resizeMessage = getMessage(message);
+    public void handle(String message, Session session, TerminalSession terminalSession) {
+        KubernetesMessage.Resize resizeMessage = toMessage(message);
         try {
             KubernetesSession kubernetesSession = KubernetesSessionContainer.getBySessionId(terminalSession.getSessionId(), resizeMessage.getInstanceId());
             if (kubernetesSession == null) return;
@@ -42,7 +42,7 @@ public class KubernetesTerminalResizeProcessor extends AbstractKubernetesTermina
     }
 
     @Override
-    protected KubernetesMessage.Resize getMessage(String message) {
+    protected KubernetesMessage.Resize toMessage(String message) {
         return new GsonBuilder().create().fromJson(message, KubernetesMessage.Resize.class);
     }
 

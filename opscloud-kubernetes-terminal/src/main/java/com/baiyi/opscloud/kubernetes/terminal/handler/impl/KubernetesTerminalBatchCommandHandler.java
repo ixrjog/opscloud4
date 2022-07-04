@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.kubernetes.terminal.processor.impl;
+package com.baiyi.opscloud.kubernetes.terminal.handler.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.kubernetes.terminal.processor.AbstractKubernetesTerminalProcessor;
-import com.baiyi.opscloud.sshcore.ITerminalProcessor;
+import com.baiyi.opscloud.kubernetes.terminal.handler.AbstractKubernetesTerminalMessageHandler;
+import com.baiyi.opscloud.sshcore.ITerminalMessageHandler;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.KubernetesSessionContainer;
@@ -17,7 +17,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class KubernetesTerminalBatchCommandProcessor extends AbstractKubernetesTerminalProcessor<KubernetesMessage.BatchCommand> implements ITerminalProcessor {
+public class KubernetesTerminalBatchCommandHandler extends AbstractKubernetesTerminalMessageHandler<KubernetesMessage.BatchCommand> implements ITerminalMessageHandler {
 
     /**
      * 登录
@@ -31,13 +31,13 @@ public class KubernetesTerminalBatchCommandProcessor extends AbstractKubernetesT
 
 
     @Override
-    public void process(String message, Session session, TerminalSession terminalSession) {
-        KubernetesMessage.BatchCommand batchMessage = getMessage(message);
-        KubernetesSessionContainer.setBatch(terminalSession.getSessionId(), batchMessage.getIsBatch());
+    public void handle(String message, Session session, TerminalSession terminalSession) {
+        KubernetesMessage.BatchCommand batchMessage = toMessage(message);
+        KubernetesSessionContainer.setBatchFlag(terminalSession.getSessionId(), batchMessage.getIsBatch());
     }
 
     @Override
-    protected KubernetesMessage.BatchCommand getMessage(String message) {
+    protected KubernetesMessage.BatchCommand toMessage(String message) {
         return new GsonBuilder().create().fromJson(message, KubernetesMessage.BatchCommand.class);
     }
 

@@ -9,9 +9,15 @@ import javax.websocket.Session;
  * @Date 2020/5/11 9:35 上午
  * @Version 1.0
  */
-public interface ITerminalProcessor {
+public interface ITerminalMessageHandler {
 
-    void process(String message, Session session, TerminalSession terminalSession);
+    /**
+     * 处理消息
+     * @param message
+     * @param session
+     * @param terminalSession
+     */
+    void handle(String message, Session session, TerminalSession terminalSession);
 
     String getState();
 

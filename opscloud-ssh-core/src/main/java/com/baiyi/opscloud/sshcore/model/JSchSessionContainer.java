@@ -16,7 +16,7 @@ public class JSchSessionContainer {
         batchMap.put(sessionId, isBatch);
     }
 
-    public static Boolean getBatchBySessionId(String sessionId) {
+    public static Boolean getBatchFlagBySessionId(String sessionId) {
         return batchMap.get(sessionId);
     }
 
