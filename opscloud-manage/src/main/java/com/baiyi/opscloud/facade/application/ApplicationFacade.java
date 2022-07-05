@@ -31,4 +31,5 @@ public interface ApplicationFacade {
     void bindApplicationResource(ApplicationResourceVO.Resource resource);
 
     void unbindApplicationResource(Integer id);
+
 }

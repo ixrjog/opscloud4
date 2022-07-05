@@ -11,6 +11,8 @@ import java.util.List;
  */
 public interface ApplicationResourceService {
 
+    ApplicationResource getById(Integer id);
+
     void add(ApplicationResource applicationResource);
 
     void update(ApplicationResource applicationResource);

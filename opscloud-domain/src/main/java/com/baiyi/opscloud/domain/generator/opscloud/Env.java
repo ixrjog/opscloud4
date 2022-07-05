@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
+@Builder
 @Table(name = "sys_env")
 public class Env implements Serializable {
     @Id

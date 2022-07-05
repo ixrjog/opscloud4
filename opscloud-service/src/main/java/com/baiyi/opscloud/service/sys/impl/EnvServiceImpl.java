@@ -28,6 +28,11 @@ public class EnvServiceImpl implements EnvService {
     private final EnvMapper envMapper;
 
     @Override
+    public List<Env> queryAll() {
+        return envMapper.selectAll();
+    }
+
+    @Override
     public void add(Env env) {
         envMapper.insert(env);
     }

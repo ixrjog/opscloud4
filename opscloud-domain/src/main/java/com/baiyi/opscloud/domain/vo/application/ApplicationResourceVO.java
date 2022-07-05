@@ -29,6 +29,8 @@ public class ApplicationResourceVO {
 
         private List<TagVO.Tag> tags;
 
+        private List<ApplicationResourceOperationLogVO.OperationLog> operationLogs;
+
         private DsInstanceVO.Instance instance;
 
         private DsAssetVO.Asset asset;

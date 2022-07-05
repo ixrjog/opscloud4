@@ -93,7 +93,6 @@
         </profile>
     </profiles>
 
-
     <build>
         <finalName>${project.artifactId}-${env}</finalName>
         <resources>
@@ -163,6 +162,5 @@
             <!--跳过test end-->
         </plugins>
     </build>
-
 
 </project>

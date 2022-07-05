@@ -99,7 +99,6 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
                 }
             }
             table = new DataTable<>(Lists.newArrayList(applicationService.getById(pageQuery.getApplicationId())), 1);
-
         }
         List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class)
                 .stream()

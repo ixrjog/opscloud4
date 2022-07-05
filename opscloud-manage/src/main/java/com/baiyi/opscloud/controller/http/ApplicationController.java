@@ -3,12 +3,14 @@ package com.baiyi.opscloud.controller.http;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
+import com.baiyi.opscloud.domain.param.application.ApplicationResourceOperationParam;
 import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
 import com.baiyi.opscloud.domain.vo.common.OptionsVO;
 import com.baiyi.opscloud.facade.application.ApplicationFacade;
+import com.baiyi.opscloud.facade.application.OperationResourceFacade;
 import com.baiyi.opscloud.util.OptionsUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +32,8 @@ import javax.validation.Valid;
 public class ApplicationController {
 
     private final ApplicationFacade applicationFacade;
+
+    private final OperationResourceFacade operationResourceFacade;
 
     @ApiOperation(value = "查询应用业务类型选项")
     @GetMapping(value = "/business/options/get", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -95,4 +99,12 @@ public class ApplicationController {
         applicationFacade.unbindApplicationResource(id);
         return HttpResult.SUCCESS;
     }
+
+    @ApiOperation(value = "应用资源操作")
+    @PutMapping(value = "/res/operation", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> operationApplicationResource(@RequestBody @Valid ApplicationResourceOperationParam.OperationResource operationResource) {
+        operationResourceFacade.operationResource(operationResource);
+        return HttpResult.SUCCESS;
+    }
+
 }

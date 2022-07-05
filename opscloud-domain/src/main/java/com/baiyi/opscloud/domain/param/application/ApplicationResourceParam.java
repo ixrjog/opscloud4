@@ -26,10 +26,10 @@ public class ApplicationResourceParam {
     @ApiModel
     public static class ResourcePageQuery extends SuperPageParam implements IExtend, BaseBusiness.IBusinessType, IApplicationResourceType {
 
-        @ApiModelProperty(value = "数据源实例id")
+        @ApiModelProperty(value = "数据源实例ID")
         private Integer instanceId;
 
-        @ApiModelProperty(value = "数据源实例uuid")
+        @ApiModelProperty(value = "数据源实例UUID")
         private String instanceUuid;
 
         @ApiModelProperty(value = "应用资源类型")
@@ -40,7 +40,7 @@ public class ApplicationResourceParam {
         @NotNull(message = "必须指定业务类型")
         private Integer businessType;
 
-        @ApiModelProperty(value = "应用id")
+        @ApiModelProperty(value = "应用ID")
         private Integer applicationId;
 
         @ApiModelProperty(value = "应用名称")
@@ -50,4 +50,5 @@ public class ApplicationResourceParam {
         private Boolean extend;
 
     }
+
 }

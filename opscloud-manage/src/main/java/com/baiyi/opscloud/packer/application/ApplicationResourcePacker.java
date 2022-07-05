@@ -5,20 +5,24 @@ import com.baiyi.opscloud.datasource.kubernetes.provider.KubernetesPodProvider;
 import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResourceOperationLog;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
 import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.vo.application.ApplicationResourceOperationLogVO;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.packer.IWrapper;
+import com.baiyi.opscloud.service.application.ApplicationResourceOperationLogService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.tag.BusinessTagService;
 import com.baiyi.opscloud.service.tag.TagService;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -50,6 +54,10 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
 
     private final BusinessTagService businessTagService;
 
+    private final ApplicationResourceOperationLogService operationLogService;
+
+    private final ApplicationResourceOperationLogPacker operationLogPacker;
+
     /**
      * Deployment Pod
      *
@@ -72,22 +80,36 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
         } catch (NullPointerException ignored) {
         }
         wrapTags(resource, asset);
+        wrapOperationLogs(resource);
         applicationResourceInstancePacker.wrap(resource);
     }
 
     private void wrapTags(ApplicationResourceVO.Resource resource, DatasourceInstanceAsset asset) {
-        List<DatasourceInstanceAssetRelation> assetRelations = assetRelationService.queryTargetAsset(asset.getInstanceUuid(),asset.getId());
-        if (CollectionUtils.isEmpty(assetRelations)) return;
+        resource.setTags(acqTags(asset));
+    }
+
+    public List<TagVO.Tag> acqTags(DatasourceInstanceAsset asset) {
+        List<DatasourceInstanceAssetRelation> assetRelations = assetRelationService.queryTargetAsset(asset.getInstanceUuid(), asset.getId());
+        if (CollectionUtils.isEmpty(assetRelations)) return Lists.newArrayList();
         Set<Integer> tagIdSet = Sets.newHashSet();
         assetRelations.stream().map(e ->
                 assetService.getById(e.getTargetAssetId())).map(targetAsset -> businessTagService.queryByBusiness(SimpleBusiness.builder()
                 .businessType(BusinessTypeEnum.ASSET.getType())
                 .businessId(targetAsset.getId())
                 .build())).filter(businessTags -> !CollectionUtils.isEmpty(businessTags)).forEach(businessTags -> businessTags.forEach(t -> tagIdSet.add(t.getTagId())));
-        List<TagVO.Tag> tags = tagIdSet.stream().map(tagId ->
+        return tagIdSet.stream().map(tagId ->
                 BeanCopierUtil.copyProperties(tagService.getById(tagId), TagVO.Tag.class)
         ).collect(Collectors.toList());
-        resource.setTags(tags);
+    }
+
+    private void wrapOperationLogs(ApplicationResourceVO.Resource resource) {
+        List<ApplicationResourceOperationLog> logs = operationLogService.queryByResourceId(resource.getId(),5);
+        if (CollectionUtils.isEmpty(logs)) return;
+        resource.setOperationLogs(BeanCopierUtil.copyListProperties(logs, ApplicationResourceOperationLogVO.OperationLog.class)
+                .stream()
+                .peek(operationLogPacker::wrap)
+                .collect(Collectors.toList())
+        );
     }
 
 }

@@ -10,6 +10,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,9 +20,29 @@ import java.util.List;
  */
 public class KubernetesDeploymentDriver {
 
+    public static final String REDEPLOY_TIMESTAMP = "redeploy-timestamp";
+
+    /**
+     * 重启容器
+     * @param kubernetes
+     * @param namespace
+     * @param name
+     */
+    public static void redeployDeployment(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
+        Deployment deployment = getDeployment(kubernetes, namespace, name);
+        if (deployment == null) return;
+        deployment.getSpec()
+                .getTemplate()
+                .getMetadata()
+                .getAnnotations()
+                .replace(REDEPLOY_TIMESTAMP, String.valueOf(new Date().getTime()));
+        createOrReplaceDeployment(kubernetes, namespace, deployment);
+    }
+
     public static List<Deployment> listDeployment(KubernetesConfig.Kubernetes kubernetes) {
         DeploymentList deploymenList = KubeClient.build(kubernetes)
                 .apps().deployments().list();
+        Deployment deployment = new Deployment();
         return deploymenList.getItems();
     }
 
@@ -70,6 +91,7 @@ public class KubernetesDeploymentDriver {
 
     /**
      * 创建无状态
+     *
      * @param kubernetes
      * @param content
      * @return
@@ -98,6 +120,7 @@ public class KubernetesDeploymentDriver {
 
     /**
      * 创建或更新无状态
+     *
      * @param kubernetes
      * @param content
      * @return
@@ -107,7 +130,6 @@ public class KubernetesDeploymentDriver {
         Deployment deployment = toDeployment(kuberClient, content);
         return createOrReplaceDeployment(kubernetes, deployment);
     }
-
 
 
     /**
@@ -149,7 +171,7 @@ public class KubernetesDeploymentDriver {
      * @throws RuntimeException
      */
     public static Deployment toDeployment(KubernetesClient kuberClient, String content) throws RuntimeException {
-        HasMetadata resource =  KubernetesUtil.toResource(kuberClient,content);
+        HasMetadata resource = KubernetesUtil.toResource(kuberClient, content);
         if (resource instanceof io.fabric8.kubernetes.api.model.apps.Deployment)
             return (Deployment) resource;
         throw new RuntimeException("Deployment配置文件类型不匹配!");
