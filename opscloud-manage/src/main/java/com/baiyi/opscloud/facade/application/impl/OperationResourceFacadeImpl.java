@@ -96,11 +96,13 @@ public class OperationResourceFacadeImpl implements OperationResourceFacade {
         if (!env.getEnvName().equals(Global.ENV_PROD)) return;
         if (!isAdmin) throw new CommonRuntimeException("应用管理员才能执行生产环境变更操作！");
         if (StringUtils.isBlank(operationResource.getComment())) throw new CommonRuntimeException("生产环境变更操作必须说明变更原因！");
-        if (redisUtil.hasKey(String.format(LOCK_KEY, operationResource.getResourceId()))) {
+
+        final String lockKey = String.format(LOCK_KEY, operationResource.getResourceId());
+        if (redisUtil.hasKey(lockKey)) {
             throw new CommonRuntimeException("生产环境90秒内禁止重复部署！");
-        }else{
+        } else {
             // 加锁
-            redisUtil.set(LOCK_KEY,true, TimeUtil.secondTime * 90 / 1000);
+            redisUtil.set(lockKey, true, TimeUtil.secondTime * 90 / 1000);
         }
     }
 

@@ -35,7 +35,7 @@ public class KubernetesDeploymentDriver {
                 .getTemplate()
                 .getMetadata()
                 .getAnnotations()
-                .replace(REDEPLOY_TIMESTAMP, String.valueOf(new Date().getTime()));
+                .put(REDEPLOY_TIMESTAMP, String.valueOf(new Date().getTime()));
         createOrReplaceDeployment(kubernetes, namespace, deployment);
     }
 
