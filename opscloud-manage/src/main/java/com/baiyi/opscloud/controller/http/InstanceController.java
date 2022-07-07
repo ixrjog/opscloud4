@@ -53,4 +53,5 @@ public class InstanceController {
     public static class ResourceInactiveException extends RuntimeException {
         // 服务不可用 HTTP 503 Service Unavailable
     }
+
 }

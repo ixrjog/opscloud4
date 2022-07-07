@@ -42,4 +42,5 @@ public class ServerTaskController {
         serverTaskFacade.submitServerTask(submitServerTask, SessionUtil.getUsername());
         return HttpResult.SUCCESS;
     }
+
 }

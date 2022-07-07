@@ -66,4 +66,5 @@ public class ServerController {
         serverFacade.deleteServerById(id);
         return HttpResult.SUCCESS;
     }
+
 }

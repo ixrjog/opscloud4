@@ -4,17 +4,16 @@ import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.tag.BusinessTagParam;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
-import com.baiyi.opscloud.facade.tag.SimpleTagFacade;
-import com.baiyi.opscloud.util.OptionsUtil;
 import com.baiyi.opscloud.domain.vo.common.OptionsVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
+import com.baiyi.opscloud.facade.tag.SimpleTagFacade;
+import com.baiyi.opscloud.util.OptionsUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -76,4 +75,5 @@ public class TagController {
         tagFacade.deleteTagById(id);
         return HttpResult.SUCCESS;
     }
+
 }

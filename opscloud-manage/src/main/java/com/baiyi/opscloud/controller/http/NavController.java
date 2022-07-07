@@ -32,4 +32,5 @@ public class NavController {
     public HttpResult<List<NavVO.Nav>> listNav() {
         return new HttpResult<>(navFacade.ListActive());
     }
+
 }

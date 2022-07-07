@@ -41,7 +41,6 @@ public class LogController {
         return new HttpResult<>(userAuthFacade.simpleLogin(loginParam));
     }
 
-
     @ApiOperation(value = "用户登出接口")
     @GetMapping(value = "/logout", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> logout() {
