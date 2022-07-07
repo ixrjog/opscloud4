@@ -14,9 +14,8 @@ import com.baiyi.opscloud.facade.business.BusinessDocumentFacade;
 import com.baiyi.opscloud.service.business.BusinessDocumentService;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.util.ServerTreeUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -24,19 +23,16 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class BusinessDocumentFacadeImpl implements BusinessDocumentFacade {
 
-    @Resource
-    private BusinessDocumentService businessDocumentService;
+    private final BusinessDocumentService businessDocumentService;
 
-    @Resource
-    private ServerGroupingAlgorithm serverGroupingAlgorithm;
+    private final ServerGroupingAlgorithm serverGroupingAlgorithm;
 
-    @Resource
-    private ServerService serverService;
+    private final ServerService serverService;
 
-    @Resource
-    private ServerTreeUtil serverTreeUtil;
+    private final ServerTreeUtil serverTreeUtil;
 
     @Override
     @BizDocWrapper(extend = true, wrapResult = true)
