@@ -10,23 +10,25 @@ import java.util.Set;
 
 /**
  * @Author baiyi
- * @Date 2021/10/21 4:35 下午
+ * @Date 2022/7/7 14:20
  * @Version 1.0
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AwsConfig extends BaseDsConfig {
+public class HuaweicloudConfig extends BaseDsConfig {
 
-    private Aws aws;
+    private Huaweicloud huaweicloud;
 
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Aws {
+    public static class Huaweicloud {
+
+        private String version;
         private Account account;
         private String regionId;
         private Set<String> regionIds; // 可用区
-        private Ec2 ec2;
+
     }
 
     @Data
@@ -34,23 +36,11 @@ public class AwsConfig extends BaseDsConfig {
     @ApiModel
     public static class Account {
 
-        private String id;
-        private String name;
-        private String company; // 可选项公司
+        private String uid;
+        private String username;
         private String accessKeyId;
-        private String secretKey;
-        private String loginUrl; // IAM登录地址
-
-    }
-
-    @Data
-    @NoArgsConstructor
-    @ApiModel
-    public static class Ec2 {
-
-        private String instances;
+        private String secretAccessKey;
 
     }
 
 }
-

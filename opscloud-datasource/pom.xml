@@ -25,6 +25,11 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-huaweicloud</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-ldap</artifactId>
         </dependency>
 

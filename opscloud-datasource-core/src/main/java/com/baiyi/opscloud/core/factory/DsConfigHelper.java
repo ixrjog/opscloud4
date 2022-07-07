@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.core.factory;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.common.datasource.base.BaseConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.DsUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
@@ -51,7 +51,7 @@ public class DsConfigHelper {
         return configs.get(0);
     }
 
-    public <T extends BaseConfig> T build(DatasourceConfig datasourceConfig, Class<T> targetClass) {
+    public <T extends BaseDsConfig> T build(DatasourceConfig datasourceConfig, Class<T> targetClass) {
         String propsYml = datasourceConfig.getPropsYml();
         if (!IdUtil.isEmpty(datasourceConfig.getCredentialId())) {
             Credential credential = credentialService.getById(datasourceConfig.getCredentialId());

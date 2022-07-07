@@ -30,8 +30,15 @@ public enum DsTypeEnum {
     NACOS(12, "NACOS"),
     DINGTALK(13, "DINGTALK"),
     DINGTALK_APP(14, "DINGTALK_APP"),
+    /**
+     * 阿里云
+     */
     ALIYUN(50, "ALIYUN"),
-    AWS(51, "AWS");
+    AWS(51, "AWS"),
+    /**
+     * 华为云
+     */
+    HUAWEICLOUD(52,"HUAWEICLOUD");
 
     private final int type;
 

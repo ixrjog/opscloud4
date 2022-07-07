@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.common.datasource;
 
-import com.baiyi.opscloud.common.datasource.base.BaseConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +15,7 @@ import java.util.Set;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class DingtalkConfig extends BaseConfig {
+public class DingtalkConfig extends BaseDsConfig {
 
     private Dingtalk dingtalk;
 

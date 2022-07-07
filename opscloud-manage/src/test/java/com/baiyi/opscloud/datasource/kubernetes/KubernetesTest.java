@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.kubernetes;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.common.datasource.base.BaseConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
@@ -182,7 +182,7 @@ public class KubernetesTest extends BaseUnit {
     }
 
     @Test
-    BaseConfig getConfig() {
+    BaseDsConfig getConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(5);
         return dsFactory.build(datasourceConfig, KubernetesConfig.class);
     }

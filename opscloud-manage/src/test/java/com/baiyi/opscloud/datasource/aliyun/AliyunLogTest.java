@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.aliyun;
 import com.aliyun.openservices.log.common.Project;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
-import com.baiyi.opscloud.common.datasource.base.BaseConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.datasource.aliyun.log.driver.AliyunLogDriver;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -37,7 +37,7 @@ public class AliyunLogTest extends BaseUnit {
     }
 
     @Test
-    BaseConfig getConfig() {
+    BaseDsConfig getConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(3);
         return dsFactory.build(datasourceConfig, AliyunConfig.class);
     }

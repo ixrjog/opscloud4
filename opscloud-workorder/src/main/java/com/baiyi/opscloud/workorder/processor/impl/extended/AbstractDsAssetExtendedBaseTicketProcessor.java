@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.workorder.processor.impl.extended;
 
-import com.baiyi.opscloud.common.datasource.base.BaseConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
@@ -25,7 +25,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractDsAssetExtendedBaseTicketProcessor<T, C extends BaseConfig> extends BaseTicketProcessor<T> implements IInstanceType, IAssetType {
+public abstract class AbstractDsAssetExtendedBaseTicketProcessor<T, C extends BaseDsConfig> extends BaseTicketProcessor<T> implements IInstanceType, IAssetType {
 
     @Resource
     protected DsInstanceAssetService dsInstanceAssetService;

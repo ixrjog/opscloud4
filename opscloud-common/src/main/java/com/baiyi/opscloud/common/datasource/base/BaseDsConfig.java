@@ -10,7 +10,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Data
-public class BaseConfig {
+public class BaseDsConfig {
 
     private String name;
     private String url;

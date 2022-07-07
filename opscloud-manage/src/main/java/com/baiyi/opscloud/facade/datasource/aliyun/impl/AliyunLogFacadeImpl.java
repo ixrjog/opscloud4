@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade.datasource.aliyun.impl;
 import com.aliyun.openservices.log.common.MachineGroup;
 import com.aliyun.openservices.log.common.Project;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
-import com.baiyi.opscloud.common.datasource.base.BaseConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
@@ -176,7 +176,7 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
         aliyunLogMemberService.deleteById(id);
     }
 
-    private BaseConfig getConfig(Integer datasourceInstanceId) {
+    private BaseDsConfig getConfig(Integer datasourceInstanceId) {
         DatasourceInstance dsInstance = dsInstanceService.getById(datasourceInstanceId);
         DatasourceConfig datasourceConfig = dsConfigService.getById(dsInstance.getConfigId());
         return dsFactory.build(datasourceConfig, AliyunConfig.class);

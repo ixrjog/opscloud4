@@ -2,7 +2,7 @@ package com.baiyi.opscloud.util;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.LdapConfig;
-import com.baiyi.opscloud.common.datasource.base.BaseConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.common.util.DsUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -37,7 +37,7 @@ public class DsUtilTest extends BaseUnit {
     void toConfig2() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(1);
         print(datasourceConfig);
-        BaseConfig base = dsFactory.build(datasourceConfig, LdapConfig.class);
+        BaseDsConfig base = dsFactory.build(datasourceConfig, LdapConfig.class);
         print(base);
     }
 }

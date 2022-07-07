@@ -43,7 +43,6 @@
             <artifactId>opscloud-datasource-aws-route53</artifactId>
         </dependency>
 
-
     </dependencies>
 
 </project>

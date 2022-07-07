@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>opscloud-datasource-aws-route53</artifactId>
+    <artifactId>opscloud-datasource-huaweicloud</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -20,13 +20,12 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-aws-core</artifactId>
+            <artifactId>opscloud-datasource-core</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-route53</artifactId>
-            <version>1.12.220</version>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-huaweicloud-ecs</artifactId>
         </dependency>
 
     </dependencies>

@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.ldap;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.LdapConfig;
-import com.baiyi.opscloud.common.datasource.base.BaseConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.business.account.impl.LdapAccountHandler;
 import com.baiyi.opscloud.datasource.business.accountGroup.AccountGroupHandlerFactory;
@@ -142,7 +142,7 @@ public class LdapTest extends BaseUnit {
     }
 
     @Test
-    BaseConfig getConfig() {
+    BaseDsConfig getConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(2);
         return dsFactory.build(datasourceConfig, LdapConfig.class);
     }
