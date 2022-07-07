@@ -105,7 +105,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.28</version>
+            <version>8.0.29</version>
             <scope>runtime</scope>
         </dependency>
         <!--        <dependency>-->
@@ -118,7 +118,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.2.8</version>
+            <version>1.2.11</version>
         </dependency>
 
         <dependency>
@@ -179,7 +179,7 @@
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
-            <version>6.1.5</version>
+            <version>6.1.6</version>
         </dependency>
 
         <!--yaml工具-->
@@ -452,6 +452,24 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-aws-route53</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-huaweicloud</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-huaweicloud-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-huaweicloud-ecs</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

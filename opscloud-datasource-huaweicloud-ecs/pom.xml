@@ -19,14 +19,20 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.huaweicloud.sdk</groupId>
-            <artifactId>huaweicloud-sdk-ecs</artifactId>
-            <version>3.0.92</version>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-huaweicloud-core</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.huaweicloud.sdk</groupId>
             <artifactId>huaweicloud-sdk-vpc</artifactId>
-            <version>3.0.92</version>
+            <version>3.0.96</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.huaweicloud.sdk</groupId>
+            <artifactId>huaweicloud-sdk-ecs</artifactId>
+            <version>3.0.96</version>
         </dependency>
 
     </dependencies>

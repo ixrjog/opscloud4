@@ -133,7 +133,11 @@ public class OperationResourceFacadeImpl implements OperationResourceFacade {
 
     private boolean isAdmin(User user, ApplicationResource applicationResource) {
         // 判断用户是否授权
-        UserPermission queryParam = UserPermission.builder().userId(user.getId()).businessType(BusinessTypeEnum.APPLICATION.getType()).businessId(applicationResource.getApplicationId()).build();
+        UserPermission queryParam = UserPermission.builder()
+                .userId(user.getId())
+                .businessType(BusinessTypeEnum.APPLICATION.getType())
+                .businessId(applicationResource.getApplicationId())
+                .build();
         UserPermission userPermission = userPermissionService.getByUniqueKey(queryParam);
         if (userPermission == null) throw new CommonRuntimeException("非授权用户禁止操作！");
         return "ADMIN".equalsIgnoreCase(userPermission.getPermissionRole());
@@ -143,13 +147,24 @@ public class OperationResourceFacadeImpl implements OperationResourceFacade {
      * 记录日志
      */
     private ApplicationResourceOperationLog recordingOperationLog(User user, ApplicationResource applicationResource, Env env, boolean isAdmin, String comment) {
-        ApplicationResourceOperationLog operationLog = ApplicationResourceOperationLog.builder().resourceId(applicationResource.getId()).resourceType(applicationResource.getResourceType()).envType(env.getEnvType()).username(user.getUsername()).isAdmin(isAdmin).operationType(OperationConstants.REDEPLOY.name()).operationTime(new Date()).comment(comment).build();
+        ApplicationResourceOperationLog operationLog = ApplicationResourceOperationLog.builder()
+                .resourceId(applicationResource.getId())
+                .resourceType(applicationResource.getResourceType())
+                .envType(env.getEnvType())
+                .username(user.getUsername()).isAdmin(isAdmin)
+                .operationType(OperationConstants.REDEPLOY.name())
+                .operationTime(new Date())
+                .comment(comment)
+                .build();
         applicationResourceOperationLogService.add(operationLog);
         return operationLog;
     }
 
     private void updateOperationLogResult(Integer id, String result) {
-        ApplicationResourceOperationLog operationLog = ApplicationResourceOperationLog.builder().id(id).result(result).build();
+        ApplicationResourceOperationLog operationLog = ApplicationResourceOperationLog.builder()
+                .id(id)
+                .result(result)
+                .build();
         applicationResourceOperationLogService.updateByPrimaryKeySelective(operationLog);
     }
 
