@@ -3,8 +3,11 @@
  * cwjcsu@gmail.com  2016年5月19日  Created
 */
 package com.baiyi.opscloud.sshcore.table.simple;
- 
+
+import java.util.Optional;
+
 public class Utils {
+
 	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
 	public static String repeat(char ch, int count) {
@@ -23,9 +26,7 @@ public class Utils {
 	}
 	
     public static boolean isEmpty(String str) {
-        if (str == null || str.length() == 0)
-            return true;
-        return false;
+        return str == null || str.length() == 0;
     }
     
     public static boolean isChChar(char ch) {
@@ -57,7 +58,7 @@ public class Utils {
             }
             return new String(strs);
         }
-        return string != null ? string.substring(start, end) : null;
+        return Optional.ofNullable(string).map(s -> s.substring(start, end)).orElse(null);
     }
 
     public static String subCHString(String string, int start) {
@@ -87,4 +88,5 @@ public class Utils {
         }
         return 0;
     }
+
 }

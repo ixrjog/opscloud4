@@ -9,21 +9,20 @@ package com.baiyi.opscloud.sshcore.table.simple;
  */
 
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static java.lang.System.getProperty;
 
+@Slf4j
 public class DefaultTableFormatter implements TableFormatter {
-    private static Logger log = Logger.getLogger(DefaultTableFormatter.class
-            .getName());
 
-    private List<CellFormatter> formatters = new ArrayList<CellFormatter>(0);
+    private final List<CellFormatter> formatters = new ArrayList<CellFormatter>(0);
 
     private static final CellFormatter DEFAULT_CELLFORMATTER = new CellFormatter() {
         public String format(Object cell) {
@@ -79,7 +78,7 @@ public class DefaultTableFormatter implements TableFormatter {
         try {
             format(table, buffer);
         } catch (IOException e) {
-            log.log(Level.WARNING, e.getMessage(), e);
+            log.warn(e.getMessage(), e);
         }
         return buffer.toString();
     }
@@ -340,4 +339,5 @@ public class DefaultTableFormatter implements TableFormatter {
         }
         return sum;
     }
+
 }

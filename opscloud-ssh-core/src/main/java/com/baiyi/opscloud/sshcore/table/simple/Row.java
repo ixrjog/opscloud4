@@ -11,9 +11,9 @@ import java.util.Comparator;
  */
 class Row implements Comparable<Row> {
 
-	private Object[] data;
+	private final Object[] data;
 
-	private DefaultTable table;
+	private final DefaultTable table;
 
 	Row(Object[] row, DefaultTable table) {
 		this.data = row;
