@@ -3,6 +3,7 @@ package com.baiyi.opscloud.service.terminal.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.domain.param.terminal.TerminalSessionParam;
+import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.baiyi.opscloud.mapper.opscloud.TerminalSessionMapper;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import com.baiyi.opscloud.util.SQLUtil;
@@ -43,7 +44,7 @@ public class TerminalSessionServiceImpl implements TerminalSessionService {
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(pageQuery.getUsername())) {
             criteria.andLike("username", SQLUtil.toLike(pageQuery.getUsername()));
-        }else{
+        } else {
             criteria.andIsNotNull("username");
         }
         if (!StringUtils.isEmpty(pageQuery.getSessionType()))
@@ -59,6 +60,11 @@ public class TerminalSessionServiceImpl implements TerminalSessionService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("sessionId", sessionId);
         return sessionMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public List<ReportVO.Report> statByMonth() {
+        return sessionMapper.statByMonth();
     }
 
 }

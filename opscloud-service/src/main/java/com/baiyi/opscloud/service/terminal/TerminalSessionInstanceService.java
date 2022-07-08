@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.service.terminal;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
+import com.baiyi.opscloud.domain.vo.base.ReportVO;
 
 import java.util.List;
 
@@ -18,4 +19,7 @@ public interface TerminalSessionInstanceService {
     List<TerminalSessionInstance> queryBySessionId(String sessionId);
 
     TerminalSessionInstance getByUniqueKey(String sessionId,String instanceId);
+
+    List<ReportVO.Report> statByMonth();
+
 }

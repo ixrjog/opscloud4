@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.service.terminal.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
+import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.baiyi.opscloud.mapper.opscloud.TerminalSessionInstanceMapper;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
 import lombok.RequiredArgsConstructor;
@@ -46,4 +47,10 @@ public class TerminalSessionInstanceServiceImpl implements TerminalSessionInstan
         criteria.andEqualTo("instanceId", instanceId);
         return sessionInstanceMapper.selectOneByExample(example);
     }
+
+    @Override
+    public List<ReportVO.Report> statByMonth() {
+        return sessionInstanceMapper.statByMonth();
+    }
+
 }

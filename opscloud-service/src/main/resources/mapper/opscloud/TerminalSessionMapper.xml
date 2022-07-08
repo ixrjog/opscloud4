@@ -18,4 +18,17 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+
+  <resultMap id="ReportResultMap" type="com.baiyi.opscloud.domain.vo.base.ReportVO$Report">
+    <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+    <result column="value" jdbcType="INTEGER" property="value"/>
+  </resultMap>
+
+  <select id="statByMonth" resultMap="ReportResultMap">
+    select date_format(create_time, '%Y-%m') as `c_name`, sum(1) as `value`
+    from  terminal_session
+    where session_closed = 1
+    group by `c_name` order by `c_name`;
+  </select>
+
 </mapper>
