@@ -20,4 +20,5 @@ public interface CredentialFacade {
     void updateCredential(CredentialVO.Credential credential);
 
     void deleteCredentialById(Integer id);
+
 }

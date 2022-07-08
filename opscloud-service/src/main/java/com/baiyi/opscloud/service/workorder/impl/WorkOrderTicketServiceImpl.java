@@ -37,7 +37,7 @@ public class WorkOrderTicketServiceImpl implements WorkOrderTicketService {
     }
 
     @Override
-    public List<WorkOrderReportVO.Report> queryReportByMonth(Integer workOrderId) {
+    public List<WorkOrderReportVO.Report> statByMonth(Integer workOrderId) {
         return workOrderTicketMapper.queryReportByMonth(workOrderId);
     }
 

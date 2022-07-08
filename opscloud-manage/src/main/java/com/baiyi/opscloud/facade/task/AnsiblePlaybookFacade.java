@@ -18,4 +18,5 @@ public interface AnsiblePlaybookFacade {
     void addAnsiblePlaybook(AnsiblePlaybookVO.Playbook playbook);
 
     void deleteAnsiblePlaybookById(int id);
+
 }

@@ -27,4 +27,5 @@ public class NavFacadeImpl implements NavFacade {
         List<Nav> navList = navService.listActive();
         return BeanCopierUtil.copyListProperties(navList, NavVO.Nav.class);
     }
+
 }

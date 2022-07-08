@@ -4,6 +4,8 @@
 */
 package com.baiyi.opscloud.sshcore.table.simple;
 
+import java.util.Optional;
+
 public class DefaultLengthCaculator implements LengthCaculator {
 
 	public boolean isChineseChar(char ch) {
@@ -53,7 +55,7 @@ public class DefaultLengthCaculator implements LengthCaculator {
 			}
 			return new String(strs);
 		}
-		return string != null ? string.substring(start, end) : null;
+		return Optional.ofNullable(string).map(s -> s.substring(start, end)).orElse(null);
 	}
 
 	public String substring(String string, int beginIndex) {

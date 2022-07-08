@@ -32,7 +32,7 @@ public class WorkOrderReportFacadeImpl implements WorkOrderReportFacade {
 
     @Override
     public WorkOrderReportVO.MonthReport queryTicketReportByMonth() {
-        List<String> dateCatList = ticketService.queryReportByMonth(-1)
+        List<String> dateCatList = ticketService.statByMonth(-1)
                 .stream().map(WorkOrderReportVO.Report::getCName).collect(Collectors.toList());
         return WorkOrderReportVO.MonthReport.builder()
                 .dateCat(dateCatList)
@@ -45,7 +45,7 @@ public class WorkOrderReportFacadeImpl implements WorkOrderReportFacade {
         return workorderList.stream().collect(
                 Collectors.toMap(WorkOrder::getName,
                         e -> WorkOrderReportVO.MonthStatistics.builder()
-                                .values(ticketService.queryReportByMonth(e.getId()).stream()
+                                .values(ticketService.statByMonth(e.getId()).stream()
                                         .map(WorkOrderReportVO.Report::getValue)
                                         .collect(Collectors.toList()))
                                 .color(workOrderService.getById(e.getId()).getColor())

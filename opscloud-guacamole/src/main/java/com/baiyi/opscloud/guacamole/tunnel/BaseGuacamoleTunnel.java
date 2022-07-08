@@ -46,11 +46,11 @@ public class BaseGuacamoleTunnel extends GuacamoleWebSocketTunnelEndpoint {
         GuacamoleParam.Login guacamoleLogin = toGuacamoleLogin(session.getRequestParameterMap());
         IGuacamoleProtocol iGuacamoleProtocol = GuacamoleProtocolFactory.getProtocol(guacamoleLogin.getProtocol());
         GuacamoleSocket socket = iGuacamoleProtocol.buildGuacamoleSocket(guacamoleLogin);
-        return new SimpleGuacamoleTunnel( socket);
+        return new SimpleGuacamoleTunnel(socket);
     }
 
     @Override
-    @OnMessage
+    @OnMessage(maxMessageSize = 1024 * 1024)
     public void onMessage(String message) {
         super.onMessage(message);
     }

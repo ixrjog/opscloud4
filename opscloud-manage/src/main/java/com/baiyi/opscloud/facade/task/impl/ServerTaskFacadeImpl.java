@@ -9,8 +9,8 @@ import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.core.util.SystemEnvUtil;
-import com.baiyi.opscloud.datasource.ansible.builder.args.AnsibleArgs;
 import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgumentsBuilder;
+import com.baiyi.opscloud.datasource.ansible.builder.args.AnsibleArgs;
 import com.baiyi.opscloud.datasource.ansible.recorder.TaskLogStorehouse;
 import com.baiyi.opscloud.datasource.ansible.task.AnsibleServerTask;
 import com.baiyi.opscloud.domain.DataTable;
@@ -146,7 +146,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                 try {
                     TimeUnit.SECONDS.sleep(3L);
                 } catch (InterruptedException ie) {
-                    ie.printStackTrace();
+                    log.error(ie.getMessage());
                 }
             }
         }

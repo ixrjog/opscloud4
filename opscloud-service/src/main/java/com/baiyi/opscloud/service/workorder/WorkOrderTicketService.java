@@ -18,7 +18,7 @@ public interface WorkOrderTicketService {
 
     List<WorkOrderReportVO.Report> queryReportByName();
 
-    List<WorkOrderReportVO.Report> queryReportByMonth(Integer workorderId);
+    List<WorkOrderReportVO.Report> statByMonth(Integer workorderId);
 
     void add(WorkOrderTicket workOrderTicket);
 

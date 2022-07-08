@@ -19,4 +19,5 @@ public interface ServerTaskFacade {
      * @return
      */
     void submitServerTask(ServerTaskParam.SubmitServerTask submitServerTask,String username);
+
 }

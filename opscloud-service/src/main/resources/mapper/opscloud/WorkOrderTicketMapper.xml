@@ -19,6 +19,12 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
 
+    <!--    report-->
+    <resultMap id="ReportResultMap" type="com.baiyi.opscloud.domain.vo.workorder.WorkOrderReportVO$Report">
+        <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+        <result column="value" jdbcType="INTEGER" property="value"/>
+    </resultMap>
+
     <select id="getNewTicketByUser" resultMap="BaseResultMap">
         select a0.*
         from work_order_ticket a0
@@ -50,12 +56,6 @@
         </where>
         order by id desc
     </select>
-
-    <!--    report-->
-    <resultMap id="ReportResultMap" type="com.baiyi.opscloud.domain.vo.workorder.WorkOrderReportVO$Report">
-        <result column="c_name" jdbcType="VARCHAR" property="cName"/>
-        <result column="value" jdbcType="INTEGER" property="value"/>
-    </resultMap>
 
     <select id="queryReportByName" resultMap="ReportResultMap">
         select a1.name as `c_name`, count(*) as `value`, a1.color

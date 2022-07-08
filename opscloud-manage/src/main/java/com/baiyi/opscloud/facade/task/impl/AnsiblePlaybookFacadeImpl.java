@@ -62,4 +62,5 @@ public class AnsiblePlaybookFacadeImpl implements AnsiblePlaybookFacade {
     public void deleteAnsiblePlaybookById(int id) {
         ansiblePlaybookService.deleteById(id);
     }
+
 }

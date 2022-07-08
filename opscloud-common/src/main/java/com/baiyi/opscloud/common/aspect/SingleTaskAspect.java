@@ -37,7 +37,7 @@ public class SingleTaskAspect {
     private final RedisUtil redisUtil;
 
     private String buildKey(String taskName) {
-        return String.format("Opscloud.V4.SingleTask.%s", taskName);
+        return String.format("opscloud.v4.singleTask#taskName=%s", taskName);
     }
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.SingleTask)")
@@ -53,12 +53,12 @@ public class SingleTaskAspect {
         String key = buildKey(singleTask.name());
         try {
             if (!isLocked(key)) {
-                log.info("同步任务开始，taskKey = {}", key);
+                log.info("同步任务开始: taskKey = {}", key);
                 Instant instant = Instant.now();
                 lock(key, singleTask.lockTime());
                 Object result = joinPoint.proceed();
                 unlocking(key);
-                log.info("同步任务结束，taskKey = {}, 消耗时间 = {}s", key, InstantUtil.timerSeconds(instant));
+                log.info("同步任务结束: taskKey = {}, 消耗时间 = {}s", key, InstantUtil.timerSeconds(instant));
                 return result;
             } else {
                 log.info("任务重复执行: taskKey = {} !", key);

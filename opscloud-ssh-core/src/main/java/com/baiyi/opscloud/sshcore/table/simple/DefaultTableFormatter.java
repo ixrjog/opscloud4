@@ -304,7 +304,7 @@ public class DefaultTableFormatter implements TableFormatter {
                     if (pad >= 0) {
                         buffer.append(td);
                         buffer.append(repeat(' ', pad));
-                    } else if (pad < 0) {// 当前列需要换行
+                    } else {// 当前列需要换行
                         repeart = true;
                         buffer.append(td.subSequence(0, w));
                         nextRow[i] = td.substring(w);
@@ -330,9 +330,7 @@ public class DefaultTableFormatter implements TableFormatter {
     }
 
     public static boolean isEmpty(Object str) {
-        if (str == null || "".equals(str.toString().trim()))
-            return true;
-        return false;
+        return str == null || "".equals(str.toString().trim());
     }
 
     public static int sum(int[] d) {
