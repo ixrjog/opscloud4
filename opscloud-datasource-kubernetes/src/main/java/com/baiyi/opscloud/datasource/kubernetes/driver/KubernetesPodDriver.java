@@ -82,6 +82,15 @@ public class KubernetesPodDriver {
                 .get();
     }
 
+    public static String getPodLog(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, String container) {
+       return KubeClient.build(kubernetes)
+                .pods()
+                .inNamespace(namespace)
+                .withName(name)
+                .inContainer(container)
+                .getLog();
+    }
+
     public static LogWatch getPodLogWatch(KubernetesConfig.Kubernetes kubernetes, String namespace, String podName) {
         return KubeClient.build(kubernetes).pods()
                 .inNamespace(namespace)

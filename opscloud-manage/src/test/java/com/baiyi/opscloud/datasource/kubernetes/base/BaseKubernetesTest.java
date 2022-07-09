@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.datasource.kubernetes.base;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import io.fabric8.kubernetes.client.ConfigBuilder;
@@ -23,7 +22,8 @@ public class BaseKubernetesTest extends BaseUnit {
     private DsConfigHelper dsConfigHelper;
 
     protected KubernetesConfig getConfig() {
-        return dsConfigHelper.build(dsConfigHelper.getConfigByDsType(DsTypeEnum.KUBERNETES.getType()), KubernetesConfig.class);
+        //return dsConfigHelper.build(dsConfigHelper.getConfigByDsType(DsTypeEnum.KUBERNETES.getType()), KubernetesConfig.class);
+        return dsConfigHelper.build(dsConfigHelper.getConfigById(30), KubernetesConfig.class);
     }
 
     public static DefaultKubernetesClient buildClient() {
