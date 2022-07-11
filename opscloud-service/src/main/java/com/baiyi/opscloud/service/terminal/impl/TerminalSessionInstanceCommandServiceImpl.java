@@ -70,4 +70,9 @@ public class TerminalSessionInstanceCommandServiceImpl implements TerminalSessio
         return commandMapper.statByMonth();
     }
 
+    @Override
+    public int statTotal() {
+        return commandMapper.statTotal();
+    }
+
 }

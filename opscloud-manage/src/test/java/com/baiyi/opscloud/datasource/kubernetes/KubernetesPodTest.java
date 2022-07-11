@@ -13,7 +13,7 @@ public class KubernetesPodTest extends BaseKubernetesTest {
 
     @Test
     void getLogTest(){
-       String l = KubernetesPodDriver.getLog(getConfig().getKubernetes(),"prod","posp-7878b5d9ff-cf95v");
+       String l = KubernetesPodDriver.getPodLog(getConfig().getKubernetes(),"prod","posp-7878b5d9ff-cf95v","aaaa");
        print(l);
     }
 }

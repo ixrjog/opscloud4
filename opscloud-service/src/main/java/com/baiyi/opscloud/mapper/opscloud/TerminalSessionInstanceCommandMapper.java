@@ -10,4 +10,6 @@ public interface TerminalSessionInstanceCommandMapper extends Mapper<TerminalSes
 
     List<ReportVO.Report> statByMonth();
 
+    int statTotal();
+
 }

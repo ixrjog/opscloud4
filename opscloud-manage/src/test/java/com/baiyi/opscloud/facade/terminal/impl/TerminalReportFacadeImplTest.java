@@ -19,7 +19,7 @@ class TerminalReportFacadeImplTest extends BaseUnit {
 
     @Test
     void reportTest(){
-        TerminalReportVO.TerminalReport terminalReport = terminalReportFacade.statByMonth();
+        TerminalReportVO.TerminalReport terminalReport = terminalReportFacade.statTerminalReport();
         print(terminalReport);
     }
 

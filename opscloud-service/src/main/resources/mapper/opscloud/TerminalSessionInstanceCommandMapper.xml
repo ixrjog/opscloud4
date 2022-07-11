@@ -28,4 +28,9 @@
     order by `c_name`;
   </select>
 
+  <select id="statTotal" resultType="int">
+    select count(distinct(id))
+    from terminal_session_instance_command
+  </select>
+
 </mapper>

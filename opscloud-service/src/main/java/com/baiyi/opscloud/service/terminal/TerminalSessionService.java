@@ -22,6 +22,12 @@ public interface TerminalSessionService {
 
     DataTable<TerminalSession> queryTerminalSessionPage(TerminalSessionParam.TerminalSessionPageQuery pageQuery);
 
-    List<ReportVO.Report> statByMonth();
+    List<ReportVO.Report> queryMonth();
+
+    List<ReportVO.Report> statMonthlyBySessionType(String sessionType);
+
+    int statUserTotal();
+
+    int statTotal();
 
 }

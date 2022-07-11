@@ -24,11 +24,28 @@
     <result column="value" jdbcType="INTEGER" property="value"/>
   </resultMap>
 
-  <select id="statByMonth" resultMap="ReportResultMap">
+  <select id="statMonthlyBySessionType" resultMap="ReportResultMap">
     select date_format(create_time, '%Y-%m') as `c_name`, sum(1) as `value`
+    from  terminal_session
+    where session_closed = 1 and session_type = #{sessionType}
+    group by `c_name` order by `c_name`;
+  </select>
+
+  <select id="queryMonth" resultMap="ReportResultMap">
+    select date_format(create_time, '%Y-%m') as `c_name`
     from  terminal_session
     where session_closed = 1
     group by `c_name` order by `c_name`;
+  </select>
+
+  <select id="statUserTotal" resultType="int">
+    select count(distinct(username))
+    from terminal_session
+  </select>
+
+  <select id="statTotal" resultType="int">
+    select count(distinct(id))
+    from terminal_session
   </select>
 
 </mapper>

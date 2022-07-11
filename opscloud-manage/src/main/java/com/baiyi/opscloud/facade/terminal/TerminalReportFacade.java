@@ -9,6 +9,6 @@ import com.baiyi.opscloud.domain.vo.terminal.TerminalReportVO;
  */
 public interface TerminalReportFacade {
 
-    TerminalReportVO.TerminalReport statByMonth();
+    TerminalReportVO.TerminalReport statTerminalReport();
 
 }

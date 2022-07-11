@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.vo.terminal;
 
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -28,13 +30,44 @@ public class TerminalReportVO {
 
         private static final long serialVersionUID = 6948099219656277502L;
 
-        private MonthReport sessionMonthReport;
+        @ApiModelProperty(value = "用户总数")
+        private Integer userTotal;
 
-        private MonthReport instanceMonthReport;
+        @ApiModelProperty(value = "会话总数")
+        private Integer sessionTotal;
+
+        @ApiModelProperty(value = "实例总数")
+        private Integer instanceTotal;
+
+        @ApiModelProperty(value = "命令总数")
+        private Integer commandTotal;
+
+        private MonthlyReport sessionReport;
+
+        private MonthlyReport instanceReport;
 
         private MonthReport commandMonthReport;
 
     }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
+    public static class MonthlyReport implements Serializable {
+
+        private static final long serialVersionUID = 4131580978973119640L;
+
+        @ApiModelProperty(value = "月份")
+        private List<String> dateCat;
+
+        @ApiModelProperty(value = "月度统计数据")
+        @Builder.Default
+        private Map<String, List<Integer>> valueMap = Maps.newHashMap();
+
+    }
+
 
     @Data
     @Builder

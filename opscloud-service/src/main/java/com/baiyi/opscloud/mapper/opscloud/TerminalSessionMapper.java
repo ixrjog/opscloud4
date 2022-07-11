@@ -8,6 +8,12 @@ import java.util.List;
 
 public interface TerminalSessionMapper extends Mapper<TerminalSession> {
 
-    List<ReportVO.Report> statByMonth();
+    List<ReportVO.Report> statMonthlyBySessionType(String sessionType);
+
+    List<ReportVO.Report> queryMonth();
+
+    int statUserTotal();
+
+    int statTotal();
 
 }

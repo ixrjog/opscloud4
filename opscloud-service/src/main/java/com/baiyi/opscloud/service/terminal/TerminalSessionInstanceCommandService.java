@@ -29,4 +29,6 @@ public interface TerminalSessionInstanceCommandService {
 
     List<ReportVO.Report> statByMonth();
 
+    int statTotal();
+
 }
