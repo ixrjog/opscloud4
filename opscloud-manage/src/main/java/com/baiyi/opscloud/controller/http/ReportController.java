@@ -27,7 +27,7 @@ public class ReportController {
     @ApiOperation(value = "查询终端报表")
     @GetMapping(value = "/terminal/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<TerminalReportVO.TerminalReport> getTerminalReport() {
-        return new HttpResult<>(terminalReportFacade.statByMonth());
+        return new HttpResult<>(terminalReportFacade.statTerminalReport());
     }
 
 }

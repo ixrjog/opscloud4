@@ -8,6 +8,10 @@ import java.util.List;
 
 public interface TerminalSessionInstanceMapper extends Mapper<TerminalSessionInstance> {
 
-    List<ReportVO.Report> statByMonth();
+    List<ReportVO.Report> statMonthlyByInstanceSessionType(String instanceSessionType);
+
+    List<ReportVO.Report> queryMonth();
+
+    int statTotal();
 
 }

@@ -20,6 +20,10 @@ public interface TerminalSessionInstanceService {
 
     TerminalSessionInstance getByUniqueKey(String sessionId,String instanceId);
 
-    List<ReportVO.Report> statByMonth();
+    List<ReportVO.Report> queryMonth();
+
+    List<ReportVO.Report> statMonthlyByInstanceSessionType(String instanceSessionType);
+
+    int statTotal();
 
 }

@@ -63,8 +63,23 @@ public class TerminalSessionServiceImpl implements TerminalSessionService {
     }
 
     @Override
-    public List<ReportVO.Report> statByMonth() {
-        return sessionMapper.statByMonth();
+    public List<ReportVO.Report> statMonthlyBySessionType(String sessionType) {
+        return sessionMapper.statMonthlyBySessionType(sessionType);
+    }
+
+    @Override
+    public List<ReportVO.Report> queryMonth() {
+        return sessionMapper.queryMonth();
+    }
+
+    @Override
+    public int statUserTotal() {
+        return sessionMapper.statUserTotal();
+    }
+
+    @Override
+    public int statTotal() {
+        return sessionMapper.statTotal();
     }
 
 }
