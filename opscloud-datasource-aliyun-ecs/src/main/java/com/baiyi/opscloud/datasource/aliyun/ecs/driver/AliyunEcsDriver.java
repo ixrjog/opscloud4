@@ -7,6 +7,7 @@ import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,7 @@ import static com.baiyi.opscloud.datasource.aliyun.core.SimpleAliyunClient.Query
  * @Date 2021/6/18 9:46 上午
  * @Version 1.0
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class AliyunEcsDriver {
@@ -37,7 +39,7 @@ public class AliyunEcsDriver {
                 describe.setNextToken(nextToken);
             } while (StringUtils.isNotBlank(nextToken));
         } catch (ClientException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return instanceList;
     }
@@ -66,7 +68,7 @@ public class AliyunEcsDriver {
                 pageNumber++;
             }
         } catch (ClientException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return images;
     }
@@ -88,9 +90,9 @@ public class AliyunEcsDriver {
                 pageNumber++;
             }
         } catch (ClientException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return securityGroups;
     }
-    
+
 }

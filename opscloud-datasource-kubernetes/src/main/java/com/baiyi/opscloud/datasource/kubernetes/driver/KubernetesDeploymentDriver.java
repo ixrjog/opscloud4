@@ -4,15 +4,17 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import com.baiyi.opscloud.datasource.kubernetes.util.KubernetesUtil;
+import com.google.common.collect.Maps;
 import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.PodTemplateSpec;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentList;
+import io.fabric8.kubernetes.api.model.apps.DeploymentSpec;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Author baiyi
@@ -33,11 +35,19 @@ public class KubernetesDeploymentDriver {
     public static void redeployDeployment(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
         Deployment deployment = getDeployment(kubernetes, namespace, name);
         if (deployment == null) return;
-        deployment.getSpec()
-                .getTemplate()
-                .getMetadata()
-                .getAnnotations()
-                .put(REDEPLOY_TIMESTAMP, String.valueOf(new Date().getTime()));
+        Optional<Map<String, String>> optionalAnnotations = Optional.of(deployment)
+                .map(Deployment::getSpec)
+                .map(DeploymentSpec::getTemplate)
+                .map(PodTemplateSpec::getMetadata)
+                .map(ObjectMeta::getAnnotations);
+        if (optionalAnnotations.isPresent()) {
+            deployment.getSpec().getTemplate().getMetadata().getAnnotations()
+                    .put(REDEPLOY_TIMESTAMP, String.valueOf(new Date().getTime()));
+        } else {
+            Map<String, String> annotations = Maps.newHashMap();
+            annotations.put(REDEPLOY_TIMESTAMP, String.valueOf(new Date().getTime()));
+            deployment.getSpec().getTemplate().getMetadata().setAnnotations(annotations);
+        }
         createOrReplaceDeployment(kubernetes, namespace, deployment);
     }
 

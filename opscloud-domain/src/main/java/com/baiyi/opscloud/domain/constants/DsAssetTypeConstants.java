@@ -79,7 +79,10 @@ public enum DsAssetTypeConstants {
     NACOS_ROLE,
 
     DINGTALK_USER,
-    DINGTALK_DEPARTMENT;
+    DINGTALK_DEPARTMENT,
+
+
+    HUAWEICLOUD_ECS;
 
 //    private final String type;
 //

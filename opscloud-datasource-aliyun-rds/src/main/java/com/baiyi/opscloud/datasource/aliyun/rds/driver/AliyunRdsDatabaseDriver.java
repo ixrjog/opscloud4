@@ -57,6 +57,6 @@ public class AliyunRdsDatabaseDriver {
             database.setRegionId(regionId);
             return database;
         }).collect(Collectors.toList());
-
     }
+
 }

@@ -22,4 +22,5 @@ public class AliyunClient extends SimpleAliyunClient {
         IAcsClient client = buildAcsClient(regionId, aliyun);
         return client.getAcsResponse(describe);
     }
+
 }
