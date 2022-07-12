@@ -50,6 +50,7 @@
         <module>opscloud-datasource-huaweicloud-core</module>
         <module>opscloud-datasource-huaweicloud</module>
         <module>opscloud-datasource-huaweicloud-ecs</module>
+        <module>opscloud-datasource-aliyun-acr</module>
     </modules>
     <parent>
         <!--https://spring.io/projects/spring-boot#learn-->
@@ -350,6 +351,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-aliyun-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aliyun-acr</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
