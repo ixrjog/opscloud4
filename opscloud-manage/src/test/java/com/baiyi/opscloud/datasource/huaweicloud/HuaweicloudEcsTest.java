@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.datasource.HuaweicloudConfig;
 import com.baiyi.opscloud.datasource.huaweicloud.base.BaseHuaweicloudTest;
 import com.baiyi.opscloud.datasource.huaweicloud.ecs.driver.HuaweicloudEcsDriver;
 import com.baiyi.opscloud.datasource.huaweicloud.ecs.driver.HuaweicloudVpcDriver;
-import com.huaweicloud.sdk.ecs.v2.model.ServerDetail;
+import com.baiyi.opscloud.datasource.huaweicloud.ecs.entity.HuaweicloudEcs;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -25,8 +25,8 @@ public class HuaweicloudEcsTest extends BaseHuaweicloudTest {
     @Test
     void listServerTest() {
         HuaweicloudConfig config = getConfig();
-        List<ServerDetail> serverDetails = HuaweicloudEcsDriver.listServers("ap-southeast-1", config.getHuaweicloud());
-        print(serverDetails);
+        List<HuaweicloudEcs.Ecs> ecss = HuaweicloudEcsDriver.listServers("ap-southeast-1", config.getHuaweicloud());
+        print(ecss);
     }
 
 }

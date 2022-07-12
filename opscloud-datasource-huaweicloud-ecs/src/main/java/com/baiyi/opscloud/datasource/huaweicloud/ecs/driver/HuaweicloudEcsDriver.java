@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -29,7 +30,7 @@ public class HuaweicloudEcsDriver {
         int LIMIT = 100;
     }
 
-    public static List<ServerDetail> listServers(String regionId, HuaweicloudConfig.Huaweicloud huaweicloud) {
+    public static List<HuaweicloudEcs.Ecs> listServers(String regionId, HuaweicloudConfig.Huaweicloud huaweicloud) {
         List<ServerDetail> serverDetails = Lists.newArrayList();
         EcsClient client = buildEcsClient(regionId, huaweicloud);
         ListServersDetailsRequest request = new ListServersDetailsRequest();
@@ -46,16 +47,13 @@ public class HuaweicloudEcsDriver {
         } catch (ServiceResponseException e) {
             log.error("HttpStatusCode = {} , RequestId = {} , ErrorCode = {} , ErrorMsg = {}", e.getHttpStatusCode(), e.getRequestId(), e.getErrorCode(), e.getErrorMsg());
         }
-        return serverDetails;
+        return serverDetails.stream().map(e-> toEcs(regionId,e)).collect(Collectors.toList());
     }
 
-    public static HuaweicloudEcs.Ecs toEcs(ServerDetail serverDetail) {
-
+    public static HuaweicloudEcs.Ecs toEcs(String regionId,ServerDetail serverDetail) {
         Map<String, List<ServerAddress>> addMap = serverDetail.getAddresses();
-
         String privateIp = "";
         String publicIp = "";
-
         for (String key : addMap.keySet()) {
             for (ServerAddress serverAdd : addMap.get(key)) {
                 if(ServerAddress.OsEXTIPSTypeEnum.FIXED == serverAdd.getOsEXTIPSType()){
@@ -68,6 +66,7 @@ public class HuaweicloudEcsDriver {
             }
         }
         return HuaweicloudEcs.Ecs.builder()
+                .regionId(regionId)
                 .id(serverDetail.getId())
                 .name(serverDetail.getName())
                 .status(serverDetail.getStatus())

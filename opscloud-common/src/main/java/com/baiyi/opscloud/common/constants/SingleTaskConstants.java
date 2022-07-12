@@ -79,4 +79,6 @@ public interface SingleTaskConstants {
 
     String SCAN_ASSET_BUSINESS = "SCAN_ASSET_BUSINESS";
 
+    String PULL_HUAWEICLOUD_ECS = "PULL_HUAWEICLOUD_ECS";
+
 }

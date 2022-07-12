@@ -35,6 +35,8 @@ public class HuaweicloudEcs {
         private String zone;
         private String created;
 
+        private String regionId;
+
         private String disk;
         private String vcpus;
         private String ram;
@@ -53,7 +55,8 @@ public class HuaweicloudEcs {
                     .name(this.name)
                     .assetKey(this.privateIp)
                     .assetKey2(this.publicIp)
-                    .kind(kind)
+                    .regionId(this.regionId)
+                    .kind(this.kind)
                     .assetType(DsAssetTypeConstants.HUAWEICLOUD_ECS.name())
                     .createdTime(toGmtDate(this.created))
                     .isActive("ACTIVE".equalsIgnoreCase(this.status))
@@ -61,6 +64,10 @@ public class HuaweicloudEcs {
                     .build();
             return AssetContainerBuilder.newBuilder()
                     .paramAsset(asset)
+                    .paramProperty("osType", this.osType)
+                    .paramProperty("ram", this.ram)
+                    .paramProperty("vcpus", this.vcpus)
+                    .paramProperty("disk", this.disk)
                     .build();
         }
     }
