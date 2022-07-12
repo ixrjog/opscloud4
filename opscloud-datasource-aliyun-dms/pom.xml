@@ -32,13 +32,13 @@
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>tea-openapi</artifactId>
-            <version>0.2.4</version>
+            <version>0.2.5</version>
         </dependency>
 
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>dms_enterprise20181101</artifactId>
-            <version>1.36.0</version>
+            <version>1.37.0</version>
         </dependency>
 
     </dependencies>
