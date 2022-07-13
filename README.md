@@ -31,23 +31,29 @@ Welcome to the opscloud wiki!
     + ECS、Image、VPC、RAM[User、Policy]、RDS[Instance、Database、Redis]、DMS[User]、ONS[Instance、Topic、Group]、Log
   + `AWS`
     + EC2、IAM[User、Policy]、SQS[Queue]、SNS[Topic、Subscription]
-+ 远程控制
+  + `华为云`
+    + ECS 
++ 堡垒机
   + 远程桌面[RDP、VNC]
     + apache-guacamole
-  + WebTerminal
+  + ServerTerminal(Web终端)
     + 支持多开、会话复制、命令同步、会话心跳
+  + KubernetesTerminal(Web终端)
+    + 支持多开、容器日志、Bash、命令同步、会话心跳 
   + SSH-Server
-    + 原生SSH协议实现，支持ED25519密钥
+    + 原生SSH协议实现，支持ED25519、RSA密钥
     + 简化用户登录，自动关联用户Gitlab账户公钥
     + 展示服务器环境，标签，授权账户
     + 支持Kubernetes容器登录或直接查看容器日志
     + 事件驱动技术
-    + 部署架构
 ```mermaid
 flowchart LR
     A[User] -->|SSH:22| B{SLB}
     B-->|TCP:2222| C[Opscloud Server] 
     B-->|TCP:2222| D[Opscloud Server] 
+    
+    A[User] -->|ssh ed25519 | B{{SSH-Server}}
+    B-->|ssh ed25519| C[Linux] 
 ```
 + 服务器批量任务
   + Ansible Playbook
