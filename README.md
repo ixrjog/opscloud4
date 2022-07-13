@@ -53,7 +53,7 @@ flowchart LR
     B-->|TCP:2222| D[Opscloud Server] 
     
     E[User] -->|ssh ed25519 | F{{SSH-Server}}
-    G-->|ssh ed25519| C[Linux] 
+    F-->|ssh ed25519| G[Linux] 
 ```
 + 服务器批量任务
   + Ansible Playbook
