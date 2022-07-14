@@ -119,8 +119,6 @@ public class SshShellCommandFactory implements Command {
                 "ssh-session-" + System.nanoTime());
         sshThread.start();
         threads.put(channelSession, sshThread);
-
-
         ServerSession serverSession = channelSession.getSession();
         IoSession ioSession = serverSession.getIoSession();
         SessionIdMapper.put(ioSession);

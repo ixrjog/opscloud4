@@ -5,12 +5,16 @@ import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2021/7/12 11:48 上午
  * @Version 1.0
  */
 public interface ApplicationService {
+
+    List<Application> queryAll();
 
     DataTable<Application> queryPageByParam(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery);
 

@@ -88,6 +88,11 @@
             <artifactId>opscloud-datasource-message</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-consul</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

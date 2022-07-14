@@ -81,4 +81,6 @@ public interface SingleTaskConstants {
 
     String PULL_HUAWEICLOUD_ECS = "PULL_HUAWEICLOUD_ECS";
 
+    String PULL_CONSUL_SERVICE = "PULL_CONSUL_SERVICE";
+
 }

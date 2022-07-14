@@ -28,7 +28,9 @@ public class TerminalUtil {
     public static void rawModeSupportVintr(Terminal terminal) {
         Attributes prvAttr = terminal.getAttributes();
         Attributes newAttr = new Attributes(prvAttr);
+        // 规范模式关闭，回显关闭，回显换行关闭，扩展输入处理关闭
         newAttr.setLocalFlags(EnumSet.of(Attributes.LocalFlag.ICANON, Attributes.LocalFlag.ECHO, Attributes.LocalFlag.IEXTEN), false);
+        // 关闭输入处理
         newAttr.setInputFlags(EnumSet.of(Attributes.InputFlag.IXON, Attributes.InputFlag.ICRNL, Attributes.InputFlag.INLCR), false);
         newAttr.setControlChar(Attributes.ControlChar.VMIN, 1); // 1
         newAttr.setControlChar(Attributes.ControlChar.VTIME, 0); // 0

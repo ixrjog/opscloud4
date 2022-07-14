@@ -30,6 +30,11 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-aliyun-cms</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-aliyun-log</artifactId>
         </dependency>
 

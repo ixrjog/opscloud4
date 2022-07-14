@@ -30,6 +30,7 @@ public enum DsTypeEnum {
     NACOS(12, "NACOS"),
     DINGTALK(13, "DINGTALK"),
     DINGTALK_APP(14, "DINGTALK_APP"),
+    CONSUL(15, "CONSUL"),
     /**
      * 阿里云
      */

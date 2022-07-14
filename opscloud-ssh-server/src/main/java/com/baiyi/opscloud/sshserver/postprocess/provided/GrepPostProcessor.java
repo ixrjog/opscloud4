@@ -44,7 +44,7 @@ public class GrepPostProcessor implements PostProcessor<String> {
                     sb.append(line).append("\n");
                 }
             }
-            return sb.toString().isEmpty() ? sb.toString() : sb.toString().substring(0, sb.toString().length() - 1);
+            return sb.toString().isEmpty() ? sb.toString() : sb.substring(0, sb.toString().length() - 1);
         }
     }
 

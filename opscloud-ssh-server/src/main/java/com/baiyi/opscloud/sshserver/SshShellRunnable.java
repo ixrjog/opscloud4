@@ -126,7 +126,10 @@ public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, 
     @Override
     public void run() {
         log.debug("{}: running...", session.toString());
-        TerminalBuilder terminalBuilder = TerminalBuilder.builder().system(false).streams(is, os);
+        TerminalBuilder terminalBuilder = TerminalBuilder.builder()
+                .system(false)
+                .encoding(StandardCharsets.UTF_8.name())
+                .streams(is, os);
         /**
          * 可以不加
          * TerminalBuilder terminalBuilder = TerminalBuilder.builder().system(false).streams(is, os)

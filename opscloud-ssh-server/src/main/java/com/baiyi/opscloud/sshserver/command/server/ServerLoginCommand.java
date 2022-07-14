@@ -99,10 +99,7 @@ public class ServerLoginCommand implements InitializingBean {
             hostSystem.setInstanceId(instanceId);
             hostSystem.setTerminalSize(sshShellHelper.terminalSize());
             TerminalSessionInstance terminalSessionInstance = TerminalSessionInstanceBuilder.build(sessionId, hostSystem, InstanceSessionTypeEnum.SERVER);
-            terminalSessionFacade.recordTerminalSessionInstance(
-                    terminalSessionInstance
-            );
-
+            terminalSessionFacade.recordTerminalSessionInstance(terminalSessionInstance);
             RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, sshContext.getSshShellRunnable().getOs());
             //terminal.enterRawMode();
             TerminalUtil.rawModeSupportVintr(terminal);
@@ -183,7 +180,7 @@ public class ServerLoginCommand implements InitializingBean {
         if (ch < 0) return;
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) throw new Exception();
-        // jSchSession.getCommander().write(String.valueOf((char) ch).getBytes(StandardCharsets.UTF_8 ));
+        // jSchSession.getCommander().write(Arrays.toString(String.valueOf((char) ch).getBytes(StandardCharsets.UTF_8)));
         jSchSession.getCommander().print((char) ch);
     }
 

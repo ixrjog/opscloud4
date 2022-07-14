@@ -81,16 +81,8 @@ public enum DsAssetTypeConstants {
     DINGTALK_USER,
     DINGTALK_DEPARTMENT,
 
+    CONSUL_SERVICE,
 
     HUAWEICLOUD_ECS;
 
-//    private final String type;
-//
-//    DsAssetTypeEnum(String type) {
-//        this.type = type;
-//    }
-//
-//    public String getType() {
-//        return this.type;
-//    }
 }

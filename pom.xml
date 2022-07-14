@@ -51,6 +51,8 @@
         <module>opscloud-datasource-huaweicloud</module>
         <module>opscloud-datasource-huaweicloud-ecs</module>
         <module>opscloud-datasource-aliyun-acr</module>
+        <module>opscloud-datasource-aliyun-cms</module>
+        <module>opscloud-datasource-consul</module>
     </modules>
     <parent>
         <!--https://spring.io/projects/spring-boot#learn-->
@@ -312,6 +314,13 @@
                 <version>${project.version}</version>
             </dependency>
 
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aliyun-cms</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-aliyun-log</artifactId>
@@ -465,6 +474,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-huaweicloud</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-consul</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

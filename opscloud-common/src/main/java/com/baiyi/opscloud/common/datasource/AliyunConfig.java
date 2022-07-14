@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+
 import java.util.Set;
 
 /**
@@ -29,18 +30,24 @@ public class AliyunConfig extends BaseDsConfig {
     @NoArgsConstructor
     @ApiModel
     public static class Aliyun {
+
         private String version;
         private Account account;
         private String regionId;
         private Set<String> regionIds; // 可用区
         private Ons ons;
+        // 数据库管理
         private Dms dms;
+        // 云监控
+        private Cms cms;
+
     }
 
     @Data
     @NoArgsConstructor
     @ApiModel
     public static class Account {
+
         private String uid;
         private String name;
         private String company;
@@ -58,24 +65,47 @@ public class AliyunConfig extends BaseDsConfig {
          */
         public String getLoginUrl(String version) {
             return RAM_LOGIN_URL
-                    .replace("${VERSION}",StringUtils.isEmpty(version) ? "aliyun" : version)
+                    .replace("${VERSION}", StringUtils.isEmpty(version) ? "aliyun" : version)
                     .replace("${COMPANY}", StringUtils.isEmpty(this.company) ? this.uid : this.company);
         }
+
     }
 
     @Data
     @NoArgsConstructor
     @ApiModel
     public static class Ons {
+
         private String internetRegionId;
+
     }
 
     @Data
     @NoArgsConstructor
     @ApiModel
     public static class Dms {
+
         private String endpoint;
         private Long tid;
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Cms {
+
+        private Dingtalk dingtalk;
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Dingtalk {
+
+        private String token;
+
     }
 
 }

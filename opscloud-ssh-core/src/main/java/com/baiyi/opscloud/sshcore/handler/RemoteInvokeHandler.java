@@ -22,6 +22,7 @@ import org.jline.terminal.Size;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 /**
@@ -155,7 +156,7 @@ public class RemoteInvokeHandler {
                     .sessionId(sessionId)
                     .instanceId(hostSystem.getInstanceId())
                     // StandardCharsets.UTF_8.name()
-                    .commander(new PrintStream(inputToChannel, true))
+                    .commander(new PrintStream(inputToChannel, true, StandardCharsets.UTF_8.name()))
                     .inputToChannel(inputToChannel)
                     .channel(channel)
                     .hostSystem(hostSystem)
