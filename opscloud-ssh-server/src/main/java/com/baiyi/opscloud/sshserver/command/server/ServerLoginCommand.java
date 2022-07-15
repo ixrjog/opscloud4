@@ -32,6 +32,7 @@ import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.sshd.common.channel.ChannelOutputStream;
 import org.apache.sshd.server.session.ServerSession;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
@@ -100,8 +101,13 @@ public class ServerLoginCommand implements InitializingBean {
             hostSystem.setTerminalSize(sshShellHelper.terminalSize());
             TerminalSessionInstance terminalSessionInstance = TerminalSessionInstanceBuilder.build(sessionId, hostSystem, InstanceSessionTypeEnum.SERVER);
             terminalSessionFacade.recordTerminalSessionInstance(terminalSessionInstance);
-            RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, sshContext.getSshShellRunnable().getOs());
-            //terminal.enterRawMode();
+
+            ChannelOutputStream out =  (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
+            // 无延迟
+            out.setNoDelay(true);
+
+            RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, out );
+
             TerminalUtil.rawModeSupportVintr(terminal);
             Instant inst1 = Instant.now(); // 计时
             Size size = terminal.getSize();
@@ -180,7 +186,6 @@ public class ServerLoginCommand implements InitializingBean {
         if (ch < 0) return;
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) throw new Exception();
-        // jSchSession.getCommander().write(Arrays.toString(String.valueOf((char) ch).getBytes(StandardCharsets.UTF_8)));
         jSchSession.getCommander().print((char) ch);
     }
 

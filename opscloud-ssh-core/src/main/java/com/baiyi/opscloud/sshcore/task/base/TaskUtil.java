@@ -1,8 +1,5 @@
 package com.baiyi.opscloud.sshcore.task.base;
 
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -13,12 +10,13 @@ import java.nio.charset.StandardCharsets;
 public class TaskUtil {
 
     public static byte[] toBytes(char[] chars) {
-        Charset cs = StandardCharsets.UTF_8;
-        CharBuffer cb = CharBuffer.allocate(chars.length);
-        cb.put(chars);
-        cb.flip();
-        ByteBuffer bb = cs.encode(cb);
-        return bb.array();
+//        Charset cs = StandardCharsets.UTF_8;
+//        CharBuffer cb = CharBuffer.allocate(chars.length * 2);
+//        cb.put(chars);
+//        cb.flip();
+//        ByteBuffer bb = cs.encode(cb);
+//        return bb.array();
+       return String.valueOf(chars).getBytes(StandardCharsets.UTF_8);
     }
 
 }

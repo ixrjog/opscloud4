@@ -128,14 +128,8 @@ public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, 
         log.debug("{}: running...", session.toString());
         TerminalBuilder terminalBuilder = TerminalBuilder.builder()
                 .system(false)
-                .encoding(StandardCharsets.UTF_8.name())
+                //.encoding(StandardCharsets.UTF_8.name())
                 .streams(is, os);
-        /**
-         * 可以不加
-         * TerminalBuilder terminalBuilder = TerminalBuilder.builder().system(false).streams(is, os)
-         *    .dumb(true)
-         *    .encoding(StandardCharsets.UTF_8.name());
-         */
         boolean sizeAvailable = false;
         if (sshEnv.getEnv().containsKey(SSH_ENV_COLUMNS) && sshEnv.getEnv().containsKey(SSH_ENV_LINES)) {
             try {

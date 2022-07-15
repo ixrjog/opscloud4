@@ -155,7 +155,6 @@ public class RemoteInvokeHandler {
             JSchSession jSchSession = JSchSession.builder()
                     .sessionId(sessionId)
                     .instanceId(hostSystem.getInstanceId())
-                    // StandardCharsets.UTF_8.name()
                     .commander(new PrintStream(inputToChannel, true, StandardCharsets.UTF_8.name()))
                     .inputToChannel(inputToChannel)
                     .channel(channel)

@@ -24,7 +24,7 @@ Welcome to the opscloud wiki!
 
 #### 主要功能
 + 动态数据源
-  + Zabbix、Nacos、LDAP、Jenkins、Guacamole、Ansible、Nexus、Gitlab、Sonar、Dingtalk、TencentExmail
+  + Zabbix、Nacos、LDAP、Jenkins、Guacamole、Ansible、Nexus、Gitlab、Sonar、Dingtalk、TencentExmail、Consul
   + `Kubernetes`
     + ACK、EKS
   + `Aliyun`
