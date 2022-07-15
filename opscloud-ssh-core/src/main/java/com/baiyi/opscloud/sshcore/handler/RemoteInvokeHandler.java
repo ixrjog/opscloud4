@@ -141,7 +141,6 @@ public class RemoteInvokeHandler {
             invokeSshCredential(hostSystem, jsch, session);
             SessionConfigUtil.setDefault(session); // 默认设置
             ChannelShell channel = (ChannelShell) session.openChannel("shell");
-            // channel.setPtyType("dumb");
             ChannelShellUtil.setDefault(channel);
             setChannelPtySize(channel, hostSystem.getTerminalSize());
             // new session output
@@ -152,6 +151,7 @@ public class RemoteInvokeHandler {
             thread.start();
             /////////////////////
             OutputStream inputToChannel = channel.getOutputStream();
+
             JSchSession jSchSession = JSchSession.builder()
                     .sessionId(sessionId)
                     .instanceId(hostSystem.getInstanceId())

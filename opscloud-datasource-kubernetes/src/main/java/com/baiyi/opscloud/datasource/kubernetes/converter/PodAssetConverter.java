@@ -69,6 +69,7 @@ public class PodAssetConverter {
                 .paramProperty("initialized", podStatusMap.get("Initialized"))
                 .paramProperty("ready", podStatusMap.get("Ready"))
                 .paramProperty("status", !statusOptional.isPresent())
+                .paramProperty("reason",entity.getStatus().getReason())
                 .build();
         assetContainer.setAgo(AgoUtil.format(startTime));
         return assetContainer;

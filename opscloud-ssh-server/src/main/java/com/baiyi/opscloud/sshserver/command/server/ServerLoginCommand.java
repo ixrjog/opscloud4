@@ -101,13 +101,10 @@ public class ServerLoginCommand implements InitializingBean {
             hostSystem.setTerminalSize(sshShellHelper.terminalSize());
             TerminalSessionInstance terminalSessionInstance = TerminalSessionInstanceBuilder.build(sessionId, hostSystem, InstanceSessionTypeEnum.SERVER);
             terminalSessionFacade.recordTerminalSessionInstance(terminalSessionInstance);
-
-            ChannelOutputStream out =  (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
+            ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
             // 无延迟
             out.setNoDelay(true);
-
-            RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, out );
-
+            RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, out);
             TerminalUtil.rawModeSupportVintr(terminal);
             Instant inst1 = Instant.now(); // 计时
             Size size = terminal.getSize();

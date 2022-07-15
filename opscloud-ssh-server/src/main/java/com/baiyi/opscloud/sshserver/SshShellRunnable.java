@@ -191,12 +191,12 @@ public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, 
                                 }
                             }
                             if (best != null) {
-                                return new AttributedStringBuilder(buffer.length()).append(best,
-                                                AttributedStyle.BOLD).append(buffer.substring(l))
+                                return new AttributedStringBuilder(buffer.length())
+                                        .append(best, AttributedStyle.BOLD)
+                                        .append(buffer.substring(l))
                                         .toAttributedString();
                             } else {
-                                return new AttributedString(buffer,
-                                        AttributedStyle.DEFAULT.foreground(AttributedStyle.RED));
+                                return new AttributedString(buffer, AttributedStyle.DEFAULT.foreground(AttributedStyle.RED));
                             }
                         })
                         .parser(parser)

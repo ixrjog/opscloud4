@@ -26,4 +26,5 @@ public class SessionConfigUtil {
         session.connect(SESSION_TIMEOUT);
         session.setTimeout(CHANNEL_TIMEOUT);
     }
+
 }
