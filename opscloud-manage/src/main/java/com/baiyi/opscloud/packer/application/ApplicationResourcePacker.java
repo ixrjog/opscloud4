@@ -5,10 +5,7 @@ import com.baiyi.opscloud.datasource.kubernetes.provider.KubernetesPodProvider;
 import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResourceOperationLog;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceOperationLogVO;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
@@ -16,6 +13,7 @@ import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.application.ApplicationResourceOperationLogService;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
@@ -28,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,6 +42,8 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
     private final KubernetesPodProvider kubernetesPodProvider;
 
     private final DsInstanceAssetService assetService;
+
+    private final DsInstanceAssetPropertyService propertyService;
 
     private final DsInstanceService dsInstanceService;
 
@@ -84,6 +85,15 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
         applicationResourceInstancePacker.wrap(resource);
     }
 
+    public void wrapProperties(ApplicationResourceVO.Resource resource) {
+        if (resource.getBusinessType() != BusinessTypeEnum.ASSET.getType()) return;
+        DsAssetVO.Asset asset = BeanCopierUtil.copyProperties(assetService.getById(resource.getBusinessId()),DsAssetVO.Asset.class);
+        Map<String, String> properties = propertyService.queryByAssetId(asset.getId())
+                .stream().collect(Collectors.toMap(DatasourceInstanceAssetProperty::getName, DatasourceInstanceAssetProperty::getValue, (k1, k2) -> k1));
+        asset.setProperties(properties);
+        resource.setAsset(asset);
+    }
+
     private void wrapTags(ApplicationResourceVO.Resource resource, DatasourceInstanceAsset asset) {
         resource.setTags(acqTags(asset));
     }
@@ -103,7 +113,7 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
     }
 
     private void wrapOperationLogs(ApplicationResourceVO.Resource resource) {
-        List<ApplicationResourceOperationLog> logs = operationLogService.queryByResourceId(resource.getId(),5);
+        List<ApplicationResourceOperationLog> logs = operationLogService.queryByResourceId(resource.getId(), 5);
         if (CollectionUtils.isEmpty(logs)) return;
         resource.setOperationLogs(BeanCopierUtil.copyListProperties(logs, ApplicationResourceOperationLogVO.OperationLog.class)
                 .stream()

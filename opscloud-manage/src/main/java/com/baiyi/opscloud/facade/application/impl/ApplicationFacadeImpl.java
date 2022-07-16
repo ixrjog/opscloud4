@@ -37,7 +37,7 @@ import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
  * @Date 2021/7/12 12:58 下午
  * @Version 1.0
  */
-@Service
+@Component
 @RequiredArgsConstructor
 @BusinessType(BusinessTypeEnum.APPLICATION)
 public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPermissionPageQuery, InitializingBean {
