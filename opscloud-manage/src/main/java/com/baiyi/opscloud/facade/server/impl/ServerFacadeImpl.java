@@ -68,6 +68,9 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     public ServerVO.Server addServer(ServerVO.Server server) {
         Server pre = toDO(server);
         pre.setDisplayName(SimpleServerNameFacade.toServerName(pre));
+        if (serverService.getByUniqueKey(pre.getEnvType(), pre.getSerialNumber(), pre.getServerGroupId()) != null) {
+            throw new CommonRuntimeException("新增服务器错误: SerialNumber冲突!");
+        }
         serverService.add(pre);
         // 绑定资产
         server.setId(pre.getId());
