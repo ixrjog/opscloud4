@@ -68,7 +68,9 @@ public class ApplicationResourceServiceImpl implements ApplicationResourceServic
     public List<ApplicationResource> queryByApplication(Integer applicationId, String resourceType, int businessType) {
         Example example = new Example(ApplicationResource.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("applicationId", applicationId).andEqualTo("resourceType", resourceType).andEqualTo("businessType", businessType);
+        criteria.andEqualTo("applicationId", applicationId)
+                .andEqualTo("resourceType", resourceType)
+                .andEqualTo("businessType", businessType);
         return applicationResourceMapper.selectByExample(example);
     }
 

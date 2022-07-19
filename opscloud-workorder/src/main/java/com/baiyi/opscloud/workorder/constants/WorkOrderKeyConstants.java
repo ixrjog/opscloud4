@@ -25,5 +25,8 @@ public enum WorkOrderKeyConstants {
     NACOS,
     GITLAB_PROJECT,
     GITLAB_GROUP,
-    SYS_EMPLOYEE_RESIGN
+    SYS_EMPLOYEE_RESIGN,
+
+    APPLICATION_SCALE_REPLICAS
+
 }

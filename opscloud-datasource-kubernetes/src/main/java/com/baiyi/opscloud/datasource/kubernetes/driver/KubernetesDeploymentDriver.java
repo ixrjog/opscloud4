@@ -3,6 +3,7 @@ package com.baiyi.opscloud.datasource.kubernetes.driver;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
+import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesDeploymentException;
 import com.baiyi.opscloud.datasource.kubernetes.util.KubernetesUtil;
 import com.google.common.collect.Maps;
 import io.fabric8.kubernetes.api.model.HasMetadata;
@@ -48,6 +49,28 @@ public class KubernetesDeploymentDriver {
             annotations.put(REDEPLOY_TIMESTAMP, String.valueOf(new Date().getTime()));
             deployment.getSpec().getTemplate().getMetadata().setAnnotations(annotations);
         }
+        createOrReplaceDeployment(kubernetes, namespace, deployment);
+    }
+
+    /**
+     * 扩容
+     *
+     * @param kubernetes
+     * @param namespace
+     * @param name
+     * @param replicas   扩容后的副本数
+     */
+    public static void scaleDeploymentReplicas(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, Integer replicas) throws KubernetesDeploymentException {
+        Deployment deployment = getDeployment(kubernetes, namespace, name);
+        Optional<Integer> optionalReplicas = Optional.ofNullable(deployment)
+                .map(Deployment::getSpec)
+                .map(DeploymentSpec::getReplicas);
+        if (!optionalReplicas.isPresent())
+            throw new KubernetesDeploymentException("无法获取Deployment参数！");
+        // 更新副本数
+        if (optionalReplicas.get() >= replicas)
+            throw new KubernetesDeploymentException("副本数不正确，只能扩容不能缩容！");
+        deployment.getSpec().setReplicas(replicas);
         createOrReplaceDeployment(kubernetes, namespace, deployment);
     }
 
