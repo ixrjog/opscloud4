@@ -17,6 +17,8 @@ import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.entry.ApplicationScaleReplicasEntry;
 import com.baiyi.opscloud.workorder.query.impl.base.BaseTicketEntryQuery;
+import com.google.common.base.Joiner;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -65,17 +67,28 @@ public class ApplicationScaleReplicasEntryQuery extends BaseTicketEntryQuery<App
                     .namespace(e.getAssetKey2())
                     .replicas(replicas)
                     .scaleReplicas(replicas + 1)
+                    .comment(getApplicatonComment(e.getId()))
                     .build();
         }).collect(Collectors.toList());
     }
 
+    private String getApplicatonComment(Integer assetId) {
+        List<ApplicationResource> resources = applicationResourceService.queryByBusiness(BusinessTypeEnum.ASSET.getType(), assetId);
+        return CollectionUtils.isEmpty(resources) ? "" : applicationService.getById(resources.get(0).getApplicationId()).getComment();
+    }
+
+    public static String getComment(ApplicationScaleReplicasEntry.KubernetesDeployment entry) {
+        String c = "已创建%s个,总共需要%s个";
+        String desc = String.format(c, entry.getReplicas(), entry.getScaleReplicas());
+        if (StringUtils.isNotBlank(entry.getComment())) {
+            return Joiner.on("").skipNulls().join(entry.getComment(), "(", desc, ")");
+        } else {
+            return desc;
+        }
+    }
+
     @Override
     protected WorkOrderTicketVO.Entry toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, ApplicationScaleReplicasEntry.KubernetesDeployment entry) {
-        List<ApplicationResource> resources = applicationResourceService.queryByBusiness(BusinessTypeEnum.ASSET.getType(), entry.getId());
-        String comment = "";
-        if (!CollectionUtils.isEmpty(resources)) {
-            comment = applicationService.getById(resources.get(0).getApplicationId()).getComment();
-        }
         return WorkOrderTicketVO.Entry.builder()
                 .workOrderTicketId(entryQuery.getWorkOrderTicketId())
                 .name(entry.getName())
@@ -83,7 +96,7 @@ public class ApplicationScaleReplicasEntryQuery extends BaseTicketEntryQuery<App
                 .businessType(BusinessTypeEnum.ASSET.getType())
                 .businessId(entry.getId())
                 .content(JSONUtil.writeValueAsString(entry))
-                .comment(comment)
+                .comment(getComment(entry))
                 .entry(entry)
                 .build();
     }

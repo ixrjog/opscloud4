@@ -13,6 +13,7 @@ import com.baiyi.opscloud.workorder.entry.ApplicationScaleReplicasEntry;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExtendedBaseTicketProcessor;
+import com.baiyi.opscloud.workorder.query.impl.ApplicationScaleReplicasEntryQuery;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentSpec;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,8 @@ import java.util.Optional;
 @Slf4j
 @Component
 public class ApplicationScaleReplicasTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcessor<ApplicationScaleReplicasEntry.KubernetesDeployment, KubernetesConfig> {
+
+    private final String SCALE_REPLICAS = "scaleReplicas";
 
     @Override
     protected void processHandle(WorkOrderTicketEntry ticketEntry, ApplicationScaleReplicasEntry.KubernetesDeployment entry) throws TicketProcessException {
@@ -50,10 +53,11 @@ public class ApplicationScaleReplicasTicketProcessor extends AbstractDsAssetExte
         WorkOrderTicketEntry preTicketEntry = ticketEntryService.getById(ticketEntry.getId());
         Map<String, String> properties = ticketEntry.getProperties();
         if (properties == null) return;
-        if (!properties.containsKey("scaleReplicas")) return;
+        if (!properties.containsKey(SCALE_REPLICAS)) return;
         ApplicationScaleReplicasEntry.KubernetesDeployment deployment = toEntry(preTicketEntry.getContent());
-        deployment.setScaleReplicas(Integer.parseInt(properties.get("scaleReplicas")));
+        deployment.setScaleReplicas(Integer.parseInt(properties.get(SCALE_REPLICAS)));
         preTicketEntry.setContent(deployment.toString());
+        preTicketEntry.setComment(ApplicationScaleReplicasEntryQuery.getComment(deployment));
         updateTicketEntry(preTicketEntry);
     }
 
