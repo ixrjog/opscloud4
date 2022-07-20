@@ -24,8 +24,11 @@ public class GitlabProjectDelegate {
     public void addProjectMember(GitlabConfig.Gitlab gitlab, Integer projectId, Integer userId, GitlabAccessLevel accessLevel) throws TicketProcessException {
         try {
             GitlabProjectDriver.addProjectMember(gitlab, projectId, userId, accessLevel);
-        } catch (IOException ioException) {
-            throw new TicketProcessException("Gitlab实例API错误: addProjectMember");
+        } catch (IOException e) {
+            // "{\"message\":{\"access_level\":[\"is not included in the list"
+            if (e.getMessage().contains("is not included in the list"))
+                throw new TicketProcessException(String.format("Gitlab 新增项目成员错误: 不支持授权 %s 角色", accessLevel.name()));
+            throw new TicketProcessException(String.format("Gitlab 新增项目成员错误: %s", e.getMessage()));
         }
     }
 
@@ -33,8 +36,8 @@ public class GitlabProjectDelegate {
     public List<GitlabProjectMember> getProjectMembers(GitlabConfig.Gitlab gitlab, Integer projectId) throws TicketProcessException {
         try {
             return GitlabProjectDriver.getProjectMembers(gitlab, projectId);
-        } catch (IOException ioException) {
-            throw new TicketProcessException("Gitlab实例API错误: getProjectMembers");
+        } catch (IOException e) {
+            throw new TicketProcessException(String.format("Gitlab 查询项目成员错误: %s", e.getMessage()));
         }
     }
 
@@ -42,8 +45,8 @@ public class GitlabProjectDelegate {
     public void updateProjectMember(GitlabConfig.Gitlab gitlab, Integer projectId, Integer userId, GitlabAccessLevel accessLevel) throws TicketProcessException {
         try {
             GitlabProjectDriver.updateProjectMember(gitlab, projectId, userId, accessLevel);
-        } catch (IOException ioException) {
-            throw new TicketProcessException("Gitlab实例API错误: updateProjectMember");
+        } catch (IOException e) {
+            throw new TicketProcessException(String.format("Gitlab 更新项目成员错误: %s", e.getMessage()));
         }
     }
 

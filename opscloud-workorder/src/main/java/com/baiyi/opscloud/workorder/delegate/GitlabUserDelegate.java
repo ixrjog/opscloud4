@@ -23,8 +23,8 @@ public class GitlabUserDelegate {
     public List<GitlabUser> findUser(GitlabConfig.Gitlab gitlab, String emailOrUsername) throws TicketProcessException {
         try {
             return GitlabUserDriver.findUser(gitlab, emailOrUsername);
-        } catch (IOException ioException) {
-            throw new TicketProcessException("Gitlab实例API错误: findUser");
+        } catch (IOException e) {
+            throw new TicketProcessException(String.format("Gitlab 查询用户错误: %s", e.getMessage()));
         }
     }
 
