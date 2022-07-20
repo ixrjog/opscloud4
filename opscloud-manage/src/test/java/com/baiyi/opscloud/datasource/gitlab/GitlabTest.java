@@ -4,9 +4,11 @@ import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.datasource.gitlab.driver.GitlabProjectDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitlabUserDriver;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
+import org.gitlab.api.models.GitlabAccessLevel;
 import org.gitlab.api.models.GitlabSSHKey;
 import org.gitlab.api.models.GitlabUser;
 import org.junit.jupiter.api.Test;
@@ -21,12 +23,12 @@ import java.util.List;
  * @Version 1.0
  */
 public class GitlabTest extends BaseUnit {
+
     @Resource
     private DsConfigService dsConfigService;
 
     @Resource
     private DsConfigHelper dsFactory;
-
 
     @Test
     void userTest() {
@@ -42,12 +44,12 @@ public class GitlabTest extends BaseUnit {
     void userSSKTest() {
         GitlabConfig gitlabDsInstanceConfig = (GitlabConfig) getConfig();
         try {
-            List<GitlabSSHKey> keys = GitlabUserDriver.getUserSSHKeys(gitlabDsInstanceConfig.getGitlab(),112);
+            List<GitlabSSHKey> keys = GitlabUserDriver.getUserSSHKeys(gitlabDsInstanceConfig.getGitlab(), 112);
             for (GitlabSSHKey key : keys) {
                 System.err.print(key.getId());
 
             }
-        }catch (IOException e){
+        } catch (IOException e) {
 
         }
 
@@ -55,7 +57,19 @@ public class GitlabTest extends BaseUnit {
 
     @Test
     BaseDsConfig getConfig() {
-        DatasourceConfig datasourceConfig = dsConfigService.getById(2);
+        DatasourceConfig datasourceConfig = dsConfigService.getById(29);
         return dsFactory.build(datasourceConfig, GitlabConfig.class);
     }
+
+    @Test
+    void userSSK111Test() {
+        GitlabConfig gitlabDsInstanceConfig = (GitlabConfig) getConfig();
+        try {
+            GitlabProjectDriver.addProjectMember(gitlabDsInstanceConfig.getGitlab(), 356, 135, GitlabAccessLevel.Owner);
+        } catch (IOException e) {
+            e.printStackTrace();
+            print(e.getMessage());
+        }
+    }
+
 }
