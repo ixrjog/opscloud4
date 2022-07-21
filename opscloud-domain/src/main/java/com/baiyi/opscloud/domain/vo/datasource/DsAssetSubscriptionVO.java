@@ -28,6 +28,7 @@ public class DsAssetSubscriptionVO {
 
         private DsAssetVO.Asset asset;
 
+        @Override
         public Date getAgoTime() {
             return lastSubscriptionTime;
         }

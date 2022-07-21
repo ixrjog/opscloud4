@@ -1,6 +1,10 @@
 package com.baiyi.opscloud.other;
 
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.alert.rule.impl.ConsulAlertRule;
+import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
+import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
+import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
 import com.baiyi.opscloud.workorder.validator.QueueValidator;
 import com.google.common.collect.Maps;
 import lombok.Builder;
@@ -11,6 +15,7 @@ import javax.annotation.Resource;
 import javax.validation.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,6 +34,12 @@ public class OtherTest extends BaseUnit {
 
     @Resource
     private QueueValidator queueValidator;
+
+    @Resource
+    private DsInstanceAssetFacade dsInstanceAssetFacade;
+
+    @Resource
+    private ConsulAlertRule consulAlertRule;
 
     @Data
     @Builder
@@ -75,5 +86,20 @@ public class OtherTest extends BaseUnit {
         queueValidator.validate(attributes);
     }
 
+    @Test
+    void test3() {
+        consulAlertRule.preData();
+        DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
+                .assetType("CONSUL_SERVICE")
+                .extend(true)
+                .instanceId(36)
+                .length(5)
+                .page(1)
+                .queryName("ng-")
+                .relation(true)
+                .build();
+        List<DsAssetVO.Asset> assetList = dsInstanceAssetFacade.queryAssetPage(pageQuery).getData();
+        assetList.forEach(asset -> consulAlertRule.evaluate(asset));
+    }
 
 }
