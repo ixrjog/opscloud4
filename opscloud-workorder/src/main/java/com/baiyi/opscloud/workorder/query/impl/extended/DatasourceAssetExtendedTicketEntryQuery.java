@@ -36,8 +36,8 @@ public abstract class DatasourceAssetExtendedTicketEntryQuery extends BaseTicket
     protected WorkOrderTicketVO.Entry toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, DatasourceInstanceAsset entry) {
         return WorkOrderTicketVO.Entry.builder()
                 .workOrderTicketId(entryQuery.getWorkOrderTicketId())
-                .name(entry.getAssetId())
-                .entryKey(entry.getAssetKey())
+                .name(entry.getName())
+                .entryKey(entry.getName())
                 .businessType(BusinessTypeEnum.ASSET.getType())
                 .businessId(entry.getId())
                 .content(JSONUtil.writeValueAsString(entry))
