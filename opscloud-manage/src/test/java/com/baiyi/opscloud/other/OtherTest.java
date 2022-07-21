@@ -95,8 +95,8 @@ public class OtherTest extends BaseUnit {
                 .instanceId(36)
                 .length(5)
                 .page(1)
-                .queryName("ng-")
-                .relation(true)
+                .queryName("shopping-order")
+                .relation(false)
                 .build();
         List<DsAssetVO.Asset> assetList = dsInstanceAssetFacade.queryAssetPage(pageQuery).getData();
         assetList.forEach(asset -> consulAlertRule.evaluate(asset));

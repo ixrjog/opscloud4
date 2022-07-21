@@ -9,6 +9,7 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ConsulConfig;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
@@ -64,17 +65,20 @@ public class ConsulAlertRule extends AbstractAlertRule {
         if (ENV_PROD.equals(env)) {
             log.info("consul 告警规则评估");
             preData();
-            DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
-                    .assetType("CONSUL_SERVICE")
-                    .extend(true)
-                    .instanceId(36)
-                    .length(500)
-                    .page(1)
-                    .queryName("")
-                    .relation(false)
-                    .build();
-            List<DsAssetVO.Asset> assetList = dsInstanceAssetFacade.queryAssetPage(pageQuery).getData();
-            assetList.forEach(this::evaluate);
+            List<DatasourceInstance> datasourceInstances = dsInstanceService.listByInstanceType(getInstanceType());
+            datasourceInstances.forEach(dsInstance -> {
+                DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
+                        .assetType(DsAssetTypeConstants.CONSUL_SERVICE.name())
+                        .extend(true)
+                        .instanceId(dsInstance.getId())
+                        .length(1000)
+                        .page(1)
+                        .queryName("")
+                        .relation(false)
+                        .build();
+                List<DsAssetVO.Asset> assetList = dsInstanceAssetFacade.queryAssetPage(pageQuery).getData();
+                assetList.forEach(this::evaluate);
+            });
             log.info("consul 告警规则结束");
         }
     }
@@ -94,7 +98,7 @@ public class ConsulAlertRule extends AbstractAlertRule {
 
     @Override
     public Boolean evaluate(DsAssetVO.Asset asset, AlertRuleMatchExpression matchExpression) {
-        Double warningNum = Double.parseDouble(asset.getProperties().get("checksWarning"));
+        Double warningNum = Double.parseDouble(asset.getProperties().get("checksCritical"));
         if (NumberUtils.isDigits(matchExpression.getValues()))
             return warningNum >= Integer.parseInt(matchExpression.getValues());
         Gson gson = new GsonBuilder().create();
@@ -114,12 +118,11 @@ public class ConsulAlertRule extends AbstractAlertRule {
     @Override
     protected AlertContext converterContext(DsAssetVO.Asset asset, AlertRuleMatchExpression matchExpression) {
         DatasourceInstance datasourceInstance = dsInstanceService.getByUuid(asset.getInstanceUuid());
-
         return AlertContext.builder()
                 .alertName("Consul 节点异常告警")
                 .severity(matchExpression.getSeverity())
                 .message("Consul 不可用节点大于 " + matchExpression.getValues())
-                .value(asset.getProperties().get("checksWarning"))
+                .value(asset.getProperties().get("checksCritical"))
                 .check(datasourceInstance.getInstanceName())
                 .source(datasourceInstance.getUuid())
                 .alertType(asset.getKind())
