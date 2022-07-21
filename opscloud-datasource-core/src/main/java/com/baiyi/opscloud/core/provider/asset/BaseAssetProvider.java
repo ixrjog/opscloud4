@@ -166,6 +166,7 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     public void pushAsset(int dsInstanceId) {
     }
 
+    @Override
     protected Credential getCredential(int credentialId) {
         return credentialService.getById(credentialId);
     }

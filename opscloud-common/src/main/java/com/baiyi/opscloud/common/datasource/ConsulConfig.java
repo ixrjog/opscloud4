@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.common.datasource;
 
+import com.baiyi.opscloud.common.alert.AlertRuleMatchExpression;
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -29,6 +30,11 @@ public class ConsulConfig extends BaseDsConfig {
         private String url;
         // DataCenter
         private List<String> dcs;
+
+        private List<AlertRuleMatchExpression> strategyMatchExpressions;
+
+        private String dingtalkToken;
+
     }
 
 }
