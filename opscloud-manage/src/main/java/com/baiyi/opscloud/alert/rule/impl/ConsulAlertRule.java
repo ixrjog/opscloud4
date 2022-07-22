@@ -98,16 +98,15 @@ public class ConsulAlertRule extends AbstractAlertRule {
 
     @Override
     public Boolean evaluate(DsAssetVO.Asset asset, AlertRuleMatchExpression matchExpression) {
-        Double warningNum = Double.parseDouble(asset.getProperties().get("checksCritical"));
+        double warningNum = Double.parseDouble(asset.getProperties().get("checksCritical"));
         if (NumberUtils.isDigits(matchExpression.getValues()))
             return warningNum >= Integer.parseInt(matchExpression.getValues());
         Gson gson = new GsonBuilder().create();
-        Type type = new TypeToken<List<String>>() {
-        }.getType();
+        Type type = new TypeToken<List<String>>() {}.getType();
         List<String> strings = gson.fromJson(asset.getProperties().get("nodes"), type);
-        Integer totalNum = strings.size();
+        int totalNum = strings.size();
         try {
-            Double percent = NumberFormat.getPercentInstance().parse(matchExpression.getValues()).doubleValue();
+            double percent = NumberFormat.getPercentInstance().parse(matchExpression.getValues()).doubleValue();
             return warningNum / totalNum >= percent;
         } catch (ParseException e) {
             log.error(e.getMessage(), e);

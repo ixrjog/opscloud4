@@ -178,6 +178,8 @@ public class ConsulHealth {
 
         private static final long serialVersionUID = -8138453725165674673L;
 
+        @JsonProperty("Address")
+        private String address;
 
     }
 

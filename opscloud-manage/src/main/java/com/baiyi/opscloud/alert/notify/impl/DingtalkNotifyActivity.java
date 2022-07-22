@@ -48,9 +48,10 @@ public class DingtalkNotifyActivity extends AbstractNotifyActivity {
                 MessageTemplate messageTemplate = messageTemplateService.getByUniqueKey(CONSUL_ALERT, "DINGTALK_APP", "markdown");
                 if (messageTemplate == null) return;
                 String msg = BeetlUtil.renderTemplate(messageTemplate.getMsgTemplate(), contentMap);
+                System.out.println(msg);
                 dingtalkSendHelper.send(media.getDingtalkToken(), msg);
-            } catch (IOException ioEx) {
-                log.error(ioEx.getMessage(), ioEx);
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
             }
         }
     }

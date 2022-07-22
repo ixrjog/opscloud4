@@ -13,7 +13,7 @@ import feign.RequestLine;
 public interface DingtalkRobotSendFeign {
 
     @RequestLine("POST /robot/send?access_token={token}")
-    @Headers({"Content-Type: application/json;charset=utf-8"})
+    @Headers({"Content-Type: application/json"})
     Object send(@Param("token") String token,DingtalkMsg.Msg msg);
 
 }

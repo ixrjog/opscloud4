@@ -72,4 +72,5 @@ public abstract class AbstractAlertRule implements IRule, IInstanceType {
     protected abstract AlertContext converterContext(DsAssetVO.Asset asset, AlertRuleMatchExpression matchExpression);
 
     protected abstract void preData(DatasourceInstance dsInstance, DatasourceConfig dsConfig);
+
 }

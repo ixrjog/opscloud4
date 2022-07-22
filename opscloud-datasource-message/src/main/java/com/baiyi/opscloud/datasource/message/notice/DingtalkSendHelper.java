@@ -45,7 +45,8 @@ public class DingtalkSendHelper {
         DingtalkRobotSendFeign feign = buildFeign();
         Gson gson = new GsonBuilder().create();
         DingtalkMsg.Msg msg = gson.fromJson(message, DingtalkMsg.Msg.class);
-        feign.send(token, msg);
+        Object result = feign.send(token, msg);
+        log.info(JSONUtil.writeValueAsString(result));
     }
 
 }
