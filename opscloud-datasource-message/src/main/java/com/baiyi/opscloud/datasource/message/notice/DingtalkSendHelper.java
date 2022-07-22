@@ -24,7 +24,7 @@ public class DingtalkSendHelper {
 
     private static final String DINGTALK_OAPI = "https://oapi.dingtalk.com";
 
-    private DingtalkRobotSendFeign buildFeign(ZabbixConfig.Zabbix config) {
+    private DingtalkRobotSendFeign buildFeign() {
         return Feign.builder()
                 .retryer(new Retryer.Default(3000, 3000, 3))
                 .encoder(new JacksonEncoder())
@@ -34,11 +34,18 @@ public class DingtalkSendHelper {
 
     public void send(ZabbixConfig.Zabbix config, String message) {
         if (config.getNotice() == null) return;
-        DingtalkRobotSendFeign dingtalkRobotSendAPI = buildFeign(config);
+        DingtalkRobotSendFeign feign = buildFeign();
         Gson gson = new GsonBuilder().create();
         DingtalkMsg.Msg msg = gson.fromJson(message, DingtalkMsg.Msg.class);
-        Object result = dingtalkRobotSendAPI.send(config.getNotice().getToken(), msg);
+        Object result = feign.send(config.getNotice().getToken(), msg);
         log.info(JSONUtil.writeValueAsString(result));
+    }
+
+    public void send(String token, String message) {
+        DingtalkRobotSendFeign feign = buildFeign();
+        Gson gson = new GsonBuilder().create();
+        DingtalkMsg.Msg msg = gson.fromJson(message, DingtalkMsg.Msg.class);
+        feign.send(token, msg);
     }
 
 }

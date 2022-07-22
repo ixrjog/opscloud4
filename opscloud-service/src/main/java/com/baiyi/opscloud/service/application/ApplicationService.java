@@ -24,6 +24,8 @@ public interface ApplicationService {
 
     Application getByKey(String applicationKey);
 
+    Application getByName(String name);
+
     void add(Application application);
 
     void update(Application application);

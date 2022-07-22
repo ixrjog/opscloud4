@@ -68,6 +68,14 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    public Application getByName(String name) {
+        Example example = new Example(Application.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("name", name);
+        return applicationMapper.selectOneByExample(example);
+    }
+
+    @Override
     public void add(Application application) {
         applicationMapper.insert(application);
     }
