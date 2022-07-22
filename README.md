@@ -9,6 +9,14 @@ Welcome to the opscloud wiki!
 <img src="https://img.shields.io/badge/mysql-8-brightgreen.svg"></img>
 <br>
 
+我们掌握的技术
++ Java技术栈实现的堡垒机（支持容器），全面支持ED25519密钥格式
++ 跨境运维能力，多云组网
++ 3层DNS架构
++ 全域统一账户集成
++ 全冗余架构的持续集成平台（Java、H5、iOS、Android）
++ 无运维DevOps
+
 <img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/login_1.png" width="600"></img>
 
 #### 项目仓库
