@@ -19,7 +19,7 @@ public class SimpleAliyunClient {
         int RDS_INSTANCE_PAGE_SIZE = 30;
     }
 
-    protected IAcsClient buildAcsClient(String regionId, AliyunConfig.Aliyun aliyun) {
+    public IAcsClient buildAcsClient(String regionId, AliyunConfig.Aliyun aliyun) {
         String defRegionId = StringUtils.isEmpty(aliyun.getRegionId()) ? aliyun.getRegionId() : regionId;
         IClientProfile profile = DefaultProfile.getProfile(defRegionId, aliyun.getAccount().getAccessKeyId(), aliyun.getAccount().getSecret());
         return new DefaultAcsClient(profile);
