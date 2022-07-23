@@ -33,10 +33,12 @@ public class AliyunEcrTest extends BaseAliyunTest {
     }
 
     @Test
-    void xx(){
+    void xx() {
+        Long date = System.currentTimeMillis();
         AliyunConfig config = getConfig();
-        aliyunVoiceNotifyDriver.singleCallByTts("eu-west-1",config.getAliyun(),"15067127069","TTS_246450043");
-
+//        String callId = aliyunVoiceNotifyDriver.singleCallByTts("eu-west-1", config.getAliyun(), "15067127069", "TTS_246450043");
+        String callId = "130069420358^116847965358";
+        aliyunVoiceNotifyDriver.queryCallDetailByCallId("eu-west-1", config.getAliyun(), callId, date);
     }
 
 

@@ -17,12 +17,14 @@ import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.collect.Maps;
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -55,7 +57,10 @@ public class ConsulAlertRule extends AbstractAlertRule {
     @Resource
     private UserService userService;
 
-    private static Map<String, String> DINGTALK_TOKEN_MAP = Maps.newHashMap();
+    /**
+     * Pair<dingTalkToken, ttsCode>
+     */
+    private static Map<String, Pair<String, String>> DINGTALK_TOKEN_MAP = Maps.newHashMap();
 
     @InstanceHealth // 实例健康检查，高优先级
     @Scheduled(initialDelay = 8000, fixedRate = 120 * 1000)
@@ -93,7 +98,8 @@ public class ConsulAlertRule extends AbstractAlertRule {
     protected void preData(DatasourceInstance dsInstance, DatasourceConfig dsConfig) {
         ConsulConfig.Consul config = dsConfigHelper.build(dsConfig, ConsulConfig.class).getConsul();
         RULE_MAP.put(dsInstance.getUuid(), config.getStrategyMatchExpressions());
-        DINGTALK_TOKEN_MAP.put(dsInstance.getUuid(), config.getDingtalkToken());
+        Pair<String, String> pair = new ImmutablePair<>(config.getDingtalkToken(), config.getTtsCode());
+        DINGTALK_TOKEN_MAP.put(dsInstance.getUuid(), pair);
     }
 
     @Override
@@ -147,7 +153,8 @@ public class ConsulAlertRule extends AbstractAlertRule {
                 .collect(Collectors.toList());
         AlertNotifyMedia media = AlertNotifyMedia.builder()
                 .users(users)
-                .dingtalkToken(DINGTALK_TOKEN_MAP.get(context.getSource()))
+                .dingtalkToken(DINGTALK_TOKEN_MAP.get(context.getSource()).getLeft())
+                .ttsCode(DINGTALK_TOKEN_MAP.get(context.getSource()).getRight())
                 .build();
         alertStrategy.executeAlertStrategy(media, context);
     }

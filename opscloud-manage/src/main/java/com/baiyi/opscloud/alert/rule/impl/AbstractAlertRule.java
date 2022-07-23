@@ -3,6 +3,7 @@ package com.baiyi.opscloud.alert.rule.impl;
 import com.baiyi.opscloud.alert.rule.IRule;
 import com.baiyi.opscloud.common.alert.AlertContext;
 import com.baiyi.opscloud.common.alert.AlertRuleMatchExpression;
+import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.base.IInstanceType;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -10,7 +11,9 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 
@@ -26,10 +29,14 @@ import java.util.stream.Collectors;
  * @Since 1.0
  */
 
+@Slf4j
 public abstract class AbstractAlertRule implements IRule, IInstanceType {
 
     @Value("${spring.profiles.active}")
     protected String env;
+
+    @Resource
+    private RedisUtil redisUtil;
 
     @Resource
     protected DsConfigHelper dsConfigHelper;
@@ -39,6 +46,8 @@ public abstract class AbstractAlertRule implements IRule, IInstanceType {
 
     @Resource
     protected DsInstanceAssetFacade dsInstanceAssetFacade;
+
+    private static final String PREFIX = "alert_rule";
 
     protected static Map<String, List<AlertRuleMatchExpression>> RULE_MAP = Maps.newHashMap();
 
@@ -63,6 +72,10 @@ public abstract class AbstractAlertRule implements IRule, IInstanceType {
                 .collect(Collectors.toList());
         for (AlertRuleMatchExpression item : matchExpressions) {
             if (evaluate(asset, item)) {
+                if (!failureDeadline(asset, item))
+                    break;
+                if (silence(asset, item))
+                    break;
                 execute(converterContext(asset, item));
                 break;
             }
@@ -72,5 +85,42 @@ public abstract class AbstractAlertRule implements IRule, IInstanceType {
     protected abstract AlertContext converterContext(DsAssetVO.Asset asset, AlertRuleMatchExpression matchExpression);
 
     protected abstract void preData(DatasourceInstance dsInstance, DatasourceConfig dsConfig);
+
+    private String getCacheKeyPrefix(DsAssetVO.Asset asset) {
+        return Joiner.on("#").join(PREFIX, getInstanceType().toLowerCase(), asset.getInstanceUuid(), asset.getAssetKey());
+    }
+
+    @Override
+    public Boolean failureDeadline(DsAssetVO.Asset asset, AlertRuleMatchExpression matchExpression) {
+        // 无容忍，直接告警
+        if (matchExpression.getFailureThreshold() == 0)
+            return true;
+        String cacheKey = Joiner.on("#").join(getCacheKeyPrefix(asset), matchExpression.getWeight(), "failureThreshold");
+        if (redisUtil.hasKey(cacheKey)) {
+            Integer count = (Integer) redisUtil.get(cacheKey);
+            if (count >= matchExpression.getFailureThreshold() - 1) {
+                log.error("达到错误阈值，key = {}", cacheKey);
+                return true;
+            }
+            redisUtil.incr(cacheKey, 1);
+            log.warn("发生故障，当前次数 {}, key = {}", count + 1, cacheKey);
+            return false;
+        }
+        redisUtil.set(cacheKey, 1, 60L * matchExpression.getFailureThreshold() + 30L);
+        log.warn("发生故障，当前次数 1, key = {}", cacheKey);
+        return false;
+    }
+
+    @Override
+    public Boolean silence(DsAssetVO.Asset asset, AlertRuleMatchExpression matchExpression) {
+        String cacheKey = Joiner.on("#").join(getCacheKeyPrefix(asset), matchExpression.getWeight());
+        if (redisUtil.hasKey(cacheKey)) {
+            log.info("告警规则静默中，key = {}", cacheKey);
+            return true;
+        }
+        redisUtil.set(cacheKey, true, matchExpression.getSilenceSeconds());
+        return false;
+    }
+
 
 }

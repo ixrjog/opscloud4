@@ -21,4 +21,13 @@ public class AlertRuleMatchExpression {
     private String severity;
     private String operator;
     private String values;
+    /**
+     * 故障次数
+     */
+    private Integer failureThreshold;
+
+    /**
+     * 沉默时间（秒）
+     */
+    private Integer silenceSeconds;
 }

@@ -24,4 +24,6 @@ public class AlertNotifyMedia {
 
     private String dingtalkToken;
 
+    private String ttsCode;
+
 }

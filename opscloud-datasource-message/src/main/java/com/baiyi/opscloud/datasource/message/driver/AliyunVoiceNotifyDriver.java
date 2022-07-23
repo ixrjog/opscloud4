@@ -47,7 +47,26 @@ public class AliyunVoiceNotifyDriver {
             e.printStackTrace();
         }
         return StringUtils.EMPTY;
-
     }
+
+    public String queryCallDetailByCallId(String regionId, AliyunConfig.Aliyun aliyun, String callId, Long queryDate) {
+        CommonRequest request = new CommonRequest();
+        request.setMethod(MethodType.POST);
+        request.setDomain("dyvmsapi.aliyuncs.com");
+        request.setVersion("2017-05-25");
+        request.setAction("QueryCallDetailByCallId");
+        request.putQueryParameter("ProdId", "11000000300006");
+        request.putQueryParameter("CallId", callId);
+        request.putQueryParameter("QueryDate", String.valueOf(queryDate));
+        IAcsClient iAcsClient = aliyunClient.buildAcsClient(regionId, aliyun);
+        try {
+            CommonResponse response = iAcsClient.getCommonResponse(request);
+            System.err.println(response);
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return StringUtils.EMPTY;
+    }
+
 
 }

@@ -13,5 +13,9 @@ public interface IRule {
 
     Boolean evaluate(DsAssetVO.Asset asset, AlertRuleMatchExpression matchExpression);
 
+    Boolean failureDeadline(DsAssetVO.Asset asset, AlertRuleMatchExpression matchExpression);
+
+    Boolean silence(DsAssetVO.Asset asset, AlertRuleMatchExpression matchExpression);
+
     void execute(AlertContext context);
 }
