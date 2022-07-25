@@ -63,7 +63,7 @@ public class ConsulAlertRule extends AbstractAlertRule {
     private static Map<String, Pair<String, String>> DINGTALK_TOKEN_MAP = Maps.newHashMap();
 
     @InstanceHealth // 实例健康检查，高优先级
-    @Scheduled(initialDelay = 8000, fixedRate = 60 * 1000)
+    @Scheduled(cron = "10 */1 * * * ?")
     @SchedulerLock(name = "consul_alert_rule_evaluate_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
     public void ruleEvaluate() {
         // 非生产环境不执行任务
