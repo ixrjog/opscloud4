@@ -1,13 +1,14 @@
 package com.baiyi.opscloud.service.server.impl;
 
 import com.baiyi.opscloud.common.annotation.EventPublisher;
+import com.baiyi.opscloud.common.annotation.ServiceExceptionCatch;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
-import com.baiyi.opscloud.domain.generator.opscloud.Server;
-import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.EventActionTypeEnum;
+import com.baiyi.opscloud.domain.generator.opscloud.Server;
+import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
@@ -45,12 +46,12 @@ public class ServerServiceImpl extends AbstractBusinessService<Server> implement
     }
 
     @Override
-    public Server getByUniqueKey(Integer envType,Integer serialNumber,Integer serverGroupId) {
+    public Server getByUniqueKey(Integer envType, Integer serialNumber, Integer serverGroupId) {
         Example example = new Example(Server.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("envType",envType)
-                .andEqualTo("serialNumber",serialNumber)
-                .andEqualTo("serverGroupId",serverGroupId);
+        criteria.andEqualTo("envType", envType)
+                .andEqualTo("serialNumber", serialNumber)
+                .andEqualTo("serverGroupId", serverGroupId);
         return serverMapper.selectOneByExample(example);
     }
 
@@ -63,7 +64,7 @@ public class ServerServiceImpl extends AbstractBusinessService<Server> implement
     }
 
     @Override
-    public Server getByKey(String key){
+    public Server getByKey(String key) {
         return getByPrivateIp(key);
     }
 
@@ -95,6 +96,7 @@ public class ServerServiceImpl extends AbstractBusinessService<Server> implement
     }
 
     @Override
+    @ServiceExceptionCatch(message = "新增服务器错误: 请确认IP、SerialNumber等字段是否有冲突!")
     @EventPublisher(eventAction = EventActionTypeEnum.CREATE)
     public void add(Server server) {
         server.setId(null);
@@ -102,6 +104,7 @@ public class ServerServiceImpl extends AbstractBusinessService<Server> implement
     }
 
     @Override
+    @ServiceExceptionCatch(message = "更新服务器错误: 请确认IP、SerialNumber等字段是否有冲突!")
     @EventPublisher(eventAction = EventActionTypeEnum.UPDATE)
     public void update(Server server) {
         serverMapper.updateByPrimaryKey(server);
@@ -117,6 +120,7 @@ public class ServerServiceImpl extends AbstractBusinessService<Server> implement
         serverMapper.deleteByPrimaryKey(id);
     }
 
+    @Override
     @EventPublisher(eventAction = EventActionTypeEnum.DELETE)
     public void delete(Server server) {
         serverMapper.deleteByPrimaryKey(server.getId());

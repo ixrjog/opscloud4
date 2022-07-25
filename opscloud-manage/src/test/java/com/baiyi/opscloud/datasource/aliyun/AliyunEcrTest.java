@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.datasource.aliyun;
 
 import com.aliyuncs.cr.model.v20181201.ListRepositoryResponse;
+import com.baiyi.opscloud.alert.notify.impl.SmsNotifyActivity;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.acr.driver.AliyunAcrRepositoryDriver;
 import com.baiyi.opscloud.datasource.aliyun.base.BaseAliyunTest;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -23,6 +25,9 @@ public class AliyunEcrTest extends BaseAliyunTest {
     @Resource
     private AliyunVoiceNotifyDriver aliyunVoiceNotifyDriver;
 
+    @Resource
+    private SmsNotifyActivity smsNotifyActivity;
+
     private final static String instanceId = "cri-4v9b8l2gc3en0x34";
 
     @Test
@@ -33,13 +38,25 @@ public class AliyunEcrTest extends BaseAliyunTest {
     }
 
     @Test
-    void xx() {
+    void xx() throws InterruptedException {
         Long date = System.currentTimeMillis();
         AliyunConfig config = getConfig();
-//        String callId = aliyunVoiceNotifyDriver.singleCallByTts("eu-west-1", config.getAliyun(), "15067127069", "TTS_246450043");
-        String callId = "130069420358^116847965358";
+        String phone = "13456768044";
+        String ttsCode = "TTS_246450043";
+        String callId = aliyunVoiceNotifyDriver.singleCallByTts("eu-west-1", config.getAliyun(), phone, ttsCode);
+//        String callId = "130094535587^116873080590";
+        aliyunVoiceNotifyDriver.queryCallDetailByCallId("eu-west-1", config.getAliyun(), callId, date);
+        TimeUnit.SECONDS.sleep(10L);
+        aliyunVoiceNotifyDriver.queryCallDetailByCallId("eu-west-1", config.getAliyun(), callId, date);
+        TimeUnit.SECONDS.sleep(10L);
         aliyunVoiceNotifyDriver.queryCallDetailByCallId("eu-west-1", config.getAliyun(), callId, date);
     }
 
-
+    @Test
+    void xxx() {
+        String phone = "15067127069";
+        String ttsCode = "TTS_246450043";
+        AliyunConfig config = getConfig();
+        smsNotifyActivity.singleCall(config.getAliyun(), phone, ttsCode);
+    }
 }

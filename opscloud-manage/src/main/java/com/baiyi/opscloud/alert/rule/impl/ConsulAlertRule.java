@@ -64,7 +64,7 @@ public class ConsulAlertRule extends AbstractAlertRule {
 
     @InstanceHealth // 实例健康检查，高优先级
     @Scheduled(cron = "10 */1 * * * ?")
-    @SchedulerLock(name = "consul_alert_rule_evaluate_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
+    @SchedulerLock(name = "consul_alert_rule_evaluate_task", lockAtMostFor = "30s", lockAtLeastFor = "30s")
     public void ruleEvaluate() {
         // 非生产环境不执行任务
         if (ENV_PROD.equals(env)) {

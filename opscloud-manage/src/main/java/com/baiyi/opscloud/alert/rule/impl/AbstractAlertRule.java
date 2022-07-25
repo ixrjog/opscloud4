@@ -93,7 +93,7 @@ public abstract class AbstractAlertRule implements IRule, IInstanceType {
     @Override
     public Boolean failureDeadline(DsAssetVO.Asset asset, AlertRuleMatchExpression matchExpression) {
         // 无容忍，直接告警
-        if (matchExpression.getFailureThreshold() == 0)
+        if (matchExpression.getFailureThreshold() == 0 || matchExpression.getFailureThreshold() == 1)
             return true;
         String cacheKey = Joiner.on("#").join(getCacheKeyPrefix(asset), matchExpression.getWeight(), "failureThreshold");
         if (redisUtil.hasKey(cacheKey)) {
@@ -121,6 +121,4 @@ public abstract class AbstractAlertRule implements IRule, IInstanceType {
         redisUtil.set(cacheKey, true, matchExpression.getSilenceSeconds());
         return false;
     }
-
-
 }

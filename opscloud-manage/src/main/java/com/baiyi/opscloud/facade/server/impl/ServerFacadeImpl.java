@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.facade.server.impl;
 
 import com.baiyi.opscloud.common.annotation.EnvWrapper;
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.RegexUtil;
@@ -68,9 +67,6 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     public ServerVO.Server addServer(ServerVO.Server server) {
         Server pre = toDO(server);
         pre.setDisplayName(SimpleServerNameFacade.toServerName(pre));
-        if (serverService.getByUniqueKey(pre.getEnvType(), pre.getSerialNumber(), pre.getServerGroupId()) != null) {
-            throw new CommonRuntimeException("新增服务器错误: SerialNumber冲突!");
-        }
         serverService.add(pre);
         // 绑定资产
         server.setId(pre.getId());
@@ -80,19 +76,8 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     @Override
     public void updateServer(ServerVO.Server server) {
         Server pre = toDO(server);
-        Server originalServer = serverService.getById(pre.getId());
-        if (!originalServer.getSerialNumber().equals(pre.getSerialNumber())) {
-            // 判断SN是否重复
-            if (serverService.getByUniqueKey(pre.getEnvType(), pre.getSerialNumber(), pre.getServerGroupId()) != null) {
-                throw new CommonRuntimeException("更新服务器错误: SerialNumber冲突!");
-            }
-        }
-        try {
-            pre.setDisplayName(SimpleServerNameFacade.toServerName(pre));
-            serverService.update(pre);
-        } catch (Exception e) {
-            throw new CommonRuntimeException("更新服务器错误: 请确认IP、SerialNumber等字段是否有冲突!");
-        }
+        pre.setDisplayName(SimpleServerNameFacade.toServerName(pre));
+        serverService.update(pre);
     }
 
     @Async(CORE)

@@ -92,7 +92,7 @@ public class OtherTest extends BaseUnit {
     }
 
     @Test
-    void test3() {
+    void test3() throws InterruptedException {
         consulAlertRule.preData();
         DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
                 .assetType("CONSUL_SERVICE")
@@ -114,6 +114,7 @@ public class OtherTest extends BaseUnit {
         assetList.forEach(asset -> consulAlertRule.evaluate(asset));
         print("55555");
         assetList.forEach(asset -> consulAlertRule.evaluate(asset));
+        TimeUnit.MINUTES.sleep(20L);
     }
 
     @Test
