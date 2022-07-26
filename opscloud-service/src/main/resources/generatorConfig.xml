@@ -95,7 +95,7 @@
         <!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
         <!--        </table>-->
 
-        <table tableName="application_resource_operation_log">
+        <table tableName="auth_platform">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 

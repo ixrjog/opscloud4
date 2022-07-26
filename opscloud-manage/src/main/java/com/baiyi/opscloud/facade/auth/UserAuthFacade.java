@@ -21,7 +21,7 @@ public interface UserAuthFacade {
      */
     LogVO.Login login(LoginParam.Login loginParam);
 
-    LogVO.Login platformLogin(LoginParam.Login loginParam);
+    LogVO.Login platformLogin(LoginParam.PlatformLogin loginParam);
 
     /**
      * 用户登出
