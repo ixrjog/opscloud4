@@ -44,6 +44,7 @@ public class DingtalkNotifyActivity extends AbstractNotifyActivity {
             contentMap.put("value", context.getValue());
             contentMap.put("alertTime", context.getAlertTime());
             contentMap.put("users", media.getUsers());
+            contentMap.put("metadata", context.getMetadata());
             try {
                 MessageTemplate messageTemplate = messageTemplateService.getByUniqueKey(CONSUL_ALERT, "DINGTALK_APP", "markdown");
                 if (messageTemplate == null) return;
