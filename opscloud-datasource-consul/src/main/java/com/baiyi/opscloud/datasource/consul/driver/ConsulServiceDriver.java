@@ -37,9 +37,9 @@ public class ConsulServiceDriver {
         return consulAPI.listServices(dataCenter);
     }
 
-    public List<ConsulHealth.Health> listHealthService(ConsulConfig.Consul config, String dataCenter, String service) {
+    public List<ConsulHealth.Health> listHealthService(ConsulConfig.Consul config, String service, String dataCenter) {
         ConsulServiceV1Feign consulAPI = buildFeign(config);
-        return consulAPI.listHealthService(dataCenter, service);
+        return consulAPI.listHealthService(service, dataCenter);
     }
 
 }
