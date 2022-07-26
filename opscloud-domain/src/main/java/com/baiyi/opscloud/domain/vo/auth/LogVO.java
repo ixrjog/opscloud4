@@ -22,4 +22,5 @@ public class LogVO {
         private String uuid;
         private String token;
     }
+
 }

@@ -144,7 +144,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     }
 
     @Override
-    public LogVO.Login simpleLogin(LoginParam.Login loginParam) {
+    public LogVO.Login platformLogin(LoginParam.Login loginParam) {
         User user = userService.getByUsername(loginParam.getUsername());
         // 尝试使用authProvider 认证
         if (authProviderManager.tryLogin(user, loginParam)) {

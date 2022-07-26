@@ -40,6 +40,24 @@ public class LoginParam {
     @Data
     @NoArgsConstructor
     @ApiModel
+    @AllArgsConstructor
+    public static class PlatformLogin extends Login {
+
+        @Valid
+        @ApiParam(required = true)
+        @ApiModelProperty(value = "平台名称(用于审计)")
+        public String platform;
+
+        @Valid
+        @ApiParam(required = true)
+        @ApiModelProperty(value = "平台令牌用于鉴权")
+        public String platformToken;
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
     public static class Logout {
 
         @Valid
@@ -50,5 +68,6 @@ public class LoginParam {
         @Valid
         @ApiModelProperty(value = "令牌")
         private String token;
+
     }
 }
