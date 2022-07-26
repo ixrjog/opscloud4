@@ -79,8 +79,8 @@ public class ConsulHealth {
         @JsonProperty("Notes")
         private String notes;
 
-        @JsonProperty("Output")
-        private String output;
+//        @JsonProperty("Output")
+//        private String output;
 
         @JsonProperty("ServiceID")
         private String serviceID;

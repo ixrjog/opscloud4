@@ -2,10 +2,15 @@ package com.baiyi.opscloud.other;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.alert.rule.impl.ConsulAlertRule;
+import com.baiyi.opscloud.common.datasource.ConsulConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
+import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.workorder.validator.QueueValidator;
 import com.google.common.collect.Maps;
 import lombok.Builder;
@@ -45,6 +50,12 @@ public class OtherTest extends BaseUnit {
 
     @Resource
     private RedisUtil redisUtil;
+
+    @Resource
+    private DsInstanceService dsInstanceService;
+
+    @Resource
+    private DsConfigHelper dsConfigHelper;
 
     @Data
     @Builder
@@ -104,16 +115,19 @@ public class OtherTest extends BaseUnit {
                 .relation(false)
                 .build();
         List<DsAssetVO.Asset> assetList = dsInstanceAssetFacade.queryAssetPage(pageQuery).getData();
+        DatasourceInstance dsInstance = dsInstanceService.getById(36);
+        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(dsInstance.getUuid());
+        ConsulConfig.Consul consul = dsConfigHelper.build(dsConfig, ConsulConfig.class).getConsul();
         print("11111");
-        assetList.forEach(asset -> consulAlertRule.evaluate(asset));
+        assetList.forEach(asset -> consulAlertRule.evaluate(asset, consul.getStrategyMatchExpressions()));
         print("22222");
-        assetList.forEach(asset -> consulAlertRule.evaluate(asset));
+        assetList.forEach(asset -> consulAlertRule.evaluate(asset, consul.getStrategyMatchExpressions()));
         print("33333");
-        assetList.forEach(asset -> consulAlertRule.evaluate(asset));
+        assetList.forEach(asset -> consulAlertRule.evaluate(asset, consul.getStrategyMatchExpressions()));
         print("44444");
-        assetList.forEach(asset -> consulAlertRule.evaluate(asset));
+        assetList.forEach(asset -> consulAlertRule.evaluate(asset, consul.getStrategyMatchExpressions()));
         print("55555");
-        assetList.forEach(asset -> consulAlertRule.evaluate(asset));
+        assetList.forEach(asset -> consulAlertRule.evaluate(asset, consul.getStrategyMatchExpressions()));
         TimeUnit.MINUTES.sleep(20L);
     }
 

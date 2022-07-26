@@ -49,23 +49,18 @@ public abstract class AbstractAlertRule implements IRule, IInstanceType {
 
     private static final String PREFIX = "alert_rule";
 
-    protected static Map<String, List<AlertRuleMatchExpression>> RULE_MAP = Maps.newHashMap();
-
-    protected void refreshData() {
-        RULE_MAP.clear();
-    }
+    protected static Map<String, DatasourceConfig> DS_CONFIG_MAP = Maps.newHashMap();
 
     public void preData() {
-        refreshData();
+        DS_CONFIG_MAP.clear();
         List<DatasourceInstance> datasourceInstances = dsInstanceService.listByInstanceType(getInstanceType());
         datasourceInstances.forEach(dsInstance -> {
             DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(dsInstance.getUuid());
-            preData(dsInstance, dsConfig);
+            DS_CONFIG_MAP.put(dsInstance.getUuid(), dsConfig);
         });
     }
 
-    public void evaluate(DsAssetVO.Asset asset) {
-        List<AlertRuleMatchExpression> alertRuleMatchExpressions = RULE_MAP.get(asset.getInstanceUuid());
+    public void evaluate(DsAssetVO.Asset asset, List<AlertRuleMatchExpression> alertRuleMatchExpressions) {
         if (CollectionUtils.isEmpty(alertRuleMatchExpressions)) return;
         List<AlertRuleMatchExpression> matchExpressions = alertRuleMatchExpressions.stream()
                 .sorted(Comparator.comparing(AlertRuleMatchExpression::getWeight).reversed())
@@ -84,9 +79,7 @@ public abstract class AbstractAlertRule implements IRule, IInstanceType {
 
     protected abstract AlertContext converterContext(DsAssetVO.Asset asset, AlertRuleMatchExpression matchExpression);
 
-    protected abstract void preData(DatasourceInstance dsInstance, DatasourceConfig dsConfig);
-
-    private String getCacheKeyPrefix(DsAssetVO.Asset asset) {
+    protected String getCacheKeyPrefix(DsAssetVO.Asset asset) {
         return Joiner.on("#").join(PREFIX, getInstanceType().toLowerCase(), asset.getInstanceUuid(), asset.getAssetKey());
     }
 

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * @Author 修远
  * @Date 2022/7/21 9:37 AM
@@ -58,5 +60,7 @@ public class AlertContext {
      * 事件开始时间的时间戳
      */
     private Long alertTime;
+
+    private List<Metadata> metadata;
 
 }
