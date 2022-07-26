@@ -97,7 +97,7 @@ public class ServerVO {
         private String publicIp;
 
         @ApiModelProperty(value = "私网ip")
-        @NotNull(message = "私网ip不能为空")
+        @NotBlank(message = "私网ip不能为空")
         private String privateIp;
 
         @ApiModelProperty(value = "服务器类型", example = "1")

@@ -35,6 +35,8 @@ public class ConsulConfig extends BaseDsConfig {
 
         private String dingtalkToken;
 
+        private String ttsCode;
+
     }
 
 }
