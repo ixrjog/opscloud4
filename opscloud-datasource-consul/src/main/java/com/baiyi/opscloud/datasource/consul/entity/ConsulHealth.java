@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.consul.entity;
 
+import com.baiyi.opscloud.common.base.IToString;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,7 @@ public class ConsulHealth {
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Health implements Serializable {
+    public static class Health extends IToString implements Serializable {
 
         private static final long serialVersionUID = -8728643808503511223L;
 
@@ -32,7 +33,8 @@ public class ConsulHealth {
 
         @JsonProperty("Service")
         private Service service;
-        
+
+
     }
 
     @Data

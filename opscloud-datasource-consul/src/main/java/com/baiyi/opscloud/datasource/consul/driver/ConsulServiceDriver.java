@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.datasource.consul.driver;
 
 import com.baiyi.opscloud.common.datasource.ConsulConfig;
+import com.baiyi.opscloud.datasource.consul.entity.ConsulHealth;
 import com.baiyi.opscloud.datasource.consul.entity.ConsulService;
 import com.baiyi.opscloud.datasource.consul.feign.ConsulServiceV1Feign;
 import feign.Feign;
@@ -31,9 +32,14 @@ public class ConsulServiceDriver {
                 .target(ConsulServiceV1Feign.class, config.getUrl());
     }
 
-    public List<ConsulService.Service> listServices(ConsulConfig.Consul config,String dataCenter) {
+    public List<ConsulService.Service> listServices(ConsulConfig.Consul config, String dataCenter) {
         ConsulServiceV1Feign consulAPI = buildFeign(config);
         return consulAPI.listServices(dataCenter);
+    }
+
+    public List<ConsulHealth.Health> listHealthService(ConsulConfig.Consul config, String dataCenter, String service) {
+        ConsulServiceV1Feign consulAPI = buildFeign(config);
+        return consulAPI.listHealthService(dataCenter, service);
     }
 
 }
