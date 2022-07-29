@@ -4,7 +4,7 @@
     <jmxConfigurator/>
 
     <property name="pattern"
-              value="[%d{yyyy-MM-dd HH:mm:ss}] [%p] [%10.10t] [%X{sentryTraceId}] [%c{1}.%M] Line:[%L] - %m%n"/>
+              value="[%d{yyyy-MM-dd HH:mm:ss}] [%p] [%10.10t] [%c{1}.%M] Line:[%L] - %m%n"/>
 
     <!-- 获取application.yml中的变量，使用方式${basedir}. 缺点，会额外生成一个bootstrap的日志文件目录。 取bootstrap中的文件，不会有问题 -->
     <!--<springProperty scope="" name="baseDir" source="spring.application.name"/>-->
