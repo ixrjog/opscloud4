@@ -34,7 +34,6 @@ public class ConsulHealth {
         @JsonProperty("Service")
         private Service service;
 
-
     }
 
     @Data

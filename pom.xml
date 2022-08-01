@@ -202,7 +202,7 @@
         <dependency>
             <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.2.0</version>
+            <version>0.2.2</version>
         </dependency>
 
     </dependencies>
@@ -313,7 +313,6 @@
                 <artifactId>opscloud-datasource-aliyun-ram</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
 
             <dependency>
                 <groupId>com.baiyi</groupId>
