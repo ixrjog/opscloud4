@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.aliyun;
 
 import com.aliyuncs.cr.model.v20181201.ListRepositoryResponse;
-import com.baiyi.opscloud.alert.notify.impl.SmsNotifyActivity;
+import com.baiyi.opscloud.alert.notify.impl.VmsNotifyActivity;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.acr.driver.AliyunAcrRepositoryDriver;
 import com.baiyi.opscloud.datasource.aliyun.base.BaseAliyunTest;
@@ -26,7 +26,7 @@ public class AliyunEcrTest extends BaseAliyunTest {
     private AliyunVoiceNotifyDriver aliyunVoiceNotifyDriver;
 
     @Resource
-    private SmsNotifyActivity smsNotifyActivity;
+    private VmsNotifyActivity vmsNotifyActivity;
 
     private final static String instanceId = "cri-4v9b8l2gc3en0x34";
 
@@ -57,6 +57,6 @@ public class AliyunEcrTest extends BaseAliyunTest {
         String phone = "15067127069";
         String ttsCode = "TTS_246450043";
         AliyunConfig config = getConfig();
-        smsNotifyActivity.singleCall(config.getAliyun(), phone, ttsCode);
+        vmsNotifyActivity.singleCall(config.getAliyun(), phone, ttsCode);
     }
 }

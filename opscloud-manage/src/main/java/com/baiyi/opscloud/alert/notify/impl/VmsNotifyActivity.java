@@ -1,11 +1,13 @@
 package com.baiyi.opscloud.alert.notify.impl;
 
 import com.baiyi.opscloud.alert.notify.NotifyMediaEnum;
+import com.baiyi.opscloud.alert.notify.NotifyStatusEnum;
 import com.baiyi.opscloud.common.alert.AlertContext;
 import com.baiyi.opscloud.common.alert.AlertNotifyMedia;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.message.driver.AliyunVoiceNotifyDriver;
+import com.baiyi.opscloud.domain.generator.opscloud.AlertNotifyHistory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -21,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class SmsNotifyActivity extends AbstractNotifyActivity {
+public class VmsNotifyActivity extends AbstractNotifyActivity {
 
     @Autowired
     private ThreadPoolTaskExecutor commonExecutor;
@@ -44,11 +46,20 @@ public class SmsNotifyActivity extends AbstractNotifyActivity {
     public void doNotify(AlertNotifyMedia media, AlertContext context) {
         AliyunConfig.Aliyun config = getConfig().getAliyun();
         media.getUsers().forEach(
-                user -> commonExecutor.submit(() -> singleCall(config, user.getPhone(), media.getTtsCode()))
+                user -> commonExecutor.submit(() -> {
+                    AlertNotifyHistory alertNotifyHistory = buildAlertNotifyHistory(context);
+                    alertNotifyHistory.setPhone(user.getPhone());
+                    if (singleCall(config, user.getPhone(), media.getTtsCode())) {
+                        alertNotifyHistory.setAlertNotifyStatus(NotifyStatusEnum.CALL_OK.getName());
+                    } else {
+                        alertNotifyHistory.setAlertNotifyStatus(NotifyStatusEnum.CALL_ERR.getName());
+                    }
+                    alertNotifyHistoryService.add(alertNotifyHistory);
+                })
         );
     }
 
-    public void singleCall(AliyunConfig.Aliyun config, String phone, String ttsCode) {
+    public Boolean singleCall(AliyunConfig.Aliyun config, String phone, String ttsCode) {
         try {
             long callTime = System.currentTimeMillis();
             int time = 1;
@@ -56,7 +67,7 @@ public class SmsNotifyActivity extends AbstractNotifyActivity {
             do {
                 TimeUnit.SECONDS.sleep(90L);
                 if (aliyunVoiceNotifyDriver.queryCallDetailByCallId(config.getRegionId(), config, callId, callTime)) {
-                    break;
+                    return true;
                 }
                 log.error("电话 = {} , 未接通，90秒后继续拨打，当前第 {} 次", phone, time);
                 time++;
@@ -66,10 +77,11 @@ public class SmsNotifyActivity extends AbstractNotifyActivity {
         } catch (InterruptedException e) {
             log.error(e.getMessage(), e);
         }
+        return false;
     }
 
     @Override
     public String getKey() {
-        return NotifyMediaEnum.SMS.name();
+        return NotifyMediaEnum.VMS.name();
     }
 }

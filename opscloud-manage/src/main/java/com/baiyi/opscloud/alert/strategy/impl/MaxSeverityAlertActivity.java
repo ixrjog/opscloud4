@@ -23,7 +23,7 @@ public class MaxSeverityAlertActivity extends AbstractAlertActivity {
 
     @Override
     public void executeAlertStrategy(AlertNotifyMedia media, AlertContext context) {
-        NotifyFactory.getNotifyActivity(NotifyMediaEnum.SMS.name()).doNotify(media, context);
+        NotifyFactory.getNotifyActivity(NotifyMediaEnum.VMS.name()).doNotify(media, context);
         NotifyFactory.getNotifyActivity(NotifyMediaEnum.DINGTALK.name()).doNotify(media, context);
     }
 }

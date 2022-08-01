@@ -50,6 +50,7 @@ public class DingtalkNotifyActivity extends AbstractNotifyActivity {
                 if (messageTemplate == null) return;
                 String msg = BeetlUtil.renderTemplate(messageTemplate.getMsgTemplate(), contentMap);
                 dingtalkSendHelper.send(media.getDingtalkToken(), msg);
+                alertNotifyHistoryService.add(buildAlertNotifyHistory(context));
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }

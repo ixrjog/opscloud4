@@ -1,6 +1,24 @@
-package com.baiyi.opscloud.alert.notify;/**
+package com.baiyi.opscloud.alert.notify;
+
+import lombok.Getter;
+
+/**
  * @Author 修远
  * @Date 2022/7/29 7:21 PM
  * @Since 1.0
- */public enum NotifyStatusEnum {
+ */
+
+
+@Getter
+public enum NotifyStatusEnum {
+
+    CALL_OK("用户接听"),
+    CALL_ERR("用户未接听")
+    ;
+
+    private String name;
+
+    NotifyStatusEnum(String name) {
+        this.name = name;
+    }
 }
