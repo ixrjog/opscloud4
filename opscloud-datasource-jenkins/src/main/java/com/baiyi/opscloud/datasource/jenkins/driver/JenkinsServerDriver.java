@@ -1,9 +1,10 @@
 package com.baiyi.opscloud.datasource.jenkins.driver;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
-import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
 import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
+import com.baiyi.opscloud.datasource.jenkins.helper.JenkinsVersion;
 import com.baiyi.opscloud.datasource.jenkins.model.Computer;
+import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -26,6 +27,16 @@ public class JenkinsServerDriver {
             throw new IOException(e.getMessage());
         }
         return result;
+    }
+
+    //    @Retryable(value = Exception.class, maxAttempts = 5, backoff = @Backoff(delay = 1000))
+    public static JenkinsVersion getVersion(JenkinsConfig.Jenkins jenkins) throws URISyntaxException, IOException{
+        JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
+        try {
+            return jenkinsServer.getVersion();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

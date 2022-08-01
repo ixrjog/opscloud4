@@ -61,6 +61,7 @@ white:
     - /api/ws/kubernetes/terminal
     - /api/ws/terminal/session/audit
     - /api/ws/server/task/play
+    - /api/ws/jenkins/build/executor/status
     - /api/out/ticket/approve
 
 spring:
