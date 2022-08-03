@@ -17,6 +17,7 @@ public enum DsAssetTypeConstants {
     RAM_USER,
     RAM_POLICY,
     RAM_ACCESS_KEY,
+    ACR_REPOSITORY,
 
     RDS_INSTANCE,
     RDS_DATABASE,
