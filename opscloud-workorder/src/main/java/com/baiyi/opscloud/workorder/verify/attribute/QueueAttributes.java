@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.workorder.validator.attribute;
+package com.baiyi.opscloud.workorder.verify.attribute;
 
 import lombok.Builder;
 import lombok.Data;

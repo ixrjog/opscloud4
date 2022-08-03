@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.workorder.validator.attribute;
+package com.baiyi.opscloud.workorder.verify.attribute;
 
 /**
  * @Author baiyi

@@ -11,7 +11,7 @@ import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
-import com.baiyi.opscloud.workorder.validator.QueueValidator;
+import com.baiyi.opscloud.workorder.verify.QueueValidator;
 import com.google.common.collect.Maps;
 import lombok.Builder;
 import lombok.Data;
@@ -99,7 +99,7 @@ public class OtherTest extends BaseUnit {
         attributes.put("MessageRetentionPeriod", "1");
         attributes.put("ReceiveMessageWaitTimeSeconds", "1");
         attributes.put("VisibilityTimeout", "1");
-        queueValidator.validate(attributes);
+        queueValidator.verify(attributes);
     }
 
     @Test
