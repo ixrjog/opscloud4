@@ -37,6 +37,8 @@ public class ConsulConfig extends BaseDsConfig {
 
         private String ttsCode;
 
+        private String templateCode;
+
     }
 
 }

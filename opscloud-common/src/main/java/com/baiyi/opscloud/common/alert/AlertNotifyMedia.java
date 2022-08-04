@@ -26,4 +26,6 @@ public class AlertNotifyMedia {
 
     private String ttsCode;
 
+    private String templateCode;
+
 }

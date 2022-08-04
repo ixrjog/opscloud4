@@ -1,9 +1,10 @@
 package com.baiyi.opscloud.alert.strategy.impl;
 
-import com.baiyi.opscloud.common.alert.AlertContext;
-import com.baiyi.opscloud.common.alert.AlertNotifyMedia;
 import com.baiyi.opscloud.alert.strategy.AlertSeverityEnum;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @Author 修远
@@ -20,7 +21,7 @@ public class LowSeverityAlertActivity extends AbstractAlertActivity {
     }
 
     @Override
-    public void executeAlertStrategy(AlertNotifyMedia media, AlertContext context) {
-
+    protected List<String> getMediaList() {
+        return Collections.emptyList();
     }
 }

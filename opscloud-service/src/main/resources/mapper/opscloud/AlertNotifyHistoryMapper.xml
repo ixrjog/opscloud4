@@ -15,7 +15,7 @@
         <result column="alert_type" jdbcType="VARCHAR" property="alertType"/>
         <result column="service" jdbcType="VARCHAR" property="service"/>
         <result column="alert_notify_media" jdbcType="VARCHAR" property="alertNotifyMedia"/>
-        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
         <result column="alert_notify_status" jdbcType="VARCHAR" property="alertNotifyStatus"/>
         <result column="alert_time" jdbcType="TIMESTAMP" property="alertTime"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>

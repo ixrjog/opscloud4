@@ -170,6 +170,7 @@ public class ConsulAlertRule extends AbstractAlertRule {
                 .users(users)
                 .dingtalkToken(consul.getDingtalkToken())
                 .ttsCode(consul.getTtsCode())
+                .templateCode(consul.getTemplateCode())
                 .build();
         alertStrategy.executeAlertStrategy(media, context);
     }

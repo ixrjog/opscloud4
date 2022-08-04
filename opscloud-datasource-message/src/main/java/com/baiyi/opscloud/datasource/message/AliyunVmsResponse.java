@@ -8,7 +8,7 @@ import lombok.Data;
  * @Date 2022/7/23 12:16 AM
  * @Since 1.0
  */
-public class AliyunVoiceNotifyResponse {
+public class AliyunVmsResponse {
 
     @Data
     public static class SingleCallByTts {

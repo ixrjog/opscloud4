@@ -65,7 +65,7 @@ public class AlertNotifyHistory {
     @Column(name = "alert_notify_media")
     private String alertNotifyMedia;
 
-    private String phone;
+    private String username;
 
     /**
      * 告警通知状态

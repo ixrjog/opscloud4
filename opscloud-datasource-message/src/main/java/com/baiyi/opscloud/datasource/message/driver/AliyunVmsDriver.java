@@ -8,7 +8,7 @@ import com.aliyuncs.http.MethodType;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.datasource.aliyun.core.SimpleAliyunClient;
-import com.baiyi.opscloud.datasource.message.AliyunVoiceNotifyResponse;
+import com.baiyi.opscloud.datasource.message.AliyunVmsResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AliyunVoiceNotifyDriver {
+public class AliyunVmsDriver {
 
     private final SimpleAliyunClient aliyunClient;
 
@@ -38,10 +38,10 @@ public class AliyunVoiceNotifyDriver {
     // calld可以通过QueryCallDetailByCallId接口查询呼叫详情。
     public String singleCallByTts(String regionId, AliyunConfig.Aliyun aliyun, String phone, String ttsCode) {
         CommonRequest request = new CommonRequest();
-        request.setMethod(MethodType.POST);
-        request.setDomain("dyvmsapi.aliyuncs.com");
-        request.setVersion("2017-05-25");
-        request.setAction("SingleCallByTts");
+        request.setSysMethod(MethodType.POST);
+        request.setSysDomain("dyvmsapi.aliyuncs.com");
+        request.setSysVersion("2017-05-25");
+        request.setSysAction("SingleCallByTts");
         request.putQueryParameter("CalledShowNumber", CALL_SHOW_NUM);
         request.putQueryParameter("CalledNumber", phone);
         request.putQueryParameter("TtsCode", ttsCode);
@@ -49,8 +49,8 @@ public class AliyunVoiceNotifyDriver {
         try {
             CommonResponse response = iAcsClient.getCommonResponse(request);
             if (response.getHttpStatus() == 200) {
-                AliyunVoiceNotifyResponse.SingleCallByTts data =
-                        JSONUtil.readValue(response.getData(), AliyunVoiceNotifyResponse.SingleCallByTts.class);
+                AliyunVmsResponse.SingleCallByTts data =
+                        JSONUtil.readValue(response.getData(), AliyunVmsResponse.SingleCallByTts.class);
                 if (OK.equals(data.getCode()))
                     return data.getCallId();
                 log.error("singleCallByTts 失败，{}", data.getMessage());
@@ -63,10 +63,10 @@ public class AliyunVoiceNotifyDriver {
 
     public Boolean queryCallDetailByCallId(String regionId, AliyunConfig.Aliyun aliyun, String callId, Long queryDate) {
         CommonRequest request = new CommonRequest();
-        request.setMethod(MethodType.POST);
-        request.setDomain("dyvmsapi.aliyuncs.com");
-        request.setVersion("2017-05-25");
-        request.setAction("QueryCallDetailByCallId");
+        request.setSysMethod(MethodType.POST);
+        request.setSysDomain("dyvmsapi.aliyuncs.com");
+        request.setSysVersion("2017-05-25");
+        request.setSysAction("QueryCallDetailByCallId");
         request.putQueryParameter("ProdId", CALL_PROD_ID);
         request.putQueryParameter("CallId", callId);
         request.putQueryParameter("QueryDate", String.valueOf(queryDate));
@@ -74,8 +74,8 @@ public class AliyunVoiceNotifyDriver {
         try {
             CommonResponse response = iAcsClient.getCommonResponse(request);
             if (response.getHttpStatus() == 200) {
-                AliyunVoiceNotifyResponse.QueryCallDetailByCallId data =
-                        JSONUtil.readValue(response.getData(), AliyunVoiceNotifyResponse.QueryCallDetailByCallId.class);
+                AliyunVmsResponse.QueryCallDetailByCallId data =
+                        JSONUtil.readValue(response.getData(), AliyunVmsResponse.QueryCallDetailByCallId.class);
                 if (OK.equals(data.getCode())) {
                     ObjectMapper mapper = new ObjectMapper();
                     JsonNode jsonNode = mapper.readTree(data.getData());

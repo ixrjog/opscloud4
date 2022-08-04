@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.alert.AlertContext;
 import com.baiyi.opscloud.common.alert.AlertNotifyMedia;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
-import com.baiyi.opscloud.datasource.message.driver.AliyunVoiceNotifyDriver;
+import com.baiyi.opscloud.datasource.message.driver.AliyunVmsDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.AlertNotifyHistory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class VmsNotifyActivity extends AbstractNotifyActivity {
     private ThreadPoolTaskExecutor commonExecutor;
 
     @Resource
-    private AliyunVoiceNotifyDriver aliyunVoiceNotifyDriver;
+    private AliyunVmsDriver aliyunVmsDriver;
 
     @Resource
     private DsConfigHelper dsConfigHelper;
@@ -48,7 +48,7 @@ public class VmsNotifyActivity extends AbstractNotifyActivity {
         media.getUsers().forEach(
                 user -> commonExecutor.submit(() -> {
                     AlertNotifyHistory alertNotifyHistory = buildAlertNotifyHistory(context);
-                    alertNotifyHistory.setPhone(user.getPhone());
+                    alertNotifyHistory.setUsername(user.getUsername());
                     if (singleCall(config, user.getPhone(), media.getTtsCode())) {
                         alertNotifyHistory.setAlertNotifyStatus(NotifyStatusEnum.CALL_OK.getName());
                     } else {
@@ -63,16 +63,16 @@ public class VmsNotifyActivity extends AbstractNotifyActivity {
         try {
             long callTime = System.currentTimeMillis();
             int time = 1;
-            String callId = aliyunVoiceNotifyDriver.singleCallByTts(config.getRegionId(), config, phone, ttsCode);
+            String callId = aliyunVmsDriver.singleCallByTts(config.getRegionId(), config, phone, ttsCode);
             do {
                 TimeUnit.SECONDS.sleep(90L);
-                if (aliyunVoiceNotifyDriver.queryCallDetailByCallId(config.getRegionId(), config, callId, callTime)) {
+                if (aliyunVmsDriver.queryCallDetailByCallId(config.getRegionId(), config, callId, callTime)) {
                     return true;
                 }
                 log.error("电话 = {} , 未接通，90秒后继续拨打，当前第 {} 次", phone, time);
                 time++;
                 callTime = System.currentTimeMillis();
-                callId = aliyunVoiceNotifyDriver.singleCallByTts(config.getRegionId(), config, phone, ttsCode);
+                callId = aliyunVmsDriver.singleCallByTts(config.getRegionId(), config, phone, ttsCode);
             } while (time <= NO_CALL_TIME);
         } catch (InterruptedException e) {
             log.error(e.getMessage(), e);

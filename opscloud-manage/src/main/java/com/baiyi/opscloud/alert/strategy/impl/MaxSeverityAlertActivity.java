@@ -1,11 +1,11 @@
 package com.baiyi.opscloud.alert.strategy.impl;
 
-import com.baiyi.opscloud.common.alert.AlertContext;
-import com.baiyi.opscloud.common.alert.AlertNotifyMedia;
-import com.baiyi.opscloud.alert.notify.NotifyFactory;
 import com.baiyi.opscloud.alert.notify.NotifyMediaEnum;
 import com.baiyi.opscloud.alert.strategy.AlertSeverityEnum;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * @Author 修远
@@ -22,8 +22,11 @@ public class MaxSeverityAlertActivity extends AbstractAlertActivity {
     }
 
     @Override
-    public void executeAlertStrategy(AlertNotifyMedia media, AlertContext context) {
-        NotifyFactory.getNotifyActivity(NotifyMediaEnum.VMS.name()).doNotify(media, context);
-        NotifyFactory.getNotifyActivity(NotifyMediaEnum.DINGTALK.name()).doNotify(media, context);
+    protected List<String> getMediaList() {
+        return Lists.newArrayList(
+                NotifyMediaEnum.VMS.name(),
+                NotifyMediaEnum.DINGTALK.name(),
+                NotifyMediaEnum.SMS.name()
+        );
     }
 }
