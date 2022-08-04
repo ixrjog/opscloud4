@@ -3,8 +3,9 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <jmxConfigurator/>
 
+    <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度，%msg：日志消息，%n是换行符 -->
     <property name="pattern"
-              value="[%d{yyyy-MM-dd HH:mm:ss}] [%p] [%10.10t] [%X{sentryTraceId}] [%c{1}.%M] Line:[%L] - %m%n"/>
+              value="[%d{yyyy-MM-dd HH:mm:ss}] [%p] [%10.10t] [%c{1}.%M] Line:[%L] - %m%n"/>
 
     <!-- 获取application.yml中的变量，使用方式${basedir}. 缺点，会额外生成一个bootstrap的日志文件目录。 取bootstrap中的文件，不会有问题 -->
     <!--<springProperty scope="" name="baseDir" source="spring.application.name"/>-->
@@ -45,7 +46,6 @@
     <!-- 控制台输出，生产环境将请stdout去掉 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder charset="UTF-8">
-            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度，%msg：日志消息，%n是换行符 -->
             <pattern>${pattern}</pattern>
         </encoder>
     </appender>

@@ -12,7 +12,7 @@ import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExtendedBaseTicketProcessor;
-import com.baiyi.opscloud.workorder.validator.QueueValidator;
+import com.baiyi.opscloud.workorder.verify.QueueValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -90,7 +90,7 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
                 throw new TicketVerifyException("校验工单条目失败: 该地域SQS已存在！");
             }
         }
-        queueValidator.validate(ticketEntry.getProperties());
+        queueValidator.verify(ticketEntry.getProperties());
     }
 
     @Override

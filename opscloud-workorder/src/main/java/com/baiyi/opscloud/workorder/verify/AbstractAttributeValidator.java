@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.workorder.validator;
+package com.baiyi.opscloud.workorder.verify;
 
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.google.common.base.Joiner;
@@ -22,7 +22,7 @@ public abstract class AbstractAttributeValidator<IAttributeValidator> {
     @Resource
     private Validator validator;
 
-    public void validate(Map<String, String> attributes) {
+    public void verify(Map<String, String> attributes) {
         IAttributeValidator iAttributeValidator = toAttributes(attributes);
         Set<ConstraintViolation<IAttributeValidator>> constraintViolationSet = validator.validate(iAttributeValidator);
         List<String> messages = constraintViolationSet.stream().map(ConstraintViolation::getMessage).collect(Collectors.toList());
