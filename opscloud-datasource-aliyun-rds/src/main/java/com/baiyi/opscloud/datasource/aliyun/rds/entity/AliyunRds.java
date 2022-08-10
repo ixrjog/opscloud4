@@ -20,7 +20,7 @@ import java.util.Date;
 public class AliyunRds {
 
     public static Date toGmtDate(String time) {
-        return TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
+        return TimeUtil.toDate(time, TimeZoneEnum.UTC);
     }
 
     @EqualsAndHashCode(callSuper = true)
