@@ -21,9 +21,9 @@ Welcome to the opscloud wiki!
 
 #### 项目仓库
 + 服务端(Java)
-  + [github.com/ixrjog/opscloud4](github.com/ixrjog/opscloud4)
+  + [https://github.com/ixrjog/opscloud4](https://github.com/ixrjog/opscloud4)
 + 前端(Vue)
-  + [github.com/ixrjog/opscloud4-web](github.com/ixrjog/opscloud4-web)
+  + [https://github.com/ixrjog/opscloud4-web](https://github.com/ixrjog/opscloud4-web)
 
 #### 开发环境
 + MacBook M1 PRO (macOS Monterey 12.3.1)
