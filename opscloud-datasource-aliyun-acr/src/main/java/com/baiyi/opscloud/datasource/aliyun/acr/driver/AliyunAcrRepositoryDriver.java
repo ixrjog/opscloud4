@@ -4,6 +4,8 @@ import com.aliyuncs.cr.model.v20181201.ListRepositoryRequest;
 import com.aliyuncs.cr.model.v20181201.ListRepositoryResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.datasource.aliyun.acr.entity.AliyunAcr;
 import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
@@ -35,16 +37,12 @@ public class AliyunAcrRepositoryDriver {
      * @param instanceId
      * @return
      */
-    public List<ListRepositoryResponse.RepositoriesItem> listRepositories(String regionId, AliyunConfig.Aliyun aliyun, String instanceId) {
+    public List<AliyunAcr.Repository> listRepositories(String regionId, AliyunConfig.Aliyun aliyun, String instanceId) {
         List<ListRepositoryResponse.RepositoriesItem> repositoriesItems = Lists.newArrayList();
         ListRepositoryRequest request = new ListRepositoryRequest();
         request.setSysRegionId(regionId);
         request.setInstanceId(instanceId);
-        //   request.setRepoName("business-front");
-        //  request.setRepoNamespaceName("service");
-
         request.setRepoStatus(Query.REPO_STATUS_NORMAL);
-
         request.setPageSize(Query.PAGE_SIZE);
         int size = Query.PAGE_SIZE;
         int pageNo = 1;
@@ -59,7 +57,11 @@ public class AliyunAcrRepositoryDriver {
         } catch (ClientException e) {
             log.error(e.getMessage());
         }
-        return repositoriesItems;
+        return toRepositories(repositoriesItems);
+    }
+
+    private List<AliyunAcr.Repository> toRepositories(List<ListRepositoryResponse.RepositoriesItem> repositoriesItems) {
+        return BeanCopierUtil.copyListProperties(repositoriesItems, AliyunAcr.Repository.class);
     }
 
 }

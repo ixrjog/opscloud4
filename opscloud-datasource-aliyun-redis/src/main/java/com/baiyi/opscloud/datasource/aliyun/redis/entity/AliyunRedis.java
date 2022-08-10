@@ -73,8 +73,8 @@ public class AliyunRedis {
                     .kind(this.instanceType)
                     .assetType(DsAssetTypeConstants.REDIS_INSTANCE.name())
                     .zone(this.zoneId)
-                    .createdTime(TimeUtil.toGmtDate(this.createTime, TimeZoneEnum.UTC))
-                    .expiredTime(TimeUtil.toGmtDate(this.endTime, TimeZoneEnum.UTC))
+                    .createdTime(TimeUtil.toDate(this.createTime, TimeZoneEnum.UTC))
+                    .expiredTime(TimeUtil.toDate(this.endTime, TimeZoneEnum.UTC))
                     .regionId(this.regionId)
                     .build();
 

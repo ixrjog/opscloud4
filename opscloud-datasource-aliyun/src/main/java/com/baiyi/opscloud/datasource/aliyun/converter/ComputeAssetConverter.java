@@ -26,7 +26,7 @@ public class ComputeAssetConverter {
     private static final String PRE_PAID = "PrePaid";
 
     public static Date toGmtDate(String time) {
-        return TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
+        return TimeUtil.toDate(time, TimeZoneEnum.UTC);
     }
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance entity) {

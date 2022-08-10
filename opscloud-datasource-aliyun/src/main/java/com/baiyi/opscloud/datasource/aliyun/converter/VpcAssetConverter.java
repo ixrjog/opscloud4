@@ -32,7 +32,7 @@ public class VpcAssetConverter {
                 .assetType(DsAssetTypeConstants.VPC.name())
                 .regionId(entity.getRegionId())
                 .description(entity.getDescription())
-                .createdTime(TimeUtil.toGmtDate(entity.getCreationTime(), TimeZoneEnum.UTC))
+                .createdTime(TimeUtil.toDate(entity.getCreationTime(), TimeZoneEnum.UTC))
                 .build();
 
         return AssetContainerBuilder.newBuilder()
@@ -51,7 +51,7 @@ public class VpcAssetConverter {
                 .kind("aliyunSecurityGroup")
                 .assetType(DsAssetTypeConstants.ECS_SG.name())
                 .description(entity.getDescription())
-                .createdTime(TimeUtil.toGmtDate(entity.getCreationTime(), TimeZoneEnum.UTC))
+                .createdTime(TimeUtil.toDate(entity.getCreationTime(), TimeZoneEnum.UTC))
                 .build();
 
         return AssetContainerBuilder.newBuilder()

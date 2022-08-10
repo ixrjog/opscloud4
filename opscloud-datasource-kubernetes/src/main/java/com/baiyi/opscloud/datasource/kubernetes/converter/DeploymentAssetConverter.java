@@ -20,7 +20,7 @@ import java.util.Date;
 public class DeploymentAssetConverter {
 
     public static Date toGmtDate(String time) {
-        return TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
+        return TimeUtil.toDate(time, TimeZoneEnum.UTC);
     }
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Deployment entity) {

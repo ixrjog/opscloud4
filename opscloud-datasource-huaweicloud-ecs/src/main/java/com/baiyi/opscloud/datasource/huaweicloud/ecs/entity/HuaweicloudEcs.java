@@ -44,7 +44,7 @@ public class HuaweicloudEcs {
         private String osType;
 
         public static Date toGmtDate(String time) {
-            return com.baiyi.opscloud.core.util.TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
+            return com.baiyi.opscloud.core.util.TimeUtil.toDate(time, TimeZoneEnum.UTC);
         }
 
         @Override

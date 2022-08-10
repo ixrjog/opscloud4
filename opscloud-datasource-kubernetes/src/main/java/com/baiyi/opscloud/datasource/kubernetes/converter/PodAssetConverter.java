@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class PodAssetConverter {
 
     public static Date toGmtDate(String time) {
-        return TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
+        return TimeUtil.toDate(time, TimeZoneEnum.UTC);
     }
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, KubernetesConfig.Kubernetes kubernetes, Pod entity) {

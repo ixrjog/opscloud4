@@ -42,7 +42,7 @@ public class AssetUtilTest extends BaseUnit {
 
         //    String UTC = "yyyy-MM-dd'T'HH:mm'Z'";
 
-        Date date = TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
+        Date date = TimeUtil.toDate(time, TimeZoneEnum.UTC);
 
         String d = com.baiyi.opscloud.common.util.TimeUtil.dateToStr(date);
         System.err.println(d);
