@@ -3,6 +3,7 @@ package com.baiyi.opscloud.datasource.aws.iam.driver;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagement;
 import com.amazonaws.services.identitymanagement.model.*;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
+import com.baiyi.opscloud.common.exception.am.CreateUserException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamUser;
 import com.baiyi.opscloud.datasource.aws.iam.service.AmazonIdentityManagementService;
@@ -46,7 +47,11 @@ public class AmazonIdentityManagementUserDriver {
         request.setUserName(user.getUsername());
         CreateUserResult result = buildAmazonIdentityManagement(config).createUser(request);
         if (createLoginProfile) {
-            this.createLoginProfile(config, user, NO_PASSWORD_RESET_REQUIRED);
+            try {
+                this.createLoginProfile(config, user, NO_PASSWORD_RESET_REQUIRED);
+            } catch (PasswordPolicyViolationException e) {
+                throw new CreateUserException(e.getMessage());
+            }
         }
         return BeanCopierUtil.copyProperties(result.getUser(), IamUser.User.class);
     }

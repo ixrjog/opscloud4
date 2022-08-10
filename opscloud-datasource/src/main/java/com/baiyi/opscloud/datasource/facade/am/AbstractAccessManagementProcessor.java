@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.facade.am;
 
+import com.baiyi.opscloud.common.exception.am.CreateUserException;
 import com.baiyi.opscloud.core.InstanceHelper;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
@@ -44,7 +45,7 @@ public abstract class AbstractAccessManagementProcessor implements IAccessManage
     private InstanceHelper instanceHelper;
 
     @Override
-    public void createUser(UserAmParam.CreateUser createUser) {
+    public void createUser(UserAmParam.CreateUser createUser) throws CreateUserException {
         User user = userService.getByUsername(createUser.getUsername());
         if (!StringUtils.isEmpty(user.getPassword())) {
             user.setPassword(stringEncryptor.decrypt(user.getPassword()));

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.facade.am.base;
 
+import com.baiyi.opscloud.common.exception.am.CreateUserException;
 import com.baiyi.opscloud.domain.param.user.UserAmParam;
 
 /**
@@ -9,7 +10,7 @@ import com.baiyi.opscloud.domain.param.user.UserAmParam;
  */
 public interface IAccessManagementProcessor {
 
-    void createUser(UserAmParam.CreateUser createUser);
+    void createUser(UserAmParam.CreateUser createUser) throws CreateUserException;
 
     void grantPolicy(UserAmParam.GrantPolicy grantPolicy);
 
