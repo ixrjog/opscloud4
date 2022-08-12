@@ -51,13 +51,13 @@
         <dependency>
             <groupId>net.javacrumbs.shedlock</groupId>
             <artifactId>shedlock-spring</artifactId>
-            <version>4.33.0</version>
+            <version>4.39.0</version>
         </dependency>
 
         <dependency>
             <groupId>net.javacrumbs.shedlock</groupId>
             <artifactId>shedlock-provider-jdbc-template</artifactId>
-            <version>4.33.0</version>
+            <version>4.39.0</version>
         </dependency>
         <!--   Shedlock 分布式任务锁 -->
 
@@ -70,20 +70,20 @@
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-core</artifactId>
-            <version>11.8</version>
+            <version>11.9</version>
         </dependency>
 
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-gson</artifactId>
-            <version>11.8</version>
+            <version>11.9</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.github.openfeign/feign-jackson -->
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-jackson</artifactId>
-            <version>11.8</version>
+            <version>11.9.1</version>
         </dependency>
 
     </dependencies>
