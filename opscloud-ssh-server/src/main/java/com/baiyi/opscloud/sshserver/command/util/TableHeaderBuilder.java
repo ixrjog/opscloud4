@@ -48,4 +48,5 @@ public class TableHeaderBuilder {
             return String.join("", Collections.nCopies(length + 1, "-"));
         }
     }
+
 }

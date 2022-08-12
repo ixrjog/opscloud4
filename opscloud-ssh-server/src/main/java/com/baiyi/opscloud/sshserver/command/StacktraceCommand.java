@@ -34,6 +34,12 @@ public class StacktraceCommand implements Stacktrace.Command {
 
     private Terminal terminal;
 
+    @Autowired
+    @Lazy
+    public void setTerminal(Terminal terminal) {
+        this.terminal = terminal;
+    }
+
     @ShellMethod(key = {"stacktrace"}, value = "Display the full stacktrace of the last error.")
     public void stacktrace() {
         Throwable lastError = TypePostProcessorResultHandler.THREAD_CONTEXT.get();
@@ -42,9 +48,4 @@ public class StacktraceCommand implements Stacktrace.Command {
         }
     }
 
-    @Autowired
-    @Lazy
-    public void setTerminal(Terminal terminal) {
-        this.terminal = terminal;
-    }
 }

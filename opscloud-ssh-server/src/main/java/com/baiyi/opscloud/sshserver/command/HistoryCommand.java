@@ -46,7 +46,8 @@ public class HistoryCommand implements History.Command {
 
     private final org.jline.reader.History history;
 
-    public HistoryCommand(SshShellProperties properties, SshShellHelper helper,
+    public HistoryCommand(SshShellProperties properties,
+                          SshShellHelper helper,
                           @Lazy org.jline.reader.History history) {
         this.properties = properties;
         this.helper = helper;
@@ -62,4 +63,5 @@ public class HistoryCommand implements History.Command {
         }
         return new History(historyToUse).history(file);
     }
+
 }

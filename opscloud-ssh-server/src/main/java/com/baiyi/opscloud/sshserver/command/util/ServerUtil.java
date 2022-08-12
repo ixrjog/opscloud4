@@ -50,5 +50,6 @@ public class ServerUtil {
         } else {
             return server.getPrivateIp();
         }
+
     }
 }

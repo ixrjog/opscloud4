@@ -111,7 +111,6 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         for (Pod pod : pods) {
             idMapper.put(seq, asset.getId());
             List<String> names = pod.getSpec().getContainers().stream().map(Container::getName).collect(Collectors.toList());
-            //  return cloudserverList.stream().collect(Collectors.toMap(OcCloudserver::getInstanceId, a -> a, (k1, k2) -> k1));
             Map<String, Boolean> podStatusMap = pod.getStatus().getConditions().stream().collect(Collectors.toMap(PodCondition::getType, a -> Boolean.valueOf(a.getStatus()), (k1, k2) -> k1));
             pt.addRow(seq,
                     datasourceInstance.getInstanceName(),
@@ -230,7 +229,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "查询容器组列表信息", key = {"list-k8s-pod"})
-    public void listKubernetesPod(@ShellOption(help = "Deployment", defaultValue = "") String deploymentName, @ShellOption(help = "Deployment ID", defaultValue = "0") int id) {
+    public void listPod(@ShellOption(help = "Deployment", defaultValue = "") String deploymentName, @ShellOption(help = "Deployment ID", defaultValue = "0") int id) {
         if (id != 0) {
             listPodById(id);
         } else {
@@ -241,9 +240,9 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
     @ScreenClear
     @InvokeSessionUser
     @ShellMethod(value = "登录容器组,通过参数可指定容器 [ 输入 ctrl+d 退出会话 ]", key = {"login-k8s-pod"})
-    public void loginPod(@ShellOption(help = "ID", defaultValue = "") int id,
-                         @ShellOption(help = "Container", defaultValue = "") String name,
-                         @ShellOption(value = {"-R", "--arthas"}, help = "Arthas") boolean arthas) {
+    public void login(@ShellOption(help = "ID", defaultValue = "") int id,
+                      @ShellOption(help = "Container", defaultValue = "") String name,
+                      @ShellOption(value = {"-R", "--arthas"}, help = "Arthas") boolean arthas) {
         Map<Integer, PodContext> podMapper = SessionCommandContext.getPodMapper();
         PodContext podContext = podMapper.get(id);
         KubernetesConfig kubernetesDsInstanceConfig = buildConfig(podContext.getInstanceUuid());
@@ -284,13 +283,8 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
 
         SshContext sshContext = getSshContext();
         WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getSshShellRunnable().getOs());
-        // WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getTerminal().writer());
         Thread thread = new Thread(run);
         thread.start();
-        // ExecutorService executorService = Executors.newSingleThreadExecutor();
-        // NonBlockingInputStreamPumper pump = new NonBlockingInputStreamPumper(sshIO.getIs(), new OutCallback());
-        // executorService.submit(pump); // run
-        // 执行arthas
         try {
             if (!listener.isClosed()) {
                 // 清除输入缓冲区数据
@@ -335,9 +329,9 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "显示容器组日志[ 输入 ctrl+c 关闭日志 ]", key = {"show-k8s-pod-log"})
-    public void showPodLog(@ShellOption(help = "ID", defaultValue = "") Integer id,
-                           @ShellOption(help = "Container", defaultValue = "") String name,
-                           @ShellOption(help = "Tailing Lines", defaultValue = "100") int lines) {
+    public void showLog(@ShellOption(help = "ID", defaultValue = "") Integer id,
+                        @ShellOption(help = "Container", defaultValue = "") String name,
+                        @ShellOption(help = "Tailing Lines", defaultValue = "100") int lines) {
         Map<Integer, PodContext> podMapper = SessionCommandContext.getPodMapper();
         PodContext podContext = podMapper.get(id);
         KubernetesConfig kubernetesDsInstanceConfig = buildConfig(podContext.getInstanceUuid());
@@ -403,7 +397,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
     public void afterPropertiesSet() throws Exception {
         if (!StringUtils.isEmpty(arthasConfig.getKubernetes())) {
             KUBERNETES_EXECUTE_ARTHAS = arthasConfig.getKubernetes().getBytes(StandardCharsets.UTF_8);
-            log.info("从配置文件加载KubernetesArthas命令: {}", arthasConfig.getKubernetes());
+            log.info("加载Arthas命令配置: {}", arthasConfig.getKubernetes());
         }
     }
 

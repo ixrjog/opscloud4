@@ -106,7 +106,8 @@ public class ServerLoginCommand implements InitializingBean {
             out.setNoDelay(true);
             RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, out);
             TerminalUtil.rawModeSupportVintr(terminal);
-            Instant inst1 = Instant.now(); // 计时
+            // 计时
+            Instant inst1 = Instant.now();
             Size size = terminal.getSize();
             if (!isClosed(sessionId, instanceId) && arthas) {
                 try {
@@ -131,7 +132,6 @@ public class ServerLoginCommand implements InitializingBean {
                     jSchSessionPrint(sessionId, instanceId, terminal.reader().read(5L));
                 }
             } catch (Exception e) {
-                // e.printStackTrace();
                 sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);
             } finally {
                 terminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
