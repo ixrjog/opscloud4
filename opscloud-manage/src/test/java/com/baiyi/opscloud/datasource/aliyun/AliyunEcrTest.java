@@ -3,6 +3,7 @@ package com.baiyi.opscloud.datasource.aliyun;
 import com.aliyuncs.cr.model.v20181201.GetInstanceEndpointResponse;
 import com.aliyuncs.cr.model.v20181201.ListInstanceResponse;
 import com.aliyuncs.cr.model.v20181201.ListNamespaceResponse;
+import com.aliyuncs.cr.model.v20181201.ListRepositoryResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.acr.delegate.AliyunAcrInstanceDelegate;
@@ -36,8 +37,11 @@ public class AliyunEcrTest extends BaseAliyunTest {
     @Test
     void listRepositoriesTest() {
         AliyunConfig config = getConfig();
-        List<AliyunAcr.Repository> repositories = aliyunAcrRepositoryDriver.listRepositories("eu-west-1", config.getAliyun(), instanceId);
-        print(repositories);
+        try {
+            List<ListRepositoryResponse.RepositoriesItem> repositories = aliyunAcrRepositoryDriver.listRepository("eu-west-1", config.getAliyun(), instanceId);
+            print(repositories);
+        } catch (ClientException e) {
+        }
     }
 
 
@@ -78,8 +82,11 @@ public class AliyunEcrTest extends BaseAliyunTest {
     @Test
     void listInstanceTest2() {
         AliyunConfig config = getConfig();
-        List<AliyunAcr.Instance> instances = aliyunAcrInstanceDelegate.listInstance("eu-west-1", config.getAliyun());
-        print(instances);
+        try {
+            List<AliyunAcr.Instance> instances = aliyunAcrInstanceDelegate.listInstance("eu-west-1", config.getAliyun());
+            print(instances);
+        } catch (ClientException e) {
+        }
     }
 
     @Test

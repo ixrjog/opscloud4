@@ -39,6 +39,7 @@ public enum DsAssetTypeConstants {
     SNS_TOPIC,
     SNS_SUBSCRIPTION,
     AMAZON_DOMAIN,
+    ECR_REPOSITORY,
 
     GITLAB_USER,
     GITLAB_GROUP,

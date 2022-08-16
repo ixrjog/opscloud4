@@ -30,7 +30,7 @@ public class AliyunAcrInstanceDelegate {
 
     public AliyunAcr.Instance getInstance(String regionId, AliyunConfig.Aliyun aliyun, String instanceId) throws ClientException {
         GetInstanceResponse getInstanceResponse = aliyunAcrInstanceDriver.getInstance(regionId, aliyun, instanceId);
-        return BeanCopierUtil.copyProperties(getInstanceResponse,    AliyunAcr.Instance.class);
+        return BeanCopierUtil.copyProperties(getInstanceResponse, AliyunAcr.Instance.class);
     }
 
     public List<AliyunAcr.Instance> listInstance(String regionId, AliyunConfig.Aliyun aliyun) throws ClientException {

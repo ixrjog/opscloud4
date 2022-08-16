@@ -7,8 +7,8 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aws.domain.driver.AmazonDomainDriver;
-import com.baiyi.opscloud.datasource.aws.domain.entity.AmazonDomain;
+import com.baiyi.opscloud.datasource.aws.ecr.delegate.AmazonEcrDelegate;
+import com.baiyi.opscloud.datasource.aws.ecr.entity.AmazonEcr;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -22,15 +22,18 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_AWS_D
 
 /**
  * @Author baiyi
- * @Date 2022/4/18 17:30
+ * @Date 2022/8/16 18:28
  * @Version 1.0
  */
 @Slf4j
 @Component
-public class AwsDomainProvider extends BaseAssetProvider<AmazonDomain.Domain> {
+public class AwsEcrRepositoryProvider extends BaseAssetProvider<AmazonEcr.Repository> {
 
     @Resource
-    private AwsDomainProvider awsDomainProvider;
+    private AmazonEcrDelegate amazonEcrDelegate;
+
+    @Resource
+    private AwsEcrRepositoryProvider awsEcrRepositoryProvider;
 
     @Override
     @SingleTask(name = PULL_AWS_DOMAIN, lockTime = "1m")
@@ -52,9 +55,9 @@ public class AwsDomainProvider extends BaseAssetProvider<AmazonDomain.Domain> {
     }
 
     @Override
-    protected List<AmazonDomain.Domain> listEntities(DsInstanceContext dsInstanceContext) {
+    protected List<AmazonEcr.Repository> listEntities(DsInstanceContext dsInstanceContext) {
         AwsConfig.Aws aws = buildConfig(dsInstanceContext.getDsConfig());
-        return AmazonDomainDriver.listDomains(aws);
+        return amazonEcrDelegate.listRepository(aws);
     }
 
     @Override
@@ -64,13 +67,12 @@ public class AwsDomainProvider extends BaseAssetProvider<AmazonDomain.Domain> {
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeConstants.AMAZON_DOMAIN.name();
+        return DsAssetTypeConstants.ECR_REPOSITORY.name();
     }
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(awsDomainProvider);
+        AssetProviderFactory.register(awsEcrRepositoryProvider);
     }
 
 }
-
