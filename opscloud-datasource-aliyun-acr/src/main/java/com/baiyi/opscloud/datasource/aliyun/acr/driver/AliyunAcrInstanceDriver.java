@@ -1,17 +1,14 @@
 package com.baiyi.opscloud.datasource.aliyun.acr.driver;
 
-import com.aliyuncs.cr.model.v20181201.ListInstanceRequest;
-import com.aliyuncs.cr.model.v20181201.ListInstanceResponse;
+import com.aliyuncs.cr.model.v20181201.*;
 import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
-import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.datasource.aliyun.acr.entity.AliyunAcr;
-import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
-import lombok.RequiredArgsConstructor;
+import com.baiyi.opscloud.datasource.aliyun.acr.driver.base.BaseAliyunAcrDriver;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,37 +18,90 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@RequiredArgsConstructor
-public class AliyunAcrInstanceDriver {
+public class AliyunAcrInstanceDriver extends BaseAliyunAcrDriver {
 
-    private final AliyunClient aliyunClient;
-
-    public List<ListInstanceResponse.InstancesItem> listInstance(String regionId, AliyunConfig.Aliyun aliyun) {
-        try {
-            ListInstanceRequest request = new ListInstanceRequest();
-            ListInstanceResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
-            return response.getInstances();
-        } catch (ClientException e) {
-            return Collections.emptyList();
+    /**
+     * {
+     * "defaultRepoType":"PRIVATE",
+     * "namespaceStatus":"NORMAL",
+     * "namespaceId":"crn-g0h399e0ayt6ax00",
+     * "autoCreateRepo":true,
+     * "instanceId":"cri-4v9b8l2gc3en0x34",
+     * "namespaceName":"daily"
+     * }
+     *
+     * @param regionId
+     * @param aliyun
+     * @param instanceId
+     * @return
+     * @throws ClientException
+     */
+    public List<ListNamespaceResponse.NamespacesItem> listNamespace(String regionId, AliyunConfig.Aliyun aliyun, String instanceId) throws ClientException {
+        ListNamespaceRequest request = new ListNamespaceRequest();
+        request.setSysRegionId(regionId);
+        request.setInstanceId(instanceId);
+        request.setNamespaceStatus(Query.NORMAL);
+        request.setPageSize(Query.PAGE_SIZE);
+        int total = 0;
+        int pageNo = 1;
+        List<ListNamespaceResponse.NamespacesItem> namespacesItems = Lists.newArrayList();
+        while (total == 0 || total == namespacesItems.size()) {
+            request.setPageNo(pageNo);
+            ListNamespaceResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
+            List<ListNamespaceResponse.NamespacesItem> nowData = response.getNamespaces();
+            if (CollectionUtils.isEmpty(nowData)) {
+                break;
+            } else {
+                namespacesItems.addAll(nowData);
+            }
+            total = Integer.parseInt(response.getTotalCount());
+            pageNo++;
         }
+        return namespacesItems;
     }
 
-    private List<AliyunAcr.Instance> toInstances(List<ListInstanceResponse.InstancesItem> instancesItems) {
-        return BeanCopierUtil.copyListProperties(instancesItems, AliyunAcr.Instance.class);
+    /**
+     * @param regionId
+     * @param aliyun
+     * @return
+     * @throws ClientException
+     */
+    public List<ListInstanceResponse.InstancesItem> listInstance(String regionId, AliyunConfig.Aliyun aliyun) throws ClientException {
+        ListInstanceRequest request = new ListInstanceRequest();
+        request.setSysRegionId(regionId);
+        request.setPageSize(Query.PAGE_SIZE);
+        int total = 0;
+        int pageNo = 1;
+        List<ListInstanceResponse.InstancesItem> instancesItems = Lists.newArrayList();
+        while (total == 0 || total == instancesItems.size()) {
+            request.setPageNo(pageNo);
+            ListInstanceResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
+            List<ListInstanceResponse.InstancesItem> nowData = response.getInstances();
+            if (CollectionUtils.isEmpty(nowData)) {
+                break;
+            } else {
+                instancesItems.addAll(nowData);
+            }
+            total = response.getTotalCount();
+            pageNo++;
+        }
+        return instancesItems;
     }
 
-//    public ListInstanceEndpointResponse listInstanceEndpoint(String regionId, String instanceId) {
-//        try {
-//            IAcsClient client = aliyunCore.getMasterClient();
-//            ListInstanceEndpointRequest request = new ListInstanceEndpointRequest();
-//            request.setRegionId(regionId);
-//            request.setInstanceId(instanceId);
-//            ListInstanceEndpointResponse response = client.getAcsResponse(request);
-//            return response.getIsSuccess() ? response : null;
-//        } catch (ClientException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
+    public GetInstanceResponse getInstance(String regionId, AliyunConfig.Aliyun aliyun, String instanceId) throws ClientException {
+        GetInstanceRequest request = new GetInstanceRequest();
+        request.setSysRegionId(regionId);
+        request.setInstanceId(instanceId);
+        return aliyunClient.getAcsResponse(regionId, aliyun, request);
+    }
+
+    public List<GetInstanceEndpointResponse.Endpoints> getInstanceEndpoint(String regionId, AliyunConfig.Aliyun aliyun, String instanceId) throws ClientException {
+        GetInstanceEndpointRequest request = new GetInstanceEndpointRequest();
+        request.setEndpointType("internet");
+        request.setInstanceId(instanceId);
+        request.setSysRegionId(regionId);
+        GetInstanceEndpointResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
+        return response.getDomains();
+    }
 
 }

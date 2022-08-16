@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -40,6 +41,8 @@ public class AliyunConfig extends BaseDsConfig {
         private Dms dms;
         // 云监控
         private Cms cms;
+
+        private Acr arc;
 
     }
 
@@ -75,36 +78,46 @@ public class AliyunConfig extends BaseDsConfig {
     @NoArgsConstructor
     @ApiModel
     public static class Ons {
-
         private String internetRegionId;
-
     }
 
     @Data
     @NoArgsConstructor
     @ApiModel
     public static class Dms {
-
         private String endpoint;
         private Long tid;
-
     }
 
     @Data
     @NoArgsConstructor
     @ApiModel
     public static class Cms {
-
         private Dingtalk dingtalk;
-
     }
 
     @Data
     @NoArgsConstructor
     @ApiModel
     public static class Dingtalk {
-
         private String token;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Acr {
+
+        private List<Instance> instances;
+
+        @Data
+        @NoArgsConstructor
+        @ApiModel
+        public static class Instance {
+            private String id;
+            private String domain;
+            private String desc;
+        }
 
     }
 

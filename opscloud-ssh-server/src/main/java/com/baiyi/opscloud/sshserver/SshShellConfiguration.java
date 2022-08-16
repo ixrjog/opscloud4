@@ -46,6 +46,7 @@ public class SshShellConfiguration {
 
     private final PublickeyAuthenticator publickeyAuthenticator;
 
+
     public SshShellConfiguration(SshShellProperties properties,
                                  SshShellCommandFactory shellCommandFactory,
                                  PasswordAuthenticator passwordAuthenticator, PublickeyAuthenticator publickeyAuthenticator) {

@@ -1,8 +1,9 @@
 package com.baiyi.opscloud.core.provider.asset;
 
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.common.exception.asset.ListEntitiesException;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.google.common.collect.Sets;
@@ -23,7 +24,7 @@ public abstract class AbstractAssetChildProvider<C> extends BaseAssetProvider<C>
     private DsInstanceAssetService dsInstanceAssetService;
 
     @Override
-    protected List<C> listEntities(DsInstanceContext dsInstanceContext) {
+    protected List<C> listEntities(DsInstanceContext dsInstanceContext) throws ListEntitiesException {
         throw new UnsupportedOperationException();
     }
 
@@ -31,7 +32,14 @@ public abstract class AbstractAssetChildProvider<C> extends BaseAssetProvider<C>
         return AopUtils.getTargetClass(this).getAnnotation(ChildProvider.class).parentType().name();
     }
 
-    protected abstract List<C> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset);
+    /**
+     * 父资产查询子条目
+     *
+     * @param dsInstanceContext
+     * @param parentAsset
+     * @return
+     */
+    protected abstract List<C> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset parentAsset) throws ListEntitiesException;
 
     protected List<DatasourceInstanceAsset> listParents(DsInstanceContext dsInstanceContext) {
         return dsInstanceAssetService.listByInstanceAssetType(dsInstanceContext.getDsInstance().getUuid(), getParentAssetKey());

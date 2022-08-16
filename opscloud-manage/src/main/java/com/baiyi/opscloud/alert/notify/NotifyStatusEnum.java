@@ -16,7 +16,7 @@ public enum NotifyStatusEnum {
     CALL_ERR("用户未接听")
     ;
 
-    private String name;
+    private final String name;
 
     NotifyStatusEnum(String name) {
         this.name = name;
