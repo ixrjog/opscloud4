@@ -95,7 +95,7 @@
         <!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
         <!--        </table>-->
 
-        <table tableName="alert_notify_history">
+        <table tableName="work_item">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
