@@ -1,12 +1,10 @@
 package com.baiyi.opscloud.datasource.aliyun;
 
-import com.aliyuncs.cr.model.v20181201.GetInstanceEndpointResponse;
-import com.aliyuncs.cr.model.v20181201.ListInstanceResponse;
-import com.aliyuncs.cr.model.v20181201.ListNamespaceResponse;
-import com.aliyuncs.cr.model.v20181201.ListRepositoryResponse;
+import com.aliyuncs.cr.model.v20181201.*;
 import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.acr.delegate.AliyunAcrInstanceDelegate;
+import com.baiyi.opscloud.datasource.aliyun.acr.driver.AliyunAcrImageDriver;
 import com.baiyi.opscloud.datasource.aliyun.acr.driver.AliyunAcrInstanceDriver;
 import com.baiyi.opscloud.datasource.aliyun.acr.driver.AliyunAcrRepositoryDriver;
 import com.baiyi.opscloud.datasource.aliyun.acr.entity.AliyunAcr;
@@ -31,6 +29,9 @@ public class AliyunEcrTest extends BaseAliyunTest {
 
     @Resource
     private AliyunAcrInstanceDelegate aliyunAcrInstanceDelegate;
+
+    @Resource
+    private AliyunAcrImageDriver aliyunAcrImageDriver;
 
     private final static String instanceId = "cri-4v9b8l2gc3en0x34";
 
@@ -106,6 +107,17 @@ public class AliyunEcrTest extends BaseAliyunTest {
         try {
             List<AliyunAcr.Namespace> namespaces = aliyunAcrInstanceDelegate.listNamespace("eu-west-1", config.getAliyun(), "cri-4v9b8l2gc3en0x34");
             print(namespaces);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void listImageTest() {
+        AliyunConfig config = getConfig();
+        try {
+            List<ListRepoTagResponse.ImagesItem> imagesItems =  aliyunAcrImageDriver.listImage("eu-west-1", config.getAliyun(), "cri-4v9b8l2gc3en0x34","crr-zla5udc2kw7ly0fk");
+            print(imagesItems);
         } catch (Exception e) {
             e.printStackTrace();
         }

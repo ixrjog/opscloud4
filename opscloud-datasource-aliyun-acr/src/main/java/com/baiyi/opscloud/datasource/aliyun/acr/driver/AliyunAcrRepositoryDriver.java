@@ -8,7 +8,6 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.acr.driver.base.BaseAliyunAcrDriver;
 import com.baiyi.opscloud.datasource.aliyun.acr.entity.AliyunAcr;
 import com.google.common.collect.Lists;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -22,7 +21,6 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class AliyunAcrRepositoryDriver extends BaseAliyunAcrDriver {
 
     /**
@@ -50,12 +48,13 @@ public class AliyunAcrRepositoryDriver extends BaseAliyunAcrDriver {
             } else {
                 repositoriesItems.addAll(nowData);
             }
-            total = Integer.parseInt(response.getTotalCount());
+            if (total == 0) {
+                total = Integer.parseInt(response.getTotalCount());
+            }
             pageNo++;
         }
         return repositoriesItems;
     }
-
 
     private List<AliyunAcr.Repository> toRepositories(List<ListRepositoryResponse.RepositoriesItem> repositoriesItems) {
         return BeanCopierUtil.copyListProperties(repositoriesItems, AliyunAcr.Repository.class);
