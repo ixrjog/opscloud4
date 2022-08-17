@@ -44,6 +44,9 @@ public class WorkEventVO {
         @ApiModelProperty(value = "时间")
         private Date workEventTime;
 
+        @ApiModelProperty(value = "yyyy 年 WW 周")
+        private String weeks;
+
         @ApiModelProperty(value = "次数")
         private Integer workEventCnt;
 

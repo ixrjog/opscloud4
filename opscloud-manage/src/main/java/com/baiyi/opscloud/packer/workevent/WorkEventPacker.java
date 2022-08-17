@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.packer.workevent;
 
+import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventVO;
 import com.baiyi.opscloud.packer.IWrapper;
@@ -31,5 +32,6 @@ public class WorkEventPacker implements IWrapper<WorkEventVO.WorkEvent> {
         vo.setWorkItem(workItemService.getById(vo.getWorkItemId()));
         vo.setWorkRole(workRoleService.getById(vo.getWorkRoleId()));
         vo.setUser(userService.getByUsername(vo.getUsername()));
+        vo.setWeeks(TimeUtil.whatWeek(vo.getWorkEventTime()));
     }
 }

@@ -1,9 +1,11 @@
 package com.baiyi.opscloud.common.util;
 
+import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -422,5 +424,15 @@ public class TimeUtil {
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT+0:00"));
         return formatter.format(time);
+    }
+
+    public static String whatWeek(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        //设置中国周
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.setTime(date);
+        int week = calendar.get(Calendar.WEEK_OF_YEAR);
+        int year = calendar.get(Calendar.YEAR);
+        return Joiner.on(" ").join(year,"年", week, "周");
     }
 }
