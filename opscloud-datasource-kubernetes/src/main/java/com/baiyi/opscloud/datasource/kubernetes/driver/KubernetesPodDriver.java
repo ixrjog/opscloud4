@@ -138,7 +138,6 @@ public class KubernetesPodDriver {
     @Data
     public static class SimpleListener implements ExecListener {
 
-
         private boolean isClosed = false;
 
         public void onOpen(Response response) {
@@ -156,4 +155,5 @@ public class KubernetesPodDriver {
             // throw new SshRuntimeException("Kubernetes Container Close!");
         }
     }
+
 }
