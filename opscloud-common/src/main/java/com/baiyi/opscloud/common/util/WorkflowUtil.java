@@ -6,6 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class WorkflowUtil {
         if (StringUtils.isEmpty(workflow))
             return WorkflowVO.Workflow.EMPTY;
         try {
-            Yaml yaml = new Yaml();
+            Yaml yaml = new Yaml(new SafeConstructor());
             Object result = yaml.load(workflow);
             return new GsonBuilder().create().fromJson(JSONUtil.writeValueAsString(result), WorkflowVO.Workflow.class);
         } catch (JsonSyntaxException e) {

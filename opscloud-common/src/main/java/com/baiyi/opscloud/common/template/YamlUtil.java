@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 /**
  * @Author baiyi
@@ -23,7 +24,7 @@ public class YamlUtil {
         if (StringUtils.isEmpty(vars))
             return YamlVars.Vars.EMPTY;
         try {
-            Yaml yaml = new Yaml();
+            Yaml yaml = new Yaml(new SafeConstructor());
             Object result = yaml.load(vars);
             Gson gson = new GsonBuilder().create();
             return gson.fromJson(JSONUtil.writeValueAsString(result), YamlVars.Vars.class);

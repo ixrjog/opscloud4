@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 /**
  * @Author baiyi
@@ -21,7 +22,7 @@ public class DsUtil {
         if (StringUtils.isEmpty(propsYml))
             throw new DatasourceRuntimeException(ErrorEnum.DATASOURCE_PROPS_EMPTY);
         try {
-            Yaml yaml = new Yaml();
+            Yaml yaml = new Yaml(new SafeConstructor());
             Object result = yaml.load(propsYml);
             Gson gson = new GsonBuilder().create();
             return gson.fromJson(JSONUtil.writeValueAsString(result), targetClass);
