@@ -29,4 +29,9 @@ public class WorkItemServiceImpl implements WorkItemService {
                 .andEqualTo("parentId", parentId);
         return workItemMapper.selectByExample(example);
     }
+
+    @Override
+    public WorkItem getById(Integer id) {
+        return workItemMapper.selectByPrimaryKey(id);
+    }
 }

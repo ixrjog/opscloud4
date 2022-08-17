@@ -25,6 +25,11 @@ public class WorkEvent {
     private Integer workItemId;
 
     /**
+     * 用户名
+     */
+    private String username;
+
+    /**
      * 时间
      */
     @Column(name = "work_event_time")

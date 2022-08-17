@@ -24,4 +24,9 @@ public class WorkRoleServiceImpl implements WorkRoleService {
     public List<WorkRole> listAll() {
         return workRoleMapper.selectAll();
     }
+
+    @Override
+    public WorkRole getById(Integer id) {
+        return workRoleMapper.selectByPrimaryKey(id);
+    }
 }

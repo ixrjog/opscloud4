@@ -13,6 +13,6 @@ public interface WorkItemService {
 
     List<WorkItem> listByWorkRoleIdAndParentId(Integer workRoleId,Integer parentId);
 
-
+    WorkItem getById(Integer id);
 
 }

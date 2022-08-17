@@ -12,4 +12,6 @@ import java.util.List;
 public interface WorkRoleService {
 
     List<WorkRole> listAll();
+
+    WorkRole getById(Integer id);
 }

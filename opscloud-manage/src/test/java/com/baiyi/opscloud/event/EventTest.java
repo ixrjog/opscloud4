@@ -2,13 +2,16 @@ package com.baiyi.opscloud.event;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.vo.common.TreeVO;
 import com.baiyi.opscloud.event.consumer.impl.kind.EmployeeResignConsumer;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
 import com.baiyi.opscloud.event.factory.EventFactory;
+import com.baiyi.opscloud.facade.workevent.WorkEventFacade;
 import com.baiyi.opscloud.service.user.UserService;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
