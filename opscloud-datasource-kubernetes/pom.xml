@@ -18,6 +18,8 @@
             <artifactId>opscloud-datasource-core</artifactId>
         </dependency>
 
+        <!-- 6.0.0版本兼容有问题 -->
+
         <!-- https://github.com/fabric8io/kubernetes-client -->
         <!-- https://mvnrepository.com/artifact/io.fabric8/kubernetes-client -->
         <dependency>
