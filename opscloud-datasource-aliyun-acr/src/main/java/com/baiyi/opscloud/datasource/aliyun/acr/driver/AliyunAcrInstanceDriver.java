@@ -54,7 +54,9 @@ public class AliyunAcrInstanceDriver extends BaseAliyunAcrDriver {
             } else {
                 namespacesItems.addAll(nowData);
             }
-            total = Integer.parseInt(response.getTotalCount());
+            if (total == 0) {
+                total = Integer.parseInt(response.getTotalCount());
+            }
             pageNo++;
         }
         return namespacesItems;

@@ -36,7 +36,7 @@ public class AmazonEcrDelegate {
         List<AmazonEcr.Repository> repositories = Lists.newArrayList();
         for (String regionId : config.getRegionIds()) {
             repositories.addAll(amazonEcrRepositoryDirver.describeRepositories(regionId, config).stream().map(e ->
-                    toRepository(config.getRegionId(), e)
+                    toRepository(regionId, e)
             ).collect(Collectors.toList()));
         }
         return repositories;
