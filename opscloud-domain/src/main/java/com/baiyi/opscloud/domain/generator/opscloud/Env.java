@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,7 +12,11 @@ import java.util.Date;
 @Data
 @Builder
 @Table(name = "sys_env")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Env implements Serializable {
+    private static final long serialVersionUID = 1037808244060772085L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

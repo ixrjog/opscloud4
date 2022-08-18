@@ -3,6 +3,7 @@ package com.baiyi.opscloud.domain.vo.env;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class EnvVO {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
+    @AllArgsConstructor
     @ApiModel
     public static class Env extends BaseVO implements Serializable {
 
