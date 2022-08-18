@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,6 +34,10 @@ public class WorkEventParam {
         private Integer workRoleId;
 
         private List<Integer> workItemIdList;
+
+        private Date workEventStartTime;
+
+        private Date workEventEndTime;
 
     }
 
