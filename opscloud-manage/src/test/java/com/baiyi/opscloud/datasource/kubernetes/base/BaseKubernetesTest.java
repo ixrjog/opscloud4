@@ -21,6 +21,22 @@ public class BaseKubernetesTest extends BaseUnit {
     @Resource
     private DsConfigHelper dsConfigHelper;
 
+    public interface KubernetesClusterConfigs {
+        int EKS_TEST = 21;
+        int EKS_GRAY = 26;
+        int EKS_PROD = 30;
+
+        int ACK_DEV = 6;
+        int ACK_DAILY = 10;
+        int ACK_GRAY = 13;
+        int ACK_PROD = 14;
+
+    }
+
+    protected KubernetesConfig getConfigById(int id) {
+        return dsConfigHelper.build(dsConfigHelper.getConfigById(id), KubernetesConfig.class);
+    }
+
     protected KubernetesConfig getConfig() {
         //return dsConfigHelper.build(dsConfigHelper.getConfigByDsType(DsTypeEnum.KUBERNETES.getType()), KubernetesConfig.class);
         return dsConfigHelper.build(dsConfigHelper.getConfigById(30), KubernetesConfig.class);
