@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
@@ -56,6 +57,9 @@ public class WorkEventServiceImpl implements WorkEventService {
         }
         if (!CollectionUtils.isEmpty(pageQuery.getWorkItemIdList())) {
             criteria.andIn("workItemId", pageQuery.getWorkItemIdList());
+        }
+        if (!ObjectUtils.isEmpty(pageQuery.getWorkEventStartTime()) && !ObjectUtils.isEmpty(pageQuery.getWorkEventEndTime())) {
+            criteria.andBetween("workEventTime", pageQuery.getWorkEventStartTime(), pageQuery.getWorkEventEndTime());
         }
         example.setOrderByClause("work_event_time desc");
         List<WorkEvent> data = workEventMapper.selectByExample(example);

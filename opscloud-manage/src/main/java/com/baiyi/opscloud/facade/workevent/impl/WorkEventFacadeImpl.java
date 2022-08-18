@@ -3,9 +3,13 @@ package com.baiyi.opscloud.facade.workevent.impl;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.annotation.BusinessType;
+import com.baiyi.opscloud.domain.annotation.TagClear;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkEvent;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkItem;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkRole;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.workevent.WorkEventParam;
 import com.baiyi.opscloud.domain.vo.common.TreeVO;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventVO;
@@ -31,6 +35,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@BusinessType(BusinessTypeEnum.WORK_EVENT)
 public class WorkEventFacadeImpl implements WorkEventFacade {
 
     private final WorkEventService workEventService;
@@ -47,7 +52,7 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
     public DataTable<WorkEventVO.WorkEvent> queryPageByParam(WorkEventParam.PageQuery pageQuery) {
         DataTable<WorkEvent> table = workEventService.queryPageByParam(pageQuery);
         List<WorkEventVO.WorkEvent> data = BeanCopierUtil.copyListProperties(table.getData(), WorkEventVO.WorkEvent.class)
-                .stream().peek(workEventPacker::wrap)
+                .stream().peek(e -> workEventPacker.wrap(e, SimpleExtend.EXTEND))
                 .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
@@ -67,6 +72,7 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
     }
 
     @Override
+    @TagClear
     public void deleteWorkEvent(Integer id) {
         workEventService.deleteById(id);
     }
