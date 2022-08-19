@@ -35,6 +35,11 @@ public class WorkEventServiceImpl implements WorkEventService {
     }
 
     @Override
+    public void add(WorkEvent workEvent) {
+        workEventMapper.insert(workEvent);
+    }
+
+    @Override
     public void update(WorkEvent workEvent) {
         workEventMapper.deleteByPrimaryKey(workEvent);
     }

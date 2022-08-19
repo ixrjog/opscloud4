@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventVO;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.user.UserService;
+import com.baiyi.opscloud.service.workevent.WorkEventPropertyService;
 import com.baiyi.opscloud.service.workevent.WorkItemService;
 import com.baiyi.opscloud.service.workevent.WorkRoleService;
 import com.google.common.base.Joiner;
@@ -34,6 +35,11 @@ public class WorkEventPacker implements IWrapper<WorkEventVO.WorkEvent> {
 
     private final UserService userService;
 
+    private final WorkEventPropertyService workEventPropertyService;
+
+    private final static Integer ROOT_PARENT_ID = 0;
+
+
     @Override
     @AgoWrapper(extend = true)
     @TagsWrapper
@@ -42,7 +48,7 @@ public class WorkEventPacker implements IWrapper<WorkEventVO.WorkEvent> {
         vo.setWorkItem(workItemService.getById(vo.getWorkItemId()));
         List<WorkItem> workItemList = Lists.newArrayList();
         WorkItem workItem = workItemService.getById(vo.getWorkItemId());
-        while (!workItem.getParentId().equals(-1)) {
+        while (!workItem.getParentId().equals(ROOT_PARENT_ID)) {
             workItemList.add(workItem);
             workItem = workItemService.getById(workItem.getParentId());
         }
@@ -53,5 +59,6 @@ public class WorkEventPacker implements IWrapper<WorkEventVO.WorkEvent> {
         vo.setWorkItemTree(workItemTree);
         vo.setWorkRole(workRoleService.getById(vo.getWorkRoleId()));
         vo.setUser(userService.getByUsername(vo.getUsername()));
+        vo.setPropertyList(workEventPropertyService.listByWorkEventId(vo.getId()));
     }
 }

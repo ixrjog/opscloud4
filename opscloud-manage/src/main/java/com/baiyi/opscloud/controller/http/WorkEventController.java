@@ -71,6 +71,12 @@ public class WorkEventController {
         return new HttpResult<>(workEventFacade.listWorkRole());
     }
 
+    @ApiOperation(value = "工作角色id查询")
+    @GetMapping(value = "/role/id/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<WorkRole> getWorkRoleById(@RequestParam int id) {
+        return new HttpResult<>(workEventFacade.getWorkRoleById(id));
+    }
+
     @ApiOperation(value = "工作事项查询")
     @PostMapping(value = "/item/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<List<WorkItem>> listWorkItem(@RequestBody @Valid WorkEventParam.WorkItemQuery param) {

@@ -26,6 +26,8 @@ public interface WorkEventFacade {
 
     List<WorkRole> listWorkRole();
 
+    WorkRole getWorkRoleById(Integer workRoleId);
+
     List<WorkItem> listWorkItem(WorkEventParam.WorkItemQuery query);
 
     List<TreeVO.Tree> queryWorkItemTree(WorkEventParam.WorkItemTreeQuery param);

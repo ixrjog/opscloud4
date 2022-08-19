@@ -17,6 +17,8 @@ public interface WorkEventService {
 
     void addList(List<WorkEvent> workEventList);
 
+    void add(WorkEvent workEvent);
+
     void deleteById(Integer id);
 
     DataTable<WorkEvent> queryPageByParam(WorkEventParam.PageQuery pageQuery);
