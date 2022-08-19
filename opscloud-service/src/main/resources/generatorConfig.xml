@@ -95,7 +95,7 @@
         <!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
         <!--        </table>-->
 
-        <table tableName="work_item">
+        <table tableName="work_event_property">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 

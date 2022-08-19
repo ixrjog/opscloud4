@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.vo.workevent;
 
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.generator.opscloud.WorkEventProperty;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkItem;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkRole;
 import com.baiyi.opscloud.domain.vo.base.ShowTime;
@@ -62,6 +63,8 @@ public class WorkEventVO {
         private String comment;
 
         private List<TagVO.Tag> tags;
+
+        private List<WorkEventProperty> propertyList;
 
         @Override
         public Integer getBusinessId() {

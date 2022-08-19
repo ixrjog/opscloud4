@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.domain.param.workevent;
 
-import com.baiyi.opscloud.domain.generator.opscloud.WorkEvent;
 import com.baiyi.opscloud.domain.param.PageParam;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventVO;
 import io.swagger.annotations.ApiModel;
@@ -62,7 +61,7 @@ public class WorkEventParam {
     @ApiModel
     public static class AddWorkEvent {
 
-        private List<WorkEvent> workEventList;
+        private List<WorkEventVO.WorkEvent> workEventList;
 
     }
 
