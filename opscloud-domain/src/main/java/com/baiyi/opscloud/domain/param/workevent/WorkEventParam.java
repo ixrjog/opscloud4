@@ -32,6 +32,8 @@ public class WorkEventParam {
 
         private Integer workRoleId;
 
+        private String username;
+
         private List<Integer> workItemIdList;
 
         private Date workEventStartTime;
