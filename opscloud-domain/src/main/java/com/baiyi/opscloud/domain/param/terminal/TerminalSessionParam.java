@@ -27,7 +27,11 @@ public class TerminalSessionParam {
         @ApiModelProperty(value = "会话类型")
         private String sessionType;
 
+        @ApiModelProperty(value = "会话状态")
+        private Boolean sessionClosed;
+
         private Boolean extend;
 
     }
+
 }
