@@ -22,4 +22,5 @@ public interface WorkEventService {
     void deleteById(Integer id);
 
     DataTable<WorkEvent> queryPageByParam(WorkEventParam.PageQuery pageQuery);
+
 }
