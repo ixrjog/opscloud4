@@ -63,6 +63,9 @@ public class WorkEventServiceImpl implements WorkEventService {
         if (!CollectionUtils.isEmpty(pageQuery.getWorkItemIdList())) {
             criteria.andIn("workItemId", pageQuery.getWorkItemIdList());
         }
+        if (StringUtils.isNotBlank(pageQuery.getUsername())) {
+            criteria.andEqualTo("username", pageQuery.getUsername());
+        }
         if (!ObjectUtils.isEmpty(pageQuery.getWorkEventStartTime()) && !ObjectUtils.isEmpty(pageQuery.getWorkEventEndTime())) {
             criteria.andBetween("workEventTime", pageQuery.getWorkEventStartTime(), pageQuery.getWorkEventEndTime());
         }
