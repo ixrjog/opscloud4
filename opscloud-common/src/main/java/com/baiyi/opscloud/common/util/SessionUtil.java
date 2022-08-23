@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.common.util;
 
 import com.baiyi.opscloud.domain.generator.opscloud.UserToken;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @Author baiyi
@@ -35,11 +36,16 @@ public class SessionUtil {
     }
 
     public static Boolean getIsAdmin() {
-        return isAdmin.get() == null ? false : isAdmin.get();
+        return isAdmin.get() != null && isAdmin.get();
     }
 
     public static String getUsername() {
         return username.get();
+    }
+
+    public static boolean equalsUsername(String name) {
+        if (StringUtils.isEmpty(name)) return false;
+        return name.equals(username.get());
     }
 
     public static void setUsername(String param) {
