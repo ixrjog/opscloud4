@@ -1,21 +1,24 @@
 package com.baiyi.opscloud.facade.workevent.impl;
 
+import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.annotation.TagClear;
+import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.generator.opscloud.WorkEvent;
-import com.baiyi.opscloud.domain.generator.opscloud.WorkEventProperty;
-import com.baiyi.opscloud.domain.generator.opscloud.WorkItem;
-import com.baiyi.opscloud.domain.generator.opscloud.WorkRole;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.workevent.WorkEventParam;
 import com.baiyi.opscloud.domain.vo.common.TreeVO;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventVO;
 import com.baiyi.opscloud.facade.workevent.WorkEventFacade;
 import com.baiyi.opscloud.packer.workevent.WorkEventPacker;
+import com.baiyi.opscloud.service.tag.BusinessTagService;
+import com.baiyi.opscloud.service.tag.TagService;
+import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.workevent.WorkEventPropertyService;
 import com.baiyi.opscloud.service.workevent.WorkEventService;
 import com.baiyi.opscloud.service.workevent.WorkItemService;
@@ -49,16 +52,20 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
 
     private final WorkEventPacker workEventPacker;
 
+    private final BusinessTagService businessTagService;
+
+    private final TagService tagService;
+
     private final WorkEventPropertyService workEventPropertyService;
+
+    private final UserService userService;
 
     private final static Integer ROOT_PARENT_ID = 0;
 
     @Override
     public DataTable<WorkEventVO.WorkEvent> queryPageByParam(WorkEventParam.PageQuery pageQuery) {
         DataTable<WorkEvent> table = workEventService.queryPageByParam(pageQuery);
-        List<WorkEventVO.WorkEvent> data = BeanCopierUtil.copyListProperties(table.getData(), WorkEventVO.WorkEvent.class)
-                .stream().peek(e -> workEventPacker.wrap(e, SimpleExtend.EXTEND))
-                .collect(Collectors.toList());
+        List<WorkEventVO.WorkEvent> data = BeanCopierUtil.copyListProperties(table.getData(), WorkEventVO.WorkEvent.class).stream().peek(e -> workEventPacker.wrap(e, SimpleExtend.EXTEND)).collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
@@ -95,7 +102,31 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
 
     @Override
     public List<WorkRole> listWorkRole() {
-        return workRoleService.listAll();
+        return workRoleService.queryAll();
+    }
+
+    @Override
+    public List<WorkRole> queryMyWorkRole() {
+        String username = SessionUtil.getUsername();
+        User user = userService.getByUsername(username);
+        if (user == null) throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_FAILURE);
+        List<Tag> tags = businessTagService.queryByBusiness(SimpleBusiness.builder().businessType(BusinessTypeEnum.USER.getType())
+                .businessId(user.getId())
+                .build()
+        ).stream().map(e -> tagService.getById(e.getTagId())).collect(Collectors.toList());
+
+        List<WorkRole> workRoles = Lists.newArrayList();
+        if (!CollectionUtils.isEmpty(tags)) {
+            for (Tag tag : tags) {
+                WorkRole workRole = workRoleService.getByTag(tag.getTagKey());
+                if (workRole != null) {
+                    workRoles.add(workRole);
+                }
+            }
+        }
+        if (!CollectionUtils.isEmpty(workRoles))
+            return workRoles;
+        return workRoleService.queryAll();
     }
 
     @Override
@@ -126,25 +157,17 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
     }
 
     private TreeVO.Tree buildTree(WorkRole workRole) {
-        return TreeVO.Tree.builder()
-                .label(workRole.getWorkRoleName())
-                .children(getChildTree(workRole.getId(), ROOT_PARENT_ID))
-                .build();
+        return TreeVO.Tree.builder().label(workRole.getWorkRoleName()).children(getChildTree(workRole.getId(), ROOT_PARENT_ID)).build();
     }
 
     private List<TreeVO.Tree> getChildTree(Integer workRoleId, Integer parentId) {
         List<WorkItem> workItemList = workItemService.listByWorkRoleIdAndParentId(workRoleId, parentId);
-        if (CollectionUtils.isEmpty(workItemList))
-            return Collections.emptyList();
+        if (CollectionUtils.isEmpty(workItemList)) return Collections.emptyList();
         List<TreeVO.Tree> childDeptTreeList = Lists.newArrayListWithCapacity(workItemList.size());
         workItemList.forEach(child -> {
             List<TreeVO.Tree> list = getChildTree(child.getWorkRoleId(), child.getId());
-            TreeVO.Tree childDeptTree = TreeVO.Tree.builder()
-                    .label(child.getWorkItemName())
-                    .value(child.getId())
-                    .build();
-            if (!CollectionUtils.isEmpty(list))
-                childDeptTree.setChildren(list);
+            TreeVO.Tree childDeptTree = TreeVO.Tree.builder().label(child.getWorkItemName()).value(child.getId()).build();
+            if (!CollectionUtils.isEmpty(list)) childDeptTree.setChildren(list);
             childDeptTreeList.add(childDeptTree);
         });
         return childDeptTreeList;

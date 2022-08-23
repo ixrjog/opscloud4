@@ -71,6 +71,13 @@ public class WorkEventController {
         return new HttpResult<>(workEventFacade.listWorkRole());
     }
 
+
+    @ApiOperation(value = "查询我的工作角色")
+    @GetMapping(value = "/my/role/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<WorkRole>> queryMyWorkRole() {
+        return new HttpResult<>(workEventFacade.listWorkRole());
+    }
+
     @ApiOperation(value = "工作角色id查询")
     @GetMapping(value = "/role/id/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<WorkRole> getWorkRoleById(@RequestParam int id) {

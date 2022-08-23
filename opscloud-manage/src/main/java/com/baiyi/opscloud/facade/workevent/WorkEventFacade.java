@@ -26,6 +26,8 @@ public interface WorkEventFacade {
 
     List<WorkRole> listWorkRole();
 
+    List<WorkRole> queryMyWorkRole();
+
     WorkRole getWorkRoleById(Integer workRoleId);
 
     List<WorkItem> listWorkItem(WorkEventParam.WorkItemQuery query);

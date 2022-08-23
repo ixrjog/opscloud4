@@ -24,6 +24,11 @@ public class WorkRole {
     @Column(name = "work_role_key")
     private String workRoleKey;
 
+    /**
+     * 标签
+     */
+    private String tag;
+
     private String comment;
 
     /**

@@ -57,8 +57,4 @@ public class TerminalSessionInstanceCommand {
      */
     private String output;
 
-//    @Override
-//    public String toString() {
-//        return JSONUtils.toJSONString(this);
-//    }
 }

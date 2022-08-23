@@ -5,6 +5,7 @@ import com.baiyi.opscloud.mapper.opscloud.WorkRoleMapper;
 import com.baiyi.opscloud.service.workevent.WorkRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class WorkRoleServiceImpl implements WorkRoleService {
     private final WorkRoleMapper workRoleMapper;
 
     @Override
-    public List<WorkRole> listAll() {
+    public List<WorkRole> queryAll() {
         return workRoleMapper.selectAll();
     }
 
@@ -29,4 +30,13 @@ public class WorkRoleServiceImpl implements WorkRoleService {
     public WorkRole getById(Integer id) {
         return workRoleMapper.selectByPrimaryKey(id);
     }
+
+    @Override
+    public WorkRole getByTag(String tag) {
+        Example example = new Example(WorkRole.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("tag", tag);
+        return workRoleMapper.selectOneByExample(example);
+    }
+
 }
