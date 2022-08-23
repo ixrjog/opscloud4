@@ -37,7 +37,7 @@ public class GroupRepoImpl implements GroupRepo {
     public List<LdapGroup.Group> searchGroupByUsername(LdapConfig.Ldap ldapConfig, String username) {
         List<String> groupNames = ldapDrive.searchLdapGroup(ldapConfig, username);
         return groupNames.stream().map(e ->
-                ldapDrive.getGroupWithDn(ldapConfig, ldapConfig.buildGroupDn(e))
+                ldapDrive.getGroupWithDN(ldapConfig, ldapConfig.buildGroupDn(e))
         ).collect(Collectors.toList());
     }
 
