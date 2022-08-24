@@ -94,9 +94,23 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void updateWorkEvent(WorkEventParam.UpdateWorkEvent param) {
         WorkEvent workEvent = BeanCopierUtil.copyProperties(param.getWorkEvent(), WorkEvent.class);
         workEventService.update(workEvent);
+        workEventPropertyService.deleteByWorkEventId(workEvent.getId());
+        Map<String, String> map = param.getWorkEvent().getProperty();
+        if (!CollectionUtils.isEmpty(map)) {
+            List<WorkEventProperty> propertyList = Lists.newArrayList();
+            map.forEach((k, v) ->
+                    propertyList.add(WorkEventProperty.builder()
+                            .workEventId(workEvent.getId())
+                            .name(k)
+                            .value(v)
+                            .build())
+            );
+            workEventPropertyService.addList(propertyList);
+        }
     }
 
     @Override

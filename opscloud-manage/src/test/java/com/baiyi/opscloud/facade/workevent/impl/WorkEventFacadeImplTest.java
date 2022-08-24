@@ -4,6 +4,7 @@ import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkRole;
 import com.baiyi.opscloud.facade.workevent.WorkEventFacade;
+import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;

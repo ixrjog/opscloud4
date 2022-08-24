@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author 修远
@@ -65,6 +66,8 @@ public class WorkEventVO {
         private List<TagVO.Tag> tags;
 
         private List<WorkEventProperty> propertyList;
+
+        private Map<String, String> property;
 
         @Override
         public Integer getBusinessId() {

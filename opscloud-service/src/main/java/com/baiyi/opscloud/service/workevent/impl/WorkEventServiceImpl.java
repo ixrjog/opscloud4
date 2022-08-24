@@ -42,7 +42,7 @@ public class WorkEventServiceImpl implements WorkEventService {
 
     @Override
     public void update(WorkEvent workEvent) {
-        workEventMapper.deleteByPrimaryKey(workEvent);
+        workEventMapper.updateByPrimaryKey(workEvent);
     }
 
     @Override
