@@ -31,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -113,26 +114,25 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
 
     @Override
     public List<WorkRole> queryMyWorkRole() {
-        String username = SessionUtil.getUsername();
-        User user = userService.getByUsername(username);
-        if (user == null) throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_FAILURE);
-        List<Tag> tags = businessTagService.queryByBusiness(SimpleBusiness.builder().businessType(BusinessTypeEnum.USER.getType())
-                .businessId(user.getId())
-                .build()
-        ).stream().map(e -> tagService.getById(e.getTagId())).collect(Collectors.toList());
-
+        User user = userService.getByUsername(SessionUtil.getUsername());
+        if (ObjectUtils.isEmpty(user)) throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_FAILURE);
+        List<Tag> tags = businessTagService.queryByBusiness(
+                        SimpleBusiness.builder()
+                                .businessType(BusinessTypeEnum.USER.getType())
+                                .businessId(user.getId())
+                                .build())
+                .stream()
+                .map(e -> tagService.getById(e.getTagId()))
+                .collect(Collectors.toList());
         List<WorkRole> workRoles = Lists.newArrayList();
         if (!CollectionUtils.isEmpty(tags)) {
-            for (Tag tag : tags) {
+            tags.forEach(tag -> {
                 WorkRole workRole = workRoleService.getByTag(tag.getTagKey());
-                if (workRole != null) {
+                if (!ObjectUtils.isEmpty(workRole))
                     workRoles.add(workRole);
-                }
-            }
+            });
         }
-        if (!CollectionUtils.isEmpty(workRoles))
-            return workRoles;
-        return workRoleService.queryAll();
+        return CollectionUtils.isEmpty(workRoles) ? workRoleService.queryAll() : workRoles;
     }
 
     @Override
