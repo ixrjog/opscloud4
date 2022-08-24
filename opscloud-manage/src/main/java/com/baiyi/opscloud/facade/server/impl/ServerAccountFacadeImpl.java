@@ -16,6 +16,7 @@ import com.baiyi.opscloud.service.sys.CredentialService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
 import java.util.List;
@@ -52,7 +53,7 @@ public class ServerAccountFacadeImpl implements ServerAccountFacade {
         try {
             accountService.add(serverAccount);
         } catch (Exception e) {
-            throw new CommonRuntimeException("新增账户错误: 请确认账户名称和类型是否重复！");
+            throw new CommonRuntimeException("新增服务器账户错误: 请确认账户名称和类型是否重复！");
         }
     }
 
@@ -71,22 +72,29 @@ public class ServerAccountFacadeImpl implements ServerAccountFacade {
         return serverAccount;
     }
 
+    /**
+     * 更新服务器账户授权
+     * @param updatePermission
+     */
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void updateServerAccountPermission(ServerAccountParam.UpdateServerAccountPermission updatePermission) {
         List<ServerAccountPermission> permissions = accountPermissionService.queryByServerId(updatePermission.getServerId());
-        updatePermission.getAccountIds().forEach(id -> {
-            if (!isAuthorized(permissions, id)) {
+        for (Integer id : updatePermission.getAccountIds()) {
+            if (!hasAuthorized(permissions, id)) {
                 ServerAccountPermission permission = ServerAccountPermission.builder()
                         .serverAccountId(id)
                         .serverId(updatePermission.getServerId())
                         .build();
                 accountPermissionService.add(permission);
             }
-        });
-        permissions.forEach(e -> accountPermissionService.deleteById(e.getId()));
+        }
+        for (ServerAccountPermission e : permissions) {
+            accountPermissionService.deleteById(e.getId());
+        }
     }
 
-    private boolean isAuthorized(List<ServerAccountPermission> permissions, Integer accountId) {
+    private boolean hasAuthorized(List<ServerAccountPermission> permissions, Integer accountId) {
         Iterator<ServerAccountPermission> iter = permissions.iterator();
         while (iter.hasNext()) {
             ServerAccountPermission permission = iter.next();
@@ -101,7 +109,7 @@ public class ServerAccountFacadeImpl implements ServerAccountFacade {
     @Override
     public void deleteServerAccountById(Integer id) {
         if (accountPermissionService.countByServerAccountId(id) != 0) {
-            throw new CommonRuntimeException("服务器账户删除错误: 账户使用中！");
+            throw new CommonRuntimeException("删除服务器账户错误: 账户使用中！");
         }
         accountService.deleteById(id);
     }

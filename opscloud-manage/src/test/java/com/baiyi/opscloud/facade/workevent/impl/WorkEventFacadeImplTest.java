@@ -22,7 +22,7 @@ class WorkEventFacadeImplTest extends BaseUnit {
 
     @Test
     void queryMyWorkRoleTest() {
-        SessionUtil.setUsername("wangyanxia");
+        SessionUtil.setUsername("xiuyuan");
         List<WorkRole> workRoles = workEventFacade.queryMyWorkRole();
         print(workRoles);
     }
