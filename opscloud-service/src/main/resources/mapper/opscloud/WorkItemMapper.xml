@@ -10,6 +10,7 @@
         <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
         <result column="work_item_name" jdbcType="VARCHAR" property="workItemName"/>
         <result column="work_item_key" jdbcType="VARCHAR" property="workItemKey"/>
+        <result column="color" jdbcType="VARCHAR" property="color"/>
         <result column="comment" jdbcType="VARCHAR" property="comment"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>

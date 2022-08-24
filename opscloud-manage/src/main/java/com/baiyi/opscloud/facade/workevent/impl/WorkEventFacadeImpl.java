@@ -12,7 +12,9 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkItem;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkRole;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.workevent.WorkEventParam;
+import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.baiyi.opscloud.domain.vo.common.TreeVO;
+import com.baiyi.opscloud.domain.vo.workevent.WorkEventReportVO;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventVO;
 import com.baiyi.opscloud.facade.workevent.WorkEventFacade;
 import com.baiyi.opscloud.packer.workevent.WorkEventPacker;
@@ -21,6 +23,7 @@ import com.baiyi.opscloud.service.workevent.WorkEventService;
 import com.baiyi.opscloud.service.workevent.WorkItemService;
 import com.baiyi.opscloud.service.workevent.WorkRoleService;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +31,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -57,7 +61,8 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
     public DataTable<WorkEventVO.WorkEvent> queryPageByParam(WorkEventParam.PageQuery pageQuery) {
         DataTable<WorkEvent> table = workEventService.queryPageByParam(pageQuery);
         List<WorkEventVO.WorkEvent> data = BeanCopierUtil.copyListProperties(table.getData(), WorkEventVO.WorkEvent.class)
-                .stream().peek(e -> workEventPacker.wrap(e, SimpleExtend.EXTEND))
+                .stream()
+                .peek(e -> workEventPacker.wrap(e, SimpleExtend.EXTEND))
                 .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
@@ -70,13 +75,12 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
             workEventService.add(workEvent);
             List<WorkEventProperty> propertyList = workEventVO.getPropertyList();
             if (!CollectionUtils.isEmpty(propertyList)) {
-                workEventPropertyService.addList(propertyList.stream().peek(property -> property.setWorkEventId(workEvent.getId())).collect(Collectors.toList()));
+                workEventPropertyService.addList(propertyList
+                        .stream()
+                        .peek(property -> property.setWorkEventId(workEvent.getId()))
+                        .collect(Collectors.toList()));
             }
         });
-//        List<WorkEvent> list = BeanCopierUtil.copyListProperties(param.getWorkEventList(), WorkEvent.class).stream()
-//                .peek(workEvent -> workEvent.setUsername(SessionUtil.getUsername()))
-//                .collect(Collectors.toList());
-//        workEventService.addList(list);
     }
 
     @Override
@@ -148,5 +152,38 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
             childDeptTreeList.add(childDeptTree);
         });
         return childDeptTreeList;
+    }
+
+    @Override
+    public WorkEventReportVO.WeeklyReport getWorkEventWeeklyReport(Integer workRoleId) {
+        List<String> weeks = workEventService.queryWeek(workRoleId).stream().map(ReportVO.Report::getCName).collect(Collectors.toList());
+        List<WorkItem> workItemList = queryChildItem(workRoleId);
+        Map<String, WorkEventReportVO.WeeklyStatistics> map = Maps.newHashMapWithExpectedSize(workItemList.size());
+        workItemList.forEach(workItem -> {
+            List<Integer> value = workEventService.queryWeekByItem(workRoleId, workItem.getId()).stream()
+                    .map(ReportVO.Report::getValue).collect(Collectors.toList());
+            WorkEventReportVO.WeeklyStatistics weeklyStatistics = WorkEventReportVO.WeeklyStatistics.builder()
+                    .color(workItem.getColor())
+                    .values(value)
+                    .build();
+            map.put(workItem.getWorkItemName(), weeklyStatistics);
+        });
+        return WorkEventReportVO.WeeklyReport.builder()
+                .weeks(weeks)
+                .valueMap(map)
+                .build();
+    }
+
+    private List<WorkItem> queryChildItem(Integer workRoleId) {
+        List<WorkItem> workItemList = workItemService.listByWorkRoleId(workRoleId);
+        return workItemList.stream()
+                .filter(e -> CollectionUtils.isEmpty(workItemService.listByWorkRoleIdAndParentId(workRoleId, e.getId())))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<WorkEventReportVO.ItemReport> getWorkEventItemReport(Integer workRoleId) {
+        List<ReportVO.Report> report = workEventService.getWorkEventItemReport(workRoleId);
+        return BeanCopierUtil.copyListProperties(report, WorkEventReportVO.ItemReport.class);
     }
 }

@@ -36,6 +36,11 @@ public class WorkItem {
     @Column(name = "work_item_key")
     private String workItemKey;
 
+    /**
+     * 类目颜色，前端专用
+     */
+    private String color;
+
     private String comment;
 
     /**

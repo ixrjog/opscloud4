@@ -34,4 +34,12 @@ public class WorkItemServiceImpl implements WorkItemService {
     public WorkItem getById(Integer id) {
         return workItemMapper.selectByPrimaryKey(id);
     }
+
+    @Override
+    public List<WorkItem> listByWorkRoleId(Integer workRoleId) {
+        Example example = new Example(WorkItem.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("workRoleId", workRoleId);
+        return workItemMapper.selectByExample(example);
+    }
 }

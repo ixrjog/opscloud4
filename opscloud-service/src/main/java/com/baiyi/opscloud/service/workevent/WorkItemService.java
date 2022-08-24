@@ -11,8 +11,10 @@ import java.util.List;
  */
 public interface WorkItemService {
 
-    List<WorkItem> listByWorkRoleIdAndParentId(Integer workRoleId,Integer parentId);
+    List<WorkItem> listByWorkRoleIdAndParentId(Integer workRoleId, Integer parentId);
 
     WorkItem getById(Integer id);
+
+    List<WorkItem> listByWorkRoleId(Integer workRoleId);
 
 }

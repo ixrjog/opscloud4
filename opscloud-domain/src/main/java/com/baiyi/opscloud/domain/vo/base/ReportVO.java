@@ -17,6 +17,7 @@ public class ReportVO {
     public static class Report {
         private String cName;
         private Integer value;
+        private String color;
     }
 
 }

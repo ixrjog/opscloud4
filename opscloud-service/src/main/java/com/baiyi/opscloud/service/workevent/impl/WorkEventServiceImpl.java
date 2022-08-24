@@ -3,6 +3,7 @@ package com.baiyi.opscloud.service.workevent.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkEvent;
 import com.baiyi.opscloud.domain.param.workevent.WorkEventParam;
+import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.baiyi.opscloud.mapper.opscloud.WorkEventMapper;
 import com.baiyi.opscloud.service.workevent.WorkEventService;
 import com.baiyi.opscloud.util.SQLUtil;
@@ -69,8 +70,23 @@ public class WorkEventServiceImpl implements WorkEventService {
         if (!ObjectUtils.isEmpty(pageQuery.getWorkEventStartTime()) && !ObjectUtils.isEmpty(pageQuery.getWorkEventEndTime())) {
             criteria.andBetween("workEventTime", pageQuery.getWorkEventStartTime(), pageQuery.getWorkEventEndTime());
         }
-        example.setOrderByClause("work_event_time desc");
+        example.setOrderByClause("work_event_time desc, id desc");
         List<WorkEvent> data = workEventMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
+    }
+
+    @Override
+    public List<ReportVO.Report> queryWeek(Integer workRoleId) {
+        return workEventMapper.queryWeek(workRoleId);
+    }
+
+    @Override
+    public List<ReportVO.Report> queryWeekByItem(Integer workRoleId, Integer workItemId) {
+        return workEventMapper.queryWeekByItem(workRoleId, workItemId);
+    }
+
+    @Override
+    public List<ReportVO.Report> getWorkEventItemReport(Integer workRoleId) {
+        return workEventMapper.getWorkEventItemReport(workRoleId);
     }
 }

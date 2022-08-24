@@ -3,6 +3,7 @@ package com.baiyi.opscloud.service.workevent;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkEvent;
 import com.baiyi.opscloud.domain.param.workevent.WorkEventParam;
+import com.baiyi.opscloud.domain.vo.base.ReportVO;
 
 import java.util.List;
 
@@ -22,4 +23,10 @@ public interface WorkEventService {
     void deleteById(Integer id);
 
     DataTable<WorkEvent> queryPageByParam(WorkEventParam.PageQuery pageQuery);
+
+    List<ReportVO.Report> queryWeek(Integer workRoleId);
+
+    List<ReportVO.Report> queryWeekByItem(Integer workRoleId, Integer workItemId);
+
+    List<ReportVO.Report> getWorkEventItemReport(Integer workRoleId);
 }

@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkItem;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkRole;
 import com.baiyi.opscloud.domain.param.workevent.WorkEventParam;
 import com.baiyi.opscloud.domain.vo.common.TreeVO;
+import com.baiyi.opscloud.domain.vo.workevent.WorkEventReportVO;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventVO;
 
 import java.util.List;
@@ -33,4 +34,9 @@ public interface WorkEventFacade {
     List<TreeVO.Tree> queryWorkItemTree(WorkEventParam.WorkItemTreeQuery param);
 
     WorkItem getWorkItemById(Integer workItemId);
+
+    WorkEventReportVO.WeeklyReport getWorkEventWeeklyReport(Integer workRoleId);
+
+    List<WorkEventReportVO.ItemReport> getWorkEventItemReport(Integer workRoleId);
+
 }
