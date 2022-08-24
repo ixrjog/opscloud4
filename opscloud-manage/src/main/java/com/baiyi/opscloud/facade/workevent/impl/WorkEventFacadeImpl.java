@@ -108,7 +108,7 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
     }
 
     @Override
-    public List<WorkRole> listWorkRole() {
+    public List<WorkRole> queryWorkRole() {
         return workRoleService.queryAll();
     }
 
@@ -156,7 +156,7 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
             WorkRole workRole = workRoleService.getById(param.getWorkRoleId());
             return Lists.newArrayList(buildTree(workRole));
         }
-        List<WorkRole> workRoleList = listWorkRole();
+        List<WorkRole> workRoleList = queryWorkRole();
         List<TreeVO.Tree> tree = Lists.newArrayListWithCapacity(workRoleList.size());
         workRoleList.forEach(workRole -> tree.add(buildTree(workRole)));
         return tree;

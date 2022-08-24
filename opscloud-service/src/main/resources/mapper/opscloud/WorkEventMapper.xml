@@ -32,7 +32,7 @@
 
 
     <select id="queryWeekByItem" resultMap="ReportResultMap">
-        select date_format(create_time, '%Y-%u') as `c_name`, sum(if(work_item_id = #{workItemId}, 1, 0)) as `value`
+        select date_format(create_time, '%Y-%u') as `c_name`, sum(case when work_item_id = #{workItemId} then work_event_cnt else 0 end) as `value`
         from work_event
         where work_role_id = #{workRoleId}
         group by `c_name`
@@ -40,7 +40,7 @@
     </select>
 
     <select id="getWorkEventItemReport" resultMap="ReportResultMap">
-        select a1.work_item_name as `c_name`, count(*) as `value`, a1.color
+        select a1.work_item_name as `c_name`, sum(work_event_cnt) as `value`, a1.color
         from work_event a0
                  join work_item a1 on a1.id = a0.work_item_id
         where a0.work_role_id = #{workRoleId}

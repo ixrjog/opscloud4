@@ -25,7 +25,7 @@ public interface WorkEventFacade {
 
     void deleteWorkEvent(Integer id);
 
-    List<WorkRole> listWorkRole();
+    List<WorkRole> queryWorkRole();
 
     List<WorkRole> queryMyWorkRole();
 
