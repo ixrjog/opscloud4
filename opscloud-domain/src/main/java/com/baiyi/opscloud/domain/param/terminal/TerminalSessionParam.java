@@ -30,6 +30,9 @@ public class TerminalSessionParam {
         @ApiModelProperty(value = "会话状态")
         private Boolean sessionClosed;
 
+        @ApiModelProperty(value = "Opscloud实例名称")
+        private String serverHostname;
+
         private Boolean extend;
 
     }
