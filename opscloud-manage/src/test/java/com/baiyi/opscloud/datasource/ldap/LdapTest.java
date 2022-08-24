@@ -111,7 +111,7 @@ public class LdapTest extends BaseUnit {
     @Test
     void queryPersonTest() {
         LdapConfig ldapDsInstanceConfig = (LdapConfig) getConfig();
-        LdapPerson.Person person = ldapHandler.getPersonWithDn(ldapDsInstanceConfig.getLdap(), "cn=baiyi,ou=People");
+        LdapPerson.Person person = ldapHandler.getPersonWithDN(ldapDsInstanceConfig.getLdap(), "cn=baiyi,ou=People");
     }
 
 
@@ -119,7 +119,7 @@ public class LdapTest extends BaseUnit {
     void queryGroupTest() {
         LdapConfig ldapDsInstanceConfig = (LdapConfig) getConfig();
         // "cn=confluence-users,ou=Groups"
-        LdapGroup.Group group = ldapHandler.getGroupWithDn(ldapDsInstanceConfig.getLdap(), "cn=vpn-users,ou=Groups");
+        LdapGroup.Group group = ldapHandler.getGroupWithDN(ldapDsInstanceConfig.getLdap(), "cn=vpn-users,ou=Groups");
     }
 
     @Test

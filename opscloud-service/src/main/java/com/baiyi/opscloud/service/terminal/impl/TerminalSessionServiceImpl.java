@@ -49,6 +49,9 @@ public class TerminalSessionServiceImpl implements TerminalSessionService {
         }
         if (!StringUtils.isEmpty(pageQuery.getSessionType()))
             criteria.andEqualTo("sessionType", pageQuery.getSessionType());
+        if (pageQuery.getSessionClosed() != null) {
+            criteria.andEqualTo("sessionClosed", pageQuery.getSessionClosed());
+        }
         example.setOrderByClause("create_time desc");
         List<TerminalSession> data = sessionMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());

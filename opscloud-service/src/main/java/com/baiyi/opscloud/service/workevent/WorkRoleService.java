@@ -11,7 +11,10 @@ import java.util.List;
  */
 public interface WorkRoleService {
 
-    List<WorkRole> listAll();
+    List<WorkRole> queryAll();
 
     WorkRole getById(Integer id);
+
+    WorkRole getByTag(String tag);
+
 }

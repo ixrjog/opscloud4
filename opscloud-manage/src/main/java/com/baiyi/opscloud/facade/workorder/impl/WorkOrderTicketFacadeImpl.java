@@ -166,7 +166,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         try {
             this.approveTicket(approveTicket);
         } catch (Exception e) {
-           return HttpResult.builder()
+            return HttpResult.builder()
                     .success(false)
                     .msg("Approval failed")
                     .build();
@@ -278,13 +278,12 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     @Override
     public void addTicketEntry(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
         WorkOrderTicket workOrderTicket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
-        if (!workOrderTicket.getUsername().equals(SessionUtil.getUsername()))
+        if (!SessionUtil.equalsUsername(workOrderTicket.getUsername()))
             throw new TicketCommonException("不合法的请求: 只有工单创建人才能新增条目！");
         WorkOrder workOrder = workOrderService.getById(workOrderTicket.getWorkOrderId());
         ITicketProcessor iTicketProcessor = WorkOrderTicketProcessorFactory.getByKey(workOrder.getWorkOrderKey());
         if (iTicketProcessor == null)
             throw new TicketCommonException("工单类型不正确！");
-        // WorkOrderTicketEntry verificationTicketEntry = BeanCopierUtil.copyProperties(ticketEntry, WorkOrderTicketEntry.class);
         iTicketProcessor.verify(ticketEntry); // 验证
         ticketEntryService.add(ticketEntry); // 新增
     }
@@ -297,7 +296,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         WorkOrderTicket workOrderTicket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
         if (!OrderTicketPhaseCodeConstants.NEW.name().equals(workOrderTicket.getTicketPhase()))
             throw new TicketCommonException("只有新建工单才能修改或删除条目！");
-        if (!workOrderTicket.getUsername().equals(SessionUtil.getUsername()))
+        if (!SessionUtil.equalsUsername(workOrderTicket.getUsername()))
             throw new TicketCommonException("不合法的请求: 只有工单创建人才能新增条目！");
         ticketEntryService.deleteById(ticketEntryId);
     }

@@ -13,6 +13,7 @@ import com.baiyi.opscloud.facade.auth.AuthFacade;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import com.baiyi.opscloud.facade.auth.UserTokenFacade;
 import com.baiyi.opscloud.facade.auth.mfa.MfaAuthHelper;
+import com.baiyi.opscloud.service.auth.AuthPlatformLogService;
 import com.baiyi.opscloud.service.auth.AuthPlatformService;
 import com.baiyi.opscloud.service.auth.AuthResourceService;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
@@ -60,6 +61,8 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     private final MfaAuthHelper mfaAuthHelper;
 
     private final AuthPlatformService authPlatformlService;
+
+    private final AuthPlatformLogService authPlatformlLogService;
 
     @Override
     public void tryUserHasResourceAuthorize(String token, String resourceName) {
@@ -158,11 +161,29 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
         User user = userService.getByUsername(loginParam.getUsername());
         // 尝试使用authProvider 认证
         if (authProviderManager.tryLogin(user, loginParam)) {
+            recordLog(authPlatform, loginParam, ErrorEnum.OK);
             return LogVO.Login.builder()
                     .name(loginParam.getUsername())
                     .build();
         } else {
+            recordLog(authPlatform, loginParam, ErrorEnum.AUTH_USER_LOGIN_FAILURE);
             throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_FAILURE); // 登录失败
+        }
+    }
+
+    private void recordLog(AuthPlatform authPlatform, LoginParam.PlatformLogin loginParam, ErrorEnum errorEnum) {
+        AuthPlatformLog authPlatformLog = AuthPlatformLog.builder()
+                .platformId(authPlatform.getId())
+                .platformName(authPlatform.getName())
+                .username(loginParam.getUsername())
+                .otp(StringUtils.isNotBlank(loginParam.getOtp()))
+                .result(errorEnum == ErrorEnum.OK)
+                .resultMsg(errorEnum.getMessage())
+                .build();
+        try {
+            authPlatformlLogService.add(authPlatformLog);
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
     }
 

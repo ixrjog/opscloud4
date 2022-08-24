@@ -11,5 +11,6 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="work_role_name" jdbcType="VARCHAR" property="workRoleName" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
   </resultMap>
 </mapper>

@@ -44,8 +44,9 @@ public class ServerAccountPacker implements IWrapper<ServerAccountVO.Account> {
     @Override
     public void wrap(ServerAccountVO.Account account, IExtend iExtend) {
         if (account == null) return;
-        account.setDisplayName(Joiner.on("").join(account.getUsername(), "[", account.getProtocol(), "]"));
-        credentialPacker.wrap(account);
+        String displayName = Joiner.on("").skipNulls().join( "[", account.getProtocol(), "|",account.getUsername(),"]",account.getComment());
+        account.setDisplayName(displayName);
+                credentialPacker.wrap(account);
         account.setServerSize(accountPermissionService.countByServerAccountId(account.getId()));
     }
 

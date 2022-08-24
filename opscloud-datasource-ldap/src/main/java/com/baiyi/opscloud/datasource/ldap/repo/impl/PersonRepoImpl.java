@@ -30,7 +30,7 @@ public class PersonRepoImpl implements PersonRepo {
         List<LdapPerson.Person> people = Lists.newArrayList();
         for (String username : usernames) {
             try {
-                people.add(ldapDrive.getPersonWithDn(ldapConfig, ldapConfig.buildUserDn(username)));
+                people.add(ldapDrive.getPersonWithDN(ldapConfig, ldapConfig.buildUserDn(username)));
             } catch (Exception e) {
                 log.error("未找到 usernmae = {} 对应的 Person", username);
             }
@@ -66,7 +66,7 @@ public class PersonRepoImpl implements PersonRepo {
      */
     @Override
     public LdapPerson.Person findPersonWithDn(LdapConfig.Ldap ldapConfig, String dn) {
-        return ldapDrive.getPersonWithDn(ldapConfig, dn);
+        return ldapDrive.getPersonWithDN(ldapConfig, dn);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class PersonRepoImpl implements PersonRepo {
 
     @Override
     public Boolean checkPersonInLdap(LdapConfig.Ldap ldapConfig, String username) {
-        return ldapDrive.checkPersonInLdap(ldapConfig, username);
+        return ldapDrive.hasPersonInLdap(ldapConfig, username);
 
     }
 

@@ -55,5 +55,7 @@ public class ServerAccountVO {
 
         private Boolean isActive;
 
+        private String comment;
+
     }
 }

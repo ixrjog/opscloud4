@@ -24,7 +24,7 @@ public class LdapAuthProvider extends BaseAuthProvider {
 
     @Override
     protected boolean auth(DsInstanceContext dsInstanceContext, Authorization.Credential credential) {
-        return ldapDriver.loginCheck(buildConfig(dsInstanceContext.getDsConfig()), credential);
+        return ldapDriver.verifyLogin(buildConfig(dsInstanceContext.getDsConfig()), credential);
     }
 
     private LdapConfig.Ldap buildConfig(DatasourceConfig dsConfig) {
