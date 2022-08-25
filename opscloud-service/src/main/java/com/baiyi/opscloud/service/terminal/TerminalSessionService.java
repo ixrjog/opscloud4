@@ -20,7 +20,11 @@ public interface TerminalSessionService {
 
     TerminalSession getBySessionId(String sessionId);
 
+    TerminalSession getById(int id);
+
     DataTable<TerminalSession> queryTerminalSessionPage(TerminalSessionParam.TerminalSessionPageQuery pageQuery);
+
+    int countActiveSessionByParam(String serverHostname, String sessionType);
 
     List<ReportVO.Report> queryMonth();
 

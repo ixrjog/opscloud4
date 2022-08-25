@@ -4,6 +4,8 @@ import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
 
+import java.util.Map;
+
 /**
  * @Author baiyi
  * @Date 2021/9/3 1:49 下午
@@ -67,6 +69,11 @@ public class InstanceVO {
         private String comment;
 
         private String license;
+
+        /**
+         * 活动会话
+         */
+        private Map<String,Integer> activeSessionMap;
 
     }
 }

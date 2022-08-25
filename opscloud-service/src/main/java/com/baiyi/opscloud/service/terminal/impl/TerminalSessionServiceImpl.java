@@ -62,6 +62,21 @@ public class TerminalSessionServiceImpl implements TerminalSessionService {
     }
 
     @Override
+    public int countActiveSessionByParam(String serverHostname, String sessionType) {
+        Example example = new Example(TerminalSession.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("serverHostname", serverHostname);
+        criteria.andEqualTo("sessionClosed", false);
+        criteria.andEqualTo("sessionType", sessionType);
+        return sessionMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public TerminalSession getById(int id) {
+        return sessionMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public TerminalSession getBySessionId(String sessionId) {
         Example example = new Example(TerminalSession.class);
         Example.Criteria criteria = example.createCriteria();

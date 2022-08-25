@@ -40,7 +40,7 @@ public class ServerTerminalCloseHandler extends AbstractServerTerminalHandler<Se
                 jSchSession.setCommander(null);
                 jSchSession = null;
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, instanceId); // 设置关闭会话
-                serverCommandAudit.recordCommand(terminalSession.getSessionId(), instanceId);
+                serverCommandAudit.asyncRecordCommand(terminalSession.getSessionId(), instanceId);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -42,7 +42,7 @@ public class KubernetesTerminalCloseHandler extends AbstractKubernetesTerminalMe
                 KubernetesSession kubernetesSession = sessionMap.get(instanceId);
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, instanceId);  // 设置关闭会话
                 KubernetesSessionContainer.closeSession(terminalSession.getSessionId(), instanceId);
-                podCommandAudit.recordCommand(terminalSession.getSessionId(), instanceId);
+                podCommandAudit.asyncRecordCommand(terminalSession.getSessionId(), instanceId);
             } catch (Exception e) {
                 log.error(e.getMessage());
             }
