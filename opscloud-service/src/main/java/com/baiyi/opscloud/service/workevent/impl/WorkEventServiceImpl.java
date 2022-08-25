@@ -51,6 +51,11 @@ public class WorkEventServiceImpl implements WorkEventService {
     }
 
     @Override
+    public WorkEvent getById(Integer id) {
+        return workEventMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public DataTable<WorkEvent> queryPageByParam(WorkEventParam.PageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(WorkEvent.class);

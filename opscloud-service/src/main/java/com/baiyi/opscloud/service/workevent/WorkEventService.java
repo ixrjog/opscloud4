@@ -22,6 +22,8 @@ public interface WorkEventService {
 
     void deleteById(Integer id);
 
+    WorkEvent getById(Integer id);
+
     DataTable<WorkEvent> queryPageByParam(WorkEventParam.PageQuery pageQuery);
 
     List<ReportVO.Report> queryWeek(Integer workRoleId);

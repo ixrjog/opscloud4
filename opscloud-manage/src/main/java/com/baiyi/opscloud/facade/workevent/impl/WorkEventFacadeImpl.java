@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.facade.workevent.impl;
 
+import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
+import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
@@ -16,6 +18,7 @@ import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.baiyi.opscloud.domain.vo.common.TreeVO;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventReportVO;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventVO;
+import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.facade.workevent.WorkEventFacade;
 import com.baiyi.opscloud.packer.workevent.WorkEventPacker;
 import com.baiyi.opscloud.service.tag.BusinessTagService;
@@ -65,6 +68,8 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
 
     private final UserService userService;
 
+    private final UserPermissionFacade userPermissionFacade;
+
     private final static Integer ROOT_PARENT_ID = 0;
 
     @Override
@@ -93,10 +98,20 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
         });
     }
 
+    private void validAccess(WorkEvent workEvent) {
+        String username = SessionUtil.getUsername();
+        int accessLevel = userPermissionFacade.getUserAccessLevel(username);
+        // ADMIN角色可以操作所有
+        if (accessLevel >= AccessLevel.ADMIN.getLevel()) return;
+        if (SessionUtil.equalsUsername(workEvent.getUsername())) return;
+        throw new CommonRuntimeException("只能变更自己创建的工作事件");
+    }
+
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void updateWorkEvent(WorkEventParam.UpdateWorkEvent param) {
         WorkEvent workEvent = BeanCopierUtil.copyProperties(param.getWorkEvent(), WorkEvent.class);
+        validAccess(workEvent);
         workEventService.update(workEvent);
         workEventPropertyService.deleteByWorkEventId(workEvent.getId());
         Map<String, String> map = param.getWorkEvent().getProperty();
@@ -117,6 +132,9 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
     @TagClear
     @Transactional(rollbackFor = {Exception.class})
     public void deleteWorkEvent(Integer id) {
+        WorkEvent workEvent = workEventService.getById(id);
+        if (ObjectUtils.isEmpty(workEvent)) return;
+        validAccess(workEvent);
         workEventPropertyService.deleteByWorkEventId(id);
         workEventService.deleteById(id);
     }
