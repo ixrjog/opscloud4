@@ -243,4 +243,24 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
         List<ReportVO.Report> report = workEventService.getWorkEventItemReport(workRoleId);
         return BeanCopierUtil.copyListProperties(report, WorkEventReportVO.ItemReport.class);
     }
+
+    @Override
+    public List<ReportVO.CommonReport> getWorkEventTimeReport() {
+        return workEventService.getWorkEventTimeReport();
+    }
+
+    @Override
+    public List<ReportVO.CommonReport> getWorkEventInterceptReport() {
+        return workEventService.getWorkEventInterceptReport();
+    }
+
+    @Override
+    public List<ReportVO.CommonReport> getWorkEventSolveReport() {
+        return workEventService.getWorkEventSolveReport();
+    }
+
+    @Override
+    public List<ReportVO.CommonReport> getWorkEventFaultReport() {
+        return workEventService.getWorkEventFaultReport();
+    }
 }

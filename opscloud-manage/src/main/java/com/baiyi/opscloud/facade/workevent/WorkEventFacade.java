@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkItem;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkRole;
 import com.baiyi.opscloud.domain.param.workevent.WorkEventParam;
+import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.baiyi.opscloud.domain.vo.common.TreeVO;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventReportVO;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventVO;
@@ -40,5 +41,13 @@ public interface WorkEventFacade {
     WorkEventReportVO.WeeklyReport getWorkEventWeeklyReport(Integer workRoleId);
 
     List<WorkEventReportVO.ItemReport> getWorkEventItemReport(Integer workRoleId);
+
+    List<ReportVO.CommonReport> getWorkEventTimeReport();
+
+    List<ReportVO.CommonReport> getWorkEventInterceptReport();
+
+    List<ReportVO.CommonReport> getWorkEventSolveReport();
+
+    List<ReportVO.CommonReport> getWorkEventFaultReport();
 
 }

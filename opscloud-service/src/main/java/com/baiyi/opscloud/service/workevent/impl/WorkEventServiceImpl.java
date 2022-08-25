@@ -94,4 +94,24 @@ public class WorkEventServiceImpl implements WorkEventService {
     public List<ReportVO.Report> getWorkEventItemReport(Integer workRoleId) {
         return workEventMapper.getWorkEventItemReport(workRoleId);
     }
+
+    @Override
+    public List<ReportVO.CommonReport> getWorkEventTimeReport() {
+        return workEventMapper.getWorkEventTimeReport();
+    }
+
+    @Override
+    public List<ReportVO.CommonReport> getWorkEventInterceptReport() {
+        return workEventMapper.getWorkEventInterceptReport();
+    }
+
+    @Override
+    public List<ReportVO.CommonReport> getWorkEventSolveReport() {
+        return workEventMapper.getWorkEventSolveReport();
+    }
+
+    @Override
+    public List<ReportVO.CommonReport> getWorkEventFaultReport() {
+        return workEventMapper.getWorkEventFaultReport();
+    }
 }
