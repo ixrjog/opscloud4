@@ -31,7 +31,9 @@ public class TerminalSessionInstanceCommandServiceImpl implements TerminalSessio
     public void add(TerminalSessionInstanceCommand command) {
         if (!StringUtils.isEmpty(command.getPrompt())) {
             String p = command.getPrompt();
-            command.setPrompt(p.substring(0, 2048));
+            if (p.length() > 2048) {
+                command.setPrompt(p.substring(0, 2048));
+            }
         }
         commandMapper.insert(command);
     }
