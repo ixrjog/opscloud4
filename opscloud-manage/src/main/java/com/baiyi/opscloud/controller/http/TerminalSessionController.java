@@ -47,4 +47,11 @@ public class TerminalSessionController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "批量关闭终端会话")
+    @PutMapping(value = "/batch/close", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> batchCloseTerminalSession(@RequestBody @Valid TerminalSessionParam.BatchCloseTerminalSession batchCloseTerminalSession) {
+        terminalSessionFacade.batchCloseTerminalSession(batchCloseTerminalSession);
+        return HttpResult.SUCCESS;
+    }
+
 }

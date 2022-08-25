@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2021/7/22 4:23 下午
@@ -34,6 +36,16 @@ public class TerminalSessionParam {
         private String serverHostname;
 
         private Boolean extend;
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class BatchCloseTerminalSession  {
+
+        @ApiModelProperty(value = "查询参数")
+        private List<Integer> ids;
 
     }
 
