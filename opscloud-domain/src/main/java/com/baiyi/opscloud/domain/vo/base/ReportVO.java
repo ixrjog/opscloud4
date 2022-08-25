@@ -20,4 +20,14 @@ public class ReportVO {
         private String color;
     }
 
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class CommonReport {
+        private String cName;
+        private Integer value0;
+        private Integer value1;
+        private Integer value2;
+    }
+
 }

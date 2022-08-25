@@ -16,4 +16,12 @@ public interface WorkEventMapper extends Mapper<WorkEvent>, InsertListMapper<Wor
 
     List<ReportVO.Report> getWorkEventItemReport(Integer workRoleId);
 
+    List<ReportVO.CommonReport> getWorkEventTimeReport();
+
+    List<ReportVO.CommonReport> getWorkEventInterceptReport();
+
+    List<ReportVO.CommonReport> getWorkEventSolveReport();
+
+    List<ReportVO.CommonReport> getWorkEventFaultReport();
+
 }

@@ -31,4 +31,12 @@ public interface WorkEventService {
     List<ReportVO.Report> queryWeekByItem(Integer workRoleId, Integer workItemId);
 
     List<ReportVO.Report> getWorkEventItemReport(Integer workRoleId);
+
+    List<ReportVO.CommonReport> getWorkEventTimeReport();
+
+    List<ReportVO.CommonReport> getWorkEventInterceptReport();
+
+    List<ReportVO.CommonReport> getWorkEventSolveReport();
+
+    List<ReportVO.CommonReport> getWorkEventFaultReport();
 }

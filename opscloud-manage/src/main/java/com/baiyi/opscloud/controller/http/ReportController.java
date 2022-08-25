@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
+import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.baiyi.opscloud.domain.vo.terminal.TerminalReportVO;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventReportVO;
 import com.baiyi.opscloud.facade.terminal.TerminalReportFacade;
@@ -49,4 +50,27 @@ public class ReportController {
         return new HttpResult<>(workEventFacade.getWorkEventItemReport(workRoleId));
     }
 
+    @ApiOperation(value = "工作事件处理时效周报表")
+    @GetMapping(value = "/workevent/timeliness", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<ReportVO.CommonReport>> getWorkEventTimeReport() {
+        return new HttpResult<>(workEventFacade.getWorkEventTimeReport());
+    }
+
+    @ApiOperation(value = "工作事件拦截率周报表")
+    @GetMapping(value = "/workevent/intercept", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<ReportVO.CommonReport>> getWorkEventInterceptReport() {
+        return new HttpResult<>(workEventFacade.getWorkEventInterceptReport());
+    }
+
+    @ApiOperation(value = "工作事件故障统计周报表")
+    @GetMapping(value = "/workevent/solve", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<ReportVO.CommonReport>> getWorkEventFaultReport() {
+        return new HttpResult<>(workEventFacade.getWorkEventFaultReport());
+    }
+
+    @ApiOperation(value = "工作事件处理时效周报表")
+    @GetMapping(value = "/workevent/fault", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<ReportVO.CommonReport>> getWorkEventSolveReport() {
+        return new HttpResult<>(workEventFacade.getWorkEventSolveReport());
+    }
 }

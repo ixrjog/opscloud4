@@ -22,6 +22,13 @@
         <result column="color" jdbcType="VARCHAR" property="color"/>
     </resultMap>
 
+    <resultMap id="CommonReportResultMap" type="com.baiyi.opscloud.domain.vo.base.ReportVO$CommonReport">
+        <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+        <result column="value0" jdbcType="INTEGER" property="value0"/>
+        <result column="value1" jdbcType="INTEGER" property="value1"/>
+        <result column="value2" jdbcType="INTEGER" property="value2"/>
+    </resultMap>
+
     <select id="queryWeek" resultMap="ReportResultMap">
         select date_format(create_time, '%Y-%u') as `c_name`
         from work_event
@@ -32,7 +39,8 @@
 
 
     <select id="queryWeekByItem" resultMap="ReportResultMap">
-        select date_format(create_time, '%Y-%u') as `c_name`, sum(case when work_item_id = #{workItemId} then work_event_cnt else 0 end) as `value`
+        select date_format(create_time, '%Y-%u')                                          as `c_name`,
+               sum(case when work_item_id = #{workItemId} then work_event_cnt else 0 end) as `value`
         from work_event
         where work_role_id = #{workRoleId}
         group by `c_name`
@@ -47,4 +55,50 @@
         group by a0.work_item_id
         order by a0.work_item_id;
     </select>
+
+    <select id="getWorkEventTimeReport" resultMap="CommonReportResultMap">
+        select date_format(a1.work_event_time, '%Y-%u')          as `c_name`,
+               sum(if(a0.value = '24小时内', a1.work_event_cnt, 0)) as `value0`,
+               sum(if(a0.value = '48小时内', a1.work_event_cnt, 0)) as `value1`,
+               sum(if(a0.value = '超48小时', a1.work_event_cnt, 0)) as `value2`
+        from work_event_property a0
+                 join work_event a1 on a0.work_event_id = a1.id
+        where a0.name = 'timeliness'
+        group by c_name
+        order by c_name;
+    </select>
+
+    <select id="getWorkEventInterceptReport" resultMap="CommonReportResultMap">
+        select date_format(a1.work_event_time, '%Y-%u')          as `c_name`,
+               sum(if(a0.value = 'true', a1.work_event_cnt, 0))  as `value0`,
+               sum(if(a0.value = 'false', a1.work_event_cnt, 0)) as `value1`
+        from work_event_property a0
+                 join work_event a1 on a0.work_event_id = a1.id
+        where a0.name = 'intercept'
+        group by c_name
+        order by c_name;
+    </select>
+
+    <select id="getWorkEventSolveReport" resultMap="CommonReportResultMap">
+        select date_format(a1.work_event_time, '%Y-%u')          as `c_name`,
+               sum(if(a0.value = 'true', a1.work_event_cnt, 0))  as `value0`,
+               sum(if(a0.value = 'false', a1.work_event_cnt, 0)) as `value1`
+        from work_event_property a0
+                 join work_event a1 on a0.work_event_id = a1.id
+        where a0.name = 'solve'
+        group by c_name
+        order by c_name;
+    </select>
+
+    <select id="getWorkEventFaultReport" resultMap="CommonReportResultMap">
+        select date_format(a1.work_event_time, '%Y-%u')          as `c_name`,
+               sum(if(a0.value = 'false', a1.work_event_cnt, 0))  as `value0`,
+               sum(if(a0.value = 'true', a1.work_event_cnt, 0)) as `value1`
+        from work_event_property a0
+                 join work_event a1 on a0.work_event_id = a1.id
+        where a0.name = 'fault'
+        group by c_name
+        order by c_name;
+    </select>
+
 </mapper>
