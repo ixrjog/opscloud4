@@ -29,6 +29,10 @@ public class TerminalSessionInstanceCommandServiceImpl implements TerminalSessio
 
     @Override
     public void add(TerminalSessionInstanceCommand command) {
+        if (!StringUtils.isEmpty(command.getPrompt())) {
+            String p = command.getPrompt();
+            command.setPrompt(p.substring(0, 2048));
+        }
         commandMapper.insert(command);
     }
 
@@ -53,7 +57,7 @@ public class TerminalSessionInstanceCommandServiceImpl implements TerminalSessio
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(TerminalSessionInstanceCommand.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("terminalSessionInstanceId",pageQuery.getTerminalSessionInstanceId());
+        criteria.andEqualTo("terminalSessionInstanceId", pageQuery.getTerminalSessionInstanceId());
         if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
             Example.Criteria criteria2 = example.createCriteria();
             String likeName = SQLUtil.toLike(pageQuery.getQueryName());
