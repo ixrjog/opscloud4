@@ -23,4 +23,5 @@ public interface InstanceFacade {
     DataTable<InstanceVO.RegisteredInstance> queryRegisteredInstancePage( RegisteredInstanceParam.RegisteredInstancePageQuery pageQuery);
 
     void setRegisteredInstanceActive(int id);
+
 }

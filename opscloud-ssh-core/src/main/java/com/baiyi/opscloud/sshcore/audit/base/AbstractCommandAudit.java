@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshcore.audit.base;
 
+import com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstanceCommand;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceCommandService;
@@ -9,6 +10,7 @@ import com.baiyi.opscloud.sshcore.config.TerminalConfigurationProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.springframework.scheduling.annotation.Async;
 
 import javax.annotation.Resource;
 import java.io.FileReader;
@@ -43,13 +45,13 @@ public abstract class AbstractCommandAudit {
      * @param sessionId
      * @param instanceId
      */
-    public void recordCommand(String sessionId, String instanceId) {
+    @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
+    public void asyncRecordCommand(String sessionId, String instanceId) {
         TerminalSessionInstance terminalSessionInstance = terminalSessionInstanceService.getByUniqueKey(sessionId, instanceId);
         String commanderLogPath = terminalConfig.buildAuditLogPath(sessionId, instanceId);
         String str;
         InstanceCommandBuilder builder = null;
         String regex = getInputRegex();
-
         try {
             LineNumberReader reader = new LineNumberReader(new FileReader(commanderLogPath));
             while ((str = reader.readLine()) != null) {
@@ -75,6 +77,14 @@ public abstract class AbstractCommandAudit {
         } catch (IOException e) {
             log.error("审计文件不存在: {}", commanderLogPath);
         }
+    }
+
+    /**
+     * 同步接口
+     * @param instance
+     */
+    public void recordCommand(TerminalSessionInstance instance){
+        this.asyncRecordCommand(instance.getSessionId(),instance.getInstanceId());
     }
 
     private ImmutablePair<Integer, Integer> getIndex(String inputStr) {

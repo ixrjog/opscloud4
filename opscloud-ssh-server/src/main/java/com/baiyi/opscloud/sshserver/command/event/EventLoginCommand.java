@@ -105,7 +105,7 @@ public class EventLoginCommand extends BaseServerCommand {
             log.error(e.getMessage());
             throw e;
         }
-        serverCommandAudit.recordCommand(sessionId, instanceId);
+        serverCommandAudit.asyncRecordCommand(sessionId, instanceId);
         JSchSessionContainer.closeSession(sessionId, instanceId);
     }
 

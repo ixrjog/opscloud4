@@ -11,10 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -41,6 +38,13 @@ public class TerminalSessionController {
     @PostMapping(value = "/instance/command/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<TerminalSessionInstanceCommandVO.Command>> queryTerminalSessionCommandPage(@RequestBody @Valid TerminalSessionInstanceCommandParam.InstanceCommandPageQuery pageQuery) {
         return new HttpResult<>(terminalSessionFacade.queryTerminalSessionCommandPage(pageQuery));
+    }
+
+    @ApiOperation(value = "关闭终端会话")
+    @PutMapping(value = "/close", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> closeTerminalSessionById(@Valid int id) {
+        terminalSessionFacade.closeTerminalSessionById(id);
+        return HttpResult.SUCCESS;
     }
 
 }

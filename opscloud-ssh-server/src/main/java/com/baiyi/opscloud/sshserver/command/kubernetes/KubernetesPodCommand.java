@@ -320,7 +320,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
             log.error("用户关闭SSH-Server: {}", e.getMessage());
         } finally {
             simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
-            podCommandAudit.recordCommand(sessionId, instanceId);
+            podCommandAudit.asyncRecordCommand(sessionId, instanceId);
             execWatch.close();
             sshShellHelper.print("\n用户退出容器！", PromptColor.GREEN);
         }

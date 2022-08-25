@@ -71,7 +71,7 @@ public class ServerLoginCommand implements InitializingBean {
 
     private final SshServerPacker sshServerPacker;
 
-    private final SimpleTerminalSessionFacade terminalSessionFacade;
+    private final SimpleTerminalSessionFacade simpleTerminalSessionFacade;
 
     private final SupserAdminInterceptor sAInterceptor;
 
@@ -83,10 +83,7 @@ public class ServerLoginCommand implements InitializingBean {
 
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "登录服务器(开启会话)", key = {"open", "login"})
-    public void login(@ShellOption(help = "ID", defaultValue = "1") int id,
-                      @ShellOption(help = "Account", defaultValue = "") String account,
-                      @ShellOption(value = {"-R", "--arthas"}, help = "Arthas") boolean arthas,
-                      @ShellOption(value = {"-A", "--admin"}, help = "Admin") boolean admin) {
+    public void login(@ShellOption(help = "ID", defaultValue = "1") int id, @ShellOption(help = "Account", defaultValue = "") String account, @ShellOption(value = {"-R", "--arthas"}, help = "Arthas") boolean arthas, @ShellOption(value = {"-A", "--admin"}, help = "Admin") boolean admin) {
         ServerSession serverSession = sshShellHelper.getSshSession();
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
         Terminal terminal = getTerminal();
@@ -100,7 +97,7 @@ public class ServerLoginCommand implements InitializingBean {
             hostSystem.setInstanceId(instanceId);
             hostSystem.setTerminalSize(sshShellHelper.terminalSize());
             TerminalSessionInstance terminalSessionInstance = TerminalSessionInstanceBuilder.build(sessionId, hostSystem, InstanceSessionTypeEnum.SERVER);
-            terminalSessionFacade.recordTerminalSessionInstance(terminalSessionInstance);
+            simpleTerminalSessionFacade.recordTerminalSessionInstance(terminalSessionInstance);
             ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
             // 无延迟
             out.setNoDelay(true);
@@ -114,8 +111,7 @@ public class ServerLoginCommand implements InitializingBean {
                     jSchSessionPrint(sessionId, instanceId, SERVER_EXECUTE_ARTHAS);
                     while (isClosed(sessionId, instanceId)) {
                         int ch = terminal.reader().read(1L);
-                        if (ch < 0)
-                            break;
+                        if (ch < 0) break;
                     }
                 } catch (Exception e) {
                     log.error("执行Arthas错误！");
@@ -125,26 +121,27 @@ public class ServerLoginCommand implements InitializingBean {
                 while (true) {
                     if (isClosed(sessionId, instanceId)) {
                         TimeUnit.MILLISECONDS.sleep(150L);
-                        sessionClosed("用户正常退出登录! 耗时:%s/s", inst1);
+                        printWithCloseSession("用户正常退出登录! 耗时=%s/s", inst1);
                         break;
                     }
-                    tryResize(size, terminal, sessionId, instanceId);
+                    doResize(size, terminal, sessionId, instanceId);
                     jSchSessionPrint(sessionId, instanceId, terminal.reader().read(5L));
                 }
             } catch (Exception e) {
-                sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);
+                printWithCloseSession("服务端连接已断开! 耗时=%s/s", inst1);
             } finally {
-                terminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
+                simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             }
         } catch (SshRuntimeException e) {
-            log.error(e.getMessage());
-            throw e;
+            String msg = String.format("SSH连接错误: %s", e.getMessage());
+            log.error(msg);
+            sshShellHelper.print(msg, PromptColor.RED);
         }
-        serverCommandAudit.recordCommand(sessionId, instanceId);
+        serverCommandAudit.asyncRecordCommand(sessionId, instanceId);
         JSchSessionContainer.closeSession(sessionId, instanceId);
     }
 
-    private void tryResize(Size size, Terminal terminal, String sessionId, String instanceId) {
+    private void doResize(Size size, Terminal terminal, String sessionId, String instanceId) {
         if (!terminal.getSize().equals(size)) {
             size = terminal.getSize();
             TerminalUtil.resize(sessionId, instanceId, size);
@@ -169,8 +166,15 @@ public class ServerLoginCommand implements InitializingBean {
         }
     }
 
-    private void sessionClosed(String logout, Instant inst1) {
-        sshShellHelper.print(String.format(logout, Duration.between(inst1, Instant.now()).getSeconds()), PromptColor.RED);
+    /**
+     * 打印会话关闭信息
+     * @param logout
+     * @param instant
+     */
+    private void printWithCloseSession(String logout, Instant instant) {
+        sshShellHelper.print(
+                String.format(logout, Duration.between(instant, Instant.now()).getSeconds()),
+                PromptColor.RED);
     }
 
     private boolean isClosed(String sessionId, String instanceId) {
