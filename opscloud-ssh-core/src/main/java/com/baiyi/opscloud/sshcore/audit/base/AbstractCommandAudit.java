@@ -7,6 +7,7 @@ import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceCommandService
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
 import com.baiyi.opscloud.sshcore.audit.InstanceCommandBuilder;
 import com.baiyi.opscloud.sshcore.config.TerminalConfigurationProperties;
+import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -48,6 +49,9 @@ public abstract class AbstractCommandAudit {
     @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
     public void asyncRecordCommand(String sessionId, String instanceId) {
         TerminalSessionInstance terminalSessionInstance = terminalSessionInstanceService.getByUniqueKey(sessionId, instanceId);
+        // 跳过日志审计
+        if(InstanceSessionTypeEnum.CONTAINER_LOG.getType().equals(terminalSessionInstance.getInstanceSessionType()))
+            return;
         String commanderLogPath = terminalConfig.buildAuditLogPath(sessionId, instanceId);
         String str;
         InstanceCommandBuilder builder = null;
