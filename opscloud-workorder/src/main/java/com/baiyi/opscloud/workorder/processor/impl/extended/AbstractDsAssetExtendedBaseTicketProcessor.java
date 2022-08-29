@@ -77,7 +77,7 @@ public abstract class AbstractDsAssetExtendedBaseTicketProcessor<T, C extends Ba
     /**
      * 更新资产
      *
-     * @param ticketEntry`
+     * @param ticketEntry
      * @param entry
      */
     protected void pullAsset(WorkOrderTicketEntry ticketEntry, T entry) {

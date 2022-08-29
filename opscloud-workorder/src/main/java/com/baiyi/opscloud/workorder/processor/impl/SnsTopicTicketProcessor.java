@@ -49,6 +49,7 @@ public class SnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
                     .topicArn(topicArn)
                     .regionId(entry.getRegionId())
                     .attributes(attributes)
+                    .envName(entry.getEnvName())
                     .build();
             pullAsset(ticketEntry, topic);
             ticketEntry.setContent(JSONUtil.writeValueAsString(topic));

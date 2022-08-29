@@ -127,6 +127,7 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
             SimpleQueueService.Queue queue = SimpleQueueService.Queue.builder()
                     .queueUrl(queueUrl)
                     .regionId(entry.getRegionId())
+                    .envName(entry.getEnvName())
                     .attributes(attributes)
                     .build();
             pullAsset(ticketEntry, queue);

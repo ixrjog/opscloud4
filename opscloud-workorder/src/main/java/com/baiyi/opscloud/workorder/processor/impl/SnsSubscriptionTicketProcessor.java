@@ -66,6 +66,7 @@ public class SnsSubscriptionTicketProcessor extends AbstractDsAssetExtendedBaseT
                     .protocol(entry.getProtocol())
                     .endpoint(entry.getEndpoint())
                     .regionId(entry.getRegionId())
+                    .envName(entry.getEnvName())
                     .build();
             pullAsset(ticketEntry, subscription);
             ticketEntry.setContent(JSONUtil.writeValueAsString(subscription));
