@@ -35,6 +35,8 @@ public class SimpleNotificationService {
 
         private String topicArn;
 
+        private String envName;
+
         private String regionId;
 
         private Map<String, String> attributes;
@@ -89,6 +91,8 @@ public class SimpleNotificationService {
         private static final long serialVersionUID = -1065834695056874611L;
 
         private String subscriptionArn;
+
+        private String envName;
 
         private String regionId;
 

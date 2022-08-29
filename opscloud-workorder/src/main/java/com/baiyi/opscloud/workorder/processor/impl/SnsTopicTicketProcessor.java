@@ -64,7 +64,6 @@ public class SnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
         String topic = entry.getTopic();
         if (StringUtils.isEmpty(topic))
             throw new TicketVerifyException("校验工单条目失败: 未指定SNS主题名称!");
-
         if (topic.endsWith(".fifo")) {
             if (!"true".equals(ticketEntry.getProperties().get("FifoTopic")))
                 throw new TicketVerifyException("校验工单条目失败: .fifo 结尾必须为 FIFO 主题");
@@ -74,28 +73,34 @@ public class SnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
             if ("true".equals(ticketEntry.getProperties().get("FifoTopic")))
                 throw new TicketVerifyException("校验工单条目失败: FIFO 主题名称必须以“.fifo”结尾");
         }
-
         if (!topic.startsWith("transsnet_"))
             throw new TicketVerifyException("校验工单条目失败: SNS主题名称必须以 transsnet_ 开始！");
 
         if (!topic.matches("[0-9a-z_]{7,256}"))
             throw new TicketVerifyException("校验工单条目失败: SNS主题名称不合规!");
-
-        switch (entry.getRegionId()) {
-            case "ap-northeast-2":
+        switch (entry.getEnvName()) {
+            case "dev":
                 if (!topic.endsWith("_dev_topic"))
                     throw new TicketVerifyException("校验工单条目失败: 开发环境SNS主题名称必须以 _dev_topic 结尾！");
                 break;
-            case "ap-east-1":
+            case "daily":
                 if (!topic.endsWith("_test_topic"))
                     throw new TicketVerifyException("校验工单条目失败: 测试环境SNS主题名称必须以 _test_topic 结尾！");
                 break;
-            case "eu-west-1":
-                if (!(topic.endsWith("_canary_topic") || topic.endsWith("_prod_topic")))
-                    throw new TicketVerifyException("校验工单条目失败: 灰度、生产SNS主题名称必须以 _canary_topic 或 _prod_topic 结尾！");
+            case "gray":
+                if (!topic.endsWith("_canary_topic"))
+                    throw new TicketVerifyException("校验工单条目失败: 灰度环境SNS主题名称必须以 _canary_topic 结尾！");
+                break;
+            case "prod":
+                if (!topic.endsWith("_prod_topic"))
+                    throw new TicketVerifyException("校验工单条目失败: 生产环境SNS主题名称必须以 _prod_topic 结尾！");
+                break;
+            case "pre":
+                if (!topic.endsWith("_pre_topic"))
+                    throw new TicketVerifyException("校验工单条目失败: 预发环境SNS主题名称必须以 _pre_topic 结尾！");
                 break;
             default:
-                throw new TicketVerifyException("校验工单条目失败: 该可用区下不支持新建SNS主题！");
+                throw new TicketVerifyException("校验工单条目失败: 该环境不支持新建SNS主题！");
         }
 
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()

@@ -36,6 +36,8 @@ public class SimpleQueueService {
 
         private String queueUrl;
 
+        private String envName;
+
         private String regionId;
 
         private Map<String, String> attributes;

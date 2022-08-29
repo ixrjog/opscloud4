@@ -30,7 +30,7 @@
     </resultMap>
 
     <select id="queryWeek" resultMap="ReportResultMap">
-        select date_format(create_time, '%Y-%u') as `c_name`
+        select date_format(work_event_time, '%Y-%u') as `c_name`
         from work_event
         where work_role_id = #{workRoleId}
         group by `c_name`
@@ -39,7 +39,7 @@
 
 
     <select id="queryWeekByItem" resultMap="ReportResultMap">
-        select date_format(create_time, '%Y-%u')                                          as `c_name`,
+        select date_format(work_event_time, '%Y-%u') as `c_name`,
                sum(case when work_item_id = #{workItemId} then work_event_cnt else 0 end) as `value`
         from work_event
         where work_role_id = #{workRoleId}
@@ -92,8 +92,8 @@
 
     <select id="getWorkEventFaultReport" resultMap="CommonReportResultMap">
         select date_format(a1.work_event_time, '%Y-%u')          as `c_name`,
-               sum(if(a0.value = 'false', a1.work_event_cnt, 0))  as `value0`,
-               sum(if(a0.value = 'true', a1.work_event_cnt, 0)) as `value1`
+               sum(if(a0.value = 'false', a1.work_event_cnt, 0)) as `value0`,
+               sum(if(a0.value = 'true', a1.work_event_cnt, 0))  as `value1`
         from work_event_property a0
                  join work_event a1 on a0.work_event_id = a1.id
         where a0.name = 'fault'

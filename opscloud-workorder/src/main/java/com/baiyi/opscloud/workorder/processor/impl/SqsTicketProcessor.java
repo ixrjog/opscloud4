@@ -61,22 +61,29 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
         if (!entry.getQueueName().startsWith("transsnet_"))
             throw new TicketVerifyException("校验工单条目失败: SQS名称必须以 transsnet_ 开始！");
 
-        switch (entry.getRegionId()) {
-            case "ap-northeast-2":
+        switch (entry.getEnvName()) {
+            case "dev":
                 if (!entry.getQueueName().endsWith("_dev_queue"))
                     throw new TicketVerifyException("校验工单条目失败: 开发环境SQS名称必须以 _dev_queue 结尾！");
                 break;
-            case "ap-east-1":
+            case "daily":
                 if (!entry.getQueueName().endsWith("_test_queue"))
-                    throw new TicketVerifyException("校验工单条目失败: 测试环境SQS名称必须以 _test_queue 结尾！");
+                    throw new TicketVerifyException("校验工单条目失败: 日常环境SQS名称必须以 _test_queue 结尾！");
                 break;
-            case "eu-west-1":
-                if (!(entry.getQueueName().endsWith("_canary_queue")
-                        || entry.getQueueName().endsWith("_prod_queue")))
-                    throw new TicketVerifyException("校验工单条目失败: 灰度、生产SQS名称必须以 _canary_queue 或 _prod_queue 结尾！");
+            case "gray":
+                if (!entry.getQueueName().endsWith("_canary_queue"))
+                    throw new TicketVerifyException("校验工单条目失败: 灰度环境SQS名称必须以 _canary_queue 结尾！");
+                break;
+            case "pre":
+                if (!entry.getQueueName().endsWith("_pre_queue"))
+                    throw new TicketVerifyException("校验工单条目失败: 预发环境SQS名称必须以 _pre_queue 结尾！");
+                break;
+            case "prod":
+                if (!entry.getQueueName().endsWith("_prod_queue"))
+                    throw new TicketVerifyException("校验工单条目失败: 生产环境SQS名称必须以 _prod_queue 结尾！");
                 break;
             default:
-                throw new TicketVerifyException("校验工单条目失败: 该可用区下不支持新建SQS！");
+                throw new TicketVerifyException("校验工单条目失败: 该环境不支持新建SQS！");
         }
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .assetType(getAssetType())
