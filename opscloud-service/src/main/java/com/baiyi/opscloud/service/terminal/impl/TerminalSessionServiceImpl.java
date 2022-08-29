@@ -44,8 +44,6 @@ public class TerminalSessionServiceImpl implements TerminalSessionService {
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(pageQuery.getUsername())) {
             criteria.andLike("username", SQLUtil.toLike(pageQuery.getUsername()));
-        } else {
-            criteria.andIsNotNull("username");
         }
         if (!StringUtils.isEmpty(pageQuery.getSessionType())) {
             criteria.andEqualTo("sessionType", pageQuery.getSessionType());
@@ -65,9 +63,9 @@ public class TerminalSessionServiceImpl implements TerminalSessionService {
     public int countActiveSessionByParam(String serverHostname, String sessionType) {
         Example example = new Example(TerminalSession.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("serverHostname", serverHostname);
-        criteria.andEqualTo("sessionClosed", false);
-        criteria.andEqualTo("sessionType", sessionType);
+        criteria.andEqualTo("serverHostname", serverHostname)
+                .andEqualTo("sessionClosed", false)
+                .andEqualTo("sessionType", sessionType);
         return sessionMapper.selectCountByExample(example);
     }
 
