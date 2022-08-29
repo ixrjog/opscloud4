@@ -17,6 +17,8 @@ public interface TerminalSessionFacade {
 
     DataTable<TerminalSessionInstanceCommandVO.Command> queryTerminalSessionCommandPage(TerminalSessionInstanceCommandParam.InstanceCommandPageQuery pageQuery);
 
+    void batchCloseTerminalSession(TerminalSessionParam.BatchCloseTerminalSession batchCloseTerminalSession);
+
     void closeTerminalSessionById(int id);
 
 }

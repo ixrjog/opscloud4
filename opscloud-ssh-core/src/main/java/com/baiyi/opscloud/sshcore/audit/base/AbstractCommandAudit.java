@@ -81,10 +81,11 @@ public abstract class AbstractCommandAudit {
 
     /**
      * 同步接口
+     *
      * @param instance
      */
-    public void recordCommand(TerminalSessionInstance instance){
-        this.asyncRecordCommand(instance.getSessionId(),instance.getInstanceId());
+    public void recordCommand(TerminalSessionInstance instance) {
+        this.asyncRecordCommand(instance.getSessionId(), instance.getInstanceId());
     }
 
     private ImmutablePair<Integer, Integer> getIndex(String inputStr) {
@@ -102,7 +103,8 @@ public abstract class AbstractCommandAudit {
         TerminalSessionInstanceCommand command = TerminalSessionInstanceCommand.builder()
                 .terminalSessionInstanceId(terminalSessionInstanceId)
                 .prompt(inputStr.substring(0, index + 1))
-                .input(inputStr.substring(index + 2))
+                // 取用户输入
+                .input(inputStr.length() > index + 2 ? inputStr.substring(index + 2) : "")
                 .build();
         formatInput(command);
         return InstanceCommandBuilder.newBuilder(command);

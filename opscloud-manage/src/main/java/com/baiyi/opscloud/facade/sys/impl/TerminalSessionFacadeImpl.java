@@ -66,6 +66,14 @@ public class TerminalSessionFacadeImpl implements TerminalSessionFacade {
 
     @Override
     @Transactional(rollbackFor = {Exception.class})
+    public void batchCloseTerminalSession(TerminalSessionParam.BatchCloseTerminalSession batchCloseTerminalSession) {
+        for (Integer id : batchCloseTerminalSession.getIds()) {
+            this.closeTerminalSessionById(id);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void closeTerminalSessionById(int id) {
         TerminalSession terminalSession = terminalSessionService.getById(id);
         if (terminalSession.getSessionClosed()) return;
