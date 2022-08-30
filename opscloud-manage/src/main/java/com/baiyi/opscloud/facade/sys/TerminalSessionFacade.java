@@ -19,6 +19,6 @@ public interface TerminalSessionFacade {
 
     void batchCloseTerminalSession(TerminalSessionParam.BatchCloseTerminalSession batchCloseTerminalSession);
 
-    void closeTerminalSessionById(int id);
+  //  void closeTerminalSessionById(int id);
 
 }

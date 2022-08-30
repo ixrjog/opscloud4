@@ -21,4 +21,7 @@ public interface SimpleTerminalSessionFacade {
     void recordTerminalSession(TerminalSession terminalSession);
 
     TerminalSession getTerminalSessionBySessionId(String sessionId);
+
+    void closeTerminalSessionById(int id);
+
 }

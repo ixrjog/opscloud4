@@ -3,7 +3,6 @@ package com.baiyi.opscloud.facade.sys.impl;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstanceCommand;
 import com.baiyi.opscloud.domain.param.terminal.TerminalSessionInstanceCommandParam;
 import com.baiyi.opscloud.domain.param.terminal.TerminalSessionParam;
@@ -15,12 +14,10 @@ import com.baiyi.opscloud.packer.sys.TerminalSessionPacker;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceCommandService;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
-import com.baiyi.opscloud.sshcore.audit.ServerCommandAudit;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,8 +43,6 @@ public class TerminalSessionFacadeImpl implements TerminalSessionFacade {
 
     private final SimpleTerminalSessionFacade simpleTerminalSessionFacade;
 
-    private final ServerCommandAudit serverCommandAudit;
-
     @Override
     public DataTable<TerminalSessionVO.Session> queryTerminalSessionPage(TerminalSessionParam.TerminalSessionPageQuery pageQuery) {
         DataTable<TerminalSession> table = terminalSessionService.queryTerminalSessionPage(pageQuery);
@@ -68,28 +63,8 @@ public class TerminalSessionFacadeImpl implements TerminalSessionFacade {
     @Transactional(rollbackFor = {Exception.class})
     public void batchCloseTerminalSession(TerminalSessionParam.BatchCloseTerminalSession batchCloseTerminalSession) {
         for (Integer id : batchCloseTerminalSession.getIds()) {
-            this.closeTerminalSessionById(id);
+            simpleTerminalSessionFacade.closeTerminalSessionById(id);
         }
-    }
-
-    @Override
-    @Transactional(rollbackFor = {Exception.class})
-    public void closeTerminalSessionById(int id) {
-        TerminalSession terminalSession = terminalSessionService.getById(id);
-        if (terminalSession.getSessionClosed()) return;
-        List<TerminalSessionInstance> instances = terminalSessionInstanceService.queryBySessionId(terminalSession.getSessionId());
-        if (!CollectionUtils.isEmpty(instances)) {
-            for (TerminalSessionInstance instance : instances) {
-                closeTerminalSessionInstance(instance);
-            }
-        }
-        simpleTerminalSessionFacade.closeTerminalSession(terminalSession);
-    }
-
-    private void closeTerminalSessionInstance(TerminalSessionInstance instance) {
-        if (instance.getInstanceClosed()) return;
-        simpleTerminalSessionFacade.closeTerminalSessionInstance(instance);
-        serverCommandAudit.recordCommand(instance);
     }
 
 }

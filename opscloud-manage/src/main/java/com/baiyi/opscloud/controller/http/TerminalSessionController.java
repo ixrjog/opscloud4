@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.param.terminal.TerminalSessionParam;
 import com.baiyi.opscloud.domain.vo.terminal.TerminalSessionInstanceCommandVO;
 import com.baiyi.opscloud.domain.vo.terminal.TerminalSessionVO;
 import com.baiyi.opscloud.facade.sys.TerminalSessionFacade;
+import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,8 @@ public class TerminalSessionController {
 
     private final TerminalSessionFacade terminalSessionFacade;
 
+    private final SimpleTerminalSessionFacade simpleTerminalSessionFacade;
+
     @ApiOperation(value = "分页查询终端会话列表")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<TerminalSessionVO.Session>> queryTerminalSessionPage(@RequestBody @Valid TerminalSessionParam.TerminalSessionPageQuery pageQuery) {
@@ -43,7 +46,7 @@ public class TerminalSessionController {
     @ApiOperation(value = "关闭终端会话")
     @PutMapping(value = "/close", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> closeTerminalSessionById(@Valid int id) {
-        terminalSessionFacade.closeTerminalSessionById(id);
+        simpleTerminalSessionFacade.closeTerminalSessionById(id);
         return HttpResult.SUCCESS;
     }
 
