@@ -13,7 +13,6 @@ import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExtendedBaseTicketProcessor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -60,6 +59,9 @@ public class OnsGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
                 .build();
         List<DatasourceInstanceAsset> list = dsInstanceAssetService.queryAssetByAssetParam(asset);
         if (!CollectionUtils.isEmpty((list))) {
+            if (list.stream().anyMatch(e -> !e.getKind().equals(entry.getGroupType()))) {
+                throw new TicketVerifyException("校验工单条目失败: GID类型与其他环境不一致，请选择" + list.get(0).getKind());
+            }
             if (list.stream().anyMatch(e -> e.getAssetId().equals(entry.getInstanceId()))) {
                 throw new TicketVerifyException("校验工单条目失败: GID已存在改ONS实例中");
             }
@@ -86,7 +88,7 @@ public class OnsGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
         processHandle(ticketEntry, entry);
         AliyunConfig.Aliyun config = getDsConfig(ticketEntry, AliyunConfig.class).getAliyun();
         try {
-            OnsRocketMqGroup.Group group = aliyunOnsRocketMqGroupDrive.getGroup(entry.getRegionId(), config, entry.getInstanceId(), entry.getGroupId());
+            OnsRocketMqGroup.Group group = aliyunOnsRocketMqGroupDrive.getGroup(entry.getRegionId(), config, entry.getInstanceId(), entry.getGroupId(), entry.getGroupType());
             pullAsset(ticketEntry, group);
         } catch (ClientException e) {
             throw new TicketProcessException("GID创建失败,GID= " + entry.getGroupId());
