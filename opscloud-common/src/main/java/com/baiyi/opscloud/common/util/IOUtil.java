@@ -106,11 +106,15 @@ public class IOUtil {
     }
 
     public static Long fileSize(String path) {
-        if (StringUtils.isEmpty(path)) {
+        try {
+            if (StringUtils.isEmpty(path)) {
+                return 0L;
+            }
+            File file = new File(path);
+            return file.length();
+        }catch (Exception e){
             return 0L;
         }
-        File file = new File(path);
-        return file.length();
     }
 
     /**

@@ -54,6 +54,13 @@ public class SshShellListenerService {
     }
 
     /**
+     * Session destroyed
+      * @param channelSession
+     */
+    public void onSessionDestroyed(ChannelSession channelSession) {
+        notify(new SshShellEvent(SshShellEventType.SESSION_DESTROYED, channelSession));
+    }
+    /**
      * Session stopped with error
      *
      * @param channelSession ssh channel session

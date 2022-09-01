@@ -127,6 +127,8 @@ public class SshShellCommandFactory implements Command {
 
     @Override
     public void destroy(ChannelSession channelSession) {
+        // 推送销毁事件
+        shellListenerService.onSessionDestroyed(channelSession);
         Thread sshThread = threads.remove(channelSession);
         if (sshThread != null) {
             sshThread.interrupt();
