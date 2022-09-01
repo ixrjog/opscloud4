@@ -39,6 +39,7 @@ public class CachingConfiguration extends CachingConfigurerSupport {
         String CACHE_1WEEK = "opscloud:v4:7d:";
         String CACHE_1DAY = "opscloud:v4:1d:";
         String CACHE_10SECONDS = "opscloud:v4:10s:";
+        String CACHE_10MINUTES =  "opscloud:v4:10m:";
     }
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
@@ -51,7 +52,8 @@ public class CachingConfiguration extends CachingConfigurerSupport {
                 Repositories.CACHE_1DAY,
                 Repositories.CACHE_1HOUR,
                 Repositories.CACHE_2HOURS,
-                Repositories.CACHE_10SECONDS);
+                Repositories.CACHE_10SECONDS,
+                Repositories.CACHE_10MINUTES);
         // 使用自定义的缓存配置初始化一个cacheManager
         return RedisCacheManager.builder(factory)
                 // 注意这两句的调用顺序，一定要先调用该方法设置初始化的缓存名，
@@ -74,6 +76,7 @@ public class CachingConfiguration extends CachingConfigurerSupport {
         configMap.put(Repositories.CACHE_1HOUR, config.entryTtl(Duration.ofHours(1)));
         configMap.put(Repositories.CACHE_2HOURS, config.entryTtl(Duration.ofHours(2)));
         configMap.put(Repositories.CACHE_10SECONDS, config.entryTtl(Duration.ofSeconds(10)));
+        configMap.put(Repositories.CACHE_10MINUTES, config.entryTtl(Duration.ofMinutes(10)));
         return configMap;
     }
 

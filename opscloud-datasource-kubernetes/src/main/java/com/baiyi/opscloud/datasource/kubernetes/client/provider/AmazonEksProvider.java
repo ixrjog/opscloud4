@@ -10,9 +10,12 @@ import com.amazonaws.internal.auth.SignerProvider;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClient;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
 import com.amazonaws.services.securitytoken.model.GetCallerIdentityRequest;
+import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -26,15 +29,16 @@ import java.util.Date;
  * @Version 1.0
  */
 @Slf4j
+@Component
 public class AmazonEksProvider {
 
     /**
      * https://docs.aws.amazon.com/zh_cn/zh_cn/sdk-for-java/v1/developer-guide/prog-services-sts.html
      * 对于 IAM 用户，临时凭证的有效期范围是 900 秒 (15 分钟) 到 129600 秒 (36 小时)。如果不指定有效期，则默认使用 43200 秒（12 小时）
-     *
+     * <p>
      * https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_enable-regions.html
      * STS可用区
-     *
+     * <p>
      * https://medium.com/@rschoening/eks-client-authentication-f17f39228dc
      * STS签名Token
      *
@@ -42,7 +46,8 @@ public class AmazonEksProvider {
      * @return
      * @throws URISyntaxException
      */
-    public static String generateEksToken(KubernetesConfig.AmazonEks amazonEks) throws URISyntaxException {
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_10MINUTES, key = "'eks_url_'+ #amazonEks.url", unless = "#result == null")
+    public String generateEksToken(KubernetesConfig.AmazonEks amazonEks) throws URISyntaxException {
         DefaultRequest defaultRequest = new DefaultRequest<>(new GetCallerIdentityRequest(), "sts");
         URI uri = new URI("https", "sts.amazonaws.com", null, null);
         defaultRequest.setResourcePath("/");

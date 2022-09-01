@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.sshserver.config;
 
-import com.baiyi.opscloud.sshserver.config.event.ISshShellEvent;
-import com.baiyi.opscloud.sshserver.config.event.SshShellEventFactory;
+import com.baiyi.opscloud.sshserver.listeners.event.ISshShellEvent;
+import com.baiyi.opscloud.sshserver.listeners.event.SshShellEventFactory;
 import com.baiyi.opscloud.sshserver.listeners.SshShellEventType;
 import com.baiyi.opscloud.sshserver.listeners.SshShellListener;
 import lombok.extern.slf4j.Slf4j;

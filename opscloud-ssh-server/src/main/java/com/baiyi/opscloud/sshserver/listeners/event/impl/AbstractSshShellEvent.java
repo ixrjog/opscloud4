@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshserver.config.event.impl;
+package com.baiyi.opscloud.sshserver.listeners.event.impl;
 
 import com.baiyi.opscloud.common.model.HostInfo;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
@@ -6,8 +6,8 @@ import com.baiyi.opscloud.sshcore.builder.TerminalSessionBuilder;
 import com.baiyi.opscloud.sshcore.enums.SessionTypeEnum;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import com.baiyi.opscloud.sshcore.model.SessionIdMapper;
-import com.baiyi.opscloud.sshserver.config.event.ISshShellEvent;
-import com.baiyi.opscloud.sshserver.config.event.SshShellEventFactory;
+import com.baiyi.opscloud.sshserver.listeners.event.ISshShellEvent;
+import com.baiyi.opscloud.sshserver.listeners.event.SshShellEventFactory;
 import com.baiyi.opscloud.sshserver.listeners.SshShellEvent;
 import org.apache.sshd.common.session.SessionContext;
 import org.springframework.beans.factory.InitializingBean;
@@ -21,7 +21,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
-public abstract class BaseSshShellEvent implements ISshShellEvent, InitializingBean {
+public abstract class AbstractSshShellEvent implements ISshShellEvent, InitializingBean {
 
     private final static HostInfo serverInfo = HostInfo.build();
 

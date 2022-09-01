@@ -1,6 +1,6 @@
-package com.baiyi.opscloud.sshserver.config.event.impl;
+package com.baiyi.opscloud.sshserver.listeners.event.impl;
 
-import com.baiyi.opscloud.sshserver.PromptColor;
+import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.listeners.SshShellEvent;
 import com.baiyi.opscloud.sshserver.listeners.SshShellEventType;
@@ -10,30 +10,28 @@ import org.springframework.stereotype.Component;
 
 /**
  * @Author baiyi
- * @Date 2022/8/30 15:27
+ * @Date 2022/8/30 15:37
  * @Version 1.0
  */
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SshShellStartedEvent extends BaseSshShellEvent {
+public class SshShellStoppedEvent extends AbstractSshShellEvent {
 
     private final SshShellHelper sshShellHelper;
 
-    private static final String WELCOME = "Hi %s, Welcome to Opscloud SSH-Server! \n";
+    private final SimpleTerminalSessionFacade simpleTerminalSessionFacade;
 
     @Override
     public String getEventType() {
-        return SshShellEventType.SESSION_STARTED.name();
+        return SshShellEventType.SESSION_STOPPED.name();
     }
 
     @Override
     public void handle(SshShellEvent event) {
-        // this.terminal.puts(InfoCmp.Capability.clear_screen, new Object[0]);  // 清屏
-        openTerminalSession(event);
         final String username = event.getSession().getServerSession().getUsername();
-        String welcome = String.format(WELCOME, username);
-        sshShellHelper.print(welcome, PromptColor.RED);
+        log.info(String.format("The user %s exits SSH-Server normally", username));
+        closeTerminalSession(event);
     }
 
 }
