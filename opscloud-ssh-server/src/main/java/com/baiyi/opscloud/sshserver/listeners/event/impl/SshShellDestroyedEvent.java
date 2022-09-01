@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshserver.config.event.impl;
+package com.baiyi.opscloud.sshserver.listeners.event.impl;
 
 import com.baiyi.opscloud.sshserver.listeners.SshShellEvent;
 import com.baiyi.opscloud.sshserver.listeners.SshShellEventType;
@@ -7,22 +7,25 @@ import org.springframework.stereotype.Component;
 
 /**
  * @Author baiyi
- * @Date 2022/8/30 15:39
+ * @Date 2022/9/1 17:09
  * @Version 1.0
  */
 @Slf4j
 @Component
-public class SshShellUnexpectedlyEvent extends BaseSshShellEvent {
+public class SshShellDestroyedEvent extends AbstractSshShellEvent {
 
     @Override
     public String getEventType() {
-        return SshShellEventType.SESSION_STOPPED_UNEXPECTEDLY.name();
+        return SshShellEventType.SESSION_DESTROYED.name();
     }
 
+    /**
+     * 销毁补偿
+     * @param event
+     */
     @Override
     public void handle(SshShellEvent event) {
         final String username = event.getSession().getServerSession().getUsername();
-        log.warn(String.format("The user %s disconnects SSH-Server", username));
         closeTerminalSession(event);
     }
 

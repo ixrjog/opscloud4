@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshserver.config.event;
+package com.baiyi.opscloud.sshserver.listeners.event;
 
 import lombok.extern.slf4j.Slf4j;
 
