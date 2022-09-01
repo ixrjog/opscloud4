@@ -14,7 +14,6 @@ import org.springframework.retry.RetryException;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
@@ -40,11 +39,11 @@ public class SimpleTerminalSessionFacadeImpl implements SimpleTerminalSessionFac
 
     @Override
     public void closeTerminalSessionInstance(TerminalSessionInstance terminalSessionInstance) {
+        serverCommandAudit.recordCommand(terminalSessionInstance);
         terminalSessionInstance.setCloseTime((new Date()));
         terminalSessionInstance.setInstanceClosed(true);
         terminalSessionInstance.setOutputSize(IOUtil.fileSize(terminalConfig.buildAuditLogPath(terminalSessionInstance.getSessionId(), terminalSessionInstance.getInstanceId())));
         terminalSessionInstanceService.update(terminalSessionInstance);
-        serverCommandAudit.recordCommand(terminalSessionInstance);
     }
 
     @Override
@@ -82,7 +81,7 @@ public class SimpleTerminalSessionFacadeImpl implements SimpleTerminalSessionFac
     }
 
     @Override
-    @Transactional(rollbackFor = {Exception.class})
+    //@Transactional(rollbackFor = {Exception.class})
     public void closeTerminalSessionById(int id) {
         TerminalSession terminalSession = terminalSessionService.getById(id);
         if (terminalSession.getSessionClosed()) return;

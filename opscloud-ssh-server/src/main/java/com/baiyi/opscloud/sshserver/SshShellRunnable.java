@@ -224,15 +224,16 @@ public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, 
                 shellListenerService.onSessionStopped(session);
                 log.debug("{}: closing", session.toString());
                 quit(0);
-            } catch (Throwable e) {
+            } catch (Throwable throwable) {
                 shellListenerService.onSessionError(session);
-                log.error("{}: unexpected exception", session.toString(), e);
+                log.error("{}: unexpected exception", session.toString(), throwable);
                 quit(1);
             }
         } catch (IOException e) {
             log.error("Unable to open terminal", e);
             quit(1);
         }
+        log.debug("{}: stoping...", session.toString());
     }
 
     private void quit(int exitCode) {

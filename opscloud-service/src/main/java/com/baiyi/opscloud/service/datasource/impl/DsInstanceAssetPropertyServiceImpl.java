@@ -1,9 +1,11 @@
 package com.baiyi.opscloud.service.datasource.impl;
 
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
 import com.baiyi.opscloud.mapper.opscloud.DatasourceInstanceAssetPropertyMapper;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -15,6 +17,7 @@ import java.util.Map;
  * @Date 2021/6/19 9:23 上午
  * @Version 1.0
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DsInstanceAssetPropertyServiceImpl implements DsInstanceAssetPropertyService {
@@ -58,7 +61,12 @@ public class DsInstanceAssetPropertyServiceImpl implements DsInstanceAssetProper
             if (property.getName().equals(assetProperty.getName())) {
                 if (!property.getValue().equals(assetProperty.getValue())) {
                     property.setValue(assetProperty.getValue());
-                    dsInstanceAssetPropertyMapper.updateByPrimaryKey(property);
+                    try{
+                        dsInstanceAssetPropertyMapper.updateByPrimaryKey(property);
+                    }catch (Exception e){
+                        log.error(e.getMessage());
+                        log.error(JSONUtil.writeValueAsString(property));
+                    }
                 }
                 assetProperties.remove(property);
                 return;

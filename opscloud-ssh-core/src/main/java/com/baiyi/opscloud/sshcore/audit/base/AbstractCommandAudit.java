@@ -50,7 +50,7 @@ public abstract class AbstractCommandAudit {
     public void asyncRecordCommand(String sessionId, String instanceId) {
         TerminalSessionInstance terminalSessionInstance = terminalSessionInstanceService.getByUniqueKey(sessionId, instanceId);
         // 跳过日志审计
-        if(InstanceSessionTypeEnum.CONTAINER_LOG.getType().equals(terminalSessionInstance.getInstanceSessionType()))
+        if (InstanceSessionTypeEnum.CONTAINER_LOG.getType().equals(terminalSessionInstance.getInstanceSessionType()))
             return;
         String commanderLogPath = terminalConfig.buildAuditLogPath(sessionId, instanceId);
         String str;
@@ -89,7 +89,11 @@ public abstract class AbstractCommandAudit {
      * @param instance
      */
     public void recordCommand(TerminalSessionInstance instance) {
-        this.asyncRecordCommand(instance.getSessionId(), instance.getInstanceId());
+        try {
+            this.asyncRecordCommand(instance.getSessionId(), instance.getInstanceId());
+        } catch (Exception e) {
+            log.error("记录日志错误: sessionId={}, instanceId={}", instance.getSessionId(), instance.getInstanceId());
+        }
     }
 
     private ImmutablePair<Integer, Integer> getIndex(String inputStr) {
