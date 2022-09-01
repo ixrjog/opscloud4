@@ -10,6 +10,8 @@ import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.net.URISyntaxException;
 
@@ -19,7 +21,15 @@ import java.net.URISyntaxException;
  * @Version 1.0
  */
 @Slf4j
+@Component
 public class KubeClient {
+
+    private static AmazonEksProvider amazonEksProvider;
+
+    @Autowired
+    public void setAmazonEksProvider(AmazonEksProvider amazonEksProvider) {
+        KubeClient.amazonEksProvider = amazonEksProvider;
+    }
 
     public static final int CONNECTION_TIMEOUT = 30 * 1000;
     public static final int REQUEST_TIMEOUT = 30 * 1000;
@@ -45,7 +55,7 @@ public class KubeClient {
     private static KubernetesClient buildByProvider(KubernetesConfig.Kubernetes kubernetes) {
         if (KubernetesProviders.AMAZON_EKS.getDesc().equalsIgnoreCase(kubernetes.getProvider())) {
             try {
-                String token = AmazonEksProvider.generateEksToken(kubernetes.getAmazonEks());
+                String token = amazonEksProvider.generateEksToken(kubernetes.getAmazonEks());
                 return build(kubernetes.getAmazonEks().getUrl(), token);
             } catch (URISyntaxException e) {
             }
