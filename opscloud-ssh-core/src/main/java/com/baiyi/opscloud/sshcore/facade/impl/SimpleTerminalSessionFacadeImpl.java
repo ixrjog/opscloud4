@@ -51,8 +51,8 @@ public class SimpleTerminalSessionFacadeImpl implements SimpleTerminalSessionFac
     public void closeTerminalSessionInstance(TerminalSession terminalSession, String instanceId) throws RetryException {
         TerminalSessionInstance terminalSessionInstance = terminalSessionInstanceService.getByUniqueKey(terminalSession.getSessionId(), instanceId);
         if (terminalSessionInstance == null) {
-            log.error("实例未完成初始化用户就退出了: sessionId = {} , instanceId = {}", terminalSession.getSessionId(), instanceId);
-            throw new RetryException("实例未完成初始化用户就退出了: sessionId  = " + terminalSession.getSessionId());
+            log.error("实例未完成初始化用户就退出了: sessionId={}, instanceId={}", terminalSession.getSessionId(), instanceId);
+            throw new RetryException("实例未完成初始化用户就退出了: sessionId=" + terminalSession.getSessionId());
         }
         if (terminalSessionInstance.getInstanceClosed()) return;
         closeTerminalSessionInstance(terminalSessionInstance);

@@ -36,23 +36,23 @@ public class DingtalkAppMessageConsumer extends AbstractMessageConsumer<Dingtalk
             if (asset.getInstanceUuid().equals(instance.getUuid()) && asset.getAssetType().equals(DsAssetTypeConstants.DINGTALK_USER.name()))
                 return asset;
         }
-        throw new CommonRuntimeException("发送消息失败: 用户未绑定钉钉用户，无法查找对应userid！");
+        throw new CommonRuntimeException("发送消息失败: 用户未绑定钉钉用户无法查找对应userid！username=" + user.getUsername());
     }
 
     @Override
     public void send(DatasourceInstance instance, User user, MessageTemplate mt, String text) {
         DatasourceInstanceAsset asset = findAssetUser(instance, user);
         DingtalkMessageParam.Markdown markdown = DingtalkMessageParam.Markdown.builder()
-                        .title(mt.getTitle())
-                        .text(text)
-                        .build();
+                .title(mt.getTitle())
+                .text(text)
+                .build();
         DingtalkMessageParam.Msg msg = DingtalkMessageParam.Msg.builder()
                 .markdown(markdown)
                 .build();
         DingtalkMessageParam.AsyncSendMessage message = DingtalkMessageParam.AsyncSendMessage.builder()
-                        .msg(msg)
-                        .useridList(asset.getAssetId())
-                        .build();
+                .msg(msg)
+                .useridList(asset.getAssetId())
+                .build();
         // log.info("发送通知 : message = {}",JSONUtil.writeValueAsString(message));
         DingtalkMessage.MessageResponse messageResponse = dingtalkMessageDriver.asyncSend(buildConfig(instance),
                 message);
