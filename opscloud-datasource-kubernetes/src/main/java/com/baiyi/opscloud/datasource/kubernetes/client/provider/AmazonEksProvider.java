@@ -69,7 +69,7 @@ public class AmazonEksProvider {
         PresignerFacade presignerFacade = new PresignerFacade(presignerParams);
         URL url = presignerFacade.presign(defaultRequest, new Date(System.currentTimeMillis() + 60000));
         String encodedUrl = Base64.getUrlEncoder().withoutPadding().encodeToString(url.toString().getBytes());
-        log.info("Generate EKS Token : clusterName = {}", amazonEks.getClusterName());
+        log.info("Generate EKS Token: clusterName={}, url={}", amazonEks.getClusterName(),amazonEks.getUrl());
         return Joiner.on(".").join("k8s-aws-v1", encodedUrl);
     }
 
