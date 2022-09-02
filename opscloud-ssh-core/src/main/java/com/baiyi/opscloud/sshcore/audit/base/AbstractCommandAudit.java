@@ -14,6 +14,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.scheduling.annotation.Async;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -56,30 +57,35 @@ public abstract class AbstractCommandAudit {
         String str;
         InstanceCommandBuilder builder = null;
         String regex = getInputRegex();
-        try {
-            LineNumberReader reader = new LineNumberReader(new FileReader(commanderLogPath));
-            while ((str = reader.readLine()) != null) {
-                if (!str.isEmpty()) {
-                    boolean isInput = Pattern.matches(regex, str);
-                    if (isInput) {
-                        if (builder != null) {
-                            // save
-                            TerminalSessionInstanceCommand auditCommand = builder.build();
-                            if (auditCommand != null) {
-                                if (!StringUtils.isEmpty(auditCommand.getInputFormatted()))
-                                    terminalSessionInstanceCommandService.add(auditCommand);
-                                builder = null;
+        File file = new File(commanderLogPath);
+        if (file.exists()) {
+            try {
+                LineNumberReader reader = new LineNumberReader(new FileReader(commanderLogPath));
+                while ((str = reader.readLine()) != null) {
+                    if (!str.isEmpty()) {
+                        boolean isInput = Pattern.matches(regex, str);
+                        if (isInput) {
+                            if (builder != null) {
+                                // save
+                                TerminalSessionInstanceCommand auditCommand = builder.build();
+                                if (auditCommand != null) {
+                                    if (!StringUtils.isEmpty(auditCommand.getInputFormatted()))
+                                        terminalSessionInstanceCommandService.add(auditCommand);
+                                    builder = null;
+                                }
                             }
+                            builder = builder(terminalSessionInstance.getId(), str);
+                        } else {
+                            if (builder != null)
+                                builder.addOutput(str);
                         }
-                        builder = builder(terminalSessionInstance.getId(), str);
-                    } else {
-                        if (builder != null)
-                            builder.addOutput(str);
                     }
                 }
+            } catch (IOException e) {
+                log.error("记录审计命令错误: error={}", e.getMessage());
             }
-        } catch (IOException e) {
-            log.error("审计文件不存在: {}", commanderLogPath);
+        } else {
+            log.info("审计文件不存在: path={}", commanderLogPath);
         }
     }
 
