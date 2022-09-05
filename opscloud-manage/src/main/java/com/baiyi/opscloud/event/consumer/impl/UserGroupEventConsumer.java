@@ -24,21 +24,21 @@ public class UserGroupEventConsumer extends AbstractEventConsumer<UserGroup> {
     }
 
     @Override
-    protected void onCreateMessage(NoticeEvent noticeEvent) {
+    protected void onCreatedMessage(NoticeEvent noticeEvent) {
         UserGroup eventData = toEventData(noticeEvent.getMessage());
-        dsAccountGroupManager.create(eventData);
+        dsAccountGroupManager.created(eventData);
     }
 
     @Override
-    protected void onUpdateMessage(NoticeEvent noticeEvent) {
+    protected void onUpdatedMessage(NoticeEvent noticeEvent) {
         UserGroup eventData = toEventData(noticeEvent.getMessage());
-        dsAccountGroupManager.update(eventData);
+        dsAccountGroupManager.updated(eventData);
     }
 
     @Override
-    protected void onDeleteMessage(NoticeEvent noticeEvent) {
+    protected void onDeletedMessage(NoticeEvent noticeEvent) {
         UserGroup eventData = toEventData(noticeEvent.getMessage());
-        dsAccountGroupManager.delete(eventData);
+        dsAccountGroupManager.deleted(eventData);
     }
 
 }

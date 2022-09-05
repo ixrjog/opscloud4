@@ -60,7 +60,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
     }
 
     @Override
-    public void create(User user) {
+    public void created(User user) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
             log.info("{} 数据源账户管理: 无可用实例", this.getClass().getSimpleName());
@@ -72,7 +72,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
     }
 
     @Override
-    public void update(User user) {
+    public void updated(User user) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
             log.info("{} 数据源账户管理: 无可用实例", this.getClass().getSimpleName());
@@ -86,7 +86,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
     }
 
     @Override
-    public void delete(User user) {
+    public void deleted(User user) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
             log.info("{} 数据源账户管理: 无可用实例", this.getClass().getSimpleName());

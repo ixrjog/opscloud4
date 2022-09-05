@@ -40,7 +40,7 @@ public class DsServerManager extends BaseManager implements IManager<Server> {
     }
 
     @Override
-    public void create(Server server) {
+    public void created(Server server) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
             log.info("{} 数据源服务器管理: 无可用实例", this.getClass().getSimpleName());
@@ -50,7 +50,7 @@ public class DsServerManager extends BaseManager implements IManager<Server> {
     }
 
     @Override
-    public void update(Server server) {
+    public void updated(Server server) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
             log.info("{} 数据源服务器管理: 无可用实例", this.getClass().getSimpleName());
@@ -61,7 +61,7 @@ public class DsServerManager extends BaseManager implements IManager<Server> {
 
     @Override
     // @Async(value = Global.TaskPools.EXECUTOR)
-    public void delete(Server server) {
+    public void deleted(Server server) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
             log.info("{} 数据源服务器管理: 无可用实例", this.getClass().getSimpleName());

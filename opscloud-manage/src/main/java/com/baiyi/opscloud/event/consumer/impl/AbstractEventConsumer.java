@@ -34,25 +34,29 @@ public abstract class AbstractEventConsumer<T> implements IEventConsumer, Initia
 
     private void messageRoute(NoticeEvent noticeEvent, String action) {
         if (EventActionTypeEnum.CREATE.name().equals(action)) {
-            onCreateMessage(noticeEvent);
+            onCreatedMessage(noticeEvent);
             return;
         }
         if (EventActionTypeEnum.UPDATE.name().equals(action)) {
-            onUpdateMessage(noticeEvent);
+            onUpdatedMessage(noticeEvent);
             return;
         }
         if (EventActionTypeEnum.DELETE.name().equals(action)) {
-            onDeleteMessage(noticeEvent);
+            onDeletedMessage(noticeEvent);
         }
     }
 
-    protected void onCreateMessage(NoticeEvent noticeEvent) {
+    /**
+     * chuang
+     * @param noticeEvent
+     */
+    protected void onCreatedMessage(NoticeEvent noticeEvent) {
     }
 
-    protected void onUpdateMessage(NoticeEvent noticeEvent) {
+    protected void onUpdatedMessage(NoticeEvent noticeEvent) {
     }
 
-    protected void onDeleteMessage(NoticeEvent noticeEvent) {
+    protected void onDeletedMessage(NoticeEvent noticeEvent) {
     }
 
     /**

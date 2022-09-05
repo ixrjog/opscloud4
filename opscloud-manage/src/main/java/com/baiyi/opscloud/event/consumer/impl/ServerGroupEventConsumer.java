@@ -41,15 +41,15 @@ public class ServerGroupEventConsumer extends AbstractEventConsumer<ServerGroup>
     }
 
     @Override
-    protected void onCreateMessage(NoticeEvent noticeEvent) {
+    protected void onCreatedMessage(NoticeEvent noticeEvent) {
         ServerGroup eventData = toEventData(noticeEvent.getMessage());
-        dsServerGroupManager.create(eventData);
+        dsServerGroupManager.created(eventData);
     }
 
     @Override
-    protected void onUpdateMessage(NoticeEvent noticeEvent) {
+    protected void onUpdatedMessage(NoticeEvent noticeEvent) {
         ServerGroup eventData = toEventData(noticeEvent.getMessage());
-        dsServerGroupManager.update(eventData);
+        dsServerGroupManager.updated(eventData);
     }
 
 }

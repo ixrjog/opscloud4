@@ -1,10 +1,11 @@
 package com.baiyi.opscloud.event.consumer.impl;
 
+import com.baiyi.opscloud.common.event.NoticeEvent;
 import com.baiyi.opscloud.datasource.manager.DsAccountGroupManager;
 import com.baiyi.opscloud.datasource.manager.DsServerGroupManager;
-import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.common.event.NoticeEvent;
+import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
+import com.baiyi.opscloud.event.consumer.ApplicationManager;
 import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -24,13 +25,15 @@ public class UserPermissionEventConsumer extends AbstractEventConsumer<UserPermi
 
     private final UserService userService;
 
+    private final ApplicationManager applicationManager;
+
     @Override
     public String getEventType() {
         return BusinessTypeEnum.USER_PERMISSION.name();
     }
 
     @Override
-    protected void onCreateMessage(NoticeEvent noticeEvent) {
+    protected void onCreatedMessage(NoticeEvent noticeEvent) {
         UserPermission eventData = toEventData(noticeEvent.getMessage());
         if (eventData.getBusinessType() == BusinessTypeEnum.USERGROUP.getType()) {
             dsAccountGroupManager.grant(userService.getById(eventData.getUserId()), eventData);
@@ -38,11 +41,17 @@ public class UserPermissionEventConsumer extends AbstractEventConsumer<UserPermi
         }
         if (eventData.getBusinessType() == BusinessTypeEnum.SERVERGROUP.getType()) {
             dsServerGroupManager.grant(userService.getById(eventData.getUserId()), eventData);
+            return;
+        }
+        if (eventData.getBusinessType() == BusinessTypeEnum.APPLICATION.getType()) {
+            applicationManager.created(eventData);
+
+            return;
         }
     }
 
     @Override
-    protected void onDeleteMessage(NoticeEvent noticeEvent) {
+    protected void onDeletedMessage(NoticeEvent noticeEvent) {
         UserPermission eventData = toEventData(noticeEvent.getMessage());
         if (eventData.getBusinessType() == BusinessTypeEnum.USERGROUP.getType()) {
             dsAccountGroupManager.revoke(userService.getById(eventData.getUserId()), eventData);

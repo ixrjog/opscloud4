@@ -47,21 +47,21 @@ public class ServerEventConsumer extends AbstractEventConsumer<Server> {
     }
 
     @Override
-    protected void onCreateMessage(NoticeEvent noticeEvent) {
+    protected void onCreatedMessage(NoticeEvent noticeEvent) {
         Server eventData = toEventData(noticeEvent.getMessage());
-        dsServerManager.create(eventData);
+        dsServerManager.created(eventData);
     }
 
     @Override
-    protected void onUpdateMessage(NoticeEvent noticeEvent) {
+    protected void onUpdatedMessage(NoticeEvent noticeEvent) {
         Server eventData = toEventData(noticeEvent.getMessage());
-        dsServerManager.update(eventData);
+        dsServerManager.updated(eventData);
     }
 
     @Override
-    protected void onDeleteMessage(NoticeEvent noticeEvent) {
+    protected void onDeletedMessage(NoticeEvent noticeEvent) {
         Server eventData = toEventData(noticeEvent.getMessage());
-        dsServerManager.delete(eventData);
+        dsServerManager.deleted(eventData);
     }
 
 }

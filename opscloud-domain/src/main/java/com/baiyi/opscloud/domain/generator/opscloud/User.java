@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Date;
 
 @Builder
@@ -18,7 +19,8 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 @Decrypt
-public class User {
+public class User implements Serializable {
+    private static final long serialVersionUID = 7775998575519732616L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
