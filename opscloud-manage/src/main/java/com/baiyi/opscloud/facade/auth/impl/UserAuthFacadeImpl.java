@@ -161,6 +161,14 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
         User user = userService.getByUsername(loginParam.getUsername());
         // 尝试使用authProvider 认证
         if (authProviderManager.tryLogin(user, loginParam)) {
+            if (user.getMfa()) {
+                try {
+                    mfaAuthHelper.verify(user, loginParam);
+                } catch (AuthRuntimeException e) {
+                    recordLog(authPlatform, loginParam, ErrorEnum.AUTH_USER_LOGIN_FAILURE);
+                    throw new AuthRuntimeException(e.getMessage()); // 登录失败
+                }
+            }
             recordLog(authPlatform, loginParam, ErrorEnum.OK);
             return LogVO.Login.builder()
                     .name(loginParam.getUsername())
