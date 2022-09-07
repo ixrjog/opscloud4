@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.filter;
 
 import com.baiyi.opscloud.common.HttpResult;
-import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
+import com.baiyi.opscloud.common.exception.auth.AuthCommonException;
 import com.baiyi.opscloud.common.util.GitlabTokenUtil;
 import com.baiyi.opscloud.config.properties.WhiteConfigurationProperties;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
@@ -78,7 +78,7 @@ public class AuthFilter extends OncePerRequestFilter {
                     userAuthFacade.tryUserHasResourceAuthorizeByAccessToken(accessToken, resourceName);
                 }
                 filterChain.doFilter(request, response);
-            } catch (AuthRuntimeException ex) {
+            } catch (AuthCommonException ex) {
                 response.setContentType(APPLICATION_JSON_UTF8_VALUE);
                 setHeaders(request, response);
                 HttpResult result = new HttpResult(ex);

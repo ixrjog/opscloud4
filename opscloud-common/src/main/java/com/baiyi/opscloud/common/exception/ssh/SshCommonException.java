@@ -12,16 +12,16 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SshRuntimeException extends BaseException {
+public class SshCommonException extends BaseException {
 
     private final Integer code = 999;
 
-    public SshRuntimeException(String message) {
+    public SshCommonException(String message) {
         super(message);
         setCode(code);
     }
 
-    public SshRuntimeException(ErrorEnum errorEnum) {
+    public SshCommonException(ErrorEnum errorEnum) {
         super(errorEnum);
     }
 }

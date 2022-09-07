@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.application.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
-import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
+import com.baiyi.opscloud.common.exception.auth.AuthCommonException;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
@@ -95,7 +95,7 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
                         .userId(pageQuery.getUserId())
                         .build();
                 if (userPermissionService.getByUniqueKey(query) == null) {
-                    throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_FAILURE);
+                    throw new AuthCommonException(ErrorEnum.AUTHENTICATION_FAILURE);
                 }
             }
             table = new DataTable<>(Lists.newArrayList(applicationService.getById(pageQuery.getApplicationId())), 1);

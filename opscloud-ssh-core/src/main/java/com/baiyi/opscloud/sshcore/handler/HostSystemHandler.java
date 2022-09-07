@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.sshcore.handler;
 
 import com.baiyi.opscloud.common.constants.enums.ProtocolEnum;
-import com.baiyi.opscloud.common.exception.ssh.SshRuntimeException;
+import com.baiyi.opscloud.common.exception.ssh.SshCommonException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.CredentialUtil;
 import com.baiyi.opscloud.common.util.ServerAccountUtil;
@@ -71,17 +71,17 @@ public class HostSystemHandler {
                     .build();
             UserPermission userPermission = userPermissionService.getByUserPermission(query);
             if (userPermission == null)
-                throw new SshRuntimeException(ErrorEnum.SSH_SERVER_AUTHENTICATION_FAILURE);
+                throw new SshCommonException(ErrorEnum.SSH_SERVER_AUTHENTICATION_FAILURE);
             isAdmin = "admin".equalsIgnoreCase(userPermission.getPermissionRole());
         }
         return isAdmin;
     }
 
-    public HostSystem buildHostSystem(ServerVO.Server serverVO, String account, boolean admin) throws SshRuntimeException {
+    public HostSystem buildHostSystem(ServerVO.Server serverVO, String account, boolean admin) throws SshCommonException {
         return buildHostSystem(BeanCopierUtil.copyProperties(serverVO, Server.class), account, admin);
     }
 
-    public HostSystem buildHostSystem(Server server, String account, boolean admin) throws SshRuntimeException {
+    public HostSystem buildHostSystem(Server server, String account, boolean admin) throws SshCommonException {
         boolean isAdmin = verifyAdmin(server);
         SshCredential sshCredential;
         // 未指定账户
@@ -96,13 +96,13 @@ public class HostSystemHandler {
         } else { // 指定账户
             ServerAccount serverAccount = serverAccountService.getPermissionServerAccountByUsernameAndProtocol(server.getId(), account, ProtocolEnum.SSH.getType());
             if (serverAccount == null)
-                throw new SshRuntimeException(ErrorEnum.SSH_SERVER_ACCOUNT_NOT_EXIST);
+                throw new SshCommonException(ErrorEnum.SSH_SERVER_ACCOUNT_NOT_EXIST);
             if (serverAccount.getAccountType() == LoginType.HIGH_AUTHORITY && !isAdmin)
-                throw new SshRuntimeException(ErrorEnum.SSH_SERVER_AUTHENTICATION_FAILURE);
+                throw new SshCommonException(ErrorEnum.SSH_SERVER_AUTHENTICATION_FAILURE);
             sshCredential = buildSshCredential(serverAccount);
         }
         if (sshCredential == null)
-            throw new SshRuntimeException(ErrorEnum.SSH_SERVER_NO_ACCOUNTS_AVAILABLE);
+            throw new SshCommonException(ErrorEnum.SSH_SERVER_NO_ACCOUNTS_AVAILABLE);
         return HostSystem.builder()
                 .host(HostParamUtil.getManageIp(server, bizPropertyHelper.getBusinessProperty(server))) // 避免绕过未授权服务器
                 .sshCredential(sshCredential)

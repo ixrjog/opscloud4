@@ -75,7 +75,7 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
             // 同步资产 IAM_USER
             dsInstanceFacade.pullAsset(grantPolicy.getInstanceUuid(), DsAssetTypeConstants.IAM_USER.name(), iamUser);
         } catch (Exception e) {
-            throw new CommonRuntimeException("AWS接口查询错误！");
+            throw new CommonRuntimeException("AWS接口查询错误，msg={}", e.getMessage());
         }
     }
 
@@ -95,7 +95,7 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
                 dsInstanceFacade.pullAsset(revokePolicy.getInstanceUuid(), DsAssetTypeConstants.IAM_USER.name(), iamUser);
             }
         } catch (Exception e) {
-            throw new CommonRuntimeException("AWS接口查询错误！");
+            throw new CommonRuntimeException("AWS接口查询错误, msg={}", e.getMessage());
         }
     }
 

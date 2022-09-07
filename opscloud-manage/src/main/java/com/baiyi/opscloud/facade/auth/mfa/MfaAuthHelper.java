@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.auth.mfa;
 
 import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
-import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
+import com.baiyi.opscloud.common.exception.auth.AuthCommonException;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserCredential;
@@ -42,19 +42,19 @@ public class MfaAuthHelper {
      */
     public void verify(User user, LoginParam.Login loginParam) {
         if (StringUtils.isEmpty(loginParam.getOtp()))
-            throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_OTP_FAILURE); // OTP
+            throw new AuthCommonException(ErrorEnum.AUTH_USER_LOGIN_OTP_FAILURE); // OTP
         List<UserCredential> credentials = userCredentialService.queryByUserIdAndType(user.getId(), UserCredentialTypeEnum.OTP_SK.getType());
         try {
             SecretKey key = OtpUtil.toKey(credentials.get(0).getCredential());
             final String otp = OtpUtil.generateOtp(key);
             if (!otp.equals(loginParam.getOtp()))
-                throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_OTP_FAILURE); // 登录失败
+                throw new AuthCommonException(ErrorEnum.AUTH_USER_LOGIN_OTP_FAILURE); // 登录失败
         } catch (OtpException.DecodingException e) {
-            throw new AuthRuntimeException("MFA认证失败: Decoding Exception!");
+            throw new AuthCommonException("MFA认证失败: Decoding Exception!");
         } catch (NoSuchAlgorithmException e2) {
-            throw new AuthRuntimeException("MFA认证失败: No Such Algorithm Exception!");
+            throw new AuthCommonException("MFA认证失败: No Such Algorithm Exception!");
         } catch (InvalidKeyException e3) {
-            throw new AuthRuntimeException("MFA认证失败: Invalid Key Exception!");
+            throw new AuthCommonException("MFA认证失败: Invalid Key Exception!");
         }
     }
 

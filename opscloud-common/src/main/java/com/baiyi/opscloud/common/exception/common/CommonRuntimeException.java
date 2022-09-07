@@ -22,6 +22,12 @@ public class CommonRuntimeException extends BaseException {
         setCode(code);
     }
 
+    public CommonRuntimeException(String message, Object... var2) {
+        super(message,var2);
+        setCode(code);
+    }
+
+
     public CommonRuntimeException(ErrorEnum errorEnum) {
         super(errorEnum);
     }

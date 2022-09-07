@@ -10,6 +10,8 @@ import com.baiyi.opscloud.domain.ErrorEnum;
  */
 public class DatasourceRuntimeException extends BaseException {
 
+    private static final long serialVersionUID = 6568038823824057120L;
+
     public DatasourceRuntimeException(ErrorEnum errorEnum) {
         super(errorEnum);
     }

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.auth.impl;
 
-import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
+import com.baiyi.opscloud.common.exception.auth.AuthCommonException;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.datasource.manager.DsAuthManager;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -68,24 +68,24 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     public void tryUserHasResourceAuthorize(String token, String resourceName) {
         AuthResource authResource = authResourceService.queryByName(resourceName);
         if (authResource == null)
-            throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_RESOURCE_NOT_EXIST); // 资源不存在
+            throw new AuthCommonException(ErrorEnum.AUTHENTICATION_RESOURCE_NOT_EXIST); // 资源不存在
 
         if (!authResource.getNeedAuth())
             return; // 此接口不需要鉴权
 
         if (StringUtils.isEmpty(token))
-            throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_REQUEST_NO_TOKEN); // request请求中没有Token
+            throw new AuthCommonException(ErrorEnum.AUTHENTICATION_REQUEST_NO_TOKEN); // request请求中没有Token
 
         UserToken userToken = userTokenService.getByVaildToken(token);
         if (userToken == null)
-            throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_TOKEN_INVALID); // Token无效
+            throw new AuthCommonException(ErrorEnum.AUTHENTICATION_TOKEN_INVALID); // Token无效
 
         SessionUtil.setUserToken(userToken); // 设置会话用户
 
         // 校验用户是否可以访问资源路径
         if (userTokenService.checkUserHasResourceAuthorize(token, resourceName) == 0) {
             if (userTokenService.checkUserHasRole(token, SUPER_ADMIN) == 0) {
-                throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_FAILURE);
+                throw new AuthCommonException(ErrorEnum.AUTHENTICATION_FAILURE);
             } else {
                 grantRoleResource(authResource);
             }
@@ -96,18 +96,18 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     public void tryUserHasResourceAuthorizeByAccessToken(String accessToken, String resourceName) {
         AuthResource authResource = authResourceService.queryByName(resourceName);
         if (authResource == null)
-            throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_RESOURCE_NOT_EXIST); // 资源不存在
+            throw new AuthCommonException(ErrorEnum.AUTHENTICATION_RESOURCE_NOT_EXIST); // 资源不存在
         if (!authResource.getNeedAuth())
             return; // 此接口不需要鉴权
         if (StringUtils.isEmpty(accessToken))
-            throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_REQUEST_NO_TOKEN); // request请求中没有AccessToken
+            throw new AuthCommonException(ErrorEnum.AUTHENTICATION_REQUEST_NO_TOKEN); // request请求中没有AccessToken
         AccessToken token = accessTokenService.getByToken(accessToken);
         if (token == null)
-            throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_TOKEN_INVALID); // Token无效
+            throw new AuthCommonException(ErrorEnum.AUTHENTICATION_TOKEN_INVALID); // Token无效
         SessionUtil.setUsername(token.getUsername()); // 设置会话用户
         // 校验用户是否可以访问资源路径
         if (accessTokenService.checkUserHasResourceAuthorize(accessToken, resourceName) == 0) {
-            throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_FAILURE);
+            throw new AuthCommonException(ErrorEnum.AUTHENTICATION_FAILURE);
         }
     }
 
@@ -145,7 +145,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
             userService.updateLogin(user);
             return userTokenFacade.userLogin(user);
         } else {
-            throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_FAILURE); // 登录失败
+            throw new AuthCommonException(ErrorEnum.AUTH_USER_LOGIN_FAILURE); // 登录失败
         }
     }
 
@@ -153,10 +153,10 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     public LogVO.Login platformLogin(LoginParam.PlatformLogin loginParam) {
         AuthPlatform authPlatform = authPlatformlService.getByName(loginParam.getPlatform());
         if (authPlatform == null) {
-            throw new AuthRuntimeException("Invalid platform name ！");
+            throw new AuthCommonException("Invalid platform name ！");
         }
         if (!stringEncryptor.decrypt(authPlatform.getToken()).equals(loginParam.getPlatformToken())) {
-            throw new AuthRuntimeException("Invalid platform token ！");
+            throw new AuthCommonException("Invalid platform token ！");
         }
         User user = userService.getByUsername(loginParam.getUsername());
         // 尝试使用authProvider 认证
@@ -164,9 +164,9 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
             if (user.getMfa()) {
                 try {
                     mfaAuthHelper.verify(user, loginParam);
-                } catch (AuthRuntimeException e) {
+                } catch (AuthCommonException e) {
                     recordLog(authPlatform, loginParam, ErrorEnum.AUTH_USER_LOGIN_FAILURE);
-                    throw new AuthRuntimeException(e.getMessage()); // 登录失败
+                    throw new AuthCommonException(e.getMessage()); // 登录失败
                 }
             }
             recordLog(authPlatform, loginParam, ErrorEnum.OK);
@@ -175,7 +175,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
                     .build();
         } else {
             recordLog(authPlatform, loginParam, ErrorEnum.AUTH_USER_LOGIN_FAILURE);
-            throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_FAILURE); // 登录失败
+            throw new AuthCommonException(ErrorEnum.AUTH_USER_LOGIN_FAILURE); // 登录失败
         }
     }
 

@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.slf4j.helpers.MessageFormatter;
 
 /**
  * @Author baiyi
@@ -21,6 +22,11 @@ public abstract class BaseException extends RuntimeException {
 
     public BaseException(String message) {
         super(message);
+        this.code = 10000;
+    }
+
+    public BaseException(String message, Object... var2) {
+        super(MessageFormatter.arrayFormat(message, var2).getMessage());
         this.code = 10000;
     }
 

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.sshserver.command.event;
 
-import com.baiyi.opscloud.common.exception.ssh.SshRuntimeException;
+import com.baiyi.opscloud.common.exception.ssh.SshCommonException;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
@@ -101,7 +101,7 @@ public class EventLoginCommand extends BaseServerCommand {
             } finally {
                 terminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             }
-        } catch (SshRuntimeException e) {
+        } catch (SshCommonException e) {
             log.error(e.getMessage());
             throw e;
         }

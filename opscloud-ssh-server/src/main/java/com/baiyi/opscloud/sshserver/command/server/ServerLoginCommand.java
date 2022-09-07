@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.sshserver.command.server;
 
-import com.baiyi.opscloud.common.exception.ssh.SshRuntimeException;
+import com.baiyi.opscloud.common.exception.ssh.SshCommonException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
@@ -132,7 +132,7 @@ public class ServerLoginCommand implements InitializingBean {
             } finally {
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             }
-        } catch (SshRuntimeException e) {
+        } catch (SshCommonException e) {
             String msg = String.format("SSH连接错误: %s", e.getMessage());
             log.error(msg);
             sshShellHelper.print(msg, PromptColor.RED);

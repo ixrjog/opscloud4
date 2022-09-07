@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.manager;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
+import com.baiyi.opscloud.common.exception.auth.AuthCommonException;
 import com.baiyi.opscloud.core.factory.AuthProviderFactory;
 import com.baiyi.opscloud.core.provider.auth.BaseAuthProvider;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
@@ -45,7 +45,7 @@ public class DsAuthManager extends BaseManager {
         return TagConstants.AUTHORIZATION.getTag();
     }
 
-    public boolean tryLogin(User user, LoginParam.Login loginParam) throws AuthRuntimeException {
+    public boolean tryLogin(User user, LoginParam.Login loginParam) throws AuthCommonException {
         List<DatasourceInstance> instances = listInstance();
         if (!CollectionUtils.isEmpty(instances)) {
             Authorization.Credential credential = Authorization.Credential.builder().username(loginParam.getUsername()).password(loginParam.getPassword()).build();
