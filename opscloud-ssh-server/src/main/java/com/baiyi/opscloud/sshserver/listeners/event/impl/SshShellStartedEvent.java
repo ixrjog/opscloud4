@@ -29,11 +29,15 @@ public class SshShellStartedEvent extends AbstractSshShellEvent {
 
     @Override
     public void handle(SshShellEvent event) {
-        // this.terminal.puts(InfoCmp.Capability.clear_screen, new Object[0]);  // 清屏
         openTerminalSession(event);
         final String username = event.getSession().getServerSession().getUsername();
         String welcome = String.format(WELCOME, username);
         sshShellHelper.print(welcome, PromptColor.RED);
+    }
+
+
+    private void preHandle(){
+        // this.terminal.puts(InfoCmp.Capability.clear_screen, new Object[0]);  // 清屏
     }
 
 }

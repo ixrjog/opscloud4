@@ -25,7 +25,6 @@ public class SshShellDestroyedEvent extends AbstractSshShellEvent {
      */
     @Override
     public void handle(SshShellEvent event) {
-        final String username = event.getSession().getServerSession().getUsername();
         closeTerminalSession(event);
     }
 
