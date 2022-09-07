@@ -230,6 +230,7 @@ public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, 
                 quit(1);
             }
         } catch (IOException e) {
+            shellListenerService.onSessionError(session);
             log.error("Unable to open terminal", e);
             quit(1);
         }
