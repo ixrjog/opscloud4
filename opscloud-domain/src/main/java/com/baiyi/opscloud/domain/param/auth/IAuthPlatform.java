@@ -9,6 +9,6 @@ public interface IAuthPlatform {
 
     String getPlatform();
 
-    String getToken();
+    String getPlatformToken();
 
 }

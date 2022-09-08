@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 
 public class LoginParam {
@@ -21,7 +21,7 @@ public class LoginParam {
     @AllArgsConstructor
     public static class Login {
 
-        @Valid
+        @NotBlank(message = "用户名不能为空")
         @ApiParam(required = true)
         @ApiModelProperty(value = "用户名")
         private String username;
@@ -44,21 +44,16 @@ public class LoginParam {
     @AllArgsConstructor
     public static class PlatformLogin extends Login implements IAuthPlatform {
 
-        @Valid
+        @NotBlank(message = "平台名称不能为空")
         @ApiParam(required = true)
         @ApiModelProperty(value = "平台名称(用于审计)")
         public String platform;
 
-        @Valid
+        @NotBlank(message = "平台令牌不能为空")
         @ApiParam(required = true)
         @ApiModelProperty(value = "平台令牌用于鉴权")
         public String platformToken;
 
-
-        @Override
-        public String getToken() {
-            return this.platformToken;
-        }
     }
 
     @Data
@@ -66,12 +61,12 @@ public class LoginParam {
     @ApiModel
     public static class Logout {
 
-        @Valid
+        @NotBlank(message = "用户名不能为空")
         @ApiParam(required = true)
         @ApiModelProperty(value = "用户名")
         private String username;
 
-        @Valid
+        @NotBlank(message = "令牌不能为空")
         @ApiModelProperty(value = "令牌")
         private String token;
 
