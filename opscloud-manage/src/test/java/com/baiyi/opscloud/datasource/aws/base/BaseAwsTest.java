@@ -4,6 +4,7 @@ import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 
 import javax.annotation.Resource;
 
@@ -14,8 +15,13 @@ import javax.annotation.Resource;
  */
 public class BaseAwsTest extends BaseUnit {
 
+    protected static final String DEFAULT_DSINSTANCE_UUID = "9877af2fa97f48faa34608531df354d2";
+
     @Resource
     private DsConfigHelper dsConfigHelper;
+
+    @Resource
+    protected DsInstanceAssetService dsInstanceAssetService;
 
     protected AwsConfig getConfig() {
         return dsConfigHelper.build(dsConfigHelper.getConfigByDsType(DsTypeEnum.AWS.getType()), AwsConfig.class);

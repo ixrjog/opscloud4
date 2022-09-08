@@ -1,24 +1,33 @@
 package com.baiyi.opscloud.datasource.aws;
 
+import com.amazonaws.services.sqs.model.QueueDoesNotExistException;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.datasource.aws.base.BaseAwsTest;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamPolicyDocument;
 import com.baiyi.opscloud.datasource.aws.sqs.driver.AmazonSimpleQueueServiceDriver;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
  * @Date 2022/3/25 16:28
  * @Version 1.0
  */
+
+@Slf4j
 public class SqsTest extends BaseAwsTest {
 
     /**
@@ -75,4 +84,33 @@ public class SqsTest extends BaseAwsTest {
         print(url);
     }
 
+    @Test
+    void createSqs() {
+        AwsConfig.Aws awsConfig = getConfigById(23).getAws();
+        List<DatasourceInstanceAsset> sqsList = dsInstanceAssetService.listByInstanceAssetType(DEFAULT_DSINSTANCE_UUID, DsAssetTypeConstants.SQS.name());
+        List<DatasourceInstanceAsset> prodSqs = sqsList.stream()
+                .filter(asset -> asset.getName().endsWith("_prod_queue"))
+                .collect(Collectors.toList());
+        prodSqs.forEach(asset -> {
+            Map<String, String> attributes = amazonSQSDriver.getQueueAttributes(awsConfig, asset.getRegionId(), asset.getAssetKey());
+            if (CollectionUtils.isEmpty(attributes)) {
+                log.error("创建异常", asset.getName());
+            } else {
+                try {
+                    String newSqsUrl = asset.getAssetKey().replace("_prod_queue", "_pre_queue");
+                    Map<String, String> map = amazonSQSDriver.getQueueAttributes(awsConfig, asset.getRegionId(), newSqsUrl);
+                    print(asset.getName());
+                } catch (QueueDoesNotExistException e) {
+                    String newSqsName = asset.getName().replace("_prod_queue", "_pre_queue");
+                    Map<String, String> newAttributes = Maps.newHashMap();
+                    newAttributes.put("DelaySeconds", attributes.get("DelaySeconds"));
+                    newAttributes.put("MaximumMessageSize", attributes.get("MaximumMessageSize"));
+                    newAttributes.put("MessageRetentionPeriod", attributes.get("MessageRetentionPeriod"));
+                    newAttributes.put("ReceiveMessageWaitTimeSeconds", attributes.get("ReceiveMessageWaitTimeSeconds"));
+                    newAttributes.put("VisibilityTimeout", attributes.get("VisibilityTimeout"));
+                    amazonSQSDriver.createQueue(awsConfig, asset.getRegionId(), newSqsName, newAttributes);
+                }
+            }
+        });
+    }
 }

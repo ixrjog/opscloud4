@@ -3,7 +3,12 @@ package com.baiyi.opscloud.datasource.aws.sqs.driver;
 import com.amazonaws.services.sns.model.*;
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
+import com.baiyi.opscloud.common.util.JSONUtil;
+import com.baiyi.opscloud.common.util.JacksonUtil;
+import com.baiyi.opscloud.datasource.aws.iam.entity.IamPolicyDocument;
 import com.baiyi.opscloud.datasource.aws.sqs.service.AmazonSNSService;
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +30,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AmazonSimpleNotificationServiceDriver {
 
+    private final AmazonSimpleQueueServiceDriver amazonSqsDriver;
+
+    private static final String DEFAULT_VERSION = "2012-10-17";
+    private static final String DEFAULT_ID = "SQSDefaultPolicy";
+    private static final String DEFAULT_SID = "topic-subscription";
+    private static final String DEFAULT_EFFECT = "Allow";
+    private static final String DEFAULT_ACTION = "SQS:SendMessage";
 
     /**
      * https://docs.aws.amazon.com/sns/latest/api/API_CreateTopic.html
@@ -113,13 +125,69 @@ public class AmazonSimpleNotificationServiceDriver {
         return result.getAttributes();
     }
 
-    public String subscribe(AwsConfig.Aws config, String regionId, String topicArn, String protocol, String endpoint) {
+    public String subscribe(AwsConfig.Aws config, String regionId, String topicArn, String protocol, String endpoint, String queueName) {
+        String subscriptionArn = subscribe(config, regionId, topicArn, protocol, endpoint);
+        String queueUrl = amazonSqsDriver.getQueue(config, regionId, queueName);
+        Map<String, String> attributes = amazonSqsDriver.getQueueAttributes(config, regionId, queueUrl);
+        String policyDoc = getPolicyDoc(attributes, topicArn, endpoint);
+        Map<String, String> newPolicy = new ImmutableMap.Builder<String, String>()
+                .put("Policy", policyDoc)
+                .build();
+        amazonSqsDriver.setQueueAttributes(config, regionId, queueUrl, newPolicy);
+        return subscriptionArn;
+    }
+
+    private String subscribe(AwsConfig.Aws config, String regionId, String topicArn, String protocol, String endpoint) {
         SubscribeRequest request = new SubscribeRequest();
         request.setTopicArn(topicArn);
         request.setProtocol(protocol);
         request.setEndpoint(endpoint);
         SubscribeResult result = AmazonSNSService.buildAmazonSNS(config, regionId).subscribe(request);
         return result.getSubscriptionArn();
+    }
+
+    private String getPolicyDoc(Map<String, String> attributes, String topicArn, String endpoint) {
+        if (StringUtils.isNotBlank(attributes.get("Policy"))) {
+            IamPolicyDocument policyDocument = JSONUtil.readValue(attributes.get("Policy"), IamPolicyDocument.class);
+            try {
+                assert policyDocument != null;
+                List<IamPolicyDocument.Statement> statementList = policyDocument.getStatement();
+                if (statementList.stream().noneMatch(e -> e.getSid().equals(Joiner.on("-").join(DEFAULT_SID, topicArn)))) {
+                    statementList.add(buildStatement(topicArn, endpoint));
+                    policyDocument.setStatement(statementList);
+                }
+            } catch (NullPointerException e) {
+                policyDocument.setStatement(Lists.newArrayList(buildStatement(topicArn, endpoint)));
+            }
+            return JSONUtil.writeValueAsString(policyDocument);
+        } else {
+            IamPolicyDocument policyDocument = IamPolicyDocument.builder()
+                    .version(DEFAULT_VERSION)
+                    .id(Joiner.on("/").join(endpoint, DEFAULT_ID))
+                    .Statement(Lists.newArrayList(buildStatement(topicArn, endpoint)))
+                    .build();
+            return JacksonUtil.toJSONString(policyDocument);
+        }
+    }
+
+    private IamPolicyDocument.Statement buildStatement(String topicArn, String endpoint) {
+        Map<String, String> principal = new ImmutableMap.Builder<String, String>()
+                .put("AWS", "*")
+                .build();
+        Map<String, String> arnLike = new ImmutableMap.Builder<String, String>()
+                .put("aws:SourceArn", topicArn)
+                .build();
+        IamPolicyDocument.Condition condition = IamPolicyDocument.Condition.builder()
+                .arnLike(arnLike)
+                .build();
+        return IamPolicyDocument.Statement.builder()
+                .sid(Joiner.on("-").join(DEFAULT_SID, topicArn))
+                .effect(DEFAULT_EFFECT)
+                .principal(principal)
+                .action(DEFAULT_ACTION)
+                .resource(endpoint)
+                .condition(condition)
+                .build();
     }
 
 }

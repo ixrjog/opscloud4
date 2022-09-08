@@ -1,9 +1,9 @@
 package com.baiyi.opscloud.core;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.tag.SimpleTagService;
 import com.google.common.collect.Lists;
