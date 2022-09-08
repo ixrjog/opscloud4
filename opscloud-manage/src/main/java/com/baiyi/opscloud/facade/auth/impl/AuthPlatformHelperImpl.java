@@ -1,0 +1,48 @@
+package com.baiyi.opscloud.facade.auth.impl;
+
+import com.baiyi.opscloud.common.exception.auth.AuthCommonException;
+import com.baiyi.opscloud.domain.generator.opscloud.AuthPlatform;
+import com.baiyi.opscloud.domain.generator.opscloud.Credential;
+import com.baiyi.opscloud.domain.param.auth.IAuthPlatform;
+import com.baiyi.opscloud.facade.auth.AuthPlatformHelper;
+import com.baiyi.opscloud.service.auth.AuthPlatformService;
+import com.baiyi.opscloud.service.sys.CredentialService;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.jasypt.encryption.StringEncryptor;
+import org.springframework.stereotype.Component;
+
+/**
+ * @Author baiyi
+ * @Date 2022/9/8 11:59
+ * @Version 1.0
+ */
+@Component
+@RequiredArgsConstructor
+public class AuthPlatformHelperImpl implements AuthPlatformHelper {
+
+    private final AuthPlatformService authPlatformService;
+
+    private final CredentialService credentialService;
+
+    private final StringEncryptor stringEncryptor;
+
+    @Override
+    public AuthPlatform verify(IAuthPlatform iAuthPlatform) {
+        AuthPlatform authPlatform = authPlatformService.getByName(iAuthPlatform.getPlatform());
+        if (authPlatform == null) {
+            throw new AuthCommonException("平台认证错误: 无效的平台名称 ！"); // 登录失败
+        }
+        Credential credential = credentialService.getById(authPlatform.getCredentialId());
+        if (credential == null) {
+            throw new AuthCommonException("平台认证错误: 凭据不存在！"); // 登录失败
+        }
+        String token = stringEncryptor.decrypt(credential.getCredential());
+        if (StringUtils.isBlank(token))
+            throw new AuthCommonException("平台认证错误: 凭据不存在！"); // 登录失败
+        if (!token.equals(iAuthPlatform.getToken()))
+            throw new AuthCommonException("平台认证错误: Token错误！"); // 登录失败
+        return authPlatform;
+    }
+
+}

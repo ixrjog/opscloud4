@@ -133,7 +133,12 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
         ramUser = aliyunRamUserDriver.createUser(aliyun.getRegionId(), aliyun, user, CREATE_LOGIN_PROFILE, enableMFA(instanceUuid));
         // 同步资产 RAM_USER
         dsInstanceFacade.pullAsset(instanceUuid, DsAssetTypeConstants.RAM_USER.name(), ramUser);
-        CreateRamUserMessage message = CreateRamUserMessage.builder().aliyunName(aliyun.getAccount().getName()).loginUrl(aliyun.getAccount().getLoginUrl(aliyun.getVersion())).username(Joiner.on("").join(ramUser.getUserName(), aliyun.getAccount().getDomain())).password(user.getPassword()).build();
+        CreateRamUserMessage message = CreateRamUserMessage.builder()
+                .aliyunName(aliyun.getAccount().getName())
+                .loginUrl(aliyun.getAccount().getLoginUrl(aliyun.getVersion()))
+                .username(Joiner.on("").join(ramUser.getUserName(), aliyun.getAccount().getDomain()))
+                .password(user.getPassword())
+                .build();
         noticeManager.sendMessage(user, NoticeManager.MsgKeys.CREATE_RAM_USER, message);
         return ramUser;
     }

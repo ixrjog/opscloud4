@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.service.auth.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.AuthPlatform;
+import com.baiyi.opscloud.factory.credential.AbstractCredentialCustomer;
 import com.baiyi.opscloud.mapper.opscloud.AuthPlatformMapper;
 import com.baiyi.opscloud.service.auth.AuthPlatformService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ import tk.mybatis.mapper.entity.Example;
  */
 @Service
 @RequiredArgsConstructor
-public class AuthPlatformServiceImpl implements AuthPlatformService {
+public class AuthPlatformServiceImpl extends AbstractCredentialCustomer implements AuthPlatformService {
 
     private final AuthPlatformMapper authPlatformMapper;
 
@@ -25,6 +26,19 @@ public class AuthPlatformServiceImpl implements AuthPlatformService {
         criteria.andLike("name", name)
                 .andEqualTo("isActive", true);
         return authPlatformMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public int countByCredentialId(int credentialId) {
+        Example example = new Example(AuthPlatform.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("credentialId", credentialId);
+        return authPlatformMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public String getBeanName() {
+        return "AuthPlatformService";
     }
 
 }

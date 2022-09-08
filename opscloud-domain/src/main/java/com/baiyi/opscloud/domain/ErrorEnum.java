@@ -27,7 +27,6 @@ public enum ErrorEnum {
     TAG_ADD_ERROR(12004, "新增标签错误，请确认Key是否唯一！"),
     TAG_UPDATE_ERROR(12004, "新增标签错误，请确认Key是否唯一！"),
 
-
     SINGLE_TASK_RUNNING(13000, "后台任务执行中！"),
 
     SSH_SERVER_AUTHENTICATION_FAILURE(20001, "SSH服务器鉴权失败！"),
@@ -49,7 +48,6 @@ public enum ErrorEnum {
     // ----------------------- 资产 -----------------------
     ASSET_NOT_EXIST(10001, "资产不存在！"),
 
-
     // 权限
     AUTHENTICATION_FAILURE(20001, "鉴权失败！"),
     AUTHENTICATION_API_FAILURE(401, "Api鉴权失败！"),
@@ -57,7 +55,6 @@ public enum ErrorEnum {
     AUTHENTICATION_REQUEST_NO_TOKEN(20003, "请求中未携带有效令牌！"),
     AUTHENTICATION_TOKEN_INVALID(401, "令牌无效！"),
     AUTHENTICATION_API_TOKEN_INVALID(401, "Api令牌无效！"),
-
 
     // auth
     AUTH_ROLE_NOT_EXIST(11002, "用户角色配置不存在！"),
@@ -90,11 +87,9 @@ public enum ErrorEnum {
     // UserPermission
     USER_PERMISSION_EXIST(12003, "用户授权已存在!"),
 
-
     // userGroup
     USERGROUP_NAME_ALREADY_EXIST(12001, "用户组名称已存在！"),
     USERGROUP_NAME_NON_COMPLIANCE_WITH_RULES(12002, "用户组名称不合规！"),
-
 
     USER_GRANT_USERGROUP_ERROR(12002, "用户授权用户组错误！"),
     USER_REVOKE_USERGROUP_ERROR(12002, "用户撤销用户组授权错误！"),
@@ -132,7 +127,6 @@ public enum ErrorEnum {
     ENV_NOT_EXIST(12003, "环境类型不存在！"),
     ENV_HAS_USED(12004, "环境类型正在使用！"),
     ENV_IS_DEFAULT(12005, "不能删除默认环境类型！"),
-
 
     // cloud
     CLOUD_TYPE_IS_NULL(30002, "未指定云类型！"),
@@ -200,7 +194,6 @@ public enum ErrorEnum {
     WORKORDER_TICKET_ENTRIES_EXISTS(70001, "工单条目未填写"),
     WORKORDER_INVALID_TOKEN(70001,"Work order approval failed: invalid token!"),
 
-
     KEYBOX_PUBLIC_KEY_IS_EMPTY(60001, "公钥不能为空！"),
     KEYBOX_PRIVATE_KEY_IS_EMPTY(60001, "私钥不能为空！"),
     KEYBOX_PASSPHRASE_IS_EMPTY(60001, "密码不能为空！"),
@@ -215,7 +208,6 @@ public enum ErrorEnum {
     KUBERNETES_DELETE_DEPLOYMENT_ERROR(70001, "Kubernetes删除Deployment错误！"),
     KUBERNETES_CREATE_SERVICE_ERROR(70001, "Kubernetes创建Service错误！"),
     KUBERNETES_DELETE_SERVICE_ERROR(70001, "Kubernetes删除Service错误！"),
-
 
     GITLAB_BRANCH_COMMIT_ERROR(80001, "查询代码仓库commit错误！"),
     GITLAB_INSTANCE_NOT_EXIST(80001, "GITLAB实例不存在！"),
