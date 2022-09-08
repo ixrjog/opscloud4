@@ -54,6 +54,7 @@
         <module>opscloud-datasource-aliyun-cms</module>
         <module>opscloud-datasource-consul</module>
         <module>opscloud-datasource-aws-ecr</module>
+        <module>opscloud-datasource-lxhl</module>
     </modules>
     <parent>
         <!--https://spring.io/projects/spring-boot#learn-->
@@ -504,6 +505,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-otp</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-lxhl</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

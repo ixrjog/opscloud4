@@ -93,6 +93,11 @@
             <artifactId>opscloud-datasource-consul</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-lxhl</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

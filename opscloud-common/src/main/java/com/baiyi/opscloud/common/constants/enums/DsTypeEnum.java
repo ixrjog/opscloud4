@@ -39,7 +39,11 @@ public enum DsTypeEnum {
     /**
      * 华为云
      */
-    HUAWEICLOUD(52,"HUAWEICLOUD");
+    HUAWEICLOUD(52, "HUAWEICLOUD"),
+    /**
+     * 领先互联
+     */
+    LXHL(53, "LXHL");
 
     private final int type;
 

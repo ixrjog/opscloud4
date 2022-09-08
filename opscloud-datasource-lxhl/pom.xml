@@ -9,33 +9,17 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>opscloud-datasource-message</artifactId>
+    <artifactId>opscloud-datasource-lxhl</artifactId>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-dingtalk</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-aliyun-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-lxhl</artifactId>
         </dependency>
 
     </dependencies>

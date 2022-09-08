@@ -18,7 +18,10 @@ public enum TagConstants {
     MFA("MFA"),
     SUPER_ADMIN("SA"),
     // 阿里云数据库管理
-    DMS("DMS");
+    DMS("DMS"),
+    VMS("VMS"),
+    SMS("SMS"),
+    ;
 
     @Getter
     private final String tag;
