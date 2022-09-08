@@ -56,7 +56,7 @@ public class DsAuthManager extends BaseManager {
             }
             return false; // 有认证实例不允许本地认证
         }
-        return localLogin(user, loginParam);
+        return loginWithLocal(user, loginParam);
     }
 
     /**
@@ -66,7 +66,7 @@ public class DsAuthManager extends BaseManager {
      * @param loginParam
      * @return
      */
-    private boolean localLogin(User user, LoginParam.Login loginParam) {
+    private boolean loginWithLocal(User user, LoginParam.Login loginParam) {
         return verifyPassword(loginParam.getPassword(), user.getPassword());
     }
 

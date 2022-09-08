@@ -28,6 +28,9 @@ public class AuthPlatform {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "credential_id")
+    private Integer credentialId;
+
     /**
      * 平台描述
      */

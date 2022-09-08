@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+
 import javax.validation.Valid;
 
 
@@ -41,7 +42,7 @@ public class LoginParam {
     @NoArgsConstructor
     @ApiModel
     @AllArgsConstructor
-    public static class PlatformLogin extends Login {
+    public static class PlatformLogin extends Login implements IAuthPlatform {
 
         @Valid
         @ApiParam(required = true)
@@ -53,6 +54,11 @@ public class LoginParam {
         @ApiModelProperty(value = "平台令牌用于鉴权")
         public String platformToken;
 
+
+        @Override
+        public String getToken() {
+            return this.platformToken;
+        }
     }
 
     @Data

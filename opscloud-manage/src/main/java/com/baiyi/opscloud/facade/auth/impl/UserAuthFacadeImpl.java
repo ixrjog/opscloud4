@@ -10,6 +10,7 @@ import com.baiyi.opscloud.domain.param.auth.LoginParam;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleResourceVO;
 import com.baiyi.opscloud.domain.vo.auth.LogVO;
 import com.baiyi.opscloud.facade.auth.AuthFacade;
+import com.baiyi.opscloud.facade.auth.AuthPlatformHelper;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import com.baiyi.opscloud.facade.auth.UserTokenFacade;
 import com.baiyi.opscloud.facade.auth.mfa.MfaAuthHelper;
@@ -60,9 +61,11 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
 
     private final MfaAuthHelper mfaAuthHelper;
 
-    private final AuthPlatformService authPlatformlService;
+    private final AuthPlatformService authPlatformService;
 
     private final AuthPlatformLogService authPlatformlLogService;
+
+    private final AuthPlatformHelper authPlatformHelper;
 
     @Override
     public void tryUserHasResourceAuthorize(String token, String resourceName) {
@@ -151,13 +154,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
 
     @Override
     public LogVO.Login platformLogin(LoginParam.PlatformLogin loginParam) {
-        AuthPlatform authPlatform = authPlatformlService.getByName(loginParam.getPlatform());
-        if (authPlatform == null) {
-            throw new AuthCommonException("Invalid platform name ！");
-        }
-        if (!stringEncryptor.decrypt(authPlatform.getToken()).equals(loginParam.getPlatformToken())) {
-            throw new AuthCommonException("Invalid platform token ！");
-        }
+        AuthPlatform authPlatform = authPlatformHelper.verify(loginParam);
         User user = userService.getByUsername(loginParam.getUsername());
         // 尝试使用authProvider 认证
         if (authProviderManager.tryLogin(user, loginParam)) {
