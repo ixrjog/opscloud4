@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 /**
  * @Author 修远
  * @Date 2022/9/8 9:18 PM
@@ -28,7 +30,7 @@ public class MessageController {
 
     @ApiOperation(value = "发送消息")
     @PostMapping(value = "/send", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<LXHLMessageResponse.SendMessage> platformLogin(@RequestBody MessageParam.SendMessage param) {
+    public HttpResult<LXHLMessageResponse.SendMessage> platformLogin(@Valid @RequestBody MessageParam.SendMessage param) {
         return new HttpResult<>(messageFacade.sendMessage(param));
     }
 }
