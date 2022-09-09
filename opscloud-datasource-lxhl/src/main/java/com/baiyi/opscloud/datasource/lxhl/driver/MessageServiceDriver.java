@@ -19,6 +19,6 @@ public class MessageServiceDriver {
         MessageServiceFeign feign = Feign.builder()
                 .retryer(new Retryer.Default(3000, 3000, 3))
                 .target(MessageServiceFeign.class, account.getUrl());
-        return feign.sendMessage(account.getUsername(), account.getPassword(), mobile, content);
+        return feign.sendMessage(account.getUsername(), account.getPassword(), mobile, content).replaceAll("\\p{C}", "");
     }
 }
