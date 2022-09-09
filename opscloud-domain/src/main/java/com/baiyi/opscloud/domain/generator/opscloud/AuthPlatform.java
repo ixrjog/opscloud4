@@ -18,11 +18,6 @@ public class AuthPlatform {
     private String name;
 
     /**
-     * 认证令牌
-     */
-    private String token;
-
-    /**
      * 有效
      */
     @Column(name = "is_active")
