@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -16,11 +17,18 @@ import java.nio.charset.StandardCharsets;
  */
 public class Authorization {
 
+
+    public interface IToBasic {
+
+        String toBasic();
+
+    }
+
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Credential {
+    public static class Credential implements IToBasic {
 
         private String password;
         private String username;
@@ -41,7 +49,7 @@ public class Authorization {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Token {
+    public static class Token implements IToBasic {
 
         private String token;
 

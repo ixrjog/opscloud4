@@ -1,9 +1,7 @@
 package com.baiyi.opscloud.datasource.message;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @Author 修远
@@ -11,7 +9,6 @@ import lombok.NoArgsConstructor;
  * @Since 1.0
  */
 public class LXHLMessageResponse {
-
 
     @Data
     @Builder
@@ -22,5 +19,12 @@ public class LXHLMessageResponse {
         private String code;
         private String requestId;
 
+        public Boolean getSuccess() {
+            return !StringUtils.isBlank(this.requestId);
+        }
+
+        private Boolean success;
+
     }
+
 }

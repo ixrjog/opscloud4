@@ -27,4 +27,5 @@ public class LXHLConfig extends BaseDsConfig {
         private String password;
 
     }
+
 }

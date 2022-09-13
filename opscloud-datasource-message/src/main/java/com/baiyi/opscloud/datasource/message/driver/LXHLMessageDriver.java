@@ -23,19 +23,22 @@ public class LXHLMessageDriver {
     private final MessageServiceDriver messageServiceDriver;
 
     public LXHLMessageResponse.SendMessage sendMessage(LXHLConfig.Account account, String mobile, String content, String signName) {
-        String msg = Joiner.on("").join("【", signName, "】", content);
-        String result = messageServiceDriver.sendMessage(account, mobile, msg);
+        final String signContent = preInvokeSign(signName, content);
+        String result = messageServiceDriver.sendMessage(account, mobile, signContent);
         if (StringUtils.isBlank(result))
             return null;
         String[] response = result.split(",");
         LXHLMessageResponse.SendMessage sendMessage = LXHLMessageResponse.SendMessage.builder()
                 .code(response[0])
                 .build();
-        if (response.length == 1)
-            return sendMessage;
-        sendMessage.setRequestId(response[1]);
+        sendMessage.setRequestId(response.length == 1 ? null : response[1]);
         return sendMessage;
     }
+
+    private String preInvokeSign(String signName, String content) {
+        return Joiner.on("").join("【", signName, "】", content);
+    }
+
 
 }
 

@@ -32,5 +32,6 @@ public class LXHLTest extends BaseUnit {
         LXHLConfig config = getConfigById(45);
         LXHLMessageResponse.SendMessage sendMessage = lxhlMessageDriver.sendMessage(config.getAccount(), "15067127069,13456768044", "测试消息123", "PalmPay");
         print(sendMessage);
+        print(sendMessage.getSuccess());
     }
 }
