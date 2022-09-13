@@ -21,4 +21,5 @@ public class MessageServiceDriver {
                 .target(MessageServiceFeign.class, account.getUrl());
         return feign.sendMessage(account.getUsername(), account.getPassword(), mobile, content).replaceAll("\\p{C}", "");
     }
+
 }

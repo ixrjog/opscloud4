@@ -11,5 +11,9 @@ import feign.RequestLine;
 public interface MessageServiceFeign {
 
     @RequestLine("POST /SendMT/SendMessage?CorpID={corpId}&Pwd={pwd}&Mobile={mobile}&Content={content}")
-    String sendMessage(@Param("corpId") String corpId, @Param("pwd") String pwd, @Param("mobile") String mobile, @Param("content") String content);
+    String sendMessage(@Param("corpId") String corpId,
+                       @Param("pwd") String pwd,
+                       @Param("mobile") String mobile,
+                       @Param("content") String content);
+
 }
