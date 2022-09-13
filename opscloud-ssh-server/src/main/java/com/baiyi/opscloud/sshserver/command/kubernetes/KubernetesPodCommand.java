@@ -312,6 +312,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                         break;
                     } else {
                         execWatch.getInput().write(ch);
+                        execWatch.getInput().flush();
                     }
                 }
                 tryResize(size, terminal, execWatch);

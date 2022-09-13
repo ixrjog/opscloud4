@@ -127,20 +127,22 @@ public class KubernetesPodDriver {
                 //.redirectingOutput()
                 //.redirectingError()
                 //.redirectingErrorChannel()
-                //.readingInput(in)
+
                 .writingOutput(out)
                 .writingError(out)
                 .withTTY()
                 .usingListener(listener)
-                .exec("sh");
+                .exec("env", "TERM=xterm","sh");
     }
+
 
     @Data
     public static class SimpleListener implements ExecListener {
 
         private boolean isClosed = false;
 
-        public void onOpen(Response response) {
+        @Override
+        public void onOpen() {
         }
 
         @Override
