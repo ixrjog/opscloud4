@@ -2,18 +2,12 @@ package com.baiyi.opscloud.datasource.kubernetes.client;
 
 import com.baiyi.opscloud.common.constants.KubernetesProviders;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.core.util.SystemEnvUtil;
+import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.datasource.kubernetes.client.provider.AmazonEksProvider;
-import com.google.common.base.Joiner;
-import io.fabric8.kubernetes.client.ConfigBuilder;
-import io.fabric8.kubernetes.client.DefaultKubernetesClient;
+import com.baiyi.opscloud.datasource.kubernetes.client.provider.DefaultKubernetesProvider;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.net.URISyntaxException;
 
 /**
  * @Author baiyi
@@ -21,62 +15,32 @@ import java.net.URISyntaxException;
  * @Version 1.0
  */
 @Slf4j
-@Component
 public class KubeClient {
 
-    private static AmazonEksProvider amazonEksProvider;
-
-    @Autowired
-    public void setAmazonEksProvider(AmazonEksProvider amazonEksProvider) {
-        KubeClient.amazonEksProvider = amazonEksProvider;
+    public interface Config {
+        int CONNECTION_TIMEOUT = 30 * 1000;
+        int REQUEST_TIMEOUT = 30 * 1000;
+        int WEBSOCKET_TIMEOUT = 60 * 1000;
     }
 
-    public static final int CONNECTION_TIMEOUT = 30 * 1000;
-    public static final int REQUEST_TIMEOUT = 30 * 1000;
-
     public static KubernetesClient build(KubernetesConfig.Kubernetes kubernetes) {
-        if(StringUtils.isNotBlank(kubernetes.getProvider()))
-            return buildByProvider(kubernetes);
-        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE,
-                buildKubeconfigPath(kubernetes));
-        io.fabric8.kubernetes.client.Config config = new ConfigBuilder()
-                .withTrustCerts(true)
-                .build();
-        config.setConnectionTimeout(CONNECTION_TIMEOUT);
-        config.setRequestTimeout(REQUEST_TIMEOUT);
-        return new DefaultKubernetesClient(config);
+        if (StringUtils.isNotBlank(kubernetes.getProvider())) {
+            return buildWithProvider(kubernetes);
+        }
+        return DefaultKubernetesProvider.buildWithDefault(kubernetes);
     }
 
     /**
      * 按供应商构建 client
+     *
      * @param kubernetes
      * @return
      */
-    private static KubernetesClient buildByProvider(KubernetesConfig.Kubernetes kubernetes) {
+    private static KubernetesClient buildWithProvider(KubernetesConfig.Kubernetes kubernetes) {
         if (KubernetesProviders.AMAZON_EKS.getDesc().equalsIgnoreCase(kubernetes.getProvider())) {
-            try {
-                String token = amazonEksProvider.generateEksToken(kubernetes.getAmazonEks());
-                return build(kubernetes.getAmazonEks().getUrl(), token);
-            } catch (URISyntaxException e) {
-            }
+            return AmazonEksProvider.buildWithProvider(kubernetes);
         }
-        return null;
-    }
-
-    private static KubernetesClient build(String url, String token) {
-        io.fabric8.kubernetes.client.Config config = new ConfigBuilder()
-                .withMasterUrl(url)
-                .withOauthToken(token)
-                .withTrustCerts(true)
-                .build();
-        config.setConnectionTimeout(CONNECTION_TIMEOUT);
-        config.setRequestTimeout(REQUEST_TIMEOUT);
-        return new DefaultKubernetesClient(config);
-    }
-
-    private static String buildKubeconfigPath(KubernetesConfig.Kubernetes kubernetes) {
-        String path = Joiner.on("/").join(kubernetes.getKubeconfig().getPath(), io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE);
-        return SystemEnvUtil.renderEnvHome(path);
+        throw new CommonRuntimeException("KubernetesClient错误: 无效的供应商配置 provider={}", kubernetes.getProvider());
     }
 
 }

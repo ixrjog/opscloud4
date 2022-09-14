@@ -337,11 +337,26 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         PodContext podContext = podMapper.get(id);
         KubernetesConfig kubernetesDsInstanceConfig = buildConfig(podContext.getInstanceUuid());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        LogWatch logWatch = KubernetesPodDriver.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(),
+
+        if (StringUtils.isEmpty(name)) {
+            List<String> names = podContext.getContainerNames().stream().filter(n -> tryIgnoreName(kubernetesDsInstanceConfig.getKubernetes(), n)).collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(names)) {
+                sshShellHelper.print("无效的容器名称！", PromptColor.RED);
+                return;
+            }
+            if (names.size() > 1) {
+                sshShellHelper.print("多容器必须指定容器名称: --name ${containerName}", PromptColor.RED);
+                return;
+            }
+            name = names.get(0);
+        }
+
+        LogWatch logWatch = KubernetesPodDriver.getPodLogWatch2(kubernetesDsInstanceConfig.getKubernetes(),
                 podContext.getNamespace(),
                 podContext.getPodName(),
                 name,
                 lines, baos);
+
         TerminalUtil.rawModeSupportVintr(terminal);
         ServerSession serverSession = sshShellHelper.getSshSession();
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
@@ -350,8 +365,9 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         // 高速输出日志流
         SshContext sshContext = getSshContext();
         WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getSshShellRunnable().getOs());
+
         // 低性能输出日志，为了能实现日志换行
-        // WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, terminal.writer());
+        //  WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, terminal.writer());
         Thread thread = new Thread(run);
         thread.start();
         while (true) {

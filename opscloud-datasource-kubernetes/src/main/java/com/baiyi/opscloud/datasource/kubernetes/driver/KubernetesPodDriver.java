@@ -83,7 +83,7 @@ public class KubernetesPodDriver {
     }
 
     public static String getPodLog(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, String container) {
-       return KubeClient.build(kubernetes)
+        return KubeClient.build(kubernetes)
                 .pods()
                 .inNamespace(namespace)
                 .withName(name)
@@ -99,13 +99,25 @@ public class KubernetesPodDriver {
     }
 
     public static LogWatch getPodLogWatch(KubernetesConfig.Kubernetes kubernetes, String namespace, String podName, String containerName, Integer lines, OutputStream outputStream) {
-        return KubeClient.build(kubernetes).pods()
+        return KubeClient.build(kubernetes)
+                .pods()
                 .inNamespace(namespace)
                 .withName(podName)
                 .inContainer(containerName)
                 .tailingLines(lines)
                 .watchLog(outputStream);
     }
+
+    public static LogWatch getPodLogWatch2(KubernetesConfig.Kubernetes kubernetes, String namespace, String podName, String containerName, Integer lines, OutputStream outputStream) {
+        return KubeClient.build(kubernetes)
+                .pods()
+                .inNamespace(namespace)
+                .withName(podName)
+                .inContainer(containerName)
+                .withLogWaitTimeout(0)
+                .watchLog(outputStream);
+    }
+
 
     /**
      * @param kubernetes
@@ -127,12 +139,11 @@ public class KubernetesPodDriver {
                 //.redirectingOutput()
                 //.redirectingError()
                 //.redirectingErrorChannel()
-
                 .writingOutput(out)
                 .writingError(out)
                 .withTTY()
                 .usingListener(listener)
-                .exec("env", "TERM=xterm","sh");
+                .exec("env", "TERM=xterm", "sh");
     }
 
 

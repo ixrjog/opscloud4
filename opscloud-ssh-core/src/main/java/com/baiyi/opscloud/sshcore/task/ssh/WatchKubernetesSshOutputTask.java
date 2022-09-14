@@ -44,6 +44,5 @@ public class WatchKubernetesSshOutputTask extends AbstractSshChannelOutputTask {
         this.channelOutput.flush();
     }
 
-
 }
 
