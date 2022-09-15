@@ -5,8 +5,10 @@ import com.baiyi.opscloud.common.alert.AlertContext;
 import com.baiyi.opscloud.common.alert.AlertNotifyMedia;
 import com.baiyi.opscloud.common.util.BeetlUtil;
 import com.baiyi.opscloud.datasource.message.notice.DingtalkSendHelper;
+import com.baiyi.opscloud.domain.generator.opscloud.AlertNotifyHistory;
 import com.baiyi.opscloud.domain.generator.opscloud.MessageTemplate;
 import com.baiyi.opscloud.service.message.MessageTemplateService;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,15 +53,20 @@ public class DingtalkNotifyActivity extends AbstractNotifyActivity {
                 if (messageTemplate == null) return;
                 String msg = BeetlUtil.renderTemplate(messageTemplate.getMsgTemplate(), contentMap);
                 dingtalkSendHelper.send(media.getDingtalkToken(), msg);
-                alertNotifyHistoryService.add(buildAlertNotifyHistory(context));
+                saveAlertNotify(context, buildAlertNotifyHistoryList());
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
         }
     }
 
+    private List<AlertNotifyHistory> buildAlertNotifyHistoryList() {
+        return Lists.newArrayList(buildAlertNotifyHistory());
+    }
+
     @Override
     public String getKey() {
         return NotifyMediaEnum.DINGTALK.name();
     }
+
 }

@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,16 +49,21 @@ public class SmsNotifyActivity extends AbstractNotifyActivity {
             return;
         }
         aliyunSmsDriver.sendBatchSms(getConfig().getAliyun(), phones, media.getTemplateCode());
-        media.getUsers().forEach(user -> {
-            AlertNotifyHistory alertNotifyHistory = buildAlertNotifyHistory(context);
-            alertNotifyHistory.setUsername(user.getUsername());
-            alertNotifyHistoryService.add(alertNotifyHistory);
-        });
+        saveAlertNotify(context, buildAlertNotifyHistoryList(media));
         redisUtil.set(cacheKey, true, 60 * 60);
     }
 
     private AliyunConfig getConfig() {
         return dsConfigHelper.build(dsConfigHelper.getConfigByInstanceUuid(MAIN_ALIYUN_INSTANCE_UUID), AliyunConfig.class);
+    }
+
+    private List<AlertNotifyHistory> buildAlertNotifyHistoryList(AlertNotifyMedia media) {
+        return media.getUsers().stream().map(user -> {
+            AlertNotifyHistory alertNotifyHistory = buildAlertNotifyHistory();
+            alertNotifyHistory.setUsername(user.getUsername());
+            return alertNotifyHistory;
+        }).collect(Collectors.toList());
+
     }
 
     private String getCacheKeyPrefix(AlertContext context) {
@@ -68,4 +74,5 @@ public class SmsNotifyActivity extends AbstractNotifyActivity {
     public String getKey() {
         return NotifyMediaEnum.SMS.name();
     }
+
 }

@@ -8,6 +8,7 @@ import com.baiyi.opscloud.common.alert.AlertRuleMatchExpression;
 import com.baiyi.opscloud.common.alert.Metadata;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ConsulConfig;
+import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.datasource.consul.driver.ConsulServiceDriver;
 import com.baiyi.opscloud.datasource.consul.entity.ConsulHealth;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
@@ -136,6 +137,7 @@ public class ConsulAlertRule extends AbstractAlertRule {
                         .build()
                 ).collect(Collectors.toList());
         return AlertContext.builder()
+                .eventUuid(IdUtil.buildUUID())
                 .alertName("Consul 节点异常告警")
                 .severity(matchExpression.getSeverity())
                 .message("Consul 不可用节点大于 " + matchExpression.getValues())
