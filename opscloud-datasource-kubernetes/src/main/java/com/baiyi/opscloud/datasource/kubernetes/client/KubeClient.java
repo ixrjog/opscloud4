@@ -9,6 +9,8 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.net.URISyntaxException;
+
 /**
  * @Author baiyi
  * @Date 2021/6/24 5:07 下午
@@ -27,7 +29,7 @@ public class KubeClient {
         if (StringUtils.isNotBlank(kubernetes.getProvider())) {
             return buildWithProvider(kubernetes);
         }
-        return DefaultKubernetesProvider.buildWithDefault(kubernetes);
+        return DefaultKubernetesProvider.buildDefaultClient(kubernetes);
     }
 
     /**
@@ -38,7 +40,11 @@ public class KubeClient {
      */
     private static KubernetesClient buildWithProvider(KubernetesConfig.Kubernetes kubernetes) {
         if (KubernetesProviders.AMAZON_EKS.getDesc().equalsIgnoreCase(kubernetes.getProvider())) {
-            return AmazonEksProvider.buildWithProvider(kubernetes);
+            try {
+                return AmazonEksProvider.buildWithProviderClient(kubernetes);
+            } catch (URISyntaxException e) {
+                throw new CommonRuntimeException("KubernetesClient错误: err={}", e.getMessage());
+            }
         }
         throw new CommonRuntimeException("KubernetesClient错误: 无效的供应商配置 provider={}", kubernetes.getProvider());
     }

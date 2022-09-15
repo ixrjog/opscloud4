@@ -4,7 +4,14 @@ import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.dsl.LogWatch;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.socket.TextMessage;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * @Author baiyi
@@ -32,10 +39,11 @@ public class KubernetesPodTest extends BaseKubernetesTest {
             KubernetesClient kc = KubeClient.build(getConfigById(KubernetesClusterConfigs.ACK_DEV).getKubernetes());
             kc.pods()
                     .inNamespace("dev")
-                    .withName("merchant-rss-dev-5479c9c66b-hh8qj")
+                    .withName("merchant-rss-dev-766874c898-654hr")
                     .inContainer("merchant-rss-dev")
-                    .tailingLines(100)
+                    .withLogWaitTimeout(0)
                     .watchLog(System.out);
+
             Thread.sleep(10 * 1000L);
             kc.close();
         } catch (
@@ -43,6 +51,33 @@ public class KubernetesPodTest extends BaseKubernetesTest {
             e.printStackTrace();
         }
 
+
+    }
+
+    @Test
+    void getLogTest4() {
+        try {
+            KubernetesClient kubernetesClient = KubeClient.build(getConfigById(KubernetesClusterConfigs.ACK_DEV).getKubernetes());
+
+            LogWatch logWatch = kubernetesClient.pods().inNamespace("dev").withName("merchant-rss-dev-766874c898-654hr").inContainer("merchant-rss-dev").withPrettyOutput().watchLog(System.out);
+            InputStream is = logWatch.getOutput();
+            Thread.sleep(10 * 1000L);
+
+
+            InputStream output = logWatch.getOutput();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(output));
+            String line;
+            try {
+                while ((line = bufferedReader.readLine()) != null) {
+                    print(new TextMessage(line));
+                }
+            } catch (IOException e) {
+
+            }
+        } catch (
+                Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
