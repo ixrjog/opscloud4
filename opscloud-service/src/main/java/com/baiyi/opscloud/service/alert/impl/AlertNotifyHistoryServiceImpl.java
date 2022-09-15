@@ -6,6 +6,8 @@ import com.baiyi.opscloud.service.alert.AlertNotifyHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @Author 修远
  * @Date 2022/7/29 6:03 PM
@@ -21,5 +23,15 @@ public class AlertNotifyHistoryServiceImpl implements AlertNotifyHistoryService 
     @Override
     public void add(AlertNotifyHistory alertNotifyHistory) {
         alertNotifyHistoryMapper.insert(alertNotifyHistory);
+    }
+
+    @Override
+    public void addList(List<AlertNotifyHistory> alertNotifyHistoryList) {
+        alertNotifyHistoryMapper.insertList(alertNotifyHistoryList);
+    }
+
+    @Override
+    public void update(AlertNotifyHistory alertNotifyHistory) {
+        alertNotifyHistoryMapper.updateByPrimaryKey(alertNotifyHistory);
     }
 }

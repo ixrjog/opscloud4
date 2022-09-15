@@ -19,6 +19,11 @@ import java.util.List;
 public class AlertContext {
 
     /**
+     * 告警事件UUID
+     */
+    private String eventUuid;
+
+    /**
      * 告警的名称
      */
     private String alertName;

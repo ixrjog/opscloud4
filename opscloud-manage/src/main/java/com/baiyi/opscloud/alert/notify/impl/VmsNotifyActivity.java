@@ -7,6 +7,7 @@ import com.baiyi.opscloud.common.alert.AlertNotifyMedia;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.message.driver.AliyunVmsDriver;
+import com.baiyi.opscloud.domain.generator.opscloud.AlertNotifyEvent;
 import com.baiyi.opscloud.domain.generator.opscloud.AlertNotifyHistory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,10 +46,12 @@ public class VmsNotifyActivity extends AbstractNotifyActivity {
     @Override
     public void doNotify(AlertNotifyMedia media, AlertContext context) {
         AliyunConfig.Aliyun config = getConfig().getAliyun();
+        AlertNotifyEvent event = alertNotifyEventService.getByUuid(context.getEventUuid());
         media.getUsers().forEach(
                 user -> commonExecutor.submit(() -> {
-                    AlertNotifyHistory alertNotifyHistory = buildAlertNotifyHistory(context);
+                    AlertNotifyHistory alertNotifyHistory = buildAlertNotifyHistory();
                     alertNotifyHistory.setUsername(user.getUsername());
+                    alertNotifyHistory.setAlertNotifyEventId(event.getId());
                     if (singleCall(config, user.getPhone(), media.getTtsCode())) {
                         alertNotifyHistory.setAlertNotifyStatus(NotifyStatusEnum.CALL_OK.getName());
                     } else {
@@ -84,4 +87,5 @@ public class VmsNotifyActivity extends AbstractNotifyActivity {
     public String getKey() {
         return NotifyMediaEnum.VMS.name();
     }
+
 }

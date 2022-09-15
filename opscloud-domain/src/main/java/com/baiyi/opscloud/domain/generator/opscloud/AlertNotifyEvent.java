@@ -8,17 +8,17 @@ import java.util.Date;
 
 @Data
 @Builder
-@Table(name = "alert_notify_history")
-public class AlertNotifyHistory {
+@Table(name = "alert_notify_event")
+public class AlertNotifyEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     /**
-     * 告警事件id
+     * 告警uuid
      */
-    @Column(name = "alert_notify_event_id")
-    private Integer alertNotifyEventId;
+    @Column(name = "event_uuid")
+    private String eventUuid;
 
     /**
      * 告警名称
@@ -66,20 +66,6 @@ public class AlertNotifyHistory {
     private String service;
 
     /**
-     * 告警通知媒介
-     */
-    @Column(name = "alert_notify_media")
-    private String alertNotifyMedia;
-
-    private String username;
-
-    /**
-     * 告警通知状态
-     */
-    @Column(name = "alert_notify_status")
-    private String alertNotifyStatus;
-
-    /**
      * 事件开始时间的时间戳
      */
     @Column(name = "alert_time")
@@ -88,13 +74,13 @@ public class AlertNotifyHistory {
     /**
      * 创建时间
      */
-    @Column(name = "create_time", insertable = false, updatable = false)
+    @Column(name = "create_time")
     private Date createTime;
 
     /**
      * 更新时间
      */
-    @Column(name = "update_time", insertable = false, updatable = false)
+    @Column(name = "update_time")
     private Date updateTime;
 
     /**

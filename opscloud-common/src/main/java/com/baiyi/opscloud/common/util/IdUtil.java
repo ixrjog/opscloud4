@@ -22,7 +22,7 @@ public class IdUtil {
     }
 
     public static boolean isNotEmpty(Integer id) {
-       return id != null;
+        return id != null;
     }
 
     /**
@@ -38,7 +38,7 @@ public class IdUtil {
     /**
      * 短格式转标准格式
      *
-     * @param uuid  10c0efa8a0fa41a89f6387c363e3d0e5
+     * @param uuid 10c0efa8a0fa41a89f6387c363e3d0e5
      * @return 10c0efa8-a0fa-41a8-9f63-87c363e3d0e5
      */
     public static String toUUID(String uuid) {
