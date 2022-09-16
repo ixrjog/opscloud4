@@ -78,6 +78,15 @@ flowchart LR
   + example.com/doc.html
   + API Token
 
+#### 监听端口详情
+
+| 服务 | 协议 | 端口 | 用户自定义端口(Java启动参数)    |
+|---|---|---|----------------------|
+| Web | http | 8080 | --server.port=8080   |
+| SSH-Server | ssh | 2222 | --ssh.shell.port=2222 |
+
+#### 功能截图
+
 <table>
 <tr>
 <td><img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/sys/env.png" alt="系统环境"></td>
