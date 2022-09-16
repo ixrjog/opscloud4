@@ -1,13 +1,11 @@
 package com.baiyi.opscloud.datasource.facade.am;
 
 import com.amazonaws.services.identitymanagement.model.VirtualMFADevice;
-import com.baiyi.opscloud.common.builder.SimpleDictBuilder;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.TemplateUtil;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamPolicy;
 import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementMFADriver;
 import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementPolicyDriver;
@@ -26,8 +24,6 @@ import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 /**
  * @Author baiyi
@@ -48,6 +44,8 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
     private final MFADelegate mfaDelegate;
 
     private final UserCredentialFacade userCredentialFacade;
+
+    public static final String DEF_SERIAL_NUMBER = "arn:aws:iam::%s:mfa/%s";
 
     @Override
     public String getDsType() {
@@ -75,7 +73,7 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
             // 同步资产 IAM_USER
             dsInstanceFacade.pullAsset(grantPolicy.getInstanceUuid(), DsAssetTypeConstants.IAM_USER.name(), iamUser);
         } catch (Exception e) {
-            throw new CommonRuntimeException("AWS接口查询错误，msg={}", e.getMessage());
+            throw new CommonRuntimeException("AWS接口查询错误: msg={}", e.getMessage());
         }
     }
 
@@ -95,7 +93,7 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
                 dsInstanceFacade.pullAsset(revokePolicy.getInstanceUuid(), DsAssetTypeConstants.IAM_USER.name(), iamUser);
             }
         } catch (Exception e) {
-            throw new CommonRuntimeException("AWS接口查询错误, msg={}", e.getMessage());
+            throw new CommonRuntimeException("AWS接口查询错误: msg={}", e.getMessage());
         }
     }
 
@@ -126,19 +124,11 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
     }
 
     private void enableMFADevice(AwsConfig.Aws config, String instanceUuid, User user) {
-        final String defSerialNumber = "arn:aws:iam::${ACCOUNT_ID}:mfa/${USERNAME}";
-        Map<String, String> dict = SimpleDictBuilder.newBuilder()
-                .putParam("ACCOUNT_ID", config.getAccount().getId())
-                .putParam("USERNAME", user.getUsername())
-                .build().getDict();
+        final String serialNumber = String.format(DEF_SERIAL_NUMBER, config.getAccount().getId(), user.getUsername());
+        log.info("尝试删除IAM虚拟MFA设备: serialNumber={}", serialNumber);
+        amazonIMMFADriver.deleteVirtualMFADevice(config, serialNumber);
         try {
-            final String serialNumber = TemplateUtil.render(defSerialNumber, dict);
-            log.info("尝试删除IAM虚拟MFA设备: serialNumber = {}", serialNumber);
-            amazonIMMFADriver.deleteVirtualMFADevice(config, serialNumber);
-        } catch (Exception e) {
-        }
-        try {
-            log.info("创建用户的IAM虚拟MFA: username = {}", user.getUsername());
+            log.info("创建用户的IAM虚拟MFA: username={}", user.getUsername());
             VirtualMFADevice vMFADevice = amazonIMMFADriver.createVirtualMFADevice(config, user);
             mfaDelegate.enableMFADevice(config, user, vMFADevice);
             // 录入MFA密钥
@@ -151,10 +141,10 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
                     .credential(new String(vMFADevice.getBase32StringSeed().array()))
                     .comment(Joiner.on("@").join(user.getUsername(), config.getAccount().getName()))
                     .build();
-            log.info("录入用户凭据(IAM-虚拟MFA): username = {}", user.getUsername());
+            log.info("录入用户凭据(IAM-虚拟MFA): username={}", user.getUsername());
             userCredentialFacade.saveCredential(credential, user);
         } catch (Exception e) {
-            log.error("启用IAM虚拟MFA失败: " + e.getMessage());
+            log.error("启用IAM虚拟MFA失败: {}", e.getMessage());
         }
     }
 

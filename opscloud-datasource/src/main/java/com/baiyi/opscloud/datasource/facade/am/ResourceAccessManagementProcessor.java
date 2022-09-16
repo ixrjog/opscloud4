@@ -69,7 +69,7 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
             dsInstanceFacade.pullAsset(grantPolicy.getInstanceUuid(), DsAssetTypeConstants.RAM_USER.name(), ramUser);
             postHandle(grantPolicy.getInstanceUuid(), policy);
         } catch (ClientException e) {
-            throw new CommonRuntimeException("阿里云接口查询错误！");
+            throw new CommonRuntimeException("阿里云接口查询错误: err={}", e.getMessage());
         }
     }
 
@@ -118,7 +118,7 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
                 dsInstanceFacade.pullAsset(revokePolicy.getInstanceUuid(), DsAssetTypeConstants.RAM_USER.name(), ramUser);
             }
         } catch (ClientException e) {
-            throw new CommonRuntimeException("阿里云接口查询错误！");
+            throw new CommonRuntimeException("阿里云接口查询错误: err={}", e.getMessage());
         }
 
     }
