@@ -24,6 +24,9 @@ public class TagParam {
         @ApiModelProperty(value = "业务类型", example = "0")
         private Integer businessType;
 
+        @ApiModelProperty(value = "是否追加通用标签")
+        private Boolean append;
+
     }
 
     @Data

@@ -2,6 +2,7 @@ package com.baiyi.opscloud.service.tag.impl;
 
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Tag;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
 import com.baiyi.opscloud.mapper.opscloud.TagMapper;
@@ -77,6 +78,9 @@ public class TagServiceImpl implements TagService {
         Example.Criteria criteria = example.createCriteria();
         if (IdUtil.isNotEmpty(pageQuery.getBusinessType())) {
             criteria.andEqualTo("businessType", pageQuery.getBusinessType());
+            if (pageQuery.getAppend() != null && pageQuery.getAppend()) {
+                criteria.orEqualTo("businessType", BusinessTypeEnum.COMMON.getType());
+            }
         }
         if (StringUtils.isNotBlank(pageQuery.getTagKey())) {
             criteria.andLike("tagKey", SQLUtil.toLike(pageQuery.getTagKey()));
@@ -85,6 +89,5 @@ public class TagServiceImpl implements TagService {
         List<Tag> data = tagMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }
-
 
 }
