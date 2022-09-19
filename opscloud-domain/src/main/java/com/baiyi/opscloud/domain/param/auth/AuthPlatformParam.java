@@ -12,10 +12,10 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * @Author baiyi
- * @Date 2020/2/15 5:20 下午
+ * @Date 2022/9/19 10:12
  * @Version 1.0
  */
-public class AuthGroupParam {
+public class AuthPlatformParam {
 
     @Data
     @SuperBuilder(toBuilder = true)
@@ -23,10 +23,16 @@ public class AuthGroupParam {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class AuthGroupPageQuery extends SuperPageParam implements IExtend {
+    public static class AuthPlatformLogPageQuery extends SuperPageParam implements IExtend {
 
-        @ApiModelProperty(value = "资源组名称")
-        private String groupName;
+        @ApiModelProperty(value = "平台ID")
+        private Integer platformId;
+
+        @ApiModelProperty(value = "认证用户名")
+        private String username;
+
+        @ApiModelProperty(value = "是否成功")
+        private Boolean result;
 
         @ApiModelProperty(value = "展开")
         private Boolean extend;

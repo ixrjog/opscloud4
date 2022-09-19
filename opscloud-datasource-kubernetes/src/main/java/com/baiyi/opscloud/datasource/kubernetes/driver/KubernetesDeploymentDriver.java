@@ -74,6 +74,33 @@ public class KubernetesDeploymentDriver {
         createOrReplaceDeployment(kubernetes, namespace, deployment);
     }
 
+    /**
+     * 扩容
+     *
+     * @param kubernetes
+     * @param namespace
+     * @param name
+     * @param replicas   扩容后的副本数
+     */
+    public static void scaleDeploymentReplicas2(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, Integer replicas) throws KubernetesDeploymentException {
+        Deployment deployment = getDeployment(kubernetes, namespace, name);
+        Optional<Integer> optionalReplicas = Optional.ofNullable(deployment)
+                .map(Deployment::getSpec)
+                .map(DeploymentSpec::getReplicas);
+        if (!optionalReplicas.isPresent())
+            throw new KubernetesDeploymentException("Kubernetes Deployment扩容失败: 读取副本数量错误！");
+        // 更新副本数
+        if (optionalReplicas.get() >= replicas)
+            throw new KubernetesDeploymentException("Kubernetes Deployment扩容失败: 只能扩容不能缩容 nowReplicas={}, newReplicas={} ！", optionalReplicas.get(), replicas);
+        deployment.getSpec().setReplicas(replicas);
+        KubeClient.build(kubernetes)
+                .apps()
+                .deployments()
+                .inNamespace(namespace)
+                .withName(name)
+                .scale(replicas);
+    }
+
     public static List<Deployment> listDeployment(KubernetesConfig.Kubernetes kubernetes) {
         DeploymentList deploymenList = KubeClient.build(kubernetes)
                 .apps().deployments().list();

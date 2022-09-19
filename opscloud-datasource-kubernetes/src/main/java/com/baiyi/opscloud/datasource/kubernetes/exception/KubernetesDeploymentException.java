@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.exception.BaseException;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.slf4j.helpers.MessageFormatter;
 
 /**
  * @Author baiyi
@@ -20,6 +21,11 @@ public class KubernetesDeploymentException extends BaseException {
 
     public KubernetesDeploymentException(String message) {
         super(message);
+        setCode(code);
+    }
+
+    public KubernetesDeploymentException(String message, Object... var2) {
+        super(MessageFormatter.arrayFormat(message, var2).getMessage());
         setCode(code);
     }
 

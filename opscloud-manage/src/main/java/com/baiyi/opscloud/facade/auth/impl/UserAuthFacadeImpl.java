@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.param.auth.LoginParam;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleResourceVO;
 import com.baiyi.opscloud.domain.vo.auth.LogVO;
 import com.baiyi.opscloud.facade.auth.AuthFacade;
-import com.baiyi.opscloud.facade.auth.AuthPlatformHelper;
+import com.baiyi.opscloud.facade.auth.PlatformAuthHelper;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import com.baiyi.opscloud.facade.auth.UserTokenFacade;
 import com.baiyi.opscloud.facade.auth.mfa.MfaAuthHelper;
@@ -62,7 +62,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
 
     private final AuthPlatformLogService authPlatformLogService;
 
-    private final AuthPlatformHelper authPlatformHelper;
+    private final PlatformAuthHelper platformAuthHelper;
 
     @Override
     public void tryUserHasResourceAuthorize(String token, String resourceName) {
@@ -151,7 +151,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
 
     @Override
     public LogVO.Login platformLogin(LoginParam.PlatformLogin loginParam) {
-        AuthPlatform authPlatform = authPlatformHelper.verify(loginParam);
+        AuthPlatform authPlatform = platformAuthHelper.verify(loginParam);
         User user = userService.getByUsername(loginParam.getUsername());
         // 尝试使用authProvider 认证
         if (authProviderManager.tryLogin(user, loginParam)) {

@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2022/7/26 11:22
@@ -26,6 +28,14 @@ public class AuthPlatformServiceImpl extends AbstractCredentialCustomer implemen
         criteria.andLike("name", name)
                 .andEqualTo("isActive", true);
         return authPlatformMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public List<AuthPlatform> queryAll() {
+        Example example = new Example(AuthPlatform.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isActive", true);
+        return authPlatformMapper.selectByExample(example);
     }
 
     @Override

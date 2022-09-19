@@ -13,7 +13,6 @@ import java.util.Date;
  */
 public class AuthMenuVO {
 
-
     @Data
     @NoArgsConstructor
     @ApiModel

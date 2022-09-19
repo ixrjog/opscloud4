@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.AuthPlatform;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.PlatformNotifyHistory;
 import com.baiyi.opscloud.domain.param.message.MessageParam;
-import com.baiyi.opscloud.facade.auth.AuthPlatformHelper;
+import com.baiyi.opscloud.facade.auth.PlatformAuthHelper;
 import com.baiyi.opscloud.facade.message.MessageFacade;
 import com.baiyi.opscloud.service.auth.PlatformNotifyHistoryService;
 import com.google.common.base.Joiner;
@@ -43,14 +43,14 @@ public class MessageFacadeImpl implements MessageFacade {
 
     private final PlatformNotifyHistoryService platformNotifyHistoryService;
 
-    private final AuthPlatformHelper authPlatformHelper;
+    private final PlatformAuthHelper platformAuthHelper;
 
     private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.LXHL};
     private static final String SIGN_NAME = "PalmPay";
 
     @Override
     public LXHLMessageResponse.SendMessage sendMessage(MessageParam.SendMessage param) {
-        AuthPlatform authPlatform = authPlatformHelper.verify(param);
+        AuthPlatform authPlatform = platformAuthHelper.verify(param);
         List<DatasourceInstance> instances = instanceHelper.listInstance(FILTER_INSTANCE_TYPES, param.getMedia());
         if (CollectionUtils.isEmpty(instances))
             throw new CommonRuntimeException("无可用实例，请联系运维");

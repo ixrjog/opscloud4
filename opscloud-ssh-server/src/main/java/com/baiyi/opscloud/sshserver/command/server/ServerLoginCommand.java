@@ -108,7 +108,7 @@ public class ServerLoginCommand implements InitializingBean {
             Size size = terminal.getSize();
             if (!isClosed(sessionId, instanceId) && arthas) {
                 try {
-                    jSchSessionPrint(sessionId, instanceId, SERVER_EXECUTE_ARTHAS);
+                    printWithSession(sessionId, instanceId, SERVER_EXECUTE_ARTHAS);
                     while (isClosed(sessionId, instanceId)) {
                         int ch = terminal.reader().read(1L);
                         if (ch < 0) break;
@@ -125,7 +125,8 @@ public class ServerLoginCommand implements InitializingBean {
                         break;
                     }
                     doResize(size, terminal, sessionId, instanceId);
-                    jSchSessionPrint(sessionId, instanceId, terminal.reader().read(5L));
+                    int i = terminal.reader().read(5L);
+                    printWithSession(sessionId, instanceId, i);
                 }
             } catch (Exception e) {
                 printWithCloseSession("服务端连接已断开! 耗时=%s/s", inst1);
@@ -168,6 +169,7 @@ public class ServerLoginCommand implements InitializingBean {
 
     /**
      * 打印会话关闭信息
+     *
      * @param logout
      * @param instant
      */
@@ -183,14 +185,14 @@ public class ServerLoginCommand implements InitializingBean {
         return jSchSession.getChannel().isClosed();
     }
 
-    private void jSchSessionPrint(String sessionId, String instanceId, int ch) throws Exception {
+    private void printWithSession(String sessionId, String instanceId, int ch) throws Exception {
         if (ch < 0) return;
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) throw new Exception();
         jSchSession.getCommander().print((char) ch);
     }
 
-    private void jSchSessionPrint(String sessionId, String instanceId, String cmd) throws Exception {
+    private void printWithSession(String sessionId, String instanceId, String cmd) throws Exception {
         if (StringUtils.isEmpty(cmd)) return;
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) throw new Exception();
