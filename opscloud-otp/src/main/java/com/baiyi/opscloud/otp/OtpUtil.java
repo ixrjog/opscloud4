@@ -24,8 +24,8 @@ import java.time.Instant;
 public class OtpUtil {
 
     private static final Duration DURATION = Duration.ofSeconds(30L);
-    // private static final String QR_CODE = "otpauth://totp/OPSCLOUD@${ACCOUNT}?secret=${OTP_SK}?&issuer=OPSCLOUD";
-    private static final String QR_CODE = "otpauth://totp/OPSCLOUD@${ACCOUNT}?secret=${OTP_SK}";
+    // otpauth://totp/OPSCLOUD@${ACCOUNT}?secret=${OTP_SK}?&issuer=OPSCLOUD
+    private static final String QR_CODE = "otpauth://totp/OPSCLOUD@%s?secret=%s";
 
     private OtpUtil() {
     }
@@ -97,8 +97,7 @@ public class OtpUtil {
      * @return otpauth://totp/客户端显示的账户信息?secret=secretBase32
      */
     public static String toQRCode(String account, String otpSk) {
-        return QR_CODE.replace("${ACCOUNT}", account)
-                .replace("${OTP_SK}", otpSk);
+        return String.format(QR_CODE, account, otpSk);
     }
 
 }

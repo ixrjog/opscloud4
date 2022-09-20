@@ -19,8 +19,6 @@ public class Base32StringUtil {
         return INSTANCE;
     }
 
-    // 32 alpha-numeric characters.
-    private final String ALPHABET;
     private final char[] DIGITS;
     private final int MASK;
     private final int SHIFT;
@@ -29,8 +27,8 @@ public class Base32StringUtil {
     private static final String SEPARATOR = "-";
 
     protected Base32StringUtil(String alphabet) {
-        this.ALPHABET = alphabet;
-        DIGITS = ALPHABET.toCharArray();
+        // 32 alpha-numeric characters.
+        DIGITS = alphabet.toCharArray();
         MASK = DIGITS.length - 1;
         SHIFT = Integer.numberOfTrailingZeros(DIGITS.length);
         CHAR_MAP = new HashMap<>();
@@ -45,7 +43,9 @@ public class Base32StringUtil {
 
     protected byte[] decodeInternal(String encoded) throws OtpException.DecodingException {
         // Remove whitespace and separators
-        encoded = encoded.trim().replaceAll(SEPARATOR, "").replaceAll(" ", "");
+        encoded = encoded.trim()
+                .replaceAll(SEPARATOR, "")
+                .replaceAll(" ", "");
 
         // Remove padding. Note: the padding is used as hint to determine how many
         // bits to decode from the last incomplete chunk (which is commented out

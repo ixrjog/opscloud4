@@ -1,14 +1,14 @@
 package com.baiyi.opscloud.datasource.ldap.repo.impl;
 
 import com.baiyi.opscloud.common.datasource.LdapConfig;
-import com.baiyi.opscloud.datasource.ldap.entity.LdapPerson;
 import com.baiyi.opscloud.datasource.ldap.driver.LdapDriver;
+import com.baiyi.opscloud.datasource.ldap.entity.LdapPerson;
 import com.baiyi.opscloud.datasource.ldap.repo.PersonRepo;
 import com.google.common.collect.Lists;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 
@@ -19,10 +19,10 @@ import java.util.List;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class PersonRepoImpl implements PersonRepo {
 
-    @Resource
-    private LdapDriver ldapDrive;
+    private final LdapDriver ldapDrive;
 
     @Override
     public List<LdapPerson.Person> queryGroupMember(LdapConfig.Ldap ldapConfig, String groupName) {

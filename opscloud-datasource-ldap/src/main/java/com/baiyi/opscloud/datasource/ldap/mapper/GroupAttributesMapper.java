@@ -27,4 +27,5 @@ public class GroupAttributesMapper implements AttributesMapper<LdapGroup.Group> 
                 .groupName((String) attrs.get("cn").get())
                 .build();
     }
+
 }
