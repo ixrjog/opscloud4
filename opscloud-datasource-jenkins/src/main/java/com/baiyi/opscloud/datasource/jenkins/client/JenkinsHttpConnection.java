@@ -83,7 +83,6 @@ public interface JenkinsHttpConnection extends Closeable {
      */
     boolean isJenkinsVersionSet();
 
-    
     /**
      * Perform a POST request and parse the response to the given class
      *

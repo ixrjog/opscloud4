@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.jenkins.driver;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.datasource.jenkins.entity.JenkinsUser;
-import com.baiyi.opscloud.datasource.jenkins.feign.JenkinsUsersFeign;
+import com.baiyi.opscloud.datasource.jenkins.feign.JenkinsUserFeign;
 import com.baiyi.opscloud.datasource.jenkins.util.JenkinsAuthUtil;
 import feign.Feign;
 import feign.Retryer;
@@ -21,21 +21,21 @@ import java.util.List;
 public class JenkinsUsersDriver {
 
     public JenkinsUser.User getUser(JenkinsConfig.Jenkins jenkins, String username) {
-        JenkinsUsersFeign jenkinsAPI = Feign.builder()
+        JenkinsUserFeign jenkinsAPI = Feign.builder()
                 .retryer(new Retryer.Default(3000, 3000, 3))
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
-                .target(JenkinsUsersFeign.class, jenkins.getUrl());
-        return jenkinsAPI.getUser(JenkinsAuthUtil.buildAuthBasic(jenkins), username);
+                .target(JenkinsUserFeign.class, jenkins.getUrl());
+        return jenkinsAPI.getUser(JenkinsAuthUtil.toAuthBasic(jenkins), username);
     }
 
     public List<JenkinsUser.User> listUsers(JenkinsConfig.Jenkins jenkins) {
-        JenkinsUsersFeign jenkinsAPI = Feign.builder()
+        JenkinsUserFeign jenkinsAPI = Feign.builder()
                 .retryer(new Retryer.Default(3000, 3000, 3))
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
-                .target(JenkinsUsersFeign.class, jenkins.getUrl());
-        return jenkinsAPI.listUsers(JenkinsAuthUtil.buildAuthBasic(jenkins));
+                .target(JenkinsUserFeign.class, jenkins.getUrl());
+        return jenkinsAPI.listUsers(JenkinsAuthUtil.toAuthBasic(jenkins));
     }
 
 }

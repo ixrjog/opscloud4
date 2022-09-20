@@ -70,7 +70,7 @@ public class JenkinsBuildExecutorHelperImpl implements JenkinsBuildExecutorHelpe
                         if (computer.details().getOffline())
                             name += "(Offline)";
                     } catch (IOException e) {
-                        log.error("查询节点状态错误: name = {}, err = {} ", k, e.getMessage());
+                        log.error("查询节点状态错误: name={}, err= {}", k, e.getMessage());
                     }
                     JenkinsBuildExecutorStatusVO.Children node = JenkinsBuildExecutorStatusVO.Children.builder()
                             .name(name)
@@ -81,7 +81,7 @@ public class JenkinsBuildExecutorHelperImpl implements JenkinsBuildExecutorHelpe
                 }
             });
         } catch (Exception e) {
-            log.error("组装Jenkins引擎工作负载错误: err = {}", e.getMessage());
+            log.error("组装Jenkins引擎工作负载错误: err={}", e.getMessage());
         }
         return computers;
     }

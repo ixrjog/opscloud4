@@ -13,7 +13,7 @@ import java.util.List;
  * @Date 2022/1/5 10:36 AM
  * @Version 1.0
  */
-public interface JenkinsUsersFeign {
+public interface JenkinsUserFeign {
 
     @RequestLine("GET /blue/rest/organizations/jenkins/users/{username}")
     @Headers({"Content-Type: " + MediaType.APPLICATION_JSON_UTF8_VALUE, "Authorization: Basic {authBasic}"})

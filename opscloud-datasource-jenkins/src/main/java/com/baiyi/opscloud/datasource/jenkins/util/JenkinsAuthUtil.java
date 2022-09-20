@@ -19,11 +19,11 @@ public class JenkinsAuthUtil {
 
     public static Authentication buildAuthentication(JenkinsConfig.Jenkins jenkins) {
         return Authentication.builder()
-                .token(Joiner.on(" ").join("Basic", buildAuthBasic(jenkins)))
+                .token(Joiner.on(" ").join("Basic", toAuthBasic(jenkins)))
                 .build();
     }
 
-    public static String buildAuthBasic(JenkinsConfig.Jenkins jenkins) {
+    public static String toAuthBasic(JenkinsConfig.Jenkins jenkins) {
         return new String(Base64.getEncoder().encode(String.format("%s:%s", jenkins.getUsername(),
                 jenkins.getToken()).getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
     }
