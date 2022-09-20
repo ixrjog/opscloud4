@@ -55,10 +55,8 @@ public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTic
 
         gitlabUsers = gitlabUserDelegate.findUser(config, username);
         Optional<GitlabUser> optionalGitlabUser = gitlabUsers.stream().filter(e -> e.getUsername().equals(username)).findFirst();
-        if (!optionalGitlabUser.isPresent())
-            throw new TicketProcessException("Gitlab实例无申请用户账户: 请登录Gitlab实例后再申请权限！");
-
-        GitlabUser gitlabUser = optionalGitlabUser.get();
+        // throw new TicketProcessException("Gitlab实例无申请用户账户: 请登录Gitlab实例后再申请权限！");
+        GitlabUser gitlabUser = optionalGitlabUser.orElseGet(() -> gitlabUserDelegate.createGitlabUser(config, username));
         Optional<GitlabAccessLevelConstants> optionalGitlabAccessLevelConstants = Arrays.stream(GitlabAccessLevelConstants.values())
                 .filter(e -> e.getRole().equalsIgnoreCase(role))
                 .findFirst();
