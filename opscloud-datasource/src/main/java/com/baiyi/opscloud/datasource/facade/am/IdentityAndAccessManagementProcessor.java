@@ -125,8 +125,12 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
 
     private void enableMFADevice(AwsConfig.Aws config, String instanceUuid, User user) {
         final String serialNumber = String.format(DEF_SERIAL_NUMBER, config.getAccount().getId(), user.getUsername());
-        log.info("尝试删除IAM虚拟MFA设备: serialNumber={}", serialNumber);
-        amazonIMMFADriver.deleteVirtualMFADevice(config, serialNumber);
+        try {
+            amazonIMMFADriver.deleteVirtualMFADevice(config, serialNumber);
+            log.debug("删除IAM虚拟MFA设备: serialNumber={}", serialNumber);
+        } catch (Exception e) {
+            log.debug("删除IAM虚拟MFA设备错误: serialNumber={},err={}", serialNumber, e.getMessage());
+        }
         try {
             log.info("创建用户的IAM虚拟MFA: username={}", user.getUsername());
             VirtualMFADevice vMFADevice = amazonIMMFADriver.createVirtualMFADevice(config, user);
