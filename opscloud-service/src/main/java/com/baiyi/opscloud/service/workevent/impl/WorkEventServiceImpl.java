@@ -6,10 +6,15 @@ import com.baiyi.opscloud.domain.param.workevent.WorkEventParam;
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.baiyi.opscloud.mapper.opscloud.WorkEventMapper;
 import com.baiyi.opscloud.service.workevent.WorkEventService;
+import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -56,29 +61,30 @@ public class WorkEventServiceImpl implements WorkEventService {
         return new DataTable<>(workEventMapper.queryPageByParam(pageQuery),page.getTotal());
     }
 
-//    public DataTable<WorkEvent> queryPageByParam2(WorkEventParam.PageQuery pageQuery) {
-//        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
-//        Example example = new Example(WorkEvent.class);
-//        Example.Criteria criteria = example.createCriteria();
-//        if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
-//            criteria.andLike("comment", SQLUtil.toLike(pageQuery.getQueryName()));
-//        }
-//        if (!pageQuery.getWorkRoleId().equals(-1)) {
-//            criteria.andEqualTo("workRoleId", pageQuery.getWorkRoleId());
-//        }
-//        if (!CollectionUtils.isEmpty(pageQuery.getWorkItemIdList())) {
-//            criteria.andIn("workItemId", pageQuery.getWorkItemIdList());
-//        }
-//        if (StringUtils.isNotBlank(pageQuery.getUsername())) {
-//            criteria.andEqualTo("username", pageQuery.getUsername());
-//        }
-//        if (!ObjectUtils.isEmpty(pageQuery.getWorkEventStartTime()) && !ObjectUtils.isEmpty(pageQuery.getWorkEventEndTime())) {
-//            criteria.andBetween("workEventTime", pageQuery.getWorkEventStartTime(), pageQuery.getWorkEventEndTime());
-//        }
-//        example.setOrderByClause("work_event_time desc, id desc");
-//        List<WorkEvent> data = workEventMapper.selectByExample(example);
-//        return new DataTable<>(data, page.getTotal());
-//    }
+    @Deprecated
+    public DataTable<WorkEvent> queryPageByParam2(WorkEventParam.PageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Example example = new Example(WorkEvent.class);
+        Example.Criteria criteria = example.createCriteria();
+        if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
+            criteria.andLike("comment", SQLUtil.toLike(pageQuery.getQueryName()));
+        }
+        if (!pageQuery.getWorkRoleId().equals(-1)) {
+            criteria.andEqualTo("workRoleId", pageQuery.getWorkRoleId());
+        }
+        if (!CollectionUtils.isEmpty(pageQuery.getWorkItemIdList())) {
+            criteria.andIn("workItemId", pageQuery.getWorkItemIdList());
+        }
+        if (StringUtils.isNotBlank(pageQuery.getUsername())) {
+            criteria.andEqualTo("username", pageQuery.getUsername());
+        }
+        if (!ObjectUtils.isEmpty(pageQuery.getWorkEventStartTime()) && !ObjectUtils.isEmpty(pageQuery.getWorkEventEndTime())) {
+            criteria.andBetween("workEventTime", pageQuery.getWorkEventStartTime(), pageQuery.getWorkEventEndTime());
+        }
+        example.setOrderByClause("work_event_time desc, id desc");
+        List<WorkEvent> data = workEventMapper.selectByExample(example);
+        return new DataTable<>(data, page.getTotal());
+    }
 
     @Override
     public List<ReportVO.Report> queryWeek(Integer workRoleId) {
