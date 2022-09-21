@@ -44,6 +44,11 @@ public class WorkItem {
     private String comment;
 
     /**
+     * 默认内容
+     */
+    private String content;
+
+    /**
      * 更新时间
      */
     @Column(name = "update_time", insertable = false, updatable = false)

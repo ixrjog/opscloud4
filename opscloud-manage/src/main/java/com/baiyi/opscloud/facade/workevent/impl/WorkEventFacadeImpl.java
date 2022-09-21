@@ -178,8 +178,9 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
     }
 
     @Override
-    public WorkItem getWorkItemById(Integer workItemId) {
-        return workItemService.getById(workItemId);
+    public WorkEventVO.Item getWorkItemById(Integer workItemId) {
+        WorkItem workItem = workItemService.getById(workItemId);
+        return BeanCopierUtil.copyProperties(workItem, WorkEventVO.Item.class);
     }
 
     @Override
