@@ -143,7 +143,6 @@ public class OtherTest extends BaseUnit {
         TimeUnit.SECONDS.sleep(2L);
         Integer count2 = (Integer) redisUtil.get(key);
         print(count2);
-
     }
 
 }

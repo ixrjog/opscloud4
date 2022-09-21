@@ -5,7 +5,9 @@ import com.baiyi.opscloud.mapper.opscloud.AlertNotifyHistoryMapper;
 import com.baiyi.opscloud.service.alert.AlertNotifyHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,5 +35,26 @@ public class AlertNotifyHistoryServiceImpl implements AlertNotifyHistoryService 
     @Override
     public void update(AlertNotifyHistory alertNotifyHistory) {
         alertNotifyHistoryMapper.updateByPrimaryKey(alertNotifyHistory);
+    }
+
+    @Override
+    public List<AlertNotifyHistory> listByEventId(Integer alertNotifyEventId) {
+        Example example = new Example(AlertNotifyHistory.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("alertNotifyEventId", alertNotifyEventId);
+        return alertNotifyHistoryMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<AlertNotifyHistory> listByAlertTime(Date alertTime) {
+        Example example = new Example(AlertNotifyHistory.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("alertTime", alertTime);
+        return alertNotifyHistoryMapper.selectByExample(example);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        alertNotifyHistoryMapper.deleteByPrimaryKey(id);
     }
 }

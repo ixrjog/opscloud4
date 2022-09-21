@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.List;
+
 /**
  * @Author 修远
  * @Date 2022/9/14 10:33 AM
@@ -30,5 +32,18 @@ public class AlertNotifyEventServiceImpl implements AlertNotifyEventService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("eventUuid", eventUuid);
         return alertNotifyEventMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public List<AlertNotifyEvent> listAll() {
+        return alertNotifyEventMapper.selectAll();
+    }
+
+    @Override
+    public List<AlertNotifyEvent> listByService(String service) {
+        Example example = new Example(AlertNotifyEvent.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("service", service);
+        return alertNotifyEventMapper.selectByExample(example);
     }
 }

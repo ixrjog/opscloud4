@@ -7,20 +7,10 @@
         -->
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="alert_notify_event_id" jdbcType="INTEGER" property="alertNotifyEventId"/>
-        <result column="alert_name" jdbcType="VARCHAR" property="alertName"/>
-        <result column="severity" jdbcType="VARCHAR" property="severity"/>
-        <result column="message" jdbcType="VARCHAR" property="message"/>
-        <result column="alert_value" jdbcType="VARCHAR" property="alertValue"/>
-        <result column="alert_check" jdbcType="VARCHAR" property="alertCheck"/>
-        <result column="alert_source" jdbcType="VARCHAR" property="alertSource"/>
-        <result column="alert_type" jdbcType="VARCHAR" property="alertType"/>
-        <result column="service" jdbcType="VARCHAR" property="service"/>
         <result column="alert_notify_media" jdbcType="VARCHAR" property="alertNotifyMedia"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
         <result column="alert_notify_status" jdbcType="VARCHAR" property="alertNotifyStatus"/>
-        <result column="alert_time" jdbcType="TIMESTAMP" property="alertTime"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-        <result column="metadata" jdbcType="LONGVARCHAR" property="metadata"/>
     </resultMap>
 </mapper>
