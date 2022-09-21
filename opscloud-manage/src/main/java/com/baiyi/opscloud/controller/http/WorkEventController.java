@@ -91,7 +91,7 @@ public class WorkEventController {
 
     @ApiOperation(value = "工作事项id查询")
     @GetMapping(value = "/item/id/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<WorkItem> getWorkItemById(@RequestParam int id) {
+    public HttpResult<WorkEventVO.Item> getWorkItemById(@RequestParam int id) {
         return new HttpResult<>(workEventFacade.getWorkItemById(id));
     }
 

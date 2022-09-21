@@ -79,4 +79,35 @@ public class WorkEventVO {
             return this.workEventTime;
         }
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ApiModel
+    public static class Item {
+
+        private Integer id;
+
+        private Integer workRoleId;
+
+        private Integer parentId;
+
+        private String workItemName;
+
+        private String workItemKey;
+
+        private String color;
+
+        private String comment;
+
+        /**
+         * 默认内容
+         */
+        private String content;
+
+        public void setContent(String content) {
+            this.comment = content;
+        }
+
+    }
 }
