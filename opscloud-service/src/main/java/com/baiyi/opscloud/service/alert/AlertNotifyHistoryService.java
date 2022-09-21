@@ -2,6 +2,7 @@ package com.baiyi.opscloud.service.alert;
 
 import com.baiyi.opscloud.domain.generator.opscloud.AlertNotifyHistory;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,5 +17,11 @@ public interface AlertNotifyHistoryService {
     void update(AlertNotifyHistory alertNotifyHistory);
 
     void addList(List<AlertNotifyHistory> alertNotifyHistoryList);
+
+    List<AlertNotifyHistory> listByEventId(Integer alertNotifyEventId);
+
+    List<AlertNotifyHistory> listByAlertTime(Date alertTime);
+
+    void delete(Integer id);
 
 }
