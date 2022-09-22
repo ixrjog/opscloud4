@@ -17,8 +17,9 @@ public class BaseKubernetesTest extends BaseUnit {
     private DsConfigHelper dsConfigHelper;
 
     public interface KubernetesClusterConfigs {
-        int EKS_TEST = 21;
+        int EKS_TEST = 24;
         int EKS_GRAY = 26;
+        int EKS_PRE = 41;
         int EKS_PROD = 30;
 
         int ACK_DEV = 6;
