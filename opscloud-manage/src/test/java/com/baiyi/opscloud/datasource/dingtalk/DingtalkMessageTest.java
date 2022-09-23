@@ -22,7 +22,7 @@ public class DingtalkMessageTest extends BaseDingtalkTest {
     void asyncSendTest() {
         DingtalkMessageParam.Markdown markdown = DingtalkMessageParam.Markdown.builder()
                 .title("OPSCLOUD消息通知")
-                .text("### OPSCLOUD账户开通  \n  - 用户名: baiyi  \n  - 密码: `###>Abc###-1213&2234`")
+                .text("### OPSCLOUD测试消息  \n  测试: `测试`")
                 .build();
 
         DingtalkMessageParam.Msg msg = DingtalkMessageParam.Msg.builder()
@@ -31,7 +31,7 @@ public class DingtalkMessageTest extends BaseDingtalkTest {
 
         DingtalkMessageParam.AsyncSendMessage message = DingtalkMessageParam.AsyncSendMessage.builder()
                 .msg(msg)
-                .useridList("160947950")
+                .useridList("165924831")
                 .build();
 
         DingtalkMessage.MessageResponse messageResponse = dingtalkMessageDrive.asyncSend(getConfig().getDingtalk(), message);
