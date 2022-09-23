@@ -4,7 +4,6 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.DingtalkConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.datasource.dingtalk.driver.DingtalkMessageDriver;
-import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkMessage;
 import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkMessageParam;
 import com.baiyi.opscloud.datasource.message.consumer.base.AbstractMessageConsumer;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
@@ -29,8 +28,7 @@ public class DingtalkAppMessageConsumer extends AbstractMessageConsumer<Dingtalk
     private final DingtalkMessageDriver dingtalkMessageDriver;
 
     private DatasourceInstanceAsset findAssetUser(DatasourceInstance instance, User user) {
-        List<BusinessAssetRelation> relations =
-                businessAssetRelationService.queryBusinessRelations(BusinessTypeEnum.USER.getType(), user.getId());
+        List<BusinessAssetRelation> relations = businessAssetRelationService.queryBusinessRelations(BusinessTypeEnum.USER.getType(), user.getId());
         for (BusinessAssetRelation relation : relations) {
             DatasourceInstanceAsset asset = dsInstanceAssetService.getById(relation.getDatasourceInstanceAssetId());
             if (asset.getInstanceUuid().equals(instance.getUuid()) && asset.getAssetType().equals(DsAssetTypeConstants.DINGTALK_USER.name()))
@@ -53,9 +51,7 @@ public class DingtalkAppMessageConsumer extends AbstractMessageConsumer<Dingtalk
                 .msg(msg)
                 .useridList(asset.getAssetId())
                 .build();
-        // log.info("发送通知 : message = {}",JSONUtil.writeValueAsString(message));
-        DingtalkMessage.MessageResponse messageResponse = dingtalkMessageDriver.asyncSend(buildConfig(instance),
-                message);
+        dingtalkMessageDriver.asyncSend(buildConfig(instance), message);
     }
 
     @Override
