@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationEvent;
 @Slf4j
 public class NoticeEvent extends ApplicationEvent {
 
+    private static final long serialVersionUID = 3500050498451084883L;
     /**
      * 接受信息
      */
@@ -21,8 +22,7 @@ public class NoticeEvent extends ApplicationEvent {
     public NoticeEvent(IEvent message) {
         super(message);
         this.message = message;
-        log.info("新事件 Event success! message: {}", message);
+        log.info("新事件通知: message={}", message);
     }
-
-
+    
 }
