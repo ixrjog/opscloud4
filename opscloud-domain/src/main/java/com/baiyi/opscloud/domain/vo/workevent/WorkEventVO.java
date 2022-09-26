@@ -1,16 +1,18 @@
 package com.baiyi.opscloud.domain.vo.workevent;
 
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.constants.FrontEndTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkEventProperty;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkItem;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkRole;
 import com.baiyi.opscloud.domain.vo.base.ShowTime;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -29,7 +31,7 @@ public class WorkEventVO {
     @NoArgsConstructor
     @AllArgsConstructor
     @ApiModel
-    public static class WorkEvent implements ShowTime.IAgo, TagVO.ITags {
+    public static class WorkEvent implements ShowTime.IAgo, TagVO.ITags, UserVO.IUser {
 
         private final Integer businessType = BusinessTypeEnum.WORK_EVENT.getType();
 
@@ -50,7 +52,7 @@ public class WorkEventVO {
         @ApiModelProperty(value = "用户名")
         private String username;
 
-        private User user;
+        private UserVO.User user;
 
         @ApiModelProperty(value = "时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
@@ -65,7 +67,10 @@ public class WorkEventVO {
 
         private List<TagVO.Tag> tags;
 
+        @Deprecated
         private List<WorkEventProperty> propertyList;
+
+        private List<EventProperty> properties;
 
         private Map<String, String> property;
 
@@ -110,4 +115,46 @@ public class WorkEventVO {
         }
 
     }
+
+    @Builder
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ApiModel
+    public static class EventProperty {
+
+        // 故障
+        public static final EventProperty FAULT = EventProperty.builder()
+                .feType(FrontEndTypeConstants.DANGER.getType())
+                .feName("故障")
+                .build();
+
+        // 拦截
+        public static final EventProperty INTERCEPT = EventProperty.builder()
+                .feType(FrontEndTypeConstants.SUCCESS.getType())
+                .feName("拦截")
+                .build();
+
+        public static final EventProperty NOT_INTERCEPT = EventProperty.builder()
+                .feType(FrontEndTypeConstants.WARNING.getType())
+                .feName("未拦截")
+                .build();
+
+        // 处理中
+        public static final EventProperty SOLVE = EventProperty.builder()
+                .feType(FrontEndTypeConstants.INFO.getType())
+                .feName("处理中")
+                .build();
+
+        @ApiModelProperty(value = "前端类型")
+        private String feType;
+
+        @ApiModelProperty(value = "前端名称")
+        private String feName;
+
+        @Builder.Default
+        private Boolean isShow = true;
+
+    }
+
 }
