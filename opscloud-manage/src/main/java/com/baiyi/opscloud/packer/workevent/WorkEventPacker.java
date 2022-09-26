@@ -70,7 +70,12 @@ public class WorkEventPacker implements IWrapper<WorkEventVO.WorkEvent> {
     }
 
     private WorkEventVO.EventProperty toProperty(WorkEventProperty workEventProperty) {
-        if (workEventProperty.getName().equals("fault")) return WorkEventVO.EventProperty.FAULT;
+        
+        if (workEventProperty.getName().equals("fault")) {
+            if (Boolean.parseBoolean(workEventProperty.getValue())) {
+                return WorkEventVO.EventProperty.FAULT;
+            }
+        }
 
         if (workEventProperty.getName().equals("intercept")) {
             if (Boolean.parseBoolean(workEventProperty.getValue())) {
@@ -90,6 +95,5 @@ public class WorkEventPacker implements IWrapper<WorkEventVO.WorkEvent> {
                 .isShow(false)
                 .build();
     }
-
 
 }
