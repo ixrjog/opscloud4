@@ -16,6 +16,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,9 @@ public class WorkEventVO {
     @NoArgsConstructor
     @AllArgsConstructor
     @ApiModel
-    public static class WorkEvent implements ShowTime.IAgo, TagVO.ITags, UserVO.IUser {
+    public static class WorkEvent implements ShowTime.IAgo, TagVO.ITags, UserVO.IUser, Serializable {
+
+        private static final long serialVersionUID = 5241869056680855688L;
 
         private final Integer businessType = BusinessTypeEnum.WORK_EVENT.getType();
 
@@ -66,7 +69,7 @@ public class WorkEventVO {
         private String comment;
 
         private List<TagVO.Tag> tags;
-        
+
         private List<WorkEventProperty> propertyList;
 
         private List<EventProperty> properties;
@@ -120,7 +123,9 @@ public class WorkEventVO {
     @NoArgsConstructor
     @AllArgsConstructor
     @ApiModel
-    public static class EventProperty {
+    public static class EventProperty implements Serializable {
+
+        private static final long serialVersionUID = 8869809924735578200L;
 
         // 故障
         public static final EventProperty FAULT = EventProperty.builder()
