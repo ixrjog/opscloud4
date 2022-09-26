@@ -62,7 +62,7 @@ public class WorkEventPacker implements IWrapper<WorkEventVO.WorkEvent> {
         userPacker.wrap(vo);
         List<WorkEventProperty> propertyList = workEventPropertyService.listByWorkEventId(vo.getId());
         if (!CollectionUtils.isEmpty(propertyList)) {
-            //  vo.setPropertyList(propertyList);
+            vo.setPropertyList(propertyList);
             vo.setProperty(propertyList.stream()
                     .collect(Collectors.toMap(WorkEventProperty::getName, WorkEventProperty::getValue)));
             vo.setProperties(propertyList.stream().map(this::toProperty).collect(Collectors.toList()));
@@ -70,13 +70,13 @@ public class WorkEventPacker implements IWrapper<WorkEventVO.WorkEvent> {
     }
 
     private WorkEventVO.EventProperty toProperty(WorkEventProperty workEventProperty) {
-        
+        // 故障属性
         if (workEventProperty.getName().equals("fault")) {
             if (Boolean.parseBoolean(workEventProperty.getValue())) {
                 return WorkEventVO.EventProperty.FAULT;
             }
         }
-
+        // 拦截属性
         if (workEventProperty.getName().equals("intercept")) {
             if (Boolean.parseBoolean(workEventProperty.getValue())) {
                 return WorkEventVO.EventProperty.INTERCEPT;
@@ -84,16 +84,14 @@ public class WorkEventPacker implements IWrapper<WorkEventVO.WorkEvent> {
                 return WorkEventVO.EventProperty.NOT_INTERCEPT;
             }
         }
-
+        // 处理中属性
         if (workEventProperty.getName().equals("solve")) {
             if (!Boolean.parseBoolean(workEventProperty.getValue())) {
                 return WorkEventVO.EventProperty.SOLVE;
             }
         }
         // 不显示
-        return WorkEventVO.EventProperty.builder()
-                .isShow(false)
-                .build();
+        return WorkEventVO.EventProperty.NO_SHOW;
     }
 
 }

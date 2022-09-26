@@ -66,8 +66,7 @@ public class WorkEventVO {
         private String comment;
 
         private List<TagVO.Tag> tags;
-
-        @Deprecated
+        
         private List<WorkEventProperty> propertyList;
 
         private List<EventProperty> properties;
@@ -144,6 +143,11 @@ public class WorkEventVO {
         public static final EventProperty SOLVE = EventProperty.builder()
                 .feType(FrontEndTypeConstants.INFO.getType())
                 .feName("处理中")
+                .build();
+
+        // 不显示
+        public static final EventProperty NO_SHOW = WorkEventVO.EventProperty.builder()
+                .isShow(false)
                 .build();
 
         @ApiModelProperty(value = "前端类型")
