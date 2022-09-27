@@ -36,44 +36,23 @@ import java.util.stream.Collectors;
 public class CachingConfiguration extends CachingConfigurerSupport {
 
     public interface Repositories {
-        String DEFAULT = "oc4:default:";
+        String DEFAULT = "oc4:cache:default:";
+        String CACHE_FOR_10S = "oc4:cache:10s:";
+        String CACHE_FOR_10M = "oc4:cache:10m:";
         String CACHE_FOR_1H = "oc4:cache:1h:";
         String CACHE_FOR_2H = "oc4:cache:2h:";
-        String CACHE_FOR_1W = "oc4:7d:";
-        String CACHE_FOR_1D = "oc4:1d:";
-        String CACHE_FOR_10S = "oc4:10s:";
-        String CACHE_FOR_10M = "oc4:10m:";
+        String CACHE_FOR_1D = "oc4:cache:1d:";
+        String CACHE_FOR_1W = "oc4:cache:7d:";
     }
 
     private static final List<CacheProperties.Repo> cacheRepositories = Lists.newArrayList(
-            CacheProperties.Repo.builder()
-                    .name(Repositories.DEFAULT)
-                    .ttl((Duration.ofDays(30)))
-                    .build(),
-            CacheProperties.Repo.builder()
-                    .name(Repositories.CACHE_FOR_1H)
-                    .ttl((Duration.ofHours(1)))
-                    .build(),
-            CacheProperties.Repo.builder()
-                    .name(Repositories.CACHE_FOR_2H)
-                    .ttl((Duration.ofHours(2)))
-                    .build(),
-            CacheProperties.Repo.builder()
-                    .name(Repositories.CACHE_FOR_1W)
-                    .ttl((Duration.ofDays(7)))
-                    .build(),
-            CacheProperties.Repo.builder()
-                    .name(Repositories.CACHE_FOR_1D)
-                    .ttl((Duration.ofDays(1)))
-                    .build(),
-            CacheProperties.Repo.builder()
-                    .name(Repositories.CACHE_FOR_10S)
-                    .ttl((Duration.ofSeconds(10)))
-                    .build(),
-            CacheProperties.Repo.builder()
-                    .name(Repositories.CACHE_FOR_10M)
-                    .ttl((Duration.ofMinutes(10)))
-                    .build()
+            CacheProperties.Repo.DEFAULT,
+            CacheProperties.Repo.CACHE_FOR_10S,
+            CacheProperties.Repo.CACHE_FOR_10M,
+            CacheProperties.Repo.CACHE_FOR_1H,
+            CacheProperties.Repo.CACHE_FOR_2H,
+            CacheProperties.Repo.CACHE_FOR_1W,
+            CacheProperties.Repo.CACHE_FOR_1D
     );
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
