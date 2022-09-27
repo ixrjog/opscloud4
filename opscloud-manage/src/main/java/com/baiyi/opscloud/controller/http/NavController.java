@@ -30,7 +30,7 @@ public class NavController {
     @ApiOperation(value = "查询有效导航")
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<List<NavVO.Nav>> listNav() {
-        return new HttpResult<>(navFacade.ListActive());
+        return new HttpResult<>(navFacade.listActive());
     }
 
 }

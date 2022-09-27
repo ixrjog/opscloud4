@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TencentExmailTokenDriver {
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_2HOURS, key = "#config.exmail.corpId + '_v4_tencent_exmail_token'", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_2H, key = "#config.exmail.corpId + '_v4_tencent_exmail_token'", unless = "#result == null")
     public ExmailToken getToken(TencentExmailConfig.Tencent config) {
         TencentExmailConfig.Exmail exmail = config.getExmail();
         TencentExmailTokenFeign exmailAPI = Feign.builder()

@@ -23,7 +23,7 @@ public class NavFacadeImpl implements NavFacade {
     private final NavService navService;
 
     @Override
-    public List<NavVO.Nav> ListActive() {
+    public List<NavVO.Nav> listActive() {
         List<Nav> navList = navService.listActive();
         return BeanCopierUtil.copyListProperties(navList, NavVO.Nav.class);
     }

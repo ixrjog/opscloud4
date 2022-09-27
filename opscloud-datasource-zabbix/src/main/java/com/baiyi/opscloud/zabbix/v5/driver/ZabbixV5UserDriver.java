@@ -29,12 +29,12 @@ import java.util.UUID;
 @Component
 public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_user_name_' + #username")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_user_name_' + #username")
     public void evictByUsername(ZabbixConfig.Zabbix config, String username) {
         log.info("清除ZabbixUser缓存 : alias = {}", username);
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_user_name_' + #username", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_user_name_' + #username", unless = "#result == null")
     public ZabbixUser.User getByUsername(ZabbixConfig.Zabbix config, String username) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("selectMedias", "extend")   // 在medias 属性返回用户使用的媒体。
@@ -124,12 +124,12 @@ public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
         }
     }
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_user_userid_' + #userid")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_user_userid_' + #userid")
     public void evictById(ZabbixConfig.Zabbix config, String userid) {
         log.info("清除ZabbixUser缓存 : userid = {}", userid);
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_user_userid_' + #userid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_user_userid_' + #userid", unless = "#result == null")
     public ZabbixUser.User getById(ZabbixConfig.Zabbix config, String userid) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("selectMedias", "extend")

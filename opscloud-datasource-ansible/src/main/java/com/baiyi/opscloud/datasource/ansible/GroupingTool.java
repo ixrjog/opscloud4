@@ -37,12 +37,12 @@ public class GroupingTool {
     /**
      * 清空缓存
      */
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_1WEEK, key = "'grouping_' + #serverGroupId", beforeInvocation = true)
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'grouping_' + #serverGroupId", beforeInvocation = true)
     public void evictGrouping1(Integer serverGroupId) {
         log.info("evictBuild 清除缓存，serverGroupId = {}", serverGroupId);
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1WEEK, key = "'grouping_' + #serverGroup.id")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'grouping_' + #serverGroup.id")
     public Map<String, List<Server>> grouping(ServerGroup serverGroup) {
         return grouping(serverGroup, true);
     }

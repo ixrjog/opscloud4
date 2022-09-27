@@ -34,7 +34,7 @@ public class ApplicationAlertHelper {
 
     private final UserService userService;
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1WEEK, key = "'application_alert_name' + #name", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'application_alert_name' + #name", unless = "#result == null")
     public List<User> queryByApplicationName(String name) {
         Application application = applicationService.getByName(name);
         if (application == null)
@@ -50,7 +50,7 @@ public class ApplicationAlertHelper {
                 .collect(Collectors.toList());
     }
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_1WEEK, key = "'application_alert_name' + #name")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'application_alert_name' + #name")
     public void evictWithApplicationName(String name) {
         log.info("清除应用告警查询用户数据缓存: application={}", name);
     }

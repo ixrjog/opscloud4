@@ -58,7 +58,16 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
         query.setLength(pageQuery.getLength());
         query.setPage(pageQuery.getPage());
         DataTable<ServerVO.Server> table = queryServerPage(query);
-        return new DataTable<>(table.getData().stream().map(e -> ApplicationResourceVO.Resource.builder().name(e.getDisplayName()).applicationId(pageQuery.getApplicationId()).businessId(e.getBusinessId()).resourceType(getApplicationResType()).businessType(getBusinessType()).comment(e.getPrivateIp()).build()).collect(Collectors.toList()), table.getTotalNum());
+        return new DataTable<>(table.getData().stream()
+                .map(e -> ApplicationResourceVO.Resource.builder()
+                        .name(e.getDisplayName())
+                        .applicationId(pageQuery.getApplicationId())
+                        .businessId(e.getBusinessId())
+                        .resourceType(getApplicationResType())
+                        .businessType(getBusinessType())
+                        .comment(e.getPrivateIp())
+                        .build())
+                .collect(Collectors.toList()), table.getTotalNum());
     }
 
     @Override

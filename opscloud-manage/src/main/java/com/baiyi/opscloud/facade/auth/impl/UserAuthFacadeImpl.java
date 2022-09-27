@@ -56,7 +56,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
 
     private final StringEncryptor stringEncryptor;
 
-    private final DsAuthManager authProviderManager;
+    private final DsAuthManager dsAuthManager;
 
     private final MfaAuthHelper mfaAuthHelper;
 
@@ -128,7 +128,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     public LogVO.Login login(LoginParam.Login loginParam) {
         User user = userService.getByUsername(loginParam.getUsername());
         // 尝试使用authProvider 认证
-        if (authProviderManager.tryLogin(user, loginParam)) {
+        if (dsAuthManager.tryLogin(user, loginParam)) {
             boolean bindMfa = false;
             if (user.getMfa()) {
                 mfaAuthHelper.verify(user, loginParam);
@@ -154,7 +154,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
         AuthPlatform authPlatform = platformAuthHelper.verify(loginParam);
         User user = userService.getByUsername(loginParam.getUsername());
         // 尝试使用authProvider 认证
-        if (authProviderManager.tryLogin(user, loginParam)) {
+        if (dsAuthManager.tryLogin(user, loginParam)) {
             if (user.getMfa()) {
                 try {
                     mfaAuthHelper.verify(user, loginParam);

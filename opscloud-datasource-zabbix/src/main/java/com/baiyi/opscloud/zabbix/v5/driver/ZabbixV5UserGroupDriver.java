@@ -42,7 +42,7 @@ public class ZabbixV5UserGroupDriver extends AbstractZabbixV5UserGroupDriver {
         return response.getResult();
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_usergroup_usrgrpid_' + #usrgrpid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_usergroup_usrgrpid_' + #usrgrpid", unless = "#result == null")
     public ZabbixUserGroup.UserGroup getById(ZabbixConfig.Zabbix config, String usrgrpid) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("usrgrpids", usrgrpid)
@@ -53,7 +53,7 @@ public class ZabbixV5UserGroupDriver extends AbstractZabbixV5UserGroupDriver {
         return response.getResult().get(0);
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1DAY, key = "#config.url + '_v5_usergroup_name_' + #usergroup", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_usergroup_name_' + #usergroup", unless = "#result == null")
     public ZabbixUserGroup.UserGroup getByName(ZabbixConfig.Zabbix config, String usergroup) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("status", 0)

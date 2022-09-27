@@ -35,7 +35,7 @@ public class TerminalReportFacadeImpl implements TerminalReportFacade {
     private final TerminalSessionInstanceCommandService terminalSessionInstanceCommandService;
 
     @Override
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1HOUR, key = "'opscloud.v4.report#statTerminalReport'")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1H, key = "'opscloud.v4.report#statTerminalReport'")
     public TerminalReportVO.TerminalReport statTerminalReport() {
         return TerminalReportVO.TerminalReport.builder()
                 .userTotal(terminalSessionService.statUserTotal())

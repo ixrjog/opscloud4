@@ -45,7 +45,7 @@ public class JenkinsBuildExecutorHelperImpl implements JenkinsBuildExecutorHelpe
     private final DsConfigHelper dsConfigHelper;
 
     @Override
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_10SECONDS, key = "'jenkins.build.executor#instance_uuid_'+ #instance.uuid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10S, key = "'jenkins.build.executor#instance_uuid_'+ #instance.uuid", unless = "#result == null")
     public JenkinsBuildExecutorStatusVO.Children generatorBuildExecutorStatus(DatasourceInstance instance) {
         DatasourceConfig datasourceConfig = dsConfigHelper.getConfigByInstanceUuid(instance.getUuid());
         JenkinsConfig jenkinsConfig = dsConfigHelper.build(datasourceConfig, JenkinsConfig.class);

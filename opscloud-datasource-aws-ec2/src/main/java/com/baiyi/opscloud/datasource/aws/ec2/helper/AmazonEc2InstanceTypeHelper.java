@@ -37,7 +37,7 @@ public class AmazonEc2InstanceTypeHelper {
      * @return
      * @throws Exception
      */
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1WEEK, key = "'amazon_ec2_instances_details'")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'amazon_ec2_instances_details'")
     public Map<String, InstanceModel.EC2InstanceType> getAmazonEc2InstanceTypeMap(AwsConfig.Aws config) throws Exception {
         URL url = new URL(config.getEc2().getInstances());
         AmazonEc2InstanceFeign awsEc2API = buildFeign(Joiner.on("://").join(url.getProtocol(),url.getHost()));

@@ -87,7 +87,7 @@ public class AmazonSimpleNotificationServiceDriver {
      * @param topicArn
      * @return
      */
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1HOUR, key = "'accountId_' + #config.account.id + '_regionId' + #regionId + '_topicArn_' + #topicArn", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1H, key = "'accountId_' + #config.account.id + '_regionId' + #regionId + '_topicArn_' + #topicArn", unless = "#result == null")
     public Map<String, String> getTopicAttributes(AwsConfig.Aws config, String regionId, String topicArn) {
         GetTopicAttributesRequest request = new GetTopicAttributesRequest();
         request.setTopicArn(topicArn);
@@ -117,7 +117,7 @@ public class AmazonSimpleNotificationServiceDriver {
         return subscriptions;
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1HOUR, key = "'accountId_' + #config.account.id + '_regionId' + #regionId + '_subscriptionArn_' + #subscriptionArn", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1H, key = "'accountId_' + #config.account.id + '_regionId' + #regionId + '_subscriptionArn_' + #subscriptionArn", unless = "#result == null")
     public Map<String, String> getSubscriptionAttributes(AwsConfig.Aws config, String regionId, String subscriptionArn) {
         GetSubscriptionAttributesRequest request = new GetSubscriptionAttributesRequest();
         request.setSubscriptionArn(subscriptionArn);

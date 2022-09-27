@@ -56,8 +56,7 @@ public class WorkEventPacker implements IWrapper<WorkEventVO.WorkEvent> {
         workItemList.add(workItem);
         List<String> list = workItemList.stream().map(WorkItem::getWorkItemName).collect(Collectors.toList());
         Collections.reverse(list);
-        String workItemTree = Joiner.on("/").join(list);
-        vo.setWorkItemTree(workItemTree);
+        vo.setWorkItemTree(Joiner.on("/").join(list));
         vo.setWorkRole(workRoleService.getById(vo.getWorkRoleId()));
         userPacker.wrap(vo);
         List<WorkEventProperty> propertyList = workEventPropertyService.listByWorkEventId(vo.getId());

@@ -32,7 +32,7 @@ public class DocumentFacadeImpl implements DocumentFacade {
     private final UserService userService;
 
     @Override
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_10MINUTES, key = "'preview_document_key_'+ #query.documentKey", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10M, key = "'preview_document_key_'+ #query.documentKey", unless = "#result == null")
     public DocumentVO.Doc previewDocument(DocumentParam.DocumentQuery query) {
         Document doc = documentService.getByKey(query.getDocumentKey());
         render(doc, query);

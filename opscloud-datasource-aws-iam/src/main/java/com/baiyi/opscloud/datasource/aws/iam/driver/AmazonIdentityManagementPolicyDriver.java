@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Component
 public class AmazonIdentityManagementPolicyDriver {
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1HOUR, key = "'account_id_'+ #config.account.id + '_policies'", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1H, key = "'account_id_'+ #config.account.id + '_policies'", unless = "#result == null")
     public Map<String, IamPolicy.Policy> getPolicyMap(AwsConfig.Aws config) {
         List<IamPolicy.Policy> policies = listPolicies(config);
         return policies.stream().collect(Collectors.toMap(IamPolicy.Policy::getPolicyName, a -> a, (k1, k2) -> k1));

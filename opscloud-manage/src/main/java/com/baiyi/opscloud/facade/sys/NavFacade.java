@@ -11,5 +11,6 @@ import java.util.List;
  */
 public interface NavFacade {
 
-    List<NavVO.Nav> ListActive();
+    List<NavVO.Nav> listActive();
+
 }

@@ -46,7 +46,7 @@ public class AmazonEksHelper {
      * @return
      * @throws URISyntaxException
      */
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_10MINUTES, key = "'eks_url_'+ #amazonEks.url", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10M, key = "'eks_url_'+ #amazonEks.url", unless = "#result == null")
     public String generateEksToken(KubernetesConfig.AmazonEks amazonEks) throws URISyntaxException {
         DefaultRequest defaultRequest = new DefaultRequest<>(new GetCallerIdentityRequest(), "sts");
         URI uri = new URI("https", "sts.amazonaws.com", null, null);

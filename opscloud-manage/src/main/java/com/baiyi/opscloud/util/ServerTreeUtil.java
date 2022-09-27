@@ -31,7 +31,7 @@ public class ServerTreeUtil {
     @Resource
     private ServerPacker serverPacker;
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1WEEK, key = "'server_tree_severgroupid_' + #serverGroup.id", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'server_tree_severgroupid_' + #serverGroup.id", unless = "#result == null")
     public ServerTreeVO.Tree wrap(ServerGroup serverGroup, Map<String, List<ServerPack>> serverGroupMap) {
         List<ServerTreeVO.Tree> children = serverGroupMap.keySet().stream()
                 .map(subName -> ServerTreeVO.Tree.builder()
@@ -48,7 +48,7 @@ public class ServerTreeUtil {
                 .build();
     }
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_1WEEK, key = "'server_tree_severgroupid_' + #serverGroupId")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'server_tree_severgroupid_' + #serverGroupId")
     public void evictWrap(Integer serverGroupId) {
     }
 
