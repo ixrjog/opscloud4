@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-ec2</artifactId>
-            <version>1.12.300</version>
+            <version>1.12.307</version>
         </dependency>
 
     </dependencies>

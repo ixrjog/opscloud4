@@ -65,7 +65,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     private final PlatformAuthHelper platformAuthHelper;
 
     @Override
-    public void tryUserHasResourceAuthorize(String token, String resourceName) {
+    public void verifyUserHasResourcePermissionWithToken(String token, String resourceName) {
         AuthResource authResource = authResourceService.queryByName(resourceName);
         if (authResource == null)
             throw new AuthCommonException(ErrorEnum.AUTHENTICATION_RESOURCE_NOT_EXIST);
@@ -92,7 +92,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     }
 
     @Override
-    public void tryUserHasResourceAuthorizeByAccessToken(String accessToken, String resourceName) {
+    public void verifyUserHasResourcePermissionWithAccessToken(String accessToken, String resourceName) {
         AuthResource authResource = authResourceService.queryByName(resourceName);
         if (authResource == null)
             throw new AuthCommonException(ErrorEnum.AUTHENTICATION_RESOURCE_NOT_EXIST);
@@ -150,7 +150,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     }
 
     @Override
-    public LogVO.Login platformLogin(LoginParam.PlatformLogin loginParam) {
+    public LogVO.Login loginWithPlatform(LoginParam.PlatformLogin loginParam) {
         AuthPlatform authPlatform = platformAuthHelper.verify(loginParam);
         User user = userService.getByUsername(loginParam.getUsername());
         // 尝试使用authProvider 认证
