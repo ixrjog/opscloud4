@@ -26,7 +26,7 @@ public class WorkEventParam {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class PageQuery extends PageParam {
+    public static class WorkEventPageQuery extends PageParam {
 
         private final int businessType = BusinessTypeEnum.WORK_EVENT.getType();
 

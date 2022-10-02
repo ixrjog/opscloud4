@@ -56,13 +56,13 @@ public class WorkEventServiceImpl implements WorkEventService {
     }
 
     @Override
-    public DataTable<WorkEvent> queryPageByParam(WorkEventParam.PageQuery pageQuery) {
+    public DataTable<WorkEvent> queryPageByParam(WorkEventParam.WorkEventPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         return new DataTable<>(workEventMapper.queryPageByParam(pageQuery),page.getTotal());
     }
 
     @Deprecated
-    public DataTable<WorkEvent> queryPageByParam2(WorkEventParam.PageQuery pageQuery) {
+    public DataTable<WorkEvent> queryPageByParam2(WorkEventParam.WorkEventPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(WorkEvent.class);
         Example.Criteria criteria = example.createCriteria();

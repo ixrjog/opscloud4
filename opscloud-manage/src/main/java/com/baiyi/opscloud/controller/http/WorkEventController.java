@@ -34,8 +34,8 @@ public class WorkEventController {
 
     @ApiOperation(value = "分页查询工作事件")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<WorkEventVO.WorkEvent>> queryPageByParam(@RequestBody @Valid WorkEventParam.PageQuery pageQuery) {
-        return new HttpResult<>(workEventFacade.queryPageByParam(pageQuery));
+    public HttpResult<DataTable<WorkEventVO.WorkEvent>> queryWorkEventPage(@RequestBody @Valid WorkEventParam.WorkEventPageQuery pageQuery) {
+        return new HttpResult<>(workEventFacade.queryWorkEventPage(pageQuery));
     }
 
     @ApiOperation(value = "新增工作事件")
