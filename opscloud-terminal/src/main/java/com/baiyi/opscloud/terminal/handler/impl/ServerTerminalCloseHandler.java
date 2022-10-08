@@ -6,9 +6,11 @@ import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
 import com.baiyi.opscloud.terminal.handler.AbstractServerTerminalHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.Session;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -18,6 +20,7 @@ import java.util.Map;
  * @Date 2020/5/11 9:38 上午
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class ServerTerminalCloseHandler extends AbstractServerTerminalHandler<ServerMessage.BaseMessage> {
 
@@ -39,16 +42,17 @@ public class ServerTerminalCloseHandler extends AbstractServerTerminalHandler<Se
                 jSchSession.setInputToChannel(null);
                 jSchSession.setCommander(null);
                 jSchSession = null;
-                simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, instanceId); // 设置关闭会话
+                // 设置关闭会话
+                simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, instanceId);
                 serverCommandAudit.asyncRecordCommand(terminalSession.getSessionId(), instanceId);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.warn("关闭JSchSession错误: instanceId={}, err={}", instanceId, e.getMessage());
             }
         try {
             sessionMap.clear();
             session.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            log.warn("关闭会话错误: err={}", e.getMessage());
         }
         simpleTerminalSessionFacade.closeTerminalSession(terminalSession);
         terminalSession = null;

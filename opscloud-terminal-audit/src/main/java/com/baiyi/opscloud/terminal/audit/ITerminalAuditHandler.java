@@ -7,14 +7,14 @@ import javax.websocket.Session;
  * @Date 2021/7/23 2:55 下午
  * @Version 1.0
  */
-public interface ITerminalAuditProcess {
+public interface ITerminalAuditHandler {
 
     /**
      *
      * @param message
      * @param session
      */
-    void process(String message, Session session);
+    void handle(String message, Session session);
 
     String getState();
 }

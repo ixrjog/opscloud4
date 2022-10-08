@@ -38,7 +38,7 @@ public class ServerTerminalResizeHandler extends AbstractServerTerminalHandler<S
             assert jSchSession != null;
             RemoteInvokeHandler.setChannelPtySize((ChannelShell) jSchSession.getChannel(), resizeMessage);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.warn("Web终端调整窗口大小错误: err={}", e.getMessage());
         }
     }
 

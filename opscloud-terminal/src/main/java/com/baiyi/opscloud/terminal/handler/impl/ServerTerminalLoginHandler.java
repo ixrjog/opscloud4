@@ -60,7 +60,7 @@ public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<Se
                 });
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("批量登录服务器错误: err={}", e.getMessage());
         } finally {
             executor.shutdown();
         }

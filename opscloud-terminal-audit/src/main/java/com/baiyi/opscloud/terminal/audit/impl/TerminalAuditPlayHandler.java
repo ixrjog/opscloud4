@@ -17,7 +17,7 @@ import javax.websocket.Session;
  */
 @Slf4j
 @Component
-public class TerminalAuditPlayProcess extends AbstractTerminalAuditProcess<TerminalAuditPlayMessage> {
+public class TerminalAuditPlayHandler extends AbstractTerminalAuditHandler<TerminalAuditPlayMessage> {
 
     /**
      * 播放
@@ -30,7 +30,7 @@ public class TerminalAuditPlayProcess extends AbstractTerminalAuditProcess<Termi
     }
 
     @Override
-    public void process(String message, Session session) {
+    public void handle(String message, Session session) {
         TerminalAuditPlayMessage playMessage = getMessage(message);
         SessionOutput sessionOutput = new SessionOutput(playMessage.getSessionId(), playMessage.getInstanceId());
         // 启动线程处理会话
