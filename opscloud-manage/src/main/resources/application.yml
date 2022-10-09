@@ -9,6 +9,14 @@ spring:
   profiles:
     active: '@env@'
 
+management:
+  server:
+    ssl:
+      enabled: off
+  health:
+    ldap:
+      enabled: off
+
 knife4j:
   enable: true
 
