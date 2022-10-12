@@ -88,6 +88,10 @@ public class SnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
                 if (!topic.endsWith("_test_topic"))
                     throw new TicketVerifyException("校验工单条目失败: 测试环境SNS主题名称必须以 _test_topic 结尾！");
                 break;
+            case "frankfurt-daily":
+                if (!topic.endsWith("_daily_topic"))
+                    throw new TicketVerifyException("校验工单条目失败: 日常环境SNS主题名称必须以 _daily_topic 结尾！");
+                break;
             case "gray":
                 if (!topic.endsWith("_canary_topic"))
                     throw new TicketVerifyException("校验工单条目失败: 灰度环境SNS主题名称必须以 _canary_topic 结尾！");
