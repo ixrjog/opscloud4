@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.alert.notify.impl;
 
 import com.baiyi.opscloud.alert.notify.NotifyMediaEnum;
-import com.baiyi.opscloud.common.alert.AlertContext;
-import com.baiyi.opscloud.common.alert.AlertNotifyMedia;
+import com.baiyi.opscloud.domain.alert.AlertContext;
+import com.baiyi.opscloud.domain.alert.AlertNotifyMedia;
 import com.baiyi.opscloud.common.util.BeetlUtil;
 import com.baiyi.opscloud.datasource.message.notice.DingtalkSendHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.AlertNotifyHistory;

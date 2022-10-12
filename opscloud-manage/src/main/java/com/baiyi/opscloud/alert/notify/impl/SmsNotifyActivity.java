@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.alert.notify.impl;
 
 import com.baiyi.opscloud.alert.notify.NotifyMediaEnum;
-import com.baiyi.opscloud.common.alert.AlertContext;
-import com.baiyi.opscloud.common.alert.AlertNotifyMedia;
+import com.baiyi.opscloud.domain.alert.AlertContext;
+import com.baiyi.opscloud.domain.alert.AlertNotifyMedia;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;

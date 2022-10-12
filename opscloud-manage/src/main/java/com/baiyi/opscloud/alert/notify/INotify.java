@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.alert.notify;
 
-import com.baiyi.opscloud.common.alert.AlertContext;
-import com.baiyi.opscloud.common.alert.AlertNotifyMedia;
+import com.baiyi.opscloud.domain.alert.AlertContext;
+import com.baiyi.opscloud.domain.alert.AlertNotifyMedia;
 
 /**
  * @Author 修远

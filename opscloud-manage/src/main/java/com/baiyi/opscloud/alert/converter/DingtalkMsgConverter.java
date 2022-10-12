@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.alert.converter;
 
-import com.baiyi.opscloud.common.alert.AlertContext;
-import com.baiyi.opscloud.common.alert.AlertNotifyMedia;
+import com.baiyi.opscloud.domain.alert.AlertContext;
+import com.baiyi.opscloud.domain.alert.AlertNotifyMedia;
 import com.baiyi.opscloud.datasource.message.DingtalkMsg;
 import com.google.common.base.Joiner;
 

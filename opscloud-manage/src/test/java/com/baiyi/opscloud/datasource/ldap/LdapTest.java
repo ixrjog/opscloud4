@@ -84,6 +84,14 @@ public class LdapTest extends BaseUnit {
     }
 
     @Test
+    void updateUserTest() {
+        User user = userService.getByUsername("nacos-dev-new");
+        user.setPassword("abcd1234");
+        DatasourceInstance dsInstance = dsInstanceService.getById(2);
+        ldapAccountProvider.update(dsInstance, user);
+    }
+
+    @Test
     void createUserTest2() {
         User user = userService.getByUsername("baiyi");
         UserGroup userGroup = userGroupService.getByName("vpn-users");

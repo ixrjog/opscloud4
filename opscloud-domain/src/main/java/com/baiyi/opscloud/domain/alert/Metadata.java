@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.common.alert;
+package com.baiyi.opscloud.domain.alert;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

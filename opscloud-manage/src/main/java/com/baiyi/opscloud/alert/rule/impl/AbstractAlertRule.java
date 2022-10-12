@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.alert.rule.impl;
 
 import com.baiyi.opscloud.alert.rule.IRule;
-import com.baiyi.opscloud.common.alert.AlertContext;
-import com.baiyi.opscloud.common.alert.AlertRuleMatchExpression;
+import com.baiyi.opscloud.domain.alert.AlertContext;
+import com.baiyi.opscloud.domain.alert.AlertRuleMatchExpression;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.base.IInstanceType;

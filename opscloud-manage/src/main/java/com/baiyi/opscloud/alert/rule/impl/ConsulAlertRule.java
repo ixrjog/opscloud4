@@ -2,10 +2,10 @@ package com.baiyi.opscloud.alert.rule.impl;
 
 import com.baiyi.opscloud.alert.strategy.AlertStrategyFactory;
 import com.baiyi.opscloud.alert.strategy.IAlertStrategy;
-import com.baiyi.opscloud.common.alert.AlertContext;
-import com.baiyi.opscloud.common.alert.AlertNotifyMedia;
-import com.baiyi.opscloud.common.alert.AlertRuleMatchExpression;
-import com.baiyi.opscloud.common.alert.Metadata;
+import com.baiyi.opscloud.domain.alert.AlertContext;
+import com.baiyi.opscloud.domain.alert.AlertNotifyMedia;
+import com.baiyi.opscloud.domain.alert.AlertRuleMatchExpression;
+import com.baiyi.opscloud.domain.alert.Metadata;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ConsulConfig;
 import com.baiyi.opscloud.common.util.IdUtil;
@@ -118,9 +118,8 @@ public class ConsulAlertRule extends AbstractAlertRule {
 
     public List<String> getWarningNode(List<ConsulHealth.Health> healthList) {
         return healthList.stream()
-                .filter(health ->
-                        health.getChecks().stream()
-                                .anyMatch(check -> !HEALTHY_STATUS.equals(check.getStatus()))
+                .filter(health -> health.getChecks().stream()
+                        .anyMatch(check -> !HEALTHY_STATUS.equals(check.getStatus()))
                 ).map(health -> health.getService().getAddress())
                 .collect(Collectors.toList());
     }

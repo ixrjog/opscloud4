@@ -1,24 +1,18 @@
-package com.baiyi.opscloud.common.datasource;
+package com.baiyi.opscloud.domain.model.property;
 
 import com.baiyi.opscloud.domain.alert.AlertRuleMatchExpression;
-import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 /**
- * @Author baiyi
- * @Date 2022/7/14 14:25
- * @Version 1.0
+ * @Author 修远
+ * @Date 2022/9/29 11:27 AM
+ * @Since 1.0
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
-public class ConsulConfig extends BaseDsConfig {
-
-    private Consul consul;
+public class ApplicationProperty {
 
     @Data
     @NoArgsConstructor
@@ -40,6 +34,4 @@ public class ConsulConfig extends BaseDsConfig {
         private String templateCode;
 
     }
-
 }
-

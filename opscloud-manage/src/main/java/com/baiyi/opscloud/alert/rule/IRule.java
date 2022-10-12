@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.alert.rule;
 
-import com.baiyi.opscloud.common.alert.AlertContext;
-import com.baiyi.opscloud.common.alert.AlertRuleMatchExpression;
+import com.baiyi.opscloud.domain.alert.AlertContext;
+import com.baiyi.opscloud.domain.alert.AlertRuleMatchExpression;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 
 /**

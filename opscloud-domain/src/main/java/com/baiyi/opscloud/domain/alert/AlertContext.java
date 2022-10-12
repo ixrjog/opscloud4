@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.common.alert;
+package com.baiyi.opscloud.domain.alert;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,10 +27,12 @@ public class AlertContext {
      * 告警的名称
      */
     private String alertName;
+
     /**
      * 告警等级  MAX、MID、LOW
      */
     private String severity;
+
     /**
      * 告警描述
      */

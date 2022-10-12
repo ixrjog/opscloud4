@@ -2,7 +2,7 @@ package com.baiyi.opscloud.alert.notify.impl;
 
 import com.baiyi.opscloud.alert.notify.INotify;
 import com.baiyi.opscloud.alert.notify.NotifyFactory;
-import com.baiyi.opscloud.common.alert.AlertContext;
+import com.baiyi.opscloud.domain.alert.AlertContext;
 import com.baiyi.opscloud.domain.generator.opscloud.AlertNotifyEvent;
 import com.baiyi.opscloud.domain.generator.opscloud.AlertNotifyHistory;
 import com.baiyi.opscloud.service.alert.AlertNotifyEventService;
