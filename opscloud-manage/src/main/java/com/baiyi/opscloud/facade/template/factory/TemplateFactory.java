@@ -23,6 +23,7 @@ public class TemplateFactory {
 
     public static void register(ITemplateConsume bean) {
         context.put(bean.getInstanceType(), bean.getTemplateKey(), bean);
-        log.info("TemplateFactory注册: instanceType = {} , templateKey = {}  ", bean.getInstanceType(), bean.getTemplateKey());
+        log.info("TemplateFactory Registered: instanceType={}, templateKey={}", bean.getInstanceType(), bean.getTemplateKey());
     }
+
 }

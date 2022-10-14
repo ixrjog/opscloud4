@@ -22,7 +22,7 @@ public class WorkOrderTicketProcessorFactory {
 
     public static void register(ITicketProcessor bean) {
         context.put(bean.getKey(), bean);
-        log.info("WorkOrderTicketProcessorFactory注册: key = {} , beanName = {}  ", bean.getKey(), bean.getClass().getSimpleName());
+        log.info("WorkOrderTicketProcessorFactory Registered: key={}, beanName={}", bean.getKey(), bean.getClass().getSimpleName());
     }
 
 }

@@ -28,11 +28,12 @@ public class UserAmFacade {
 
     public static void register(IAccessManagementProcessor bean) {
         context.put(bean.getDsType(), bean);
-        log.info("AM Processor注册: dsType = {} , beanName = {}  ", bean.getDsType(), bean.getClass().getSimpleName());
+        log.info("AM Processor Registered: dsType={}, beanName={}", bean.getDsType(), bean.getClass().getSimpleName());
     }
 
     /**
      * 授权策略
+     *
      * @param grantPolicy
      */
     public void grantPolicy(UserAmParam.GrantPolicy grantPolicy) {
@@ -42,6 +43,7 @@ public class UserAmFacade {
 
     /**
      * 撤销已授权策略
+     *
      * @param revokePolicy
      */
     public void revokePolicy(UserAmParam.RevokePolicy revokePolicy) {

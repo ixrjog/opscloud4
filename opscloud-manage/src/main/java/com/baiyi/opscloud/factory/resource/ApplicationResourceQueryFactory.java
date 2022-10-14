@@ -25,10 +25,10 @@ public class ApplicationResourceQueryFactory {
     }
 
     public static void register(IApplicationResourceQuery bean) {
-        log.info("ApplicationResourceQueryFactory注册: beanName = {} , resourceType = {} ,businessType = {} ",
-                bean.getClass().getSimpleName(), bean.getApplicationResType(), bean.getBusinessType());
         ImmutablePair<String, Integer> key = ImmutablePair.of(bean.getApplicationResType(), bean.getBusinessType());
         context.put(key, bean);
+        log.info("ApplicationResourceQueryFactory Registered: beanName={}, resourceType={}, businessType={}",
+                bean.getClass().getSimpleName(), bean.getApplicationResType(), bean.getBusinessType());
     }
 
 }
