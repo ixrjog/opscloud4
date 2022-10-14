@@ -24,8 +24,8 @@ public class BusinessServiceFactory {
     }
 
     public static void register(IBusinessService bean) {
-        log.info("BusinessServiceFactory注册: beanName = {} , businessType = {} ", bean.getClass().getSimpleName(), bean.getBusinessType());
         context.put(bean.getBusinessType(), bean);
+        log.info("BusinessServiceFactory Registered: beanName={}, businessType={}", bean.getClass().getSimpleName(), bean.getBusinessType());
     }
 
 }
