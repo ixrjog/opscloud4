@@ -53,19 +53,19 @@ public class SingleTaskAspect {
         String key = buildKey(singleTask.name());
         try {
             if (!isLocked(key)) {
-                log.info("同步任务开始: taskKey = {}", key);
+                log.info("Asset Synchronization Task Start: taskKey={}", key);
                 Instant instant = Instant.now();
                 lock(key, singleTask.lockTime());
                 Object result = joinPoint.proceed();
                 unlocking(key);
-                log.info("同步任务结束: taskKey = {}, 消耗时间 = {}s", key, InstantUtil.timerSeconds(instant));
+                log.info("Asset Synchronization Task End: taskKey={}, 消耗时间={}s", key, InstantUtil.timerSeconds(instant));
                 return result;
             } else {
-                log.info("任务重复执行: taskKey = {} !", key);
+                log.warn("Asset Synchronization Task Repeat: taskKey={}", key);
                 return new CommonRuntimeException(ErrorEnum.SINGLE_TASK_RUNNING);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Asset Synchronization Task: err={}", e.getMessage());
             unlocking(key);
         } finally {
             unlocking(key);
