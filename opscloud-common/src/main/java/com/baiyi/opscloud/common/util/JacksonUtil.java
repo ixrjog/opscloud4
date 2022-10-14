@@ -12,7 +12,7 @@ import java.io.IOException;
  */
 public class JacksonUtil {
 
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * JSON字符串反序列化成Java对象
