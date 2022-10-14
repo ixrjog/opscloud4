@@ -73,19 +73,15 @@ public class KubernetesTerminalController extends SimpleAuthentication {
     @OnOpen
     public void onOpen(Session session) {
         try {
-            log.info("{} session try to connect: instanceIP = {} , sessionId = {}", IF_NAME, serverInfo.getHostAddress(), sessionId);
+            log.info("{} session try to connect: instanceIP={}, sessionId={}", IF_NAME, serverInfo.getHostAddress(), sessionId);
             TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.KUBERNETES_TERMINAL);
             this.terminalSession = terminalSession;
             terminalSessionService.add(terminalSession);
             sessionSet.add(session);
             int cnt = onlineCount.incrementAndGet(); // 在线数加1
-            log.info("{} session connection join: instanceIP = {} , connections = {}", IF_NAME, serverInfo.getHostAddress(), cnt);
+            log.info("{} session connection join: instanceIP={}, connections={}", IF_NAME, serverInfo.getHostAddress(), cnt);
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
             this.session = session;
-            // 线程启动
-            //        Runnable run = new SentOutputTask(sessionId, session);
-            //        Thread thread = new Thread(run);
-            //        thread.start();
             kubernetesTerminalExecutor.execute(new SentOutputTask(sessionId, session));
             ThreadPoolTaskExecutorPrint.print(kubernetesTerminalExecutor, "k8sTermExecutor");
         } catch (Exception e) {
@@ -102,7 +98,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
         KubernetesTerminalMessageHandlerFactory.getHandlerByState(MessageState.CLOSE.getState()).handle("", session, terminalSession);
         sessionSet.remove(session);
         int cnt = onlineCount.decrementAndGet();
-        log.info("{} session connection closed: instanceIP = {} , connections = {}", IF_NAME, serverInfo.getHostAddress(), cnt);
+        log.info("{} session connection closed: instanceIP={}, connections={}", IF_NAME, serverInfo.getHostAddress(), cnt);
     }
 
     /**
@@ -137,7 +133,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("{} onError: instanceIP = {} , e = {}，sessionID = {}",
+        log.error("{} onError: instanceIP={}, sessionID={}, err={}",
                 IF_NAME,
                 serverInfo.getHostAddress(),
                 error.getMessage(),

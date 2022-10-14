@@ -1,10 +1,10 @@
 package com.baiyi.opscloud.common.util;
 
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
-import org.apache.commons.lang3.StringUtils;
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -12,12 +12,12 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class CredentialUtil {
 
-    @Resource
-    private StringEncryptor stringEncryptor;
+    private final StringEncryptor stringEncryptor;
 
-    public void decrypt(Credential credential){
+    public void decrypt(Credential credential) {
         // 解密
         if (!StringUtils.isEmpty(credential.getCredential()))
             credential.setCredential(stringEncryptor.decrypt(credential.getCredential()));
@@ -26,4 +26,5 @@ public class CredentialUtil {
         if (!StringUtils.isEmpty(credential.getPassphrase()))
             credential.setPassphrase(stringEncryptor.decrypt(credential.getPassphrase()));
     }
+
 }
