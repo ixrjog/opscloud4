@@ -90,14 +90,14 @@ public class EventLoginCommand extends BaseServerCommand {
                 while (true) {
                     if (isClosed(sessionId, instanceId)) {
                         TimeUnit.MILLISECONDS.sleep(150L);
-                        sessionClosed("用户正常退出登录! 耗时:%s/s", inst1);
+                        sessionClosed("用户正常退出登录: 耗时%s/s", inst1);
                         break;
                     }
                     tryResize(size, terminal, sessionId, instanceId);
                     printJSchSession(sessionId, instanceId, terminal.reader().read(5L));
                 }
             } catch (Exception e) {
-                sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);
+                sessionClosed("服务端连接已断开: 耗时%s/s", inst1);
             } finally {
                 terminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             }

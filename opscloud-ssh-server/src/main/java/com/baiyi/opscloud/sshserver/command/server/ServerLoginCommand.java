@@ -121,7 +121,7 @@ public class ServerLoginCommand implements InitializingBean {
                 while (true) {
                     if (isClosed(sessionId, instanceId)) {
                         TimeUnit.MILLISECONDS.sleep(150L);
-                        printWithCloseSession("用户正常退出登录! 耗时=%s/s", inst1);
+                        printWithCloseSession("用户正常退出登录: 耗时%s/s", inst1);
                         break;
                     }
                     doResize(size, terminal, sessionId, instanceId);
@@ -129,7 +129,7 @@ public class ServerLoginCommand implements InitializingBean {
                     printWithSession(sessionId, instanceId, i);
                 }
             } catch (Exception e) {
-                printWithCloseSession("服务端连接已断开! 耗时=%s/s", inst1);
+                printWithCloseSession("服务端连接已断开: 耗时%s/s", inst1);
             } finally {
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             }
