@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.business.account.util;
 
-import com.baiyi.opscloud.common.util.RegexUtil;
+import com.baiyi.opscloud.common.util.ValidationUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixMedia;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,10 +26,10 @@ public class ZabbixMediaUtil {
     public static List<ZabbixMedia.Media> buildMedias(User user) {
         List<ZabbixMedia.Media> medias = Lists.newArrayList();
         try {
-            if (RegexUtil.isEmail(user.getEmail())) {
+            if (ValidationUtil.isEmail(user.getEmail())) {
                 medias.add(buildMailMedia(user.getEmail()));
             }
-            if (RegexUtil.isPhone(user.getPhone())) {
+            if (ValidationUtil.isPhone(user.getPhone())) {
                 medias.add(buildPhoneMedia(user.getPhone()));
             }
         } catch (JsonProcessingException ignored) {
