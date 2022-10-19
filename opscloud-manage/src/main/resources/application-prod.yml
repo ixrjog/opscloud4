@@ -27,24 +27,6 @@ terminal:
     # 审计日志目录
     path: ${HOME}/opscloud-data/ssh/audit
 
-# 白名单配置
-white:
-  urls:
-    - /*.js
-    - /*.css
-    - /*.jpg
-    - /*.ico
-    - /swagger-resources
-    - /swagger-ui.html
-    - /v2/api-docs
-    - /doc.html
-    - /api/ws/guacamole/tunnel
-    - /api/ws/terminal
-    - /api/ws/kubernetes/terminal
-    - /api/ws/terminal/session/audit
-    - /api/ws/server/task/play
-    - /api/out/ticket/approve
-
 spring:
   config:
     activate:

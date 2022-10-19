@@ -22,23 +22,6 @@ terminal:
   auditPath: ${HOME}/opscloud-data/ssh/audit
   openAudit: on
 
-# 白名单配置
-white:
-  urls:
-    - /*.js
-    - /*.css
-    - /*.jpg
-    - /*.ico
-    - /swagger-resources
-    - /swagger-ui.html
-    - /v2/api-docs
-    - /doc.html
-    - /api/ws/guacamole/tunnel
-    - /api/ws/terminal
-    - /api/ws/kubernetes/terminal
-    - /api/ws/terminal/session/audit
-    - /api/ws/server/task/play
-
 spring:
   config:
     activate:

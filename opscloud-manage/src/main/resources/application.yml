@@ -20,6 +20,25 @@ management:
 knife4j:
   enable: true
 
+# 白名单配置
+white:
+  urls:
+    - /*.js
+    - /*.css
+    - /*.jpg
+    - /*.ico
+    - /swagger-resources
+    - /swagger-ui.html
+    - /v2/api-docs
+    - /doc.html
+    - /api/ws/guacamole/tunnel
+    - /api/ws/terminal
+    - /api/ws/kubernetes/terminal
+    - /api/ws/terminal/session/audit
+    - /api/ws/server/task/play
+    - /api/ws/jenkins/build/executor/status
+    - /api/out/ticket/approve
+
 # 开发环境配置
 server:
   # 服务端口
