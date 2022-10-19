@@ -6,11 +6,9 @@ import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDrive
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import io.fabric8.kubernetes.api.model.Container;
-import io.fabric8.kubernetes.api.model.EnvVar;
-import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -78,7 +76,7 @@ public class KubernetesDeploymentTest extends BaseKubernetesTest {
     void dTest() {
         KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_PRE);
         // account
-        updateDeploymentWithApplication(kubernetesConfig,applicationService.getById(23));
+        updateDeploymentWithApplication(kubernetesConfig, applicationService.getById(23));
     }
 
     /**
@@ -93,42 +91,33 @@ public class KubernetesDeploymentTest extends BaseKubernetesTest {
         }
     }
 
+    // CI
     private void updateDeploymentWithApplication(KubernetesConfig kubernetesConfig, Application application) {
         String appName = application.getName();
         print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         print("应用名称: " + appName);
-        if(appName.equals("okcard-risk-control")) return;
-        if(appName.equals("postloan-risk-control")) return;
-        Deployment deployment = KubernetesDeploymentDriver.getDeployment(kubernetesConfig.getKubernetes(), "gray", appName);
+        Deployment deployment = KubernetesDeploymentDriver.getDeployment(kubernetesConfig.getKubernetes(), "pre", appName);
         if (deployment == null) return;
-
-        // 删除 init容器
-        if (!CollectionUtils.isEmpty(deployment.getSpec().getTemplate().getSpec().getInitContainers())) {
-            deployment.getSpec().getTemplate().getSpec().getInitContainers().clear();
-        }
-
-        Optional<Container> optionalContainer =
-                deployment.getSpec().getTemplate().getSpec().getContainers().stream().filter(e -> e.getName().equals(appName)).findFirst();
+        // 选中应用容器
+        Optional<Container> optionalContainer = deployment
+                .getSpec()
+                .getTemplate()
+                .getSpec()
+                .getContainers().stream().filter(e -> e.getName().equals(appName)).findFirst();
         if (optionalContainer.isPresent()) {
-
-            // 删除磁盘挂载点
-            Container container = optionalContainer.get();
-            container.getVolumeMounts().clear();
-            deployment.getSpec().getTemplate().getSpec().getVolumes().clear();
-
-            // 修改容器资源限制
-            container.getResources().getLimits().put("memory",new Quantity("5Gi"));
-            container.getResources().getRequests().put("memory",new Quantity("2Gi"));
-
-            // 修改JVM
-            Optional<EnvVar> optionalEnvVar = container.getEnv().stream().filter(e -> e.getName().equals("JAVA_OPTS")).findFirst();
-            if (optionalEnvVar.isPresent()) {
-                optionalEnvVar.get().setValue("-Xms1024M -Xmx3072M -Xmn1536M -XX:MetaspaceSize=128M -XX:MaxMetaspaceSize=256M -Xss256K -XX:+HeapDumpOnOutOfMemoryError -XX:+PrintGCDateStamps -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=80");
+            // 修改preStop参数
+            try {
+                Container container = optionalContainer.get();
+                container.getLifecycle().getPreStop().getExec().getCommand().clear();
+                List<String> command = Lists.newArrayList("curl", "http://127.0.0.1:8080/eksshutdown", "-X", "GET");
+                container.getLifecycle().getPreStop().getExec().setCommand(command);
+                // 更新 Deployment
+                KubernetesDeploymentDriver.createOrReplaceDeployment(kubernetesConfig.getKubernetes(), deployment);
+            }catch (Exception e){
+                print(e.getMessage());
             }
         }
 
-        // 更新 Deployment
-        KubernetesDeploymentDriver.createOrReplaceDeployment(kubernetesConfig.getKubernetes(), deployment);
     }
 
 }
