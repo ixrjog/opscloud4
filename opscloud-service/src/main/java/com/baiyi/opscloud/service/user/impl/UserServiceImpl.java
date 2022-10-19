@@ -65,27 +65,25 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
         // 处理Dingtalk
         if (asset.getAssetType().equals(DsAssetTypeConstants.DINGTALK_USER.name())) {
             if (asset.getProperties().containsKey("username")) {
-                log.info("同步钉钉，查询本地用户: name = {} , username = {}", asset.getName(), asset.getProperties().get(
-                        "username"));
+                log.info("同步钉钉查询本地用户: name={}, username={}", asset.getName(), asset.getProperties().get("username"));
                 User user = getByKey(asset.getProperties().get("username"));
                 if (user != null) {
-                    return toVO(user);
+                    return toUserVO(user);
                 }
                 if (asset.getProperties().containsKey("mobile")) {
                     List<User> users = listByPhone(asset.getProperties().get("mobile"));
                     if (!CollectionUtils.isEmpty(users) && users.size() == 1) {
-                        log.info("同步钉钉，查询本地用户: name = {} , mobile = {}", asset.getName(), asset.getProperties().get(
-                                "mobile"));
-                        return toVO(users.get(0));
+                        log.info("同步钉钉查询本地用户: name={}, mobile={}", asset.getName(), asset.getProperties().get("mobile"));
+                        return toUserVO(users.get(0));
                     }
                 }
             }
             return null;
         }
-        return toVO(getByKey(asset.getAssetKey()));
+        return toUserVO(getByKey(asset.getAssetKey()));
     }
 
-    private UserVO.User toVO(User user) {
+    private UserVO.User toUserVO(User user) {
         return BeanCopierUtil.copyProperties(user, UserVO.User.class);
     }
 
@@ -124,7 +122,6 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
     @Override
     public void updateLogin(User user) {
         userMapper.updateByPrimaryKeySelective(user);
-       // userMapper.updateByPrimaryKey(user);
     }
 
     @Override
@@ -184,7 +181,7 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
     }
 
     @Override
-    public DataTable<User> queryPageByParam(UserParam.EmployeeResignPageQuery pageQuery){
+    public DataTable<User> queryPageByParam(UserParam.EmployeeResignPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<User> data = userMapper.queryEmployeeResignPageByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());

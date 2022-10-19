@@ -30,15 +30,15 @@ public class AnsibleServerTask implements Runnable {
 
     public static final Long MAX_TIMEOUT = TimeUtil.minuteTime * 100;
 
-    private ServerTaskMember serverTaskMember;
+    private final ServerTaskMember serverTaskMember;
 
-    private CommandLine commandLine;
+    private final CommandLine commandLine;
 
-    private String taskUuid; // 任务uuid
+    private final String taskUuid; // 任务uuid
 
-    private ServerTaskMemberService serverTaskMemberService;
+    private final ServerTaskMemberService serverTaskMemberService;
 
-    private TaskLogStorehouse taskLogStorehouse;
+    private final TaskLogStorehouse taskLogStorehouse;
 
     public interface ExitValues {
         int OK = 0;
@@ -95,7 +95,7 @@ public class AnsibleServerTask implements Runnable {
                 serverTaskMember.setStartTime(new Date());
                 serverTaskMember.setTaskStatus(ServerTaskStatusEnum.EXECUTING.name());
                 serverTaskMemberService.update(serverTaskMember);
-                log.info("任务启动信息! taskUuid = {} , serverTaskMemberId = {} , taskStatus = {}", taskUuid, serverTaskMember.getId(), serverTaskMember.getTaskStatus());
+                log.info("任务启动: taskUuid={}, serverTaskMemberId={}, taskStatus={}", taskUuid, serverTaskMember.getId(), serverTaskMember.getTaskStatus());
             }
             watching(taskExecutor, resultHandler);
         } catch (TaskTimeoutException e) {
@@ -115,7 +115,7 @@ public class AnsibleServerTask implements Runnable {
             save(taskStatus);
         } catch (InterruptedException | IOException e) {
             // 日志流转码错误 暂不处理
-            e.printStackTrace();
+            log.warn(e.getMessage());
         }
     }
 

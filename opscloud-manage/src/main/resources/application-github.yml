@@ -56,9 +56,9 @@ spring:
         validation-query: select 1
         # 申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效
         test-while-idle: on
-        # 申请连接时执行validationQuery检测连接是否有效, 默认true:检测,false:不检测
+        # 申请连接时执行validationQuery检测连接是否有效, 默认on:检测, off:不检测
         test-on-borrow: off
-        # 归还连接时执行validationQuery检测连接是否有效,默认false:不检测,ture:检测
+        # 归还连接时执行validationQuery检测连接是否有效, 默认off:不检测, on:检测
         test-on-return: off
         # 打开PSCache(preparedStatement)，并且指定每个连接上PSCache的大小
         pool-prepared-statements: on

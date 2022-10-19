@@ -18,7 +18,7 @@ public class AliyunRegionIdUtil {
     public static Set<String> toOnsRegionIds(AliyunConfig.Aliyun aliyun) {
         Set<String> regionIds = Sets.newHashSet(aliyun.getRegionIds());
         regionIds.add(aliyun.getRegionId());
-        regionIds.add(Optional.ofNullable(aliyun)
+        regionIds.add(Optional.of(aliyun)
                 .map(AliyunConfig.Aliyun::getOns)
                 .map(AliyunConfig.Ons::getInternetRegionId)
                 .orElse(null));
