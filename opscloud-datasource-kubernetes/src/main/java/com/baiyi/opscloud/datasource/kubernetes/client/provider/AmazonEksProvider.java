@@ -40,6 +40,7 @@ public class AmazonEksProvider {
             String token = amazonEksHelper.generateEksToken(kubernetes.getAmazonEks());
             return build(kubernetes.getAmazonEks().getUrl(), token);
         } catch (URISyntaxException e) {
+            log.error(e.getMessage());
         }
         return null;
     }

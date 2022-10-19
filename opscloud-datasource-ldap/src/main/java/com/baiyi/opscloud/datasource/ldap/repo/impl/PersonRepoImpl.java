@@ -32,7 +32,7 @@ public class PersonRepoImpl implements PersonRepo {
             try {
                 people.add(ldapDriver.getPersonWithDN(ldapConfig, ldapConfig.buildUserDn(username)));
             } catch (Exception e) {
-                log.error("未找到 usernmae = {} 对应的 Person", username);
+                log.debug("未找到 usernmae={} 对应的 Person", username);
             }
         }
         return people;

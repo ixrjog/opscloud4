@@ -41,5 +41,4 @@ public class KubernetesTestDriver {
                 .withName(name).watchLog(System.out);
     }
 
-
 }

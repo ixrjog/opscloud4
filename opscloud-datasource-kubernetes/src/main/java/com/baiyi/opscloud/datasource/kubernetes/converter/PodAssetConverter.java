@@ -69,7 +69,7 @@ public class PodAssetConverter {
                 .paramProperty("initialized", podStatusMap.get("Initialized"))
                 .paramProperty("ready", podStatusMap.get("Ready"))
                 .paramProperty("status", !statusOptional.isPresent())
-                .paramProperty("reason",entity.getStatus().getReason())
+                .paramProperty("reason", entity.getStatus().getReason())
                 .build();
         assetContainer.setAgo(AgoUtil.format(startTime));
         return assetContainer;
@@ -84,7 +84,7 @@ public class PodAssetConverter {
                 }
             }
         } catch (Exception e) {
-            log.error("获取容器状态错误！");
+            log.error("获取容器状态错误: err={}", e.getMessage());
         }
         return ContainerBO.ContainerStatus.builder().build().toContainerStatus();
     }

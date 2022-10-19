@@ -52,10 +52,10 @@ public class AliyunSmsDriver {
                         JSONUtil.readValue(response.getData(), AliyunSmsResponse.SendBatchSms.class);
                 if (OK.equals(data.getCode()))
                     return data.getBizId();
-                log.error("sendBatchSms 失败，{}", data.getMessage());
+                log.error("sendBatchSms失败: err={}", data.getMessage());
             }
         } catch (ClientException e) {
-            log.error("sendBatchSms 失败，{}", e.getMessage(), e);
+            log.error("sendBatchSms失败: err={}", e.getMessage());
         }
         return StringUtils.EMPTY;
     }

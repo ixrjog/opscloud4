@@ -40,7 +40,7 @@ public class KubeClient {
         if (KubernetesProviders.AMAZON_EKS.getDesc().equalsIgnoreCase(kubernetes.getProvider())) {
             return AmazonEksProvider.buildWithProvider(kubernetes);
         }
-        throw new CommonRuntimeException("KubernetesClient错误: 无效的供应商配置 provider={}", kubernetes.getProvider());
+        throw new CommonRuntimeException("Kubernetes无效的供应商配置: provider={}", kubernetes.getProvider());
     }
 
 }
