@@ -26,6 +26,7 @@ import com.baiyi.opscloud.sshserver.util.TerminalUtil;
 import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.sshd.common.channel.ChannelOutputStream;
 import org.apache.sshd.server.session.ServerSession;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
@@ -82,9 +83,12 @@ public class EventLoginCommand extends BaseServerCommand {
             terminalSessionFacade.recordTerminalSessionInstance(
                     terminalSessionInstance
             );
-            RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, sshContext.getSshShellRunnable().getOs());
+            ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
+            out.setNoDelay(true);
+            RemoteInvokeHandler.openWithSSHServer(sessionId, hostSystem, out);
             TerminalUtil.rawModeSupportVintr(terminal);
-            Instant inst1 = Instant.now(); // 计时
+            // 计时
+            Instant inst1 = Instant.now();
             Size size = terminal.getSize();
             try {
                 while (true) {

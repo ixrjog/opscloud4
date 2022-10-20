@@ -101,7 +101,7 @@ public class ServerLoginCommand implements InitializingBean {
             ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
             // 无延迟
             out.setNoDelay(true);
-            RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, out);
+            RemoteInvokeHandler.openWithSSHServer(sessionId, hostSystem, out);
             TerminalUtil.rawModeSupportVintr(terminal);
             // 计时
             Instant inst1 = Instant.now();
