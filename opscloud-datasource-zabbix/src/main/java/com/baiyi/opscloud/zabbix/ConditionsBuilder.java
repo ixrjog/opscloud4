@@ -16,37 +16,49 @@ import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
  */
 public class ConditionsBuilder {
 
-    public static List<ZabbixActionParam.Condition> build(String groupid) {
-        List<ZabbixActionParam.Condition> conditions = Lists.newArrayList();
+    private static final ZabbixActionParam.Condition conditionA = ZabbixActionParam.Condition.builder()
+            .conditiontype(Conditiontype.TRIGGER_SEVERITY.getType()) // 4 - trigger severity;
+            .operator(OperatorType.IS_GREATER_THAN_OR_EQUALS.getType()) // 5 - is greater than or equals;
+            .value("4")
+            .formulaid("A")
+            .build();
 
-        /**
-         * https://www.zabbix.com/documentation/5.0/manual/api/reference/action/object?s[]=conditions
-         * 	触发器示警度
-         */
-        ZabbixActionParam.Condition conditionA = ZabbixActionParam.Condition.builder()
-                .conditiontype(Conditiontype.TRIGGER_SEVERITY.getType()) // 4 - trigger severity;
-                .operator(OperatorType.IS_GREATER_THAN_OR_EQUALS.getType()) // 5 - is greater than or equals;
-                .value("4")
-                .formulaid("A")
-                .build();
-        conditions.add(conditionA);
-        // 服务器组
-        ZabbixActionParam.Condition conditionB = ZabbixActionParam.Condition.builder()
+    /**
+     * 服务器组
+     *
+     * @param groupid
+     * @return
+     */
+    private static ZabbixActionParam.Condition buildConditionB(String groupid) {
+        return ZabbixActionParam.Condition.builder()
                 .conditiontype(Conditiontype.HOST_GROUP.getType()) // 0 - host group;
                 .operator(OperatorType.EQUALS.getType()) // 0 - (default) equals;
                 .value(groupid)
                 .formulaid("B")
                 .build();
-        conditions.add(conditionB);
-        // 环境标签
-        ZabbixActionParam.Condition conditionC = ZabbixActionParam.Condition.builder()
-                .conditiontype(Conditiontype.EVENT_TAG_VALUE.getType()) // 26 - event tag value.
-                .operator(OperatorType.EQUALS.getType()) // 0 - (default) equals;
-                .value(ENV_PROD)
-                .value2("env")
-                .formulaid("C")
-                .build();
-        conditions.add(conditionC);
-        return conditions;
     }
+
+    /**
+     * 环境标签
+     */
+    private static final ZabbixActionParam.Condition conditionC = ZabbixActionParam.Condition.builder()
+            .conditiontype(Conditiontype.EVENT_TAG_VALUE.getType()) // 26 - event tag value.
+            .operator(OperatorType.EQUALS.getType()) // 0 - (default) equals;
+            .value(ENV_PROD)
+            .value2("env")
+            .formulaid("C")
+            .build();
+
+
+    /**
+     * https://www.zabbix.com/documentation/5.0/manual/api/reference/action/object?s[]=conditions
+     * 触发器示警度
+     *
+     * @param groupid
+     * @return
+     */
+    public static List<ZabbixActionParam.Condition> build(String groupid) {
+        return Lists.newArrayList(conditionA, buildConditionB(groupid), conditionC);
+    }
+
 }
