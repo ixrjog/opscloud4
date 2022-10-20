@@ -75,6 +75,7 @@ public class AnsibleServerTask implements Runnable {
             } else {
                 // 判断任务是否需要终止或超时
                 if (TimeUtil.checkTimeout(startTaskTime, MAX_TIMEOUT)) {
+                    log.warn("Ansible task timeout: startTaskTime={}, maxTimeout={}", startTaskTime, MAX_TIMEOUT);
                     taskExecutor.killedProcess(); // kill
                     taskLogStorehouse.recorderLog(taskUuid, serverTaskMember, taskExecutor);
                     throw new TaskTimeoutException();
@@ -99,14 +100,13 @@ public class AnsibleServerTask implements Runnable {
             }
             watching(taskExecutor, resultHandler);
         } catch (TaskTimeoutException e) {
-            e.printStackTrace();
             TaskStatus taskStatus = TaskStatus.builder()
                     .stopType(ServerTaskStopType.TIMEOUT_STOP.getType())
                     .taskResult("TIMEOUT")
                     .build();
             save(taskStatus);
         } catch (ExecuteException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             TaskStatus taskStatus = TaskStatus.builder()
                     .stopType(ServerTaskStopType.ERROR_STOP.getType())
                     .exitValue(e.getExitValue())
