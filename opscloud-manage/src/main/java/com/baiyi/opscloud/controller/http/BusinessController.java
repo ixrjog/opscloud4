@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
+import com.baiyi.opscloud.domain.param.business.BusinessDocumentParam;
 import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
 import com.baiyi.opscloud.facade.business.BusinessDocumentFacade;
@@ -48,7 +49,7 @@ public class BusinessController {
         return new HttpResult<>(businessDocumentFacade.getById(id));
     }
 
-    @ApiOperation(value = "按UniqueKey查询业务文档")
+    @ApiOperation(value = "按联合键查询业务文档")
     @GetMapping(value = "/document/unique/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<BusinessDocumentVO.Document> getBusinessDocumentByUniqueKey(@RequestParam @Valid Integer businessType, @Valid Integer businessId) {
         return new HttpResult<>(businessDocumentFacade.getByUniqueKey(businessType, businessId));
@@ -56,7 +57,7 @@ public class BusinessController {
 
     @ApiOperation(value = "保存业务文档")
     @PostMapping(value = "/document/save", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> saveBusinessDocument(@RequestBody @Valid BusinessDocumentVO.Document document) {
+    public HttpResult<Boolean> saveBusinessDocument(@RequestBody @Valid BusinessDocumentParam.Document document) {
         businessDocumentFacade.save(document);
         return HttpResult.SUCCESS;
     }

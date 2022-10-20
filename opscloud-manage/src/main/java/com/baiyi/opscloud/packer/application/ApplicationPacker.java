@@ -40,7 +40,8 @@ public class ApplicationPacker implements IWrapper<ApplicationVO.Application> {
         if (!iExtend.getExtend()) return;
         List<ApplicationResource> applicationResourceList = applicationResourceService.queryByApplication(application.getId());
         List<ApplicationResourceVO.Resource> resources = BeanCopierUtil.copyListProperties(applicationResourceList, ApplicationResourceVO.Resource.class).stream()
-                        .peek(resourcePacker::wrapProperties).collect(Collectors.toList());
+                        .peek(resourcePacker::wrapProperties)
+                .collect(Collectors.toList());
         resources.forEach(applicationResourceInstancePacker::wrap);
         Map<String, List<ApplicationResourceVO.Resource>> resourcesMap = resources.stream()
                 .collect(Collectors.groupingBy(ApplicationResourceVO.Resource::getResourceType));

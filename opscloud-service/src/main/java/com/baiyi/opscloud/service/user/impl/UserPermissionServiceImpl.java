@@ -79,6 +79,11 @@ public class UserPermissionServiceImpl implements UserPermissionService {
         return permissionMapper.selectCountByExample(example);
     }
 
+    /**
+     * 查询授权不展示离职用户
+     * @param userPermission
+     * @return
+     */
     @Override
     public List<UserPermission> queryByBusiness(UserPermission userPermission) {
         Example example = new Example(UserPermission.class);

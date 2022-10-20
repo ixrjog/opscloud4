@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.business;
 
+import com.baiyi.opscloud.domain.param.business.BusinessDocumentParam;
 import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
 
 /**
@@ -13,7 +14,6 @@ public interface BusinessDocumentFacade {
 
     BusinessDocumentVO.Document getByUniqueKey(Integer businessType, Integer businessId);
 
-    void save(BusinessDocumentVO.Document document);
-
+    void save(BusinessDocumentParam.Document document);
 
 }

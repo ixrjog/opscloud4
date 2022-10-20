@@ -9,6 +9,7 @@ import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessDocument;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
+import com.baiyi.opscloud.domain.param.business.BusinessDocumentParam;
 import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
 import com.baiyi.opscloud.facade.business.BusinessDocumentFacade;
 import com.baiyi.opscloud.service.business.BusinessDocumentService;
@@ -42,36 +43,33 @@ public class BusinessDocumentFacadeImpl implements BusinessDocumentFacade {
     }
 
     @Override
-    @BizDocWrapper(extend = true, wrapResult = true)
+    //@BizDocWrapper(extend = true, wrapResult = true)
     public BusinessDocumentVO.Document getByUniqueKey(Integer businessType, Integer businessId) {
-        SimpleBusiness simpleBusiness = SimpleBusiness.builder()
-                .businessType(businessType)
-                .businessId(businessId)
-                .build();
+        SimpleBusiness simpleBusiness = SimpleBusiness.builder().businessType(businessType).businessId(businessId).build();
         BusinessDocument businessDocument = businessDocumentService.getByBusiness(simpleBusiness);
         return BeanCopierUtil.copyProperties(businessDocument, BusinessDocumentVO.Document.class);
     }
 
     @Override
-    public void save(BusinessDocumentVO.Document document) {
+    public void save(BusinessDocumentParam.Document document) {
         BusinessDocument businessDocument = BeanCopierUtil.copyProperties(document, BusinessDocument.class);
         if (businessDocumentService.getByBusiness(document) != null) {
-            this.update(document);
+            this.update(businessDocument);
         } else {
-            this.add(document);
+            this.add(businessDocument);
         }
     }
 
-    private void add(BusinessDocumentVO.Document document) {
-        BusinessDocument businessDocument = BeanCopierUtil.copyProperties(document, BusinessDocument.class);
-        if (businessDocumentService.getByBusiness(document) != null) {
+    private void add(BusinessDocument document) {
+        try {
+            businessDocumentService.add(document);
+            evictCache(document);
+        } catch (Exception e) {
             throw new CommonRuntimeException("业务文档已存在!");
         }
-        businessDocumentService.add(businessDocument);
-        evictCache(document);
     }
 
-    private void update(BusinessDocumentVO.Document document) {
+    private void update(BusinessDocument document) {
         BusinessDocument businessDocument = businessDocumentService.getByBusiness(document);
         businessDocument.setContent(document.getContent());
         businessDocumentService.update(businessDocument);
