@@ -65,7 +65,7 @@ public class InstanceServiceImpl implements InstanceService {
         if (pageQuery.getIsActive() != null) {
             criteria.andEqualTo("isActive", pageQuery.getIsActive());
         }
-        example.setOrderByClause("create_time");
+        example.setOrderByClause("name");
         List<Instance> data = instanceMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }
