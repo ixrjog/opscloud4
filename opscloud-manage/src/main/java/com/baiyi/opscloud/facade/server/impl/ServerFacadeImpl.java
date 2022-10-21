@@ -48,7 +48,9 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     @Override
     public DataTable<ServerVO.Server> queryServerPage(ServerParam.ServerPageQuery pageQuery) {
         DataTable<Server> table = serverService.queryServerPage(pageQuery);
-        List<ServerVO.Server> data = BeanCopierUtil.copyListProperties(table.getData(), ServerVO.Server.class).stream().peek(e -> serverPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        List<ServerVO.Server> data = BeanCopierUtil.copyListProperties(table.getData(), ServerVO.Server.class).stream()
+                .peek(e -> serverPacker.wrap(e, pageQuery))
+                .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
