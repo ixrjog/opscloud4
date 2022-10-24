@@ -56,10 +56,10 @@ public class EventPublisherAspect {
                             .action(eventPublisher.eventAction().name())
                             .body(body)
                             .build();
-                    publishEvent(simpleEvent);
+                    handlePublishEvent(simpleEvent);
                 } else {
                     // 从参数获取
-                    publishEvent(args[0], eventPublisher.eventAction().name());
+                    publishEventWithParam(args[0], eventPublisher.eventAction().name());
                 }
             } else {
                 Object body = args[0];
@@ -68,13 +68,13 @@ public class EventPublisherAspect {
                         .action(eventPublisher.eventAction().name())
                         .body(body)
                         .build();
-                publishEvent(simpleEvent);
+                handlePublishEvent(simpleEvent);
             }
         }
         return result;
     }
 
-    private void publishEvent(Object message, String action) {
+    private void publishEventWithParam(Object message, String action) {
         if (message instanceof BaseBusiness.IBusiness) {
             BaseBusiness.IBusiness ib = (BaseBusiness.IBusiness) message;
             Object body = getBody(ib);
@@ -84,7 +84,7 @@ public class EventPublisherAspect {
                     .action(action)
                     .body(body)
                     .build();
-            publishEvent(simpleEvent);
+            handlePublishEvent(simpleEvent);
         }
     }
 
@@ -94,8 +94,9 @@ public class EventPublisherAspect {
         return iBusinessService.getById(ib.getBusinessId());
     }
 
-    private void publishEvent(SimpleEvent simpleEvent) {
+    private void handlePublishEvent(SimpleEvent simpleEvent) {
         // 发送事件
         applicationEventPublisher.publishEvent(new NoticeEvent(simpleEvent));
     }
+
 }

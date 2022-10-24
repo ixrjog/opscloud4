@@ -31,7 +31,7 @@ public class AliyunLogMachineGroupDriver extends AbstractAliyunLogDriver {
             Client client = buildClient(aliyun);
             return client.GetMachineGroup(req).GetMachineGroup();
         } catch (LogException lg) {
-            log.error("阿里云日志服务查询MachineGroup错误! , {}", lg.GetErrorMessage());
+            log.error("阿里云日志服务查询MachineGroup错误: err={}", lg.GetErrorMessage());
         }
         return null;
     }
@@ -44,7 +44,7 @@ public class AliyunLogMachineGroupDriver extends AbstractAliyunLogDriver {
             Client client = buildClient(aliyun);
             machineGroups = client.ListMachineGroup(req).GetMachineGroups();
         } catch (LogException lg) {
-            log.error("阿里云日志服务查询MachineGroup错误! , {}", lg.GetErrorMessage());
+            log.error("阿里云日志服务查询MachineGroup错误: err={}", lg.GetErrorMessage());
         }
         return machineGroups;
     }
@@ -57,7 +57,7 @@ public class AliyunLogMachineGroupDriver extends AbstractAliyunLogDriver {
             UpdateMachineGroupRequest req = new UpdateMachineGroupRequest(logMember.getLog().getProject(), machineGroup);
             client.UpdateMachineGroup(req);
         } catch (LogException lg) {
-            log.error("阿里云日志服务更新MachineGroup错误! , {}", lg.GetErrorMessage());
+            log.error("阿里云日志服务更新MachineGroup错误: err={}", lg.GetErrorMessage());
         }
     }
 
@@ -85,7 +85,7 @@ public class AliyunLogMachineGroupDriver extends AbstractAliyunLogDriver {
             Client client = buildClient(aliyun);
             client.ApplyConfigToMachineGroup(req);
         } catch (LogException lg) {
-            lg.printStackTrace();
+            log.error(lg.getMessage());
         }
     }
 

@@ -20,7 +20,7 @@ public class SshShellStartedEvent extends AbstractSshShellEvent {
 
     private final SshShellHelper sshShellHelper;
 
-    private static final String WELCOME = "Hi %s, Welcome to Opscloud SSH-Server! \n";
+    private static final String WELCOME = "Dear %s, Welcome to Opscloud SSH-Server %s \n";
 
     @Override
     public String getEventType() {
@@ -31,12 +31,12 @@ public class SshShellStartedEvent extends AbstractSshShellEvent {
     public void handle(SshShellEvent event) {
         openTerminalSession(event);
         final String username = event.getSession().getServerSession().getUsername();
-        String welcome = String.format(WELCOME, username);
+        final String sshServerInstance = sshShellHelper.getColored(AbstractSshShellEvent.serverInfo.getHostname(), PromptColor.BLUE);
+        String welcome = String.format(WELCOME, username, sshServerInstance);
         sshShellHelper.print(welcome, PromptColor.RED);
     }
 
-
-    private void preHandle(){
+    private void preHandle() {
         // this.terminal.puts(InfoCmp.Capability.clear_screen, new Object[0]);  // 清屏
     }
 

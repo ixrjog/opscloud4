@@ -103,8 +103,10 @@ public class HostSystemHandler {
         }
         if (sshCredential == null)
             throw new SshCommonException(ErrorEnum.SSH_SERVER_NO_ACCOUNTS_AVAILABLE);
+        ServerProperty.Server serverProperty = bizPropertyHelper.getBusinessProperty(server);
         return HostSystem.builder()
-                .host(HostParamUtil.getManageIp(server, bizPropertyHelper.getBusinessProperty(server))) // 避免绕过未授权服务器
+                .host(HostParamUtil.getManageIp(server,  serverProperty)) // 避免绕过未授权服务器
+                .port(HostParamUtil.getSshPort(serverProperty))
                 .sshCredential(sshCredential)
                 .build();
     }

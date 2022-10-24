@@ -55,20 +55,16 @@ public class GitlabGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicke
 
         gitlabUsers = gitlabUserDelegate.findUser(config, username);
         Optional<GitlabUser> optionalGitlabUser = gitlabUsers.stream().filter(e -> e.getUsername().equals(username)).findFirst();
-        if (!optionalGitlabUser.isPresent()) throw new TicketProcessException("Gitlab实例无申请用户账户: 请登录Gitlab实例后再申请权限！");
 
-        GitlabUser gitlabUser = optionalGitlabUser.get();
+        GitlabUser gitlabUser = optionalGitlabUser.orElseGet(() -> gitlabUserDelegate.createGitlabUser(config, username));
         Optional<GitlabAccessLevelConstants> optionalGitlabAccessLevelConstants = Arrays.stream(GitlabAccessLevelConstants.values()).filter(e -> e.getRole().equalsIgnoreCase(role)).findFirst();
 
         if (!optionalGitlabAccessLevelConstants.isPresent())
             throw new TicketProcessException("Gitlab角色名称错误: role = " + role);
 
         GitlabAccessLevel gitlabAccessLevel = GitlabAccessLevel.fromAccessValue(optionalGitlabAccessLevelConstants.get().getAccessValue());
-
         List<GitlabGroupMember> gitlabGroupMembers = gitlabGroupDelegate.getGroupMembers(config, Integer.parseInt(entry.getAssetId()));
-
         Optional<GitlabGroupMember> optionalGitlabGroupMember = gitlabGroupMembers.stream().filter(e -> e.getId().equals(gitlabUser.getId())).findFirst();
-
         if (optionalGitlabGroupMember.isPresent()) {
             // 用户已经拥有相同的角色
             if (optionalGitlabGroupMember.get().getAccessLevel().accessValue == gitlabAccessLevel.accessValue) {

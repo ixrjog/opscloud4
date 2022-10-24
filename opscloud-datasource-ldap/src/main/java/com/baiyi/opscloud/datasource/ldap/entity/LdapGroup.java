@@ -16,6 +16,7 @@ import org.springframework.ldap.odm.annotations.Entry;
  * @Version 1.0
  */
 public class LdapGroup {
+
     /**
      * @Author baiyi
      * @Date 2019/12/27 5:49 下午
@@ -55,6 +56,6 @@ public class LdapGroup {
                     .paramAsset(asset)
                     .build();
         }
-
     }
+
 }

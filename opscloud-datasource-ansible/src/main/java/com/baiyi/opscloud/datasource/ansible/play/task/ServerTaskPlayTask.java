@@ -44,7 +44,7 @@ public class ServerTaskPlayTask implements Runnable {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        log.info("serverTaskPlayTask线程结束! serverTaskId = {} , serverTaskMemberId = {}", serverTaskMember.getServerTaskId(), serverTaskMember.getId());
+        log.info("ServerTaskPlayTask线程结束: serverTaskId={}, serverTaskMemberId={}", serverTaskMember.getServerTaskId(), serverTaskMember.getId());
     }
 
     private void send(String output, String error) throws IOException {

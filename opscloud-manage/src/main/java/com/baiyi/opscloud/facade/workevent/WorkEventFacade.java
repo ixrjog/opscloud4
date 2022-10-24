@@ -18,7 +18,7 @@ import java.util.List;
  */
 public interface WorkEventFacade {
 
-    DataTable<WorkEventVO.WorkEvent> queryPageByParam(WorkEventParam.PageQuery pageQuery);
+    DataTable<WorkEventVO.WorkEvent> queryWorkEventPage(WorkEventParam.WorkEventPageQuery pageQuery);
 
     void addWorkEvent(WorkEventParam.AddWorkEvent param);
 
@@ -36,7 +36,7 @@ public interface WorkEventFacade {
 
     List<TreeVO.Tree> queryWorkItemTree(WorkEventParam.WorkItemTreeQuery param);
 
-    WorkItem getWorkItemById(Integer workItemId);
+    WorkEventVO.Item getWorkItemById(Integer workItemId);
 
     WorkEventReportVO.WeeklyReport getWorkEventWeeklyReport(Integer workRoleId);
 

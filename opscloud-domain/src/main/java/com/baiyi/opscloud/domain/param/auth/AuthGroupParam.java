@@ -32,4 +32,5 @@ public class AuthGroupParam {
         private Boolean extend;
 
     }
+
 }

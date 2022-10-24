@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.auth;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthPlatformLog;
+import com.baiyi.opscloud.domain.param.auth.AuthPlatformParam;
 
 /**
  * @Author baiyi
@@ -10,5 +12,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.AuthPlatformLog;
 public interface AuthPlatformLogService {
 
     void add(AuthPlatformLog authPlatformLog);
+
+    DataTable<AuthPlatformLog> queryPageByParam(AuthPlatformParam.AuthPlatformLogPageQuery pageQuery);
 
 }

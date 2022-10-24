@@ -90,18 +90,18 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
     @Override
     public InstanceVO.Health checkHealth() {
         if (InstanceFacadeImpl.inetAddress == null)
-            return buildHealth(HealthStatus.ERROR);
+            return buildHealthWithStatus(HealthStatus.ERROR);
         Instance instance = instanceService.getByHostIp(InstanceFacadeImpl.inetAddress.getHostAddress());
         if (instance == null)
-            return buildHealth(HealthStatus.ERROR);
+            return buildHealthWithStatus(HealthStatus.ERROR);
         if (instance.getIsActive()) {
-            return buildHealth(HealthStatus.OK);
+            return buildHealthWithStatus(HealthStatus.OK);
         } else {
-            return buildHealth(HealthStatus.INACTIVE);
+            return buildHealthWithStatus(HealthStatus.INACTIVE);
         }
     }
 
-    private InstanceVO.Health buildHealth(String status) {
+    private InstanceVO.Health buildHealthWithStatus(String status) {
         return InstanceVO.Health.builder()
                 .status(status)
                 .isHealth(status.equals(HealthStatus.OK))

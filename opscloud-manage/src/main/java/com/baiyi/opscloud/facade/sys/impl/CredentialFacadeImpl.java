@@ -61,11 +61,9 @@ public class CredentialFacadeImpl implements CredentialFacade {
         com.baiyi.opscloud.domain.generator.opscloud.Credential credential = credentialService.getById(id);
         if (credential == null) return;
         Map<String, ICredentialCustomer> context = CredentialCustomerFactory.getContext();
-        for (String key : context.keySet()) {
-            ICredentialCustomer iCredentialCustomer = context.get(key);
-            if (iCredentialCustomer.hasUsedCredential(id))
-                throw new CommonRuntimeException("该凭据正在使用中！");
-        }
+        context.keySet().stream().map(context::get).filter(iCredentialCustomer -> iCredentialCustomer.hasUsedCredential(id)).forEachOrdered(iCredentialCustomer -> {
+            throw new CommonRuntimeException("该凭据正在使用中！");
+        });
         credentialService.deleteById(id);
     }
 

@@ -6,8 +6,6 @@
 package com.baiyi.opscloud.datasource.jenkins.client;
 
 import com.baiyi.opscloud.common.util.JSONUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Joiner;
 import com.baiyi.opscloud.datasource.jenkins.client.util.EncodingUtils;
 import com.baiyi.opscloud.datasource.jenkins.client.util.RequestReleasingInputStream;
 import com.baiyi.opscloud.datasource.jenkins.client.util.ResponseUtils;
@@ -16,6 +14,9 @@ import com.baiyi.opscloud.datasource.jenkins.client.validator.HttpResponseValida
 import com.baiyi.opscloud.datasource.jenkins.model.BaseModel;
 import com.baiyi.opscloud.datasource.jenkins.model.Crumb;
 import com.baiyi.opscloud.datasource.jenkins.model.ExtractHeader;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Joiner;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -41,8 +42,6 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,9 +54,8 @@ import java.util.Map;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 //import static org.apache.commons.lang.StringUtils.isNotBlank;
 
+@Slf4j
 public class JenkinsHttpClient implements JenkinsHttpConnection {
-
-    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     private final URI uri;
     private final CloseableHttpClient client;
@@ -89,7 +87,7 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
         this.httpResponseValidator = new HttpResponseValidator();
         // this.contentExtractor = new HttpResponseContentExtractor();
         this.jenkinsVersion = EMPTY_VERSION;
-        LOGGER.debug("uri={}", uri);
+        log.debug("uri={}", uri);
     }
 
     /**
@@ -165,7 +163,7 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
         HttpGet getMethod = new HttpGet(UrlUtils.toJsonApiUri(uri, context, path));
         HttpResponse response = client.execute(getMethod, localContext);
         jenkinsVersion = ResponseUtils.getJenkinsVersion(response);
-        LOGGER.debug("get({}), version={}, responseCode={}", path, this.jenkinsVersion,
+        log.debug("get({}), version={}, responseCode={}", path, this.jenkinsVersion,
                 response.getStatusLine().getStatusCode());
         try {
             httpResponseValidator.validateResponse(response);
@@ -187,7 +185,7 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
             value = get(path, cls);
             return value;
         } catch (IOException e) {
-            LOGGER.debug("getQuietly({}, {})", path, cls.getName(), e);
+            log.debug("getQuietly({}, {})", path, cls.getName(), e);
             // TODO: Is returing null a good idea?
             return null;
         }
@@ -444,7 +442,7 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
         try {
             client.close();
         } catch (final IOException ex) {
-            LOGGER.debug("I/O exception closing client", ex);
+            log.debug("I/O exception closing client", ex);
         }
     }
 

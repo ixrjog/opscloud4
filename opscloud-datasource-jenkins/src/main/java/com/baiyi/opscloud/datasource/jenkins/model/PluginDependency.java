@@ -3,8 +3,7 @@ package com.baiyi.opscloud.datasource.jenkins.model;
 /**
  * @author Karl Heinz Marbaise
  */
-public class PluginDependency extends BaseModel
-{
+public class PluginDependency extends BaseModel {
     private boolean optional;
 
     private String shortName;
@@ -39,41 +38,35 @@ public class PluginDependency extends BaseModel
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ( optional ? 1231 : 1237 );
-        result = prime * result + ( ( shortName == null ) ? 0 : shortName.hashCode() );
-        result = prime * result + ( ( version == null ) ? 0 : version.hashCode() );
+        result = prime * result + (optional ? 1231 : 1237);
+        result = prime * result + ((shortName == null) ? 0 : shortName.hashCode());
+        result = prime * result + ((version == null) ? 0 : version.hashCode());
         return result;
     }
 
     @Override
-    public boolean equals( Object obj )
-    {
-        if ( this == obj )
+    public boolean equals(Object obj) {
+        if (this == obj)
             return true;
-        if ( obj == null )
+        if (obj == null)
             return false;
-        if ( getClass() != obj.getClass() )
+        if (getClass() != obj.getClass())
             return false;
         PluginDependency other = (PluginDependency) obj;
-        if ( optional != other.optional )
+        if (optional != other.optional)
             return false;
-        if ( shortName == null )
-        {
-            if ( other.shortName != null )
+        if (shortName == null) {
+            if (other.shortName != null)
                 return false;
-        }
-        else if ( !shortName.equals( other.shortName ) )
+        } else if (!shortName.equals(other.shortName))
             return false;
-        if ( version == null )
-        {
-            if ( other.version != null )
+        if (version == null) {
+            if (other.version != null)
                 return false;
-        }
-        else if ( !version.equals( other.version ) )
+        } else if (!version.equals(other.version))
             return false;
         return true;
     }

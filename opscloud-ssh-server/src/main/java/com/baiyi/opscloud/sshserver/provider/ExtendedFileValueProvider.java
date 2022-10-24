@@ -17,6 +17,7 @@
 package com.baiyi.opscloud.sshserver.provider;
 
 import com.baiyi.opscloud.sshserver.ExtendedCompletionProposal;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 /**
  * Fixed file value provider (mostly for windows) and allow to not put space after proposal when directory
  */
+@Slf4j
 public class ExtendedFileValueProvider extends ValueProviderSupport {
 
     private final boolean replaceAll;

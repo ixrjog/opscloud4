@@ -5,8 +5,7 @@ import java.util.List;
 /**
  * @author Karl Heinz Marbaise
  */
-public class Plugin extends BaseModel
-{
+public class Plugin extends BaseModel {
     private boolean active;
     private String backupVersion;
     private boolean bundled;
@@ -22,242 +21,200 @@ public class Plugin extends BaseModel
 
     private List<PluginDependency> dependencies;
 
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return active;
     }
 
-    public Plugin setActive(boolean active)
-    {
+    public Plugin setActive(boolean active) {
         this.active = active;
         return this;
     }
 
-    public String getBackupVersion()
-    {
+    public String getBackupVersion() {
         return backupVersion;
     }
 
-    public Plugin setBackupVersion(String backupVersion)
-    {
+    public Plugin setBackupVersion(String backupVersion) {
         this.backupVersion = backupVersion;
         return this;
     }
 
-    public boolean isBundled()
-    {
+    public boolean isBundled() {
         return bundled;
     }
 
-    public Plugin setBundled(boolean bundled)
-    {
+    public Plugin setBundled(boolean bundled) {
         this.bundled = bundled;
         return this;
     }
 
-    public boolean isDowngradable()
-    {
+    public boolean isDowngradable() {
         return downgradable;
     }
 
-    public Plugin setDowngradable(boolean downgradable)
-    {
+    public Plugin setDowngradable(boolean downgradable) {
         this.downgradable = downgradable;
         return this;
     }
 
-    public boolean isEnabled()
-    {
+    public boolean isEnabled() {
         return enabled;
     }
 
-    public Plugin setEnabled(boolean enabled)
-    {
+    public Plugin setEnabled(boolean enabled) {
         this.enabled = enabled;
         return this;
     }
 
-    public boolean isHasUpdate()
-    {
+    public boolean isHasUpdate() {
         return hasUpdate;
     }
 
-    public Plugin setHasUpdate(boolean hasUpdate)
-    {
+    public Plugin setHasUpdate(boolean hasUpdate) {
         this.hasUpdate = hasUpdate;
         return this;
     }
 
-    public String getLongName()
-    {
+    public String getLongName() {
         return longName;
     }
 
-    public Plugin setLongName(String longName)
-    {
+    public Plugin setLongName(String longName) {
         this.longName = longName;
         return this;
     }
 
-    public boolean isPinned()
-    {
+    public boolean isPinned() {
         return pinned;
     }
 
-    public Plugin setPinned(boolean pinned)
-    {
+    public Plugin setPinned(boolean pinned) {
         this.pinned = pinned;
         return this;
     }
 
-    public String getShortName()
-    {
+    public String getShortName() {
         return shortName;
     }
 
-    public Plugin setShortName(String shortName)
-    {
+    public Plugin setShortName(String shortName) {
         this.shortName = shortName;
         return this;
     }
 
-    public String getSupportsDynamicLoad()
-    {
+    public String getSupportsDynamicLoad() {
         return supportsDynamicLoad;
     }
 
-    public Plugin setSupportsDynamicLoad(String supportsDynamicLoad)
-    {
+    public Plugin setSupportsDynamicLoad(String supportsDynamicLoad) {
         this.supportsDynamicLoad = supportsDynamicLoad;
         return this;
     }
 
-    public String getUrl()
-    {
+    public String getUrl() {
         return url;
     }
 
-    public Plugin setUrl(String url)
-    {
+    public Plugin setUrl(String url) {
         this.url = url;
         return this;
     }
 
-    public String getVersion()
-    {
+    public String getVersion() {
         return version;
     }
 
-    public Plugin setVersion(String version)
-    {
+    public Plugin setVersion(String version) {
         this.version = version;
         return this;
     }
 
-    public List<PluginDependency> getDependencies()
-    {
+    public List<PluginDependency> getDependencies() {
         return dependencies;
     }
 
-    public Plugin setDependencies(List<PluginDependency> dependencies)
-    {
+    public Plugin setDependencies(List<PluginDependency> dependencies) {
         this.dependencies = dependencies;
         return this;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ( active ? 1231 : 1237 );
-        result = prime * result + ( ( backupVersion == null ) ? 0 : backupVersion.hashCode() );
-        result = prime * result + ( bundled ? 1231 : 1237 );
-        result = prime * result + ( ( dependencies == null ) ? 0 : dependencies.hashCode() );
-        result = prime * result + ( downgradable ? 1231 : 1237 );
-        result = prime * result + ( enabled ? 1231 : 1237 );
-        result = prime * result + ( hasUpdate ? 1231 : 1237 );
-        result = prime * result + ( ( longName == null ) ? 0 : longName.hashCode() );
-        result = prime * result + ( pinned ? 1231 : 1237 );
-        result = prime * result + ( ( shortName == null ) ? 0 : shortName.hashCode() );
-        result = prime * result + ( ( supportsDynamicLoad == null ) ? 0 : supportsDynamicLoad.hashCode() );
-        result = prime * result + ( ( url == null ) ? 0 : url.hashCode() );
-        result = prime * result + ( ( version == null ) ? 0 : version.hashCode() );
+        result = prime * result + (active ? 1231 : 1237);
+        result = prime * result + ((backupVersion == null) ? 0 : backupVersion.hashCode());
+        result = prime * result + (bundled ? 1231 : 1237);
+        result = prime * result + ((dependencies == null) ? 0 : dependencies.hashCode());
+        result = prime * result + (downgradable ? 1231 : 1237);
+        result = prime * result + (enabled ? 1231 : 1237);
+        result = prime * result + (hasUpdate ? 1231 : 1237);
+        result = prime * result + ((longName == null) ? 0 : longName.hashCode());
+        result = prime * result + (pinned ? 1231 : 1237);
+        result = prime * result + ((shortName == null) ? 0 : shortName.hashCode());
+        result = prime * result + ((supportsDynamicLoad == null) ? 0 : supportsDynamicLoad.hashCode());
+        result = prime * result + ((url == null) ? 0 : url.hashCode());
+        result = prime * result + ((version == null) ? 0 : version.hashCode());
         return result;
     }
 
     @Override
-    public boolean equals( Object obj )
-    {
-        if ( this == obj )
+    public boolean equals(Object obj) {
+        if (this == obj)
             return true;
-        if ( obj == null )
+        if (obj == null)
             return false;
-        if ( getClass() != obj.getClass() )
+        if (getClass() != obj.getClass())
             return false;
         Plugin other = (Plugin) obj;
-        if ( active != other.active )
+        if (active != other.active)
             return false;
-        if ( backupVersion == null )
-        {
-            if ( other.backupVersion != null )
+        if (backupVersion == null) {
+            if (other.backupVersion != null)
                 return false;
-        }
-        else if ( !backupVersion.equals( other.backupVersion ) )
+        } else if (!backupVersion.equals(other.backupVersion))
             return false;
-        if ( bundled != other.bundled )
+        if (bundled != other.bundled)
             return false;
-        if ( dependencies == null )
-        {
-            if ( other.dependencies != null )
+        if (dependencies == null) {
+            if (other.dependencies != null)
                 return false;
-        }
-        else if ( !dependencies.equals( other.dependencies ) )
+        } else if (!dependencies.equals(other.dependencies))
             return false;
-        if ( downgradable != other.downgradable )
+        if (downgradable != other.downgradable)
             return false;
-        if ( enabled != other.enabled )
+        if (enabled != other.enabled)
             return false;
-        if ( hasUpdate != other.hasUpdate )
+        if (hasUpdate != other.hasUpdate)
             return false;
-        if ( longName == null )
-        {
-            if ( other.longName != null )
+        if (longName == null) {
+            if (other.longName != null)
                 return false;
-        }
-        else if ( !longName.equals( other.longName ) )
+        } else if (!longName.equals(other.longName))
             return false;
-        if ( pinned != other.pinned )
+        if (pinned != other.pinned)
             return false;
-        if ( shortName == null )
-        {
-            if ( other.shortName != null )
+        if (shortName == null) {
+            if (other.shortName != null)
                 return false;
-        }
-        else if ( !shortName.equals( other.shortName ) )
+        } else if (!shortName.equals(other.shortName))
             return false;
-        if ( supportsDynamicLoad == null )
-        {
-            if ( other.supportsDynamicLoad != null )
+        if (supportsDynamicLoad == null) {
+            if (other.supportsDynamicLoad != null)
                 return false;
-        }
-        else if ( !supportsDynamicLoad.equals( other.supportsDynamicLoad ) )
+        } else if (!supportsDynamicLoad.equals(other.supportsDynamicLoad))
             return false;
-        if ( url == null )
-        {
-            if ( other.url != null )
+        if (url == null) {
+            if (other.url != null)
                 return false;
-        }
-        else if ( !url.equals( other.url ) )
+        } else if (!url.equals(other.url))
             return false;
-        if ( version == null )
-        {
-            if ( other.version != null )
+        if (version == null) {
+            if (other.version != null)
                 return false;
-        }
-        else if ( !version.equals( other.version ) )
+        } else if (!version.equals(other.version))
             return false;
         return true;
     }
-    
+
 }

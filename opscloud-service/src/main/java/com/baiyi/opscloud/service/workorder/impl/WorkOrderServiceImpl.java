@@ -59,7 +59,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     }
 
     @Override
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1HOUR, key = "'workorder_id_' + #id", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1H, key = "'workorder_id_' + #id", unless = "#result == null")
     public WorkOrder getById(int id) {
         return workOrderMapper.selectByPrimaryKey(id);
     }
@@ -73,7 +73,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     }
 
     @Override
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_1HOUR, key = "'workorder_id_' + #workOrder.id")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1H, key = "'workorder_id_' + #workOrder.id")
     public void update(WorkOrder workOrder) {
         workOrderMapper.updateByPrimaryKey(workOrder);
     }

@@ -1,5 +1,13 @@
 Welcome to the opscloud wiki!
 
+
+#### Thanks to JetBrains
+<a href="https://www.jetbrains.com" target="_blank">
+  <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/jetbrains-logos/jetbrains-variant-2.svg"></img>
+</a>
+
+> Thanks JetBrains to support the project providing such great IDE.
+
 ![GitHub Stats Card](https://github-readme-stats.vercel.app/api?username=ixrjog&show_icons=true&theme=onedark)
 
 # OpsCloud4.0 云上运维
@@ -9,20 +17,12 @@ Welcome to the opscloud wiki!
 <img src="https://img.shields.io/badge/mysql-8-brightgreen.svg"></img>
 <br>
 
-我们掌握的技术
-+ Java技术栈实现的堡垒机（支持容器），全面支持ED25519密钥格式
-+ 跨境运维能力，多云组网
-+ 3层DNS架构
-+ 全域统一账户集成
-+ 全冗余架构的持续集成平台（Java、H5、iOS、Android）
-+ 无运维DevOps
-
 <img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/login_1.png" width="600"></img>
 
-#### 项目仓库
-+ 服务端(Java)
+#### Code repository
++ Backend
   + [https://github.com/ixrjog/opscloud4](https://github.com/ixrjog/opscloud4)
-+ 前端(Vue)
++ Frontend
   + [https://github.com/ixrjog/opscloud4-web](https://github.com/ixrjog/opscloud4-web)
 
 #### 开发环境
@@ -77,6 +77,15 @@ flowchart LR
 + API文档
   + example.com/doc.html
   + API Token
+
+#### 监听端口详情
+
+| 服务 | 协议 | 端口 | 用户自定义端口(Java启动参数)    |
+|---|---|---|----------------------|
+| Web | http | 8080 | --server.port=8080   |
+| SSH-Server | ssh | 2222 | --ssh.shell.port=2222 |
+
+#### 功能截图
 
 <table>
 <tr>
@@ -146,10 +155,3 @@ flowchart LR
 #### 帮助文档
 
 <a style="color:#2b669a" href="https://www.kancloud.cn/ixrjog/opscloud4/2361886" target="_blank">传送门:https://www.kancloud.cn/ixrjog/opscloud4/2361886</a>
-
-#### Thanks to JetBrains
-<a href="https://www.jetbrains.com" target="_blank">
-  <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/jetbrains-logos/jetbrains-variant-2.svg"></img>
-</a>
-
-> Thanks JetBrains to support the project providing such great IDE.

@@ -5,9 +5,10 @@ import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitlabProjectDriver;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitlabUserDriver;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
+import com.baiyi.opscloud.workorder.delegate.GitlabUserDelegate;
 import org.gitlab.api.models.GitlabAccessLevel;
 import org.gitlab.api.models.GitlabSSHKey;
 import org.gitlab.api.models.GitlabUser;
@@ -29,6 +30,9 @@ public class GitlabTest extends BaseUnit {
 
     @Resource
     private DsConfigHelper dsFactory;
+
+    @Resource
+    private GitlabUserDelegate gitlabUserDelegate;
 
     @Test
     void userTest() {
@@ -70,6 +74,12 @@ public class GitlabTest extends BaseUnit {
             e.printStackTrace();
             print(e.getMessage());
         }
+    }
+
+    @Test
+    void createUserTest(){
+        GitlabConfig gitlabDsInstanceConfig = (GitlabConfig) getConfig();
+        gitlabUserDelegate.createGitlabUser(gitlabDsInstanceConfig.getGitlab(),"xiuyuan");
     }
 
 }

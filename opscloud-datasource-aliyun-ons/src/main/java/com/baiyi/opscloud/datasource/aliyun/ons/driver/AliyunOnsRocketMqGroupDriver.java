@@ -101,7 +101,7 @@ public class AliyunOnsRocketMqGroupDriver {
         request.setRemark(group.getRemark());
         request.setGroupType(group.getGroupType());
         OnsGroupCreateResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
-        log.info("创建阿里云ONS-Topic: requestId = {}, group = {}", response.getRequestId(), group);
+        log.info("创建阿里云ONS-Topic: requestId={}, group={}", response.getRequestId(), group);
     }
 
 }

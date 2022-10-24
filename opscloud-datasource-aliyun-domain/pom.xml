@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>aliyun-java-sdk-domain</artifactId>
-            <version>3.14.7</version>
+            <version>3.14.11</version>
         </dependency>
 
     </dependencies>

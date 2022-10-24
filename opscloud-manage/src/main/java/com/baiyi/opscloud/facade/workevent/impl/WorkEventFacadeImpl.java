@@ -73,7 +73,7 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
     private final static Integer ROOT_PARENT_ID = 0;
 
     @Override
-    public DataTable<WorkEventVO.WorkEvent> queryPageByParam(WorkEventParam.PageQuery pageQuery) {
+    public DataTable<WorkEventVO.WorkEvent> queryWorkEventPage(WorkEventParam.WorkEventPageQuery pageQuery) {
         DataTable<WorkEvent> table = workEventService.queryPageByParam(pageQuery);
         List<WorkEventVO.WorkEvent> data = BeanCopierUtil.copyListProperties(table.getData(), WorkEventVO.WorkEvent.class)
                 .stream()
@@ -178,8 +178,9 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
     }
 
     @Override
-    public WorkItem getWorkItemById(Integer workItemId) {
-        return workItemService.getById(workItemId);
+    public WorkEventVO.Item getWorkItemById(Integer workItemId) {
+        WorkItem workItem = workItemService.getById(workItemId);
+        return BeanCopierUtil.copyProperties(workItem, WorkEventVO.Item.class);
     }
 
     @Override

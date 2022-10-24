@@ -21,11 +21,6 @@ public class GitlabGroupDriver {
         return buildAPI(gitlab).getGroups();
     }
 
-//    public static List<GitlabGroup> queryGroups(GitlabDsConfig.Gitlab gitlab, Integer projectId) throws IOException {
-//        GitlabProject gitlabProject = buildAPI(gitlab).getProject(projectId);
-//        gitlabProject.
-//    }
-
     public static void addGroupMember(GitlabConfig.Gitlab gitlab, Integer groupId, Integer userId, GitlabAccessLevel accessLevel) throws IOException {
         buildAPI(gitlab).addGroupMember(groupId, userId, accessLevel);
     }

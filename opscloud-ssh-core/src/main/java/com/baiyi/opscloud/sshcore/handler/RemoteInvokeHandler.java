@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.sshcore.handler;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
+import com.baiyi.opscloud.common.exception.ssh.SshCommonException;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
@@ -37,10 +38,6 @@ public class RemoteInvokeHandler {
 
     private static final String appId = UUID.randomUUID().toString();
 
-//    private static final int SERVER_ALIVE_INTERVAL = 60 * 1000;
-//    public static final int SESSION_TIMEOUT = 60000;
-//    public static final int CHANNEL_TIMEOUT = 60000;
-
     /**
      * 按类型注入凭据
      *
@@ -72,7 +69,7 @@ public class RemoteInvokeHandler {
      * @param instanceId
      * @param hostSystem
      */
-    public static void openWebTerminal(String sessionId, String instanceId, HostSystem hostSystem) {
+    public static void openWithWebTerminal(String sessionId, String instanceId, HostSystem hostSystem) {
         JSch jsch = new JSch();
 
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
@@ -131,13 +128,13 @@ public class RemoteInvokeHandler {
      * @param sessionId
      * @param hostSystem
      */
-    public static void openSSHServer(String sessionId, HostSystem hostSystem, OutputStream out) {
+    public static void openWithSSHServer(String sessionId, HostSystem hostSystem, OutputStream out) throws SshCommonException {
         JSch jsch = new JSch();
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
         try {
             if (hostSystem.getSshCredential() == null) return;
             Session session = jsch.getSession(hostSystem.getSshCredential().getServerAccount().getUsername(), hostSystem.getHost(),
-                    hostSystem.getPort() == null ? 22 : hostSystem.getPort());
+                    hostSystem.getPort() == null ? SSH_PORT : hostSystem.getPort());
             invokeSshCredential(hostSystem, jsch, session);
             SessionConfigUtil.setDefault(session); // 默认设置
             ChannelShell channel = (ChannelShell) session.openChannel("shell");
@@ -175,6 +172,7 @@ public class RemoteInvokeHandler {
             } else {
                 hostSystem.setStatusCd(HostSystem.GENERIC_FAIL_STATUS);
             }
+            throw new SshCommonException(e.toString());
         }
     }
 

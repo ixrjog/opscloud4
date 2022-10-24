@@ -78,7 +78,7 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
             });
             return entities;
         } catch (Exception e) {
-            log.error("查询钉钉用户错误: {}", e.getMessage());
+            log.error("查询钉钉用户错误: err={}", e.getMessage());
         }
         throw new RuntimeException("查询条目失败!");
     }
@@ -94,7 +94,7 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
             if (CollectionUtils.isEmpty(userResponse.getResult().getList())) return;
             Map<String, DingtalkUser.User> userMap = userResponse.getResult().getList().stream().collect(Collectors.toMap(DingtalkUser.User::getUserid, a -> a, (k1, k2) -> k1));
             allUserMap.putAll(userMap);
-            log.info("查询钉钉用户: 部门ID = {} , 用户总数 = {}", deptId, allUserMap.size());
+            log.info("查询钉钉用户: 部门ID={}, 用户总数={}", deptId, allUserMap.size());
         });
         return allUserMap;
     }

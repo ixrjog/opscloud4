@@ -40,12 +40,10 @@ public class ApplicationManager implements IManager<BaseBusiness.IBusiness> {
 
     @Override
     public void grant(User user, BaseBusiness.IBusiness businessResource) {
-
     }
 
     @Override
     public void revoke(User user, BaseBusiness.IBusiness businessResource) {
-
     }
 
     private void handle(BaseBusiness.IBusiness businessResource){

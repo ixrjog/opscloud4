@@ -16,6 +16,7 @@
 
 package com.baiyi.opscloud.sshserver;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.shell.Input;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.List;
 /**
  * Extended input which takes in account special characters
  */
+@Slf4j
 public class ExtendedInput
         implements Input {
 

@@ -55,7 +55,7 @@ public class AssetPullJob extends QuartzJobBean {
         // 任务
         String assetType = jobDataMap.getString(ASSET_TYPE);
         Integer instanceId = jobDataMap.getInt(INSTANCE_ID);
-        log.info("---Quartz Task执行 : assetType = {} , instanceId = {} , trigger = {}", assetType, instanceId, jobExecutionContext.getTrigger());
+        log.info("---Quartz Task执行: assetType={}, instanceId={}, trigger={}", assetType, instanceId, jobExecutionContext.getTrigger());
         // 任务开始时间
         DsAssetParam.PullAsset pullAsset = DsAssetParam.PullAsset.builder()
                 .assetType(assetType)

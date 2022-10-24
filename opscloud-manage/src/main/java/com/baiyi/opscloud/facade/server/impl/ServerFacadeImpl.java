@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade.server.impl;
 import com.baiyi.opscloud.common.annotation.EnvWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
-import com.baiyi.opscloud.common.util.RegexUtil;
+import com.baiyi.opscloud.common.util.ValidationUtil;
 import com.baiyi.opscloud.datasource.manager.ZabbixInstanceManager;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.*;
@@ -48,7 +48,9 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     @Override
     public DataTable<ServerVO.Server> queryServerPage(ServerParam.ServerPageQuery pageQuery) {
         DataTable<Server> table = serverService.queryServerPage(pageQuery);
-        List<ServerVO.Server> data = BeanCopierUtil.copyListProperties(table.getData(), ServerVO.Server.class).stream().peek(e -> serverPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        List<ServerVO.Server> data = BeanCopierUtil.copyListProperties(table.getData(), ServerVO.Server.class).stream()
+                .peek(e -> serverPacker.wrap(e, pageQuery))
+                .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
@@ -58,7 +60,16 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
         query.setLength(pageQuery.getLength());
         query.setPage(pageQuery.getPage());
         DataTable<ServerVO.Server> table = queryServerPage(query);
-        return new DataTable<>(table.getData().stream().map(e -> ApplicationResourceVO.Resource.builder().name(e.getDisplayName()).applicationId(pageQuery.getApplicationId()).businessId(e.getBusinessId()).resourceType(getApplicationResType()).businessType(getBusinessType()).comment(e.getPrivateIp()).build()).collect(Collectors.toList()), table.getTotalNum());
+        return new DataTable<>(table.getData().stream()
+                .map(e -> ApplicationResourceVO.Resource.builder()
+                        .name(e.getDisplayName())
+                        .applicationId(pageQuery.getApplicationId())
+                        .businessId(e.getBusinessId())
+                        .resourceType(getApplicationResType())
+                        .businessType(getBusinessType())
+                        .comment(e.getPrivateIp())
+                        .build())
+                .collect(Collectors.toList()), table.getTotalNum());
     }
 
     @Override
@@ -90,7 +101,7 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
     private Server toDO(ServerVO.Server server) {
         Server pre = BeanCopierUtil.copyProperties(server, Server.class);
         pre.setName(pre.getName().trim());
-        RegexUtil.tryServerNameRule(pre.getName());
+        ValidationUtil.tryServerNameRule(pre.getName());
         if (IdUtil.isEmpty(pre.getSerialNumber())) {
             Server maxSerialNumberServer = serverService.getMaxSerialNumberServer(pre.getServerGroupId(), pre.getEnvType());
             pre.setSerialNumber(null == maxSerialNumberServer ? 1 : maxSerialNumberServer.getSerialNumber() + 1);

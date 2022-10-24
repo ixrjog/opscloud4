@@ -42,4 +42,5 @@ public class WorkItemServiceImpl implements WorkItemService {
         criteria.andEqualTo("workRoleId", workRoleId);
         return workItemMapper.selectByExample(example);
     }
+
 }

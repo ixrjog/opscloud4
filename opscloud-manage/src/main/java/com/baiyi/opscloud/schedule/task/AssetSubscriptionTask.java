@@ -86,7 +86,7 @@ public class AssetSubscriptionTask extends AbstractTask {
         List<DatasourceInstanceAssetSubscription> assetSubscriptions = dsInstanceAssetSubscriptionService.queryByAssetId(asset.getId());
         if (CollectionUtils.isEmpty(assetSubscriptions)) return;
         assetSubscriptions.forEach(e -> {
-                    log.info("发布订阅配置: assetSubscriptionId = {}", e.getId());
+                    log.info("发布订阅配置: assetSubscriptionId={}", e.getId());
                     dsInstanceAssetSubscriptionFacade.publishAssetSubscription(e);
                 }
         );

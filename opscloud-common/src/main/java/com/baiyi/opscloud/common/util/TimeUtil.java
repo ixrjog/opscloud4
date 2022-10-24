@@ -67,7 +67,7 @@ public class TimeUtil {
         if (subTime < 0) {
             throw new RuntimeException("计算时间有误!");
         }
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         long day = subTime / dayTime;
         if (day != 0) {
             buffer.append(day);
@@ -229,8 +229,7 @@ public class TimeUtil {
     public static String nowDateName() {
         SimpleDateFormat formatter;
         formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
-        String now = formatter.format(new Date());
-        return now;
+        return formatter.format(new Date());
     }
 
 
@@ -246,11 +245,7 @@ public class TimeUtil {
         SimpleDateFormat sdf = new SimpleDateFormat(TimeUtil.timeFormat);
         Date date = sdf.parse(d);
         long subTime = new Date().getTime() - date.getTime();
-        if (subTime >= stamp) {
-            return true;
-        } else {
-            return false;
-        }
+        return subTime >= stamp;
     }
 
     public static String toGmtDate(Date date){
@@ -342,11 +337,8 @@ public class TimeUtil {
             long stamp = dateToStamp(date);
             Date date1 = new Date(stamp);
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-            if (fmt.format(date).toString().equals(fmt.format(new Date()).toString())) { //格式化为相同格式
-                return true;
-            } else {
-                return false;
-            }
+            //格式化为相同格式
+            return fmt.format(date).equals(fmt.format(new Date()));
         } catch (Exception e) {
             return false;
         }
@@ -435,4 +427,5 @@ public class TimeUtil {
         int year = calendar.get(Calendar.YEAR);
         return Joiner.on(" ").join(year,"年", week, "周");
     }
+
 }

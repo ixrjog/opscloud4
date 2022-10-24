@@ -96,7 +96,7 @@ public class AmazonSimpleQueueServiceDriver {
      * @param queueUrl
      * @return
      */
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1HOUR, key = "'accountId_' + #config.account.id + '_regionId' + #regionId + '_queueUrl_' + #queueUrl", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1H, key = "'accountId_' + #config.account.id + '_regionId' + #regionId + '_queueUrl_' + #queueUrl", unless = "#result == null")
     public Map<String, String> getQueueAttributes(AwsConfig.Aws config, String regionId, String queueUrl) {
         GetQueueAttributesRequest request = new GetQueueAttributesRequest();
         request.setAttributeNames(Lists.newArrayList("All"));
@@ -105,7 +105,7 @@ public class AmazonSimpleQueueServiceDriver {
         return result.getAttributes();
     }
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_1HOUR, key = "'accountId_' + #config.account.id + '_regionId' + #regionId + '_queueUrl_' + #queueUrl")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1H, key = "'accountId_' + #config.account.id + '_regionId' + #regionId + '_queueUrl_' + #queueUrl")
     public void evictWrap(AwsConfig.Aws config, String regionId, String queueUrl) {
     }
 

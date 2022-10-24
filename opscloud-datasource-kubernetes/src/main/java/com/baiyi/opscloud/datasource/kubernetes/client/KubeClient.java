@@ -46,7 +46,7 @@ public class KubeClient {
                 throw new CommonRuntimeException("KubernetesClient错误: err={}", e.getMessage());
             }
         }
-        throw new CommonRuntimeException("KubernetesClient错误: 无效的供应商配置 provider={}", kubernetes.getProvider());
+        throw new CommonRuntimeException("Kubernetes无效的供应商配置: provider={}", kubernetes.getProvider());
     }
 
 }

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.param.workevent;
 
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.param.PageParam;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventVO;
 import io.swagger.annotations.ApiModel;
@@ -25,7 +26,9 @@ public class WorkEventParam {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class PageQuery extends PageParam {
+    public static class WorkEventPageQuery extends PageParam {
+
+        private final int businessType = BusinessTypeEnum.WORK_EVENT.getType();
 
         @ApiModelProperty(value = "模糊查询")
         private String queryName;
@@ -39,6 +42,8 @@ public class WorkEventParam {
         private Date workEventStartTime;
 
         private Date workEventEndTime;
+
+        private Integer tagId;
 
     }
 

@@ -15,49 +15,10 @@ public class AlertNotifyHistory {
     private Integer id;
 
     /**
-     * 告警名称
+     * 告警事件id
      */
-    @Column(name = "alert_name")
-    private String alertName;
-
-    /**
-     * 告警等级  MAX、MID、LOW
-     */
-    private String severity;
-
-    /**
-     * 告警描述
-     */
-    private String message;
-
-    /**
-     * 监控指标的样本值
-     */
-    @Column(name = "alert_value")
-    private String alertValue;
-
-    /**
-     * 事件检查项
-     */
-    @Column(name = "alert_check")
-    private String alertCheck;
-
-    /**
-     * 告警事件的来源
-     */
-    @Column(name = "alert_source")
-    private String alertSource;
-
-    /**
-     * 探测端类型
-     */
-    @Column(name = "alert_type")
-    private String alertType;
-
-    /**
-     * 服务名称
-     */
-    private String service;
+    @Column(name = "alert_notify_event_id")
+    private Integer alertNotifyEventId;
 
     /**
      * 告警通知媒介
@@ -74,12 +35,6 @@ public class AlertNotifyHistory {
     private String alertNotifyStatus;
 
     /**
-     * 事件开始时间的时间戳
-     */
-    @Column(name = "alert_time")
-    private Date alertTime;
-
-    /**
      * 创建时间
      */
     @Column(name = "create_time", insertable = false, updatable = false)
@@ -91,8 +46,4 @@ public class AlertNotifyHistory {
     @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 
-    /**
-     * 告警元数据
-     */
-    private String metadata;
 }

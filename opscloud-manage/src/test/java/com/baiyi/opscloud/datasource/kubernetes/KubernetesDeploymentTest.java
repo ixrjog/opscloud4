@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
@@ -23,14 +24,12 @@ public class KubernetesDeploymentTest extends BaseKubernetesTest {
     @Resource
     private ApplicationService applicationService;
 
-
     @Test
     void aTest() {
         Deployment deployment = KubernetesDeploymentDriver.getDeployment(getConfig().getKubernetes(), "dev", "merchant-rss-dev");
         KubernetesDeploymentDriver.redeployDeployment(getConfig().getKubernetes(), "dev", "merchant-rss-dev");
         print(deployment);
     }
-
 
     @Test
     void bTest() {
@@ -57,11 +56,11 @@ public class KubernetesDeploymentTest extends BaseKubernetesTest {
      */
     @Test
     void cTest() {
-        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_PROD);
+        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_TEST);
         List<Application> applications = applicationService.queryAll();
         for (Application application : applications) {
             String appName = application.getName();
-            Deployment deployment = KubernetesDeploymentDriver.getDeployment(kubernetesConfig.getKubernetes(), "prod", appName);
+            Deployment deployment = KubernetesDeploymentDriver.getDeployment(kubernetesConfig.getKubernetes(), "ci", appName);
             if (deployment == null) continue;
             print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
             print("应用名称: " + appName);
@@ -70,5 +69,57 @@ public class KubernetesDeploymentTest extends BaseKubernetesTest {
         }
     }
 
+    /**
+     * 修改配置
+     */
+    @Test
+    void dTest() {
+        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_PRE);
+        // account
+        updateDeploymentWithApplication(kubernetesConfig, applicationService.getById(23));
+    }
+
+    /**
+     * 修改配置
+     */
+    @Test
+    void eTest() {
+        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_PRE);
+        List<Application> applications = applicationService.queryAll();
+        for (Application application : applications) {
+            updateDeploymentWithApplication(kubernetesConfig, application);
+        }
+    }
+
+    // CI
+    private void updateDeploymentWithApplication(KubernetesConfig kubernetesConfig, Application application) {
+        String appName = application.getName();
+        print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+        print("应用名称: " + appName);
+        Deployment deployment = KubernetesDeploymentDriver.getDeployment(kubernetesConfig.getKubernetes(), "pre", appName);
+        if (deployment == null) return;
+        // 选中应用容器
+        Optional<Container> optionalContainer = deployment
+                .getSpec()
+                .getTemplate()
+                .getSpec()
+                .getContainers().stream().filter(e -> e.getName().equals(appName)).findFirst();
+        if (optionalContainer.isPresent()) {
+            // 修改preStop参数
+            try {
+                Container container = optionalContainer.get();
+                container.getLifecycle().getPreStop().getExec().getCommand().clear();
+                List<String> command = Lists.newArrayList("curl", "http://127.0.0.1:8080/eksshutdown", "-X", "GET");
+                container.getLifecycle().getPreStop().getExec().setCommand(command);
+                // 更新 Deployment
+                KubernetesDeploymentDriver.createOrReplaceDeployment(kubernetesConfig.getKubernetes(), deployment);
+            }catch (Exception e){
+                print(e.getMessage());
+            }
+        }
+
+    }
 
 }
+
+

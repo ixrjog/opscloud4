@@ -55,7 +55,7 @@ public class TaskExecutor {
             this.outputStream.reset();
             return outStr;
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             return "";
         }
     }
@@ -71,7 +71,7 @@ public class TaskExecutor {
             this.errorStream.reset();
             return errStr;
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             return "";
         }
     }

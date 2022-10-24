@@ -22,8 +22,6 @@ import java.util.List;
  * @Date 2022/8/15 6:23 PM
  * @Since 1.0
  */
-
-
 @RestController
 @RequestMapping("/api/workevent")
 @Api(tags = "工作事件")
@@ -34,8 +32,8 @@ public class WorkEventController {
 
     @ApiOperation(value = "分页查询工作事件")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<WorkEventVO.WorkEvent>> queryPageByParam(@RequestBody @Valid WorkEventParam.PageQuery pageQuery) {
-        return new HttpResult<>(workEventFacade.queryPageByParam(pageQuery));
+    public HttpResult<DataTable<WorkEventVO.WorkEvent>> queryWorkEventPage(@RequestBody @Valid WorkEventParam.WorkEventPageQuery pageQuery) {
+        return new HttpResult<>(workEventFacade.queryWorkEventPage(pageQuery));
     }
 
     @ApiOperation(value = "新增工作事件")
@@ -91,7 +89,7 @@ public class WorkEventController {
 
     @ApiOperation(value = "工作事项id查询")
     @GetMapping(value = "/item/id/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<WorkItem> getWorkItemById(@RequestParam int id) {
+    public HttpResult<WorkEventVO.Item> getWorkItemById(@RequestParam int id) {
         return new HttpResult<>(workEventFacade.getWorkItemById(id));
     }
 

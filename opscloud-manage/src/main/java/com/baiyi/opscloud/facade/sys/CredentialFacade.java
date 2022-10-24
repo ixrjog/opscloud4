@@ -11,8 +11,6 @@ import com.baiyi.opscloud.domain.vo.sys.CredentialVO;
  */
 public interface CredentialFacade {
 
-    //CredentialVO.Credential getCredentialById(Integer id);
-
     DataTable<CredentialVO.Credential> queryCredentialPage(CredentialParam.CredentialPageQuery pageQuery);
 
     void addCredential(CredentialVO.Credential credential);

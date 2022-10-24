@@ -35,19 +35,19 @@ public class DingtalkDepartmentDriver {
                 .target(DingtalkDepartmentFeign.class, config.getUrl());
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1HOUR, key = "'corp_id_'+ #config.corpId + '_dingtalk_list_sub_id_by_dept_id_' + #listSubDepartmentId.deptId", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1H, key = "'corp_id_'+ #config.corpId + '_dingtalk_list_sub_id_by_dept_id_' + #listSubDepartmentId.deptId", unless = "#result == null")
     public DingtalkDepartment.DepartmentSubIdResponse listSubId(DingtalkConfig.Dingtalk config, DingtalkDepartmentParam.ListSubDepartmentId listSubDepartmentId) {
         DingtalkToken.TokenResponse tokenResponse = dingtalkTokenDriver.getToken(config);
         DingtalkDepartmentFeign dingtalkAPI = buildFeign(config);
-        log.info("未命中缓存! method = listSubId , deptId = {}", listSubDepartmentId.getDeptId());
+        log.debug("未命中缓存: method=listSubId, deptId={}", listSubDepartmentId.getDeptId());
         return dingtalkAPI.listSubId(tokenResponse.getAccessToken(), listSubDepartmentId);
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_1HOUR, key = "'corp_id_'+ #config.corpId + '_dingtalk_get_dept_id_' + #getDepartment.deptId", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1H, key = "'corp_id_'+ #config.corpId + '_dingtalk_get_dept_id_' + #getDepartment.deptId", unless = "#result == null")
     public DingtalkDepartment.GetDepartmentResponse get(DingtalkConfig.Dingtalk config, DingtalkDepartmentParam.GetDepartment getDepartment) {
         DingtalkToken.TokenResponse tokenResponse = dingtalkTokenDriver.getToken(config);
         DingtalkDepartmentFeign dingtalkAPI = buildFeign(config);
-        log.info("未命中缓存! method = get , deptId = {}", getDepartment.getDeptId());
+        log.debug("未命中缓存: method=get, deptId={}", getDepartment.getDeptId());
         return dingtalkAPI.get(tokenResponse.getAccessToken(), getDepartment);
     }
 

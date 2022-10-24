@@ -33,24 +33,30 @@ public class MFADelegate {
 
     @Retryable(value = RetryException.class, maxAttempts = 5, backoff = @Backoff(delay = 3000))
     public void enableMFADevice(AwsConfig.Aws config, User user, VirtualMFADevice vMFADevice) throws RetryException {
+        setFlag();
         try {
-            if (firstExecution.get() == null) {
-                log.info("首次执行延迟3秒！");
-                firstExecution.set(Boolean.FALSE);
-                TimeUnit.SECONDS.sleep(3L);
-            }
-        } catch (InterruptedException e) {
-        }
-        try {
-            log.info("尝试启用IAM虚拟MFA: username = {} , serialNumber = {}", user.getUsername(), vMFADevice.getSerialNumber());
+            log.info("尝试启用IAM虚拟MFA: username={}, serialNumber={}", user.getUsername(), vMFADevice.getSerialNumber());
             String secretKeyStr = new String(vMFADevice.getBase32StringSeed().array());
             SecretKey key = OtpUtil.toKey(secretKeyStr);
             OTPAccessCode.AccessCode accessCode = OtpUtil.generateOtpAccessCode(key);
             EnableMFADeviceResult result = amazonIMMFADriver.enableMFADevice(config, user, vMFADevice.getSerialNumber(), accessCode.getCurrentPassword(), accessCode.getFuturePassword());
-            log.info("启用虚拟MFA设备成功: username = {} , requestId = {}", user.getUsername(), result.getSdkResponseMetadata().getRequestId());
+            log.info("启用虚拟MFA设备成功: username={}, requestId={}", user.getUsername(), result.getSdkResponseMetadata().getRequestId());
         } catch (Exception e) {
             log.error("启用虚拟MFA设备失败: {}", e.getMessage());
             throw new RetryException(e.getMessage());
+        }
+    }
+
+    /**
+     * 首次执行延迟3秒！
+     */
+    private void setFlag() {
+        try {
+            if (firstExecution.get() == null) {
+                firstExecution.set(Boolean.FALSE);
+                TimeUnit.SECONDS.sleep(3L);
+            }
+        } catch (InterruptedException ignored) {
         }
     }
 

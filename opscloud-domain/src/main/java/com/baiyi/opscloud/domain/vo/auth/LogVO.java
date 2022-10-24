@@ -21,6 +21,7 @@ public class LogVO {
         private String name; // 用户显示名
         private String uuid;
         private String token;
+
     }
 
 }

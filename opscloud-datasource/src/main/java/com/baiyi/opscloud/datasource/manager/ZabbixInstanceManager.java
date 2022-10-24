@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.manager;
 import com.baiyi.opscloud.common.constants.ServerMonitorStatusEnum;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.common.util.IPRegionUtil;
+import com.baiyi.opscloud.common.util.IPUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.domain.constants.TagConstants;
@@ -70,7 +70,7 @@ public class ZabbixInstanceManager extends BaseManager {
     private void updateServerMonitorStatus(Server server, List<ZabbixConfig> zabbixConfigs) {
         // 只遍历有效服务器
         if (!server.getIsActive()) return;
-        Optional<ZabbixConfig> optionalZabbixConfig = zabbixConfigs.stream().filter(c -> IPRegionUtil.isInRanges(server.getPrivateIp(), c.getZabbix().getRegions())).findFirst();
+        Optional<ZabbixConfig> optionalZabbixConfig = zabbixConfigs.stream().filter(c -> IPUtil.includeMasks(server.getPrivateIp(), c.getZabbix().getRegions())).findFirst();
         // 未匹配路由规则
         if (!optionalZabbixConfig.isPresent()) return;
         ZabbixConfig zabbixConfig = optionalZabbixConfig.get();

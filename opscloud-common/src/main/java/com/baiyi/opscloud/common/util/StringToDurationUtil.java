@@ -58,4 +58,5 @@ public class StringToDurationUtil {
         Assert.state(unit != null, "Unknown unit '" + value + "'");
         return unit;
     }
+
 }

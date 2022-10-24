@@ -13,6 +13,7 @@ import javax.naming.directory.Attributes;
  * @Version 1.0
  */
 public class PersonAttributesMapper implements AttributesMapper<LdapPerson.Person> {
+
     /**
      * Map Attributes to an object. The supplied attributes are the attributes
      * from a single SearchResult.
@@ -44,4 +45,5 @@ public class PersonAttributesMapper implements AttributesMapper<LdapPerson.Perso
         }
         return person;
     }
+
 }

@@ -18,6 +18,7 @@ import java.util.Date;
  * @Version 1.0
  */
 public class LdapPerson {
+
     /**
      * @Author baiyi
      * @Date 2019/12/27 1:04 下午
@@ -120,4 +121,5 @@ public class LdapPerson {
                     .build();
         }
     }
+
 }

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.aspect;
 
-import com.baiyi.opscloud.common.util.RegexUtil;
+import com.baiyi.opscloud.common.util.ValidationUtil;
 import com.baiyi.opscloud.domain.annotation.DesensitizedField;
 import com.baiyi.opscloud.domain.constants.SensitiveTypeEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -61,7 +61,7 @@ public class DesensitizeAspect {
         switch (type) {
             case MOBILE_PHONE:
                 if (StringUtils.isEmpty(value)) return value;
-                if (RegexUtil.isPhone(value)) {
+                if (ValidationUtil.isPhone(value)) {
                     StringBuilder sb = new StringBuilder(value);
                     return sb.replace(3, 7, getSymbol(4)).toString();
                 }

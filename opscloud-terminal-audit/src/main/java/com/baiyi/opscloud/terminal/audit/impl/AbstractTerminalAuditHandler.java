@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.terminal.audit.impl;
 
 import com.baiyi.opscloud.sshcore.message.audit.BaseAuditMessage;
-import com.baiyi.opscloud.terminal.audit.ITerminalAuditProcess;
-import com.baiyi.opscloud.terminal.audit.TerminalAuditProcessFactory;
+import com.baiyi.opscloud.terminal.audit.ITerminalAuditHandler;
+import com.baiyi.opscloud.terminal.audit.TerminalAuditHandlerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -12,7 +12,7 @@ import org.springframework.beans.factory.InitializingBean;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractTerminalAuditProcess<T extends BaseAuditMessage> implements ITerminalAuditProcess, InitializingBean {
+public abstract class AbstractTerminalAuditHandler<T extends BaseAuditMessage> implements ITerminalAuditHandler, InitializingBean {
 
     abstract protected T getMessage(String message);
 
@@ -21,6 +21,6 @@ public abstract class AbstractTerminalAuditProcess<T extends BaseAuditMessage> i
      */
     @Override
     public void afterPropertiesSet() {
-        TerminalAuditProcessFactory.register(this);
+        TerminalAuditHandlerFactory.register(this);
     }
 }

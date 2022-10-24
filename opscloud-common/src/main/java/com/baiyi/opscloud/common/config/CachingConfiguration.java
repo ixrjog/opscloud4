@@ -1,9 +1,10 @@
 package com.baiyi.opscloud.common.config;
 
+import com.baiyi.opscloud.common.config.properties.CacheProperties;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
@@ -18,8 +19,10 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * redis配置类
@@ -33,27 +36,30 @@ import java.util.Set;
 public class CachingConfiguration extends CachingConfigurerSupport {
 
     public interface Repositories {
-        String DEFAULT = "opscloud:v4:default:";
-        String CACHE_1HOUR = "opscloud:v4:cache:1h:";
-        String CACHE_2HOURS = "opscloud:v4:cache:2h:";
-        String CACHE_1WEEK = "opscloud:v4:7d:";
-        String CACHE_1DAY = "opscloud:v4:1d:";
-        String CACHE_10SECONDS = "opscloud:v4:10s:";
-        String CACHE_10MINUTES =  "opscloud:v4:10m:";
+        String DEFAULT = "oc4:cache:default:";
+        String CACHE_FOR_10S = "oc4:cache:10s:";
+        String CACHE_FOR_10M = "oc4:cache:10m:";
+        String CACHE_FOR_1H = "oc4:cache:1h:";
+        String CACHE_FOR_2H = "oc4:cache:2h:";
+        String CACHE_FOR_1D = "oc4:cache:1d:";
+        String CACHE_FOR_1W = "oc4:cache:7d:";
     }
+
+    private static final List<CacheProperties.Repo> cacheRepositories = Lists.newArrayList(
+            CacheProperties.Repo.DEFAULT,
+            CacheProperties.Repo.CACHE_FOR_10S,
+            CacheProperties.Repo.CACHE_FOR_10M,
+            CacheProperties.Repo.CACHE_FOR_1H,
+            CacheProperties.Repo.CACHE_FOR_2H,
+            CacheProperties.Repo.CACHE_FOR_1W,
+            CacheProperties.Repo.CACHE_FOR_1D
+    );
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory factory) {
         // 设置一个初始化的缓存空间set集合
-        Set<String> cacheNames = Sets.newHashSet(
-                Repositories.DEFAULT,
-                Repositories.CACHE_1WEEK,
-                Repositories.CACHE_1DAY,
-                Repositories.CACHE_1HOUR,
-                Repositories.CACHE_2HOURS,
-                Repositories.CACHE_10SECONDS,
-                Repositories.CACHE_10MINUTES);
+        Set<String> cacheNames = cacheRepositories.stream().map(CacheProperties.Repo::getName).collect(Collectors.toSet());
         // 使用自定义的缓存配置初始化一个cacheManager
         return RedisCacheManager.builder(factory)
                 // 注意这两句的调用顺序，一定要先调用该方法设置初始化的缓存名，
@@ -67,16 +73,10 @@ public class CachingConfiguration extends CachingConfigurerSupport {
         Map<String, RedisCacheConfiguration> configMap = new HashMap<>();
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig();
         // 设置缓存的默认过期时间，也是使用Duration设置
-        config = config.entryTtl(Duration.ofMinutes(1))
+        config.entryTtl(Duration.ofMinutes(1))
                 // 不缓存空值
                 .disableCachingNullValues();
-        configMap.put(Repositories.DEFAULT, config.entryTtl(Duration.ofDays(30)));
-        configMap.put(Repositories.CACHE_1WEEK, config.entryTtl(Duration.ofDays(7)));
-        configMap.put(Repositories.CACHE_1DAY, config.entryTtl(Duration.ofDays(1)));
-        configMap.put(Repositories.CACHE_1HOUR, config.entryTtl(Duration.ofHours(1)));
-        configMap.put(Repositories.CACHE_2HOURS, config.entryTtl(Duration.ofHours(2)));
-        configMap.put(Repositories.CACHE_10SECONDS, config.entryTtl(Duration.ofSeconds(10)));
-        configMap.put(Repositories.CACHE_10MINUTES, config.entryTtl(Duration.ofMinutes(10)));
+        cacheRepositories.forEach(e -> configMap.put(e.getName(), config.entryTtl(e.getTtl())));
         return configMap;
     }
 

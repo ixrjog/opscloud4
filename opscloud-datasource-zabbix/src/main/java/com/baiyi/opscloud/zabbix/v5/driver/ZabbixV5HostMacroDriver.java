@@ -32,7 +32,7 @@ public class ZabbixV5HostMacroDriver extends SimpleZabbixV5HostDriver {
                 .build();
         ZabbixHost.UpdateHostResponse response = updateHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult().getHostids())) {
-            log.error("更新Zabbix主机宏属性: hostName = {} , macros = {}", host.getHost(), JSONUtil.writeValueAsString(macros));
+            log.error("Update Zabbix HostMacro error: hostName={} , macros={}", host.getHost(), JSONUtil.writeValueAsString(macros));
         }
     }
 

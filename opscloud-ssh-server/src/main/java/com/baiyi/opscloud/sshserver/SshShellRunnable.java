@@ -140,7 +140,7 @@ public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, 
                 sizeAvailable = true;
             } catch (NumberFormatException e) {
                 if (!log.isTraceEnabled()) {
-                    log.debug("Unable to get terminal size : {}:{}", e.getClass().getSimpleName(), e.getMessage());
+                    log.debug("Unable to get terminal size: {}:{}", e.getClass().getSimpleName(), e.getMessage());
                 } else {
                     log.trace("Unable to get terminal size", e);
                 }
@@ -217,7 +217,6 @@ public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, 
                     historyFile = new File(properties.getHistoryDirectory(), "sshShellHistory-" + user + ".log");
                 }
                 reader.setVariable(LineReader.HISTORY_FILE, historyFile.toPath());
-
                 SSH_THREAD_CONTEXT.set(new SshContext(this, terminal, reader, authentication));
                 shellListenerService.onSessionStarted(session);
                 shell.run(new SshShellInputProvider(reader, promptProvider));
@@ -261,8 +260,7 @@ public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, 
         return sshShellCommandFactory;
     }
 
-    static class SshShellInputProvider
-            extends InteractiveShellApplicationRunner.JLineInputProvider {
+    static class SshShellInputProvider extends InteractiveShellApplicationRunner.JLineInputProvider {
 
         public SshShellInputProvider(LineReader lineReader, PromptProvider promptProvider) {
             super(lineReader, promptProvider);

@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.Max;
+
 /**
  * @Author baiyi
  * @Date 2021/12/31 9:36 AM
@@ -24,6 +26,8 @@ public class SuperPageParam {
     @Builder.Default
     private Integer page = 1;
 
+    @Max(value = 1024, message = "分页查询最大限制1024条记录")
     @ApiModelProperty(value = "分页页长", example = "10")
     private Integer length;
+
 }

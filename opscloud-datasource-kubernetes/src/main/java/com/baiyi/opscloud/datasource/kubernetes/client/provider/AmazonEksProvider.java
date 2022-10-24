@@ -34,10 +34,20 @@ public class AmazonEksProvider {
      * @param kubernetes
      * @return
      */
-    public static KubernetesClient buildWithProviderClient(KubernetesConfig.Kubernetes kubernetes) throws URISyntaxException {
-        String token = amazonEksHelper.generateEksToken(kubernetes.getAmazonEks());
-        initConfig(kubernetes);
-        return build(kubernetes.getAmazonEks().getUrl(), token);
+//<<<<<<< HEAD
+//    public static KubernetesClient buildWithProviderClient(KubernetesConfig.Kubernetes kubernetes) throws URISyntaxException {
+//        String token = amazonEksHelper.generateEksToken(kubernetes.getAmazonEks());
+//        initConfig(kubernetes);
+//        return build(kubernetes.getAmazonEks().getUrl(), token);
+//=======
+    public static KubernetesClient buildWithProvider(KubernetesConfig.Kubernetes kubernetes) {
+        try {
+            String token = amazonEksHelper.generateEksToken(kubernetes.getAmazonEks());
+            return build(kubernetes.getAmazonEks().getUrl(), token);
+        } catch (URISyntaxException e) {
+            log.error(e.getMessage());
+        }
+        return null;
     }
 
     private static KubernetesClient build(String url, String token) {

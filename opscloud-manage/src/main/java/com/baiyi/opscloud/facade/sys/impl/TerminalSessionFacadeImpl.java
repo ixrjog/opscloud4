@@ -12,7 +12,6 @@ import com.baiyi.opscloud.facade.sys.TerminalSessionFacade;
 import com.baiyi.opscloud.packer.sys.TerminalSessionInstanceCommandPacker;
 import com.baiyi.opscloud.packer.sys.TerminalSessionPacker;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceCommandService;
-import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +31,6 @@ import java.util.stream.Collectors;
 public class TerminalSessionFacadeImpl implements TerminalSessionFacade {
 
     private final TerminalSessionService terminalSessionService;
-
-    private final TerminalSessionInstanceService terminalSessionInstanceService;
 
     private final TerminalSessionInstanceCommandPacker terminalSessionInstanceCommandPacker;
 

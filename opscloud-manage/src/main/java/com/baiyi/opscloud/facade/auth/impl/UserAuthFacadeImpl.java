@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.param.auth.LoginParam;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleResourceVO;
 import com.baiyi.opscloud.domain.vo.auth.LogVO;
 import com.baiyi.opscloud.facade.auth.AuthFacade;
-import com.baiyi.opscloud.facade.auth.AuthPlatformHelper;
+import com.baiyi.opscloud.facade.auth.PlatformAuthHelper;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import com.baiyi.opscloud.facade.auth.UserTokenFacade;
 import com.baiyi.opscloud.facade.auth.mfa.MfaAuthHelper;
@@ -56,16 +56,16 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
 
     private final StringEncryptor stringEncryptor;
 
-    private final DsAuthManager authProviderManager;
+    private final DsAuthManager dsAuthManager;
 
     private final MfaAuthHelper mfaAuthHelper;
 
     private final AuthPlatformLogService authPlatformLogService;
 
-    private final AuthPlatformHelper authPlatformHelper;
+    private final PlatformAuthHelper platformAuthHelper;
 
     @Override
-    public void tryUserHasResourceAuthorize(String token, String resourceName) {
+    public void verifyUserHasResourcePermissionWithToken(String token, String resourceName) {
         AuthResource authResource = authResourceService.queryByName(resourceName);
         if (authResource == null)
             throw new AuthCommonException(ErrorEnum.AUTHENTICATION_RESOURCE_NOT_EXIST);
@@ -92,7 +92,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     }
 
     @Override
-    public void tryUserHasResourceAuthorizeByAccessToken(String accessToken, String resourceName) {
+    public void verifyUserHasResourcePermissionWithAccessToken(String accessToken, String resourceName) {
         AuthResource authResource = authResourceService.queryByName(resourceName);
         if (authResource == null)
             throw new AuthCommonException(ErrorEnum.AUTHENTICATION_RESOURCE_NOT_EXIST);
@@ -128,7 +128,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     public LogVO.Login login(LoginParam.Login loginParam) {
         User user = userService.getByUsername(loginParam.getUsername());
         // 尝试使用authProvider 认证
-        if (authProviderManager.tryLogin(user, loginParam)) {
+        if (dsAuthManager.tryLogin(user, loginParam)) {
             boolean bindMfa = false;
             if (user.getMfa()) {
                 mfaAuthHelper.verify(user, loginParam);
@@ -150,11 +150,11 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     }
 
     @Override
-    public LogVO.Login platformLogin(LoginParam.PlatformLogin loginParam) {
-        AuthPlatform authPlatform = authPlatformHelper.verify(loginParam);
+    public LogVO.Login loginWithPlatform(LoginParam.PlatformLogin loginParam) {
+        AuthPlatform authPlatform = platformAuthHelper.verify(loginParam);
         User user = userService.getByUsername(loginParam.getUsername());
         // 尝试使用authProvider 认证
-        if (authProviderManager.tryLogin(user, loginParam)) {
+        if (dsAuthManager.tryLogin(user, loginParam)) {
             if (user.getMfa()) {
                 try {
                     mfaAuthHelper.verify(user, loginParam);

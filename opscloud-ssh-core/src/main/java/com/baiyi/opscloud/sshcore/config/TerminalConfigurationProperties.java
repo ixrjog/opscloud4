@@ -15,8 +15,15 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "terminal", ignoreInvalidFields = true)
 public class TerminalConfigurationProperties {
 
-    private String auditPath;
-    private Boolean openAudit;
+    @Data
+    public static class Audit {
+
+        private String path;
+        private Boolean open;
+
+    }
+
+    private Audit audit;
 
     public interface Suffix {
         String AUDIT_LOG = ".log";
@@ -25,14 +32,15 @@ public class TerminalConfigurationProperties {
     }
 
     public String buildAuditLogPath(String sessionId, String instanceId) {
-        return Joiner.on("/").join(auditPath, sessionId, instanceId + Suffix.AUDIT_LOG);
+        return Joiner.on("/").join(audit.getPath(), sessionId, instanceId + Suffix.AUDIT_LOG);
     }
 
     public String buildCommanderLogPath(String sessionId, String instanceId) {
-        return Joiner.on("/").join(auditPath, sessionId, instanceId + Suffix.COMMAND_LOG);
+        return Joiner.on("/").join(audit.getPath(), sessionId, instanceId + Suffix.COMMAND_LOG);
     }
 
     public String buildFmtCommanderLogPath(String sessionId, String instanceId) {
-        return Joiner.on("/").join(auditPath, sessionId, instanceId + Suffix.FMT_COMMAND_LOG);
+        return Joiner.on("/").join(audit.getPath(), sessionId, instanceId + Suffix.FMT_COMMAND_LOG);
     }
+
 }

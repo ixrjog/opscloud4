@@ -11,9 +11,9 @@ import java.util.List;
  * @Version 1.0
  */
 @Slf4j
-public class IPRegionUtil {
+public class IPUtil {
 
-    private IPRegionUtil() {
+    private IPUtil() {
     }
 
 
@@ -22,7 +22,7 @@ public class IPRegionUtil {
      * @param mask    192.168.0.0/16
      * @return
      */
-    public static boolean isInRange(String network, String mask) {
+    public static boolean includeMask(String network, String mask) {
         if ("0.0.0.0/0".equals(mask) || "0.0.0.0".equals(mask))
             return true;
         String[] networkips = network.split("\\.");
@@ -41,13 +41,13 @@ public class IPRegionUtil {
         return (ipAddr & mask1) == (cidrIpAddr & mask1);
     }
 
-    public static boolean isInRanges(String network, List<String> masks) {
+    public static boolean includeMasks(String network, List<String> masks) {
         // 不配置Regions则默认包含
         if (CollectionUtils.isEmpty(masks))
             return true;
         for (String mask : masks) {
             try {
-                if (IPRegionUtil.isInRange(network, mask))
+                if (IPUtil.includeMask(network, mask))
                     return true;
             } catch (Exception e) {
                 // 格式错误

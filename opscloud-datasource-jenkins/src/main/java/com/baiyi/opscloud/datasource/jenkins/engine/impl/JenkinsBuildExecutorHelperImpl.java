@@ -45,7 +45,7 @@ public class JenkinsBuildExecutorHelperImpl implements JenkinsBuildExecutorHelpe
     private final DsConfigHelper dsConfigHelper;
 
     @Override
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_10SECONDS, key = "'jenkins.build.executor#instance_uuid_'+ #instance.uuid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10S, key = "'jenkins.build.executor#instance_uuid_'+ #instance.uuid", unless = "#result == null")
     public JenkinsBuildExecutorStatusVO.Children generatorBuildExecutorStatus(DatasourceInstance instance) {
         DatasourceConfig datasourceConfig = dsConfigHelper.getConfigByInstanceUuid(instance.getUuid());
         JenkinsConfig jenkinsConfig = dsConfigHelper.build(datasourceConfig, JenkinsConfig.class);
@@ -70,7 +70,7 @@ public class JenkinsBuildExecutorHelperImpl implements JenkinsBuildExecutorHelpe
                         if (computer.details().getOffline())
                             name += "(Offline)";
                     } catch (IOException e) {
-                        log.error("查询节点状态错误: name = {}, err = {} ", k, e.getMessage());
+                        log.error("查询节点状态错误: name={}, err= {}", k, e.getMessage());
                     }
                     JenkinsBuildExecutorStatusVO.Children node = JenkinsBuildExecutorStatusVO.Children.builder()
                             .name(name)
@@ -81,7 +81,7 @@ public class JenkinsBuildExecutorHelperImpl implements JenkinsBuildExecutorHelpe
                 }
             });
         } catch (Exception e) {
-            log.error("组装Jenkins引擎工作负载错误: err = {}", e.getMessage());
+            log.error("组装Jenkins引擎工作负载错误: err={}", e.getMessage());
         }
         return computers;
     }

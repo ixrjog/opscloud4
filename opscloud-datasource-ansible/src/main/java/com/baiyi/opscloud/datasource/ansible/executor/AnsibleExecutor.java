@@ -48,6 +48,7 @@ public class AnsibleExecutor {
                     .error(errorStream)
                     .build();
         } catch (Exception e) {
+            log.error(e.getMessage());
             AnsibleExecuteResult result = AnsibleExecuteResult.FAILED;
             result.setException(e);
             return result;

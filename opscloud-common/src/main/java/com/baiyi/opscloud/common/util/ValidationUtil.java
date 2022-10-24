@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * @Date 2020/1/7 1:52 下午
  * @Version 1.0
  */
-public class RegexUtil {
+public class ValidationUtil {
 
     private interface RegexMatches {
         String PHONE = "^1[3456789]\\d{9}$";

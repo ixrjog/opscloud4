@@ -1,6 +1,9 @@
 package com.baiyi.opscloud.common.builder;
 
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
+
 /**
  * @Author baiyi
  * @Date 2021/6/16 1:24 下午
@@ -18,8 +21,16 @@ public class SimpleDictBuilder {
     }
 
     public SimpleDictBuilder putParam(String name, String value) {
-        if (!StringUtils.isEmpty(value))
+        if (!StringUtils.isEmpty(value)) {
             simpleDict.put(name, value);
+        }
+        return this;
+    }
+
+    public SimpleDictBuilder putWithDict(Map<String, String> dict) {
+        if (dict != null) {
+            simpleDict.put(dict);
+        }
         return this;
     }
 

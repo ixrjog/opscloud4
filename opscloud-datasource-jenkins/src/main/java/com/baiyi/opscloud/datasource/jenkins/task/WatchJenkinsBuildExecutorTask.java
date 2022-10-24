@@ -38,6 +38,7 @@ public class WatchJenkinsBuildExecutorTask implements Runnable {
                 send(children);
                 TimeUnit.MILLISECONDS.sleep(10000L);
             } catch (InterruptedException e) {
+                log.error(e.getMessage());
             }
         }
     }

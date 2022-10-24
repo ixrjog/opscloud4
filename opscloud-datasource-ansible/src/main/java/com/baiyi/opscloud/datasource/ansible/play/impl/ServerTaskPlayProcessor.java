@@ -47,7 +47,7 @@ public class ServerTaskPlayProcessor extends AbstractTaskPlayProcessor<ServerTas
     private void doTask(Session session, Integer serverTaskMemberId) {
         ServerTaskMember serverTaskMember = serverTaskMemberService.getById(serverTaskMemberId);
         if (serverTaskMember == null) {
-            log.error("serverTaskMember不存在！ serverTaskMemberId = {}", serverTaskMemberId);
+            log.error("ServerTaskMember不存在: serverTaskMemberId={}", serverTaskMemberId);
             return;
         }
         if (serverTaskMember.getFinalized()) {
@@ -80,7 +80,7 @@ public class ServerTaskPlayProcessor extends AbstractTaskPlayProcessor<ServerTas
             if (session.isOpen())
                 session.getBasicRemote().sendText(pom.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
