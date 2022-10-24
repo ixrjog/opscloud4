@@ -2,9 +2,9 @@ package com.baiyi.opscloud.datasource.kubernetes.client;
 
 import com.baiyi.opscloud.common.constants.KubernetesProviders;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.datasource.kubernetes.client.provider.AmazonEksProvider;
 import com.baiyi.opscloud.datasource.kubernetes.client.provider.DefaultKubernetesProvider;
+import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesException;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -43,10 +43,10 @@ public class KubeClient {
             try {
                 return AmazonEksProvider.buildWithProviderClient(kubernetes);
             } catch (URISyntaxException e) {
-                throw new CommonRuntimeException("KubernetesClient错误: err={}", e.getMessage());
+                throw new KubernetesException("KubernetesClient错误: err={}", e.getMessage());
             }
         }
-        throw new CommonRuntimeException("Kubernetes无效的供应商配置: provider={}", kubernetes.getProvider());
+        throw new KubernetesException("Kubernetes无效的供应商配置: provider={}", kubernetes.getProvider());
     }
 
 }

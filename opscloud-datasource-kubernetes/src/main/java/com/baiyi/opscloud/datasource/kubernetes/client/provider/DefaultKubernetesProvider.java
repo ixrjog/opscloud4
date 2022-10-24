@@ -16,7 +16,7 @@ import io.fabric8.kubernetes.client.KubernetesClientBuilder;
 public class DefaultKubernetesProvider {
 
     public static KubernetesClient buildDefaultClient(KubernetesConfig.Kubernetes kubernetes) {
-        initConfig(kubernetes);
+        preInitConfig(kubernetes);
         io.fabric8.kubernetes.client.Config config = new ConfigBuilder()
                 .withTrustCerts(true)
                 // .withWebsocketTimeout(KubeClient.Config.WEBSOCKET_TIMEOUT)
@@ -26,7 +26,7 @@ public class DefaultKubernetesProvider {
         return new KubernetesClientBuilder().withConfig(config).build();
     }
 
-    private static void initConfig(KubernetesConfig.Kubernetes kubernetes) {
+    private static void preInitConfig(KubernetesConfig.Kubernetes kubernetes) {
         System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE, toKubeconfigPath(kubernetes));
         System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_REQUEST_TIMEOUT_SYSTEM_PROPERTY, String.valueOf(KubeClient.Config.REQUEST_TIMEOUT));
         System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_WEBSOCKET_TIMEOUT_SYSTEM_PROPERTY, String.valueOf(KubeClient.Config.WEBSOCKET_TIMEOUT));

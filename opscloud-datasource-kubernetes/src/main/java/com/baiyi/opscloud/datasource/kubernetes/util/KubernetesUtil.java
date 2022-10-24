@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.kubernetes.util;
 
+import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesException;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.client.KubernetesClient;
 
@@ -20,7 +21,8 @@ public class KubernetesUtil {
         InputStream is = new ByteArrayInputStream(content.getBytes());
         List<HasMetadata> resources = kuberClient.load(is).get();
         if (resources.isEmpty()) // 配置文件为空
-            throw new RuntimeException("转换Deployment配置文件错误!");
+            throw new KubernetesException("转换Deployment配置文件错误!");
         return resources.get(0);
     }
+
 }
