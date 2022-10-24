@@ -48,6 +48,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.sshd.common.channel.ChannelOutputStream;
 import org.apache.sshd.server.session.ServerSession;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
@@ -177,7 +178,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                 List<Pod> pods = KubernetesPodDriver.listPod(kubernetesDsInstanceMap
                         .get(instanceUuid).getKubernetesDsInstanceConfig().getKubernetes(), datasourceAsset.getAssetKey2(), datasourceAsset.getAssetKey());
                 if (CollectionUtils.isEmpty(pods)) {
-                    log.info("查询Pods为空: namespace = {} , deploymentName = {}", datasourceAsset.getAssetKey2(), datasourceAsset.getAssetKey());
+                    log.warn("查询Pods为空: namespace={}, deploymentName={}", datasourceAsset.getAssetKey2(), datasourceAsset.getAssetKey());
                     continue;
                 }
                 for (Pod pod : pods) {
@@ -282,7 +283,10 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
 
         SshContext sshContext = getSshContext();
-        WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getSshShellRunnable().getOs());
+        ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
+        // 无延迟
+        out.setNoDelay(true);
+        WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, out);
         Thread thread = new Thread(run);
         thread.start();
         try {
@@ -300,7 +304,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                 TimeUnit.SECONDS.sleep(1L);
             }
         } catch (IOException | InterruptedException ie) {
-            log.error("执行Arthas错误！");
+            log.error("执行Arthas错误: err={}",ie.getMessage());
         }
         try {
             while (!listener.isClosed()) {
@@ -318,7 +322,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                 tryResize(size, terminal, execWatch);
             }
         } catch (IOException | InterruptedException e) {
-            log.error("用户关闭SSH-Server: {}", e.getMessage());
+            log.error("用户关闭SSH-Server: err={}", e.getMessage());
         } finally {
             simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             podCommandAudit.asyncRecordCommand(sessionId, instanceId);

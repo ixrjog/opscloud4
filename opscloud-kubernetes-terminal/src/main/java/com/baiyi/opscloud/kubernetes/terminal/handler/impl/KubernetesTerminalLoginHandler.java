@@ -70,7 +70,7 @@ public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMe
                     })
             );
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         } finally {
             executor.shutdown();
         }
