@@ -9,12 +9,6 @@ public class Global {
 
     public static final String SUPER_ADMIN = "super_admin";
 
-//    public interface TaskPools {
-//        String EXECUTOR = "asyncExecutorTaskPool";
-//        String DEFAULT = "asyncDefaultTaskPool";
-//    }
-
-
     public static final String CREATED_BY = "Created by opscloud4";
 
     // extend

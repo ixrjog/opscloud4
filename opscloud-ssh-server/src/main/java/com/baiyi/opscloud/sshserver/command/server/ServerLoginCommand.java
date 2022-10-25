@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
-import com.baiyi.opscloud.interceptor.SupserAdminInterceptor;
+import com.baiyi.opscloud.interceptor.SuperAdminInterceptor;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.sshcore.audit.ServerCommandAudit;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
@@ -73,7 +73,7 @@ public class ServerLoginCommand implements InitializingBean {
 
     private final SimpleTerminalSessionFacade simpleTerminalSessionFacade;
 
-    private final SupserAdminInterceptor sAInterceptor;
+    private final SuperAdminInterceptor sAInterceptor;
 
     private String toInstanceId(Server server) {
         ServerVO.Server serverVO = BeanCopierUtil.copyProperties(server, ServerVO.Server.class);

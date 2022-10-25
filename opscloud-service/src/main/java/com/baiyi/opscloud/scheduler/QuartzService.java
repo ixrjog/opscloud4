@@ -70,7 +70,7 @@ public class QuartzService {
             // 把作业和触发器注册到任务调度中
             scheduler.scheduleJob(jobDetail, trigger);
         } catch (Exception e) {
-            log.error("注册作业错误: e = {}", e.getMessage());
+            log.error("注册作业错误: err={}", e.getMessage());
         }
     }
 
@@ -90,7 +90,7 @@ public class QuartzService {
             // 重启触发器
             scheduler.rescheduleJob(triggerKey, trigger);
         } catch (SchedulerException e) {
-            log.error(e.getMessage());
+            log.error("更新作业错误: err={}", e.getMessage());
         }
     }
 
@@ -114,7 +114,7 @@ public class QuartzService {
             // 删除任务
             scheduler.deleteJob(jobKey);
         } catch (SchedulerException e) {
-            log.error(e.getMessage());
+            log.error("删除作业错误: err={}", e.getMessage());
         }
     }
 
@@ -129,7 +129,7 @@ public class QuartzService {
             JobKey jobKey = JobKey.jobKey(jobName, group);
             scheduler.pauseJob(jobKey);
         } catch (SchedulerException e) {
-            log.error(e.getMessage());
+            log.error("暂停作业错误: err={}", e.getMessage());
         }
     }
 
@@ -144,7 +144,7 @@ public class QuartzService {
             JobKey jobKey = JobKey.jobKey(jobName, group);
             scheduler.resumeJob(jobKey);
         } catch (SchedulerException e) {
-            log.error(e.getMessage());
+            log.error("恢复作业错误: err={}", e.getMessage());
         }
     }
 
@@ -159,12 +159,13 @@ public class QuartzService {
             JobKey jobKey = JobKey.jobKey(jobName, group);
             scheduler.triggerJob(jobKey);
         } catch (SchedulerException e) {
-            log.error(e.getMessage());
+            log.error("执行作业错误: err={}", e.getMessage());
         }
     }
 
     /**
      * 查询数据源实例任务数量
+     *
      * @param group
      * @return
      */
@@ -174,6 +175,7 @@ public class QuartzService {
             Set<JobKey> jobKeys = scheduler.getJobKeys(matcher);
             return jobKeys.size();
         } catch (SchedulerException e) {
+            log.error("查询数据源实例任务数量: err={}", e.getMessage());
             return 0;
         }
     }
