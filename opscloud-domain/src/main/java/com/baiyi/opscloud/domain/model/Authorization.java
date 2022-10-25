@@ -17,7 +17,6 @@ import java.nio.charset.StandardCharsets;
  */
 public class Authorization {
 
-
     public interface IToBasic {
 
         String toBasic();
@@ -39,8 +38,7 @@ public class Authorization {
 
         public String toBasic() {
             String authString = Joiner.on(":").join(username, password);
-            byte[] authEncBytes = Base64.encodeBase64(authString.getBytes(StandardCharsets.UTF_8));
-            return new String(authEncBytes);
+            return toBasice(authString);
         }
 
     }
@@ -59,9 +57,14 @@ public class Authorization {
 
         public String toBasic() {
             String authString = token + ":";
-            byte[] authEncBytes = Base64.encodeBase64(authString.getBytes(StandardCharsets.UTF_8));
-            return new String(authEncBytes);
+            return toBasice(authString);
         }
 
     }
+
+    private static String toBasice(String authString){
+        byte[] authEncBytes = Base64.encodeBase64(authString.getBytes(StandardCharsets.UTF_8));
+        return new String(authEncBytes);
+    }
+
 }
