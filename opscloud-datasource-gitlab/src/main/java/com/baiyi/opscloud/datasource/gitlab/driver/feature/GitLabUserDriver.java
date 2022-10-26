@@ -2,7 +2,6 @@ package com.baiyi.opscloud.datasource.gitlab.driver.feature;
 
 import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.datasource.gitlab.factory.GitLabApiFactory;
-import org.gitlab.api.models.CreateUserRequest;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Membership;
@@ -12,18 +11,15 @@ import org.gitlab4j.api.models.User;
 import java.util.List;
 
 /**
+ * https://docs.gitlab.com/ee/api/users.html
  * @Author baiyi
  * @Date 2022/10/26 13:32
  * @Version 1.0
  */
 public class GitLabUserDriver {
 
-    // private static final int ITEMS_PER_PAGE = 50;
 
-    public static User createUser(GitlabConfig.Gitlab gitlab, CreateUserRequest request) throws GitLabApiException {
-        // return  buildAPI(gitlab).getUserApi().createUser();
-        return null;
-    }
+    // private static final int ITEMS_PER_PAGE = 50;
 
     public static List<User> findUser(GitlabConfig.Gitlab gitlab, String emailOrUsername) throws GitLabApiException {
         return buildAPI(gitlab).getUserApi().findUsers(emailOrUsername);
