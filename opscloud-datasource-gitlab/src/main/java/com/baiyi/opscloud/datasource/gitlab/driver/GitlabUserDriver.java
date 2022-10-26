@@ -37,7 +37,8 @@ public class GitlabUserDriver {
         return buildAPI(gitlab).getSSHKeys(targetUserId);
     }
 
-    public static GitlabSSHKey getSSHKeys(GitlabConfig.Gitlab gitlab, Integer keyId) throws IOException {
+    @Deprecated
+    public static GitlabSSHKey getSSHKey(GitlabConfig.Gitlab gitlab, Integer keyId) throws IOException {
         return buildAPI(gitlab).getSSHKey(keyId);
     }
 

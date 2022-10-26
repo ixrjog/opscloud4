@@ -1,0 +1,125 @@
+package com.baiyi.opscloud.datasource.gitlab;
+
+import com.baiyi.opscloud.datasource.gitlab.base.BaseGitLabApiUnit;
+import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabUserDriver;
+import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.Membership;
+import org.gitlab4j.api.models.SshKey;
+import org.gitlab4j.api.models.User;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+/**
+ * @Author baiyi
+ * @Date 2022/10/26 13:57
+ * @Version 1.0
+ */
+public class GitLabApiTest extends BaseGitLabApiUnit {
+
+    private static final Long BAIYI_USER_ID = 2L;
+
+    private static final Long KEY_ID = 10L;
+
+    /**
+     * 模糊查询用户
+     */
+    @Test
+    void findUserTest() {
+        try {
+            List<User> users = GitLabUserDriver.findUser(getConfig().getGitlab(), "baiyi");
+            print(users.get(0));
+        } catch (GitLabApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 查询用户
+     */
+    @Test
+    void getUserTest() {
+        try {
+            // baiyi  userId = 2L
+            User user = GitLabUserDriver.getUser(getConfig().getGitlab(), BAIYI_USER_ID);
+            print(user);
+        } catch (GitLabApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void queryUsersTest() {
+        try {
+            List<User> users = GitLabUserDriver.queryUsers(getConfig().getGitlab());
+            print(users);
+        } catch (GitLabApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void getUserSshKeysTest() {
+        try {
+            List<SshKey> sshKeys = GitLabUserDriver.getUserSshKeys(getConfig().getGitlab(), BAIYI_USER_ID);
+            print(sshKeys);
+        } catch (GitLabApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void getSshKeyTest() {
+        try {
+            SshKey sshKey = GitLabUserDriver.getSshKey(getConfig().getGitlab(), KEY_ID);
+            print(sshKey);
+        } catch (GitLabApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * [
+     *     {
+     *         "sourceId":5,
+     *         "sourceName":"basic-service",
+     *         "sourceType":"Namespace",
+     *         "accessLevel":30
+     *     },
+     *     {
+     *         "sourceId":10,
+     *         "sourceName":"ops",
+     *         "sourceType":"Namespace",
+     *         "accessLevel":50
+     *     },
+     *     {
+     *         "sourceId":23,
+     *         "sourceName":"merchant-kili",
+     *         "sourceType":"Project",
+     *         "accessLevel":40
+     *     },
+     *     {
+     *         "sourceId":8,
+     *         "sourceName":"Android",
+     *         "sourceType":"Namespace",
+     *         "accessLevel":30
+     *     },
+     *     {
+     *         "sourceId":10,
+     *         "sourceName":"lib_net",
+     *         "sourceType":"Project",
+     *         "accessLevel":30
+     *     }
+     * ]
+     */
+    @Test
+    void getUserMembershipsTest() {
+        try {
+            List<Membership> memberships = GitLabUserDriver.getUserMemberships(getConfig().getGitlab(), BAIYI_USER_ID);
+            print(memberships);
+        } catch (GitLabApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+}

@@ -21,10 +21,22 @@ public class GitlabConfig extends BaseDsConfig {
     @NoArgsConstructor
     @ApiModel
     public static class Gitlab {
-
+        private Api api;
         private String url;
         private String token;
         private SystemHooks systemHooks;
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Api {
+
+        private String version;
+        private Integer connectTimeout;
+        private Integer readTimeout;
+
     }
 
     @Data
