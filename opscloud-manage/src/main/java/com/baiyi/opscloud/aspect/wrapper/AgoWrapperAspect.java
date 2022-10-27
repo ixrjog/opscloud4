@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.aspect.wrapper;
 
 import com.baiyi.opscloud.common.annotation.AgoWrapper;
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.common.util.time.AgoUtil;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.base.ShowTime;
@@ -28,12 +28,12 @@ public class AgoWrapperAspect {
     }
 
     @Around("@annotation(agoWrapper)")
-    public Object around(ProceedingJoinPoint joinPoint, AgoWrapper agoWrapper) throws CommonRuntimeException {
+    public Object around(ProceedingJoinPoint joinPoint, AgoWrapper agoWrapper) throws OCRuntimeException {
         Object result;
         try {
             result = joinPoint.proceed();
         } catch (Throwable e) {
-            throw new CommonRuntimeException(e.getMessage());
+            throw new OCRuntimeException(e.getMessage());
         }
         boolean extend = agoWrapper.extend();
         ShowTime.IAgo targetAgo = null;

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.aspect.wrapper;
 
 import com.baiyi.opscloud.common.annotation.LaterWrapper;
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.common.util.time.LaterUtil;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.base.ShowTime;
@@ -28,12 +28,12 @@ public class LaterWrapperAspect {
     }
 
     @Around("@annotation(laterWrapper)")
-    public Object around(ProceedingJoinPoint joinPoint, LaterWrapper laterWrapper) throws CommonRuntimeException {
+    public Object around(ProceedingJoinPoint joinPoint, LaterWrapper laterWrapper) throws OCRuntimeException {
         Object result;
         try {
             result = joinPoint.proceed();
         } catch (Throwable e) {
-            throw new CommonRuntimeException(e.getMessage());
+            throw new OCRuntimeException(e.getMessage());
         }
         boolean extend = laterWrapper.extend();
         ShowTime.ILater targetLater = null;

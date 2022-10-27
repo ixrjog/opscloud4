@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.template.impl;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.common.template.YamlUtil;
 import com.baiyi.opscloud.common.template.YamlVars;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
@@ -105,7 +105,7 @@ public class TemplateFacadeImpl implements TemplateFacade {
     @Override
     public void deleteTemplateById(int id) {
         if (businessTemplateService.countByTemplateId(id) > 0)
-            throw new CommonRuntimeException("模板已经使用无法删除！");
+            throw new OCRuntimeException("模板已经使用无法删除！");
         templateService.deleteById(id);
     }
 
@@ -133,15 +133,15 @@ public class TemplateFacadeImpl implements TemplateFacade {
     public BusinessTemplateVO.BusinessTemplate createAssetByBusinessTemplate(int id) {
         BusinessTemplate bizTemplate = businessTemplateService.getById(id);
         if (bizTemplate == null)
-            throw new CommonRuntimeException("无法创建资产: 业务模板不存在!");
+            throw new OCRuntimeException("无法创建资产: 业务模板不存在!");
         if (StringUtils.isEmpty(bizTemplate.getName()))
-            throw new CommonRuntimeException("无法创建资产: 业务模板名称不合规（空值）!");
+            throw new OCRuntimeException("无法创建资产: 业务模板名称不合规（空值）!");
         Template template = templateService.getById(bizTemplate.getTemplateId());
         if (template == null)
-            throw new CommonRuntimeException("无法创建资产: 模板不存在!");
+            throw new OCRuntimeException("无法创建资产: 模板不存在!");
         ITemplateConsume iTemplateConsume = TemplateFactory.getByInstanceAsset(template.getInstanceType(), template.getTemplateKey());
         if (iTemplateConsume == null) {
-            throw new CommonRuntimeException("无法创建资产: 无可用的生产者!");
+            throw new OCRuntimeException("无法创建资产: 无可用的生产者!");
         }
         return iTemplateConsume.produce(bizTemplate);
     }
@@ -188,7 +188,7 @@ public class TemplateFacadeImpl implements TemplateFacade {
         BusinessTemplate bizTemplate = BeanCopierUtil.copyProperties(addBusinessTemplate, BusinessTemplate.class);
         Template template = templateService.getById(bizTemplate.getTemplateId());
         if (template == null)
-            throw new CommonRuntimeException("无法创建业务模板: 模板不存在!");
+            throw new OCRuntimeException("无法创建业务模板: 模板不存在!");
         bizTemplate.setEnvType(template.getEnvType());
         bizTemplate.setVars(template.getVars());
         setName(bizTemplate);
@@ -206,7 +206,7 @@ public class TemplateFacadeImpl implements TemplateFacade {
         if (!preBizTemplate.getTemplateId().equals(businessTemplate.getTemplateId())) {
             Template template = templateService.getById(businessTemplate.getTemplateId());
             if (template == null)
-                throw new CommonRuntimeException("无法创建业务模板: 模板不存在!");
+                throw new OCRuntimeException("无法创建业务模板: 模板不存在!");
             preBizTemplate.setTemplateId(businessTemplate.getTemplateId());
             preBizTemplate.setEnvType(template.getEnvType());
             preBizTemplate.setVars(template.getVars());

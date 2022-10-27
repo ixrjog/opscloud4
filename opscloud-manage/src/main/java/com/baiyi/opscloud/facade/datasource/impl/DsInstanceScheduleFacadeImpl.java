@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.datasource.impl;
 
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.common.util.CronUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceScheduleParam;
@@ -41,24 +41,24 @@ public class DsInstanceScheduleFacadeImpl implements DsInstanceScheduleFacade {
     public List<ScheduleVO.Job> queryJob(int instanceId) {
         DatasourceInstance instance = instanceService.getById(instanceId);
         if (instance == null)
-            throw new CommonRuntimeException("数据源实例不存在！");
+            throw new OCRuntimeException("数据源实例不存在！");
         try {
             return quartzService.queryJob(instance.getUuid());
         } catch (SchedulerException e) {
             log.error(e.getMessage());
-            throw new CommonRuntimeException("查询数据源实例任务错误: " + e.getMessage());
+            throw new OCRuntimeException("查询数据源实例任务错误: " + e.getMessage());
         }
     }
 
     @Override
     public void addJob(DsInstanceScheduleParam.AddJob param) {
         if (!jobClassMap.containsKey(param.getJobType()))
-            throw new CommonRuntimeException("任务类型不存在！");
+            throw new OCRuntimeException("任务类型不存在！");
         DatasourceInstance instance = instanceService.getById(param.getInstanceId());
         if (instance == null)
-            throw new CommonRuntimeException("数据源实例不存在！");
+            throw new OCRuntimeException("数据源实例不存在！");
         if (quartzService.checkJobExist(instance.getUuid(), param.getAssetType()))
-            throw new CommonRuntimeException("任务已存在！");
+            throw new OCRuntimeException("任务已存在！");
         addJob(instance, param);
     }
 

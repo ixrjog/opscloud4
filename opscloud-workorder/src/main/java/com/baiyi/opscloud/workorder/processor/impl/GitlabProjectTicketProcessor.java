@@ -55,14 +55,14 @@ public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTic
 
         gitlabUsers = gitlabUserDelegate.findUser(config, username);
         Optional<GitlabUser> optionalGitlabUser = gitlabUsers.stream().filter(e -> e.getUsername().equals(username)).findFirst();
-        // throw new TicketProcessException("Gitlab实例无申请用户账户: 请登录Gitlab实例后再申请权限！");
+
         GitlabUser gitlabUser = optionalGitlabUser.orElseGet(() -> gitlabUserDelegate.createGitlabUser(config, username));
         Optional<GitlabAccessLevelConstants> optionalGitlabAccessLevelConstants = Arrays.stream(GitlabAccessLevelConstants.values())
                 .filter(e -> e.getRole().equalsIgnoreCase(role))
                 .findFirst();
 
         if (!optionalGitlabAccessLevelConstants.isPresent())
-            throw new TicketProcessException("Gitlab角色名称错误: role = " + role);
+            throw new TicketProcessException("角色名称错误: role={}", role);
 
         GitlabAccessLevel gitlabAccessLevel = GitlabAccessLevel.fromAccessValue(optionalGitlabAccessLevelConstants.get().getAccessValue());
         List<GitlabProjectMember> gitlabProjectMembers = gitlabProjectDelegate.getProjectMembers(config, Integer.parseInt(entry.getAssetId()));
@@ -115,7 +115,7 @@ public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTic
             throw new TicketProcessException("工单进度不是新建，无法更新配置条目！");
         String role = ticketEntry.getRole();
         if (Arrays.stream(GitlabAccessLevelConstants.values()).noneMatch(e -> e.getRole().equalsIgnoreCase(role))) {
-            throw new TicketProcessException("更新角色错误: 不支持的角色名称！");
+            throw new TicketProcessException("修改角色错误，不支持该名称！");
         }
         WorkOrderTicketEntry preTicketEntry = ticketEntryService.getById(ticketEntry.getId());
         preTicketEntry.setRole(role);

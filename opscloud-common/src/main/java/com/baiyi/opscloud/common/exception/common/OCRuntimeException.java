@@ -12,27 +12,27 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class CommonRuntimeException extends BaseException {
+public class OCRuntimeException extends BaseException {
 
     private static final long serialVersionUID = -2938977933351653100L;
     private final Integer code = 999;
 
-    public CommonRuntimeException(String message) {
+    public OCRuntimeException(String message) {
         super(message);
         setCode(code);
     }
 
-    public CommonRuntimeException(String message, Object... var2) {
+    public OCRuntimeException(String message, Object... var2) {
         super(message,var2);
         setCode(code);
     }
 
-
-    public CommonRuntimeException(ErrorEnum errorEnum) {
+    public OCRuntimeException(ErrorEnum errorEnum) {
         super(errorEnum);
     }
 
-    public CommonRuntimeException(String message, Throwable cause) {
+    public OCRuntimeException(String message, Throwable cause) {
         super(message, cause);
     }
+
 }

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.message.consumer.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.DingtalkConfig;
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.datasource.dingtalk.driver.DingtalkMessageDriver;
 import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkMessageParam;
 import com.baiyi.opscloud.datasource.message.consumer.base.AbstractMessageConsumer;
@@ -34,7 +34,7 @@ public class DingtalkAppMessageConsumer extends AbstractMessageConsumer<Dingtalk
             if (asset.getInstanceUuid().equals(instance.getUuid()) && asset.getAssetType().equals(DsAssetTypeConstants.DINGTALK_USER.name()))
                 return asset;
         }
-        throw new CommonRuntimeException("发送消息失败: 用户未绑定钉钉用户无法查找对应userid！username=" + user.getUsername());
+        throw new OCRuntimeException("发送消息失败: 用户未绑定钉钉用户无法查找对应userid！username=" + user.getUsername());
     }
 
     @Override

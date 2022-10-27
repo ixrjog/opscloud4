@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.sys.impl;
 
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.sys.CredentialParam;
@@ -62,7 +62,7 @@ public class CredentialFacadeImpl implements CredentialFacade {
         if (credential == null) return;
         Map<String, ICredentialCustomer> context = CredentialCustomerFactory.getContext();
         context.keySet().stream().map(context::get).filter(iCredentialCustomer -> iCredentialCustomer.hasUsedCredential(id)).forEachOrdered(iCredentialCustomer -> {
-            throw new CommonRuntimeException("该凭据正在使用中！");
+            throw new OCRuntimeException("该凭据正在使用中！");
         });
         credentialService.deleteById(id);
     }

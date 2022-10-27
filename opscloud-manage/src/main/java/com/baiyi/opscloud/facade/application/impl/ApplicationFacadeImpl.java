@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.application.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.auth.AuthCommonException;
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
@@ -125,14 +125,14 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     @Override
     public DataTable<ApplicationResourceVO.Resource> previewApplicationResourcePage(ApplicationResourceParam.ResourcePageQuery pageQuery) {
         IApplicationResourceQuery iApplicationResourceQuery = ApplicationResourceQueryFactory.getIApplicationResourceQuery(pageQuery.getApplicationResType(), pageQuery.getBusinessType());
-        if (iApplicationResourceQuery == null) throw new CommonRuntimeException("无法预览应用资源，未找到对应的方法！");
+        if (iApplicationResourceQuery == null) throw new OCRuntimeException("无法预览应用资源，未找到对应的方法！");
         return iApplicationResourceQuery.queryResourcePage(pageQuery);
     }
 
     @Override
     public ApplicationVO.Application getApplicationById(Integer id) {
         Application application = applicationService.getById(id);
-        if (application == null) throw new CommonRuntimeException(ErrorEnum.APPLICATION_NOT_EXIST);
+        if (application == null) throw new OCRuntimeException(ErrorEnum.APPLICATION_NOT_EXIST);
         ApplicationVO.Application vo = BeanCopierUtil.copyProperties(application, ApplicationVO.Application.class);
         applicationPacker.wrap(vo, SimpleExtend.EXTEND);
         return vo;
@@ -141,7 +141,7 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     @Override
     public void addApplication(ApplicationVO.Application application) {
         if (applicationService.getByKey(application.getApplicationKey()) != null)
-            throw new CommonRuntimeException(ErrorEnum.APPLICATION_ALREADY_EXIST);
+            throw new OCRuntimeException(ErrorEnum.APPLICATION_ALREADY_EXIST);
         Application app = BeanCopierUtil.copyProperties(application, Application.class);
         applicationService.add(app);
     }
@@ -149,7 +149,7 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     @Override
     public void updateApplication(ApplicationVO.Application application) {
         Application app = applicationService.getByKey(application.getApplicationKey());
-        if (app == null) throw new CommonRuntimeException(ErrorEnum.APPLICATION_ALREADY_EXIST);
+        if (app == null) throw new OCRuntimeException(ErrorEnum.APPLICATION_ALREADY_EXIST);
         app.setComment(application.getComment());
         app.setName(application.getName());
         applicationService.update(app);
@@ -159,14 +159,14 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     @TagClear
     public void deleteApplication(Integer id) {
         if (!CollectionUtils.isEmpty(applicationResourceService.queryByApplication(id)))
-            throw new CommonRuntimeException(ErrorEnum.APPLICATION_RES_IS_NOT_EMPTY);
+            throw new OCRuntimeException(ErrorEnum.APPLICATION_RES_IS_NOT_EMPTY);
         applicationService.deleteById(id);
     }
 
     @Override
     public void bindApplicationResource(ApplicationResourceVO.Resource resource) {
         if (applicationResourceService.getByUniqueKey(resource.getApplicationId(), resource.getBusinessType(), resource.getBusinessId()) != null)
-            throw new CommonRuntimeException(ErrorEnum.APPLICATION_RES_ALREADY_EXIST);
+            throw new OCRuntimeException(ErrorEnum.APPLICATION_RES_ALREADY_EXIST);
         ApplicationResource res = BeanCopierUtil.copyProperties(resource, ApplicationResource.class);
         applicationResourceService.add(res);
     }

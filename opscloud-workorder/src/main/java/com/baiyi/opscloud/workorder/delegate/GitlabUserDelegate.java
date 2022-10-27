@@ -34,7 +34,7 @@ public class GitlabUserDelegate {
         try {
             return GitlabUserDriver.findUser(gitlab, emailOrUsername);
         } catch (IOException e) {
-            throw new TicketProcessException(String.format("Gitlab 查询用户错误: %s", e.getMessage()));
+            throw new TicketProcessException("Gitlab查询用户错误: %s", e.getMessage());
         }
     }
 
@@ -48,7 +48,7 @@ public class GitlabUserDelegate {
         try {
             return GitlabUserDriver.createUser(gitlab, request);
         } catch (IOException e) {
-            throw new TicketProcessException(String.format("Gitlab 创建用户错误: %s", e.getMessage()));
+            throw new TicketProcessException("Gitlab创建用户错误: %s", e.getMessage());
         }
     }
 

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.aspect.wrapper;
 
 import com.baiyi.opscloud.common.annotation.DurationWrapper;
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.base.ShowTime;
 import lombok.extern.slf4j.Slf4j;
@@ -30,12 +30,12 @@ public class DurationWrapperAspect {
     }
 
     @Around("@annotation(durationWrapper)")
-    public Object around(ProceedingJoinPoint joinPoint, DurationWrapper durationWrapper) throws CommonRuntimeException {
+    public Object around(ProceedingJoinPoint joinPoint, DurationWrapper durationWrapper) throws OCRuntimeException {
         Object result;
         try {
             result = joinPoint.proceed();
         } catch (Throwable e) {
-            throw new CommonRuntimeException(e.getMessage());
+            throw new OCRuntimeException(e.getMessage());
         }
         boolean extend = durationWrapper.extend();
         ShowTime.IDuration targetDuration = null;

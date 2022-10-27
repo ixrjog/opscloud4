@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.workevent.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.auth.AuthCommonException;
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
@@ -104,7 +104,7 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
         // ADMIN角色可以操作所有
         if (accessLevel >= AccessLevel.ADMIN.getLevel()) return;
         if (SessionUtil.equalsUsername(workEvent.getUsername())) return;
-        throw new CommonRuntimeException("只能变更自己创建的工作事件");
+        throw new OCRuntimeException("只能变更自己创建的工作事件");
     }
 
     @Override

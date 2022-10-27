@@ -25,7 +25,7 @@ public class GitlabGroupDelegate {
         try {
             GitlabGroupDriver.addGroupMember(gitlab, groupId, userId, accessLevel);
         } catch (IOException e) {
-            throw new TicketProcessException(String.format("Gitlab 新增群组成员错误: %s", e.getMessage()));
+            throw new TicketProcessException("Gitlab新增群组成员错误: %s", e.getMessage());
         }
     }
 
@@ -34,7 +34,7 @@ public class GitlabGroupDelegate {
         try {
             return GitlabGroupDriver.getGroupMembers(gitlab, groupId);
         } catch (Exception e) {
-            throw new TicketProcessException(String.format("Gitlab 查询群组成员错误: %s", e.getMessage()));
+            throw new TicketProcessException("Gitlab查询群组成员错误: %s", e.getMessage());
         }
     }
 
@@ -43,7 +43,7 @@ public class GitlabGroupDelegate {
         try {
             GitlabGroupDriver.deleteGroupMember(gitlab, groupId, userId);
         } catch (IOException e) {
-            throw new TicketProcessException(String.format("Gitlab 删除群组成员错误: %s", e.getMessage()));
+            throw new TicketProcessException("Gitlab删除群组成员错误: %s", e.getMessage());
         }
     }
 }

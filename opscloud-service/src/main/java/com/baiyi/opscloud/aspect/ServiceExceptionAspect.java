@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.aspect;
 
 import com.baiyi.opscloud.common.annotation.ServiceExceptionCatch;
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -34,7 +34,7 @@ public class ServiceExceptionAspect {
             return proceedingJoinPoint.proceed();
         } catch (Throwable throwable) {
             if (throwable instanceof DuplicateKeyException) {
-                throw new CommonRuntimeException(serviceExceptionCatch.message());
+                throw new OCRuntimeException(serviceExceptionCatch.message());
             }
             throw throwable;
         }

@@ -27,8 +27,8 @@ public class GitlabProjectDelegate {
         } catch (IOException e) {
             // "{\"message\":{\"access_level\":[\"is not included in the list"
             if (e.getMessage().contains("is not included in the list"))
-                throw new TicketProcessException(String.format("Gitlab 新增项目成员错误: 不支持授权 %s 角色", accessLevel.name()));
-            throw new TicketProcessException(String.format("Gitlab 新增项目成员错误: %s", e.getMessage()));
+                throw new TicketProcessException("Gitlab新增项目成员错误: 不支持授权 %s 角色", accessLevel.name());
+            throw new TicketProcessException("Gitlab新增项目成员错误: %s", e.getMessage());
         }
     }
 
@@ -37,7 +37,7 @@ public class GitlabProjectDelegate {
         try {
             return GitlabProjectDriver.getProjectMembers(gitlab, projectId);
         } catch (IOException e) {
-            throw new TicketProcessException(String.format("Gitlab 查询项目成员错误: %s", e.getMessage()));
+            throw new TicketProcessException("Gitlab查询项目成员错误: %s", e.getMessage());
         }
     }
 
@@ -46,7 +46,7 @@ public class GitlabProjectDelegate {
         try {
             GitlabProjectDriver.updateProjectMember(gitlab, projectId, userId, accessLevel);
         } catch (IOException e) {
-            throw new TicketProcessException(String.format("Gitlab 更新项目成员错误: %s", e.getMessage()));
+            throw new TicketProcessException("Gitlab更新项目成员错误: %s", e.getMessage());
         }
     }
 

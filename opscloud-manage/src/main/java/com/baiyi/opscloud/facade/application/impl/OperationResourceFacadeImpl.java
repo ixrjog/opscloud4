@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade.application.impl;
 import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.constants.OperationConstants;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.common.util.TimeUtil;
@@ -71,12 +71,12 @@ public class OperationResourceFacadeImpl implements OperationResourceFacade {
     @Override
     public void operationResource(ApplicationResourceOperationParam.OperationResource operationResource) {
         ApplicationResource applicationResource = applicationResourceService.getById(operationResource.getResourceId());
-        if (applicationResource == null) throw new CommonRuntimeException(ErrorEnum.APPLICATION_RES_NOT_EXIST);
+        if (applicationResource == null) throw new OCRuntimeException(ErrorEnum.APPLICATION_RES_NOT_EXIST);
         String username = SessionUtil.getUsername();
         User user = userService.getByUsername(username);
         boolean isAdmin = isAdmin(user, applicationResource);
         if (applicationResource.getBusinessType() != BusinessTypeEnum.ASSET.getType()) {
-            throw new CommonRuntimeException("资产类型不符！");
+            throw new OCRuntimeException("资产类型不符！");
         }
         DatasourceInstanceAsset asset = dsInstanceAssetService.getById(applicationResource.getBusinessId());
         List<TagVO.Tag> tags = applicationResourcePacker.acqTags(asset);
@@ -94,12 +94,12 @@ public class OperationResourceFacadeImpl implements OperationResourceFacade {
 
     private void preInspectionOfProdEnv(Env env, boolean isAdmin, ApplicationResourceOperationParam.OperationResource operationResource) {
         if (!env.getEnvName().equals(Global.ENV_PROD)) return;
-        if (!isAdmin) throw new CommonRuntimeException("应用管理员才能执行生产环境变更操作！");
-        if (StringUtils.isBlank(operationResource.getComment())) throw new CommonRuntimeException("生产环境变更操作必须说明变更原因！");
+        if (!isAdmin) throw new OCRuntimeException("应用管理员才能执行生产环境变更操作！");
+        if (StringUtils.isBlank(operationResource.getComment())) throw new OCRuntimeException("生产环境变更操作必须说明变更原因！");
 
         final String lockKey = String.format(LOCK_KEY, operationResource.getResourceId());
         if (redisUtil.hasKey(lockKey)) {
-            throw new CommonRuntimeException("生产环境90秒内禁止重复部署！");
+            throw new OCRuntimeException("生产环境90秒内禁止重复部署！");
         } else {
             // 加锁
             redisUtil.set(lockKey, true, TimeUtil.secondTime * 90 / 1000);
@@ -139,7 +139,7 @@ public class OperationResourceFacadeImpl implements OperationResourceFacade {
                 .businessId(applicationResource.getApplicationId())
                 .build();
         UserPermission userPermission = userPermissionService.getByUniqueKey(queryParam);
-        if (userPermission == null) throw new CommonRuntimeException("非授权用户禁止操作！");
+        if (userPermission == null) throw new OCRuntimeException("非授权用户禁止操作！");
         return "ADMIN".equalsIgnoreCase(userPermission.getPermissionRole());
     }
 
