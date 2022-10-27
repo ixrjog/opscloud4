@@ -18,8 +18,8 @@ import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExtendedBaseTicketProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.gitlab.api.models.GitlabAccessLevel;
-import org.gitlab.api.models.GitlabGroupMember;
 import org.gitlab.api.models.GitlabUser;
+import org.gitlab4j.api.models.Member;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -63,11 +63,13 @@ public class GitlabGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicke
             throw new TicketProcessException("Gitlab角色名称错误: role = " + role);
 
         GitlabAccessLevel gitlabAccessLevel = GitlabAccessLevel.fromAccessValue(optionalGitlabAccessLevelConstants.get().getAccessValue());
-        List<GitlabGroupMember> gitlabGroupMembers = gitlabGroupDelegate.getGroupMembers(config, Integer.parseInt(entry.getAssetId()));
-        Optional<GitlabGroupMember> optionalGitlabGroupMember = gitlabGroupMembers.stream().filter(e -> e.getId().equals(gitlabUser.getId())).findFirst();
+        // List<GitlabGroupMember> gitlabGroupMembers = gitlabGroupDelegate.getGroupMembers(config, Integer.parseInt(entry.getAssetId()));
+
+        List<Member> groupMembers = gitlabGroupDelegate.getGroupMembers(config, Integer.parseInt(entry.getAssetId()));
+        Optional<Member> optionalGitlabGroupMember = groupMembers.stream().filter(e -> e.getId().equals(gitlabUser.getId().longValue())).findFirst();
         if (optionalGitlabGroupMember.isPresent()) {
             // 用户已经拥有相同的角色
-            if (optionalGitlabGroupMember.get().getAccessLevel().accessValue == gitlabAccessLevel.accessValue) {
+            if (optionalGitlabGroupMember.get().getAccessLevel().value == gitlabAccessLevel.accessValue) {
                 return;
             } else {
                 // 删除角色重新添加

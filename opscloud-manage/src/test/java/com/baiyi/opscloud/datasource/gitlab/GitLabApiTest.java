@@ -2,12 +2,10 @@ package com.baiyi.opscloud.datasource.gitlab;
 
 import com.baiyi.opscloud.datasource.gitlab.base.BaseGitLabApiUnit;
 import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabProjectDriver;
+import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabSshKeyDriver;
 import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabUserDriver;
 import org.gitlab4j.api.GitLabApiException;
-import org.gitlab4j.api.models.Member;
-import org.gitlab4j.api.models.Membership;
-import org.gitlab4j.api.models.SshKey;
-import org.gitlab4j.api.models.User;
+import org.gitlab4j.api.models.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -51,7 +49,7 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
     }
 
     @Test
-    void queryUsersTest() {
+    void getUsersTest() {
         try {
             List<User> users = GitLabUserDriver.getUsers(getConfig().getGitlab());
             print(users);
@@ -61,9 +59,9 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
     }
 
     @Test
-    void getUserSshKeysTest() {
+    void getSshKeysWithUserIdTest() {
         try {
-            List<SshKey> sshKeys = GitLabUserDriver.getUserSshKeys(getConfig().getGitlab(), BAIYI_USER_ID);
+            List<SshKey> sshKeys = GitLabSshKeyDriver.getSshKeysWithUserId(getConfig().getGitlab(), BAIYI_USER_ID);
             print(sshKeys);
         } catch (GitLabApiException e) {
             e.printStackTrace();
@@ -124,12 +122,21 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
         }
     }
 
+    @Test
+    void getMembersTest() {
+        try {
+            List<Member> members = GitLabProjectDriver.getMembersWithProjectId(getConfigById(56).getGitlab(), 73L, 20);
+            print(members);
+        } catch (GitLabApiException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
-    void getMemberPagerTest() {
+    void getProjectsTest() {
         try {
-            List<Member> members = GitLabProjectDriver.getMembers(getConfigById(56).getGitlab(), 73L, 20);
-            print(members);
+            List<Project> projects = GitLabProjectDriver.getProjects(getConfig().getGitlab());
+            print(projects);
         } catch (GitLabApiException e) {
             e.printStackTrace();
         }

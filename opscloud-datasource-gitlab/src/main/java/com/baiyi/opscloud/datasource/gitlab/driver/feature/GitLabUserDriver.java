@@ -33,10 +33,6 @@ public class GitLabUserDriver {
         return buildAPI(gitlab).getUserApi().getUsers();
     }
 
-    public static List<SshKey> getUserSshKeys(GitlabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
-        return buildAPI(gitlab).getUserApi().getSshKeys(userId);
-    }
-
     public static List<Membership> getUserMemberships(GitlabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
         return buildAPI(gitlab).getUserApi().getMemberships(userId);
     }

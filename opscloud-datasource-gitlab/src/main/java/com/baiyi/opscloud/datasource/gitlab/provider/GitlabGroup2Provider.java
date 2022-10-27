@@ -1,26 +1,27 @@
 package com.baiyi.opscloud.datasource.gitlab.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.GitlabConfig;
+import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
-import com.baiyi.opscloud.datasource.gitlab.convert.GitlabAssetConvert;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
+import com.baiyi.opscloud.datasource.gitlab.convert.GitlabAssetConvert;
+import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabGroupDriver;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.baiyi.opscloud.datasource.gitlab.driver.GitlabGroupDriver;
-import com.google.common.collect.Lists;
-import org.gitlab.api.models.GitlabGroup;
-import org.gitlab.api.models.GitlabProject;
+import lombok.extern.slf4j.Slf4j;
+import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.Group;
+import org.gitlab4j.api.models.Project;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,11 +32,12 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_GITLA
  * @Date 2021/6/21 6:48 下午
  * @Version 1.0
  */
+@Slf4j
 @Component
-public class GitlabGroupProvider extends AbstractAssetRelationProvider<GitlabGroup, GitlabProject> {
+public class GitlabGroup2Provider extends AbstractAssetRelationProvider<Group, Project> {
 
     @Resource
-    private GitlabGroupProvider gitlabGroupProvider;
+    private GitlabGroup2Provider gitlabGroupProvider;
 
     @Override
     public String getInstanceType() {
@@ -47,18 +49,18 @@ public class GitlabGroupProvider extends AbstractAssetRelationProvider<GitlabGro
     }
 
     @Override
-    protected List<GitlabGroup> listEntities(DsInstanceContext dsInstanceContext, GitlabProject target) {
+    protected List<Group> listEntities(DsInstanceContext dsInstanceContext, Project target) {
         return Collections.emptyList();
     }
 
     @Override
-    protected List<GitlabGroup> listEntities(DsInstanceContext dsInstanceContext) {
+    protected List<Group> listEntities(DsInstanceContext dsInstanceContext) {
         try {
-            return GitlabGroupDriver.queryGroups(buildConfig(dsInstanceContext.getDsConfig()));
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            return GitLabGroupDriver.getGroups(buildConfig(dsInstanceContext.getDsConfig()));
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw new DatasourceProviderException(e.getMessage());
         }
-        return Lists.newArrayList();
     }
 
     @Override
@@ -91,7 +93,7 @@ public class GitlabGroupProvider extends AbstractAssetRelationProvider<GitlabGro
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabGroup entity) {
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Group entity) {
         return GitlabAssetConvert.toAssetContainer(dsInstance, entity);
     }
 

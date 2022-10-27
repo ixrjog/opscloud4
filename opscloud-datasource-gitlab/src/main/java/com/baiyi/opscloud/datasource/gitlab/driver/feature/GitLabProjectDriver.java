@@ -7,6 +7,7 @@ import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.Pager;
 import org.gitlab4j.api.models.Member;
+import org.gitlab4j.api.models.Project;
 
 import java.util.List;
 
@@ -23,21 +24,31 @@ public class GitLabProjectDriver {
     public static final int ITEMS_PER_PAGE = 20;
 
     /**
-     * 查询项目成员
+     * 查询项目中所有成员
      * @param gitlab
      * @param projectId
      * @param itemsPerPage 分页查询长度
      * @return
      * @throws GitLabApiException
      */
-    public static List<Member> getMembers(GitlabConfig.Gitlab gitlab, Long projectId, int itemsPerPage) throws GitLabApiException {
+    public static List<Member> getMembersWithProjectId(GitlabConfig.Gitlab gitlab, Long projectId, int itemsPerPage) throws GitLabApiException {
         Pager<Member> memberPager = buildAPI(gitlab).getProjectApi().getMembers(projectId, itemsPerPage);
         return memberPager.all();
     }
 
-    public static List<Member> getMembers(GitlabConfig.Gitlab gitlab, Long projectId) throws GitLabApiException {
+    public static List<Member> getMembersWithProjectId(GitlabConfig.Gitlab gitlab, Long projectId) throws GitLabApiException {
         Pager<Member> memberPager = buildAPI(gitlab).getProjectApi().getMembers(projectId, ITEMS_PER_PAGE);
         return memberPager.all();
+    }
+
+    /**
+     * 查询GitLab实例中所有项目
+     * @param gitlab
+     * @return
+     * @throws GitLabApiException
+     */
+    public static List<Project> getProjects(GitlabConfig.Gitlab gitlab) throws GitLabApiException {
+        return buildAPI(gitlab).getProjectApi().getProjects();
     }
 
     private static GitLabApi buildAPI(GitlabConfig.Gitlab gitlab) {

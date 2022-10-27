@@ -45,10 +45,9 @@ public class GitlabProjectDelegate {
     @Retryable(value = TicketProcessException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
     public List<Member> getProjectMembers(GitlabConfig.Gitlab gitlab, Integer projectId) throws TicketProcessException {
         try {
-            //   return GitlabProjectDriver.getProjectMembers(gitlab, projectId);
-            return GitLabProjectDriver.getMembers(gitlab, projectId.longValue(), 20);
+            return GitLabProjectDriver.getMembersWithProjectId(gitlab, projectId.longValue(), 20);
         } catch (GitLabApiException e) {
-            throw new TicketProcessException("Gitlab查询项目成员错误: %s", e.getMessage());
+            throw new TicketProcessException("GitLab查询项目成员错误: %s", e.getMessage());
         }
     }
 

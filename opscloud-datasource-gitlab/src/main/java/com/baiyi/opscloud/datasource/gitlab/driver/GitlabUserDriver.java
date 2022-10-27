@@ -25,11 +25,11 @@ public class GitlabUserDriver {
         return buildAPI(gitlab).findUsers(emailOrUsername);
     }
 
-    public static GitlabUser getUser(GitlabConfig.Gitlab gitlab, Integer userId) throws IOException {
-        return buildAPI(gitlab).getUser(userId);
-    }
+//    public static GitlabUser getUser(GitlabConfig.Gitlab gitlab, Integer userId) throws IOException {
+//        return buildAPI(gitlab).getUser(userId);
+//    }
 
-    public static List<GitlabUser> queryUsers(GitlabConfig.Gitlab gitlab) {
+    public static List<GitlabUser> getUsers(GitlabConfig.Gitlab gitlab) {
         return buildAPI(gitlab).getUsers();
     }
 

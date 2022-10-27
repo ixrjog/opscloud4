@@ -1,27 +1,33 @@
 package com.baiyi.opscloud.datasource.gitlab.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.GitlabConfig;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
-import com.baiyi.opscloud.datasource.gitlab.convert.GitlabAssetConvert;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
+import com.baiyi.opscloud.datasource.gitlab.convert.GitlabAssetConvert;
+import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabSshKeyDriver;
+import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabUserDriver;
+import com.baiyi.opscloud.datasource.gitlab.entity.SshKeyBO;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.baiyi.opscloud.datasource.gitlab.driver.GitlabUserDriver;
 import com.google.common.collect.Lists;
-import org.gitlab.api.models.GitlabSSHKey;
-import org.gitlab.api.models.GitlabUser;
+import lombok.extern.slf4j.Slf4j;
+import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.SshKey;
+import org.gitlab4j.api.models.User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,11 +38,12 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_GITLA
  * @Date 2021/7/2 3:01 下午
  * @Version 1.0
  */
+@Slf4j
 @Component
-public class GitlabSSHKeyProvider extends AbstractAssetRelationProvider<GitlabSSHKey, GitlabUser> {
+public class GitlabSSHKey2Provider extends AbstractAssetRelationProvider<SshKey, User> {
 
     @Resource
-    private GitlabSSHKeyProvider gitlabSSHKeyProvider;
+    private GitlabSSHKey2Provider gitlabSSHKeyProvider;
 
     @Override
     public String getInstanceType() {
@@ -48,33 +55,46 @@ public class GitlabSSHKeyProvider extends AbstractAssetRelationProvider<GitlabSS
     }
 
     @Override
-    protected List<GitlabSSHKey> listEntities(DsInstanceContext dsInstanceContext, GitlabUser target) {
+    protected List<SshKey> listEntities(DsInstanceContext dsInstanceContext, User target) {
         GitlabConfig.Gitlab gitlab = buildConfig(dsInstanceContext.getDsConfig());
         try {
-            return GitlabUserDriver.getUserSSHKeys(gitlab, target.getId()).stream().peek(e ->
-                    e.setUser(target)
+            return GitLabSshKeyDriver.getSshKeysWithUserId(gitlab, target.getId()).stream().map(e -> {
+                        SshKeyBO sshKey = BeanCopierUtil.copyProperties(e, SshKeyBO.class);
+                        sshKey.setUsername(target.getUsername());
+                        return sshKey;
+                    }
             ).collect(Collectors.toList());
-        } catch (IOException ignored) {
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw new DatasourceProviderException(e.getMessage());
         }
-        return Lists.newArrayList();
     }
 
     @Override
-    protected List<GitlabSSHKey> listEntities(DsInstanceContext dsInstanceContext) {
+    protected List<SshKey> listEntities(DsInstanceContext dsInstanceContext) {
         GitlabConfig.Gitlab gitlab = buildConfig(dsInstanceContext.getDsConfig());
-        List<GitlabUser> users = GitlabUserDriver.queryUsers(gitlab);
-        List<GitlabSSHKey> keys = Lists.newArrayList();
-        if (CollectionUtils.isEmpty(users))
-            return keys;
-        users.forEach(u -> {
-            try {
-                keys.addAll(GitlabUserDriver.getUserSSHKeys(gitlab, u.getId()).stream().peek(e ->
-                        e.setUser(u)
-                ).collect(Collectors.toList()));
-            } catch (IOException ignored) {
+        try {
+
+            List<User> users = GitLabUserDriver.getUsers(gitlab);
+            if (CollectionUtils.isEmpty(users))
+                return Collections.emptyList();
+            List<SshKey> sshKeys = Lists.newArrayList();
+            for (User user : users) {
+                List<SshKey> keys = GitLabSshKeyDriver.getSshKeysWithUserId(gitlab, user.getId());
+                if (!CollectionUtils.isEmpty(keys)) {
+                    sshKeys.addAll(keys.stream().map(e -> {
+                                SshKeyBO sshKey = BeanCopierUtil.copyProperties(e, SshKeyBO.class);
+                                sshKey.setUsername(user.getUsername());
+                                return sshKey;
+                            }).collect(Collectors.toList())
+                    );
+                }
             }
-        });
-        return keys;
+            return  sshKeys;
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw new DatasourceProviderException(e.getMessage());
+        }
     }
 
     @Override
@@ -107,7 +127,7 @@ public class GitlabSSHKeyProvider extends AbstractAssetRelationProvider<GitlabSS
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabSSHKey entity) {
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, SshKey entity) {
         return GitlabAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
