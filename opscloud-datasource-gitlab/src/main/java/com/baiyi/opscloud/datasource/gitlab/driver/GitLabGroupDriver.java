@@ -5,6 +5,7 @@ import com.baiyi.opscloud.datasource.gitlab.factory.GitLabApiFactory;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.Pager;
+import org.gitlab4j.api.models.AccessLevel;
 import org.gitlab4j.api.models.Group;
 import org.gitlab4j.api.models.Member;
 import org.gitlab4j.api.models.Project;
@@ -22,6 +23,7 @@ public class GitLabGroupDriver {
 
     /**
      * 查询群组中所有成员
+     *
      * @param gitlab
      * @param groupId
      * @return
@@ -44,8 +46,17 @@ public class GitLabGroupDriver {
         return projectPager.all();
     }
 
+    public static void updateMember(GitlabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
+        buildAPI(gitlab).getGroupApi().updateMember(groupId, userId, accessLevel);
+    }
+
+    public static void addMember(GitlabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
+        buildAPI(gitlab).getProjectApi().addMember(groupId, userId, accessLevel);
+    }
+
     /**
      * 查询GitLab实例中所有群组
+     *
      * @param gitlab
      * @return
      * @throws GitLabApiException

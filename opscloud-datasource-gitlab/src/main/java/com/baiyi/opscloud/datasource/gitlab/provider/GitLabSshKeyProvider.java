@@ -10,7 +10,7 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.gitlab.convert.GitlabAssetConvert;
-import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabSshKeyDriver;
+import com.baiyi.opscloud.datasource.gitlab.driver.GitLabSshKeyDriver;
 import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabUserDriver;
 import com.baiyi.opscloud.datasource.gitlab.entity.SshKeyBO;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;

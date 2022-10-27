@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.gitlab.driver.feature;
+package com.baiyi.opscloud.datasource.gitlab.driver;
 
 import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.datasource.gitlab.factory.GitLabApiFactory;

@@ -1,17 +1,15 @@
 package com.baiyi.opscloud.workorder.delegate;
 
 import com.baiyi.opscloud.common.datasource.GitlabConfig;
-import com.baiyi.opscloud.datasource.gitlab.driver.GitlabProjectDriver;
-import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabProjectDriver;
+import com.baiyi.opscloud.datasource.gitlab.driver.GitLabProjectDriver;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
-import org.gitlab.api.models.GitlabAccessLevel;
 import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.AccessLevel;
 import org.gitlab4j.api.models.Member;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -23,10 +21,10 @@ import java.util.List;
 public class GitlabProjectDelegate {
 
     @Retryable(value = TicketProcessException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public void addProjectMember(GitlabConfig.Gitlab gitlab, Integer projectId, Integer userId, GitlabAccessLevel accessLevel) throws TicketProcessException {
+    public void addProjectMember(GitlabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
         try {
-            GitlabProjectDriver.addProjectMember(gitlab, projectId, userId, accessLevel);
-        } catch (IOException e) {
+            GitLabProjectDriver.addMember(gitlab, projectId, userId, accessLevel);
+        } catch (GitLabApiException e) {
             // "{\"message\":{\"access_level\":[\"is not included in the list"
             if (e.getMessage().contains("is not included in the list"))
                 throw new TicketProcessException("Gitlab新增项目成员错误: 不支持授权 %s 角色", accessLevel.name());
@@ -43,19 +41,19 @@ public class GitlabProjectDelegate {
      * @throws TicketProcessException
      */
     @Retryable(value = TicketProcessException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public List<Member> getProjectMembers(GitlabConfig.Gitlab gitlab, Integer projectId) throws TicketProcessException {
+    public List<Member> getProjectMembers(GitlabConfig.Gitlab gitlab, Long projectId) throws TicketProcessException {
         try {
-            return GitLabProjectDriver.getMembersWithProjectId(gitlab, projectId.longValue(), 20);
+            return GitLabProjectDriver.getMembersWithProjectId(gitlab, projectId);
         } catch (GitLabApiException e) {
             throw new TicketProcessException("GitLab查询项目成员错误: %s", e.getMessage());
         }
     }
 
     @Retryable(value = TicketProcessException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public void updateProjectMember(GitlabConfig.Gitlab gitlab, Integer projectId, Integer userId, GitlabAccessLevel accessLevel) throws TicketProcessException {
+    public void updateProjectMember(GitlabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
         try {
-            GitlabProjectDriver.updateProjectMember(gitlab, projectId, userId, accessLevel);
-        } catch (IOException e) {
+            GitLabProjectDriver.updateMember(gitlab, projectId, userId, accessLevel);
+        } catch (GitLabApiException e) {
             throw new TicketProcessException("Gitlab更新项目成员错误: %s", e.getMessage());
         }
     }

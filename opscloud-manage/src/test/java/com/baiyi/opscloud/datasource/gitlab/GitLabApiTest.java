@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.datasource.gitlab;
 
 import com.baiyi.opscloud.datasource.gitlab.base.BaseGitLabApiUnit;
-import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabProjectDriver;
-import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabSshKeyDriver;
+import com.baiyi.opscloud.datasource.gitlab.driver.GitLabProjectDriver;
+import com.baiyi.opscloud.datasource.gitlab.driver.GitLabSshKeyDriver;
 import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabUserDriver;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.*;
@@ -68,15 +68,6 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
         }
     }
 
-    @Test
-    void getSshKeyTest() {
-        try {
-            SshKey sshKey = GitLabUserDriver.getSshKey(getConfig().getGitlab(), KEY_ID);
-            print(sshKey);
-        } catch (GitLabApiException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * [

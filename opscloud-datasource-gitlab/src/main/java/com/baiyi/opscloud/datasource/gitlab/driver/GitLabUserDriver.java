@@ -5,13 +5,13 @@ import com.baiyi.opscloud.datasource.gitlab.factory.GitLabApiFactory;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Membership;
-import org.gitlab4j.api.models.SshKey;
 import org.gitlab4j.api.models.User;
 
 import java.util.List;
 
 /**
  * https://docs.gitlab.com/ee/api/users.html
+ *
  * @Author baiyi
  * @Date 2022/10/26 13:32
  * @Version 1.0
@@ -40,16 +40,18 @@ public class GitLabUserDriver {
 
     /**
      * 锁定用户
+     *
      * @param gitlab
      * @param userId
      * @throws GitLabApiException
      */
     public static void blockUser(GitlabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
-         buildAPI(gitlab).getUserApi().blockUser(userId);
+        buildAPI(gitlab).getUserApi().blockUser(userId);
     }
 
     /**
      * 解锁用户
+     *
      * @param gitlab
      * @param userId
      * @throws GitLabApiException
@@ -58,9 +60,8 @@ public class GitLabUserDriver {
         buildAPI(gitlab).getUserApi().unblockUser(userId);
     }
 
-    @Deprecated
-    public static SshKey getSshKey(GitlabConfig.Gitlab gitlab, Long keyId) throws GitLabApiException {
-        return buildAPI(gitlab).getUserApi().getSshKey(keyId);
+    public static User createUser(GitlabConfig.Gitlab gitlab, User user, String password) throws GitLabApiException {
+       return buildAPI(gitlab).getUserApi().createUser(user, password, false);
     }
 
     private static GitLabApi buildAPI(GitlabConfig.Gitlab gitlab) {

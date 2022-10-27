@@ -10,7 +10,7 @@ import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.gitlab.convert.GitlabAssetConvert;
 import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabGroupDriver;
-import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabProjectDriver;
+import com.baiyi.opscloud.datasource.gitlab.driver.GitLabProjectDriver;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;

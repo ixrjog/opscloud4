@@ -17,9 +17,9 @@ import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExtendedBaseTicketProcessor;
 import lombok.extern.slf4j.Slf4j;
-import org.gitlab.api.models.GitlabAccessLevel;
-import org.gitlab.api.models.GitlabUser;
+import org.gitlab4j.api.models.AccessLevel;
 import org.gitlab4j.api.models.Member;
+import org.gitlab4j.api.models.User;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -51,12 +51,9 @@ public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTic
         WorkOrderTicket ticket = getTicketById(ticketEntry.getWorkOrderTicketId());
         String username = ticket.getUsername();
         String role = ticketEntry.getRole();
-        List<GitlabUser> gitlabUsers;
+        // 预检查用户
+        User gitLabUser = preCheckUser(config, username);
 
-        gitlabUsers = gitlabUserDelegate.findUser(config, username);
-        Optional<GitlabUser> optionalGitlabUser = gitlabUsers.stream().filter(e -> e.getUsername().equals(username)).findFirst();
-
-        GitlabUser gitlabUser = optionalGitlabUser.orElseGet(() -> gitlabUserDelegate.createGitlabUser(config, username));
         Optional<GitlabAccessLevelConstants> optionalGitlabAccessLevelConstants = Arrays.stream(GitlabAccessLevelConstants.values())
                 .filter(e -> e.getRole().equalsIgnoreCase(role))
                 .findFirst();
@@ -64,24 +61,31 @@ public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTic
         if (!optionalGitlabAccessLevelConstants.isPresent())
             throw new TicketProcessException("角色名称错误: role={}", role);
 
-        GitlabAccessLevel gitlabAccessLevel = GitlabAccessLevel.fromAccessValue(optionalGitlabAccessLevelConstants.get().getAccessValue());
-        // List<GitlabProjectMember> gitlabProjectMembers = gitlabProjectDelegate.getProjectMembers(config, Integer.parseInt(entry.getAssetId()));
-        List<Member> projectMembers = gitlabProjectDelegate.getProjectMembers(config, Integer.parseInt(entry.getAssetId()));
-        // Optional<GitlabProjectMember> optionalGitlabProjectMember = gitlabProjectMembers.stream().filter(e -> e.getId().equals(gitlabUser.getId())).findFirst();
-        Optional<Member> optionalProjectMember =  projectMembers.stream().filter(e -> e.getId().equals(gitlabUser.getId().longValue())).findFirst();
+        AccessLevel accessLevel = AccessLevel.forValue(optionalGitlabAccessLevelConstants.get().getAccessValue());
+        List<Member> projectMembers = gitlabProjectDelegate.getProjectMembers(config, Long.valueOf(entry.getAssetId()));
+
+        Optional<Member> optionalProjectMember = projectMembers.stream().filter(e -> e.getId().equals(gitLabUser.getId())).findFirst();
         if (optionalProjectMember.isPresent()) {
-            if (optionalProjectMember.get().getAccessLevel().value != gitlabAccessLevel.accessValue) {
+            if (!accessLevel.value.equals(optionalProjectMember.get().getAccessLevel().value)) {
+                log.info("更新用户项目角色: userId={}, projectId={}, accessLevel={}", gitLabUser.getId(), entry.getAssetId(), accessLevel.name());
                 gitlabProjectDelegate.updateProjectMember(config,
-                        Integer.parseInt(entry.getAssetId()),
-                        gitlabUser.getId(),
-                        gitlabAccessLevel);
+                        Long.valueOf(entry.getAssetId()),
+                        gitLabUser.getId(),
+                        accessLevel);
             }
         } else {
+            log.info("新增用户项目角色: userId={}, projectId={}, accessLevel={}", gitLabUser.getId(), entry.getAssetId(), accessLevel.name());
             gitlabProjectDelegate.addProjectMember(config,
-                    Integer.parseInt(entry.getAssetId()),
-                    gitlabUser.getId(),
-                    gitlabAccessLevel);
+                    Long.valueOf(entry.getAssetId()),
+                    gitLabUser.getId(),
+                    accessLevel);
         }
+    }
+
+    private User preCheckUser(GitlabConfig.Gitlab config, String username) {
+        List<User> gitlabUsers = gitlabUserDelegate.findUser(config, username);
+        Optional<User> optionalGitlabUser = gitlabUsers.stream().filter(e -> e.getUsername().equals(username)).findFirst();
+        return optionalGitlabUser.orElseGet(() -> gitlabUserDelegate.createGitlabUser(config, username));
     }
 
     @Override
