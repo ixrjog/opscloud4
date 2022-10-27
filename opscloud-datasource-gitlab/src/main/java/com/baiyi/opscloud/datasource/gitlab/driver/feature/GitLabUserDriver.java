@@ -21,7 +21,7 @@ public class GitLabUserDriver {
 
     // private static final int ITEMS_PER_PAGE = 50;
 
-    public static List<User> findUser(GitlabConfig.Gitlab gitlab, String emailOrUsername) throws GitLabApiException {
+    public static List<User> findUsers(GitlabConfig.Gitlab gitlab, String emailOrUsername) throws GitLabApiException {
         return buildAPI(gitlab).getUserApi().findUsers(emailOrUsername);
     }
 
@@ -29,7 +29,7 @@ public class GitLabUserDriver {
         return buildAPI(gitlab).getUserApi().getUser(userId);
     }
 
-    public static List<User> queryUsers(GitlabConfig.Gitlab gitlab) throws GitLabApiException {
+    public static List<User> getUsers(GitlabConfig.Gitlab gitlab) throws GitLabApiException {
         return buildAPI(gitlab).getUserApi().getUsers();
     }
 

@@ -22,7 +22,7 @@ public class GitlabProjectDriver {
     }
 
     /**
-     * 查询项目成员
+     * 查询项目成员 最大查询20
      * @param gitlab
      * @param projectId
      * @return
@@ -31,6 +31,7 @@ public class GitlabProjectDriver {
     public static List<GitlabProjectMember> getProjectMembers(GitlabConfig.Gitlab gitlab, Integer projectId) throws IOException {
        return buildAPI(gitlab).getProjectMembers(projectId);
     }
+
 
     /**
      * 更新项目成员

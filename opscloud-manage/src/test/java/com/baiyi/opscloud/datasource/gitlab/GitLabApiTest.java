@@ -1,8 +1,10 @@
 package com.baiyi.opscloud.datasource.gitlab;
 
 import com.baiyi.opscloud.datasource.gitlab.base.BaseGitLabApiUnit;
+import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabProjectDriver;
 import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabUserDriver;
 import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.Member;
 import org.gitlab4j.api.models.Membership;
 import org.gitlab4j.api.models.SshKey;
 import org.gitlab4j.api.models.User;
@@ -27,7 +29,7 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
     @Test
     void findUserTest() {
         try {
-            List<User> users = GitLabUserDriver.findUser(getConfig().getGitlab(), "baiyi");
+            List<User> users = GitLabUserDriver.findUsers(getConfig().getGitlab(), "baiyi");
             print(users.get(0));
         } catch (GitLabApiException e) {
             e.printStackTrace();
@@ -51,7 +53,7 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
     @Test
     void queryUsersTest() {
         try {
-            List<User> users = GitLabUserDriver.queryUsers(getConfig().getGitlab());
+            List<User> users = GitLabUserDriver.getUsers(getConfig().getGitlab());
             print(users);
         } catch (GitLabApiException e) {
             e.printStackTrace();
@@ -80,36 +82,36 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
 
     /**
      * [
-     *     {
-     *         "sourceId":5,
-     *         "sourceName":"basic-service",
-     *         "sourceType":"Namespace",
-     *         "accessLevel":30
-     *     },
-     *     {
-     *         "sourceId":10,
-     *         "sourceName":"ops",
-     *         "sourceType":"Namespace",
-     *         "accessLevel":50
-     *     },
-     *     {
-     *         "sourceId":23,
-     *         "sourceName":"merchant-kili",
-     *         "sourceType":"Project",
-     *         "accessLevel":40
-     *     },
-     *     {
-     *         "sourceId":8,
-     *         "sourceName":"Android",
-     *         "sourceType":"Namespace",
-     *         "accessLevel":30
-     *     },
-     *     {
-     *         "sourceId":10,
-     *         "sourceName":"lib_net",
-     *         "sourceType":"Project",
-     *         "accessLevel":30
-     *     }
+     * {
+     * "sourceId":5,
+     * "sourceName":"basic-service",
+     * "sourceType":"Namespace",
+     * "accessLevel":30
+     * },
+     * {
+     * "sourceId":10,
+     * "sourceName":"ops",
+     * "sourceType":"Namespace",
+     * "accessLevel":50
+     * },
+     * {
+     * "sourceId":23,
+     * "sourceName":"merchant-kili",
+     * "sourceType":"Project",
+     * "accessLevel":40
+     * },
+     * {
+     * "sourceId":8,
+     * "sourceName":"Android",
+     * "sourceType":"Namespace",
+     * "accessLevel":30
+     * },
+     * {
+     * "sourceId":10,
+     * "sourceName":"lib_net",
+     * "sourceType":"Project",
+     * "accessLevel":30
+     * }
      * ]
      */
     @Test
@@ -117,6 +119,17 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
         try {
             List<Membership> memberships = GitLabUserDriver.getUserMemberships(getConfig().getGitlab(), BAIYI_USER_ID);
             print(memberships);
+        } catch (GitLabApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    void getMemberPagerTest() {
+        try {
+            List<Member> members = GitLabProjectDriver.getMembers(getConfigById(56).getGitlab(), 73L, 20);
+            print(members);
         } catch (GitLabApiException e) {
             e.printStackTrace();
         }

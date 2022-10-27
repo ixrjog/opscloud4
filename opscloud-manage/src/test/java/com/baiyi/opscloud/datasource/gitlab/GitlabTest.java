@@ -10,6 +10,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.workorder.delegate.GitlabUserDelegate;
 import org.gitlab.api.models.GitlabAccessLevel;
+import org.gitlab.api.models.GitlabProjectMember;
 import org.gitlab.api.models.GitlabSSHKey;
 import org.gitlab.api.models.GitlabUser;
 import org.junit.jupiter.api.Test;
@@ -77,9 +78,21 @@ public class GitlabTest extends BaseUnit {
     }
 
     @Test
-    void createUserTest(){
+    void createUserTest() {
         GitlabConfig gitlabDsInstanceConfig = (GitlabConfig) getConfig();
-        gitlabUserDelegate.createGitlabUser(gitlabDsInstanceConfig.getGitlab(),"xiuyuan");
+        gitlabUserDelegate.createGitlabUser(gitlabDsInstanceConfig.getGitlab(), "xiuyuan");
+    }
+
+    @Test
+    void aaaaTest() {
+        DatasourceConfig datasourceConfig = dsConfigService.getById(56);
+        GitlabConfig gitlabDsInstanceConfig = dsFactory.build(datasourceConfig, GitlabConfig.class);
+        try {
+            List<GitlabProjectMember> members = GitlabProjectDriver.getProjectMembers(gitlabDsInstanceConfig.getGitlab(), 73);
+            print(members);
+        } catch (IOException e) {
+
+        }
     }
 
 }

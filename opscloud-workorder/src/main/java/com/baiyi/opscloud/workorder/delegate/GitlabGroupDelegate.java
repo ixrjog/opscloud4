@@ -46,4 +46,5 @@ public class GitlabGroupDelegate {
             throw new TicketProcessException("Gitlab删除群组成员错误: %s", e.getMessage());
         }
     }
+
 }

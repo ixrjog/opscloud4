@@ -2,9 +2,11 @@ package com.baiyi.opscloud.workorder.delegate;
 
 import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitlabProjectDriver;
+import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabProjectDriver;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import org.gitlab.api.models.GitlabAccessLevel;
-import org.gitlab.api.models.GitlabProjectMember;
+import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.Member;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
@@ -32,11 +34,20 @@ public class GitlabProjectDelegate {
         }
     }
 
+    /**
+     * 新API
+     *
+     * @param gitlab
+     * @param projectId
+     * @return
+     * @throws TicketProcessException
+     */
     @Retryable(value = TicketProcessException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public List<GitlabProjectMember> getProjectMembers(GitlabConfig.Gitlab gitlab, Integer projectId) throws TicketProcessException {
+    public List<Member> getProjectMembers(GitlabConfig.Gitlab gitlab, Integer projectId) throws TicketProcessException {
         try {
-            return GitlabProjectDriver.getProjectMembers(gitlab, projectId);
-        } catch (IOException e) {
+            //   return GitlabProjectDriver.getProjectMembers(gitlab, projectId);
+            return GitLabProjectDriver.getMembers(gitlab, projectId.longValue(), 20);
+        } catch (GitLabApiException e) {
             throw new TicketProcessException("Gitlab查询项目成员错误: %s", e.getMessage());
         }
     }

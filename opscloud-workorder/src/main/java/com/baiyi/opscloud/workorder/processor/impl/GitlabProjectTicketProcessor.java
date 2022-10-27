@@ -18,8 +18,8 @@ import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExtendedBaseTicketProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.gitlab.api.models.GitlabAccessLevel;
-import org.gitlab.api.models.GitlabProjectMember;
 import org.gitlab.api.models.GitlabUser;
+import org.gitlab4j.api.models.Member;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -65,11 +65,12 @@ public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTic
             throw new TicketProcessException("角色名称错误: role={}", role);
 
         GitlabAccessLevel gitlabAccessLevel = GitlabAccessLevel.fromAccessValue(optionalGitlabAccessLevelConstants.get().getAccessValue());
-        List<GitlabProjectMember> gitlabProjectMembers = gitlabProjectDelegate.getProjectMembers(config, Integer.parseInt(entry.getAssetId()));
-
-        Optional<GitlabProjectMember> optionalGitlabProjectMember = gitlabProjectMembers.stream().filter(e -> e.getId().equals(gitlabUser.getId())).findFirst();
-        if (optionalGitlabProjectMember.isPresent()) {
-            if (optionalGitlabProjectMember.get().getAccessLevel().accessValue != gitlabAccessLevel.accessValue) {
+        // List<GitlabProjectMember> gitlabProjectMembers = gitlabProjectDelegate.getProjectMembers(config, Integer.parseInt(entry.getAssetId()));
+        List<Member> projectMembers = gitlabProjectDelegate.getProjectMembers(config, Integer.parseInt(entry.getAssetId()));
+        // Optional<GitlabProjectMember> optionalGitlabProjectMember = gitlabProjectMembers.stream().filter(e -> e.getId().equals(gitlabUser.getId())).findFirst();
+        Optional<Member> optionalProjectMember =  projectMembers.stream().filter(e -> e.getId().equals(gitlabUser.getId().longValue())).findFirst();
+        if (optionalProjectMember.isPresent()) {
+            if (optionalProjectMember.get().getAccessLevel().value != gitlabAccessLevel.accessValue) {
                 gitlabProjectDelegate.updateProjectMember(config,
                         Integer.parseInt(entry.getAssetId()),
                         gitlabUser.getId(),
