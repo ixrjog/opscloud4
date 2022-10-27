@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.workorder.delegate;
 
 import com.baiyi.opscloud.common.datasource.GitlabConfig;
-import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabUserDriver;
+import com.baiyi.opscloud.datasource.gitlab.driver.GitLabUserDriver;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import lombok.RequiredArgsConstructor;

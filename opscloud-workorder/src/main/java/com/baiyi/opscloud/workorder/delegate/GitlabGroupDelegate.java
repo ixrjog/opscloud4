@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.workorder.delegate;
 
 import com.baiyi.opscloud.common.datasource.GitlabConfig;
-import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabGroupDriver;
+import com.baiyi.opscloud.datasource.gitlab.driver.GitLabGroupDriver;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.AccessLevel;

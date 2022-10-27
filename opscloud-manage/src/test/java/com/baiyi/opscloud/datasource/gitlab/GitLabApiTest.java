@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.gitlab;
 import com.baiyi.opscloud.datasource.gitlab.base.BaseGitLabApiUnit;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabProjectDriver;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabSshKeyDriver;
-import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabUserDriver;
+import com.baiyi.opscloud.datasource.gitlab.driver.GitLabUserDriver;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.*;
 import org.junit.jupiter.api.Test;

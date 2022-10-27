@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.workorder.processor.impl;
 
-import com.baiyi.opscloud.common.constants.GitlabAccessLevelConstants;
+import com.baiyi.opscloud.common.constants.GitLabAccessLevelConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.core.InstanceHelper;
@@ -54,7 +54,7 @@ public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTic
         // 预检查用户
         User gitLabUser = preCheckUser(config, username);
 
-        Optional<GitlabAccessLevelConstants> optionalGitlabAccessLevelConstants = Arrays.stream(GitlabAccessLevelConstants.values())
+        Optional<GitLabAccessLevelConstants> optionalGitlabAccessLevelConstants = Arrays.stream(GitLabAccessLevelConstants.values())
                 .filter(e -> e.getRole().equalsIgnoreCase(role))
                 .findFirst();
 
@@ -119,7 +119,7 @@ public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTic
         if (!OrderTicketPhaseCodeConstants.NEW.name().equals(ticket.getTicketPhase()))
             throw new TicketProcessException("工单进度不是新建，无法更新配置条目！");
         String role = ticketEntry.getRole();
-        if (Arrays.stream(GitlabAccessLevelConstants.values()).noneMatch(e -> e.getRole().equalsIgnoreCase(role))) {
+        if (Arrays.stream(GitLabAccessLevelConstants.values()).noneMatch(e -> e.getRole().equalsIgnoreCase(role))) {
             throw new TicketProcessException("修改角色错误，不支持该名称！");
         }
         WorkOrderTicketEntry preTicketEntry = ticketEntryService.getById(ticketEntry.getId());

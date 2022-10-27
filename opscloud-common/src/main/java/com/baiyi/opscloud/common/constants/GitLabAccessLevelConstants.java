@@ -8,7 +8,7 @@ import lombok.Getter;
  * @Version 1.0
  */
 @Getter
-public enum GitlabAccessLevelConstants {
+public enum GitLabAccessLevelConstants {
 
 //    GUEST("Guest", 10),
     REPORTER("Reporter", 20),
@@ -21,7 +21,7 @@ public enum GitlabAccessLevelConstants {
 
     private final int accessValue;
 
-    GitlabAccessLevelConstants(String role, int accessValue) {
+    GitLabAccessLevelConstants(String role, int accessValue) {
         this.role = role;
         this.accessValue = accessValue;
     }
