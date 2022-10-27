@@ -9,49 +9,39 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.gitlab.convert.GitlabAssetConvert;
-import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabUserDriver;
+import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabGroupDriver;
+import com.baiyi.opscloud.datasource.gitlab.driver.feature.GitLabProjectDriver;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.gitlab4j.api.GitLabApiException;
-import org.gitlab4j.api.models.SshKey;
-import org.gitlab4j.api.models.User;
+import org.gitlab4j.api.models.Group;
+import org.gitlab4j.api.models.Project;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_GITLAB_USER;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_GITLAB_PROJECT;
 
 /**
  * @Author baiyi
- * @Date 2021/6/21 4:38 下午
+ * @Date 2021/6/21 6:40 下午
  * @Version 1.0
  */
 @Slf4j
 @Component
-public class GitlabUser2Provider extends AbstractAssetRelationProvider<User, SshKey> {
+public class GitLabProjectProvider extends AbstractAssetRelationProvider<Project, Group> {
 
     @Resource
-    private GitlabUser2Provider gitlabUserProvider;
+    private GitLabProjectProvider gitLabProjectProvider;
 
     @Override
     public String getInstanceType() {
         return DsTypeEnum.GITLAB.name();
-    }
-
-    @Override
-    public String getAssetType() {
-        return DsAssetTypeConstants.GITLAB_USER.name();
-    }
-
-    @Override
-    public String getTargetAssetKey() {
-        return DsAssetTypeConstants.GITLAB_SSHKEY.name();
     }
 
     private GitlabConfig.Gitlab buildConfig(DatasourceConfig dsConfig) {
@@ -59,10 +49,9 @@ public class GitlabUser2Provider extends AbstractAssetRelationProvider<User, Ssh
     }
 
     @Override
-    protected List<User> listEntities(DsInstanceContext dsInstanceContext, SshKey target) {
-        GitlabConfig.Gitlab gitlab = buildConfig(dsInstanceContext.getDsConfig());
+    protected List<Project> listEntities(DsInstanceContext dsInstanceContext, Group target) {
         try {
-            return Lists.newArrayList(GitLabUserDriver.getUser(gitlab, target.getUserId()));
+            return GitLabGroupDriver.getProjectsWithGroupId(buildConfig(dsInstanceContext.getDsConfig()), target.getId());
         } catch (GitLabApiException e) {
             log.error(e.getMessage());
             throw new DatasourceProviderException(e.getMessage());
@@ -70,9 +59,9 @@ public class GitlabUser2Provider extends AbstractAssetRelationProvider<User, Ssh
     }
 
     @Override
-    protected List<User> listEntities(DsInstanceContext dsInstanceContext) {
+    protected List<Project> listEntities(DsInstanceContext dsInstanceContext) {
         try {
-            return GitLabUserDriver.getUsers(buildConfig(dsInstanceContext.getDsConfig()));
+            return GitLabProjectDriver.getProjects(buildConfig(dsInstanceContext.getDsConfig()));
         } catch (GitLabApiException e) {
             log.error(e.getMessage());
             throw new DatasourceProviderException(e.getMessage());
@@ -80,26 +69,41 @@ public class GitlabUser2Provider extends AbstractAssetRelationProvider<User, Ssh
     }
 
     @Override
-    @SingleTask(name = PULL_GITLAB_USER, lockTime = "5m")
+    @SingleTask(name = PULL_GITLAB_PROJECT, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
 
     @Override
+    public String getAssetType() {
+        return DsAssetTypeConstants.GITLAB_PROJECT.name();
+    }
+
+    @Override
+    public String getTargetAssetKey() {
+        return DsAssetTypeConstants.GITLAB_GROUP.name();
+    }
+
+    @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) return false;
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) return false;
-        if (preAsset.getIsActive() != asset.getIsActive()) return false;
+        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey()))
+            return false;
+        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
+            return false;
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+            return false;
+        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
+            return false;
         return true;
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, User entity) {
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Project entity) {
         return GitlabAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(gitlabUserProvider);
+        AssetProviderFactory.register(gitLabProjectProvider);
     }
 }

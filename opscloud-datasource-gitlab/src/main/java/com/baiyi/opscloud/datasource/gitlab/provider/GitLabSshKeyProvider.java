@@ -40,10 +40,10 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_GITLA
  */
 @Slf4j
 @Component
-public class GitlabSSHKey2Provider extends AbstractAssetRelationProvider<SshKey, User> {
+public class GitLabSshKeyProvider extends AbstractAssetRelationProvider<SshKey, User> {
 
     @Resource
-    private GitlabSSHKey2Provider gitlabSSHKeyProvider;
+    private GitLabSshKeyProvider gitLabSshKeyProvider;
 
     @Override
     public String getInstanceType() {
@@ -133,7 +133,7 @@ public class GitlabSSHKey2Provider extends AbstractAssetRelationProvider<SshKey,
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(gitlabSSHKeyProvider);
+        AssetProviderFactory.register(gitLabSshKeyProvider);
     }
 }
 
