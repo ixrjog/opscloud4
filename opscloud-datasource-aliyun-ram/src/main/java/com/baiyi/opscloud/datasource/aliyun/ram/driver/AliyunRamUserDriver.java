@@ -5,7 +5,7 @@ import com.aliyuncs.ram.model.v20150501.*;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.RegexUtil;
+import com.baiyi.opscloud.common.util.ValidationUtil;
 import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamPolicy;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamUser;
@@ -81,7 +81,7 @@ public class AliyunRamUserDriver {
         CreateUserRequest request = new CreateUserRequest();
         request.setUserName(user.getUsername());
         request.setDisplayName(user.getDisplayName());
-        if (RegexUtil.isPhone(user.getPhone()))
+        if (ValidationUtil.isPhone(user.getPhone()))
             request.setMobilePhone("86-" + user.getPhone());
         if (!StringUtils.isEmpty(user.getEmail()))
             request.setEmail(user.getEmail());

@@ -15,7 +15,7 @@ public class ThreadPoolTaskExecutorPrint {
 
     public static void print(ThreadPoolTaskExecutor threadPoolTaskExecutor,String name) {
         ThreadPoolExecutor threadPoolExecutor = threadPoolTaskExecutor.getThreadPoolExecutor();
-        log.info("{} threadPoolExecutor: taskCount = {}, completedTaskCount = {}, poolSize = {}, activeCount = {}",
+        log.info("{} threadPoolExecutor: taskCount={}, completedTaskCount={}, poolSize={}, activeCount={}",
                 name,
                 threadPoolExecutor.getTaskCount(),
                 threadPoolExecutor.getCompletedTaskCount(),

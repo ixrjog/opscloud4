@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
-import com.baiyi.opscloud.interceptor.SupserAdminInterceptor;
+import com.baiyi.opscloud.interceptor.SuperAdminInterceptor;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.sshcore.audit.ServerCommandAudit;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
@@ -73,7 +73,7 @@ public class ServerLoginCommand implements InitializingBean {
 
     private final SimpleTerminalSessionFacade simpleTerminalSessionFacade;
 
-    private final SupserAdminInterceptor sAInterceptor;
+    private final SuperAdminInterceptor sAInterceptor;
 
     private String toInstanceId(Server server) {
         ServerVO.Server serverVO = BeanCopierUtil.copyProperties(server, ServerVO.Server.class);
@@ -101,7 +101,7 @@ public class ServerLoginCommand implements InitializingBean {
             ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
             // 无延迟
             out.setNoDelay(true);
-            RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, out);
+            RemoteInvokeHandler.openWithSSHServer(sessionId, hostSystem, out);
             TerminalUtil.rawModeSupportVintr(terminal);
             // 计时
             Instant inst1 = Instant.now();
@@ -121,7 +121,7 @@ public class ServerLoginCommand implements InitializingBean {
                 while (true) {
                     if (isClosed(sessionId, instanceId)) {
                         TimeUnit.MILLISECONDS.sleep(150L);
-                        printWithCloseSession("用户正常退出登录! 耗时=%s/s", inst1);
+                        printWithCloseSession("用户正常退出登录: 耗时%s/s", inst1);
                         break;
                     }
                     doResize(size, terminal, sessionId, instanceId);
@@ -129,7 +129,7 @@ public class ServerLoginCommand implements InitializingBean {
                     printWithSession(sessionId, instanceId, i);
                 }
             } catch (Exception e) {
-                printWithCloseSession("服务端连接已断开! 耗时=%s/s", inst1);
+                printWithCloseSession("服务端连接已断开: 耗时%s/s", inst1);
             } finally {
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             }

@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.datasource.ansible.play;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -8,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2021/9/27 9:42 上午
  * @Version 1.0
  */
+@Slf4j
 public class ServerTaskPlayFactory {
 
     private ServerTaskPlayFactory() {
@@ -21,5 +24,6 @@ public class ServerTaskPlayFactory {
 
     public static void register(ITaskPlayProcessor bean) {
         context.put(bean.getState(), bean);
+        log.info("TemplateFactory Registered: state={}", bean.getState());
     }
 }

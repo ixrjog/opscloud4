@@ -45,7 +45,6 @@ public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
-
     /**
      * 同步资产
      *
@@ -66,7 +65,7 @@ public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
                 try {
                     AliyunDmsUserDriver.registerUser(aliyun, tid, dmsUser);
                 } catch (Exception e) {
-                    log.error("注册用户错误: nickName = {} , e = {}", dmsUser.nickName, e.getMessage());
+                    log.error("注册用户错误: nickName={}, err={}", dmsUser.nickName, e.getMessage());
                 }
             });
             this.doPull(dsInstanceId);
@@ -96,7 +95,7 @@ public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
                     .orElse(AliyunDmsTenantDriver.getTenant(aliyun).getTid());
             return AliyunDmsUserDriver.listUser(aliyun, tid);
         } catch (Exception e) {
-            log.error("获取条目错误: e = {}", e.getMessage());
+            log.error("获取条目错误: err={}", e.getMessage());
         }
         return Collections.emptyList();
     }

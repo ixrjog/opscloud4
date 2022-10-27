@@ -66,7 +66,6 @@ public class GitlabUserProvider extends AbstractAssetRelationProvider<GitlabUser
         return users;
     }
 
-
     @Override
     protected List<GitlabUser> listEntities(DsInstanceContext dsInstanceContext) {
         return GitlabUserDriver.queryUsers(buildConfig(dsInstanceContext.getDsConfig()));

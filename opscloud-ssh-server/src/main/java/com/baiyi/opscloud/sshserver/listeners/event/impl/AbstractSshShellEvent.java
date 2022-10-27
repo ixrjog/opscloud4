@@ -23,7 +23,7 @@ import javax.annotation.Resource;
 @Component
 public abstract class AbstractSshShellEvent implements ISshShellEvent, InitializingBean {
 
-    private final static HostInfo serverInfo = HostInfo.build();
+    public final static HostInfo serverInfo = HostInfo.build();
 
     @Resource
     private SimpleTerminalSessionFacade simpleTerminalSessionFacade;
@@ -31,7 +31,12 @@ public abstract class AbstractSshShellEvent implements ISshShellEvent, Initializ
     protected void openTerminalSession(SshShellEvent event) {
         String sessionId = SessionIdMapper.getSessionId(event.getSession().getServerSession().getIoSession());
         SessionContext sc = event.getSession().getSessionContext();
-        TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, event.getSession().getServerSession().getUsername(), serverInfo, sc.getRemoteAddress(), SessionTypeEnum.SSH_SERVER);
+        TerminalSession terminalSession = TerminalSessionBuilder.build(
+                sessionId,
+                event.getSession().getServerSession().getUsername(),
+                serverInfo,
+                sc.getRemoteAddress(),
+                SessionTypeEnum.SSH_SERVER);
         simpleTerminalSessionFacade.recordTerminalSession(terminalSession);
     }
 

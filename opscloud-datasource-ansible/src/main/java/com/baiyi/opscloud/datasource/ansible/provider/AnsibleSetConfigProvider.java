@@ -11,6 +11,7 @@ import com.baiyi.opscloud.core.util.SystemEnvUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.google.common.collect.Sets;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -26,6 +27,7 @@ import java.util.Set;
  * @Date 2021/8/16 5:24 下午
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class AnsibleSetConfigProvider extends AbstractSetDsInstanceConfigProvider<AnsibleConfig.Ansible> {
 
@@ -52,7 +54,7 @@ public class AnsibleSetConfigProvider extends AbstractSetDsInstanceConfigProvide
         try {
             setPrivateKeyPermissions(privateKeyPath);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 

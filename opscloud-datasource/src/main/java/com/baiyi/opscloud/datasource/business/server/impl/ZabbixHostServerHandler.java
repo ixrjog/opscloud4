@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.business.server.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.common.util.IPRegionUtil;
+import com.baiyi.opscloud.common.util.IPUtil;
 import com.baiyi.opscloud.datasource.business.server.impl.base.AbstractZabbixHostServerHandler;
 import com.baiyi.opscloud.datasource.business.server.util.HostParamUtil;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
@@ -25,7 +25,7 @@ public class ZabbixHostServerHandler extends AbstractZabbixHostServerHandler {
     private boolean isInRegions(Server server) {
         String network = server.getPrivateIp();
         ZabbixConfig.Zabbix zabbix = configContext.get();
-        return IPRegionUtil.isInRanges(network, zabbix.getRegions());
+        return IPUtil.includeMasks(network, zabbix.getRegions());
     }
 
     @Override

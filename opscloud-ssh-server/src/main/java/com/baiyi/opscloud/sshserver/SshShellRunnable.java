@@ -140,7 +140,7 @@ public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, 
                 sizeAvailable = true;
             } catch (NumberFormatException e) {
                 if (!log.isTraceEnabled()) {
-                    log.debug("Unable to get terminal size : {}:{}", e.getClass().getSimpleName(), e.getMessage());
+                    log.debug("Unable to get terminal size: {}:{}", e.getClass().getSimpleName(), e.getMessage());
                 } else {
                     log.trace("Unable to get terminal size", e);
                 }

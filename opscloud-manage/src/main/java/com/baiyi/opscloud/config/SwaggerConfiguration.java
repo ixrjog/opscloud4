@@ -16,6 +16,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfiguration {
 
+    private final ApiInfo apiInfo = generatepApiInfo();
+
     /**
      * https://doc.xiaominfo.com/knife4j/documentation/
      */
@@ -28,11 +30,10 @@ public class SwaggerConfiguration {
                 .apis(RequestHandlerSelectors.basePackage("com.baiyi.opscloud.controller"))
                 .paths(PathSelectors.any())
                 .build()
-                .apiInfo(apiInfo());
+                .apiInfo(apiInfo);
     }
 
-    //API 作者相关信息
-    private ApiInfo apiInfo() {
+    private ApiInfo generatepApiInfo() {
         return new ApiInfoBuilder()
                 .title("OPSCLOUD 4.1.0")
                 .description("OPSCLOUD OPENAPI接口文档")

@@ -8,10 +8,12 @@ import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.KubernetesSession;
 import com.baiyi.opscloud.sshcore.model.KubernetesSessionContainer;
 import com.google.gson.GsonBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.apache.commons.lang3.StringUtils;
 import javax.websocket.Session;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 
 /**
@@ -19,6 +21,7 @@ import java.util.Map;
  * @Date 2021/7/19 2:25 下午
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class KubernetesTerminalCommandHandler extends AbstractKubernetesTerminalMessageHandler<KubernetesMessage.Command> implements ITerminalMessageHandler {
 
@@ -49,9 +52,11 @@ public class KubernetesTerminalCommandHandler extends AbstractKubernetesTerminal
         KubernetesSession kubernetesSession = KubernetesSessionContainer.getBySessionId(sessionId, instanceId);
         if (kubernetesSession == null) return;
         try {
-            kubernetesSession.getExecWatch().getInput().write(cmd.getBytes());
+            OutputStream out =   kubernetesSession.getExecWatch().getInput();
+            out.write(cmd.getBytes());
+            out.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 

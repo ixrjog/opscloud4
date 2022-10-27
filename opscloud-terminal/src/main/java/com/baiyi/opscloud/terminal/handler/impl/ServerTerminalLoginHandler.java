@@ -2,7 +2,7 @@ package com.baiyi.opscloud.terminal.handler.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.interceptor.SupserAdminInterceptor;
+import com.baiyi.opscloud.interceptor.SuperAdminInterceptor;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
@@ -33,7 +33,7 @@ import java.util.concurrent.Executors;
 public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<ServerMessage.Login> {
 
     @Resource
-    private SupserAdminInterceptor sAInterceptor;
+    private SuperAdminInterceptor sAInterceptor;
 
     @Resource
     private ServerService serverService;
@@ -55,12 +55,12 @@ public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<Se
                     sAInterceptor.interceptLoginServer(serverNode.getId());
                     HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverNode, loginMessage);
                     Server server = serverService.getById(serverNode.getId());
-                    RemoteInvokeHandler.openWebTerminal(terminalSession.getSessionId(), serverNode.getInstanceId(), hostSystem);
+                    RemoteInvokeHandler.openWithWebTerminal(terminalSession.getSessionId(), serverNode.getInstanceId(), hostSystem);
                     terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, hostSystem, InstanceSessionTypeEnum.SERVER));
                 });
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("批量登录服务器错误: err={}", e.getMessage());
         } finally {
             executor.shutdown();
         }

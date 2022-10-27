@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface WorkEventMapper extends Mapper<WorkEvent>, InsertListMapper<WorkEvent> {
 
-    List<WorkEvent> queryPageByParam(WorkEventParam.PageQuery pageQuery);
+    List<WorkEvent> queryPageByParam(WorkEventParam.WorkEventPageQuery pageQuery);
 
     List<ReportVO.Report> queryWeek(Integer workRoleId);
 

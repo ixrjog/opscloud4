@@ -37,7 +37,7 @@ public class AliyunLogDriver extends AbstractAliyunLogDriver {
             Client client = buildClient(aliyun);
             return client.ListProject(req).getProjects();
         } catch (LogException lg) {
-            log.error("阿里云日志服务查询Project错误! , {}", lg.GetErrorMessage());
+            log.error("阿里云日志服务查询Project错误: err={}", lg.GetErrorMessage());
         }
         return Collections.emptyList();
     }
@@ -57,7 +57,7 @@ public class AliyunLogDriver extends AbstractAliyunLogDriver {
             Client client = buildClient(aliyun);
             return client.ListLogStores(req).GetLogStores();
         } catch (LogException lg) {
-            log.error("阿里云日志服务查询LogStore错误! , {}", lg.GetErrorMessage());
+            log.error("阿里云日志服务查询LogStore错误: err={}", lg.GetErrorMessage());
         }
         return Collections.emptyList();
     }
@@ -70,7 +70,7 @@ public class AliyunLogDriver extends AbstractAliyunLogDriver {
             Client client = buildClient(aliyun);
             return client.ListConfig(req).GetConfigs();
         } catch (LogException lg) {
-            log.error("阿里云日志服务查询Config错误! , {}", lg.GetErrorMessage());
+            log.error("阿里云日志服务查询Config错误: err={}", lg.GetErrorMessage());
         }
         return Collections.emptyList();
     }

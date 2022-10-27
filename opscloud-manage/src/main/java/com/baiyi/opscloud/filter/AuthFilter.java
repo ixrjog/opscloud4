@@ -72,10 +72,10 @@ public class AuthFilter extends OncePerRequestFilter {
             try {
                 final String token = request.getHeader(AUTHORIZATION);
                 if (!StringUtils.isEmpty(token)) {
-                    userAuthFacade.tryUserHasResourceAuthorize(token, resourceName);
+                    userAuthFacade.verifyUserHasResourcePermissionWithToken(token, resourceName);
                 } else {
                     final String accessToken = request.getHeader(ACCESS_TOKEN);
-                    userAuthFacade.tryUserHasResourceAuthorizeByAccessToken(accessToken, resourceName);
+                    userAuthFacade.verifyUserHasResourcePermissionWithAccessToken(accessToken, resourceName);
                 }
                 filterChain.doFilter(request, response);
             } catch (AuthCommonException ex) {

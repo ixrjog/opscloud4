@@ -8,6 +8,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.AccessKey;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -18,6 +19,7 @@ import java.util.List;
  * @Date 2021/12/10 2:52 PM
  * @Version 1.0
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class AliyunRamAccessKeyDriver {
@@ -31,7 +33,7 @@ public class AliyunRamAccessKeyDriver {
             ListAccessKeysResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
             return BeanCopierUtil.copyListProperties(response.getAccessKeys(),AccessKey.Key.class);
         } catch (ClientException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return Collections.emptyList();
     }

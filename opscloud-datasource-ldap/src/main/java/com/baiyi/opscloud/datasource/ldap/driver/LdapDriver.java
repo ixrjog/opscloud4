@@ -289,7 +289,7 @@ public class LdapDriver {
                     (AttributesMapper<String>) attributes -> attributes.get(userId).get(0).toString()
             );
         } catch (Exception e) {
-            log.warn("Search ldap group error: username={}, error={}", username, e.getMessage());
+            log.warn("Search ldap group error: username={}, err={}", username, e.getMessage());
         }
         return groupList;
     }

@@ -63,7 +63,7 @@ public class ZabbixV5HostDriver extends SimpleZabbixV5HostDriver {
 
     @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_host_hostid_' + #hostid")
     public void evictHostById(ZabbixConfig.Zabbix config, String hostid) {
-        log.info("清除ZabbixHost缓存 : hostid = {}", hostid);
+        log.info("Evict cache Zabbix Host: hostid={}", hostid);
     }
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_host_hostid_' + #hostid", unless = "#result == null")
@@ -100,7 +100,7 @@ public class ZabbixV5HostDriver extends SimpleZabbixV5HostDriver {
         request.putParam("hostid", host.getHostid());
         ZabbixHost.UpdateHostResponse response = updateHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult().getHostids())) {
-            log.error("更新ZabbixHost主机名称失败: hostName = {}", host.getHost());
+            log.error("Update Zabbix Host name error: hostName={}", host.getHost());
         }
     }
 
@@ -112,7 +112,7 @@ public class ZabbixV5HostDriver extends SimpleZabbixV5HostDriver {
                 .build();
         ZabbixHost.UpdateHostResponse response = updateHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult().getHostids())) {
-            log.error("更新ZabbixHost主机名称失败: hostName = {}", hostName);
+            log.error("Update Zabbix Host name error: hostName={}", hostName);
         }
     }
 
@@ -131,7 +131,7 @@ public class ZabbixV5HostDriver extends SimpleZabbixV5HostDriver {
                 .build();
         ZabbixHost.UpdateHostResponse response = updateHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult().getHostids())) {
-            log.error("更新ZabbixHost主机名称失败: hostName = {},  proxyHostid = {}", host.getHost(), proxyHostid);
+            log.error("Update Zabbix Host name error: hostName={}, proxyHostid={}", host.getHost(), proxyHostid);
         }
     }
 
@@ -149,7 +149,7 @@ public class ZabbixV5HostDriver extends SimpleZabbixV5HostDriver {
                 .build();
         ZabbixHost.DeleteHostResponse response = deleteHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult().getHostids())) {
-            log.error("删除ZabbixHost主机失败: hostid = {}", host.getHostid());
+            log.error("Delete Zabbix Host error: hostid={}", host.getHostid());
         }
     }
 

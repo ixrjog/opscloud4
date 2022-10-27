@@ -73,15 +73,14 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     @Resource
     private ServerTaskPacker serverTaskPacker;
 
-    private static final int MAX_EXECUTING = 20;
+    private static final int MAX_EXECUTING = 10;
 
     @Override
     public DataTable<ServerTaskVO.ServerTask> queryServerTaskPage(ServerTaskParam.ServerTaskPageQuery pageQuery) {
         DataTable<ServerTask> table = serverTaskService.queryServerTaskPage(pageQuery);
         List<ServerTaskVO.ServerTask> data = BeanCopierUtil.copyListProperties(table.getData(), ServerTaskVO.ServerTask.class).stream()
                 .peek(e -> serverTaskPacker.wrap(e, pageQuery)).collect(Collectors.toList());
-        return new DataTable<>(data
-                , table.getTotalNum());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Async(value = COMMON)
@@ -100,7 +99,8 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
      * @param servers
      */
     private List<ServerTaskMember> record(ServerTask serverTask, List<ServerVO.Server> servers) {
-        if (CollectionUtils.isEmpty(servers)) throw new CommonRuntimeException("服务器列表为空！");
+        if (CollectionUtils.isEmpty(servers))
+            throw new CommonRuntimeException("服务器列表为空！");
         List<ServerTaskMember> members = Lists.newArrayList();
         servers.forEach(server -> {
             ServerTaskMember member = ServerTaskMemberBuilder.newBuilder(serverTask, server);
@@ -129,28 +129,28 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
         ExecutorService fixedThreadPool = Executors.newFixedThreadPool(MAX_EXECUTING);
         // 使用迭代器遍历并执行所有服务器任务
         Iterator<ServerTaskMember> iter = members.iterator();
-        while (iter.hasNext()) {
-            // 查询当前执行中的任务是否达到最大并发
-            if (serverTaskMemberService.countByTaskStatus(serverTask.getId(), ServerTaskStatusEnum.EXECUTING.name()) < MAX_EXECUTING) {
-                ServerTaskMember serverTaskMember = iter.next();
-                iter.remove();
-                args.setHosts(serverTaskMember.getManageIp());
-                CommandLine commandLine = AnsiblePlaybookArgumentsBuilder.build(ansible, args);
-                AnsibleServerTask ansibleServerTask = new AnsibleServerTask(serverTask.getTaskUuid(),
-                        serverTaskMember,
-                        commandLine,
-                        serverTaskMemberService,
-                        taskLogStorehouse);
-                fixedThreadPool.execute(ansibleServerTask); // 执行任务
-            } else {
-                try {
-                    TimeUnit.SECONDS.sleep(3L);
-                } catch (InterruptedException ie) {
-                    log.error(ie.getMessage());
+        try {
+            while (iter.hasNext()) {
+                // 查询当前执行中的任务是否达到最大并发
+                if (serverTaskMemberService.countByTaskStatus(serverTask.getId(), ServerTaskStatusEnum.EXECUTING.name()) < MAX_EXECUTING) {
+                    ServerTaskMember serverTaskMember = iter.next();
+                    iter.remove();
+                    args.setHosts(serverTaskMember.getManageIp());
+                    CommandLine commandLine = AnsiblePlaybookArgumentsBuilder.build(ansible, args);
+                    AnsibleServerTask ansibleServerTask = new AnsibleServerTask(serverTask.getTaskUuid(),
+                            serverTaskMember,
+                            commandLine,
+                            serverTaskMemberService,
+                            taskLogStorehouse);
+                    fixedThreadPool.execute(ansibleServerTask); // 执行任务
                 }
+                TimeUnit.SECONDS.sleep(5L);
             }
+        } catch (InterruptedException ie) {
+            log.warn(ie.getMessage());
+        } finally {
+            fixedThreadPool.shutdown();
         }
-        fixedThreadPool.shutdown();
         traceEndOfTask(serverTask);
     }
 
@@ -171,7 +171,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                 try {
                     TimeUnit.SECONDS.sleep(1L);
                 } catch (InterruptedException ie) {
-                    ie.printStackTrace();
+                    log.warn(ie.getMessage());
                 }
             }
         }

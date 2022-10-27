@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SupserAdminInterceptor {
+public class SuperAdminInterceptor {
 
     private final UserPermissionFacade userPermissionFacade;
 
@@ -44,7 +44,10 @@ public class SupserAdminInterceptor {
         // 服务器未打SA标签
         if (bizTagService.countByBusinessTag(bizTag) == 0) return;
         int accessLevel = userPermissionFacade.getUserAccessLevel(SessionUtil.getUsername());
-        if (accessLevel < 100) throw new AuthCommonException("越权访问: 业务资源只有{SUPER_SA}才能访问！");
+        if (accessLevel < 100) {
+            log.warn("越权访问: 业务资源只有{SUPER_SA}才能访问！");
+            throw new AuthCommonException("越权访问: 业务资源只有{SUPER_SA}才能访问！");
+        }
         log.info("SA Interceptor: passed！");
     }
 

@@ -86,7 +86,7 @@ public class AliyunOnsRocketMqTopicDriver {
         request.setRemark(topic.getRemark());
         request.setMessageType(topic.getMessageType());
         OnsTopicCreateResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
-        log.info("创建阿里云ONS-Topic: requestId = {}, topic = {}", response.getRequestId(), topic);
+        log.info("创建阿里云ONS-Topic: requestId={}, topic={}", response.getRequestId(), topic);
     }
 
 }

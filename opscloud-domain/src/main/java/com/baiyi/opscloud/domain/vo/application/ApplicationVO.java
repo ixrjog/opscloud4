@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.vo.application;
 
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
 import com.baiyi.opscloud.domain.vo.business.IBusinessPermissionUser;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
@@ -27,7 +28,11 @@ public class ApplicationVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Application extends BaseVO implements IBusinessPermissionUser, UserVO.IUserPermission, TagVO.ITags {
+    public static class Application extends BaseVO implements
+            IBusinessPermissionUser,
+            BusinessDocumentVO.IBusinessDocument,
+            UserVO.IUserPermission,
+            TagVO.ITags {
 
         private final Integer businessType = BusinessTypeEnum.APPLICATION.getType();
 
@@ -44,6 +49,9 @@ public class ApplicationVO {
         private List<ApplicationResourceVO.Resource> resources;
 
         private Map<String, List<ApplicationResourceVO.Resource>> resourceMap;
+
+        @ApiModelProperty(value = "业务文档")
+        private BusinessDocumentVO.Document document;
 
         @ApiModelProperty(value = "主键", example = "1")
         private Integer id;

@@ -18,7 +18,7 @@ import java.util.List;
  */
 public interface WorkEventFacade {
 
-    DataTable<WorkEventVO.WorkEvent> queryPageByParam(WorkEventParam.PageQuery pageQuery);
+    DataTable<WorkEventVO.WorkEvent> queryWorkEventPage(WorkEventParam.WorkEventPageQuery pageQuery);
 
     void addWorkEvent(WorkEventParam.AddWorkEvent param);
 

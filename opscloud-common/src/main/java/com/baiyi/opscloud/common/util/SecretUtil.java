@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.common.util;
 
-import java.util.ArrayList;
+import com.google.common.collect.Lists;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -56,7 +57,7 @@ public class SecretUtil {
 
     private static String shuffleForSortingString(String s) {
         char[] c = s.toCharArray();
-        List<Character> lst = new ArrayList<Character>();
+        List<Character> lst = Lists.newArrayList();
         for (char value : c) lst.add(value);
         Collections.shuffle(lst);
         StringBuilder resultStr = new StringBuilder();

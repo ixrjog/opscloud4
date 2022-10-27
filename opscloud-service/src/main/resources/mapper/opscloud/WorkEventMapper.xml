@@ -29,7 +29,7 @@
         <result column="value2" jdbcType="INTEGER" property="value2"/>
     </resultMap>
 
-    <select id="queryPageByParam" parameterType="com.baiyi.opscloud.domain.param.workevent.WorkEventParam$PageQuery"
+    <select id="queryPageByParam" parameterType="com.baiyi.opscloud.domain.param.workevent.WorkEventParam$WorkEventPageQuery"
             resultMap="BaseResultMap">
         select * from work_event as a0
         <if test="tagId != null and tagId > 0">

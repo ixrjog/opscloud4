@@ -42,27 +42,9 @@ opscloud:
 # auditPath 审计日志目录
 # openAudit :on 开启审计日志 off 关闭审计日志
 terminal:
-  auditPath: ${HOME}/opscloud-data/ssh/audit
-  openAudit: on
-
-# 白名单配置
-white:
-  urls:
-    - /*.js
-    - /*.css
-    - /*.jpg
-    - /*.ico
-    - /swagger-resources
-    - /swagger-ui.html
-    - /v2/api-docs
-    - /doc.html
-    - /api/ws/guacamole/tunnel
-    - /api/ws/terminal
-    - /api/ws/kubernetes/terminal
-    - /api/ws/terminal/session/audit
-    - /api/ws/server/task/play
-    - /api/ws/jenkins/build/executor/status
-    - /api/out/ticket/approve
+  audit:
+    open: on
+    path: ${HOME}/opscloud-data/ssh/audit
 
 spring:
   config:
@@ -98,9 +80,9 @@ spring:
         validation-query: select 1
         # 申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效
         test-while-idle: on
-        # 申请连接时执行validationQuery检测连接是否有效, 默认true:检测,false:不检测
+        # 申请连接时执行validationQuery检测连接是否有效, 默认on:检测, off:不检测
         test-on-borrow: off
-        # 归还连接时执行validationQuery检测连接是否有效,默认false:不检测,ture:检测
+        # 归还连接时执行validationQuery检测连接是否有效, 默认off:不检测, on:检测
         test-on-return: off
         # 打开PSCache(preparedStatement)，并且指定每个连接上PSCache的大小
         pool-prepared-statements: on

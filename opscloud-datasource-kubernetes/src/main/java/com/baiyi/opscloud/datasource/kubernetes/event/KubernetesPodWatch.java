@@ -18,7 +18,6 @@ import java.util.concurrent.CountDownLatch;
 @Slf4j
 public class KubernetesPodWatch {
 
-
     public static void watch(KubernetesConfig.Kubernetes kubernetes, String namespace) {
         // Latch for Watch termination
         final CountDownLatch isWatchClosed = new CountDownLatch(1);

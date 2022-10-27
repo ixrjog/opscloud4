@@ -26,11 +26,11 @@ public class ZabbixV5HostTagDriver extends SimpleZabbixV5HostDriver {
 
     @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_host_tag_hostid' + #host.hostid")
     public void evictHostTag(ZabbixConfig.Zabbix config, ZabbixHost.Host host) {
-        log.info("清除ZabbixHostTag缓存 : hostid = {}", host.getHostid());
+        log.info("Evict cache Zabbix Host Tag: hostid={}", host.getHostid());
     }
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_host_tag_hostid' + #host.hostid", unless = "#result == null")
-    public ZabbixHost.Host getHostTag(ZabbixConfig.Zabbix config, ZabbixHost.Host  host) {
+    public ZabbixHost.Host getHostTag(ZabbixConfig.Zabbix config, ZabbixHost.Host host) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("output", new String[]{"name"})
                 .putParam("hostids", host.getHostid())
@@ -39,7 +39,7 @@ public class ZabbixV5HostTagDriver extends SimpleZabbixV5HostDriver {
         ZabbixHost.QueryHostResponse response = queryHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult()))
             return null;
-         return response.getResult().get(0);
+        return response.getResult().get(0);
     }
 
     public void updateHostTags(ZabbixConfig.Zabbix config, ZabbixHost.Host host, List<ZabbixHostParam.Tag> tags) {
@@ -50,7 +50,7 @@ public class ZabbixV5HostTagDriver extends SimpleZabbixV5HostDriver {
                 .build();
         ZabbixHost.UpdateHostResponse response = updateHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult().getHostids())) {
-            log.error("更新ZabbixHost主机标签失败: hostid = {}", host.getHostid());
+            log.error("Update Zabbix Host Tag error: hostid={}", host.getHostid());
         }
     }
 

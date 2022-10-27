@@ -9,10 +9,11 @@ import com.baiyi.opscloud.domain.param.IExtend;
  */
 public class ExtendUtil {
 
-    private ExtendUtil(){}
+    private ExtendUtil() {
+    }
 
-    public static boolean isExtend(IExtend iExtend){
-        if(iExtend.getExtend() == null) return false;
+    public static boolean isExtend(IExtend iExtend) {
+        if (iExtend.getExtend() == null) return false;
         return iExtend.getExtend();
     }
 

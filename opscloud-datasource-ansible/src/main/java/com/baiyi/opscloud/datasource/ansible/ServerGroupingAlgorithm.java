@@ -78,7 +78,7 @@ public class ServerGroupingAlgorithm extends BaseAlgorithm {
      */
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'server_grouping_algorithm_servergroupid_' + #serverGroup.id", unless = "#result == null")
     public Map<String, List<ServerPack>> grouping(ServerGroup serverGroup) {
-        log.info("服务器分组: serverGroupName = {}", serverGroup.getName());
+        log.info("服务器分组: serverGroupName={}", serverGroup.getName());
         Map<String, List<ServerPack>> serverMap = groupingByEnv(serverGroup);
         if (serverMap.isEmpty()) return serverMap;
         int subgroup = getSubgroup(serverGroup); // 分2组

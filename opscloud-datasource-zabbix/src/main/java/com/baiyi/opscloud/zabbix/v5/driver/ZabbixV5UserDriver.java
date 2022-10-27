@@ -31,7 +31,7 @@ public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
 
     @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_user_name_' + #username")
     public void evictByUsername(ZabbixConfig.Zabbix config, String username) {
-        log.info("清除ZabbixUser缓存 : alias = {}", username);
+        log.info("Evict cache Zabbix User: alias={}", username);
     }
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_user_name_' + #username", unless = "#result == null")
@@ -75,7 +75,7 @@ public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
                 .build();
         ZabbixUser.CreateUserResponse response = createHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult().getUserids())) {
-            log.error("创建ZabbixUser失败: name = {}", user.getName());
+            log.error("Create Zabbix User error: name={}", user.getName());
         }
     }
 
@@ -96,7 +96,7 @@ public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
                 .build();
         ZabbixUser.UpdateUserResponse response = updateHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult().getUserids())) {
-            log.error("更新ZabbixUser失败: name = {}", user.getName());
+            log.error("Update Zabbix User error: name={}", user.getName());
         }
     }
 
@@ -120,13 +120,13 @@ public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
                 .build();
         ZabbixUser.DeleteUserResponse response = deleteHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult().getUserids())) {
-            log.error("删除用户失败: username = {}", username);
+            log.error("Delete Zabbix User error: username={}", username);
         }
     }
 
     @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_user_userid_' + #userid")
     public void evictById(ZabbixConfig.Zabbix config, String userid) {
-        log.info("清除ZabbixUser缓存 : userid = {}", userid);
+        log.info("Evict cache Zabbix User: userid={}", userid);
     }
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_user_userid_' + #userid", unless = "#result == null")

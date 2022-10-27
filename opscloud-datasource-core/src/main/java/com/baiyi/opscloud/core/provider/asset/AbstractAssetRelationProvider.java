@@ -89,7 +89,7 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
     }
 
     private void clearRelation(DatasourceInstanceAssetRelation relation) {
-        log.info("删除无效的资产绑定关系: datasource_instance_asset_relation_id = {}", relation.getId());
+        log.info("删除无效的资产绑定关系: datasourceInstanceAssetRelationId={}", relation.getId());
         dsInstanceAssetRelationService.deleteById(relation.getId());
     }
 

@@ -89,7 +89,7 @@ public class ZabbixV5HostGroupDriver {
 
     @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_hostgroup_name_' + #hostGroup.name")
     public void evictHostGroup(ZabbixConfig.Zabbix config, ZabbixHostGroup.HostGroup hostGroup) {
-        log.info("清除ZabbixHostGroup缓存 : name = {}", hostGroup.getName());
+        log.info("Evict cache Zabbix HostGroup: name={}", hostGroup.getName());
     }
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_hostgroup_name_' + #name", unless = "#result == null")
@@ -111,7 +111,7 @@ public class ZabbixV5HostGroupDriver {
                 .build();
         ZabbixHostGroup.CreateHostGroupResponse response = createHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult().getGroupids())) {
-            log.error("ZabbixHostGroup创建失败: name = {}", name);
+            log.error("Create Zabbix HostGroup error: name={}", name);
         }
     }
 

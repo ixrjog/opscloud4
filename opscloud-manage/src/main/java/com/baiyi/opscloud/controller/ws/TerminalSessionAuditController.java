@@ -2,8 +2,8 @@ package com.baiyi.opscloud.controller.ws;
 
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
-import com.baiyi.opscloud.terminal.audit.ITerminalAuditProcess;
-import com.baiyi.opscloud.terminal.audit.TerminalAuditProcessFactory;
+import com.baiyi.opscloud.terminal.audit.ITerminalAuditHandler;
+import com.baiyi.opscloud.terminal.audit.TerminalAuditHandlerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -63,8 +63,8 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
     public void onMessage(String message, Session session) {
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;
         String state = getState(message);
-        ITerminalAuditProcess iTerminalAuditProcess = TerminalAuditProcessFactory.getProcessByKey(state);
-        if (iTerminalAuditProcess != null) iTerminalAuditProcess.process(message, session);
+        ITerminalAuditHandler iTerminalAuditProcess = TerminalAuditHandlerFactory.getHandlerByKey(state);
+        if (iTerminalAuditProcess != null) iTerminalAuditProcess.handle(message, session);
     }
 
     /**

@@ -45,7 +45,7 @@ public class HuaweicloudEcsDriver {
                 pageNo++;
             }
         } catch (ServiceResponseException e) {
-            log.error("HttpStatusCode = {} , RequestId = {} , ErrorCode = {} , ErrorMsg = {}", e.getHttpStatusCode(), e.getRequestId(), e.getErrorCode(), e.getErrorMsg());
+            log.error("查询错误: httpStatusCode={}, requestId={}, errorCode={}, errorMsg={}", e.getHttpStatusCode(), e.getRequestId(), e.getErrorCode(), e.getErrorMsg());
         }
         return serverDetails.stream().map(e-> toEcs(regionId,e)).collect(Collectors.toList());
     }

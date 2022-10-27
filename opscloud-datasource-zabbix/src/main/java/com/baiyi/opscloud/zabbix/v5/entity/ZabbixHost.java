@@ -177,5 +177,4 @@ public class ZabbixHost {
         private Integer useip;
     }
 
-
 }

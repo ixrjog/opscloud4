@@ -26,6 +26,7 @@ import com.baiyi.opscloud.sshserver.util.TerminalUtil;
 import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.sshd.common.channel.ChannelOutputStream;
 import org.apache.sshd.server.session.ServerSession;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
@@ -82,22 +83,25 @@ public class EventLoginCommand extends BaseServerCommand {
             terminalSessionFacade.recordTerminalSessionInstance(
                     terminalSessionInstance
             );
-            RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, sshContext.getSshShellRunnable().getOs());
+            ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
+            out.setNoDelay(true);
+            RemoteInvokeHandler.openWithSSHServer(sessionId, hostSystem, out);
             TerminalUtil.rawModeSupportVintr(terminal);
-            Instant inst1 = Instant.now(); // 计时
+            // 计时
+            Instant inst1 = Instant.now();
             Size size = terminal.getSize();
             try {
                 while (true) {
                     if (isClosed(sessionId, instanceId)) {
                         TimeUnit.MILLISECONDS.sleep(150L);
-                        sessionClosed("用户正常退出登录! 耗时:%s/s", inst1);
+                        sessionClosed("用户正常退出登录: 耗时%s/s", inst1);
                         break;
                     }
                     tryResize(size, terminal, sessionId, instanceId);
                     printJSchSession(sessionId, instanceId, terminal.reader().read(5L));
                 }
             } catch (Exception e) {
-                sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);
+                sessionClosed("服务端连接已断开: 耗时%s/s", inst1);
             } finally {
                 terminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             }

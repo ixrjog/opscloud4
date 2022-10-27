@@ -9,8 +9,35 @@ spring:
   profiles:
     active: '@env@'
 
+management:
+  server:
+    ssl:
+      enabled: off
+  health:
+    ldap:
+      enabled: off
+
 knife4j:
   enable: true
+
+# 白名单配置
+white:
+  urls:
+    - /*.js
+    - /*.css
+    - /*.jpg
+    - /*.ico
+    - /swagger-resources
+    - /swagger-ui.html
+    - /v2/api-docs
+    - /doc.html
+    - /api/ws/guacamole/tunnel
+    - /api/ws/terminal
+    - /api/ws/kubernetes/terminal
+    - /api/ws/terminal/session/audit
+    - /api/ws/server/task/play
+    - /api/ws/jenkins/build/executor/status
+    - /api/out/ticket/approve
 
 # 开发环境配置
 server:
@@ -27,7 +54,7 @@ server:
     max-http-form-post-size: 209715200
     threads:
       # tomcat最大线程数，默认为200
-      max: 400
+      max: 800
       # Tomcat启动初始化的线程数，默认值25
       min-spare: 25
 

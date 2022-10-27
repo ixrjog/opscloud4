@@ -71,13 +71,9 @@ public class ZabbixActionParam {
         @Builder.Default
         private Integer default_msg = 0;
 
-        //        @Builder.Default
-//        private String subject = zabbixConfig.getOperation().getSubject();
         private String subject;
 
         private String message;
-//        @Builder.Default
-//        private String message = zabbixConfig.getOperation().getMessage();
 
     }
 

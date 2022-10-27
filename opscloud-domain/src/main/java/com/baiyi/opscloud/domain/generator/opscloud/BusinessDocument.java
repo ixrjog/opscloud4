@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -7,7 +8,7 @@ import java.util.Date;
 
 @Data
 @Table(name = "business_document")
-public class BusinessDocument {
+public class BusinessDocument implements BaseBusiness.IBusiness {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

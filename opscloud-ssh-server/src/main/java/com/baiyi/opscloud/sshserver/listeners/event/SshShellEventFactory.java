@@ -21,7 +21,7 @@ public class SshShellEventFactory {
 
     public static void register(ISshShellEvent bean) {
         context.put(bean.getEventType(), bean);
-        log.info("SshShellEventFactory注册: evnetType = {} , beanName = {}  ", bean.getEventType(), bean.getClass().getSimpleName());
+        log.info("SshShellEventFactory Registered: evnetType={}, beanName={}", bean.getEventType(), bean.getClass().getSimpleName());
     }
 
 }

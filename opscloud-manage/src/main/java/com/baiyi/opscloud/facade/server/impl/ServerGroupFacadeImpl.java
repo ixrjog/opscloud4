@@ -4,7 +4,7 @@ import com.baiyi.opscloud.algorithm.ServerPack;
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.RegexUtil;
+import com.baiyi.opscloud.common.util.ValidationUtil;
 import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -153,7 +153,7 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
     private ServerGroup toDO(ServerGroupVO.ServerGroup serverGroup) {
         ServerGroup pre = BeanCopierUtil.copyProperties(serverGroup, ServerGroup.class);
         pre.setName(pre.getName().trim());
-        RegexUtil.tryServerGroupNameRule(pre.getName());
+        ValidationUtil.tryServerGroupNameRule(pre.getName());
         return pre;
     }
 

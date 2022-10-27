@@ -27,6 +27,7 @@ public class CronUtil {
             while (1 <= cnt) {
                 dateTime = cronExpression.next(dateTime);
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern(PATTERN);
+                assert dateTime != null;
                 result.add(dtf.format(dateTime));
                 cnt--;
             }
@@ -34,4 +35,5 @@ public class CronUtil {
         }
         return result;
     }
+
 }

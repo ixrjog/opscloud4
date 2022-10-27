@@ -34,11 +34,13 @@ public class ServerVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class Server extends BaseVO implements EnvVO.IEnv,
+    public static class Server extends BaseVO implements
+            EnvVO.IEnv,
             TagVO.ITags,
             ServerGroupVO.IServerGroup,
             ServerAccountVO.IAccount,
-            BusinessAssetRelationVO.IBusinessAssetRelation, // 资产与业务对象绑定关系
+            // 资产与业务对象绑定关系
+            BusinessAssetRelationVO.IBusinessAssetRelation,
             BusinessPropertyVO.IBusinessProperty,
             BusinessDocumentVO.IBusinessDocument,
             Serializable {
@@ -93,10 +95,10 @@ public class ServerVO {
         @NotNull(message = "环境类型不能为空")
         private Integer envType;
 
-        @ApiModelProperty(value = "公网ip")
+        @ApiModelProperty(value = "公网IP")
         private String publicIp;
 
-        @ApiModelProperty(value = "私网ip")
+        @ApiModelProperty(value = "私网IP")
         @NotBlank(message = "私网ip不能为空")
         private String privateIp;
 
@@ -128,7 +130,7 @@ public class ServerVO {
         @Builder.Default
         private Boolean isActive = true;
 
-        @ApiModelProperty(value = "资产id")
+        @ApiModelProperty(value = "资产ID")
         private Integer assetId;
 
     }

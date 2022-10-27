@@ -40,7 +40,7 @@ public class AmazonEc2Driver {
         try {
             instanceTypeMap.putAll(amazonEc2InstanceTypeHelper.getAmazonEc2InstanceTypeMap(aws));
         } catch (Exception e) {
-            log.error("查询AmazonEC2实例类型错误！");
+            log.error("查询AmazonEC2实例类型错误: err={}", e.getMessage());
         }
         DescribeInstancesRequest request = new DescribeInstancesRequest();
         List<Ec2Instance.Instance> instanceList = Lists.newArrayList();

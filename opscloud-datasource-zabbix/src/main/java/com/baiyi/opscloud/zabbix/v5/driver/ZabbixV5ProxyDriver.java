@@ -49,6 +49,7 @@ public class ZabbixV5ProxyDriver extends AbstractZabbixV5ProxyDriver {
 
     /**
      * 更新主机的代理配置
+     *
      * @param config
      * @param host
      * @param proxy
@@ -60,7 +61,7 @@ public class ZabbixV5ProxyDriver extends AbstractZabbixV5ProxyDriver {
                 .build();
         ZabbixProxy.UpdateProxyResponse response = updateHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult().getProxyids())) {
-            log.error("更新Zabbix主机名称失败: host = {} , proxy = {}", host.getHost(), proxy.getHost());
+            log.error("Update Zabbix Host Proxy error: host={}, proxy={}", host.getHost(), proxy.getHost());
         }
     }
 

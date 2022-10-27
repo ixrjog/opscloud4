@@ -70,6 +70,10 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
                 if (!entry.getQueueName().endsWith("_test_queue"))
                     throw new TicketVerifyException("校验工单条目失败: 日常环境SQS名称必须以 _test_queue 结尾！");
                 break;
+            case "frankfurt-daily":
+                if (!entry.getQueueName().endsWith("_daily_queue"))
+                    throw new TicketVerifyException("校验工单条目失败: 日常环境SQS名称必须以 _daily_queue 结尾！");
+                break;
             case "gray":
                 if (!entry.getQueueName().endsWith("_canary_queue"))
                     throw new TicketVerifyException("校验工单条目失败: 灰度环境SQS名称必须以 _canary_queue 结尾！");

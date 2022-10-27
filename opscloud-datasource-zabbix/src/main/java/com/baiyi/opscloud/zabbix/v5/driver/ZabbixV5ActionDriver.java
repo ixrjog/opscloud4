@@ -34,7 +34,7 @@ public class ZabbixV5ActionDriver extends AbstractZabbixV5ActionDriver {
 
     @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_action_name_' + #actionName")
     public void evictActionByName(ZabbixConfig.Zabbix config, String actionName) {
-        log.info("清除ZabbixAction缓存 : name = {}", actionName);
+        log.info("Evict cache with Zabbix Action: actionName={}", actionName);
     }
 
     /**
@@ -71,7 +71,7 @@ public class ZabbixV5ActionDriver extends AbstractZabbixV5ActionDriver {
                 .build();
         ZabbixAction.CreateActionResponse response = createHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult().getActionids())) {
-            log.error("创建ZabbixAction失败: name = {}", actionName);
+            log.error("Create Zabbix Action error: actionName={}", actionName);
         }
     }
 
@@ -102,7 +102,7 @@ public class ZabbixV5ActionDriver extends AbstractZabbixV5ActionDriver {
                 .build();
         ZabbixAction.DeleteActionResponse response = deleteHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult().getActionids())) {
-            log.error("删除ZabbixAction失败: actionid = {}", action.getActionid());
+            log.error("Delete Zabbix Action error: actionid={}", action.getActionid());
         }
     }
 
