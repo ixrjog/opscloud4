@@ -57,10 +57,9 @@ public class GitlabGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicke
         Optional<GitlabAccessLevelConstants> optionalGitlabAccessLevelConstants = Arrays.stream(GitlabAccessLevelConstants.values()).filter(e -> e.getRole().equalsIgnoreCase(role)).findFirst();
 
         if (!optionalGitlabAccessLevelConstants.isPresent())
-            throw new TicketProcessException("GitLab角色名称错误: role = " + role);
+            throw new TicketProcessException("GitLab角色名称错误: role={}" + role);
 
         AccessLevel accessLevel = AccessLevel.forValue(optionalGitlabAccessLevelConstants.get().getAccessValue());
-        // List<GitlabGroupMember> gitlabGroupMembers = gitlabGroupDelegate.getGroupMembers(config, Integer.parseInt(entry.getAssetId()));
 
         List<Member> groupMembers = gitlabGroupDelegate.getMembers(config, Integer.parseInt(entry.getAssetId()));
         Optional<Member> optionalGitlabGroupMember = groupMembers.stream().filter(e -> e.getId().equals(gitLabUser.getId())).findFirst();
@@ -121,7 +120,7 @@ public class GitlabGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicke
             throw new TicketProcessException("工单进度不是新建，无法更新配置条目！");
         String role = ticketEntry.getRole();
         if (Arrays.stream(GitlabAccessLevelConstants.values()).noneMatch(e -> e.getRole().equalsIgnoreCase(role))) {
-            throw new TicketProcessException("更新角色错误: 不支持的角色名称！");
+            throw new TicketProcessException("修改角色错误，不支持该名称！");
         }
         WorkOrderTicketEntry preTicketEntry = ticketEntryService.getById(ticketEntry.getId());
         preTicketEntry.setRole(role);

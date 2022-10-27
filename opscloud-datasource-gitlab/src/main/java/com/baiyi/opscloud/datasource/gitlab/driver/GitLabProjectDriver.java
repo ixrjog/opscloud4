@@ -38,15 +38,38 @@ public class GitLabProjectDriver {
         return memberPager.all();
     }
 
+    /**
+     * 查询项目中所有成员
+     * @param gitlab
+     * @param projectId
+     * @return
+     * @throws GitLabApiException
+     */
     public static List<Member> getMembersWithProjectId(GitlabConfig.Gitlab gitlab, Long projectId) throws GitLabApiException {
         Pager<Member> memberPager = buildAPI(gitlab).getProjectApi().getMembers(projectId, ITEMS_PER_PAGE);
         return memberPager.all();
     }
 
+    /**
+     * 修改项目成员
+     * @param gitlab
+     * @param projectId
+     * @param userId
+     * @param accessLevel
+     * @throws GitLabApiException
+     */
     public static void updateMember(GitlabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
         buildAPI(gitlab).getProjectApi().updateMember(projectId, userId, accessLevel);
     }
 
+    /**
+     * 新增项目成员
+     * @param gitlab
+     * @param projectId
+     * @param userId
+     * @param accessLevel
+     * @throws GitLabApiException
+     */
     public static void addMember(GitlabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
         buildAPI(gitlab).getProjectApi().addMember(projectId, userId, accessLevel);
     }

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.gitlab.driver.feature;
+package com.baiyi.opscloud.datasource.gitlab.driver;
 
 import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.datasource.gitlab.factory.GitLabApiFactory;
@@ -21,22 +21,42 @@ public class GitLabUserDriver {
 
     // private static final int ITEMS_PER_PAGE = 50;
 
+    /**
+     * 按email或username查询用户
+     * @param gitlab
+     * @param emailOrUsername
+     * @return
+     * @throws GitLabApiException
+     */
     public static List<User> findUsers(GitlabConfig.Gitlab gitlab, String emailOrUsername) throws GitLabApiException {
         return buildAPI(gitlab).getUserApi().findUsers(emailOrUsername);
     }
 
+    /**
+     * 查询用户
+     * @param gitlab
+     * @param userId
+     * @return
+     * @throws GitLabApiException
+     */
     public static User getUser(GitlabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
         return buildAPI(gitlab).getUserApi().getUser(userId);
     }
 
+    /**
+     * 查询GitLab实例中所有用户
+     * @param gitlab
+     * @return
+     * @throws GitLabApiException
+     */
     public static List<User> getUsers(GitlabConfig.Gitlab gitlab) throws GitLabApiException {
         return buildAPI(gitlab).getUserApi().getUsers();
     }
 
+
     public static List<Membership> getUserMemberships(GitlabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
         return buildAPI(gitlab).getUserApi().getMemberships(userId);
     }
-
 
     /**
      * 锁定用户

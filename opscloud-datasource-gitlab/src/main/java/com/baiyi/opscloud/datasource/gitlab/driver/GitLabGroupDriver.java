@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.gitlab.driver.feature;
+package com.baiyi.opscloud.datasource.gitlab.driver;
 
 import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.datasource.gitlab.factory.GitLabApiFactory;
@@ -46,10 +46,26 @@ public class GitLabGroupDriver {
         return projectPager.all();
     }
 
+    /**
+     * 修改群组成员
+     * @param gitlab
+     * @param groupId
+     * @param userId
+     * @param accessLevel
+     * @throws GitLabApiException
+     */
     public static void updateMember(GitlabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
         buildAPI(gitlab).getGroupApi().updateMember(groupId, userId, accessLevel);
     }
 
+    /**
+     * 新增群组成员
+     * @param gitlab
+     * @param groupId
+     * @param userId
+     * @param accessLevel
+     * @throws GitLabApiException
+     */
     public static void addMember(GitlabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
         buildAPI(gitlab).getProjectApi().addMember(groupId, userId, accessLevel);
     }
@@ -64,7 +80,6 @@ public class GitLabGroupDriver {
     public static List<Group> getGroups(GitlabConfig.Gitlab gitlab) throws GitLabApiException {
         return buildAPI(gitlab).getGroupApi().getGroups();
     }
-
 
     private static GitLabApi buildAPI(GitlabConfig.Gitlab gitlab) {
         return GitLabApiFactory.buildGitLabApi(gitlab);

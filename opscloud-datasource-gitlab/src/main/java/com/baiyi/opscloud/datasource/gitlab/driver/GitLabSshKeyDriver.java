@@ -16,7 +16,7 @@ import java.util.List;
 public class GitLabSshKeyDriver {
 
     /**
-     * 查询用户所有SshKeys
+     * 查询用户所有SshKey
      *
      * @param gitlab
      * @param userId
