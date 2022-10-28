@@ -3,6 +3,7 @@ package com.baiyi.opscloud.datasource.jenkins.provider;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.jenkins.converter.ComputerAssetConverter;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
@@ -17,6 +18,7 @@ import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
 import com.baiyi.opscloud.datasource.jenkins.model.Computer;
 import com.baiyi.opscloud.datasource.jenkins.model.ComputerWithDetails;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -30,6 +32,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_JENKI
  * @Date 2021/7/2 9:59 上午
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class JenkinsComputerProvider extends BaseAssetProvider<ComputerWithDetails> {
 
@@ -59,9 +62,9 @@ public class JenkinsComputerProvider extends BaseAssetProvider<ComputerWithDetai
                 computerWithDetails.add(computerMap.get(k).details());
             return computerWithDetails;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+            throw new DatasourceProviderException(e.getMessage());
         }
-        throw new RuntimeException("查询条目失败");
     }
 
     @Override

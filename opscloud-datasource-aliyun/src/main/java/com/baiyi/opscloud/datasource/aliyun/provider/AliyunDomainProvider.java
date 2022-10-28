@@ -4,6 +4,7 @@ import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
@@ -68,7 +69,7 @@ public class AliyunDomainProvider extends BaseAssetProvider<AliyunDomain.Domain>
             return aliyunDomainDriver.listDomains(aliyun.getRegionId(), aliyun);
         } catch (ClientException e) {
             log.error(e.getMessage());
-            throw new RuntimeException(e.getMessage()) ;
+            throw new DatasourceProviderException(e.getMessage());
         }
     }
 

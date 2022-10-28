@@ -4,6 +4,7 @@ import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
@@ -63,16 +64,17 @@ public class AliyunAcrInstanceProvider extends BaseAssetProvider<AliyunAcr.Insta
     protected List<AliyunAcr.Instance> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         Set<String> regionIds = aliyun.getRegionIds();
-        List<AliyunAcr.Instance> entities = Lists.newArrayList();
-        regionIds.forEach(regionId -> {
-            try {
+        try {
+            List<AliyunAcr.Instance> entities = Lists.newArrayList();
+            for (String regionId : regionIds) {
                 List<AliyunAcr.Instance> instances = aliyunAcrInstanceDelegate.listInstance(regionId, aliyun);
                 entities.addAll(instances);
-            } catch (ClientException e) {
-                log.error(e.getMessage());
             }
-        });
-        return entities;
+            return entities;
+        } catch (ClientException e) {
+            log.error(e.getMessage());
+            throw new DatasourceProviderException(e.getMessage());
+        }
     }
 
     @Override

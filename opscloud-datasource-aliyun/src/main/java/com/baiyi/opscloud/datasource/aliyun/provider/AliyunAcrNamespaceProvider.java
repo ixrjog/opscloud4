@@ -4,6 +4,7 @@ import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
@@ -63,20 +64,21 @@ public class AliyunAcrNamespaceProvider extends AbstractAssetChildProvider<Aliyu
     protected List<AliyunAcr.Namespace> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         Set<String> regionIds = aliyun.getRegionIds();
-        List<AliyunAcr.Namespace> entities = Lists.newArrayList();
-        regionIds.forEach(regionId -> {
-            try {
+        try {
+            List<AliyunAcr.Namespace> entities = Lists.newArrayList();
+            for (String regionId : regionIds) {
                 List<AliyunAcr.Instance> instances = aliyunAcrInstanceDelegate.listInstance(regionId, aliyun);
                 if (!CollectionUtils.isEmpty(instances)) {
                     for (AliyunAcr.Instance instance : instances) {
                         entities.addAll(aliyunAcrInstanceDelegate.listNamespace(regionId, aliyun, instance.getInstanceId()));
                     }
                 }
-            } catch (ClientException e) {
-                log.error(e.getMessage());
             }
-        });
-        return entities;
+            return entities;
+        } catch (ClientException e) {
+            log.error(e.getMessage());
+            throw new DatasourceProviderException(e.getMessage());
+        }
     }
 
     @Override

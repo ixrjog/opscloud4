@@ -5,6 +5,7 @@ import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.exception.asset.ListEntitiesException;
+import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
@@ -70,19 +71,20 @@ public class AliyunAcrRepositoryProvider extends AbstractAssetChildProvider<Aliy
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         Set<String> regionIds = aliyun.getRegionIds();
         List<AliyunAcr.Repository> entities = Lists.newArrayList();
-        for (String regionId : regionIds) {
-            try {
+        try {
+            for (String regionId : regionIds) {
                 List<AliyunAcr.Instance> instances = aliyunAcrInstanceDelegate.listInstance(regionId, aliyun);
                 if (!CollectionUtils.isEmpty(instances)) {
                     for (AliyunAcr.Instance instance : instances) {
                         entities.addAll(aliyunAcrRepositoryDelegate.listRepository(regionId, aliyun, instance.getInstanceId()));
                     }
                 }
-            } catch (ClientException e) {
-                throw new ListEntitiesException(e.getMessage());
             }
+            return entities;
+        } catch (ClientException e) {
+            log.error(e.getMessage());
+            throw new DatasourceProviderException(e.getMessage());
         }
-        return entities;
     }
 
     @Override
@@ -91,6 +93,7 @@ public class AliyunAcrRepositoryProvider extends AbstractAssetChildProvider<Aliy
         try {
             return aliyunAcrRepositoryDelegate.listRepository(parentAsset.getRegionId(), aliyun, parentAsset.getAssetId());
         } catch (ClientException e) {
+            log.error(e.getMessage());
             throw new ListEntitiesException(e.getMessage());
         }
     }
