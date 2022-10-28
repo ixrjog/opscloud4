@@ -36,7 +36,7 @@ public class GitlabTest extends BaseUnit {
     @Test
     void createUserTest() {
         GitLabConfig gitlabDsInstanceConfig = (GitLabConfig) getConfig();
-        gitlabUserDelegate.createGitlabUser(gitlabDsInstanceConfig.getGitlab(), "xiuyuan");
+        gitlabUserDelegate.createUser(gitlabDsInstanceConfig.getGitlab(), "xiuyuan");
     }
 
 }

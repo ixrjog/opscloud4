@@ -81,15 +81,13 @@ public class GitlabGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicke
                     gitLabUser.getId(),
                     accessLevel);
         }
-
     }
 
     private User preCheckUser(GitLabConfig.Gitlab config, String username) {
-        List<User> gitlabUsers = gitlabUserDelegate.findUser(config, username);
+        List<User> gitlabUsers = gitlabUserDelegate.findUsers(config, username);
         Optional<User> optionalGitlabUser = gitlabUsers.stream().filter(e -> e.getUsername().equals(username)).findFirst();
-        return optionalGitlabUser.orElseGet(() -> gitlabUserDelegate.createGitlabUser(config, username));
+        return optionalGitlabUser.isPresent() ? optionalGitlabUser.get() : gitlabUserDelegate.createUser(config, username);
     }
-
 
     @Override
     protected void pullAsset(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) {
