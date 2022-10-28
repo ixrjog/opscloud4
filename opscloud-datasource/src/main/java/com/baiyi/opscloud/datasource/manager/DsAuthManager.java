@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.manager;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.common.exception.auth.AuthCommonException;
+import com.baiyi.opscloud.common.exception.auth.AuthException;
 import com.baiyi.opscloud.core.factory.AuthProviderFactory;
 import com.baiyi.opscloud.core.provider.auth.BaseAuthProvider;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
@@ -45,7 +45,7 @@ public class DsAuthManager extends BaseManager {
         return TagConstants.AUTHORIZATION.getTag();
     }
 
-    public boolean tryLogin(User user, LoginParam.Login loginParam) throws AuthCommonException {
+    public boolean tryLogin(User user, LoginParam.Login loginParam) throws AuthException {
         List<DatasourceInstance> instances = listInstance();
         if (!CollectionUtils.isEmpty(instances)) {
             Authorization.Credential credential = Authorization.Credential.builder().username(loginParam.getUsername()).password(loginParam.getPassword()).build();
@@ -54,7 +54,8 @@ public class DsAuthManager extends BaseManager {
                 if (authProvider == null) continue;
                 if (authProvider.login(instance, credential)) return true;
             }
-            return false; // 有认证实例不允许本地认证
+            // 有认证实例不允许本地认证
+            return false;
         }
         return loginWithLocal(user, loginParam);
     }

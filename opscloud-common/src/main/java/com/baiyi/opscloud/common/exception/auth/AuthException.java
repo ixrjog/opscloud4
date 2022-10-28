@@ -12,22 +12,22 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AuthCommonException extends BaseException {
+public class AuthException extends BaseException {
 
     private static final long serialVersionUID = -1331639499184065986L;
     private Integer code;
 
-    public AuthCommonException(String message) {
+    public AuthException(String message) {
         super(message);
         this.code = 999;
     }
 
-    public AuthCommonException(Integer code, String message) {
+    public AuthException(Integer code, String message) {
         super(message);
         this.code = code;
     }
 
-    public AuthCommonException(ErrorEnum errorEnum) {
+    public AuthException(ErrorEnum errorEnum) {
         super(errorEnum.getMessage());
         this.code = errorEnum.getCode();
     }

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.gitlab.driver;
 
-import com.baiyi.opscloud.common.datasource.GitlabConfig;
+import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.datasource.gitlab.factory.GitLabApiFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.gitlab4j.api.GitLabApi;
@@ -33,7 +33,7 @@ public class GitLabProjectDriver {
      * @return
      * @throws GitLabApiException
      */
-    public static List<Member> getMembersWithProjectId(GitlabConfig.Gitlab gitlab, Long projectId, int itemsPerPage) throws GitLabApiException {
+    public static List<Member> getMembersWithProjectId(GitLabConfig.Gitlab gitlab, Long projectId, int itemsPerPage) throws GitLabApiException {
         Pager<Member> memberPager = buildAPI(gitlab).getProjectApi().getMembers(projectId, itemsPerPage);
         return memberPager.all();
     }
@@ -45,7 +45,7 @@ public class GitLabProjectDriver {
      * @return
      * @throws GitLabApiException
      */
-    public static List<Member> getMembersWithProjectId(GitlabConfig.Gitlab gitlab, Long projectId) throws GitLabApiException {
+    public static List<Member> getMembersWithProjectId(GitLabConfig.Gitlab gitlab, Long projectId) throws GitLabApiException {
         Pager<Member> memberPager = buildAPI(gitlab).getProjectApi().getMembers(projectId, ITEMS_PER_PAGE);
         return memberPager.all();
     }
@@ -58,7 +58,7 @@ public class GitLabProjectDriver {
      * @param accessLevel
      * @throws GitLabApiException
      */
-    public static void updateMember(GitlabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
+    public static void updateMember(GitLabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
         buildAPI(gitlab).getProjectApi().updateMember(projectId, userId, accessLevel);
     }
 
@@ -70,7 +70,7 @@ public class GitLabProjectDriver {
      * @param accessLevel
      * @throws GitLabApiException
      */
-    public static void addMember(GitlabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
+    public static void addMember(GitLabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
         buildAPI(gitlab).getProjectApi().addMember(projectId, userId, accessLevel);
     }
 
@@ -81,11 +81,11 @@ public class GitLabProjectDriver {
      * @return
      * @throws GitLabApiException
      */
-    public static List<Project> getProjects(GitlabConfig.Gitlab gitlab) throws GitLabApiException {
+    public static List<Project> getProjects(GitLabConfig.Gitlab gitlab) throws GitLabApiException {
         return buildAPI(gitlab).getProjectApi().getProjects();
     }
 
-    private static GitLabApi buildAPI(GitlabConfig.Gitlab gitlab) {
+    private static GitLabApi buildAPI(GitLabConfig.Gitlab gitlab) {
         return GitLabApiFactory.buildGitLabApi(gitlab);
     }
 

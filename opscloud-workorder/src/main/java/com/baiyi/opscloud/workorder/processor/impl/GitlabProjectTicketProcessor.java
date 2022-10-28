@@ -2,7 +2,7 @@ package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.baiyi.opscloud.common.constants.GitLabAccessLevelConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.common.datasource.GitlabConfig;
+import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.core.InstanceHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
@@ -34,7 +34,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
-public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcessor<DatasourceInstanceAsset, GitlabConfig> {
+public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcessor<DatasourceInstanceAsset, GitLabConfig> {
 
     @Resource
     private GitlabProjectDelegate gitlabProjectDelegate;
@@ -47,7 +47,7 @@ public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTic
 
     @Override
     protected void processHandle(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
-        GitlabConfig.Gitlab config = getDsConfig(ticketEntry, GitlabConfig.class).getGitlab();
+        GitLabConfig.Gitlab config = getDsConfig(ticketEntry, GitLabConfig.class).getGitlab();
         WorkOrderTicket ticket = getTicketById(ticketEntry.getWorkOrderTicketId());
         String username = ticket.getUsername();
         String role = ticketEntry.getRole();
@@ -82,7 +82,7 @@ public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTic
         }
     }
 
-    private User preCheckUser(GitlabConfig.Gitlab config, String username) {
+    private User preCheckUser(GitLabConfig.Gitlab config, String username) {
         List<User> gitlabUsers = gitlabUserDelegate.findUser(config, username);
         Optional<User> optionalGitlabUser = gitlabUsers.stream().filter(e -> e.getUsername().equals(username)).findFirst();
         return optionalGitlabUser.orElseGet(() -> gitlabUserDelegate.createGitlabUser(config, username));

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.gitlab.factory;
 
-import com.baiyi.opscloud.common.datasource.GitlabConfig;
+import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import org.gitlab4j.api.GitLabApi;
 
 import java.util.Optional;
@@ -16,11 +16,11 @@ public class GitLabApiFactory {
     private static final int CONNECT_TIMEOUT = 1000;
     private static final int READ_TIMEOUT = 5000;
 
-    public static GitLabApi buildGitLabApi(GitlabConfig.Gitlab gitlab) {
+    public static GitLabApi buildGitLabApi(GitLabConfig.Gitlab gitlab) {
         assert gitlab != null;
         String version = Optional.of(gitlab)
-                .map(GitlabConfig.Gitlab::getApi)
-                .map(GitlabConfig.Api::getVersion)
+                .map(GitLabConfig.Gitlab::getApi)
+                .map(GitLabConfig.Api::getVersion)
                 .orElse("v4");
         GitLabApi gitLabApi;
         if (version.equalsIgnoreCase("v3")) {
@@ -30,12 +30,12 @@ public class GitLabApiFactory {
         }
 
         int connectTimeout = Optional.of(gitlab)
-                .map(GitlabConfig.Gitlab::getApi)
-                .map(GitlabConfig.Api::getConnectTimeout)
+                .map(GitLabConfig.Gitlab::getApi)
+                .map(GitLabConfig.Api::getConnectTimeout)
                 .orElse(CONNECT_TIMEOUT);
         int readTimeout = Optional.of(gitlab)
-                .map(GitlabConfig.Gitlab::getApi)
-                .map(GitlabConfig.Api::getReadTimeout)
+                .map(GitLabConfig.Gitlab::getApi)
+                .map(GitLabConfig.Api::getReadTimeout)
                 .orElse(READ_TIMEOUT);
         gitLabApi.setRequestTimeout(connectTimeout, readTimeout);
         return gitLabApi;

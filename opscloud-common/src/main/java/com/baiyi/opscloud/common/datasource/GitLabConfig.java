@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class GitlabConfig extends BaseDsConfig {
+public class GitLabConfig extends BaseDsConfig {
 
     private Gitlab gitlab;
 

@@ -57,7 +57,7 @@ public class IamAccountHandler extends AbstractAccountHandler {
         try {
             amazonIMUserDriver.deleteLoginProfile(aws, user.getUsername());
         } catch (Exception e) {
-            log.info("删除 IAM 用户错误: username = {} , message = {}", user.getUsername(), e.getMessage());
+            log.info("删除IAM用户错误: username={}, message={}", user.getUsername(), e.getMessage());
         }
     }
 

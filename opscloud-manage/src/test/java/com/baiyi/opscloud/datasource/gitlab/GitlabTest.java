@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.gitlab;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.datasource.GitlabConfig;
+import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -30,12 +30,12 @@ public class GitlabTest extends BaseUnit {
     @Test
     BaseDsConfig getConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(29);
-        return dsFactory.build(datasourceConfig, GitlabConfig.class);
+        return dsFactory.build(datasourceConfig, GitLabConfig.class);
     }
 
     @Test
     void createUserTest() {
-        GitlabConfig gitlabDsInstanceConfig = (GitlabConfig) getConfig();
+        GitLabConfig gitlabDsInstanceConfig = (GitLabConfig) getConfig();
         gitlabUserDelegate.createGitlabUser(gitlabDsInstanceConfig.getGitlab(), "xiuyuan");
     }
 

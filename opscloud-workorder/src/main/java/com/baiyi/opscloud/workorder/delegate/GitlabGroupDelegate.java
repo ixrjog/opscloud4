@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.workorder.delegate;
 
-import com.baiyi.opscloud.common.datasource.GitlabConfig;
+import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabGroupDriver;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import org.gitlab4j.api.GitLabApiException;
@@ -21,7 +21,7 @@ import java.util.List;
 public class GitlabGroupDelegate {
 
     @Retryable(value = TicketProcessException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public void addMember(GitlabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
+    public void addMember(GitLabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
         try {
             GitLabGroupDriver.addMember(gitlab, groupId, userId, accessLevel);
         } catch (GitLabApiException e) {
@@ -30,7 +30,7 @@ public class GitlabGroupDelegate {
     }
 
     @Retryable(value = TicketProcessException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public void updateMember(GitlabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
+    public void updateMember(GitLabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
         try {
             GitLabGroupDriver.updateMember(gitlab, groupId, userId, accessLevel);
         } catch (GitLabApiException e) {
@@ -39,7 +39,7 @@ public class GitlabGroupDelegate {
     }
 
     @Retryable(value = TicketProcessException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public List<Member> getMembers(GitlabConfig.Gitlab gitlab, Integer groupId) throws TicketProcessException {
+    public List<Member> getMembers(GitLabConfig.Gitlab gitlab, Integer groupId) throws TicketProcessException {
         try {
             return GitLabGroupDriver.getMembersWithGroupId(gitlab, groupId.longValue());
         } catch (GitLabApiException e) {

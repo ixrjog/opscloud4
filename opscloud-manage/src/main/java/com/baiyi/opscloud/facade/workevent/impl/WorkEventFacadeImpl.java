@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.workevent.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
-import com.baiyi.opscloud.common.exception.auth.AuthCommonException;
+import com.baiyi.opscloud.common.exception.auth.AuthException;
 import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
@@ -147,7 +147,7 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
     @Override
     public List<WorkRole> queryMyWorkRole() {
         User user = userService.getByUsername(SessionUtil.getUsername());
-        if (ObjectUtils.isEmpty(user)) throw new AuthCommonException(ErrorEnum.AUTHENTICATION_FAILURE);
+        if (ObjectUtils.isEmpty(user)) throw new AuthException(ErrorEnum.AUTHENTICATION_FAILURE);
         List<Tag> tags = businessTagService.queryByBusiness(
                         SimpleBusiness.builder()
                                 .businessType(BusinessTypeEnum.USER.getType())

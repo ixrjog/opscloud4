@@ -32,7 +32,7 @@ public class ZabbixAccountHandler extends AbstractZabbixAccountHandler {
     @Override
     protected void doCreate(User user) {
         zabbixV5UserDriver.create(configContext.get(), AccountConverter.toZabbixUser(user), ZabbixMediaUtil.buildMedias(user), getUsrgrps(configContext.get(), user));
-        log.info("创建Zabbix用户: username = {}", user.getUsername());
+        log.info("创建Zabbix用户: username={}", user.getUsername());
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ZabbixAccountHandler extends AbstractZabbixAccountHandler {
             zabbixV5UserDriver.update(configContext.get(), updateUser, getUsrgrps(configContext.get(), user), ZabbixMediaUtil.buildMedias(user));
             // 清除缓存
             postCacheEvict(zabbixUser,user);
-            log.info("更新Zabbix用户: username = {}", user.getUsername());
+            log.info("更新Zabbix用户: username={}", user.getUsername());
         }
     }
 
@@ -57,7 +57,7 @@ public class ZabbixAccountHandler extends AbstractZabbixAccountHandler {
         zabbixV5UserDriver.delete(configContext.get(), user.getUsername());
         // 清除缓存
         postCacheEvict(zabbixUser,user);
-        log.info("删除Zabbix用户: username = {}", user.getUsername());
+        log.info("删除Zabbix用户: username={}", user.getUsername());
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ZabbixAccountHandler extends AbstractZabbixAccountHandler {
             zabbixV5UserDriver.update(configContext.get(), zabbixUser, getUsrgrps(configContext.get(), user));
             // 清除缓存
             postCacheEvict(zabbixUser,user);
-            log.info("更新Zabbix用户: username = {}", user.getUsername());
+            log.info("更新Zabbix用户: username={}", user.getUsername());
         }
     }
 

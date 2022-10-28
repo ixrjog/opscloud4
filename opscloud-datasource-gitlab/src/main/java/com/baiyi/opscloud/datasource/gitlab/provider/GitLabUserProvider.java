@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.gitlab.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.common.datasource.GitlabConfig;
+import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
@@ -54,13 +54,13 @@ public class GitLabUserProvider extends AbstractAssetRelationProvider<User, SshK
         return DsAssetTypeConstants.GITLAB_SSHKEY.name();
     }
 
-    private GitlabConfig.Gitlab buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, GitlabConfig.class).getGitlab();
+    private GitLabConfig.Gitlab buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, GitLabConfig.class).getGitlab();
     }
 
     @Override
     protected List<User> listEntities(DsInstanceContext dsInstanceContext, SshKey target) {
-        GitlabConfig.Gitlab gitlab = buildConfig(dsInstanceContext.getDsConfig());
+        GitLabConfig.Gitlab gitlab = buildConfig(dsInstanceContext.getDsConfig());
         try {
             return Lists.newArrayList(GitLabUserDriver.getUser(gitlab, target.getUserId()));
         } catch (GitLabApiException e) {

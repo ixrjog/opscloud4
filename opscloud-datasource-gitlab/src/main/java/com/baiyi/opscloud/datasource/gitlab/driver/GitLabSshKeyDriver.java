@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.gitlab.driver;
 
-import com.baiyi.opscloud.common.datasource.GitlabConfig;
+import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.datasource.gitlab.factory.GitLabApiFactory;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
@@ -23,11 +23,11 @@ public class GitLabSshKeyDriver {
      * @return
      * @throws GitLabApiException
      */
-    public static List<SshKey> getSshKeysWithUserId(GitlabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
+    public static List<SshKey> getSshKeysWithUserId(GitLabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
         return buildAPI(gitlab).getUserApi().getSshKeys(userId);
     }
 
-    private static GitLabApi buildAPI(GitlabConfig.Gitlab gitlab) {
+    private static GitLabApi buildAPI(GitLabConfig.Gitlab gitlab) {
         return GitLabApiFactory.buildGitLabApi(gitlab);
     }
 

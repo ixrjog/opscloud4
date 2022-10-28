@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.workorder.delegate;
 
-import com.baiyi.opscloud.common.datasource.GitlabConfig;
+import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabProjectDriver;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import org.gitlab4j.api.GitLabApiException;
@@ -21,7 +21,7 @@ import java.util.List;
 public class GitlabProjectDelegate {
 
     @Retryable(value = TicketProcessException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public void addProjectMember(GitlabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
+    public void addProjectMember(GitLabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
         try {
             GitLabProjectDriver.addMember(gitlab, projectId, userId, accessLevel);
         } catch (GitLabApiException e) {
@@ -41,7 +41,7 @@ public class GitlabProjectDelegate {
      * @throws TicketProcessException
      */
     @Retryable(value = TicketProcessException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public List<Member> getProjectMembers(GitlabConfig.Gitlab gitlab, Long projectId) throws TicketProcessException {
+    public List<Member> getProjectMembers(GitLabConfig.Gitlab gitlab, Long projectId) throws TicketProcessException {
         try {
             return GitLabProjectDriver.getMembersWithProjectId(gitlab, projectId);
         } catch (GitLabApiException e) {
@@ -50,7 +50,7 @@ public class GitlabProjectDelegate {
     }
 
     @Retryable(value = TicketProcessException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public void updateProjectMember(GitlabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
+    public void updateProjectMember(GitLabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
         try {
             GitLabProjectDriver.updateMember(gitlab, projectId, userId, accessLevel);
         } catch (GitLabApiException e) {

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.gitlab.driver;
 
-import com.baiyi.opscloud.common.datasource.GitlabConfig;
+import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.datasource.gitlab.factory.GitLabApiFactory;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
@@ -28,7 +28,7 @@ public class GitLabUserDriver {
      * @return
      * @throws GitLabApiException
      */
-    public static List<User> findUsers(GitlabConfig.Gitlab gitlab, String emailOrUsername) throws GitLabApiException {
+    public static List<User> findUsers(GitLabConfig.Gitlab gitlab, String emailOrUsername) throws GitLabApiException {
         return buildAPI(gitlab).getUserApi().findUsers(emailOrUsername);
     }
 
@@ -39,7 +39,7 @@ public class GitLabUserDriver {
      * @return
      * @throws GitLabApiException
      */
-    public static User getUser(GitlabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
+    public static User getUser(GitLabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
         return buildAPI(gitlab).getUserApi().getUser(userId);
     }
 
@@ -49,12 +49,12 @@ public class GitLabUserDriver {
      * @return
      * @throws GitLabApiException
      */
-    public static List<User> getUsers(GitlabConfig.Gitlab gitlab) throws GitLabApiException {
+    public static List<User> getUsers(GitLabConfig.Gitlab gitlab) throws GitLabApiException {
         return buildAPI(gitlab).getUserApi().getUsers();
     }
 
 
-    public static List<Membership> getUserMemberships(GitlabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
+    public static List<Membership> getUserMemberships(GitLabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
         return buildAPI(gitlab).getUserApi().getMemberships(userId);
     }
 
@@ -65,7 +65,7 @@ public class GitLabUserDriver {
      * @param userId
      * @throws GitLabApiException
      */
-    public static void blockUser(GitlabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
+    public static void blockUser(GitLabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
         buildAPI(gitlab).getUserApi().blockUser(userId);
     }
 
@@ -76,15 +76,15 @@ public class GitLabUserDriver {
      * @param userId
      * @throws GitLabApiException
      */
-    public static void unblockUser(GitlabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
+    public static void unblockUser(GitLabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
         buildAPI(gitlab).getUserApi().unblockUser(userId);
     }
 
-    public static User createUser(GitlabConfig.Gitlab gitlab, User user, String password) throws GitLabApiException {
+    public static User createUser(GitLabConfig.Gitlab gitlab, User user, String password) throws GitLabApiException {
        return buildAPI(gitlab).getUserApi().createUser(user, password, false);
     }
 
-    private static GitLabApi buildAPI(GitlabConfig.Gitlab gitlab) {
+    private static GitLabApi buildAPI(GitLabConfig.Gitlab gitlab) {
         return GitLabApiFactory.buildGitLabApi(gitlab);
     }
 
