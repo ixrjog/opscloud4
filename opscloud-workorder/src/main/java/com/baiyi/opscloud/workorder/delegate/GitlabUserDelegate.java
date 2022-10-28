@@ -43,15 +43,12 @@ public class GitlabUserDelegate {
                 .withUsername(username)
                 .withName(ocUser.getDisplayName())
                 .withEmail(ocUser.getEmail())
+                // 跳过确认
                 .withSkipConfirmation(true);
-//        CreateUserRequest request = new CreateUserRequest(ocUser.getDisplayName(), username, ocUser.getEmail());
-//        request.setPassword(stringEncryptor.decrypt(ocUser.getPassword()));
-//        request.setResetPassword(false);
-//        request.setSkipConfirmation(true);
         try {
-            return GitLabUserDriver.createUser(gitlab, user,stringEncryptor.decrypt(ocUser.getPassword()));
+            return GitLabUserDriver.createUser(gitlab, user, stringEncryptor.decrypt(ocUser.getPassword()));
         } catch (GitLabApiException e) {
-            throw new TicketProcessException("Gitlab创建用户错误: %s", e.getMessage());
+            throw new TicketProcessException("GitLab创建用户错误: %s", e.getMessage());
         }
     }
 
