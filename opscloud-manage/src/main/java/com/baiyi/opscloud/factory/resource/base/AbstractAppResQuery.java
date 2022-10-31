@@ -3,8 +3,8 @@ package com.baiyi.opscloud.factory.resource.base;
 import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.domain.annotation.ApplicationResType;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
-import com.baiyi.opscloud.factory.resource.ApplicationResourceQueryFactory;
-import com.baiyi.opscloud.factory.resource.IApplicationResourceQuery;
+import com.baiyi.opscloud.factory.resource.AppResQueryFactory;
+import com.baiyi.opscloud.factory.resource.IAppResQuery;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
@@ -12,12 +12,12 @@ import org.springframework.beans.factory.InitializingBean;
  * @Date 2021/9/8 4:31 下午
  * @Version 1.0
  */
-public abstract class AbstractApplicationResourceQuery implements IApplicationResourceQuery, InitializingBean {
+public abstract class AbstractAppResQuery implements IAppResQuery, InitializingBean {
 
    //  protected abstract DataTable<ApplicationResourceVO.Resource> queryResourcePage(ApplicationResourceParam.ResourcePageQuery pageQuery);
 
     @Override
-    public String getApplicationResType() {
+    public String getAppResType() {
         if (this.getClass().isAnnotationPresent(ApplicationResType.class)) {
             ApplicationResType annotation = this.getClass().getAnnotation(ApplicationResType.class);
             return annotation.value().name();
@@ -36,7 +36,7 @@ public abstract class AbstractApplicationResourceQuery implements IApplicationRe
 
     @Override
     public void afterPropertiesSet() {
-        ApplicationResourceQueryFactory.register(this);
+        AppResQueryFactory.register(this);
     }
 
 }

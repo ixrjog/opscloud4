@@ -9,17 +9,18 @@ import org.springframework.stereotype.Component;
 
 /**
  * @Author baiyi
- * @Date 2021/9/9 10:51 上午
+ * @Date 2022/10/31 13:38
  * @Version 1.0
  */
-@ApplicationResType(ApplicationResTypeEnum.KUBERNETES_DEPLOYMENT)
+@ApplicationResType(ApplicationResTypeEnum.GITLAB_PROJECT)
 @BusinessType(BusinessTypeEnum.ASSET)
 @Component
-public class AssetResourceQueryKubernetesDeployment extends AbstractAssetResourceQuery {
+public class AppResQueryWithGitLabProjectAsset extends AbstractAppResQueryWithAsset {
 
     @Override
-    protected String getResName(DsAssetVO.Asset asset){
-        return asset.getAssetId();
+    protected String getResName(DsAssetVO.Asset asset) {
+        //  git仓库
+        return asset.getAssetKey();
     }
 
 }

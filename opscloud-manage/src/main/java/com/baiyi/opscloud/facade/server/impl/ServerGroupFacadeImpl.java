@@ -28,7 +28,7 @@ import com.baiyi.opscloud.facade.server.ServerGroupFacade;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
-import com.baiyi.opscloud.factory.resource.base.AbstractApplicationResourceQuery;
+import com.baiyi.opscloud.factory.resource.base.AbstractAppResQuery;
 import com.baiyi.opscloud.packer.server.ServerGroupPacker;
 import com.baiyi.opscloud.packer.server.ServerGroupTypePacker;
 import com.baiyi.opscloud.packer.user.UserPermissionPacker;
@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
 @BusinessType(BusinessTypeEnum.SERVERGROUP)
 @Service
 @RequiredArgsConstructor
-public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery implements ServerGroupFacade, IUserBusinessPermissionPageQuery, InitializingBean {
+public class ServerGroupFacadeImpl extends AbstractAppResQuery implements ServerGroupFacade, IUserBusinessPermissionPageQuery, InitializingBean {
 
     private final ServerGroupService serverGroupService;
 
@@ -100,7 +100,7 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
                 .map(e -> ApplicationResourceVO.Resource.builder()
                         .name(e.getName())
                         .applicationId(pageQuery.getApplicationId())
-                        .resourceType(getApplicationResType())
+                        .resourceType(getAppResType())
                         .businessType(getBusinessType())
                         .businessId(e.getBusinessId())
                         .comment(e.getComment())

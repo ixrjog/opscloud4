@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
-import com.baiyi.opscloud.factory.resource.base.AbstractApplicationResourceQuery;
+import com.baiyi.opscloud.factory.resource.base.AbstractAppResQuery;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractAssetResourceQuery extends AbstractApplicationResourceQuery {
+public abstract class AbstractAppResQueryWithAsset extends AbstractAppResQuery {
 
     @Resource
     private DsInstanceAssetFacade dsInstanceAssetFacade;
@@ -31,7 +31,7 @@ public abstract class AbstractAssetResourceQuery extends AbstractApplicationReso
         DsAssetParam.AssetPageQuery query = DsAssetParam.AssetPageQuery.builder()
                 .instanceId(pageQuery.getInstanceId())
                 .instanceUuid(pageQuery.getInstanceUuid())
-                .assetType(pageQuery.getApplicationResType())
+                .assetType(pageQuery.getAppResType())
                 .queryName(pageQuery.getQueryName())
                 .isActive(true)
                 .build();
@@ -45,22 +45,29 @@ public abstract class AbstractAssetResourceQuery extends AbstractApplicationReso
     protected ApplicationResourceVO.Resource toResource(DsAssetVO.Asset asset) {
         ApplicationResourceParam.ResourcePageQuery pageQuery = resourceQuery.get();
         return ApplicationResourceVO.Resource.builder()
+                // 选择项名称
                 .name(getResName(asset))
+                // 选择项说明
+                .comment(getResComment(asset))
                 .applicationId(pageQuery.getApplicationId())
                 .businessId(asset.getBusinessId())
                 .businessType(pageQuery.getBusinessType())
-                .resourceType(pageQuery.getApplicationResType())
-                .comment(asset.getAssetId())
+                .resourceType(pageQuery.getAppResType())
                 .build();
     }
 
     /**
      * 可重写
+     *
      * @param asset
      * @return
      */
     protected String getResName(DsAssetVO.Asset asset) {
         return asset.getName();
+    }
+
+    protected String getResComment(DsAssetVO.Asset asset) {
+        return asset.getDescription();
     }
 
 }

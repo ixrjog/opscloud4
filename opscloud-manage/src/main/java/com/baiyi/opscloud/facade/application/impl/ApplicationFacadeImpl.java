@@ -24,8 +24,8 @@ import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.application.ApplicationFacade;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
-import com.baiyi.opscloud.factory.resource.ApplicationResourceQueryFactory;
-import com.baiyi.opscloud.factory.resource.IApplicationResourceQuery;
+import com.baiyi.opscloud.factory.resource.AppResQueryFactory;
+import com.baiyi.opscloud.factory.resource.IAppResQuery;
 import com.baiyi.opscloud.packer.application.ApplicationPacker;
 import com.baiyi.opscloud.packer.user.UserPermissionPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
@@ -124,7 +124,7 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
 
     @Override
     public DataTable<ApplicationResourceVO.Resource> previewApplicationResourcePage(ApplicationResourceParam.ResourcePageQuery pageQuery) {
-        IApplicationResourceQuery appResQuery = ApplicationResourceQueryFactory.getApplicationResourceQuery(pageQuery.getApplicationResType(), pageQuery.getBusinessType());
+        IAppResQuery appResQuery = AppResQueryFactory.getAppResQuery(pageQuery.getAppResType(), pageQuery.getBusinessType());
         if (appResQuery == null) throw new OCRuntimeException("无法预览应用资源，未找到对应的方法！");
         return appResQuery.queryResourcePage(pageQuery);
     }

@@ -5,8 +5,8 @@ package com.baiyi.opscloud.domain.base;
  * @Date 2021/9/8 6:38 下午
  * @Version 1.0
  */
-public interface IApplicationResourceType {
+public interface IAppResType {
 
-    String getApplicationResType();
+    String getAppResType();
 
 }

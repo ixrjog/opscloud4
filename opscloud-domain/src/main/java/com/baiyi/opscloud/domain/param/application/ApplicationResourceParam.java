@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.param.application;
 
 import com.baiyi.opscloud.domain.base.BaseBusiness;
-import com.baiyi.opscloud.domain.base.IApplicationResourceType;
+import com.baiyi.opscloud.domain.base.IAppResType;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
 import io.swagger.annotations.ApiModel;
@@ -24,7 +24,7 @@ public class ApplicationResourceParam {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class ResourcePageQuery extends SuperPageParam implements IExtend, BaseBusiness.IBusinessType, IApplicationResourceType {
+    public static class ResourcePageQuery extends SuperPageParam implements IExtend, BaseBusiness.IBusinessType, IAppResType {
 
         @ApiModelProperty(value = "数据源实例ID")
         private Integer instanceId;
@@ -34,7 +34,7 @@ public class ApplicationResourceParam {
 
         @ApiModelProperty(value = "应用资源类型")
         @NotNull(message = "必须指定应用资源类型")
-        private String applicationResType;
+        private String appResType;
 
         @ApiModelProperty(value = "业务类型")
         @NotNull(message = "必须指定业务类型")

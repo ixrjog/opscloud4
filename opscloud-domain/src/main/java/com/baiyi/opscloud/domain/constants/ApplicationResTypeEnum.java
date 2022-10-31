@@ -14,6 +14,7 @@ public enum ApplicationResTypeEnum {
     SERVERGROUP,
     KUBERNETES_DEPLOYMENT,
     GITLAB_PROJECT,
-    GITLAB_GROUP
+    GITLAB_GROUP,
+    DATASOURCE_INSTANCE
 
 }
