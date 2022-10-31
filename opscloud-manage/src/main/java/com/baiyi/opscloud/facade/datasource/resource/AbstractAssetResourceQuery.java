@@ -8,8 +8,8 @@ import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
 import com.baiyi.opscloud.factory.resource.base.AbstractApplicationResourceQuery;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Resource;
 import java.util.stream.Collectors;
 
 /**
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractAssetResourceQuery extends AbstractApplicationResourceQuery {
 
-    @Autowired
+    @Resource
     private DsInstanceAssetFacade dsInstanceAssetFacade;
 
     protected static ThreadLocal<ApplicationResourceParam.ResourcePageQuery> resourceQuery = new ThreadLocal<>();
@@ -45,13 +45,22 @@ public abstract class AbstractAssetResourceQuery extends AbstractApplicationReso
     protected ApplicationResourceVO.Resource toResource(DsAssetVO.Asset asset) {
         ApplicationResourceParam.ResourcePageQuery pageQuery = resourceQuery.get();
         return ApplicationResourceVO.Resource.builder()
-                .name(asset.getName())
+                .name(getResName(asset))
                 .applicationId(pageQuery.getApplicationId())
                 .businessId(asset.getBusinessId())
                 .businessType(pageQuery.getBusinessType())
                 .resourceType(pageQuery.getApplicationResType())
                 .comment(asset.getAssetId())
                 .build();
+    }
+
+    /**
+     * 可重写
+     * @param asset
+     * @return
+     */
+    protected String getResName(DsAssetVO.Asset asset) {
+        return asset.getName();
     }
 
 }

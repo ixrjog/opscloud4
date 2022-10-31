@@ -124,9 +124,9 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
 
     @Override
     public DataTable<ApplicationResourceVO.Resource> previewApplicationResourcePage(ApplicationResourceParam.ResourcePageQuery pageQuery) {
-        IApplicationResourceQuery iApplicationResourceQuery = ApplicationResourceQueryFactory.getIApplicationResourceQuery(pageQuery.getApplicationResType(), pageQuery.getBusinessType());
-        if (iApplicationResourceQuery == null) throw new OCRuntimeException("无法预览应用资源，未找到对应的方法！");
-        return iApplicationResourceQuery.queryResourcePage(pageQuery);
+        IApplicationResourceQuery appResQuery = ApplicationResourceQueryFactory.getApplicationResourceQuery(pageQuery.getApplicationResType(), pageQuery.getBusinessType());
+        if (appResQuery == null) throw new OCRuntimeException("无法预览应用资源，未找到对应的方法！");
+        return appResQuery.queryResourcePage(pageQuery);
     }
 
     @Override

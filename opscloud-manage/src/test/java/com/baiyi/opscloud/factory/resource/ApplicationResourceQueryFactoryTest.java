@@ -19,7 +19,7 @@ class ApplicationResourceQueryFactoryTest extends BaseUnit {
     @Test
     void applicationResourceQueryFactoryTest() {
         IApplicationResourceQuery iApplicationResourceQuery
-                = ApplicationResourceQueryFactory.getIApplicationResourceQuery(ApplicationResTypeEnum.SERVERGROUP.name(), BusinessTypeEnum.SERVERGROUP.getType());
+                = ApplicationResourceQueryFactory.getApplicationResourceQuery(ApplicationResTypeEnum.SERVERGROUP.name(), BusinessTypeEnum.SERVERGROUP.getType());
         if (iApplicationResourceQuery != null) {
             System.err.print(iApplicationResourceQuery.getApplicationResType());
             ApplicationResourceParam.ResourcePageQuery pageQuery = ApplicationResourceParam.ResourcePageQuery.builder()

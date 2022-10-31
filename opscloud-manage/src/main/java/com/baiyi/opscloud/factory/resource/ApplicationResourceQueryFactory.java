@@ -19,7 +19,7 @@ public class ApplicationResourceQueryFactory {
 
     private static final Map<ImmutablePair<String, Integer>, IApplicationResourceQuery> context = new ConcurrentHashMap<>();
 
-    public static IApplicationResourceQuery getIApplicationResourceQuery(String resType, Integer businessType) {
+    public static IApplicationResourceQuery getApplicationResourceQuery(String resType, Integer businessType) {
         ImmutablePair<String, Integer> key = ImmutablePair.of(resType, businessType);
         return context.get(key);
     }

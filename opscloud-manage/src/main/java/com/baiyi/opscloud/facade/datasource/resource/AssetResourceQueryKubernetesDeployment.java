@@ -4,7 +4,6 @@ import com.baiyi.opscloud.domain.annotation.ApplicationResType;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import org.springframework.stereotype.Component;
 
@@ -16,13 +15,11 @@ import org.springframework.stereotype.Component;
 @ApplicationResType(ApplicationResTypeEnum.KUBERNETES_DEPLOYMENT)
 @BusinessType(BusinessTypeEnum.ASSET)
 @Component
-public class KubernetesDeploymentAssetResourceQuery extends AbstractAssetResourceQuery {
+public class AssetResourceQueryKubernetesDeployment extends AbstractAssetResourceQuery {
 
     @Override
-    protected ApplicationResourceVO.Resource toResource(DsAssetVO.Asset asset) {
-        ApplicationResourceVO.Resource resource = super.toResource(asset);
-        resource.setName(asset.getAssetId());
-        return resource;
+    protected String getResName(DsAssetVO.Asset asset){
+        return asset.getAssetId();
     }
 
 }
