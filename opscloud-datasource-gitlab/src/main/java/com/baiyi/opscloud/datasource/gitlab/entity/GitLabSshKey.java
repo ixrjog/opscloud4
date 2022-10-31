@@ -12,7 +12,7 @@ import org.gitlab4j.api.models.SshKey;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SshKeyBO extends SshKey {
+public class GitLabSshKey extends SshKey {
 
     private String username;
 

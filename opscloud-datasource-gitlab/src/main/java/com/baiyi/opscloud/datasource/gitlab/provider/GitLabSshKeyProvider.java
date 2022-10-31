@@ -9,10 +9,10 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.gitlab.convert.GitlabAssetConvert;
+import com.baiyi.opscloud.datasource.gitlab.convert.GitLabAssetConvert;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabSshKeyDriver;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabUserDriver;
-import com.baiyi.opscloud.datasource.gitlab.entity.SshKeyBO;
+import com.baiyi.opscloud.datasource.gitlab.entity.GitLabSshKey;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -59,7 +59,7 @@ public class GitLabSshKeyProvider extends AbstractAssetRelationProvider<SshKey, 
         GitLabConfig.Gitlab gitlab = buildConfig(dsInstanceContext.getDsConfig());
         try {
             return GitLabSshKeyDriver.getSshKeysWithUserId(gitlab, target.getId()).stream().map(e -> {
-                        SshKeyBO sshKey = BeanCopierUtil.copyProperties(e, SshKeyBO.class);
+                        GitLabSshKey sshKey = BeanCopierUtil.copyProperties(e, GitLabSshKey.class);
                         sshKey.setUsername(target.getUsername());
                         return sshKey;
                     }
@@ -83,7 +83,7 @@ public class GitLabSshKeyProvider extends AbstractAssetRelationProvider<SshKey, 
                 List<SshKey> keys = GitLabSshKeyDriver.getSshKeysWithUserId(gitlab, user.getId());
                 if (!CollectionUtils.isEmpty(keys)) {
                     sshKeys.addAll(keys.stream().map(e -> {
-                                SshKeyBO sshKey = BeanCopierUtil.copyProperties(e, SshKeyBO.class);
+                                GitLabSshKey sshKey = BeanCopierUtil.copyProperties(e, GitLabSshKey.class);
                                 sshKey.setUsername(user.getUsername());
                                 return sshKey;
                             }).collect(Collectors.toList())
@@ -128,7 +128,7 @@ public class GitLabSshKeyProvider extends AbstractAssetRelationProvider<SshKey, 
 
     @Override
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, SshKey entity) {
-        return GitlabAssetConvert.toAssetContainer(dsInstance, entity);
+        return GitLabAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

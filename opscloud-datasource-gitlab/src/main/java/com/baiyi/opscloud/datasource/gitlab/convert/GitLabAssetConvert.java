@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.gitlab.convert;
 
 import com.baiyi.opscloud.common.util.SSHUtil;
-import com.baiyi.opscloud.datasource.gitlab.entity.SshKeyBO;
+import com.baiyi.opscloud.datasource.gitlab.entity.GitLabSshKey;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -19,7 +19,7 @@ import org.gitlab4j.api.models.User;
  * @Version 1.0
  */
 @Slf4j
-public class GitlabAssetConvert {
+public class GitLabAssetConvert {
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, User entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
@@ -88,8 +88,8 @@ public class GitlabAssetConvert {
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, SshKey entity) {
         String name = "";
-        if(entity instanceof SshKeyBO)
-            name = ((SshKeyBO) entity).getUsername();
+        if(entity instanceof GitLabSshKey)
+            name = ((GitLabSshKey) entity).getUsername();
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(String.valueOf(entity.getId()))
@@ -106,4 +106,5 @@ public class GitlabAssetConvert {
                 .paramProperty("userId", entity.getUserId())
                 .build();
     }
+    
 }
