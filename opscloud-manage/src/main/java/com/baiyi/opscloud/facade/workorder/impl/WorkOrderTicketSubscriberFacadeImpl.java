@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.workorder.impl;
 
 import com.baiyi.opscloud.common.util.PasswordUtil;
-import com.baiyi.opscloud.common.util.WorkflowUtil;
+import com.baiyi.opscloud.workorder.util.WorkflowUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.vo.workorder.WorkflowVO;
 import com.baiyi.opscloud.facade.workorder.WorkOrderTicketSubscriberFacade;
@@ -56,7 +56,7 @@ public class WorkOrderTicketSubscriberFacadeImpl implements WorkOrderTicketSubsc
 //    @Async(value = CORE)
     public void publish(WorkOrderTicket ticket) {
         WorkOrder workOrder = workOrderService.getById(ticket.getWorkOrderId());
-        Map<String, WorkflowVO.Node> nodeMap = WorkflowUtil.toWorkflowNodeMap(workOrder.getWorkflow());
+        Map<String, WorkflowVO.Node> nodeMap = WorkflowUtil.toNodeMap(workOrder.getWorkflow());
         List<WorkOrderTicketNode> ticketNodes = ticketNodeService.queryByWorkOrderTicketId(ticket.getId());
         ticketNodes.forEach(n -> {
             if (nodeMap.containsKey(n.getNodeName())) {

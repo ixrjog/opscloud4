@@ -47,7 +47,7 @@ public class IOUtil {
                 result = true;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return result;
     }
@@ -69,7 +69,7 @@ public class IOUtil {
                 feedback = FileUtils.readFileToString(file, "utf8");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return feedback;
     }
@@ -79,6 +79,7 @@ public class IOUtil {
         try {
             FileUtils.forceMkdir(file);
         } catch (IOException e) {
+            log.error(e.getMessage());
         }
     }
 
@@ -101,6 +102,7 @@ public class IOUtil {
         try (FileWriter fw = new FileWriter(file)) {
             fw.write(body);//将字符串写入到指定的路径下的文件中
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -132,7 +134,7 @@ public class IOUtil {
             writer.write(body);
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
@@ -155,7 +157,7 @@ public class IOUtil {
             }
             return buffer.toString();
         } catch (Exception e) {
-            //  throw new RuntimeException(e);
+            log.error(e.getMessage());
             return null;
         }
     }

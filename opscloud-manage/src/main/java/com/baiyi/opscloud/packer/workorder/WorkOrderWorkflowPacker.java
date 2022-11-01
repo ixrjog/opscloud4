@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.packer.workorder;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.WorkflowUtil;
+import com.baiyi.opscloud.workorder.util.WorkflowUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketNode;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
@@ -39,7 +39,7 @@ public class WorkOrderWorkflowPacker {
     public void wrap(WorkOrderTicketVO.TicketView ticketView) {
         WorkOrderVO.WorkOrder workOrder = ticketView.getWorkOrder();
         if (workOrder == null) return;
-        WorkflowVO.Workflow workflowVO = WorkflowUtil.toWorkflowView(workOrder.getWorkflow());
+        WorkflowVO.Workflow workflowVO = WorkflowUtil.toView(workOrder.getWorkflow());
         List<WorkflowVO.NodeView> nodes = workflowVO.getNodes().stream().map(e -> {
             WorkflowVO.NodeView nodeView = BeanCopierUtil.copyProperties(e, WorkflowVO.NodeView.class);
             try {

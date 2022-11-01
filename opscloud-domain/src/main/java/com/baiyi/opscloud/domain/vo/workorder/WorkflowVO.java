@@ -40,7 +40,7 @@ public class WorkflowVO {
     @Builder
     @Data
     public static class Workflow implements Serializable {
-        public static final Workflow EMPTY = Workflow.builder().build();
+        public static final Workflow EMPTY_WORKFLOW = Workflow.builder().build();
         private static final long serialVersionUID = -837044550263261422L;
         @Builder.Default
         private List<Node> nodes = Lists.newArrayList();

@@ -1,5 +1,6 @@
-package com.baiyi.opscloud.common.util;
+package com.baiyi.opscloud.workorder.util;
 
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.vo.workorder.WorkflowVO;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -22,21 +23,21 @@ public class WorkflowUtil {
     private WorkflowUtil() {
     }
 
-    public static WorkflowVO.Workflow toWorkflowView(String workflow) {
+    public static WorkflowVO.Workflow toView(String workflow) {
         if (StringUtils.isEmpty(workflow))
-            return WorkflowVO.Workflow.EMPTY;
+            return WorkflowVO.Workflow.EMPTY_WORKFLOW;
         try {
             Yaml yaml = new Yaml(new SafeConstructor());
             Object result = yaml.load(workflow);
             return new GsonBuilder().create().fromJson(JSONUtil.writeValueAsString(result), WorkflowVO.Workflow.class);
         } catch (JsonSyntaxException e) {
             log.error(e.getMessage());
-            return WorkflowVO.Workflow.EMPTY;
+            return WorkflowVO.Workflow.EMPTY_WORKFLOW;
         }
     }
 
-    public static Map<String, WorkflowVO.Node> toWorkflowNodeMap(String workflow) {
-        WorkflowVO.Workflow wf = toWorkflowView(workflow);
+    public static Map<String, WorkflowVO.Node> toNodeMap(String workflow) {
+        WorkflowVO.Workflow wf = toView(workflow);
         return wf.getNodes().stream().collect(Collectors.toMap(WorkflowVO.Node::getName, a -> a, (k1, k2) -> k1));
     }
 

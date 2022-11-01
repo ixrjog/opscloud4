@@ -3,7 +3,7 @@ package com.baiyi.opscloud.workorder.helper.strategy.impl;
 import com.baiyi.opscloud.common.config.properties.OpscloudConfigurationProperties;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.TimeUtil;
-import com.baiyi.opscloud.common.util.WorkflowUtil;
+import com.baiyi.opscloud.workorder.util.WorkflowUtil;
 import com.baiyi.opscloud.datasource.manager.base.NoticeManager;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.notice.INoticeMessage;
@@ -60,7 +60,7 @@ public class SendAuditNotice extends AbstractSendNotice {
     @Override
     public void send(WorkOrderTicket ticket) {
         WorkOrder workOrder = workOrderService.getById(ticket.getWorkOrderId());
-        Map<String, WorkflowVO.Node> nodeMap = WorkflowUtil.toWorkflowNodeMap(workOrder.getWorkflow());
+        Map<String, WorkflowVO.Node> nodeMap = WorkflowUtil.toNodeMap(workOrder.getWorkflow());
         WorkOrderTicketNode node = ticketNodeService.getById(ticket.getNodeId());
         if (nodeMap.containsKey(node.getNodeName())) {
             INoticeMessage noticeMessage = buildNoticeMessage(ticket);

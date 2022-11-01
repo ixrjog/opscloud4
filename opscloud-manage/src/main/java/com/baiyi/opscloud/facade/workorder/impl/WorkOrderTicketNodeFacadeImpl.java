@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.workorder.impl;
 
-import com.baiyi.opscloud.common.util.WorkflowUtil;
+import com.baiyi.opscloud.workorder.util.WorkflowUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrder;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketNode;
@@ -32,7 +32,7 @@ public class WorkOrderTicketNodeFacadeImpl implements WorkOrderTicketNodeFacade 
 
     @Override
     public void createWorkflowNodes(WorkOrder workOrder, WorkOrderTicket workOrderTicket) {
-        WorkflowVO.Workflow workflowVO = WorkflowUtil.toWorkflowView(workOrder.getWorkflow());
+        WorkflowVO.Workflow workflowVO = WorkflowUtil.toView(workOrder.getWorkflow());
         List<WorkOrderTicketNode> nodes = Lists.newArrayList();
         for (WorkflowVO.Node node : workflowVO.getNodes()) {
             WorkOrderTicketNode workOrderTicketNode = WorkOrderTicketNode.builder()
@@ -48,7 +48,7 @@ public class WorkOrderTicketNodeFacadeImpl implements WorkOrderTicketNodeFacade 
 
     @Override
     public void verifyWorkflowNodes(WorkOrder workOrder, WorkOrderTicket workOrderTicket) {
-        Map<String, WorkflowVO.Node> nodeMap = WorkflowUtil.toWorkflowNodeMap(workOrder.getWorkflow());
+        Map<String, WorkflowVO.Node> nodeMap = WorkflowUtil.toNodeMap(workOrder.getWorkflow());
         List<WorkOrderTicketNode> nodes = workOrderTicketNodeService.queryByWorkOrderTicketId(workOrderTicket.getId());
         for (WorkOrderTicketNode node : nodes) {
             if (!nodeMap.containsKey(node.getNodeName()))

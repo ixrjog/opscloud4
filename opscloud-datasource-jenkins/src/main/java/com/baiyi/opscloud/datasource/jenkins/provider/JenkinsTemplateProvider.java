@@ -65,13 +65,13 @@ public class JenkinsTemplateProvider extends BaseAssetProvider<Job> {
         try {
             // 遍历所有模板目录
             for (String templateFolder : templateFolders) {
-                //  FolderJob folder = new FolderJob("templates", "https://leo-jenkins-1.chuanyinet.com/job/templates/");
+                // https://leo.jenkins.org/job/templates/
                 FolderJob folder = new FolderJob(templateFolder, Joiner.on("/").join(config.getUrl(), "job", templateFolder, ""));
-                Map<String, Job> jobMap = JenkinsServerDriver.getJobs(config,folder  );
+                Map<String, Job> jobMap = JenkinsServerDriver.getJobs(config, folder);
                 for (String k : jobMap.keySet()) {
-                   if(jobMap.get(k).getName().startsWith(prefix)){
-                       entities.add(jobMap.get(k));
-                   }
+                    if (jobMap.get(k).getName().startsWith(prefix)) {
+                        entities.add(jobMap.get(k));
+                    }
                 }
             }
             return entities;

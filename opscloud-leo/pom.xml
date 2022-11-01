@@ -17,4 +17,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-common</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>
