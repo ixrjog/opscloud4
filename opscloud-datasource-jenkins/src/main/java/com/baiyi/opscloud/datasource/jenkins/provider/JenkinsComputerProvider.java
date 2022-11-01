@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
-import com.baiyi.opscloud.datasource.jenkins.converter.ComputerAssetConverter;
+import com.baiyi.opscloud.datasource.jenkins.converter.JenkinsAssetConverter;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
@@ -84,7 +84,7 @@ public class JenkinsComputerProvider extends BaseAssetProvider<ComputerWithDetai
 
     @Override
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ComputerWithDetails entity) {
-        return ComputerAssetConverter.toAssetContainer(dsInstance, entity);
+        return JenkinsAssetConverter.toAssetContainer(dsInstance, entity);
     }
 
     @Override

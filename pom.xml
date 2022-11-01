@@ -55,6 +55,7 @@
         <module>opscloud-datasource-consul</module>
         <module>opscloud-datasource-aws-ecr</module>
         <module>opscloud-datasource-lxhl</module>
+        <module>opscloud-leo</module>
     </modules>
     <parent>
         <!--https://spring.io/projects/spring-boot#learn-->
@@ -123,7 +124,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.2.13</version>
+            <version>1.2.14</version>
         </dependency>
 
         <dependency>
@@ -182,14 +183,14 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.9.0</version>
+            <version>2.10</version>
         </dependency>
 
         <!-- 系统信息 -->
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
-            <version>6.2.2</version>
+            <version>6.3.0</version>
         </dependency>
 
         <!--yaml工具-->
@@ -516,6 +517,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-lxhl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-leo</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

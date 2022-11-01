@@ -62,6 +62,8 @@ public enum DsAssetTypeConstants {
     ZABBIX_USER_GROUP,
 
     JENKINS_COMPUTER,
+    JENKINS_TEMPLATE,
+    JENKINS_JOB,
 
     ZABBIX_HOST,
     ZABBIX_HOST_GROUP,
