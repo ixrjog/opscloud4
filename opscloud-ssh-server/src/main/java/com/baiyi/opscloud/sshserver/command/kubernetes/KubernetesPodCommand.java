@@ -48,7 +48,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.sshd.common.channel.ChannelOutputStream;
 import org.apache.sshd.server.session.ServerSession;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
@@ -283,10 +282,8 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
 
         SshContext sshContext = getSshContext();
-        ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
-        // 无延迟
-        out.setNoDelay(true);
-        WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, out);
+
+        WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getSshShellRunnable().getOs());
         Thread thread = new Thread(run);
         thread.start();
         try {
@@ -304,7 +301,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                 TimeUnit.SECONDS.sleep(1L);
             }
         } catch (IOException | InterruptedException ie) {
-            log.error("执行Arthas错误: err={}",ie.getMessage());
+            log.warn("执行Arthas错误: err={}", ie.getMessage());
         }
         try {
             while (!listener.isClosed()) {
