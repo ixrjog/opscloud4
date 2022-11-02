@@ -59,7 +59,7 @@ public class NoticeManager {
     }
 
     /**
-     * 模版消息发送
+     * 模板消息发送
      *
      * @param user
      * @param msgKey
@@ -74,7 +74,7 @@ public class NoticeManager {
                 noticeHelper.sendMessage(user, msgKey, instances, iNoticeMessage);
             }
         } catch (Exception e) {
-            log.error("发送消息失败: " + e.getMessage());
+            log.error("发送消息失败: err={}", e.getMessage());
         }
     }
 

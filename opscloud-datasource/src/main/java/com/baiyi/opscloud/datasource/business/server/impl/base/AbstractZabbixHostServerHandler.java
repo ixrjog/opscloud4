@@ -165,9 +165,9 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
         });
         // 更新模板参数
         requestBuilder.putParamSkipEmpty("templates", HostParamUtil.toTemplateParam(zabbixTemplates));
-        // 主机模板与配置保持一致，清理多余模版
+        // 主机模板与配置保持一致，清理多余模板
         if (property.getZabbix().getTemplateUniformity() != null && property.getZabbix().getTemplateUniformity()) {
-            clearTemplates(zabbixTemplates, property); // 清理模版
+            clearTemplates(zabbixTemplates, property); // 清理模板
             requestBuilder.putParamSkipEmpty("templates_clear", HostParamUtil.toTemplateParam(zabbixTemplates));
         }
         zabbixV5TemplateDriver.evictHostTemplate(configContext.get(), host); //清理缓存

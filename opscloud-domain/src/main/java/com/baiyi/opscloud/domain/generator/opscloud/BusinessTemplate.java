@@ -33,7 +33,7 @@ public class BusinessTemplate {
     private Integer businessId;
 
     /**
-     * 模版ID
+     * 模板ID
      */
     @Column(name = "template_id")
     private Integer templateId;
@@ -57,12 +57,12 @@ public class BusinessTemplate {
     private Date updateTime;
 
     /**
-     * 模版变量
+     * 模板变量
      */
     private String vars;
 
     /**
-     * 模版内容
+     * 模板内容
      */
     private String content;
 

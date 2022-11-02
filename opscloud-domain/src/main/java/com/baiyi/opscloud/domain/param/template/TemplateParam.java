@@ -30,10 +30,10 @@ public class TemplateParam {
         @ApiModelProperty(value = "实例类型查询")
         private String instanceType;
 
-        @ApiModelProperty(value = "模版关键字查询")
+        @ApiModelProperty(value = "模板关键字查询")
         private String templateKey;
 
-        @ApiModelProperty(value = "模版类型查询")
+        @ApiModelProperty(value = "模板类型查询")
         private String templateType;
 
         @ApiModelProperty(value = "环境类型")

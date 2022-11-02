@@ -33,7 +33,7 @@ public class TemplateUtil {
     }
 
     /**
-     * 渲染模版
+     * 渲染模板
      *
      * @param propsYml   YAML
      * @param credential

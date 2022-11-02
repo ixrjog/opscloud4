@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.vo.leo;
 
+import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,14 @@ public class LeoTemplateVO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Template {
+    public static class Template implements DsInstanceVO.IDsInstance {
+
+        private DsInstanceVO.Instance instance;
+
+        @Override
+        public String getInstanceUuid() {
+            return this.jenkinsInstanceUuid;
+        }
 
         private Integer id;
 
@@ -30,7 +38,7 @@ public class LeoTemplateVO {
         @ApiModelProperty(value = "实例UUID")
         private String jenkinsInstanceUuid;
 
-        @ApiModelProperty(value = "模版名称")
+        @ApiModelProperty(value = "模板名称")
         private String templateName;
 
         @NotEmpty(message = "模板配置不能为空")
@@ -45,6 +53,8 @@ public class LeoTemplateVO {
 
         @ApiModelProperty(value = "描述")
         private String comment;
+
+
 
     }
 }

@@ -55,7 +55,7 @@ public class LeoTemplateParam {
         @ApiModelProperty(value = "实例UUID")
         private String jenkinsInstanceUuid;
 
-        @ApiModelProperty(value = "模版名称")
+        @ApiModelProperty(value = "模板名称")
         private String templateName;
 
         @NotEmpty(message = "模板配置不能为空")

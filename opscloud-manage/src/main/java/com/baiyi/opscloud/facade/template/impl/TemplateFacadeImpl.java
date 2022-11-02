@@ -202,7 +202,7 @@ public class TemplateFacadeImpl implements TemplateFacade {
     @Override
     public BusinessTemplateVO.BusinessTemplate updateBusinessTemplate(BusinessTemplateParam.BusinessTemplate businessTemplate) {
         BusinessTemplate preBizTemplate = businessTemplateService.getById(businessTemplate.getId());
-        // 用户修改模版
+        // 用户修改模板
         if (!preBizTemplate.getTemplateId().equals(businessTemplate.getTemplateId())) {
             Template template = templateService.getById(businessTemplate.getTemplateId());
             if (template == null)

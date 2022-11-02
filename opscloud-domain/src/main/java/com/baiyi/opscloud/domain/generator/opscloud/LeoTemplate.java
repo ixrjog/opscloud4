@@ -17,7 +17,7 @@ import java.util.Date;
 public class LeoTemplate implements Serializable {
 
     private static final long serialVersionUID = -517321853690494654L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -34,7 +34,7 @@ public class LeoTemplate implements Serializable {
     private String jenkinsInstanceUuid;
 
     /**
-     * 模版名称
+     * 模板名称
      */
     @Column(name = "template_name")
     private String templateName;

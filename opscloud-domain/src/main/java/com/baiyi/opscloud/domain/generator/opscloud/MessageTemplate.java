@@ -52,7 +52,7 @@ public class MessageTemplate {
     private Date updateTime;
 
     /**
-     * 通知模版
+     * 通知模板
      */
     @Column(name = "msg_template")
     private String msgTemplate;

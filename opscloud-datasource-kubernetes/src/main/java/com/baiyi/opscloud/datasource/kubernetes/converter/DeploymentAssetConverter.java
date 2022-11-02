@@ -37,7 +37,6 @@ public class DeploymentAssetConverter {
                 .assetId(assetId)
                 .name(name)
                 .assetKey(name)
-                // entiry.getSpec().getTemplate().getSpec().getContainers().get(0).getImage() 容器模版镜像
                 .assetKey2(namespace) // namespace
                 .kind(entity.getKind())
                 .assetType(DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name())
