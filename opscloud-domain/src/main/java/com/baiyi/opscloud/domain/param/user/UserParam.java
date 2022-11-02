@@ -157,6 +157,10 @@ public class UserParam {
 
         @ApiModelProperty(value = "有效")
         private Boolean isActive;
+
+        @ApiModelProperty(value = "标签ID")
+        private Integer tagId;
+
     }
 
     @Data

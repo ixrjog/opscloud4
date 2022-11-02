@@ -27,8 +27,14 @@
 
     <select id="queryPageByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserParam$UserPageQuery"
             resultMap="BaseResultMap">
-        select * from user
+        select a0.* from user a0
+        <if test="tagId != null and tagId > 0">
+            join business_tag a1 on a0.id = a1.business_id
+        </if>
         <where>
+            <if test="tagId != null and tagId > 0">
+                a1.business_type = #{businessType} and a1.tag_id = #{tagId}
+            </if>
             <if test="queryName != null and queryName != ''">
                 ( username like "%" #{queryName} "%"
                 or name like "%" #{queryName} "%"
@@ -41,7 +47,7 @@
                 and is_active = #{isActive}
             </if>
             <if test="filterTag != null and filterTag">
-                and id not in (
+                and a0.id not in (
                 select business_id from business_tag
                 where
                 business_type = #{businessType}
