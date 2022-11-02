@@ -13,7 +13,7 @@ import java.util.List;
  * @Date 2021/10/28 4:27 下午
  * @Version 1.0
  */
-public class GitlabNotifyParam {
+public class GitLabNotifyParam {
 
     /**
      * https://gitlab.xinc818.com/help/system_hooks/system_hooks.md

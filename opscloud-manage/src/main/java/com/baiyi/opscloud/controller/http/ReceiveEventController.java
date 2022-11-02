@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
-import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
+import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
 import com.baiyi.opscloud.facade.datasource.instance.GitlabFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,7 +29,7 @@ public class ReceiveEventController {
 
     @ApiOperation(value = "Gitlab(API:v4)通知接口")
     @PostMapping(value = "/gitlab/v4/system/hooks",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> receiveGitlabV4SystemHooks(@RequestBody @Valid GitlabNotifyParam.SystemHook systemHook) {
+    public HttpResult<Boolean> receiveGitlabV4SystemHooks(@RequestBody @Valid GitLabNotifyParam.SystemHook systemHook) {
         gitlabFacade.consumeEventV4(systemHook);
         return HttpResult.SUCCESS;
     }

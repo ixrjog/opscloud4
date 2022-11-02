@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
-import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
+import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
 import com.baiyi.opscloud.zabbix.constant.SeverityType;
 
 /**
@@ -14,7 +14,7 @@ import com.baiyi.opscloud.zabbix.constant.SeverityType;
  */
 public class SystemHookConverter {
 
-    public static Event toEvent(DatasourceInstance instance, GitlabNotifyParam.SystemHook systemHook){
+    public static Event toEvent(DatasourceInstance instance, GitLabNotifyParam.SystemHook systemHook){
         return Event.builder()
                 .instanceUuid(instance.getUuid())
                 .eventId(IdUtil.buildUUID())

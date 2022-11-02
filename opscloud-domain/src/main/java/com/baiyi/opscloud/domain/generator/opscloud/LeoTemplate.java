@@ -1,12 +1,23 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
-import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+
+@Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "leo_template")
-public class LeoTemplate {
+public class LeoTemplate implements Serializable {
+
+    private static final long serialVersionUID = -517321853690494654L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -29,15 +40,21 @@ public class LeoTemplate {
     private String templateName;
 
     /**
+     * 有效
+     */
+    @Column(name = "is_active")
+    private Boolean isActive;
+
+    /**
      * 更新时间
      */
-    @Column(name = "update_time")
+    @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 
     /**
      * 创建时间
      */
-    @Column(name = "create_time")
+    @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
     /**
@@ -51,6 +68,12 @@ public class LeoTemplate {
      */
     @Column(name = "template_parameter")
     private String templateParameter;
+
+    /**
+     * 模板内容
+     */
+    @Column(name = "template_content")
+    private String templateContent;
 
     /**
      * 描述
