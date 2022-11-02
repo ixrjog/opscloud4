@@ -13,6 +13,8 @@ public interface LeoTemplateFacade {
 
     DataTable<LeoTemplateVO.Template> queryLeoTemplatePage(LeoTemplateParam.TemplatePageQuery pageQuery);
 
-    void addLeoTemplate(LeoTemplateParam.Template template);
+    LeoTemplateVO.Template addLeoTemplate(LeoTemplateParam.Template template);
+
+    LeoTemplateVO.Template updateLeoTemplate(LeoTemplateParam.Template template);
 
 }

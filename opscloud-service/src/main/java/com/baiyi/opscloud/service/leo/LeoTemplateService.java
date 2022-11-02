@@ -15,6 +15,10 @@ public interface LeoTemplateService {
 
     void add(LeoTemplate leoTemplate);
 
+    void update(LeoTemplate leoTemplate);
+
+    void updateByPrimaryKeySelective(LeoTemplate leoTemplate);
+
     LeoTemplate getById(Integer id);
 
 }

@@ -27,7 +27,10 @@
         </if>
         <where>
             <if test="tagId != null and tagId > 0">
-                a1.business_type = 1 and a1.tag_id = #{tagId}
+                a1.business_type = #{businessType} and a1.tag_id = #{tagId}
+            </if>
+            <if test="instanceUuid != null and instanceUuid != ''">
+                and a0.jenkins_instance_uuid = #{instanceUuid}
             </if>
             <if test="queryName != null and queryName != ''">
                 and a0.name like "%" #{queryName} "%"

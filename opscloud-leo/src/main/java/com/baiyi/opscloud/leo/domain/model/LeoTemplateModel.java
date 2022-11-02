@@ -22,6 +22,7 @@ public class LeoTemplateModel {
 
     /**
      * 从配置加载
+     *
      * @param config
      * @return
      */
@@ -61,7 +62,7 @@ public class LeoTemplateModel {
         private String hash;
         private String comment;
         private List<String> tags;
-
+        private List<Parameter> parameters;
     }
 
     @Data
@@ -78,6 +79,16 @@ public class LeoTemplateModel {
 
         private String name;
         private String uuid;
+
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class Parameter {
+
+        private String name;
+        private String value;
+        private String description;
 
     }
 

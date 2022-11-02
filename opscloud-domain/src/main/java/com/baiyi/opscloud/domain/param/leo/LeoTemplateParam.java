@@ -34,6 +34,9 @@ public class LeoTemplateParam {
         @ApiModelProperty(value = "标签ID")
         private Integer tagId;
 
+        @ApiModelProperty(value = "数据源实例UUID")
+        private String instanceUuid;
+
         private final Integer businessType = BusinessTypeEnum.LEO_TEMPLATE.getType();
 
         private Boolean extend;

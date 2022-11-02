@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoTemplate;
 import com.baiyi.opscloud.domain.generator.opscloud.Tag;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.leo.LeoTemplateParam;
 import com.baiyi.opscloud.domain.param.tag.BusinessTagParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoTemplateVO;
@@ -50,15 +51,46 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
 
     @Override
     public DataTable<LeoTemplateVO.Template> queryLeoTemplatePage(LeoTemplateParam.TemplatePageQuery pageQuery) {
-        DataTable<LeoTemplate> table =  leoTemplateService.queryTemplatePage(pageQuery);
+        DataTable<LeoTemplate> table = leoTemplateService.queryTemplatePage(pageQuery);
         List<LeoTemplateVO.Template> data = BeanCopierUtil.copyListProperties(table.getData(), LeoTemplateVO.Template.class).stream()
                 .peek(e -> leoTemplatePacker.wrap(e, pageQuery))
                 .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
+    private LeoTemplateVO.Template toLeoTemplateVO(LeoTemplate leoTemplate) {
+        LeoTemplateVO.Template templateVO = BeanCopierUtil.copyProperties(leoTemplate, LeoTemplateVO.Template.class);
+        leoTemplatePacker.wrap(templateVO, SimpleExtend.EXTEND);
+        return templateVO;
+    }
+
     @Override
-    public void addLeoTemplate(LeoTemplateParam.Template template) {
+    public LeoTemplateVO.Template addLeoTemplate(LeoTemplateParam.Template template) {
+        LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(template.getTemplateConfig());
+        // Jenkins 实例
+        Optional<LeoTemplateModel.Instance> optionalInstance = Optional.ofNullable(templateConfig)
+                .map(LeoTemplateModel.TemplateConfig::getTemplate)
+                .map(LeoTemplateModel.Template::getJenkins)
+                .map(LeoTemplateModel.Jenkins::getInstance);
+        if (!optionalInstance.isPresent()) {
+            throw new LeoTemplateException("模板配置缺少Jenkins实例配置项！");
+        }
+        LeoTemplateModel.Instance instance = optionalInstance.get();
+        LeoTemplate leoTemplate = LeoTemplate.builder()
+                .jenkinsInstanceUuid(getUuidWithJenkinsInstance(instance))
+                .templateName(templateConfig.getTemplate().getName())
+                .templateConfig(template.getTemplateConfig())
+                .templateParameter(template.getTemplateParameter())
+                .comment(template.getComment())
+                .isActive(true)
+                .build();
+        leoTemplateService.add(leoTemplate);
+        updateTagsWithLeoTemplate(leoTemplate, templateConfig);
+        return toLeoTemplateVO(leoTemplate);
+    }
+
+    @Override
+    public LeoTemplateVO.Template updateLeoTemplate(LeoTemplateParam.Template template) {
         LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(template.getTemplateConfig());
         // Jenkins 实例
         Optional<LeoTemplateModel.Instance> optionalInstance = Optional.ofNullable(templateConfig)
@@ -71,15 +103,16 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
         LeoTemplateModel.Instance instance = optionalInstance.get();
 
         LeoTemplate leoTemplate = LeoTemplate.builder()
-                .jenkinsInstanceUuid(getUuidWithJenkinsInstance(instance))
-                .templateName(templateConfig.getTemplate().getName())
+                .id(template.getId())
+                .name(template.getName())
+                .isActive(template.getIsActive())
+                .jenkinsInstanceUuid(instance.getUuid())
                 .templateConfig(template.getTemplateConfig())
-                .templateParameter(template.getTemplateParameter())
-                .comment(template.getComment())
-                .isActive(true)
                 .build();
-        leoTemplateService.add(leoTemplate);
-        postUpdateTagsWithLeoTemplate(leoTemplate, templateConfig);
+
+        leoTemplateService.updateByPrimaryKeySelective(leoTemplate);
+        updateTagsWithLeoTemplate(leoTemplate, templateConfig);
+        return toLeoTemplateVO(leoTemplate);
     }
 
     /**
@@ -88,7 +121,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
      * @param leoTemplate
      * @param templateConfig
      */
-    private void postUpdateTagsWithLeoTemplate(LeoTemplate leoTemplate, LeoTemplateModel.TemplateConfig templateConfig) {
+    private void updateTagsWithLeoTemplate(LeoTemplate leoTemplate, LeoTemplateModel.TemplateConfig templateConfig) {
         Optional<List<String>> optionalTags = Optional.ofNullable(templateConfig)
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getTags);
@@ -99,7 +132,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
         BusinessTagParam.UpdateBusinessTags updateBusinessTags = BusinessTagParam.UpdateBusinessTags.builder()
                 .businessId(leoTemplate.getId())
                 .businessType(BusinessTypeEnum.LEO_TEMPLATE.getType())
-                .tagIds(null)
+                .tagIds(tagIds)
                 .build();
         simpleTagFacade.updateBusinessTags(updateBusinessTags);
     }

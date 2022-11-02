@@ -36,6 +36,16 @@ public class LeoTemplateServiceImpl implements LeoTemplateService {
     }
 
     @Override
+    public void update(LeoTemplate leoTemplate) {
+        templateMapper.updateByPrimaryKey(leoTemplate);
+    }
+
+    @Override
+    public void updateByPrimaryKeySelective(LeoTemplate leoTemplate) {
+        templateMapper.updateByPrimaryKeySelective(leoTemplate);
+    }
+
+    @Override
     public LeoTemplate getById(Integer id) {
         return templateMapper.selectByPrimaryKey(id);
     }
