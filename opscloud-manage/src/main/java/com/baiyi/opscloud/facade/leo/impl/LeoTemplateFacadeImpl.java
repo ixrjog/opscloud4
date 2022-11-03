@@ -1,9 +1,14 @@
 package com.baiyi.opscloud.facade.leo.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
+import com.baiyi.opscloud.datasource.jenkins.model.FolderJob;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoTemplate;
 import com.baiyi.opscloud.domain.generator.opscloud.Tag;
@@ -24,6 +29,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.internal.guava.Sets;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -48,6 +55,8 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
     private final SimpleTagFacade simpleTagFacade;
 
     private final LeoTemplatePacker leoTemplatePacker;
+
+    private final DsConfigHelper dsConfigHelper;
 
     @Override
     public DataTable<LeoTemplateVO.Template> queryLeoTemplatePage(LeoTemplateParam.TemplatePageQuery pageQuery) {
@@ -113,6 +122,23 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
         leoTemplateService.updateByPrimaryKeySelective(leoTemplate);
         updateTagsWithLeoTemplate(leoTemplate, templateConfig);
         return toLeoTemplateVO(leoTemplate);
+    }
+
+    @Override
+    public LeoTemplateVO.Template updateLeoTemplateContent(LeoTemplateParam.Template template) {
+        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(template.getJenkinsInstanceUuid());
+        JenkinsConfig jenkinsConfig = dsConfigHelper.build(dsConfig, JenkinsConfig.class);
+        // 从DB中获取配置
+        LeoTemplate leoTemplate = leoTemplateService.getById(template.getId());
+        //LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(leoTemplate.getTemplateConfig());
+        try {
+            FolderJob folder = new FolderJob(leoTemplate.getTemplateName(), "url");
+
+            JenkinsServerDriver.getJobs(jenkinsConfig.getJenkins(), null);
+        } catch (URISyntaxException | IOException e) {
+            throw new LeoTemplateException("获取Jenkins任务模板错误: err={}", e.getMessage());
+        }
+        return null;
     }
 
     /**

@@ -44,4 +44,10 @@ public class LeoController {
         return new HttpResult<>(leoTemplateFacade.updateLeoTemplate(template));
     }
 
+    @ApiOperation(value = "更新模板内容(Jenkins Job)")
+    @PutMapping(value = "/template/content/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<LeoTemplateVO.Template> updateLeoTemplateContent(@RequestBody @Valid LeoTemplateParam.Template template) {
+        return new HttpResult<>(leoTemplateFacade.updateLeoTemplateContent(template));
+    }
+
 }

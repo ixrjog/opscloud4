@@ -17,4 +17,6 @@ public interface LeoTemplateFacade {
 
     LeoTemplateVO.Template updateLeoTemplate(LeoTemplateParam.Template template);
 
+    LeoTemplateVO.Template updateLeoTemplateContent(LeoTemplateParam.Template template);
+
 }
