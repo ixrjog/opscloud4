@@ -48,6 +48,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.sshd.common.channel.ChannelOutputStream;
 import org.apache.sshd.server.session.ServerSession;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
@@ -282,8 +283,9 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
 
         SshContext sshContext = getSshContext();
-
-        WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getSshShellRunnable().getOs());
+        ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
+        out.setNoDelay(true);
+        WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, out);
         Thread thread = new Thread(run);
         thread.start();
         try {
@@ -319,7 +321,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                 tryResize(size, terminal, execWatch);
             }
         } catch (IOException | InterruptedException e) {
-            log.error("用户关闭SSH-Server: err={}", e.getMessage());
+            log.warn("用户关闭SSH-Server: err={}", e.getMessage());
         } finally {
             simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             podCommandAudit.asyncRecordCommand(sessionId, instanceId);
