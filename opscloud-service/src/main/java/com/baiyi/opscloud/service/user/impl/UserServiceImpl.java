@@ -171,7 +171,8 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
     public List<User> listByPhone(String phone) {
         Example example = new Example(User.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("phone", phone);
+        criteria.andEqualTo("phone", phone)
+                .orEqualTo("isActive", true);
         return userMapper.selectByExample(example);
     }
 
