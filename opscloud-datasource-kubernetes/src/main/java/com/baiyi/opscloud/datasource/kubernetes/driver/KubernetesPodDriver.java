@@ -143,7 +143,7 @@ public class KubernetesPodDriver {
                 .writingError(out)
                 .withTTY()
                 .usingListener(listener)
-                .exec("env", "TERM=xterm", "sh");
+                .exec("env","TERM=xterm", "sh");
     }
 
 
