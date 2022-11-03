@@ -29,8 +29,7 @@ import java.io.OutputStream;
 public class SshIO {
 
     private InputStream is;
-
     private OutputStream os;
-
     private ExitCallback ec;
+
 }
