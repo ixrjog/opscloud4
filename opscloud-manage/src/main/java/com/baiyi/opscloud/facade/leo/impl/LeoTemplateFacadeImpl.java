@@ -106,7 +106,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
                 .id(template.getId())
                 .name(template.getName())
                 .isActive(template.getIsActive())
-                .jenkinsInstanceUuid(instance.getUuid())
+                .jenkinsInstanceUuid(getUuidWithJenkinsInstance(instance))
                 .templateConfig(template.getTemplateConfig())
                 .build();
 
