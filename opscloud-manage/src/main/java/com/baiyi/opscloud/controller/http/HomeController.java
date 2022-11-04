@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.controller.http;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @Author baiyi
@@ -8,15 +9,16 @@ import org.springframework.stereotype.Controller;
  * @Version 1.0
  */
 @Controller
+@RequestMapping
 public class HomeController {
-//
-//    /**
-//     * 首页
-//     * @return
-//     */
-//    @RequestMapping(value = {"/", "/index.html"})
-//    public String index() {
-//        return "index.html";
-//    }
+
+    /**
+     * 首页
+     * @return
+     */
+    @RequestMapping(value = {"/", "/index"})
+    public String index() {
+        return "index.html";
+    }
 
 }

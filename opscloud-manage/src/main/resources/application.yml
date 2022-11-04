@@ -8,6 +8,8 @@ spring:
     enabled: false
   profiles:
     active: '@env@'
+  thymeleaf:
+    cache: off
 
 management:
   server:
