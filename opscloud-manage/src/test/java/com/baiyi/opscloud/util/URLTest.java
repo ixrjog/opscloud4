@@ -24,6 +24,7 @@ public class URLTest extends BaseUnit {
             print("path=" + url.getPath());
             print("query=" + url.getQuery());
             print("file=" + url.getFile());
+            print(url);
         } catch (MalformedURLException e) {
             print(e.getMessage());
 

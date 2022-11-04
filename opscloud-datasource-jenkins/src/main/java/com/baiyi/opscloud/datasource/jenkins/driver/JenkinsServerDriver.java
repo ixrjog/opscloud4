@@ -35,6 +35,16 @@ public class JenkinsServerDriver {
         return jenkinsServer.getJobs(folder);
     }
 
+    public static String getJobsXml(JenkinsConfig.Jenkins jenkins, FolderJob folder,String jobName) throws URISyntaxException, IOException {
+        JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
+        return jenkinsServer.getJobXml(folder,jobName);
+    }
+
+    public static String getJobsXml(JenkinsConfig.Jenkins jenkins,String jobName) throws URISyntaxException, IOException {
+        JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
+        return jenkinsServer.getJobXml(jobName);
+    }
+
     //    @Retryable(value = Exception.class, maxAttempts = 5, backoff = @Backoff(delay = 1000))
     public static JenkinsVersion getVersion(JenkinsConfig.Jenkins jenkins) throws URISyntaxException, IOException {
         JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);

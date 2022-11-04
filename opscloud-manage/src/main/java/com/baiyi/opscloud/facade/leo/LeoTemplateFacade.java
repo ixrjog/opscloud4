@@ -13,9 +13,9 @@ public interface LeoTemplateFacade {
 
     DataTable<LeoTemplateVO.Template> queryLeoTemplatePage(LeoTemplateParam.TemplatePageQuery pageQuery);
 
-    LeoTemplateVO.Template addLeoTemplate(LeoTemplateParam.Template template);
+    void addLeoTemplate(LeoTemplateParam.Template template);
 
-    LeoTemplateVO.Template updateLeoTemplate(LeoTemplateParam.Template template);
+    void updateLeoTemplate(LeoTemplateParam.Template template);
 
     LeoTemplateVO.Template updateLeoTemplateContent(LeoTemplateParam.Template template);
 

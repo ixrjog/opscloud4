@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface LeoTemplateMapper extends Mapper<LeoTemplate> {
 
-    List<LeoTemplate> queryTemplateByParam(LeoTemplateParam.TemplatePageQuery pageQuer);
+    List<LeoTemplate> queryPageByParam(LeoTemplateParam.TemplatePageQuery pageQuer);
 
 }

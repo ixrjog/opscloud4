@@ -24,13 +24,16 @@ import com.baiyi.opscloud.packer.leo.LeoTemplatePacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.leo.LeoTemplateService;
 import com.baiyi.opscloud.service.tag.TagService;
+import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.internal.guava.Sets;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -74,17 +77,16 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
     }
 
     @Override
-    public LeoTemplateVO.Template addLeoTemplate(LeoTemplateParam.Template template) {
+    public void addLeoTemplate(LeoTemplateParam.Template template) {
         LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(template.getTemplateConfig());
         // Jenkins 实例
-        Optional<LeoTemplateModel.Instance> optionalInstance = Optional.ofNullable(templateConfig)
+        Optional.ofNullable(templateConfig)
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getJenkins)
-                .map(LeoTemplateModel.Jenkins::getInstance);
-        if (!optionalInstance.isPresent()) {
-            throw new LeoTemplateException("模板配置缺少Jenkins实例配置项！");
-        }
-        LeoTemplateModel.Instance instance = optionalInstance.get();
+                .map(LeoTemplateModel.Jenkins::getInstance)
+                .orElseThrow(() -> new LeoTemplateException("模板配置缺少Jenkins实例配置项！"));
+
+        LeoTemplateModel.Instance instance = templateConfig.getTemplate().getJenkins().getInstance();
         LeoTemplate leoTemplate = LeoTemplate.builder()
                 .jenkinsInstanceUuid(getUuidWithJenkinsInstance(instance))
                 .templateName(templateConfig.getTemplate().getName())
@@ -95,21 +97,20 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
                 .build();
         leoTemplateService.add(leoTemplate);
         updateTagsWithLeoTemplate(leoTemplate, templateConfig);
-        return toLeoTemplateVO(leoTemplate);
+        //return toLeoTemplateVO(leoTemplate);
     }
 
     @Override
-    public LeoTemplateVO.Template updateLeoTemplate(LeoTemplateParam.Template template) {
+    public void updateLeoTemplate(LeoTemplateParam.Template template) {
         LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(template.getTemplateConfig());
         // Jenkins 实例
-        Optional<LeoTemplateModel.Instance> optionalInstance = Optional.ofNullable(templateConfig)
+        Optional.ofNullable(templateConfig)
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getJenkins)
-                .map(LeoTemplateModel.Jenkins::getInstance);
-        if (!optionalInstance.isPresent()) {
-            throw new LeoTemplateException("模板配置缺少Jenkins实例配置项！");
-        }
-        LeoTemplateModel.Instance instance = optionalInstance.get();
+                .map(LeoTemplateModel.Jenkins::getInstance)
+                .orElseThrow(() -> new LeoTemplateException("模板配置缺少Jenkins实例配置项！"));
+
+        LeoTemplateModel.Instance instance = templateConfig.getTemplate().getJenkins().getInstance();
 
         LeoTemplate leoTemplate = LeoTemplate.builder()
                 .id(template.getId())
@@ -121,24 +122,44 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
 
         leoTemplateService.updateByPrimaryKeySelective(leoTemplate);
         updateTagsWithLeoTemplate(leoTemplate, templateConfig);
-        return toLeoTemplateVO(leoTemplate);
+        //return toLeoTemplateVO(leoTemplate);
     }
 
     @Override
+    @Transactional(rollbackFor = {LeoTemplateException.class})
     public LeoTemplateVO.Template updateLeoTemplateContent(LeoTemplateParam.Template template) {
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(template.getJenkinsInstanceUuid());
         JenkinsConfig jenkinsConfig = dsConfigHelper.build(dsConfig, JenkinsConfig.class);
         // 从DB中获取配置
         LeoTemplate leoTemplate = leoTemplateService.getById(template.getId());
-        //LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(leoTemplate.getTemplateConfig());
-        try {
-            FolderJob folder = new FolderJob(leoTemplate.getTemplateName(), "url");
+        LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(leoTemplate.getTemplateConfig());
 
-            JenkinsServerDriver.getJobs(jenkinsConfig.getJenkins(), null);
+        Optional.ofNullable(templateConfig)
+                .map(LeoTemplateModel.TemplateConfig::getTemplate)
+                .orElseThrow(() -> new LeoTemplateException("任务模板未配置!"));
+        // https://leo-jenkins-1.chuanyinet.com/job/templates/job/tpl_test/
+        String folder = Optional.of(templateConfig)
+                .map(LeoTemplateModel.TemplateConfig::getTemplate)
+                .map(LeoTemplateModel.Template::getFolder).orElse("");
+        try {
+            String jobXml;
+            if (StringUtils.isNotBlank(folder)) {
+                // 重新拼装URL
+                // https://leo-jenkins-1.chuanyinet.com/job/templates/job/tpl_test/ =>
+                // https://leo-jenkins-1.chuanyinet.com/job/templates/
+                URL url = new URL(templateConfig.getTemplate().getUrl());
+                String folderUrl = Joiner.on("").skipNulls().join(url.getProtocol(), "://", url.getHost(), url.getPort() == -1 ? null : ":" + url.getPort(), "/job/", folder, "/");
+                FolderJob folderJob = new FolderJob(folder, folderUrl);
+                jobXml = JenkinsServerDriver.getJobsXml(jenkinsConfig.getJenkins(), folderJob, templateConfig.getTemplate().getName());
+            } else {
+                jobXml = JenkinsServerDriver.getJobsXml(jenkinsConfig.getJenkins(), templateConfig.getTemplate().getName());
+            }
+            leoTemplate.setTemplateContent(jobXml);
+            leoTemplateService.updateByPrimaryKeySelective(leoTemplate);
         } catch (URISyntaxException | IOException e) {
-            throw new LeoTemplateException("获取Jenkins任务模板错误: err={}", e.getMessage());
+            throw new LeoTemplateException("查询Jenkins任务模板错误: err={}", e.getMessage());
         }
-        return null;
+        return toLeoTemplateVO(leoTemplate);
     }
 
     /**

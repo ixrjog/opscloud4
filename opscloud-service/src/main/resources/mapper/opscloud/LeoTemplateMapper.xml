@@ -18,7 +18,7 @@
         <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
     </resultMap>
 
-    <select id="queryTemplateByParam"
+    <select id="queryPageByParam"
             parameterType="com.baiyi.opscloud.domain.param.leo.LeoTemplateParam$TemplatePageQuery"
             resultMap="BaseResultMap">
         select a0.* from leo_template a0

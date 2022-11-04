@@ -88,4 +88,18 @@ public class JenkinsTest extends BaseJenkinsTest {
         }
     }
 
+    @Test
+    void getJobXmlTest() {
+        JenkinsConfig config = getConfigById(60);
+        try {
+            // https://leo-jenkins-1.chuanyinet.com/job/templates/job/tpl_test/
+            FolderJob folder = new FolderJob("templates", "https://leo-jenkins-1.chuanyinet.com/job/templates/");
+            String xml = JenkinsServerDriver.getJobsXml(config.getJenkins(), folder, "tpl_test");
+            print(xml);
+
+        } catch (Exception e) {
+            print(e.getMessage());
+        }
+    }
+
 }

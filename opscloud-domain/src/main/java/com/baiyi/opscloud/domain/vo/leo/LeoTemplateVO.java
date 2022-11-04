@@ -49,6 +49,9 @@ public class LeoTemplateVO {
         @ApiModelProperty(value = "显示名称")
         private String name;
 
+        @ApiModelProperty(value = "模板版本")
+        private String version;
+
         @ApiModelProperty(value = "实例UUID")
         private String jenkinsInstanceUuid;
 

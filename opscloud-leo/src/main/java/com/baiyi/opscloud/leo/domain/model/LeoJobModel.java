@@ -14,11 +14,11 @@ import java.util.List;
 
 /**
  * @Author baiyi
- * @Date 2022/11/1 11:43
+ * @Date 2022/11/4 16:47
  * @Version 1.0
  */
 @Slf4j
-public class LeoTemplateModel {
+public class LeoJobModel {
 
     /**
      * 从配置加载
@@ -26,63 +26,64 @@ public class LeoTemplateModel {
      * @param config
      * @return
      */
-    public static TemplateConfig load(String config) {
+    public static JobConfig load(String config) {
         if (StringUtils.isEmpty(config))
-            return TemplateConfig.EMPTY_TEMPLATE;
+            return JobConfig.EMPTY_JOB;
         try {
             Yaml yaml = new Yaml();
             Object result = yaml.load(config);
-            return new GsonBuilder().create().fromJson(JSONUtil.writeValueAsString(result), TemplateConfig.class);
+            return new GsonBuilder().create().fromJson(JSONUtil.writeValueAsString(result), JobConfig.class);
         } catch (JsonSyntaxException e) {
             log.error(e.getMessage());
-            return TemplateConfig.EMPTY_TEMPLATE;
+            return JobConfig.EMPTY_JOB;
         }
     }
 
     @Builder
     @Data
     @AllArgsConstructor
-    public static class TemplateConfig {
+    public static class JobConfig {
 
-        private static final TemplateConfig EMPTY_TEMPLATE = TemplateConfig.builder().build();
+        private static final JobConfig EMPTY_JOB = JobConfig.builder().build();
 
-        private Template template;
+        private Job job;
 
     }
 
     @Builder
     @Data
     @AllArgsConstructor
-    public static class Template {
+    public static class Job {
 
-        private Jenkins jenkins;
-        private String name;
-        // 任务目录
-        private String folder;
-        // 模板任务完整URL
-        private String url;
-        private String type;
         private String version;
-        private String hash;
+        private String name;
+        // 代码扫描
+        private Sonar sonar;
+        // 通知配置
+        private Notify notify;
         private String comment;
         private List<String> tags;
+        // 任务参数
         private List<LeoModel.Parameter> parameters;
     }
 
+    @Builder
     @Data
     @AllArgsConstructor
-    public static class Jenkins {
+    public static class Sonar {
 
-        private Instance instance;
+        private Boolean enabled;
 
     }
 
+    @Builder
     @Data
     @AllArgsConstructor
-    public static class Instance {
+    public static class Notify {
 
+        private String type;
         private String name;
-        private String uuid;
+        private Boolean atAll;
 
     }
 

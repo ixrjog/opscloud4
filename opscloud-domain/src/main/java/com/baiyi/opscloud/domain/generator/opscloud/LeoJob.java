@@ -1,0 +1,110 @@
+package com.baiyi.opscloud.domain.generator.opscloud;
+
+import java.util.Date;
+import javax.persistence.*;
+import lombok.Data;
+
+@Data
+@Table(name = "leo_job")
+public class LeoJob {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    /**
+     * 关联任务ID
+     */
+    @Column(name = "parent_id")
+    private Integer parentId;
+
+    /**
+     * 应用ID
+     */
+    @Column(name = "application_id")
+    private Integer applicationId;
+
+    /**
+     * 显示名称
+     */
+    private String name;
+
+    /**
+     * 任务Key(不可变名称)
+     */
+    @Column(name = "job_key")
+    private String jobKey;
+
+    /**
+     * 默认分支
+     */
+    private String branch;
+
+    /**
+     * 环境类型
+     */
+    @Column(name = "env_type")
+    private Integer envType;
+
+    /**
+     * 当前构建编号
+     */
+    @Column(name = "build_number")
+    private Integer buildNumber;
+
+    /**
+     * 模板版本
+     */
+    @Column(name = "template_version")
+    private String templateVersion;
+
+    /**
+     * 隐藏任务
+     */
+    private Boolean hide;
+
+    /**
+     * 模版ID
+     */
+    @Column(name = "template_id")
+    private Integer templateId;
+
+    /**
+     * 任务超文本链接
+     */
+    private String href;
+
+    /**
+     * 有效
+     */
+    @Column(name = "is_active")
+    private Boolean isActive;
+
+    /**
+     * 更新时间
+     */
+    @Column(name = "update_time")
+    private Date updateTime;
+
+    /**
+     * 创建时间
+     */
+    @Column(name = "create_time")
+    private Date createTime;
+
+    /**
+     * 任务参数配置
+     */
+    @Column(name = "job_config")
+    private String jobConfig;
+
+    /**
+     * 模板内容
+     */
+    @Column(name = "template_content")
+    private String templateContent;
+
+    /**
+     * 描述
+     */
+    private String comment;
+}

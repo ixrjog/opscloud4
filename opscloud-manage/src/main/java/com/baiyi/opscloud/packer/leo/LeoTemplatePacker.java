@@ -4,9 +4,12 @@ import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.datasource.packer.DsInstancePacker;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.leo.LeoTemplateVO;
+import com.baiyi.opscloud.leo.domain.model.LeoTemplateModel;
 import com.baiyi.opscloud.packer.IWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * @Author baiyi
@@ -22,8 +25,17 @@ public class LeoTemplatePacker implements IWrapper<LeoTemplateVO.Template> {
     @Override
     @TagsWrapper
     public void wrap(LeoTemplateVO.Template template, IExtend iExtend) {
-        if (iExtend.getExtend())
+        LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(template.getTemplateConfig());
+        // 注入版本
+        String version = Optional.ofNullable(templateConfig)
+                .map(LeoTemplateModel.TemplateConfig::getTemplate)
+                .map(LeoTemplateModel.Template::getVersion)
+                .orElse("0.0.0");
+        template.setVersion(version);
+        if (iExtend.getExtend()) {
             dsInstancePacker.wrap(template);
+        }
+
     }
 
 }
