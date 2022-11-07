@@ -101,8 +101,7 @@ public class SendAuditNotice extends AbstractSendNotice {
                         noticeManager.sendMessage(user, msgKey, approveNoticeMessage);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    log.error("工单移动端审批Token写入失败！");
+                    log.error("工单移动端审批Token写入失败: err={}", e.getMessage());
                 }
             }
         });
@@ -121,11 +120,8 @@ public class SendAuditNotice extends AbstractSendNotice {
                 .ticketId(ticket.getId())
                 .createUser(userDisplayName)
                 .workOrderName(workOrder.getName())
-                //.apiAgree("111")
-                //.apiReject("2222")
                 .ticketEntities(ticketEntries)
                 .build();
     }
-
 
 }

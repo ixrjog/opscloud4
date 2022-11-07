@@ -22,10 +22,10 @@ public abstract class AbstractDsAssetPermissionExtendedBaseTicketProcessor exten
         try {
             DatasourceInstanceAsset asset = dsInstanceAssetService.getByUniqueKey(queryParam);
             if (asset == null)
-                throw new TicketVerifyException("校验工单条目失败: 授权资产不存在!");
+                throw new TicketVerifyException("校验工单条目失败: 授权资产不存在！");
             return asset;
         } catch (Exception e) {
-            throw new TicketVerifyException("查询授权资产错误: " + e.getMessage());
+            throw new TicketVerifyException("查询授权资产错误: {}", e.getMessage());
         }
     }
 

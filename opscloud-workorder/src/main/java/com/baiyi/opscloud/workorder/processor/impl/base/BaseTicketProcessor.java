@@ -67,7 +67,7 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
     @Override
     public void verify(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         if (ticketEntryService.countByTicketUniqueKey(ticketEntry) != 0)
-            throw new TicketVerifyException("校验工单条目失败: 重复申请!");
+            throw new TicketVerifyException("校验工单条目失败: 重复申请！");
         verifyHandle(ticketEntry);
     }
 
@@ -109,12 +109,12 @@ public abstract class BaseTicketProcessor<T> implements ITicketProcessor, Initia
 
     private void verifyByAllowOrder(IAllowOrder allowOrder) throws TicketVerifyException {
         if (allowOrder.getAllowOrder() == null || !allowOrder.getAllowOrder())
-            throw new TicketVerifyException("校验工单条目失败: 此条目不允许工单申请!");
+            throw new TicketVerifyException("校验工单条目失败: 此条目不允许工单申请！");
     }
 
     private void verifyByAsset(DatasourceInstanceAsset asset) throws TicketVerifyException {
         if (asset.getIsActive() == null || !asset.getIsActive())
-            throw new TicketVerifyException("校验工单条目失败: 此授权资产无效!");
+            throw new TicketVerifyException("校验工单条目失败: 此授权资产无效！");
     }
 
     @Override

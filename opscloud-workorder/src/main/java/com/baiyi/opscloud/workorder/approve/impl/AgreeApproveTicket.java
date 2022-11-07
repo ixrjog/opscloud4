@@ -45,7 +45,7 @@ public class AgreeApproveTicket extends AbstractApproveTicket {
         // 尝试移动审批节点指针
         WorkOrderTicketNode nextNode = ticketNodeService.getByUniqueKey(ticket.getId(), ticketNode.getId());
         if (nextNode == null) {
-            log.info("工单审批结束开始自动执行: ticketId = {} , createUser = {}", ticket.getId(), ticket.getCreateTime());
+            log.info("工单审批结束开始自动执行: ticketId={}, createUser={}", ticket.getId(), ticket.getCreateTime());
             ticket.setTicketPhase(OrderTicketPhaseCodeConstants.PROCESSING.name());
             updateTicket(ticket, false);
             processing(ticket); // 开始执行
