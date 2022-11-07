@@ -20,4 +20,13 @@ public class LeoModel {
 
     }
 
+    @Data
+    @AllArgsConstructor
+    public static class DsInstance {
+
+        private String name;
+        private String uuid;
+
+    }
+
 }

@@ -47,7 +47,43 @@ public class LeoTemplateParam {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Template {
+    public static class AddTemplate {
+
+        private Integer id;
+
+        @NotEmpty(message = "名称不能为空")
+        @ApiModelProperty(value = "名称")
+        private String name;
+
+        @ApiModelProperty(value = "实例UUID")
+        private String jenkinsInstanceUuid;
+
+        @ApiModelProperty(value = "模板名称")
+        private String templateName;
+
+        @NotEmpty(message = "模板配置不能为空")
+        @ApiModelProperty(value = "模板配置")
+        private String templateConfig;
+
+        @ApiModelProperty(value = "模板参数")
+        private String templateParameter;
+
+        @ApiModelProperty(value = "模板内容")
+        private String templateContent;
+
+        @ApiModelProperty(value = "有效")
+        private Boolean isActive;
+
+        @ApiModelProperty(value = "描述")
+        private String comment;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateTemplate {
 
         private Integer id;
 

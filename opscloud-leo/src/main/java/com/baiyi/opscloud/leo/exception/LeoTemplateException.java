@@ -29,6 +29,5 @@ public class LeoTemplateException extends RuntimeException {
         this.code = 40000;
     }
 
-
 }
 

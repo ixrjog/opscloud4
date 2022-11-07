@@ -41,22 +41,22 @@ public class LeoController {
 
     @ApiOperation(value = "新增模板")
     @PostMapping(value = "/template/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addLeoTemplate(@RequestBody @Valid LeoTemplateParam.Template template) {
-        leoTemplateFacade.addLeoTemplate(template);
+    public HttpResult<Boolean> addLeoTemplate(@RequestBody @Valid LeoTemplateParam.AddTemplate addTemplate) {
+        leoTemplateFacade.addLeoTemplate(addTemplate);
         return HttpResult.SUCCESS;
     }
 
     @ApiOperation(value = "更新模板")
     @PutMapping(value = "/template/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateLeoTemplate(@RequestBody @Valid LeoTemplateParam.Template template) {
-        leoTemplateFacade.updateLeoTemplate(template);
+    public HttpResult<Boolean> updateLeoTemplate(@RequestBody @Valid LeoTemplateParam.UpdateTemplate updateTemplate) {
+        leoTemplateFacade.updateLeoTemplate(updateTemplate);
         return HttpResult.SUCCESS;
     }
 
     @ApiOperation(value = "从JenkinsJob更新模板内容")
     @PutMapping(value = "/template/content/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<LeoTemplateVO.Template> updateLeoTemplateContent(@RequestBody @Valid LeoTemplateParam.Template template) {
-        return new HttpResult<>(leoTemplateFacade.updateLeoTemplateContent(template));
+    public HttpResult<LeoTemplateVO.Template> updateLeoTemplateContent(@RequestBody @Valid LeoTemplateParam.UpdateTemplate updateTemplate) {
+        return new HttpResult<>(leoTemplateFacade.updateLeoTemplateContent(updateTemplate));
     }
 
     // LeoJob
@@ -65,6 +65,20 @@ public class LeoController {
     @PostMapping(value = "/job/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<LeoJobVO.Job>> queryLeoJobPage(@RequestBody @Valid LeoJobParam.JobPageQuery pageQuery) {
         return new HttpResult<>(leoJobFacade.queryLeoJobPage(pageQuery));
+    }
+
+    @ApiOperation(value = "新增任务")
+    @PostMapping(value = "/job/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> addLeoJob(@RequestBody @Valid LeoJobParam.AddJob addJob) {
+        leoJobFacade.addLeoJob(addJob);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "更新任务")
+    @PutMapping(value = "/job/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updateLeoJob(@RequestBody @Valid LeoJobParam.UpdateJob updateJob) {
+        leoJobFacade.updateLeoJob(updateJob);
+        return HttpResult.SUCCESS;
     }
 
 }

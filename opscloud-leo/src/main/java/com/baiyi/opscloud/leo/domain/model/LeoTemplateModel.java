@@ -73,16 +73,7 @@ public class LeoTemplateModel {
     @AllArgsConstructor
     public static class Jenkins {
 
-        private Instance instance;
-
-    }
-
-    @Data
-    @AllArgsConstructor
-    public static class Instance {
-
-        private String name;
-        private String uuid;
+        private LeoModel.DsInstance instance;
 
     }
 

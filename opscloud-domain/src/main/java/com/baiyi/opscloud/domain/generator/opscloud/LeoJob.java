@@ -1,10 +1,17 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
-import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.Date;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "leo_job")
 public class LeoJob {
     @Id

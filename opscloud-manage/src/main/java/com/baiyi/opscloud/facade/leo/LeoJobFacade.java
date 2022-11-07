@@ -13,4 +13,8 @@ public interface LeoJobFacade {
 
     DataTable<LeoJobVO.Job> queryLeoJobPage(LeoJobParam.JobPageQuery pageQuery);
 
+    void addLeoJob(LeoJobParam.AddJob addJob);
+
+    void updateLeoJob(LeoJobParam.UpdateJob updateJob);
+
 }

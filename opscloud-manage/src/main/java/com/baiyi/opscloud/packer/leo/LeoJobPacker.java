@@ -31,6 +31,8 @@ public class LeoJobPacker implements IWrapper<LeoJobVO.Job> {
 
     private final LeoTemplatePacker leoTemplatePacker;
 
+    private static final String DISPLAY_VERSION = "T%s/%s";
+
     @Override
     @TagsWrapper
     @EnvWrapper
@@ -53,11 +55,10 @@ public class LeoJobPacker implements IWrapper<LeoJobVO.Job> {
                             .displayVersion(template.getVersion())
                             .build();
                 } else {
-                    String displayVersion = "T%s/%s";
                     verifyTemplateVersion = LeoJobVO.VerifyTemplateVersion.builder()
                             .type("warning")
                             .isIdentical(false)
-                            .displayVersion(String.format(displayVersion, template.getVersion(), job.getTemplateVersion()))
+                            .displayVersion(String.format(DISPLAY_VERSION, template.getVersion(), job.getTemplateVersion()))
                             .build();
                 }
                 job.setVerifyTemplateVersion(verifyTemplateVersion);

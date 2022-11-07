@@ -87,5 +87,23 @@ public class LeoJobModel {
 
     }
 
+    @Data
+    @AllArgsConstructor
+    public static class GitLab {
+
+        private LeoModel.DsInstance instance;
+
+        private GitLabProject project;
+
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class GitLabProject {
+
+        private String sshUrl;
+
+    }
+
 
 }

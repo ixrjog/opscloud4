@@ -17,6 +17,8 @@ public interface LeoJobService {
 
     void update(LeoJob leoJob);
 
+    LeoJob getById(Integer id);
+
     void updateByPrimaryKeySelective(LeoJob leoJob);
 
 }

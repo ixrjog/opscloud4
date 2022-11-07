@@ -2,7 +2,6 @@ package com.baiyi.opscloud.service.leo.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.domain.generator.opscloud.LeoTemplate;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.mapper.opscloud.LeoJobMapper;
 import com.baiyi.opscloud.service.leo.LeoJobService;
@@ -39,6 +38,11 @@ public class LeoJobServiceImpl implements LeoJobService {
     @Override
     public void update(LeoJob leoJob) {
         leoJobMapper.updateByPrimaryKey(leoJob);
+    }
+
+    @Override
+    public LeoJob getById(Integer id) {
+        return leoJobMapper.selectByPrimaryKey(id);
     }
 
     @Override
