@@ -55,12 +55,17 @@ public class LeoJobModel {
     @AllArgsConstructor
     public static class Job {
 
-        private String version;
+       //  private String version;
+        private GitLab gitLab;
+
         private String name;
         // 代码扫描
         private Sonar sonar;
-        // 通知配置
+        // 通知配置: 单个
         private Notify notify;
+        // 通知配置: 多个
+        private List<Notify> notifies;
+
         private String comment;
         private List<String> tags;
         // 任务参数
@@ -92,7 +97,6 @@ public class LeoJobModel {
     public static class GitLab {
 
         private LeoModel.DsInstance instance;
-
         private GitLabProject project;
 
     }
@@ -102,8 +106,8 @@ public class LeoJobModel {
     public static class GitLabProject {
 
         private String sshUrl;
+        private String branch;
 
     }
-
 
 }

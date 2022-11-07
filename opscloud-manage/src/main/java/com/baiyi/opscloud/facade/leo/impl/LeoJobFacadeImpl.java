@@ -73,16 +73,28 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
             throw new LeoJobException("任务模板配置不正确！");
         }
         LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(leoTemplate.getTemplateConfig());
-        String templateVersion = Optional.ofNullable(templateConfig)
+        final String templateVersion = Optional.ofNullable(templateConfig)
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getVersion)
                 .orElse("0.0.0");
+
+        LeoJobModel.JobConfig jobConfig = LeoJobModel.load(updateJob.getJobConfig());
+
+        final String branch = Optional.ofNullable(jobConfig)
+                .map(LeoJobModel.JobConfig::getJob)
+                .map(LeoJobModel.Job::getGitLab)
+                .map(LeoJobModel.GitLab::getProject)
+                .map(LeoJobModel.GitLabProject::getBranch)
+                .orElse(updateJob.getBranch());
+
         LeoJob leoJob = LeoJob.builder()
                 .id(updateJob.getId())
                 .name(updateJob.getName())
                 .parentId(updateJob.getParentId())
                 .applicationId(updateJob.getApplicationId())
-                .branch(updateJob.getBranch())
+                .envType(updateJob.getEnvType())
+                .branch(branch)
+                .jobConfig(updateJob.getJobConfig())
                 .templateId(updateJob.getTemplateId())
                 .templateVersion(templateVersion)
                 .templateContent(leoTemplate.getTemplateContent())
