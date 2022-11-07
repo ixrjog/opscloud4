@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 
 /**
  * 员工离职-工单处理逻辑
+ *
  * @Author baiyi
  * @Date 2022/3/2 11:48 AM
  * @Version 1.0
@@ -42,7 +43,7 @@ public class EmployeeResignTicketProcessor extends BaseTicketProcessor<User> {
         User entry = this.toEntry(ticketEntry.getContent());
         User originalUser = userService.getById(ticketEntry.getBusinessId());
         if (!originalUser.getUsername().equals(entry.getUsername())) {
-            throw new TicketVerifyException("校验工单条目失败: 离职员工不匹配!");
+            throw new TicketVerifyException("校验工单条目失败: 离职员工不匹配！");
         }
     }
 

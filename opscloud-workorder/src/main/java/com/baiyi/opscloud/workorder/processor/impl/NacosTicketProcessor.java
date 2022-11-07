@@ -70,13 +70,13 @@ public class NacosTicketProcessor extends AbstractDsAssetExtendedBaseTicketProce
         try {
             NacosUser.AuthRoleResponse authRoleResponse = nacosAuthDrive.authRole(config, nacosUsername, ticketEntry.getName());
             if (authRoleResponse.getCode() != 200) {
-                throw new TicketProcessException("工单配置Nacos失败: " + authRoleResponse.getMessage());
+                throw new TicketProcessException("工单配置Nacos失败: {}", authRoleResponse.getMessage());
             }
         } catch (FeignException e) {
             if (e.status() == 500) {
                 log.info("Nacos授权角色接口500错误: 可能是重复申请导致的！");
             } else {
-                throw new TicketProcessException("工单配置Nacos失败: " + e.getMessage());
+                throw new TicketProcessException("工单配置Nacos失败: {}", e.getMessage());
             }
         }
     }

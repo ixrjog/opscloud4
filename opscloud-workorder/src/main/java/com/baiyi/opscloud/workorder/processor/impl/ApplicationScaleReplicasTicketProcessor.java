@@ -39,9 +39,9 @@ public class ApplicationScaleReplicasTicketProcessor extends AbstractDsAssetExte
         KubernetesConfig.Kubernetes config = getDsConfig(ticketEntry, KubernetesConfig.class).getKubernetes();
         try {
             KubernetesDeploymentDriver.scaleDeploymentReplicas(config, entry.getNamespace(), entry.getDeploymentName(), entry.getScaleReplicas());
-            log.info("工单扩容应用副本: instanceUuid = {} , entry = {}", ticketEntry.getInstanceUuid(), entry);
+            log.info("工单扩容应用副本: instanceUuid={}, entry={}", ticketEntry.getInstanceUuid(), entry);
         } catch (KubernetesDeploymentException e) {
-            throw new TicketProcessException("工单扩容应用副本失败: " + e.getMessage());
+            throw new TicketProcessException("工单扩容应用副本失败: {}", e.getMessage());
         }
     }
 
@@ -49,7 +49,7 @@ public class ApplicationScaleReplicasTicketProcessor extends AbstractDsAssetExte
     public void update(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
         WorkOrderTicket ticket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
         if (!OrderTicketPhaseCodeConstants.NEW.name().equals(ticket.getTicketPhase()))
-            throw new TicketProcessException("工单进度不是新建，无法更新配置条目");
+            throw new TicketProcessException("工单进度不是新建，无法更新配置条目！");
         WorkOrderTicketEntry preTicketEntry = ticketEntryService.getById(ticketEntry.getId());
         Map<String, String> properties = ticketEntry.getProperties();
         if (properties == null) return;
@@ -66,19 +66,19 @@ public class ApplicationScaleReplicasTicketProcessor extends AbstractDsAssetExte
         ApplicationScaleReplicasEntry.KubernetesDeployment entry = this.toEntry(ticketEntry.getContent());
         KubernetesConfig.Kubernetes config = getDsConfig(ticketEntry, KubernetesConfig.class).getKubernetes();
         if (StringUtils.isEmpty(entry.getNamespace()))
-            throw new TicketVerifyException("校验工单条目失败: 未指定Namespace命名空间!");
+            throw new TicketVerifyException("校验工单条目失败: 未指定Namespace命名空间！");
         if (StringUtils.isEmpty(entry.getDeploymentName()))
-            throw new TicketVerifyException("校验工单条目失败: 未指定Deployment(无状态)名称!");
+            throw new TicketVerifyException("校验工单条目失败: 未指定Deployment(无状态)名称！");
         if (entry.getScaleReplicas() == null)
-            throw new TicketVerifyException("校验工单条目失败: 未指定扩容后副本数!");
+            throw new TicketVerifyException("校验工单条目失败: 未指定扩容后副本数！");
         Deployment deployment = KubernetesDeploymentDriver.getDeployment(config, entry.getNamespace(), entry.getDeploymentName());
         Optional<Integer> optionalReplicas = Optional.ofNullable(deployment)
                 .map(Deployment::getSpec)
                 .map(DeploymentSpec::getReplicas);
         if (!optionalReplicas.isPresent())
-            throw new TicketVerifyException("校验工单条目失败: 无法获取当前副本数!");
+            throw new TicketVerifyException("校验工单条目失败: 无法获取当前副本数！");
         if (entry.getScaleReplicas() <= optionalReplicas.get())
-            throw new TicketVerifyException("校验工单条目失败: 扩容后副本数小于当前副本数!");
+            throw new TicketVerifyException("校验工单条目失败: 扩容后副本数小于当前副本数！");
     }
 
     @Override
@@ -104,7 +104,7 @@ public class ApplicationScaleReplicasTicketProcessor extends AbstractDsAssetExte
             Deployment deployment = KubernetesDeploymentDriver.getDeployment(config, entry.getNamespace(), entry.getDeploymentName());
             dsInstanceFacade.pullAsset(ticketEntry.getInstanceUuid(), getAssetType(), deployment);
         } catch (Exception e) {
-            throw new TicketProcessException("应用副本扩容失败: " + e.getMessage());
+            throw new TicketProcessException("应用副本扩容失败: {}", e.getMessage());
         }
     }
 

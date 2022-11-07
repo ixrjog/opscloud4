@@ -37,9 +37,9 @@ public class OnsGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
         AliyunConfig.Aliyun config = getDsConfig(ticketEntry, AliyunConfig.class).getAliyun();
         try {
             aliyunOnsRocketMqGroupDrive.createGroup(entry.getRegionId(), config, entry);
-            log.info("工单创建数据源实例资产: instanceUuid = {} , entry = {}", ticketEntry.getInstanceUuid(), entry);
+            log.info("工单创建数据源实例资产: instanceUuid={}, entry={}", ticketEntry.getInstanceUuid(), entry);
         } catch (ClientException e) {
-            throw new TicketProcessException("工单创建数据源实例资产失败: " + e.getMessage());
+            throw new TicketProcessException("工单创建数据源实例资产失败: {}", e.getMessage());
         }
     }
 
@@ -49,9 +49,9 @@ public class OnsGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
         if (StringUtils.isEmpty(entry.getGroupId()))
             throw new TicketVerifyException("校验工单条目失败: 未指定GID名称!");
         if (!entry.getGroupId().startsWith("GID_"))
-            throw new TicketVerifyException("校验工单条目失败: GID名称必须为GID_!");
+            throw new TicketVerifyException("校验工单条目失败: GID名称必须以 GID_ 开头！");
         if (!entry.getGroupId().matches("[0-9A-Z_]{7,64}"))
-            throw new TicketVerifyException("校验工单条目失败: GID名称不合规!");
+            throw new TicketVerifyException("校验工单条目失败: GID名称不合规！");
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .assetType(getAssetType())
                 .instanceUuid(ticketEntry.getInstanceUuid())
@@ -60,10 +60,10 @@ public class OnsGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
         List<DatasourceInstanceAsset> list = dsInstanceAssetService.queryAssetByAssetParam(asset);
         if (!CollectionUtils.isEmpty((list))) {
             if (list.stream().anyMatch(e -> !e.getKind().equals(entry.getGroupType()))) {
-                throw new TicketVerifyException("校验工单条目失败: GID类型与其他环境不一致，请选择" + list.get(0).getKind());
+                throw new TicketVerifyException("校验工单条目失败: GID类型与其他环境不一致，请选择 {}！", list.get(0).getKind());
             }
             if (list.stream().anyMatch(e -> e.getAssetId().equals(entry.getInstanceId()))) {
-                throw new TicketVerifyException("校验工单条目失败: GID已存在改ONS实例中");
+                throw new TicketVerifyException("校验工单条目失败: GID已存在改ONS实例中！");
             }
         }
     }
@@ -91,7 +91,7 @@ public class OnsGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
             OnsRocketMqGroup.Group group = aliyunOnsRocketMqGroupDrive.getGroup(entry.getRegionId(), config, entry.getInstanceId(), entry.getGroupId(), entry.getGroupType());
             pullAsset(ticketEntry, group);
         } catch (ClientException e) {
-            throw new TicketProcessException("GID创建失败,GID= " + entry.getGroupId());
+            throw new TicketProcessException("GID创建失败: GID={}", entry.getGroupId());
         }
     }
 

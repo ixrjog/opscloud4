@@ -45,9 +45,9 @@ public class OnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
         AliyunConfig.Aliyun config = getDsConfig(ticketEntry, AliyunConfig.class).getAliyun();
         try {
             aliyunOnsRocketMqTopicDrive.createTopic(entry.getRegionId(), config, entry);
-            log.info("工单创建数据源实例资产: instanceUuid = {} , entry = {}", ticketEntry.getInstanceUuid(), entry);
+            log.info("工单创建数据源实例资产: instanceUuid={}, entry={}", ticketEntry.getInstanceUuid(), entry);
         } catch (ClientException e) {
-            throw new TicketProcessException("工单创建数据源实例资产失败: " + e.getMessage());
+            throw new TicketProcessException("工单创建数据源实例资产失败: {}", e.getMessage());
         }
     }
 
@@ -55,11 +55,11 @@ public class OnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
     public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         OnsRocketMqTopic.Topic entry = this.toEntry(ticketEntry.getContent());
         if (StringUtils.isEmpty(entry.getTopic()))
-            throw new TicketVerifyException("校验工单条目失败: 未指定Topic名称!");
+            throw new TicketVerifyException("校验工单条目失败: 未指定Topic名称！");
         if (!entry.getTopic().startsWith("TOPIC_"))
-            throw new TicketVerifyException("校验工单条目失败: Topic名称必须为TOPIC_!");
+            throw new TicketVerifyException("校验工单条目失败: Topic名称必须以TOPIC_开头！");
         if (!entry.getTopic().matches("[0-9A-Z_]{9,64}"))
-            throw new TicketVerifyException("校验工单条目失败: Topic名称不合规!");
+            throw new TicketVerifyException("校验工单条目失败: Topic名称不合规！");
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .assetType(getAssetType())
                 .instanceUuid(ticketEntry.getInstanceUuid())
@@ -68,10 +68,10 @@ public class OnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
         List<DatasourceInstanceAsset> list = dsInstanceAssetService.queryAssetByAssetParam(asset);
         if (!CollectionUtils.isEmpty(list)) {
             if (list.stream().anyMatch(e -> !e.getKind().equals(OnsMessageTypeConstants.getDesc(entry.getMessageType())))) {
-                throw new TicketVerifyException("校验工单条目失败: Topic类型与其他环境不一致，请选择" + list.get(0).getKind());
+                throw new TicketVerifyException("校验工单条目失败: Topic类型与其他环境不一致，请选择 {}", list.get(0).getKind());
             }
             if (list.stream().anyMatch(e -> e.getAssetId().equals(entry.getInstanceId()))) {
-                throw new TicketVerifyException("校验工单条目失败: Topic已存在改ONS实例中");
+                throw new TicketVerifyException("校验工单条目失败: Topic已存在改ONS实例中！");
             }
         }
     }
@@ -94,7 +94,7 @@ public class OnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
             OnsRocketMqTopic.Topic topic = aliyunOnsRocketMqTopicDrive.getTopic(entry.getRegionId(), config, entry.getInstanceId(), entry.getTopic());
             pullAsset(ticketEntry, topic);
         } catch (ClientException e) {
-            throw new TicketProcessException("Topic创建失败,Topic= " + entry.getTopic());
+            throw new TicketProcessException("Topic创建失败: Topic={}", entry.getTopic());
         }
     }
 }

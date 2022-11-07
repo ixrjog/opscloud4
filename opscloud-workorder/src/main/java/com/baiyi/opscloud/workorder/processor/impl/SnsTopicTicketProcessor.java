@@ -39,12 +39,12 @@ public class SnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
         AwsConfig.Aws config = getDsConfig(ticketEntry, AwsConfig.class).getAws();
         try {
             String topicArn = amazonSnsDriver.createTopic(config, entry.getRegionId(), entry.getTopic(), entry.getAttributes());
-            log.info("工单创建数据源实例资产: instanceUuid = {} , entry = {}", ticketEntry.getInstanceUuid(), entry);
+            log.info("工单创建数据源实例资产: instanceUuid={}, entry={}", ticketEntry.getInstanceUuid(), entry);
             if (StringUtils.isBlank(topicArn))
-                throw new TicketProcessException("工单创建数据源实例资产失败");
+                throw new TicketProcessException("工单创建数据源实例资产失败！");
             Map<String, String> attributes = amazonSnsDriver.getTopicAttributes(config, entry.getRegionId(), topicArn);
             if (CollectionUtils.isEmpty(attributes))
-                throw new TicketProcessException("SNS主题创建失败: 工单创建数据源实例资产失败");
+                throw new TicketProcessException("SNS主题创建失败: 工单创建数据源实例资产失败！");
             SimpleNotificationService.Topic topic = SimpleNotificationService.Topic.builder()
                     .topicArn(topicArn)
                     .regionId(entry.getRegionId())
@@ -55,7 +55,7 @@ public class SnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
             ticketEntry.setContent(JSONUtil.writeValueAsString(topic));
             ticketEntryService.update(ticketEntry);
         } catch (Exception e) {
-            throw new TicketProcessException("工单创建数据源实例资产失败: " + e.getMessage());
+            throw new TicketProcessException("工单创建数据源实例资产失败: {}", e.getMessage());
         }
     }
 
@@ -72,13 +72,13 @@ public class SnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
             topic = strings.get(0);
         } else {
             if ("true".equals(ticketEntry.getProperties().get("FifoTopic")))
-                throw new TicketVerifyException("校验工单条目失败: FIFO 主题名称必须以“.fifo”结尾");
+                throw new TicketVerifyException("校验工单条目失败: FIFO 主题名称必须以 .fifo 结尾！");
         }
         if (!topic.startsWith("transsnet_"))
             throw new TicketVerifyException("校验工单条目失败: SNS主题名称必须以 transsnet_ 开始！");
 
         if (!topic.matches("[0-9a-z_]{7,256}"))
-            throw new TicketVerifyException("校验工单条目失败: SNS主题名称不合规!");
+            throw new TicketVerifyException("校验工单条目失败: SNS主题名称不合规！");
         switch (entry.getEnvName()) {
             case "dev":
                 if (!topic.endsWith("_dev_topic"))

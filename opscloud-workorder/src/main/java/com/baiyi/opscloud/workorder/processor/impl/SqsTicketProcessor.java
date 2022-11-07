@@ -42,11 +42,11 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
         AwsConfig.Aws config = getDsConfig(ticketEntry, AwsConfig.class).getAws();
         try {
             String name = amazonSqsDriver.createQueue(config, entry.getRegionId(), entry.getQueueName(), entry.getAttributes());
-            log.info("工单创建数据源实例资产: instanceUuid = {} , entry = {}", ticketEntry.getInstanceUuid(), entry);
+            log.info("工单创建数据源实例资产: instanceUuid={}, entry={}", ticketEntry.getInstanceUuid(), entry);
             if (StringUtils.isBlank(name))
-                throw new TicketProcessException("工单创建数据源实例资产失败");
+                throw new TicketProcessException("工单创建数据源实例资产失败！");
         } catch (Exception e) {
-            throw new TicketProcessException("工单创建数据源实例资产失败: " + e.getMessage());
+            throw new TicketProcessException("工单创建数据源实例资产失败: {}", e.getMessage());
         }
     }
 
@@ -54,9 +54,9 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
     public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         SimpleQueueService.Queue entry = this.toEntry(ticketEntry.getContent());
         if (StringUtils.isEmpty(entry.getQueueName()))
-            throw new TicketVerifyException("校验工单条目失败: 未指定SQS名称!");
+            throw new TicketVerifyException("校验工单条目失败: 未指定SQS名称！");
         if (!entry.getQueueName().matches("[0-9a-z_]{7,80}"))
-            throw new TicketVerifyException("校验工单条目失败: SQS名称不合规!");
+            throw new TicketVerifyException("校验工单条目失败: SQS名称不合规！");
 
         if (!entry.getQueueName().startsWith("transsnet_"))
             throw new TicketVerifyException("校验工单条目失败: SQS名称必须以 transsnet_ 开始！");
@@ -126,7 +126,7 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
         try {
             String queueUrl = amazonSqsDriver.getQueue(config, entry.getRegionId(), entry.getQueueName());
             if (StringUtils.isBlank(queueUrl))
-                throw new TicketProcessException("SQS创建失败: 工单创建数据源实例资产失败");
+                throw new TicketProcessException("SQS创建失败: 工单创建数据源实例资产失败！");
             Map<String, String> attributes = amazonSqsDriver.getQueueAttributes(config, entry.getRegionId(), entry.getQueueName());
             SimpleQueueService.Queue queue = SimpleQueueService.Queue.builder()
                     .queueUrl(queueUrl)
@@ -138,7 +138,7 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
             ticketEntry.setContent(JSONUtil.writeValueAsString(queue));
             ticketEntryService.update(ticketEntry);
         } catch (Exception e) {
-            throw new TicketProcessException("SQS创建失败: queueName = " + entry.getQueueName());
+            throw new TicketProcessException("SQS创建失败: queueName={}", entry.getQueueName());
         }
     }
 
