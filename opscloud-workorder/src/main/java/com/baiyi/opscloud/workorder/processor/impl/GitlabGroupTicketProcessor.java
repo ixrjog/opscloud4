@@ -52,15 +52,10 @@ public class GitlabGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicke
         String username = ticket.getUsername();
         String role = ticketEntry.getRole();
 
-        User gitLabUser = preCheckUser(config, username);
-
-        Optional<GitLabAccessLevelConstants> optionalGitlabAccessLevelConstants = Arrays.stream(GitLabAccessLevelConstants.values()).filter(e -> e.getRole().equalsIgnoreCase(role)).findFirst();
-
-        if (!optionalGitlabAccessLevelConstants.isPresent())
-            throw new TicketProcessException("GitLab角色名称错误: role={}" + role);
-
-        AccessLevel accessLevel = AccessLevel.forValue(optionalGitlabAccessLevelConstants.get().getAccessValue());
-
+        User gitLabUser = getOrCreateUser(config, username);
+        GitLabAccessLevelConstants gitlabAccessLevel = Arrays.stream(GitLabAccessLevelConstants.values()).filter(e -> e.getRole().equalsIgnoreCase(role)).findFirst()
+                .orElseThrow(() -> new TicketProcessException("GitLab角色名称错误: role={}", role));
+        AccessLevel accessLevel = AccessLevel.forValue(gitlabAccessLevel.getAccessValue());
         List<Member> groupMembers = gitlabGroupDelegate.getMembers(config, Integer.parseInt(entry.getAssetId()));
         Optional<Member> optionalGitlabGroupMember = groupMembers.stream().filter(e -> e.getId().equals(gitLabUser.getId())).findFirst();
         if (optionalGitlabGroupMember.isPresent()) {
@@ -83,10 +78,10 @@ public class GitlabGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicke
         }
     }
 
-    private User preCheckUser(GitLabConfig.Gitlab config, String username) {
+    private User getOrCreateUser(GitLabConfig.Gitlab config, String username) {
         List<User> gitlabUsers = gitlabUserDelegate.findUsers(config, username);
         Optional<User> optionalGitlabUser = gitlabUsers.stream().filter(e -> e.getUsername().equals(username)).findFirst();
-        return optionalGitlabUser.isPresent() ? optionalGitlabUser.get() : gitlabUserDelegate.createUser(config, username);
+        return optionalGitlabUser.orElseGet(() -> gitlabUserDelegate.createUser(config, username));
     }
 
     @Override

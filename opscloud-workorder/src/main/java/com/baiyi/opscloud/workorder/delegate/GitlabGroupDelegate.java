@@ -3,6 +3,7 @@ package com.baiyi.opscloud.workorder.delegate;
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabGroupDriver;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
+import lombok.extern.slf4j.Slf4j;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.AccessLevel;
 import org.gitlab4j.api.models.Member;
@@ -17,35 +18,38 @@ import java.util.List;
  * @Date 2022/6/27 20:03
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class GitlabGroupDelegate {
 
-    @Retryable(value = TicketProcessException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
+    @Retryable(value = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
     public void addMember(GitLabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
         try {
             GitLabGroupDriver.addMember(gitlab, groupId, userId, accessLevel);
         } catch (GitLabApiException e) {
-            throw new TicketProcessException("GitLab新增群组成员错误: %s", e.getMessage());
+            log.error("GitLab新增群组成员错误: {}", e.getMessage());
+            throw new TicketProcessException("GitLab新增群组成员错误: {}", e.getMessage());
         }
     }
 
-    @Retryable(value = TicketProcessException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
+    @Retryable(value = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
     public void updateMember(GitLabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
         try {
             GitLabGroupDriver.updateMember(gitlab, groupId, userId, accessLevel);
         } catch (GitLabApiException e) {
-            throw new TicketProcessException("GitLab删除群组成员错误: %s", e.getMessage());
+            log.error("GitLab删除群组成员错误: {}", e.getMessage());
+            throw new TicketProcessException("GitLab删除群组成员错误: {}", e.getMessage());
         }
     }
 
-    @Retryable(value = TicketProcessException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
+    @Retryable(value = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
     public List<Member> getMembers(GitLabConfig.Gitlab gitlab, Integer groupId) throws TicketProcessException {
         try {
             return GitLabGroupDriver.getMembersWithGroupId(gitlab, groupId.longValue());
         } catch (GitLabApiException e) {
-            throw new TicketProcessException("GitLab查询群组成员错误: %s", e.getMessage());
+            log.error("GitLab查询群组成员错误: {}", e.getMessage());
+            throw new TicketProcessException("GitLab查询群组成员错误: {}", e.getMessage());
         }
     }
-
 
 }

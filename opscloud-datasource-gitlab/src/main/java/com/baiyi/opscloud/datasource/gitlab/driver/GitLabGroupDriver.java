@@ -67,7 +67,7 @@ public class GitLabGroupDriver {
      * @throws GitLabApiException
      */
     public static void addMember(GitLabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
-        buildAPI(gitlab).getProjectApi().addMember(groupId, userId, accessLevel);
+        buildAPI(gitlab).getGroupApi().addMember(groupId, userId, accessLevel);
     }
 
     /**

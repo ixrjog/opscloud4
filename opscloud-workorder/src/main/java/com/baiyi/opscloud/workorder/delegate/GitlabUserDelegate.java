@@ -27,16 +27,16 @@ public class GitlabUserDelegate {
 
     private final StringEncryptor stringEncryptor;
 
-    @Retryable(value = TicketProcessException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
+    @Retryable(value = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
     public List<User> findUsers(GitLabConfig.Gitlab gitlab, String emailOrUsername) throws TicketProcessException {
         try {
             return GitLabUserDriver.findUsers(gitlab, emailOrUsername);
         } catch (GitLabApiException e) {
-            throw new TicketProcessException("GitLab查询用户错误: %s", e.getMessage());
+            throw new TicketProcessException("GitLab查询用户错误: {}", e.getMessage());
         }
     }
 
-    @Retryable(value = TicketProcessException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
+    @Retryable(value = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
     public User createUser(GitLabConfig.Gitlab gitlab, String username) throws TicketProcessException {
         com.baiyi.opscloud.domain.generator.opscloud.User ocUser = userService.getByUsername(username);
         User user = new User()
@@ -48,7 +48,7 @@ public class GitlabUserDelegate {
         try {
             return GitLabUserDriver.createUser(gitlab, user, stringEncryptor.decrypt(ocUser.getPassword()));
         } catch (GitLabApiException e) {
-            throw new TicketProcessException("GitLab创建用户错误: %s", e.getMessage());
+            throw new TicketProcessException("GitLab创建用户错误: {}", e.getMessage());
         }
     }
 
