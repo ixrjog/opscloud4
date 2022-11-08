@@ -16,8 +16,6 @@ import lombok.NoArgsConstructor;
 public class JenkinsJob extends Job {
 
     private Boolean isFolder;
-
-
     private Boolean isTemplate;
 
 }

@@ -47,7 +47,7 @@ public class DsConfigHelper {
     public DatasourceConfig getConfigByDsType(int dsType) {
         List<DatasourceConfig> configs = dsConfigService.queryByDsType(dsType);
         if (CollectionUtils.isEmpty(configs))
-            throw new OCRuntimeException("无可用的数据源配置文件");
+            throw new OCRuntimeException("无可用的数据源配置文件！");
         return configs.get(0);
     }
 

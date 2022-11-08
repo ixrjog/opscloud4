@@ -151,9 +151,9 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
                 URL url = new URL(templateConfig.getTemplate().getUrl());
                 String folderUrl = Joiner.on("").skipNulls().join(url.getProtocol(), "://", url.getHost(), url.getPort() == -1 ? null : ":" + url.getPort(), "/job/", folder, "/");
                 FolderJob folderJob = new FolderJob(folder, folderUrl);
-                jobXml = JenkinsServerDriver.getJobsXml(jenkinsConfig.getJenkins(), folderJob, templateConfig.getTemplate().getName());
+                jobXml = JenkinsServerDriver.getJobXml(jenkinsConfig.getJenkins(), folderJob, templateConfig.getTemplate().getName());
             } else {
-                jobXml = JenkinsServerDriver.getJobsXml(jenkinsConfig.getJenkins(), templateConfig.getTemplate().getName());
+                jobXml = JenkinsServerDriver.getJobXml(jenkinsConfig.getJenkins(), templateConfig.getTemplate().getName());
             }
             leoTemplate.setTemplateContent(jobXml);
             leoTemplateService.updateByPrimaryKeySelective(leoTemplate);

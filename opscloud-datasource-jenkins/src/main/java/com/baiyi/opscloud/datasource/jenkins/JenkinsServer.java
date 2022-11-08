@@ -14,12 +14,11 @@ import com.baiyi.opscloud.datasource.jenkins.helper.JenkinsVersion;
 import com.baiyi.opscloud.datasource.jenkins.model.*;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.ContentType;
 import org.dom4j.DocumentException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBException;
 import java.io.Closeable;
@@ -37,8 +36,8 @@ import static java.util.stream.Collectors.toMap;
 /**
  * The main starting point for interacting with a Jenkins server.
  */
+@Slf4j
 public class JenkinsServer implements Closeable {
-    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     /**
      * The transport client instance to use.
@@ -86,7 +85,7 @@ public class JenkinsServer implements Closeable {
             client.get("/");
             return true;
         } catch (IOException e) {
-            LOGGER.debug("isRunning()", e);
+            log.debug("isRunning()", e);
             return false;
         }
     }
@@ -234,7 +233,7 @@ public class JenkinsServer implements Closeable {
             }
             return resultView;
         } catch (HttpResponseException e) {
-            LOGGER.debug("getView(folder={}, name={}) status={}", folder, name, e.getStatusCode());
+            log.debug("getView(folder={}, name={}) status={}", folder, name, e.getStatusCode());
             if (e.getStatusCode() == HttpStatus.SC_NOT_FOUND) {
                 // TODO: Think hard about this.
                 return null;
@@ -269,7 +268,7 @@ public class JenkinsServer implements Closeable {
 
             return job;
         } catch (HttpResponseException e) {
-            LOGGER.debug("getJob(folder={}, jobName={}) status={}", folder, jobName, e.getStatusCode());
+            log.debug("getJob(folder={}, jobName={}) status={}", folder, jobName, e.getStatusCode());
             if (e.getStatusCode() == HttpStatus.SC_NOT_FOUND) {
                 // TODO: Think hard about this.
                 return null;
@@ -289,7 +288,7 @@ public class JenkinsServer implements Closeable {
 
             return job;
         } catch (HttpResponseException e) {
-            LOGGER.debug("getMavenJob(jobName={}) status={}", jobName, e.getStatusCode());
+            log.debug("getMavenJob(jobName={}) status={}", jobName, e.getStatusCode());
             if (e.getStatusCode() == HttpStatus.SC_NOT_FOUND) {
                 return null;
             }
@@ -306,7 +305,7 @@ public class JenkinsServer implements Closeable {
             folder.setClient(client);
             return Optional.of(folder);
         } catch (HttpResponseException e) {
-            LOGGER.debug("getForlderJob(job={}) status={}", job, e.getStatusCode());
+            log.debug("getForlderJob(job={}) status={}", job, e.getStatusCode());
             if (e.getStatusCode() == HttpStatus.SC_NOT_FOUND) {
                 // TODO: Check if this is a good idea ? What about
                 // Optional.absent() ?
@@ -645,7 +644,7 @@ public class JenkinsServer implements Closeable {
         try {
             client.post("/quietDown/");
         } catch (org.apache.http.client.ClientProtocolException e) {
-            LOGGER.error("quietDown()", e);
+            log.error("quietDown()", e);
         }
         return this;
     }
@@ -659,7 +658,7 @@ public class JenkinsServer implements Closeable {
         try {
             client.post("/cancelQuietDown/");
         } catch (org.apache.http.client.ClientProtocolException e) {
-            LOGGER.error("cancelQuietDown()", e);
+            log.error("cancelQuietDown()", e);
         }
         return this;
     }
@@ -909,7 +908,7 @@ public class JenkinsServer implements Closeable {
         try {
             client.post("/restart", crumbFlag);
         } catch (org.apache.http.client.ClientProtocolException e) {
-            LOGGER.error("restart()", e);
+            log.error("restart()", e);
         }
         return this;
     }
@@ -926,7 +925,7 @@ public class JenkinsServer implements Closeable {
         try {
             client.post("/safeRestart", crumbFlag);
         } catch (org.apache.http.client.ClientProtocolException e) {
-            LOGGER.error("safeRestart()", e);
+            log.error("safeRestart()", e);
         }
         return this;
     }
@@ -942,7 +941,7 @@ public class JenkinsServer implements Closeable {
         try {
             client.post("/exit", crumbFlag);
         } catch (org.apache.http.client.ClientProtocolException e) {
-            LOGGER.error("exit()", e);
+            log.error("exit()", e);
         }
         return this;
     }
@@ -959,7 +958,7 @@ public class JenkinsServer implements Closeable {
         try {
             client.post("/safeExit", crumbFlag);
         } catch (org.apache.http.client.ClientProtocolException e) {
-            LOGGER.error("safeExit()", e);
+            log.error("safeExit()", e);
         }
         return this;
     }

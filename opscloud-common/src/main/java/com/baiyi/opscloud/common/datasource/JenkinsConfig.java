@@ -27,6 +27,7 @@ public class JenkinsConfig extends BaseDsConfig {
 
         private String version;
         private String url;
+        private Security security;
         private String name;
         private String username;
         private String token;
@@ -47,6 +48,16 @@ public class JenkinsConfig extends BaseDsConfig {
         private Set<String> folders;
         private String prefix;
         private String _class;
+
+    }
+
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Security {
+
+        private Boolean crumbFlag;
 
     }
 

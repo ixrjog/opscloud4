@@ -8,6 +8,7 @@ package com.baiyi.opscloud.datasource.jenkins.model;
 
 import com.baiyi.opscloud.datasource.jenkins.client.util.EncodingUtils;
 import com.baiyi.opscloud.datasource.jenkins.helper.Range;
+import com.google.common.collect.Maps;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpResponseException;
 
@@ -486,7 +487,7 @@ public class JobWithDetails extends Job {
         Objects.requireNonNull(description, "description is not allowed to be null.");
         //JDK9+
         // Map.of(...);
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = Maps.newHashMap();
         params.put("description", description);
         client.post_form(this.getUrl() + "/submitDescription?", params, crumbFlag);
         return this;

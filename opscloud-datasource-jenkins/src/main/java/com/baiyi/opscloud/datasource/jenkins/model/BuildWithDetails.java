@@ -6,15 +6,15 @@
 
 package com.baiyi.opscloud.datasource.jenkins.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.baiyi.opscloud.datasource.jenkins.helper.BuildConsoleStreamListener;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,9 +30,8 @@ import static java.util.stream.Collectors.toMap;
  * like duration start and of course the build result.
  *
  */
+@Slf4j
 public class BuildWithDetails extends Build {
-
-    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     public final static String TEXT_SIZE_HEADER = "x-text-size";
     public final static String MORE_DATA_HEADER = "x-more-data";
@@ -177,7 +176,7 @@ public class BuildWithDetails extends Build {
         Objects.requireNonNull(displayName, "displayName is not allowed to be null.");
         Objects.requireNonNull(description, "description is not allowed to be null.");
         //TODO:JDK9+ Map.of()...
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = Maps.newHashMap();
         params.put("displayName", displayName);
         params.put("description", description);
         // TODO: Check what the "core:apply" means?
@@ -209,7 +208,7 @@ public class BuildWithDetails extends Build {
     public BuildWithDetails updateDisplayName(String displayName, boolean crumbFlag) throws IOException {
         Objects.requireNonNull(displayName, "displayName is not allowed to be null.");
         String description = getDescription() == null ? "" : getDescription();
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = Maps.newHashMap();
         params.put("displayName", displayName);
         params.put("description", description);
         // TODO: Check what the "core:apply" means?
@@ -240,7 +239,7 @@ public class BuildWithDetails extends Build {
         Objects.requireNonNull(description, "description is not allowed to be null.");
         String displayName = getDisplayName() == null ? "" : getDisplayName();
         //JDK9+: Map.of(..)
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = Maps.newHashMap();
         params.put("displayName", displayName);
         params.put("description", description);
         // TODO: Check what the "core:apply" means?
@@ -410,7 +409,7 @@ public class BuildWithDetails extends Build {
             long currentTime = System.currentTimeMillis();
 
             if (currentTime > timeoutTime) {
-                LOGGER.warn("Pooling for build {0} for {2} timeout! Check if job stuck in jenkins",
+                log.warn("Pooling for build {} for {} timeout! Check if job stuck in jenkins",
                         BuildWithDetails.this.getDisplayName(), BuildWithDetails.this.getNumber());
                 break;
             }
@@ -445,7 +444,7 @@ public class BuildWithDetails extends Build {
             try {
                 currentBufferSize = Integer.parseInt(textSizeHeader.getValue());
             } catch (NumberFormatException e) {
-                LOGGER.warn("Cannot parse buffer size for job {0} build {1}. Using current offset!", this.getDisplayName(), this.getNumber());
+                log.warn("Cannot parse buffer size for job {} build {}. Using current offset!", this.getDisplayName(), this.getNumber());
             }
         }
         return new ConsoleLog(response, hasMoreData, currentBufferSize);

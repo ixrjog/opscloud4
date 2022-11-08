@@ -65,7 +65,6 @@ public class JobConfiguration {
             }
         }
         return this;
-
     }
 
     public String asXml() {
@@ -80,4 +79,5 @@ public class JobConfiguration {
         this.configXml = configXml;
         return this;
     }
+
 }
