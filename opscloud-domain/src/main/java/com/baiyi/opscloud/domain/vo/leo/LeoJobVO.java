@@ -45,6 +45,9 @@ public class LeoJobVO {
         @ApiModelProperty(value = "任务模板")
         private LeoTemplateVO.Template template;
 
+        @ApiModelProperty(value = "配置对象")
+        private Object configDetails;
+
         private Integer id;
 
         @ApiModelProperty(value = "关联任务ID")

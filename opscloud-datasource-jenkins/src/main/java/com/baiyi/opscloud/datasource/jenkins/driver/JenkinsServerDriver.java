@@ -42,7 +42,6 @@ public class JenkinsServerDriver {
         return jenkinsServer.getJobXml(jobName);
     }
 
-
     //    @Retryable(value = Exception.class, maxAttempts = 5, backoff = @Backoff(delay = 1000))
     public static JenkinsVersion getVersion(JenkinsConfig.Jenkins jenkins) throws URISyntaxException, IOException {
         JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);

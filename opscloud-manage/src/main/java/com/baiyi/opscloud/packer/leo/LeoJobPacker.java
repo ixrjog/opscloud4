@@ -10,6 +10,7 @@ import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoTemplateVO;
+import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.leo.LeoTemplateService;
@@ -63,6 +64,8 @@ public class LeoJobPacker implements IWrapper<LeoJobVO.Job> {
                 }
                 job.setVerifyTemplateVersion(verifyTemplateVersion);
             }
+            LeoJobModel.JobConfig jobConfig = LeoJobModel.load(job.getJobConfig());
+            job.setConfigDetails(jobConfig);
         }
     }
 

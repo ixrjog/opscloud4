@@ -6,9 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.Pager;
-import org.gitlab4j.api.models.AccessLevel;
-import org.gitlab4j.api.models.Member;
-import org.gitlab4j.api.models.Project;
+import org.gitlab4j.api.models.*;
 
 import java.util.List;
 
@@ -40,6 +38,7 @@ public class GitLabProjectDriver {
 
     /**
      * 查询项目中所有成员
+     *
      * @param gitlab
      * @param projectId
      * @return
@@ -52,6 +51,7 @@ public class GitLabProjectDriver {
 
     /**
      * 修改项目成员
+     *
      * @param gitlab
      * @param projectId
      * @param userId
@@ -64,6 +64,7 @@ public class GitLabProjectDriver {
 
     /**
      * 新增项目成员
+     *
      * @param gitlab
      * @param projectId
      * @param userId
@@ -83,6 +84,14 @@ public class GitLabProjectDriver {
      */
     public static List<Project> getProjects(GitLabConfig.Gitlab gitlab) throws GitLabApiException {
         return buildAPI(gitlab).getProjectApi().getProjects();
+    }
+
+    public static List<Tag> getTagsWithProjectId(GitLabConfig.Gitlab gitlab, Long projectId) throws GitLabApiException {
+        return buildAPI(gitlab).getTagsApi().getTags(projectId);
+    }
+
+    public static List<Branch> getBranchesWithProjectId(GitLabConfig.Gitlab gitlab, Long projectId) throws GitLabApiException {
+        return buildAPI(gitlab).getRepositoryApi().getBranches(projectId);
     }
 
     private static GitLabApi buildAPI(GitLabConfig.Gitlab gitlab) {

@@ -66,14 +66,14 @@ public class LeoTemplateModel {
         private String hash;
         private String comment;
         private List<String> tags;
-        private List<LeoModel.Parameter> parameters;
+        private List<LeoBaseModel.Parameter> parameters;
     }
 
     @Data
     @AllArgsConstructor
     public static class Jenkins {
 
-        private LeoModel.DsInstance instance;
+        private LeoBaseModel.DsInstance instance;
 
     }
 

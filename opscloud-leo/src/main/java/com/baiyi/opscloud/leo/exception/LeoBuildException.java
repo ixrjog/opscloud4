@@ -8,26 +8,26 @@ import org.slf4j.helpers.MessageFormatter;
 
 /**
  * @Author baiyi
- * @Date 2022/11/1 17:11
+ * @Date 2022/11/8 16:39
  * @Version 1.0
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-public class LeoTemplateException extends BaseException {
+public class LeoBuildException extends BaseException {
 
-    private static final long serialVersionUID = 4679996919812759224L;
+    private static final long serialVersionUID = -4973491757480514266L;
 
     private Integer code;
 
-    public LeoTemplateException(String message) {
+    public LeoBuildException(String message) {
         super(message);
-        this.code = 40000;
+        this.code = 42000;
     }
 
-    public LeoTemplateException(String message, Object... var2) {
+    public LeoBuildException(String message, Object... var2) {
         super(MessageFormatter.arrayFormat(message, var2).getMessage());
-        this.code = 40000;
+        this.code = 42000;
     }
 
 }

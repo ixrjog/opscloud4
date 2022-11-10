@@ -55,8 +55,8 @@ public class LeoJobModel {
     @AllArgsConstructor
     public static class Job {
 
-       //  private String version;
-        private GitLab gitLab;
+        //  private String version;
+        private LeoBaseModel.GitLab gitLab;
 
         private String name;
         // 代码扫描
@@ -67,9 +67,10 @@ public class LeoJobModel {
         private List<Notify> notifies;
 
         private String comment;
+
         private List<String> tags;
         // 任务参数
-        private List<LeoModel.Parameter> parameters;
+        private List<LeoBaseModel.Parameter> parameters;
     }
 
     @Builder
@@ -89,24 +90,6 @@ public class LeoJobModel {
         private String type;
         private String name;
         private Boolean atAll;
-
-    }
-
-    @Data
-    @AllArgsConstructor
-    public static class GitLab {
-
-        private LeoModel.DsInstance instance;
-        private GitLabProject project;
-
-    }
-
-    @Data
-    @AllArgsConstructor
-    public static class GitLabProject {
-
-        private String sshUrl;
-        private String branch;
 
     }
 

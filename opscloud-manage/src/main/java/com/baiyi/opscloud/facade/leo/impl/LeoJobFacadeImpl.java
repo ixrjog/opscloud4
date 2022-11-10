@@ -8,6 +8,7 @@ import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 import com.baiyi.opscloud.facade.leo.LeoJobFacade;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
+import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoTemplateModel;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
 import com.baiyi.opscloud.packer.leo.LeoJobPacker;
@@ -83,8 +84,8 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
         final String branch = Optional.ofNullable(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getGitLab)
-                .map(LeoJobModel.GitLab::getProject)
-                .map(LeoJobModel.GitLabProject::getBranch)
+                .map(LeoBaseModel.GitLab::getProject)
+                .map(LeoBaseModel.GitLabProject::getBranch)
                 .orElse(updateJob.getBranch());
 
         LeoJob leoJob = LeoJob.builder()

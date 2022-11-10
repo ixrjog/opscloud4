@@ -2,10 +2,13 @@ package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.LeoTemplateParam;
+import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoTemplateVO;
+import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
 import com.baiyi.opscloud.facade.leo.LeoJobFacade;
 import com.baiyi.opscloud.facade.leo.LeoTemplateFacade;
 import io.swagger.annotations.Api;
@@ -31,7 +34,9 @@ public class LeoController {
 
     private final LeoJobFacade leoJobFacade;
 
-    // LeoTemplate
+    private final LeoBuildFacade leoBuildFacade;
+
+    // Leo Template
 
     @ApiOperation(value = "分页查询模板列表")
     @PostMapping(value = "/template/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -59,7 +64,7 @@ public class LeoController {
         return new HttpResult<>(leoTemplateFacade.updateLeoTemplateContent(updateTemplate));
     }
 
-    // LeoJob
+    // Leo Job
 
     @ApiOperation(value = "分页查询任务列表")
     @PostMapping(value = "/job/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -79,6 +84,21 @@ public class LeoController {
     public HttpResult<Boolean> updateLeoJob(@RequestBody @Valid LeoJobParam.UpdateJob updateJob) {
         leoJobFacade.updateLeoJob(updateJob);
         return HttpResult.SUCCESS;
+    }
+
+    // Leo Build
+
+    @ApiOperation(value = "执行构建")
+    @PostMapping(value = "/build/do", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> doLeoBuild(@RequestBody @Valid LeoBuildParam.DoBuild doBuild) {
+        leoBuildFacade.doBuild(doBuild);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "构建分支选项")
+    @PostMapping(value = "/build/branch/options/get", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<LeoBuildVO.BranchOptions> getBuildBranchOptions(@RequestBody @Valid LeoBuildParam.GetBuildBranchOptions getOptions) {
+        return new HttpResult<>(leoBuildFacade.getBuildBranchOptions(getOptions));
     }
 
 }

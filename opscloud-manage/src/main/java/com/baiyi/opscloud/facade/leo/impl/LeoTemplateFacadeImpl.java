@@ -18,7 +18,7 @@ import com.baiyi.opscloud.domain.param.tag.BusinessTagParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoTemplateVO;
 import com.baiyi.opscloud.facade.leo.LeoTemplateFacade;
 import com.baiyi.opscloud.facade.tag.SimpleTagFacade;
-import com.baiyi.opscloud.leo.domain.model.LeoModel;
+import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoTemplateModel;
 import com.baiyi.opscloud.leo.exception.LeoTemplateException;
 import com.baiyi.opscloud.packer.leo.LeoTemplatePacker;
@@ -87,7 +87,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
                 .map(LeoTemplateModel.Jenkins::getInstance)
                 .orElseThrow(() -> new LeoTemplateException("模板配置缺少Jenkins实例配置项！"));
 
-        LeoModel.DsInstance instance = templateConfig.getTemplate().getJenkins().getInstance();
+        LeoBaseModel.DsInstance instance = templateConfig.getTemplate().getJenkins().getInstance();
         LeoTemplate leoTemplate = LeoTemplate.builder()
                 .jenkinsInstanceUuid(getUuidWithJenkinsInstance(instance))
                 .templateName(templateConfig.getTemplate().getName())
@@ -111,7 +111,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
                 .map(LeoTemplateModel.Jenkins::getInstance)
                 .orElseThrow(() -> new LeoTemplateException("模板配置缺少Jenkins实例配置项！"));
 
-        LeoModel.DsInstance instance = templateConfig.getTemplate().getJenkins().getInstance();
+        LeoBaseModel.DsInstance instance = templateConfig.getTemplate().getJenkins().getInstance();
 
         LeoTemplate leoTemplate = LeoTemplate.builder()
                 .id(updateTemplate.getId())
@@ -185,7 +185,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
         simpleTagFacade.updateBusinessTags(updateBusinessTags);
     }
 
-    private String getUuidWithJenkinsInstance(LeoModel.DsInstance instance) {
+    private String getUuidWithJenkinsInstance(LeoBaseModel.DsInstance instance) {
         if (StringUtils.isNotBlank(instance.getUuid()))
             return instance.getUuid();
         if (!StringUtils.isNotBlank(instance.getName()))

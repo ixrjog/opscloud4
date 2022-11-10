@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.leo.exception;
 
+import com.baiyi.opscloud.common.exception.BaseException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import org.slf4j.helpers.MessageFormatter;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-public class LeoJobException extends RuntimeException {
+public class LeoJobException extends BaseException {
 
     private static final long serialVersionUID = 4679996919812759224L;
 

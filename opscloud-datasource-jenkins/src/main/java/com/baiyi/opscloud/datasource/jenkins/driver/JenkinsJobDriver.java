@@ -5,6 +5,8 @@ import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
 import com.baiyi.opscloud.datasource.jenkins.model.JobWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.model.QueueReference;
 import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -20,6 +22,17 @@ import java.util.Optional;
 @Component
 public class JenkinsJobDriver {
 
+    /**
+     * 构建Job
+     *
+     * @param jenkins
+     * @param jobName
+     * @param params
+     * @return
+     * @throws URISyntaxException
+     * @throws IOException
+     */
+    @Retryable(value = IOException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000))
     public QueueReference buildJobWithParams(JenkinsConfig.Jenkins jenkins, String jobName, Map<String, String> params) throws URISyntaxException, IOException {
         assert jenkins != null;
         boolean crumbFlag = Optional.of(jenkins)
@@ -28,10 +41,10 @@ public class JenkinsJobDriver {
                 .orElse(false);
         JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
         JobWithDetails job = jenkinsServer.getJob(jobName);
-        return job.build(params, false);
+        return job.build(params, crumbFlag);
     }
 
-    /**`
+    /**
      * 创建Job
      *
      * @param jenkins
@@ -41,9 +54,15 @@ public class JenkinsJobDriver {
      * @throws URISyntaxException
      * @throws IOException
      */
+    @Retryable(value = IOException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000))
     public JenkinsServer createJob(JenkinsConfig.Jenkins jenkins, String jobName, String jobXml) throws URISyntaxException, IOException {
+        assert jenkins != null;
+        boolean crumbFlag = Optional.of(jenkins)
+                .map(JenkinsConfig.Jenkins::getSecurity)
+                .map(JenkinsConfig.Security::getCrumbFlag)
+                .orElse(false);
         JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
-        return jenkinsServer.createJob(jobName, jobXml);
+        return jenkinsServer.createJob(jobName, jobXml, crumbFlag);
     }
 
 }
