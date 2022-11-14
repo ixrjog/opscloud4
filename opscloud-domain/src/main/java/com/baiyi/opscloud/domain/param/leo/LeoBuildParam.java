@@ -30,6 +30,9 @@ public class LeoBuildParam {
         @ApiModelProperty(value = "分支")
         private String branch;
 
+        @ApiModelProperty(value = "COMMIT ID")
+        private String commitId;
+
         @ApiModelProperty(value = "构建参数")
         private Map<String, String> params;
 

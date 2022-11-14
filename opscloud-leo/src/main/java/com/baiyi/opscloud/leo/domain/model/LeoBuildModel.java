@@ -1,11 +1,9 @@
 package com.baiyi.opscloud.leo.domain.model;
 
-import com.google.gson.JsonSyntaxException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.yaml.snakeyaml.Yaml;
 
 import java.util.List;
 
@@ -20,14 +18,9 @@ public class LeoBuildModel {
     @Builder
     @Data
     @AllArgsConstructor
-    public static class BuildConfig {
+    public static class BuildConfig extends YamlDump {
 
         private Build build;
-
-        public String dump() throws JsonSyntaxException {
-            Yaml yaml = new Yaml();
-            return yaml.dump(this);
-        }
 
     }
 

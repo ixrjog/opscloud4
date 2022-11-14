@@ -59,4 +59,5 @@ public class SessionUtil {
     public static void setToken(String param) {
         token.set(param);
     }
+
 }

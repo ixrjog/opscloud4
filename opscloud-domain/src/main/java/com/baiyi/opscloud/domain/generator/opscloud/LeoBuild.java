@@ -31,6 +31,12 @@ public class LeoBuild {
     private String jobName;
 
     /**
+     * 构建任务名
+     */
+    @Column(name = "build_job_name")
+    private String buildJobName;
+
+    /**
      * 应用ID
      */
     @Column(name = "application_id")

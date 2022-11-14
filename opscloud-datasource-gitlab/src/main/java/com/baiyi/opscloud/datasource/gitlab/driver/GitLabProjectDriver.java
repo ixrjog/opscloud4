@@ -9,6 +9,7 @@ import org.gitlab4j.api.Pager;
 import org.gitlab4j.api.models.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * https://docs.gitlab.com/ee/api/projects.html
@@ -90,8 +91,16 @@ public class GitLabProjectDriver {
         return buildAPI(gitlab).getTagsApi().getTags(projectId);
     }
 
+    public static Optional<Tag> getTagWithProjectIdAndTagName(GitLabConfig.Gitlab gitlab, Long projectId, String tagName) throws GitLabApiException {
+        return buildAPI(gitlab).getTagsApi().getOptionalTag(projectId, tagName);
+    }
+
     public static List<Branch> getBranchesWithProjectId(GitLabConfig.Gitlab gitlab, Long projectId) throws GitLabApiException {
         return buildAPI(gitlab).getRepositoryApi().getBranches(projectId);
+    }
+
+    public static Optional<Branch> getBranchWithProjectIdAndBranchName(GitLabConfig.Gitlab gitlab, Long projectId, String branchName) throws GitLabApiException {
+        return buildAPI(gitlab).getRepositoryApi().getOptionalBranch(projectId, branchName);
     }
 
     private static GitLabApi buildAPI(GitLabConfig.Gitlab gitlab) {

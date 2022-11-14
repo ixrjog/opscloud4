@@ -15,6 +15,7 @@ import com.baiyi.opscloud.packer.leo.LeoJobPacker;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.leo.LeoTemplateService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
  * @Date 2022/11/4 14:45
  * @Version 1.0
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LeoJobFacadeImpl implements LeoJobFacade {

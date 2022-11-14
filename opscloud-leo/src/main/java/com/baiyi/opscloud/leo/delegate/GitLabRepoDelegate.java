@@ -5,15 +5,18 @@ import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabProjectDriver;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.leo.converter.GitLabBranchConverter;
+import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Branch;
+import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.Tag;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Author baiyi
@@ -56,6 +59,21 @@ public class GitLabRepoDelegate {
             log.warn("查询GitLab branches tags: url={}, projectId={}, err={}", gitlab.getUrl(), projectId, e.getMessage());
             return LeoBuildVO.BranchOptions.EMPTY_OPTIONS;
         }
+    }
+
+    public Commit getBranchOrTagCommit(GitLabConfig.Gitlab gitlab, Long projectId, String branchNameOrTagName) {
+        try {
+            Optional<Branch> optionalBranch = GitLabProjectDriver.getBranchWithProjectIdAndBranchName(gitlab, projectId, branchNameOrTagName);
+            if (optionalBranch.isPresent())
+                return optionalBranch.get().getCommit();
+
+            Optional<Tag> optionalTag = GitLabProjectDriver.getTagWithProjectIdAndTagName(gitlab, projectId, branchNameOrTagName);
+            if (optionalTag.isPresent())
+                return optionalTag.get().getCommit();
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+        }
+        throw new LeoBuildException("查询构建分支Commit错误: gitlab={}, projectId={}, branchOrTag={}", gitlab.getUrl(), projectId, branchNameOrTagName);
     }
 
 }

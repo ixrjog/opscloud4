@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.leo.domain.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -49,6 +50,7 @@ public class LeoBaseModel {
     }
 
     @Data
+    @Builder
     @AllArgsConstructor
     public static class GitLabCommit {
 

@@ -59,6 +59,8 @@ public class LeoJobModel {
         private LeoBaseModel.GitLab gitLab;
 
         private String name;
+
+        private Build build;
         // 代码扫描
         private Sonar sonar;
         // 通知配置: 单个
@@ -71,6 +73,25 @@ public class LeoJobModel {
         private List<String> tags;
         // 任务参数
         private List<LeoBaseModel.Parameter> parameters;
+    }
+
+    @Builder
+    @Data
+    @AllArgsConstructor
+    public static class Build {
+
+        private Version version;
+
+    }
+
+    @Builder
+    @Data
+    @AllArgsConstructor
+    public static class Version {
+
+        private String prefix;
+        private String suffix;
+
     }
 
     @Builder

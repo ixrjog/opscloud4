@@ -6,6 +6,9 @@ import com.baiyi.opscloud.leo.supervisor.base.ISupervisor;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 /**
  * @Author baiyi
  * @Date 2022/11/9 11:43
@@ -31,11 +34,28 @@ public class BuildingSupervisor implements ISupervisor {
     @Override
     public void run() {
         try {
+            // 创建Jenkins Job
+
+            // 执行Job
+
+
             while (true) {
 
+
+                TimeUnit.SECONDS.sleep(5L);
             }
+        } catch (InterruptedException ie)   {
+
         } catch (Exception e) {
             logHelper.error(leoBuild, "异常错误任务结束: err={}", e.getMessage());
+            LeoBuild saveLeoBuild = LeoBuild.builder()
+                    .id(leoBuild.getId())
+                    .endTime(new Date())
+                    .isFinish(true)
+                    .buildStatus("ERROR")
+                    .buildResult(e.getMessage())
+                    .build();
+            leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
         }
     }
 

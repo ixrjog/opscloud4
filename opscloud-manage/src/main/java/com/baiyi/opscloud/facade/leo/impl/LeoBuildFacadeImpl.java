@@ -16,7 +16,8 @@ import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
-import com.baiyi.opscloud.leo.util.JobNameUtil;
+import com.baiyi.opscloud.leo.log.BuildingLogHelper;
+import com.baiyi.opscloud.leo.util.JobUtil;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
@@ -24,8 +25,10 @@ import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.gitlab4j.api.models.Commit;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,6 +60,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     private final DsConfigHelper dsConfigHelper;
 
+    private final BuildingLogHelper logHelper;
+
     @Override
     public void doBuild(LeoBuildParam.DoBuild doBuild) {
         LeoJob leoJob = leoJobService.getById(doBuild.getJobId());
@@ -79,11 +84,23 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .map(LeoJobModel.Job::getGitLab)
                 .orElseThrow(() -> new LeoBuildException("任务GitLab配置不存在: jobId={}", doBuild.getJobId()));
 
+        // 设置commitId
+        DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, gitLab.getProject().getSshUrl());
+        final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
+        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
+        GitLabConfig gitLabConfig = dsConfigHelper.build(dsConfig, GitLabConfig.class);
+        Commit commit = gitLabRepoDelegate.getBranchOrTagCommit(gitLabConfig.getGitlab(), projectId, doBuild.getBranch());
+        gitLab.getProject().setCommit(
+                LeoBaseModel.GitLabCommit.builder()
+                        .id(commit.getId())
+                        .build()
+        );
+
         LeoBuildModel.Build build = LeoBuildModel.Build.builder()
                 .tags(tags)
                 .gitLab(gitLab)
+                // TODO 构建参数
                 .parameters(null)
-                .comment(null)
                 .build();
 
         LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.BuildConfig.builder()
@@ -91,19 +108,22 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .build();
 
         final int buildNumber = generateBuildNumberWithJobId(doBuild.getJobId());
+        final String jobName = JobUtil.generateJobName(application, leoJob);
+        final String buildJobName = JobUtil.generateBuildJobName(application, leoJob, buildNumber);
 
         LeoBuild leoBuild = LeoBuild.builder()
                 .jobId(doBuild.getJobId())
-                .jobName(JobNameUtil.generateBuildJobName(application, leoJob, buildNumber))
+                .jobName(jobName)
+                .buildJobName(buildJobName)
                 .applicationId(leoJob.getApplicationId())
                 .buildNumber(buildNumber)
-                .versionName(doBuild.getVersionName())
+                .startTime(new Date())
+                .versionName(JobUtil.generateVersionName(doBuild, jobConfig))
                 .versionDesc(doBuild.getVersionDesc())
                 .executionType(ExecutionTypeConstants.USER)
                 .username(SessionUtil.getUsername())
                 .buildConfig(buildConfig.dump())
                 .build();
-
         leoBuildService.add(leoBuild);
     }
 
@@ -124,17 +144,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         if (leoJob == null) {
             throw new LeoBuildException("任务配置不存在: jobId={}", getOptions.getJobId());
         }
-        ApplicationResource resource = applicationResourceService.queryByApplication(
-                        leoJob.getApplicationId(),
-                        DsAssetTypeConstants.GITLAB_PROJECT.name(),
-                        BusinessTypeEnum.ASSET.getType())
-                .stream()
-                .filter(e -> e.getName().equals(getOptions.getSshUrl()))
-                .findFirst()
-                .orElseThrow(() -> new LeoBuildException("GitLab项目不存在: applicationId={}, sshUrl={}", leoJob.getApplicationId(), getOptions.getSshUrl()));
 
-        DatasourceInstanceAsset gitLabProjectAsset = assetService.getById(resource.getBusinessId());
-
+        DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, getOptions.getSshUrl());
         final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
         final boolean openTag = getOptions.getOpenTag() != null && getOptions.getOpenTag();
 
@@ -142,6 +153,29 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         GitLabConfig gitLabConfig = dsConfigHelper.build(dsConfig, GitLabConfig.class);
 
         return gitLabRepoDelegate.generatorGitLabBranchOptions(gitLabConfig.getGitlab(), projectId, openTag);
+    }
+
+    /**
+     * 获取 GitLab Project Asset
+     *
+     * @param leoJob
+     * @param sshUrl
+     * @return
+     */
+    private DatasourceInstanceAsset getGitLabProjectAssetWithLeoJobAndSshUrl(LeoJob leoJob, String sshUrl) {
+        ApplicationResource resource = applicationResourceService.queryByApplication(
+                        leoJob.getApplicationId(),
+                        DsAssetTypeConstants.GITLAB_PROJECT.name(),
+                        BusinessTypeEnum.ASSET.getType())
+                .stream()
+                .filter(e -> e.getName().equals(sshUrl))
+                .findFirst()
+                .orElseThrow(() -> new LeoBuildException("GitLab项目不存在: applicationId={}, sshUrl={}", leoJob.getApplicationId(), sshUrl));
+        return assetService.getById(resource.getBusinessId());
+    }
+
+    private void electLeoJenkinsInstances(){
+
     }
 
 }
