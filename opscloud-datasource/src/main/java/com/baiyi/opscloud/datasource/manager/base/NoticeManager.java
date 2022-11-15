@@ -39,7 +39,7 @@ public class NoticeManager {
     /**
      * 支持通知的实例类型
      */
-    private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.DINGTALK, DsTypeEnum.DINGTALK_APP};
+    private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.DINGTALK_APP};
 
     @Resource
     private NoticeHelper noticeHelper;
