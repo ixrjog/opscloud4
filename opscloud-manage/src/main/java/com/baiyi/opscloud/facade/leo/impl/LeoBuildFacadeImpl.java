@@ -10,6 +10,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
+import com.baiyi.opscloud.leo.build.LeoBuildHandler;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.delegate.GitLabRepoDelegate;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
@@ -23,12 +24,12 @@ import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
+import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.gitlab4j.api.models.Commit;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,6 +63,9 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     private final BuildingLogHelper logHelper;
 
+    private final LeoBuildHandler leoBuildHandler;
+
+
     @Override
     public void doBuild(LeoBuildParam.DoBuild doBuild) {
         LeoJob leoJob = leoJobService.getById(doBuild.getJobId());
@@ -84,6 +88,11 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .map(LeoJobModel.Job::getGitLab)
                 .orElseThrow(() -> new LeoBuildException("任务GitLab配置不存在: jobId={}", doBuild.getJobId()));
 
+        List<LeoBaseModel.Parameter> jobParameters = Optional.of(jobConfig)
+                .map(LeoJobModel.JobConfig::getJob)
+                .map(LeoJobModel.Job::getParameters)
+                .orElse(Lists.newArrayList());
+
         // 设置commitId
         DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, gitLab.getProject().getSshUrl());
         final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
@@ -99,8 +108,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         LeoBuildModel.Build build = LeoBuildModel.Build.builder()
                 .tags(tags)
                 .gitLab(gitLab)
-                // TODO 构建参数
-                .parameters(null)
+                .parameters(jobParameters)
                 .build();
 
         LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.BuildConfig.builder()
@@ -117,7 +125,6 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .buildJobName(buildJobName)
                 .applicationId(leoJob.getApplicationId())
                 .buildNumber(buildNumber)
-                .startTime(new Date())
                 .versionName(JobUtil.generateVersionName(doBuild, jobConfig))
                 .versionDesc(doBuild.getVersionDesc())
                 .executionType(ExecutionTypeConstants.USER)
@@ -125,6 +132,17 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .buildConfig(buildConfig.dump())
                 .build();
         leoBuildService.add(leoBuild);
+        buildHandle(leoBuild, buildConfig);
+    }
+
+    /**
+     * 使用责任链设计模式解耦代码
+     *
+     * @param leoBuild
+     * @param buildConfig
+     */
+    private void buildHandle(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
+        leoBuildHandler.buildHandle(leoBuild, buildConfig);
     }
 
     /**
@@ -138,6 +156,12 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         return leoBuildService.getMaxBuildNumberWithJobId(jobId) + 1;
     }
 
+    /**
+     * 用户查询构建分支选项
+     *
+     * @param getOptions
+     * @return
+     */
     @Override
     public LeoBuildVO.BranchOptions getBuildBranchOptions(LeoBuildParam.GetBuildBranchOptions getOptions) {
         LeoJob leoJob = leoJobService.getById(getOptions.getJobId());
@@ -170,12 +194,9 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .stream()
                 .filter(e -> e.getName().equals(sshUrl))
                 .findFirst()
+                // 未找到资产抛出异常
                 .orElseThrow(() -> new LeoBuildException("GitLab项目不存在: applicationId={}, sshUrl={}", leoJob.getApplicationId(), sshUrl));
         return assetService.getById(resource.getBusinessId());
-    }
-
-    private void electLeoJenkinsInstances(){
-
     }
 
 }

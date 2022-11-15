@@ -4,41 +4,31 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
-import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
-import com.baiyi.opscloud.datasource.jenkins.model.FolderJob;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoTemplate;
-import com.baiyi.opscloud.domain.generator.opscloud.Tag;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.leo.LeoTemplateParam;
-import com.baiyi.opscloud.domain.param.tag.BusinessTagParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoTemplateVO;
 import com.baiyi.opscloud.facade.leo.LeoTemplateFacade;
-import com.baiyi.opscloud.facade.tag.SimpleTagFacade;
+import com.baiyi.opscloud.facade.leo.tags.LeoTagHelper;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoTemplateModel;
 import com.baiyi.opscloud.leo.exception.LeoTemplateException;
+import com.baiyi.opscloud.leo.helper.JenkinsJobHelper;
 import com.baiyi.opscloud.packer.leo.LeoTemplatePacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.leo.LeoTemplateService;
-import com.baiyi.opscloud.service.tag.TagService;
-import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.glassfish.jersey.internal.guava.Sets;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +36,7 @@ import java.util.stream.Collectors;
  * @Date 2022/11/1 16:37
  * @Version 1.0
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
@@ -54,13 +45,13 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
 
     private final DsInstanceService dsInstanceService;
 
-    private final TagService tagService;
-
-    private final SimpleTagFacade simpleTagFacade;
-
     private final LeoTemplatePacker leoTemplatePacker;
 
     private final DsConfigHelper dsConfigHelper;
+
+    private final JenkinsJobHelper jenkinsJobHelper;
+
+    private final LeoTagHelper leoTagHelper;
 
     @Override
     public DataTable<LeoTemplateVO.Template> queryLeoTemplatePage(LeoTemplateParam.TemplatePageQuery pageQuery) {
@@ -142,24 +133,10 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
         String folder = Optional.of(templateConfig)
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getFolder).orElse("");
-        try {
-            String jobXml;
-            if (StringUtils.isNotBlank(folder)) {
-                // 重新拼装URL
-                // https://leo-jenkins-1.chuanyinet.com/job/templates/job/tpl_test/ =>
-                // https://leo-jenkins-1.chuanyinet.com/job/templates/
-                URL url = new URL(templateConfig.getTemplate().getUrl());
-                String folderUrl = Joiner.on("").skipNulls().join(url.getProtocol(), "://", url.getHost(), url.getPort() == -1 ? null : ":" + url.getPort(), "/job/", folder, "/");
-                FolderJob folderJob = new FolderJob(folder, folderUrl);
-                jobXml = JenkinsServerDriver.getJobXml(jenkinsConfig.getJenkins(), folderJob, templateConfig.getTemplate().getName());
-            } else {
-                jobXml = JenkinsServerDriver.getJobXml(jenkinsConfig.getJenkins(), templateConfig.getTemplate().getName());
-            }
-            leoTemplate.setTemplateContent(jobXml);
-            leoTemplateService.updateByPrimaryKeySelective(leoTemplate);
-        } catch (URISyntaxException | IOException e) {
-            throw new LeoTemplateException("查询Jenkins任务模板错误: err={}", e.getMessage());
-        }
+
+        String jobXml = jenkinsJobHelper.getJobXml(templateConfig, jenkinsConfig, folder);
+        leoTemplate.setTemplateContent(jobXml);
+        leoTemplateService.updateByPrimaryKeySelective(leoTemplate);
         return toLeoTemplateVO(leoTemplate);
     }
 
@@ -170,19 +147,11 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
      * @param templateConfig
      */
     private void updateTagsWithLeoTemplate(LeoTemplate leoTemplate, LeoTemplateModel.TemplateConfig templateConfig) {
-        Optional<List<String>> optionalTags = Optional.ofNullable(templateConfig)
+        List<String> tags = Optional.ofNullable(templateConfig)
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
-                .map(LeoTemplateModel.Template::getTags);
-        if (!optionalTags.isPresent())
-            return;
-        Set<Integer> tagIds = Sets.newHashSet();
-        optionalTags.get().stream().map(tagService::getByTagKey).filter(Objects::nonNull).map(Tag::getId).forEachOrdered(tagIds::add);
-        BusinessTagParam.UpdateBusinessTags updateBusinessTags = BusinessTagParam.UpdateBusinessTags.builder()
-                .businessId(leoTemplate.getId())
-                .businessType(BusinessTypeEnum.LEO_TEMPLATE.getType())
-                .tagIds(tagIds)
-                .build();
-        simpleTagFacade.updateBusinessTags(updateBusinessTags);
+                .map(LeoTemplateModel.Template::getTags)
+                .orElse(Collections.emptyList());
+        leoTagHelper.updateTagsWithLeoBusiness(leoTemplate, tags);
     }
 
     private String getUuidWithJenkinsInstance(LeoBaseModel.DsInstance instance) {

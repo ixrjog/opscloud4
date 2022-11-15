@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.leo.domain.model;
 
 import com.baiyi.opscloud.common.util.JSONUtil;
+import com.baiyi.opscloud.leo.exception.LeoJobException;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,9 +33,8 @@ public class LeoJobModel {
             Yaml yaml = new Yaml();
             Object result = yaml.load(config);
             return new GsonBuilder().create().fromJson(JSONUtil.writeValueAsString(result), JobConfig.class);
-        } catch (JsonSyntaxException e) {
-            log.error(e.getMessage());
-            return JobConfig.EMPTY_JOB;
+        } catch (Exception e) {
+            throw new LeoJobException("转换配置文件错误: err={}", e.getMessage());
         }
     }
 
@@ -73,6 +72,7 @@ public class LeoJobModel {
         private List<String> tags;
         // 任务参数
         private List<LeoBaseModel.Parameter> parameters;
+
     }
 
     @Builder

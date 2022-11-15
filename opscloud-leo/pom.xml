@@ -28,9 +28,15 @@
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-common</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-gitlab</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-jenkins</artifactId>
         </dependency>
 
     </dependencies>

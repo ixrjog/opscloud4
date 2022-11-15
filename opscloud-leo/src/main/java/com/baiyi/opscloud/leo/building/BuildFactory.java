@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.leo.build;
+package com.baiyi.opscloud.leo.building;
 
 import lombok.extern.slf4j.Slf4j;
 

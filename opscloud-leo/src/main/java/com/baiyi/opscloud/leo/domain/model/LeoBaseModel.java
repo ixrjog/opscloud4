@@ -22,6 +22,7 @@ public class LeoBaseModel {
     }
 
     @Data
+    @Builder
     @AllArgsConstructor
     public static class DsInstance {
 
@@ -55,6 +56,15 @@ public class LeoBaseModel {
     public static class GitLabCommit {
 
         private String id;
+
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class Jenkins {
+
+        private LeoBaseModel.DsInstance instance;
 
     }
 

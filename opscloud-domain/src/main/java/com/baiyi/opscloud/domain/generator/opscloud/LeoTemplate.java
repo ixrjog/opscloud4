@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
+import com.baiyi.opscloud.domain.base.BaseBusiness;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,9 +16,19 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "leo_template")
-public class LeoTemplate implements Serializable {
+public class LeoTemplate implements Serializable, BaseBusiness.IBusiness {
 
     private static final long serialVersionUID = -517321853690494654L;
+
+    @Override
+    public Integer getBusinessId() {
+        return this.getId();
+    }
+
+    @Override
+    public Integer getBusinessType() {
+        return BusinessTypeEnum.LEO_TEMPLATE.getType();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +46,7 @@ public class LeoTemplate implements Serializable {
     private String jenkinsInstanceUuid;
 
     /**
-     * 模板名称
+     * 模板名
      */
     @Column(name = "template_name")
     private String templateName;
@@ -79,4 +91,5 @@ public class LeoTemplate implements Serializable {
      * 描述
      */
     private String comment;
+
 }

@@ -1,7 +1,7 @@
-package com.baiyi.opscloud.leo.build.base;
+package com.baiyi.opscloud.leo.building.base;
 
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.leo.build.IBuildHandler;
+import com.baiyi.opscloud.leo.building.IBuildHandler;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public abstract class BaseBuildHandler implements IBuildHandler {
-
 
     @Override
     public void doBuild(LeoBuild leoBuild) {

@@ -1,11 +1,14 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
+import com.baiyi.opscloud.domain.base.BaseBusiness;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
@@ -13,7 +16,20 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "leo_job")
-public class LeoJob {
+public class LeoJob implements Serializable, BaseBusiness.IBusiness {
+
+    private static final long serialVersionUID = -37689929767342534L;
+
+    @Override
+    public Integer getBusinessId() {
+        return this.getId();
+    }
+
+    @Override
+    public Integer getBusinessType() {
+        return BusinessTypeEnum.LEO_JOB.getType();
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -89,13 +105,13 @@ public class LeoJob {
     /**
      * 更新时间
      */
-    @Column(name = "update_time")
+    @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 
     /**
      * 创建时间
      */
-    @Column(name = "create_time")
+    @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
     /**
@@ -114,4 +130,5 @@ public class LeoJob {
      * 描述
      */
     private String comment;
+
 }

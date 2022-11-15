@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.leo.build;
+package com.baiyi.opscloud.leo.building;
 
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 

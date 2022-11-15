@@ -8,6 +8,6 @@ package com.baiyi.opscloud.leo.constants;
 public enum LogTypeConstants {
 
     DEF,
-    HEARTBEAT;
+    HEARTBEAT
 
 }

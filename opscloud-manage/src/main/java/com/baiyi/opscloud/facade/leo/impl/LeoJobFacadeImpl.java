@@ -7,8 +7,9 @@ import com.baiyi.opscloud.domain.generator.opscloud.LeoTemplate;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 import com.baiyi.opscloud.facade.leo.LeoJobFacade;
-import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
+import com.baiyi.opscloud.facade.leo.tags.LeoTagHelper;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
+import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.domain.model.LeoTemplateModel;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
 import com.baiyi.opscloud.packer.leo.LeoJobPacker;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,6 +39,8 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
     private final LeoTemplateService leoTemplateService;
 
     private final LeoJobPacker leoJobPacker;
+
+    private final LeoTagHelper leoTagHelper;
 
     @Override
     public DataTable<LeoJobVO.Job> queryLeoJobPage(LeoJobParam.JobPageQuery pageQuery) {
@@ -67,6 +71,21 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
         leoJob.setTemplateVersion(templateVersion);
         leoJob.setTemplateContent(leoTemplate.getTemplateContent());
         leoJobService.add(leoJob);
+        updateTagsWithLeoJob(leoJob, jobConfig);
+    }
+
+    /**
+     * 绑定标签
+     *
+     * @param leoJob
+     * @param jobConfig
+     */
+    private void updateTagsWithLeoJob(LeoJob leoJob, LeoJobModel.JobConfig jobConfig) {
+        List<String> tags = Optional.ofNullable(jobConfig)
+                .map(LeoJobModel.JobConfig::getJob)
+                .map(LeoJobModel.Job::getTags)
+                .orElse(Collections.emptyList());
+        leoTagHelper.updateTagsWithLeoBusiness(leoJob, tags);
     }
 
     @Override
@@ -80,7 +99,6 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getVersion)
                 .orElse("0.0.0");
-
         LeoJobModel.JobConfig jobConfig = LeoJobModel.load(updateJob.getJobConfig());
 
         final String branch = Optional.ofNullable(jobConfig)
@@ -107,6 +125,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .comment(updateJob.getComment())
                 .build();
         leoJobService.updateByPrimaryKeySelective(leoJob);
+        updateTagsWithLeoJob(leoJob, jobConfig);
     }
 
 }
