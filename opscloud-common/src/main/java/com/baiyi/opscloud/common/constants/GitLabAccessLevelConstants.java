@@ -16,7 +16,6 @@ public enum GitLabAccessLevelConstants {
     MASTER("Master", 40),
     OWNER("Owner", 50);
 
-    @Getter
     private final String role;
 
     private final int accessValue;
