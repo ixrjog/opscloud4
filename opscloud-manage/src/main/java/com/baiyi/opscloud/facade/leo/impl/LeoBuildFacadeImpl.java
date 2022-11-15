@@ -88,6 +88,12 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .map(LeoJobModel.Job::getGitLab)
                 .orElseThrow(() -> new LeoBuildException("任务GitLab配置不存在: jobId={}", doBuild.getJobId()));
 
+        LeoBaseModel.Notify notify = Optional.of(jobConfig)
+                .map(LeoJobModel.JobConfig::getJob)
+                .map(LeoJobModel.Job::getNotify)
+                .orElse(LeoBaseModel.Notify.EMPTY_NOTIFY);
+
+
         List<LeoBaseModel.Parameter> jobParameters = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getParameters)
@@ -108,6 +114,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         LeoBuildModel.Build build = LeoBuildModel.Build.builder()
                 .tags(tags)
                 .gitLab(gitLab)
+                .notify(notify)
                 .parameters(jobParameters)
                 .build();
 

@@ -68,4 +68,17 @@ public class LeoBaseModel {
 
     }
 
+    @Builder
+    @Data
+    @AllArgsConstructor
+    public static class Notify {
+
+        public static final Notify EMPTY_NOTIFY = Notify.builder().build();
+
+        private String type;
+        private String name;
+        private Boolean atAll;
+
+    }
+
 }

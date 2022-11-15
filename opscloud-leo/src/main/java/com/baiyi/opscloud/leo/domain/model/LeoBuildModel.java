@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -36,7 +37,11 @@ public class LeoBuildModel {
 
         private LeoBaseModel.Jenkins jenkins;
 
+        private LeoBaseModel.Notify notify;
+
         private String comment;
+        // 构建字典
+        private Map<String, String> dict;
         // 构建参数
         private List<LeoBaseModel.Parameter> parameters;
         // 构建标签

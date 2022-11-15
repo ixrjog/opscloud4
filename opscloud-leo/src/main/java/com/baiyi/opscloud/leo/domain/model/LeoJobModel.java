@@ -63,9 +63,9 @@ public class LeoJobModel {
         // 代码扫描
         private Sonar sonar;
         // 通知配置: 单个
-        private Notify notify;
-        // 通知配置: 多个
-        private List<Notify> notifies;
+        private LeoBaseModel.Notify notify;
+        // 通知配置: 多个 <不支持>
+        private List<LeoBaseModel.Notify> notifies;
 
         private String comment;
 
@@ -103,15 +103,5 @@ public class LeoJobModel {
 
     }
 
-    @Builder
-    @Data
-    @AllArgsConstructor
-    public static class Notify {
-
-        private String type;
-        private String name;
-        private Boolean atAll;
-
-    }
 
 }

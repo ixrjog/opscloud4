@@ -209,16 +209,14 @@ public class TimeUtil {
     public static String nowDate() {
         SimpleDateFormat formatter;
         formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String now = formatter.format(new Date());
-        return now;
+        return formatter.format(new Date());
     }
 
     public static String gmtNowDate() {
         long time = new Date().getTime();
         SimpleDateFormat formatter;
         formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String now = formatter.format(time - TimeUtil.hourTime * 8);
-        return now;
+        return formatter.format(time - TimeUtil.hourTime * 8);
     }
 
     /**
@@ -248,7 +246,7 @@ public class TimeUtil {
         return subTime >= stamp;
     }
 
-    public static String toGmtDate(Date date){
+    public static String toGmtDate(Date date) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return simpleDateFormat.format(date);
     }
@@ -363,7 +361,7 @@ public class TimeUtil {
         }
     }
 
-    public static Date convertTime(String time,String timeFormat){
+    public static Date convertTime(String time, String timeFormat) {
         SimpleDateFormat format = new SimpleDateFormat(timeFormat);
         try {
             return format.parse(time);
@@ -425,7 +423,7 @@ public class TimeUtil {
         calendar.setTime(date);
         int week = calendar.get(Calendar.WEEK_OF_YEAR);
         int year = calendar.get(Calendar.YEAR);
-        return Joiner.on(" ").join(year,"年", week, "周");
+        return Joiner.on(" ").join(year, "年", week, "周");
     }
 
 }

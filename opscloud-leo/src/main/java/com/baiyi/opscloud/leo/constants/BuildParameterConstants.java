@@ -10,6 +10,7 @@ import lombok.Getter;
 public enum BuildParameterConstants {
 
     BRANCH("branch"),
+    PROJECT("project"),
     COMMIT_ID("commitId"),
     SSH_URL("sshUrl"),
     ENV("env"),

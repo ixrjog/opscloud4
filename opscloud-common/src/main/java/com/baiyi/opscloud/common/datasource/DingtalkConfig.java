@@ -21,7 +21,6 @@ public class DingtalkConfig extends BaseDsConfig {
 
     private Robot robot;
 
-
     @Data
     @NoArgsConstructor
     @ApiModel
