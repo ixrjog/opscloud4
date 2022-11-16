@@ -68,9 +68,9 @@ public class NoticeHelper {
                     MessageConsumerFactory.getConsumerByInstanceType(instance.getInstanceType());
             if (iMessageCustomer == null) return;
             iMessageCustomer.send(instance, user, mt, text);
-            log.info("发送用户消息！instanceName = {}, username = {}", instance.getInstanceName(), user.getUsername());
+            log.info("发送用户消息！instanceName={}, username={}", instance.getInstanceName(), user.getUsername());
         } catch (IOException e) {
-            log.error("发送用户消息错误！instanceName = {}, username = {}", instance.getInstanceName(), user.getUsername());
+            log.error("发送用户消息错误！instanceName={}, username={}", instance.getInstanceName(), user.getUsername());
             e.printStackTrace();
         }
     }

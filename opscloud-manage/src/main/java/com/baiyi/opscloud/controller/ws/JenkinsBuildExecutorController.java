@@ -56,7 +56,7 @@ public class JenkinsBuildExecutorController {
         this.session = session;
         sessionSet.add(session);
         int cnt = onlineCount.incrementAndGet(); // 在线数加1
-        log.info("Jenkins Build Executor Status: 当前连接数为 = {}", cnt);
+        log.info("Jenkins Build Executor Status: 当前连接数为={}", cnt);
         session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
     }
 
@@ -93,7 +93,7 @@ public class JenkinsBuildExecutorController {
     public void onClose() {
         sessionSet.remove(session);
         int cnt = onlineCount.decrementAndGet();
-        log.info("Jenkins Build Executor Status: 当前连接数为 = {}", cnt);
+        log.info("Jenkins Build Executor Status: 当前连接数为={}", cnt);
     }
 
 }

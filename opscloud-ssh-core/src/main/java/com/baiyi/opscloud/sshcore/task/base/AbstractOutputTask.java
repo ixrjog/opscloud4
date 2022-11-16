@@ -46,7 +46,7 @@ public abstract class AbstractOutputTask implements IOutputTask {
         } catch (Exception ex) {
             log.error(ex.toString(), ex);
         } finally {
-            log.info("Watch server output task end: sessionId = {} , instanceId = {}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
+            log.info("Watch server output task end: sessionId={}, instanceId={}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
             SessionOutputUtil.removeOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId());
         }
     }

@@ -59,7 +59,7 @@ public class AssetBusinessRelationAspect {
      * @param bar
      */
     private void bindRelation(BusinessAssetRelationVO.IBusinessAssetRelation bar) {
-        log.info("业务对象绑定资产: businessType = {} , businessId = {} , assetId = {}", bar.getBusinessType(), bar.getBusinessId(), bar.getAssetId());
+        log.info("业务对象绑定资产: businessType={}, businessId={}, assetId={}", bar.getBusinessType(), bar.getBusinessId(), bar.getAssetId());
         businessAssetRelationFacade.bindAsset(bar);
     }
 

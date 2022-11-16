@@ -99,7 +99,7 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
             datasourceInstanceAssetSubscription.setLastSubscriptionTime(new Date());
             dsInstanceAssetSubscriptionService.update(datasourceInstanceAssetSubscription);
         } catch (UnsupportedEncodingException e) {
-            log.error("发布订阅任务失败！id = {}", datasourceInstanceAssetSubscription.getId());
+            log.error("发布订阅任务失败: id={}", datasourceInstanceAssetSubscription.getId());
         }
     }
 

@@ -54,7 +54,7 @@ public class AssetBusinessUnbindRelationAspect {
     }
 
     private void unbindAsset(BaseBusiness.IBusiness iBusiness) {
-        log.info("解除业务对象与资产的绑定关系: businessType = {} , businessId = {}", iBusiness.getBusinessType(), iBusiness.getBusinessId());
+        log.info("解除业务对象与资产的绑定关系: businessType={}, businessId={}", iBusiness.getBusinessType(), iBusiness.getBusinessId());
         businessAssetRelationFacade.unbindAsset(iBusiness);
     }
 

@@ -90,7 +90,7 @@ public class IOUtil {
      * @param path
      */
     public static void writeFile(String body, String path) {
-        log.info("Write file : path = {}", path);
+        log.info("Write file: path={}", path);
 
         if (StringUtils.isEmpty(path)) {
             log.error("WriteFile path is null !");

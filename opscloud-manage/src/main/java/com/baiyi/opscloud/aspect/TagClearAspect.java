@@ -59,7 +59,7 @@ public class TagClearAspect {
     }
 
     private void doClear(Integer businessType, Integer businessId) {
-        log.info("清除业务标签: businessType = {} , businessId = {}", businessType, businessId);
+        log.info("清除业务标签: businessType={}, businessId={}", businessType, businessId);
         businessTagService.deleteByBusinessTypeAndId(businessType, businessId);
     }
 

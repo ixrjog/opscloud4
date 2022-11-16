@@ -56,7 +56,7 @@ public class RevokeUserPermissionAspect {
     }
 
     private void revokeHandle(Integer businessType, Integer businessId) {
-        log.info("撤销当前业务对象的所有用户授权: businessType = {} , businessId = {}", businessType, businessId);
+        log.info("撤销当前业务对象的所有用户授权: businessType={}, businessId={}", businessType, businessId);
         if (BusinessTypeEnum.USER.getType() == businessType) {
             // 撤销用户的所有授权
             userPermissionFacade.revokeByUserId(businessId);

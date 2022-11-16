@@ -46,7 +46,7 @@ public class ZabbixHostTest extends BaseZabbixTest {
         DataTable<Server> dataTable = serverService.queryServerPage(pageQuery);
         for (Server server : dataTable.getData()) {
             zabbixHostServerProvider.update(datasourceInstance, server);
-            log.info("创建Zabbix主机: name = {} , envType = {}", server.getName(), server.getEnvType());
+            log.info("创建Zabbix主机: name={}, envType={}", server.getName(), server.getEnvType());
         }
     }
 

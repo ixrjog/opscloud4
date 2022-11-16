@@ -27,7 +27,7 @@ public class AuditRecordHelper {
         try {
             IOUtil.appendFile(new String(buf).substring(off, len), terminalConfigurationProperties.buildAuditLogPath(sessionId, instanceId));
         } catch (Exception e) {
-            log.error("Web终端会话日志写入失败! sessionId = {}, instanceId = {}", sessionId, instanceId);
+            log.error("Web终端会话日志写入失败! sessionId={}, instanceId={}", sessionId, instanceId);
         }
     }
 
@@ -51,7 +51,7 @@ public class AuditRecordHelper {
             }
             IOUtil.appendFile(log, terminalConfigurationProperties.buildCommanderLogPath(sessionId, instanceId));
         } catch (Exception e) {
-            log.error("Web终端命令日志写入失败! sessionId = {}, instanceId = {}", sessionId, instanceId);
+            log.error("Web终端命令日志写入失败! sessionId={}, instanceId={}", sessionId, instanceId);
         }
     }
 

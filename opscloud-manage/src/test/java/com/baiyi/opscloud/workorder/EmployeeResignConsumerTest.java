@@ -33,7 +33,7 @@ public class EmployeeResignConsumerTest extends BaseUnit {
                 .assetType(DsAssetTypeConstants.DINGTALK_USER.name())
                 .build();
         bizAssetRelationService.add(relation);
-        log.info("BusinessAssetRelation: id = {}", relation.getId());
+        log.info("BusinessAssetRelation: id={}", relation.getId());
         bizAssetRelationService.delete(relation);
     }
 

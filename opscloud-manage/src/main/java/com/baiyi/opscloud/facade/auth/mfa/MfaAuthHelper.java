@@ -70,7 +70,7 @@ public class MfaAuthHelper {
         try {
             verify(user, loginParam);
         } catch (Exception e) {
-            log.info("尝试绑定MFA失败用户提交的OTP不正确: username = {}", loginParam.getUsername());
+            log.info("尝试绑定MFA失败用户提交的OTP不正确: username={}", loginParam.getUsername());
             return false;
         }
         return true;

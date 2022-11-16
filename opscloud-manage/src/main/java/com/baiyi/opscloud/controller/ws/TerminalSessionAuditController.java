@@ -38,7 +38,7 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
     public void onOpen(Session session) {
         sessionSet.add(session);
         int cnt = onlineCount.incrementAndGet(); // 在线数加1
-        log.info("终端会话审计有连接加入: 当前连接数为 = {}", cnt);
+        log.info("终端会话审计有连接加入: 当前连接数为={}", cnt);
         session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
         this.session = session;
     }
@@ -50,7 +50,7 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
     public void onClose() {
         sessionSet.remove(session);
         int cnt = onlineCount.decrementAndGet();
-        log.info("有连接关闭: 当前连接数为 = {}", cnt);
+        log.info("有连接关闭: 当前连接数为={}", cnt);
     }
 
     /**
@@ -75,7 +75,7 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.debug("发生错误: e = {}，SessionID = {}", error.getMessage(), session.getId());
+        log.debug("发生错误: err={}, SessionID={}", error.getMessage(), session.getId());
     }
 
 }

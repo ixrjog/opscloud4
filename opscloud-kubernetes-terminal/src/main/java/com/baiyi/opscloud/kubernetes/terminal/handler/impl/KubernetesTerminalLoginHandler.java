@@ -54,7 +54,7 @@ public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMe
             kubernetesResource.getPods().forEach(pod ->
                     pod.getContainers().forEach(container -> {
                         executor.submit(() -> {
-                            log.info("初始化容器终端: sessionType = {} , container = {} ", loginMessage.getSessionType(), container.getName());
+                            log.info("初始化容器终端: sessionType={}, container={}", loginMessage.getSessionType(), container.getName());
                             KubernetesConfig kubernetesDsInstanceConfig = buildConfig(kubernetesResource);
                             if (loginMessage.getSessionType().equals(SessionType.CONTAINER_LOG)) {
                                 processLog(kubernetesDsInstanceConfig.getKubernetes(), terminalSession, kubernetesResource, pod, container);

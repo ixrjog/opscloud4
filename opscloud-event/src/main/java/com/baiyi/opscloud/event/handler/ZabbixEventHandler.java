@@ -95,10 +95,10 @@ public class ZabbixEventHandler extends AbstractEventHandler<ZabbixProblem.Probl
         ZabbixConfig config = getConfig(dsInstance.getUuid());
         ZabbixTrigger.Trigger trigger = zabbixV5TriggerDatasource.getById(config.getZabbix(), problem.getObjectid());
         if (trigger == null) {
-            log.info("Zabbix Trigger 不存在: problemId = {}, triggerId = {}", problem.getEventid(), problem.getObjectid());
+            log.info("Zabbix Trigger 不存在: problemId={}, triggerId={}", problem.getEventid(), problem.getObjectid());
             return;
         }
-        log.info("Zabbix Trigger 存在: problemId = {}, triggerId = {}", problem.getEventid(), problem.getObjectid());
+        log.info("Zabbix Trigger 存在: problemId={}, triggerId={}", problem.getEventid(), problem.getObjectid());
         List<ZabbixHost.Host> hosts = trigger.getHosts();
         if (!CollectionUtils.isEmpty(hosts)) {
             hosts.forEach(h -> recordEventBusiness(config, event, h));
