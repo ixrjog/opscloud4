@@ -39,9 +39,9 @@ public class AmazonEcr {
         public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
             DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                     .instanceUuid(dsInstance.getUuid())
-                    .assetId(this.repositoryArn)
+                    .assetId(this.registryId)
                     .name(this.repositoryName)
-                    .assetKey(this.repositoryName)
+                    .assetKey(this.repositoryArn)
                     .assetKey2(this.repositoryUri)
                     .regionId(regionId)
                     .kind("repo")
@@ -51,7 +51,7 @@ public class AmazonEcr {
                     .build();
             return AssetContainerBuilder.newBuilder()
                     .paramAsset(asset)
-                    .paramProperty("registryId",this.registryId)
+                    .paramProperty("imageTagMutability", this.imageTagMutability)
                     .build();
         }
 
