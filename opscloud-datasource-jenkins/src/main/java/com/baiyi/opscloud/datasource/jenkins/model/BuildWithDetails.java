@@ -388,11 +388,11 @@ public class BuildWithDetails extends Build {
     public void streamConsoleOutput(final BuildConsoleStreamListener listener, final int poolingInterval, final int poolingTimeout, boolean crumbFlag) throws InterruptedException, IOException {
         // Calculate start and timeout
         final long startTime = System.currentTimeMillis();
-        final long timeoutTime = startTime + (poolingTimeout * 1000);
+        final long timeoutTime = startTime + (poolingTimeout * 1000L);
 
         int bufferOffset = 0;
         while (true) {
-            Thread.sleep(poolingInterval * 1000);
+            Thread.sleep(poolingInterval * 1000L);
 
             ConsoleLog consoleLog = null;
             consoleLog = getConsoleOutputText(bufferOffset, crumbFlag);
@@ -439,7 +439,7 @@ public class BuildWithDetails extends Build {
         if (moreDataHeader != null) {
             hasMoreData = Boolean.TRUE.toString().equals(moreDataHeader.getValue());
         }
-        Integer currentBufferSize = bufferOffset;
+        int currentBufferSize = bufferOffset;
         if (textSizeHeader != null) {
             try {
                 currentBufferSize = Integer.parseInt(textSizeHeader.getValue());
