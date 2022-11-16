@@ -170,7 +170,7 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
                 ).collect(Collectors.toList()));
 
         final String envName = params.get(BuildParameterConstants.ENV.getParam());
-        final String commit = params.get(BuildParameterConstants.COMMIT_ID.getParam());
+        final String shortCommit = params.get(BuildParameterConstants.COMMIT_ID.getParam());
         final String buildNumber = String.valueOf(leoBuild.getBuildNumber());
         dict.put("envName", envName);
         dict.put("applicationName", params.get(BuildParameterConstants.APPLICATION_NAME.getParam()));
@@ -179,13 +179,12 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
         dict.put("versionName", leoBuild.getVersionName());
         dict.put("buildNumber", buildNumber);
         dict.put("branch", params.get(BuildParameterConstants.BRANCH.getParam()));
-        dict.put("commit", commit );
+        dict.put("commit", shortCommit);
         dict.put("displayName", displayName);
-
 
         String project = params.get(BuildParameterConstants.PROJECT.getParam());
         String registryUrl = "aliyun-cr-uk.chuanyinet.com";
-        String imageTag = commit + "-" + buildNumber;
+        String imageTag = shortCommit + "-" + buildNumber;
         // aliyun-cr-uk.chuanyinet.com/daily/merchant-rss:460e7585-19
         String img = "%s/%s/%s:%s";
         dict.put("image", String.format(img, registryUrl, envName, project, imageTag));
