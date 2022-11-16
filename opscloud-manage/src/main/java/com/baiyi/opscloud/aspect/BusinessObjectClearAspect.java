@@ -61,9 +61,9 @@ public class BusinessObjectClearAspect {
     }
 
     private void doClear(Integer businessType, Integer businessId) {
-        log.info("清除业务属性: businessType = {} , businessId = {}", businessType, businessId);
+        log.info("清除业务属性: businessType={}, businessId={}", businessType, businessId);
         businessPropertyService.deleteByUniqueKey(businessType, businessId);
-        log.info("清除业务文档: businessType = {} , businessId = {}", businessType, businessId);
+        log.info("清除业务文档: businessType={}, businessId={}", businessType, businessId);
         businessDocumentService.deleteByUniqueKey(businessType, businessId);
     }
 

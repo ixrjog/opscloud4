@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_AWS_DOMAIN;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_AWS_ECR_REPOSITORY;
 
 /**
  * @Author baiyi
@@ -36,7 +36,7 @@ public class AwsEcrRepositoryProvider extends BaseAssetProvider<AmazonEcr.Reposi
     private AwsEcrRepositoryProvider awsEcrRepositoryProvider;
 
     @Override
-    @SingleTask(name = PULL_AWS_DOMAIN, lockTime = "1m")
+    @SingleTask(name = PULL_AWS_ECR_REPOSITORY, lockTime = "2m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -49,7 +49,9 @@ public class AwsEcrRepositoryProvider extends BaseAssetProvider<AmazonEcr.Reposi
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
         if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
             return false;
-        if (!AssetUtil.equals(preAsset.getExpiredTime(), asset.getExpiredTime()))
+        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
+            return false;
+        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
             return false;
         return true;
     }

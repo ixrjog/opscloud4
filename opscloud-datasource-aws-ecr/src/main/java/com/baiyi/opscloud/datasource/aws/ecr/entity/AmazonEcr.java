@@ -32,7 +32,6 @@ public class AmazonEcr {
         private String repositoryUri;
         private Date createdAt;
         private String imageTagMutability;
-
         private String regionId;
 
         @Override
