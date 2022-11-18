@@ -4,7 +4,6 @@ import com.baiyi.opscloud.datasource.jenkins.entity.JenkinsUser;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
-import org.springframework.http.MediaType;
 
 import java.util.List;
 
@@ -16,6 +15,6 @@ import java.util.List;
 public interface JenkinsPipelineFeign {
 
     @RequestLine("GET /blue/rest/organizations/jenkins/pipelines/")
-    @Headers({"Content-Type: " + MediaType.APPLICATION_JSON_UTF8_VALUE, "Authorization: Basic {authBasic}"})
+    @Headers({"Content-Type: application/json;charset=UTF-8", "Authorization: Basic {authBasic}"})
     List<JenkinsUser.User> listPipelines(@Param("authBasic") String authBasic);
 }

@@ -2,10 +2,7 @@ package com.baiyi.opscloud.domain.param.auth;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.NotBlank;
@@ -36,6 +33,7 @@ public class LoginParam {
     }
 
     @Data
+    @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @ApiModel
     @AllArgsConstructor

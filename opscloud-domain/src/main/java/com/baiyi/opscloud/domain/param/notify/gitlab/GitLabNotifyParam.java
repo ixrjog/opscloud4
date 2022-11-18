@@ -25,7 +25,7 @@ public class GitLabNotifyParam {
     @ApiModel
     public static class SystemHook {
 
-        public String ver = "1.0.0";
+        private final String ver = "1.0.0";
         private String object_kind;
         private Integer id;
         private String event_name;

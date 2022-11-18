@@ -3,6 +3,7 @@ package com.baiyi.opscloud.datasource.jenkins.entity;
 import com.baiyi.opscloud.datasource.jenkins.model.Job;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
  * @Version 1.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class JenkinsJob extends Job {

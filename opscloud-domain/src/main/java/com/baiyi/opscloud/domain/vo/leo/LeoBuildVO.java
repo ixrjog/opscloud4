@@ -28,6 +28,7 @@ public class LeoBuildVO {
 
         public static final BranchOptions EMPTY_OPTIONS = BranchOptions.builder().build();
 
+        @Builder.Default
         private List<Option> options = Lists.newArrayList();
     }
 

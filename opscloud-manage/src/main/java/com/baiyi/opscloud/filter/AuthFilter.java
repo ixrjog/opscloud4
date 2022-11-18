@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.stream.Stream;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 
@@ -79,7 +78,7 @@ public class AuthFilter extends OncePerRequestFilter {
                 }
                 filterChain.doFilter(request, response);
             } catch (AuthException ex) {
-                response.setContentType(APPLICATION_JSON_UTF8_VALUE);
+                response.setContentType("application/json;charset=UTF-8");
                 setHeaders(request, response);
                 HttpResult result = new HttpResult(ex);
                 response.getWriter().println(result);

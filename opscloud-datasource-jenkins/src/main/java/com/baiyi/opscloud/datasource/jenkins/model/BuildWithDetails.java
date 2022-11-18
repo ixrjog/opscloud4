@@ -6,6 +6,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -122,13 +123,13 @@ public class BuildWithDetails extends Build {
                 return action.containsKey("causes");
             }
         });
-        List<BuildCause> result = new ArrayList();
+        List<BuildCause> result = Lists.newArrayList();
         if (causes != null && !causes.isEmpty()) {
-            List<Map<String, Object>> causes_blob = (List)((Map)causes.toArray()[0]).get("causes");
+            List<Map<String, Object>> causes_blob = (List) ((Map) causes.toArray()[0]).get("causes");
             Iterator var4 = causes_blob.iterator();
 
-            while(var4.hasNext()) {
-                Map<String, Object> cause = (Map)var4.next();
+            while (var4.hasNext()) {
+                Map<String, Object> cause = (Map) var4.next();
                 BuildCause convertToBuildCause = this.convertToBuildCause(cause);
                 result.add(convertToBuildCause);
             }
@@ -172,32 +173,32 @@ public class BuildWithDetails extends Build {
 
     private BuildCause convertToBuildCause(Map<String, Object> cause) {
         BuildCause cause_object = new BuildCause();
-        String description = (String)cause.get("shortDescription");
+        String description = (String) cause.get("shortDescription");
         if (!Strings.isNullOrEmpty(description)) {
             cause_object.setShortDescription(description);
         }
 
-        Integer upstreamBuild = (Integer)cause.get("upstreamBuild");
+        Integer upstreamBuild = (Integer) cause.get("upstreamBuild");
         if (upstreamBuild != null) {
             cause_object.setUpstreamBuild(upstreamBuild);
         }
 
-        String upstreamProject = (String)cause.get("upstreamProject");
+        String upstreamProject = (String) cause.get("upstreamProject");
         if (!Strings.isNullOrEmpty(upstreamProject)) {
             cause_object.setUpstreamProject(upstreamProject);
         }
 
-        String upstreamUrl = (String)cause.get("upstreamUrl");
+        String upstreamUrl = (String) cause.get("upstreamUrl");
         if (!Strings.isNullOrEmpty(upstreamUrl)) {
             cause_object.setUpstreamUrl(upstreamUrl);
         }
 
-        String userId = (String)cause.get("userId");
+        String userId = (String) cause.get("userId");
         if (!Strings.isNullOrEmpty(userId)) {
             cause_object.setUserId(userId);
         }
 
-        String userName = (String)cause.get("userName");
+        String userName = (String) cause.get("userName");
         if (!Strings.isNullOrEmpty(userName)) {
             cause_object.setUserName(userName);
         }
@@ -253,11 +254,11 @@ public class BuildWithDetails extends Build {
         });
         Map<String, String> params = new HashMap();
         if (parameters != null && !parameters.isEmpty()) {
-            Iterator var3 = ((List)((Map)parameters.toArray()[0]).get("parameters")).iterator();
+            Iterator var3 = ((List) ((Map) parameters.toArray()[0]).get("parameters")).iterator();
 
-            while(var3.hasNext()) {
-                Map<String, Object> param = (Map)var3.next();
-                String key = (String)param.get("name");
+            while (var3.hasNext()) {
+                Map<String, Object> param = (Map) var3.next();
+                String key = (String) param.get("name");
                 Object value = param.get("value");
                 params.put(key, String.valueOf(value));
             }
@@ -276,11 +277,11 @@ public class BuildWithDetails extends Build {
 
     public void streamConsoleOutput(BuildConsoleStreamListener listener, int poolingInterval, int poolingTimeout) throws InterruptedException, IOException {
         long startTime = System.currentTimeMillis();
-        long timeoutTime = startTime + (long)(poolingTimeout * 1000);
+        long timeoutTime = startTime + (long) (poolingTimeout * 1000);
         int bufferOffset = 0;
 
-        while(true) {
-            Thread.sleep((long)(poolingInterval * 1000));
+        while (true) {
+            Thread.sleep((long) (poolingInterval * 1000));
             ConsoleLog consoleLog = null;
             consoleLog = this.getConsoleOutputText(bufferOffset);
             String logString = consoleLog.getConsoleLog();
@@ -335,7 +336,7 @@ public class BuildWithDetails extends Build {
         if (this.changeSet != null) {
             result = this.changeSet;
         } else if (this.changeSets != null && !this.changeSets.isEmpty()) {
-            result = (BuildChangeSet)this.changeSets.get(0);
+            result = (BuildChangeSet) this.changeSets.get(0);
         } else {
             result = null;
         }
@@ -391,7 +392,7 @@ public class BuildWithDetails extends Build {
         } else if (this.getClass() != obj.getClass()) {
             return false;
         } else {
-            BuildWithDetails other = (BuildWithDetails)obj;
+            BuildWithDetails other = (BuildWithDetails) obj;
             if (this.actions == null) {
                 if (other.actions != null) {
                     return false;
