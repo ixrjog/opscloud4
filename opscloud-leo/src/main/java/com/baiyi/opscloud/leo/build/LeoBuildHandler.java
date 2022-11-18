@@ -2,9 +2,10 @@ package com.baiyi.opscloud.leo.build;
 
 import com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.leo.build.concrete.*;
+import com.baiyi.opscloud.leo.build.concrete.pre.*;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
  * @Date 2022/11/14 18:00
  * @Version 1.0
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class LeoBuildHandler implements InitializingBean {
@@ -27,11 +29,11 @@ public class LeoBuildHandler implements InitializingBean {
     // 执行BuildJob
     private final DoBuildConcreteHandler doBuildConcreteHandler;
 
+    // 执行构建通知
+    private final StartBuildNotificationConcreteHandler startBuildNotificationConcreteHandler;
+
     // 启动监视器
     private final BuildingSupervisorConcreteHandler buildingSupervisorConcreteHandler;
-
-    // 构建后通知
-    private final PostBuildNotificationConcreteHandler postBuildNotificationConcreteHandler;
 
     @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
     public void buildHandle(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
@@ -41,10 +43,11 @@ public class LeoBuildHandler implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        electInstanceConcreteHandler.setNextHandler(createJobConcreteHandler);
-        createJobConcreteHandler.setNextHandler(doBuildConcreteHandler);
-        doBuildConcreteHandler.setNextHandler(buildingSupervisorConcreteHandler);
-        buildingSupervisorConcreteHandler.setNextHandler(postBuildNotificationConcreteHandler);
+        electInstanceConcreteHandler
+                .setNextHandler(createJobConcreteHandler)
+                .setNextHandler(doBuildConcreteHandler)
+                .setNextHandler(startBuildNotificationConcreteHandler)
+                .setNextHandler(buildingSupervisorConcreteHandler);
     }
 
 }

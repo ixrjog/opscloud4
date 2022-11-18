@@ -1,13 +1,16 @@
-package com.baiyi.opscloud.leo.build.concrete;
+package com.baiyi.opscloud.leo.build.concrete.pre;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.build.BaseBuildHandler;
+import com.baiyi.opscloud.leo.build.LeoPostBuildHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.supervisor.BuildingSupervisor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -17,9 +20,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class BuildingSupervisorConcreteHandler extends BaseBuildHandler {
-    
+
+    @Resource
+    private LeoPostBuildHandler leoPostBuildHandler;
+
     /**
      * 启动监视器
+     *
      * @param leoBuild
      * @param buildConfig
      */
@@ -27,14 +34,20 @@ public class BuildingSupervisorConcreteHandler extends BaseBuildHandler {
     protected void handle(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
         LeoBaseModel.DsInstance dsInstance = buildConfig.getBuild().getJenkins().getInstance();
         JenkinsConfig jenkinsConfig = getJenkinsConfigWithUuid(dsInstance.getUuid());
-
         BuildingSupervisor buildingSupervisor = new BuildingSupervisor(
                 this.leoBuildService,
                 leoBuild,
                 logHelper,
-                jenkinsConfig.getJenkins());
-
+                jenkinsConfig.getJenkins(),
+                buildConfig,
+                leoPostBuildHandler
+        );
         buildingSupervisor.run();
+        LeoBuild saveLeoBuild = LeoBuild.builder()
+                .id(leoBuild.getId())
+                .buildStatus("启动构建Supervisor阶段: 成功")
+                .build();
+        save(saveLeoBuild, "启动构建Supervisor成功: jobName={}", leoBuild.getBuildJobName());
     }
 
 }

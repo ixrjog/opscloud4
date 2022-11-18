@@ -6,7 +6,8 @@ import com.baiyi.opscloud.mapper.opscloud.DatasourceInstanceMapper;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang3.StringUtils;import tk.mybatis.mapper.entity.Example;
+import org.apache.commons.lang3.StringUtils;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -31,6 +32,14 @@ public class DsInstanceServiceImpl implements DsInstanceService {
         Example example = new Example(DatasourceInstance.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("uuid", uuid);
+        return dsInstanceMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public DatasourceInstance getByInstanceName(String name) {
+        Example example = new Example(DatasourceInstance.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("instanceName", name);
         return dsInstanceMapper.selectOneByExample(example);
     }
 

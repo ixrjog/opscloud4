@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.datasource.aliyun.acr.driver;
 
+import com.aliyuncs.cr.model.v20181201.GetRepositoryRequest;
+import com.aliyuncs.cr.model.v20181201.GetRepositoryResponse;
 import com.aliyuncs.cr.model.v20181201.ListRepositoryRequest;
 import com.aliyuncs.cr.model.v20181201.ListRepositoryResponse;
 import com.aliyuncs.exceptions.ClientException;
@@ -54,6 +56,16 @@ public class AliyunAcrRepositoryDriver extends BaseAliyunAcrDriver {
             pageNo++;
         }
         return repositoriesItems;
+    }
+
+    public String getRepositoryId(String regionId, AliyunConfig.Aliyun aliyun, String instanceId, String repoNamespaceName, String repoName) throws ClientException {
+        GetRepositoryRequest request = new GetRepositoryRequest();
+        request.setSysRegionId(regionId);
+        request.setInstanceId(instanceId);
+        request.setRepoNamespaceName(repoNamespaceName);
+        request.setRepoName(repoName);
+        GetRepositoryResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
+        return response.getRepoId();
     }
 
     private List<AliyunAcr.Repository> toRepositories(List<ListRepositoryResponse.RepositoriesItem> repositoriesItems) {

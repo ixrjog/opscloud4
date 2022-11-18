@@ -42,6 +42,10 @@
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-message</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-aliyun-acr</artifactId>
+        </dependency>
 
     </dependencies>
 

@@ -1,8 +1,7 @@
-package com.baiyi.opscloud.leo.build.concrete;
+package com.baiyi.opscloud.leo.build.concrete.pre;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsJobDriver;
-import com.baiyi.opscloud.datasource.jenkins.model.BuildResult;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.leo.build.BaseBuildHandler;
@@ -19,7 +18,6 @@ import java.net.URISyntaxException;
 import java.util.Date;
 
 /**
- *
  * @Author baiyi
  * @Date 2022/11/14 17:50
  * @Version 1.0
@@ -36,6 +34,7 @@ public class CreateJobConcreteHandler extends BaseBuildHandler {
 
     /**
      * 在Jenkins实例中创建任务
+     *
      * @param leoBuild
      * @param buildConfig
      */
@@ -50,17 +49,16 @@ public class CreateJobConcreteHandler extends BaseBuildHandler {
                     .id(leoBuild.getId())
                     .buildStatus("创建构建任务阶段: 成功")
                     .build();
-            leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
-            logHelper.info(leoBuild, "创建构建任务成功: jenkinsName={}, jobName={}", dsInstance.getName(), leoBuild.getBuildJobName());
+            save(saveLeoBuild, "创建构建任务成功: jenkinsName={}, jobName={}", dsInstance.getName(), leoBuild.getBuildJobName());
         } catch (URISyntaxException | IOException e) {
             LeoBuild saveLeoBuild = LeoBuild.builder()
                     .id(leoBuild.getId())
                     .endTime(new Date())
                     .isFinish(true)
-                    .buildResult(BuildResult.FAILURE.name())
+                    .buildResult(BUILD_RESULT_ERROR)
                     .buildStatus("创建构建任务阶段")
                     .build();
-            leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
+            save(saveLeoBuild);
             throw new LeoBuildException("创建构建任务错误: jenkinsName={}, uuid={}", dsInstance.getName(), dsInstance.getUuid());
         }
     }

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.leo.build.concrete;
+package com.baiyi.opscloud.leo.build.concrete.pre;
 
 import com.baiyi.opscloud.common.util.BeetlUtil;
 import com.baiyi.opscloud.common.util.TimeUtil;
@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.MessageTemplate;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.leo.build.BaseBuildHandler;
-import com.baiyi.opscloud.leo.build.LeoRobotHelper;
+import com.baiyi.opscloud.leo.build.helper.LeoRobotHelper;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
@@ -30,10 +30,10 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
-public class PostBuildNotificationConcreteHandler extends BaseBuildHandler {
+public class StartBuildNotificationConcreteHandler extends BaseBuildHandler {
 
     @Resource
-    private MessageTemplateService megTemplateService;
+    private MessageTemplateService msgTemplateService;
 
     @Resource
     private LeoRobotHelper leoRobotHelper;
@@ -41,10 +41,10 @@ public class PostBuildNotificationConcreteHandler extends BaseBuildHandler {
     @Resource
     private UserService userService;
 
-    private static final String LEO_POST_BUILD = "LEO_POST_BUILD";
+    private static final String LEO_START_BUILD = "LEO_START_BUILD";
 
     /**
-     * 构建后通知
+     * 构建前通知
      *
      * @param leoBuild
      * @param buildConfig
@@ -55,18 +55,15 @@ public class PostBuildNotificationConcreteHandler extends BaseBuildHandler {
             sendMessage(leoBuild, buildConfig);
             LeoBuild saveLeoBuild = LeoBuild.builder()
                     .id(leoBuild.getId())
-                    .buildStatus("构建后通知阶段: 发送消息成功")
+                    .buildStatus("启动构建通知阶段: 发送消息成功")
                     .build();
-            leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
-            logHelper.info(leoBuild, "构建后通知成功: jobName={}", leoBuild.getBuildJobName());
+            save(saveLeoBuild, "启动构建通知成功: jobName={}", leoBuild.getBuildJobName());
         } catch (LeoBuildException e) {
             LeoBuild saveLeoBuild = LeoBuild.builder()
                     .id(leoBuild.getId())
-                    .buildStatus("构建后通知阶段: 发送消息失败")
+                    .buildStatus("启动构建通知阶段: 发送消息失败")
                     .build();
-            leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
-            // 忽略异常，只记录日志
-            logHelper.warn(leoBuild, e.getMessage());
+            save(saveLeoBuild, e.getMessage());
         }
     }
 
@@ -78,7 +75,7 @@ public class PostBuildNotificationConcreteHandler extends BaseBuildHandler {
                 .orElseThrow(() -> new LeoBuildException("发送消息失败: DingtalkRobot未配置！"));
 
         DatasourceInstance dsInstance = leoRobotHelper.getRobotInstance(dingtalkRobot);
-        MessageTemplate messageTemplate = megTemplateService.getByUniqueKey(LEO_POST_BUILD, "DINGTALK_ROBOT", "markdown");
+        MessageTemplate messageTemplate = msgTemplateService.getByUniqueKey(LEO_START_BUILD, "DINGTALK_ROBOT", "markdown");
         if (messageTemplate == null)
             throw new LeoBuildException("发送消息失败: 消息模板未配置！");
 

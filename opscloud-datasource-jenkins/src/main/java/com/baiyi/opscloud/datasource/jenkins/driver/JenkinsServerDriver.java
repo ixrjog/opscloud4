@@ -37,10 +37,6 @@ public class JenkinsServerDriver {
         return jenkinsServer.getJob(jobName);
     }
 
-    public static Build getLastBuildWithJob(JobWithDetails jobWithDetails) throws URISyntaxException {
-        return jobWithDetails.getLastBuild();
-    }
-
     public static String getJobXml(JenkinsConfig.Jenkins jenkins, FolderJob folder, String jobName) throws URISyntaxException, IOException {
         JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
         return jenkinsServer.getJobXml(folder, jobName);

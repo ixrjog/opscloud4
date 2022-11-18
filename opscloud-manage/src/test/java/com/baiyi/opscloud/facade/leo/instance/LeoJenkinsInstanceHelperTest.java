@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.leo.instance;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.leo.build.LeoJenkinsInstanceHelper;
+import com.baiyi.opscloud.leo.build.helper.LeoJenkinsInstanceHelper;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 

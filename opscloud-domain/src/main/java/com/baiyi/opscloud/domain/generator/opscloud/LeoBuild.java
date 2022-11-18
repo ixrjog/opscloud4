@@ -87,9 +87,8 @@ public class LeoBuild {
     /**
      * 任务是否完成
      */
-    @Builder.Default
     @Column(name = "is_finish")
-    private Boolean isFinish = false;
+    private Boolean isFinish;
 
     /**
      * 执行类型

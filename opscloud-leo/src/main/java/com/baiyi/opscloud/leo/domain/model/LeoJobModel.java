@@ -73,6 +73,7 @@ public class LeoJobModel {
     @AllArgsConstructor
     public static class Build {
         private Version version;
+        private String type;
     }
 
     @Builder
@@ -104,6 +105,7 @@ public class LeoJobModel {
         private String type;
         private CRInstance instance;
         private Cloud cloud;
+        private Repo repo;
 
     }
 
@@ -114,6 +116,7 @@ public class LeoJobModel {
     @Data
     @AllArgsConstructor
     public static class CRInstance {
+        private String regionId;
         private String id;
         private String name;
         private String url;
@@ -128,6 +131,20 @@ public class LeoJobModel {
     public static class Cloud {
         private String uuid;
         private String name;
+    }
+
+    /**
+     * 容器注册表
+     */
+    @Builder
+    @Data
+    @AllArgsConstructor
+    public static class Repo {
+
+        private String id;
+        private String name;
+        private String namespace;
+
     }
 
 }

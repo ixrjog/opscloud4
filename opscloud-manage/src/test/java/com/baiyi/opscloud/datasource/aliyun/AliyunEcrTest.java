@@ -116,8 +116,32 @@ public class AliyunEcrTest extends BaseAliyunTest {
     void listImageTest() {
         AliyunConfig config = getConfig();
         try {
-            List<ListRepoTagResponse.ImagesItem> imagesItems =  aliyunAcrImageDriver.listImage("eu-west-1", config.getAliyun(), "cri-4v9b8l2gc3en0x34","crr-zla5udc2kw7ly0fk");
+            List<ListRepoTagResponse.ImagesItem> imagesItems = aliyunAcrImageDriver.listImage("eu-west-1", config.getAliyun(), "cri-4v9b8l2gc3en0x34", "crr-zla5udc2kw7ly0fk");
             print(imagesItems);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void listImage2Test() {
+        AliyunConfig config = getConfig();
+        try {
+            List<ListRepoTagResponse.ImagesItem> imagesItems = aliyunAcrImageDriver.listImage("eu-west-1", config.getAliyun(), "cri-4v9b8l2gc3en0x34", "crr-zla5udc2kw7ly0fk", 3);
+            for (ListRepoTagResponse.ImagesItem imagesItem : imagesItems) {
+                print(imagesItem);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void listImage3Test() {
+        AliyunConfig config = getConfig();
+        try {
+            String repoId = aliyunAcrRepositoryDriver.getRepositoryId("eu-west-1", config.getAliyun(), "cri-4v9b8l2gc3en0x34", "gray", "mgw-core-aliyun");
+            print(repoId);
         } catch (Exception e) {
             e.printStackTrace();
         }

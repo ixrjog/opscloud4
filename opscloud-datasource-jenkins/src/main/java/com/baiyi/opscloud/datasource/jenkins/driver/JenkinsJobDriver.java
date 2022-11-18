@@ -2,13 +2,17 @@ package com.baiyi.opscloud.datasource.jenkins.driver;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
+import com.baiyi.opscloud.datasource.jenkins.helper.BuildConsoleStreamListener;
+import com.baiyi.opscloud.datasource.jenkins.model.BuildWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.model.JobWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.model.QueueReference;
 import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
+import javax.websocket.Session;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
@@ -19,8 +23,12 @@ import java.util.Optional;
  * @Date 2022/11/8 14:46
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class JenkinsJobDriver {
+
+    public static final int POOLING_INTERVAL = 1;
+    public static final int POOLING_TIMEOUT = 600;
 
     /**
      * 构建Job
@@ -63,6 +71,42 @@ public class JenkinsJobDriver {
                 .orElse(false);
         JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
         return jenkinsServer.createJob(jobName, jobXml, crumbFlag);
+    }
+
+    /**
+     * 输出日志到会话
+     *
+     * @param buildWithDetails
+     * @param session
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public void streamConsoleOutputToSession(BuildWithDetails buildWithDetails, Session session, boolean crumbFlag) throws IOException, InterruptedException {
+        buildWithDetails.streamConsoleOutput(
+                new BuildConsoleStreamListener() {
+                    @Override
+                    public void onData(String newLogChunk) {
+                        try {
+                            if (session.isOpen()) {
+                                session.getBasicRemote().sendText(newLogChunk);
+                            } else {
+                                finished();
+                            }
+                        } catch (IOException e) {
+                            log.error(e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void finished() {
+                        // 任务日志会话关闭！
+                        try {
+                            session.close();
+                        } catch (IOException e) {
+                            log.error(e.getMessage());
+                        }
+                    }
+                }, POOLING_INTERVAL, POOLING_TIMEOUT);
     }
 
 }

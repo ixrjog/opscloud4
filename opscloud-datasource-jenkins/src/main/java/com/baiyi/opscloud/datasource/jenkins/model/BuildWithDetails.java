@@ -1,20 +1,18 @@
-/*
- * Copyright (c) 2013 Cosmin Stejerean, Karl Heinz Marbaise, and contributors.
- *
- * Distributed under the MIT license: http://opensource.org/licenses/MIT
- */
-
 package com.baiyi.opscloud.datasource.jenkins.model;
 
 import com.baiyi.opscloud.datasource.jenkins.helper.BuildConsoleStreamListener;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.Maps;
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableMap;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,87 +20,53 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-
-/**
- * This class represents build information with details about what has been done
- * like duration start and of course the build result.
- *
- */
-@Slf4j
 public class BuildWithDetails extends Build {
-
-    public final static String TEXT_SIZE_HEADER = "x-text-size";
-    public final static String MORE_DATA_HEADER = "x-more-data";
-
-    /**
-     * This will be returned by the API in cases where the build has never run.
-     * For example {@link Build#BUILD_HAS_NEVER_RUN}
-     */
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    public static final String TEXT_SIZE_HEADER = "x-text-size";
+    public static final String MORE_DATA_HEADER = "x-more-data";
     public static final BuildWithDetails BUILD_HAS_NEVER_RUN = new BuildWithDetails() {
-
-        @Override
         public List getActions() {
             return Collections.emptyList();
         }
 
-        @Override
         public List<Artifact> getArtifacts() {
-            return Collections.<Artifact>emptyList();
+            return Collections.emptyList();
         }
 
-        @Override
         public List<BuildCause> getCauses() {
-            return Collections.<BuildCause>emptyList();
+            return Collections.emptyList();
         }
 
-        @Override
         public List<BuildChangeSetAuthor> getCulprits() {
-            return Collections.<BuildChangeSetAuthor>emptyList();
+            return Collections.emptyList();
         }
 
-        @Override
         public BuildResult getResult() {
             return BuildResult.NOT_BUILT;
         }
-
     };
-
-    /**
-     * This will be returned by the API in cases where the build has been
-     * cancelled. For example {@link Build#BUILD_HAS_BEEN_CANCELLED}
-     */
     public static final BuildWithDetails BUILD_HAS_BEEN_CANCELLED = new BuildWithDetails() {
-
-        @Override
         public List getActions() {
             return Collections.emptyList();
         }
 
-        @Override
         public List<Artifact> getArtifacts() {
-            return Collections.<Artifact>emptyList();
+            return Collections.emptyList();
         }
 
-        @Override
         public List<BuildCause> getCauses() {
-            return Collections.<BuildCause>emptyList();
+            return Collections.emptyList();
         }
 
-        @Override
         public List<BuildChangeSetAuthor> getCulprits() {
-            return Collections.<BuildChangeSetAuthor>emptyList();
+            return Collections.emptyList();
         }
 
-        @Override
         public BuildResult getResult() {
             return BuildResult.CANCELLED;
         }
-
     };
-
-    private List<LinkedHashMap<String, List<LinkedHashMap<String, Object>>>> actions; // TODO: Should be improved.
+    private List actions;
     private boolean building;
     private String description;
     private String displayName;
@@ -122,7 +86,6 @@ public class BuildWithDetails extends Build {
     private List<BuildChangeSetAuthor> culprits;
 
     public BuildWithDetails() {
-        // Default ctor is needed to jackson.
     }
 
     public BuildWithDetails(BuildWithDetails details) {
@@ -146,481 +109,403 @@ public class BuildWithDetails extends Build {
     }
 
     public List<Artifact> getArtifacts() {
-        return artifacts;
+        return this.artifacts;
     }
 
     public boolean isBuilding() {
-        return building;
+        return this.building;
     }
 
     public List<BuildCause> getCauses() {
-        return actions.stream()
-                .filter(item -> item.containsKey("causes"))
-                .flatMap(item -> item.entrySet().stream())
-                .flatMap(sub -> sub.getValue().stream())
-                .map(item -> convertToBuildCause(item))
-                .collect(toList());
+        Collection causes = Collections2.filter(this.actions, new Predicate<Map<String, Object>>() {
+            public boolean apply(Map<String, Object> action) {
+                return action.containsKey("causes");
+            }
+        });
+        List<BuildCause> result = new ArrayList();
+        if (causes != null && !causes.isEmpty()) {
+            List<Map<String, Object>> causes_blob = (List)((Map)causes.toArray()[0]).get("causes");
+            Iterator var4 = causes_blob.iterator();
+
+            while(var4.hasNext()) {
+                Map<String, Object> cause = (Map)var4.next();
+                BuildCause convertToBuildCause = this.convertToBuildCause(cause);
+                result.add(convertToBuildCause);
+            }
+        }
+
+        return result;
     }
 
-    /**
-     * Update <code>displayName</code> and the <code>description</code> of a
-     * build.
-     * 
-     * @param displayName The new displayName which should be set.
-     * @param description The description which should be set.
-     * @param crumbFlag <code>true</code> or <code>false</code>.
-     * @throws IOException in case of errors.
-     */
-    public BuildWithDetails updateDisplayNameAndDescription(String displayName, String description, boolean crumbFlag)
-            throws IOException {
+    public void updateDisplayNameAndDescription(String displayName, String description, boolean crumbFlag) throws IOException {
         Objects.requireNonNull(displayName, "displayName is not allowed to be null.");
         Objects.requireNonNull(description, "description is not allowed to be null.");
-        //TODO:JDK9+ Map.of()...
-        Map<String, String> params = Maps.newHashMap();
-        params.put("displayName", displayName);
-        params.put("description", description);
-        // TODO: Check what the "core:apply" means?
-        params.put("core:apply", "");
-        params.put("Submit", "Save");
-        client.post_form(this.getUrl() + "/configSubmit?", params, crumbFlag);
-        return this;
+        ImmutableMap<String, String> params = ImmutableMap.of("displayName", displayName, "description", description, "core:apply", "", "Submit", "Save");
+        this.client.post_form(this.getUrl() + "/configSubmit?", params, crumbFlag);
     }
 
-    /**
-     * Update <code>displayName</code> and the <code>description</code> of a
-     * build.
-     * 
-     * @param displayName The new displayName which should be set.
-     * @param description The description which should be set.
-     * @throws IOException in case of errors.
-     */
-    public BuildWithDetails updateDisplayNameAndDescription(String displayName, String description) throws IOException {
-        return updateDisplayNameAndDescription(displayName, description, false);
+    public void updateDisplayNameAndDescription(String displayName, String description) throws IOException {
+        this.updateDisplayNameAndDescription(displayName, description, false);
     }
 
-    /**
-     * Update <code>displayName</code> of a build.
-     * 
-     * @param displayName The new displayName which should be set.
-     * @param crumbFlag <code>true</code> or <code>false</code>.
-     * @throws IOException in case of errors.
-     */
-    public BuildWithDetails updateDisplayName(String displayName, boolean crumbFlag) throws IOException {
+    public void updateDisplayName(String displayName, boolean crumbFlag) throws IOException {
         Objects.requireNonNull(displayName, "displayName is not allowed to be null.");
-        String description = getDescription() == null ? "" : getDescription();
-        Map<String, String> params = Maps.newHashMap();
-        params.put("displayName", displayName);
-        params.put("description", description);
-        // TODO: Check what the "core:apply" means?
-        params.put("core:apply", "");
-        params.put("Submit", "Save");
-        client.post_form(this.getUrl() + "/configSubmit?", params, crumbFlag);
-        return this;
+        String description = this.getDescription() == null ? "" : this.getDescription();
+        ImmutableMap<String, String> params = ImmutableMap.of("displayName", displayName, "description", description, "core:apply", "", "Submit", "Save");
+        this.client.post_form(this.getUrl() + "/configSubmit?", params, crumbFlag);
     }
 
-    /**
-     * Update <code>displayName</code> of a build.
-     * 
-     * @param displayName The new displayName which should be set.
-     * @throws IOException in case of errors.
-     */
-    public BuildWithDetails updateDisplayName(String displayName) throws IOException {
-        return updateDisplayName(displayName, false);
+    public void updateDisplayName(String displayName) throws IOException {
+        this.updateDisplayName(displayName, false);
     }
 
-    /**
-     * Update the <code>description</code> of a build.
-     * 
-     * @param description The description which should be set.
-     * @param crumbFlag <code>true</code> or <code>false</code>.
-     * @throws IOException in case of errors.
-     */
-    public BuildWithDetails updateDescription(String description, boolean crumbFlag) throws IOException {
+    public void updateDescription(String description, boolean crumbFlag) throws IOException {
         Objects.requireNonNull(description, "description is not allowed to be null.");
-        String displayName = getDisplayName() == null ? "" : getDisplayName();
-        //JDK9+: Map.of(..)
-        Map<String, String> params = Maps.newHashMap();
-        params.put("displayName", displayName);
-        params.put("description", description);
-        // TODO: Check what the "core:apply" means?
-        params.put("core:apply", "");
-        params.put("Submit", "Save");
-        client.post_form(this.getUrl() + "/configSubmit?", params, crumbFlag);
-        return this;
+        String displayName = this.getDisplayName() == null ? "" : this.getDisplayName();
+        ImmutableMap<String, String> params = ImmutableMap.of("displayName", displayName, "description", description, "core:apply", "", "Submit", "Save");
+        this.client.post_form(this.getUrl() + "/configSubmit?", params, crumbFlag);
     }
 
-    /**
-     * Update the <code>description</code> of a build.
-     * 
-     * @param description The description which should be set.
-     * @throws IOException in case of errors.
-     */
-    public BuildWithDetails updateDescription(String description) throws IOException {
-        return updateDescription(description, false);
-    }
-
-    private boolean isNullOrEmpty(String value) {
-        return value == null || value.isEmpty();
+    public void updateDescription(String description) throws IOException {
+        this.updateDescription(description, false);
     }
 
     private BuildCause convertToBuildCause(Map<String, Object> cause) {
         BuildCause cause_object = new BuildCause();
-
-        // TODO: Think about it. Can this be done more simpler?
-        String description = (String) cause.get("shortDescription");
-        if (!isNullOrEmpty(description)) {
+        String description = (String)cause.get("shortDescription");
+        if (!Strings.isNullOrEmpty(description)) {
             cause_object.setShortDescription(description);
         }
 
-        Integer upstreamBuild = (Integer) cause.get("upstreamBuild");
+        Integer upstreamBuild = (Integer)cause.get("upstreamBuild");
         if (upstreamBuild != null) {
             cause_object.setUpstreamBuild(upstreamBuild);
         }
 
-        String upstreamProject = (String) cause.get("upstreamProject");
-        if (!isNullOrEmpty(upstreamProject)) {
+        String upstreamProject = (String)cause.get("upstreamProject");
+        if (!Strings.isNullOrEmpty(upstreamProject)) {
             cause_object.setUpstreamProject(upstreamProject);
         }
 
-        String upstreamUrl = (String) cause.get("upstreamUrl");
-        if (!isNullOrEmpty(upstreamUrl)) {
+        String upstreamUrl = (String)cause.get("upstreamUrl");
+        if (!Strings.isNullOrEmpty(upstreamUrl)) {
             cause_object.setUpstreamUrl(upstreamUrl);
         }
 
-        String userId = (String) cause.get("userId");
-        if (!isNullOrEmpty(userId)) {
+        String userId = (String)cause.get("userId");
+        if (!Strings.isNullOrEmpty(userId)) {
             cause_object.setUserId(userId);
         }
 
-        String userName = (String) cause.get("userName");
-        if (!isNullOrEmpty(userName)) {
+        String userName = (String)cause.get("userName");
+        if (!Strings.isNullOrEmpty(userName)) {
             cause_object.setUserName(userName);
         }
+
         return cause_object;
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public long getDuration() {
-        return duration;
+        return this.duration;
     }
 
     public long getEstimatedDuration() {
-        return estimatedDuration;
+        return this.estimatedDuration;
     }
 
     public String getFullDisplayName() {
-        return fullDisplayName;
+        return this.fullDisplayName;
     }
 
     public String getDisplayName() {
-        return displayName;
+        return this.displayName;
     }
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public long getTimestamp() {
-        return timestamp;
+        return this.timestamp;
     }
 
     public BuildResult getResult() {
-        return result;
+        return this.result;
     }
 
     public String getBuiltOn() {
-        return builtOn;
+        return this.builtOn;
     }
 
     public List getActions() {
-        return actions;
+        return this.actions;
     }
 
-    public Map<String, Object> getParameters() {
-        Map<String, Object> parameters = actions.stream()
-                .filter(item -> item.containsKey("parameters"))
-                .flatMap(item -> item.entrySet().stream())
-                .flatMap(sub -> sub.getValue().stream())
-                .collect(toMap(k -> (String) k.get("name"), v -> v.get("value")));
+    public Map<String, String> getParameters() {
+        Collection parameters = Collections2.filter(this.actions, new Predicate<Map<String, Object>>() {
+            public boolean apply(Map<String, Object> action) {
+                return action.containsKey("parameters");
+            }
+        });
+        Map<String, String> params = new HashMap();
+        if (parameters != null && !parameters.isEmpty()) {
+            Iterator var3 = ((List)((Map)parameters.toArray()[0]).get("parameters")).iterator();
 
-        return parameters;
+            while(var3.hasNext()) {
+                Map<String, Object> param = (Map)var3.next();
+                String key = (String)param.get("name");
+                Object value = param.get("value");
+                params.put(key, String.valueOf(value));
+            }
+        }
+
+        return params;
     }
 
-    /**
-     * @return The full console output of the build. The line separation is done by
-     *         {@code CR+LF}.
-     *
-     * @see #streamConsoleOutput(BuildConsoleStreamListener, int, int, boolean) method for obtaining logs for running build
-     *
-     * @throws IOException in case of a failure.
-     */
     public String getConsoleOutputText() throws IOException {
-        return client.get(getUrl() + "/logText/progressiveText");
+        return this.client.get(this.getUrl() + "/logText/progressiveText");
     }
 
-    /**
-     * The full console output with HTML.
-     *
-     * @see #streamConsoleOutput(BuildConsoleStreamListener, int, int, boolean) method for obtaining logs for running build
-     *
-     * @return The console output as HTML.
-     * @throws IOException in case of an error.
-     */
     public String getConsoleOutputHtml() throws IOException {
-        return client.get(getUrl() + "/logText/progressiveHtml");
+        return this.client.get(this.getUrl() + "/logText/progressiveHtml");
     }
 
-
-    /**
-     * Stream build console output log as text using BuildConsoleStreamListener
-     * Method can be used to asynchronously obtain logs for running build.
-     *
-     * @param listener interface used to asynchronously obtain logs
-     * @param poolingInterval interval (seconds) used to pool jenkins for logs
-     * @param poolingTimeout pooling timeout (seconds) used to break pooling in case build stuck
-     * @throws InterruptedException in case of an error.
-     * @throws IOException in case of an error.
-     *
-     */
-    public void streamConsoleOutput(final BuildConsoleStreamListener listener, final int poolingInterval, final int poolingTimeout, boolean crumbFlag) throws InterruptedException, IOException {
-        // Calculate start and timeout
-        final long startTime = System.currentTimeMillis();
-        final long timeoutTime = startTime + (poolingTimeout * 1000L);
-
+    public void streamConsoleOutput(BuildConsoleStreamListener listener, int poolingInterval, int poolingTimeout) throws InterruptedException, IOException {
+        long startTime = System.currentTimeMillis();
+        long timeoutTime = startTime + (long)(poolingTimeout * 1000);
         int bufferOffset = 0;
-        while (true) {
-            Thread.sleep(poolingInterval * 1000L);
 
+        while(true) {
+            Thread.sleep((long)(poolingInterval * 1000));
             ConsoleLog consoleLog = null;
-            consoleLog = getConsoleOutputText(bufferOffset, crumbFlag);
+            consoleLog = this.getConsoleOutputText(bufferOffset);
             String logString = consoleLog.getConsoleLog();
             if (logString != null && !logString.isEmpty()) {
                 listener.onData(logString);
             }
+
             if (consoleLog.getHasMoreData()) {
                 bufferOffset = consoleLog.getCurrentBufferSize();
-            } else {
-                listener.finished();
-                break;
-            }
-            long currentTime = System.currentTimeMillis();
+                long var11 = System.currentTimeMillis();
+                if (var11 <= timeoutTime) {
+                    continue;
+                }
 
-            if (currentTime > timeoutTime) {
-                log.warn("Pooling for build {} for {} timeout! Check if job stuck in jenkins",
-                        BuildWithDetails.this.getDisplayName(), BuildWithDetails.this.getNumber());
+                this.LOGGER.warn("Pooling for build {0} for {2} timeout! Check if job stuck in jenkins", this.getDisplayName(), this.getNumber());
                 break;
             }
+
+            listener.finished();
+            break;
         }
+
     }
 
-    /**
-     * Get build console output log as text.
-     * Use this method to periodically obtain logs from jenkins and skip chunks that were already received
-     *
-     * @param bufferOffset offset in console lo
-     * @param crumbFlag <code>true</code> or <code>false</code>.
-     * @return ConsoleLog object containing console output of the build. The line separation is done by
-     * {@code CR+LF}.
-     * @throws IOException in case of a failure.
-     */
-    public ConsoleLog getConsoleOutputText(int bufferOffset, boolean crumbFlag) throws IOException {
-        List<NameValuePair> formData = new ArrayList<>();
+    public ConsoleLog getConsoleOutputText(int bufferOffset) throws IOException {
+        List<NameValuePair> formData = new ArrayList();
         formData.add(new BasicNameValuePair("start", Integer.toString(bufferOffset)));
-        String path = getUrl() + "logText/progressiveText";
-        HttpResponse httpResponse = client.post_form_with_result(path, formData, crumbFlag);
-
-        Header moreDataHeader = httpResponse.getFirstHeader(MORE_DATA_HEADER);
-        Header textSizeHeader = httpResponse.getFirstHeader(TEXT_SIZE_HEADER);
+        String path = this.getUrl() + "logText/progressiveText";
+        HttpResponse httpResponse = this.client.post_form_with_result(path, formData, false);
+        Header moreDataHeader = httpResponse.getFirstHeader("x-more-data");
+        Header textSizeHeader = httpResponse.getFirstHeader("x-text-size");
         String response = EntityUtils.toString(httpResponse.getEntity());
         boolean hasMoreData = false;
         if (moreDataHeader != null) {
             hasMoreData = Boolean.TRUE.toString().equals(moreDataHeader.getValue());
         }
-        int currentBufferSize = bufferOffset;
+
+        Integer currentBufferSize = bufferOffset;
         if (textSizeHeader != null) {
             try {
                 currentBufferSize = Integer.parseInt(textSizeHeader.getValue());
-            } catch (NumberFormatException e) {
-                log.warn("Cannot parse buffer size for job {} build {}. Using current offset!", this.getDisplayName(), this.getNumber());
+            } catch (NumberFormatException var11) {
+                this.LOGGER.warn("Cannot parse buffer size for job {0} build {1}. Using current offset!", this.getDisplayName(), this.getNumber());
             }
         }
+
         return new ConsoleLog(response, hasMoreData, currentBufferSize);
     }
 
-
-  /**
-   * Returns the change set of a build if available.
-   * 
-   * If a build performs several scm checkouts (i.e. pipeline builds), the change set of the first
-   * checkout is returned. To get the complete list of change sets for all checkouts, use
-   * {@link #getChangeSets()}
-   * 
-   * If no checkout is performed, null is returned.
-   * 
-   * @return The change set of the build.
-   * 
-   */
     public BuildChangeSet getChangeSet() {
         BuildChangeSet result;
-        if (changeSet != null) {
-            result = changeSet;
-        } else if (changeSets != null && !changeSets.isEmpty()) {
-            result = changeSets.get(0);
+        if (this.changeSet != null) {
+            result = this.changeSet;
+        } else if (this.changeSets != null && !this.changeSets.isEmpty()) {
+            result = (BuildChangeSet)this.changeSets.get(0);
         } else {
             result = null;
         }
+
         return result;
     }
 
-    public BuildWithDetails setChangeSet(BuildChangeSet changeSet) {
+    public void setChangeSet(BuildChangeSet changeSet) {
         this.changeSet = changeSet;
-        return this;
     }
 
-  /**
-   * Returns the complete list of change sets for all checkout the build has performed. If no
-   * checkouts have been performed, returns null.
-   * 
-   * @return The complete list of change sets of the build.
-   */
     public List<BuildChangeSet> getChangeSets() {
-        List<BuildChangeSet> result;
-        if (changeSets != null) {
-            result = changeSets;
-        } else if (changeSet != null) {
-            result = Collections.singletonList(changeSet);
+        List result;
+        if (this.changeSets != null) {
+            result = this.changeSets;
+        } else if (this.changeSet != null) {
+            result = Collections.singletonList(this.changeSet);
         } else {
             result = null;
-	}
+        }
+
         return result;
     }
 
-    public BuildWithDetails setChangeSets(List<BuildChangeSet> changeSets) {
+    public void setChangeSets(List<BuildChangeSet> changeSets) {
         this.changeSets = changeSets;
-        return this;
     }
 
     public List<BuildChangeSetAuthor> getCulprits() {
-        return culprits;
+        return this.culprits;
     }
 
-    public BuildWithDetails setCulprits(List<BuildChangeSetAuthor> culprits) {
+    public void setCulprits(List<BuildChangeSetAuthor> culprits) {
         this.culprits = culprits;
-        return this;
     }
 
-    public BuildWithDetails setResult(BuildResult result) {
+    public void setResult(BuildResult result) {
         this.result = result;
-        return this;
     }
 
     public InputStream downloadArtifact(Artifact a) throws IOException, URISyntaxException {
-        // We can't just put the artifact's relative path at the end of the url
-        // string, as there could be characters that need to be escaped.
-        URI uri = new URI(getUrl());
+        URI uri = new URI(this.getUrl());
         String artifactPath = uri.getPath() + "artifact/" + a.getRelativePath();
-        URI artifactUri = new URI(uri.getScheme(), uri.getUserInfo(), uri.getHost(), uri.getPort(), artifactPath, "",
-                "");
-        return client.getFile(artifactUri);
+        URI artifactUri = new URI(uri.getScheme(), uri.getUserInfo(), uri.getHost(), uri.getPort(), artifactPath, "", "");
+        return this.client.getFile(artifactUri);
     }
-    
-    /**
-     * Returns {@link MavenModuleWithDetails} based on its name
-     * 
-     * @param name module name
-     * @return {@link MavenModuleWithDetails}
-     * @throws IOException in case of error.
-     */
-    public MavenModuleWithDetails getModule(String name) throws IOException {
-        return client.get(getUrl() + name, MavenModuleWithDetails.class);
-    }    
 
-    @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (!super.equals(obj))
+        } else if (!super.equals(obj)) {
             return false;
-        if (getClass() != obj.getClass())
+        } else if (this.getClass() != obj.getClass()) {
             return false;
-        BuildWithDetails other = (BuildWithDetails) obj;
-        if (actions == null) {
-            if (other.actions != null)
+        } else {
+            BuildWithDetails other = (BuildWithDetails)obj;
+            if (this.actions == null) {
+                if (other.actions != null) {
+                    return false;
+                }
+            } else if (!this.actions.equals(other.actions)) {
                 return false;
-        } else if (!actions.equals(other.actions))
-            return false;
-        if (artifacts == null) {
-            if (other.artifacts != null)
+            }
+
+            if (this.artifacts == null) {
+                if (other.artifacts != null) {
+                    return false;
+                }
+            } else if (!this.artifacts.equals(other.artifacts)) {
                 return false;
-        } else if (!artifacts.equals(other.artifacts))
-            return false;
-        if (building != other.building)
-            return false;
-        if (builtOn == null) {
-            if (other.builtOn != null)
+            }
+
+            if (this.building != other.building) {
                 return false;
-        } else if (!builtOn.equals(other.builtOn))
-            return false;
-        if (changeSet == null) {
-            if (other.changeSet != null)
-                return false;
-        } else if (!changeSet.equals(other.changeSet))
-            return false;
-        if (changeSets == null) {
-            if (other.changeSets != null)
-                return false;
-        } else if (!changeSets.equals(other.changeSets))
-            return false;
-        if (consoleOutputHtml == null) {
-            if (other.consoleOutputHtml != null)
-                return false;
-        } else if (!consoleOutputHtml.equals(other.consoleOutputHtml))
-            return false;
-        if (consoleOutputText == null) {
-            if (other.consoleOutputText != null)
-                return false;
-        } else if (!consoleOutputText.equals(other.consoleOutputText))
-            return false;
-        if (culprits == null) {
-            if (other.culprits != null)
-                return false;
-        } else if (!culprits.equals(other.culprits))
-            return false;
-        if (description == null) {
-            if (other.description != null)
-                return false;
-        } else if (!description.equals(other.description))
-            return false;
-        if (displayName == null) {
-            if (other.displayName != null)
-                return false;
-        } else if (!displayName.equals(other.displayName))
-            return false;
-        if (duration != other.duration)
-            return false;
-        if (estimatedDuration != other.estimatedDuration)
-            return false;
-        if (fullDisplayName == null) {
-            if (other.fullDisplayName != null)
-                return false;
-        } else if (!fullDisplayName.equals(other.fullDisplayName))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (result != other.result)
-            return false;
-        if (timestamp != other.timestamp)
-            return false;
-        return true;
+            } else {
+                if (this.builtOn == null) {
+                    if (other.builtOn != null) {
+                        return false;
+                    }
+                } else if (!this.builtOn.equals(other.builtOn)) {
+                    return false;
+                }
+
+                if (this.changeSet == null) {
+                    if (other.changeSet != null) {
+                        return false;
+                    }
+                } else if (!this.changeSet.equals(other.changeSet)) {
+                    return false;
+                }
+
+                if (this.changeSets == null) {
+                    if (other.changeSets != null) {
+                        return false;
+                    }
+                } else if (!this.changeSets.equals(other.changeSets)) {
+                    return false;
+                }
+
+                if (this.consoleOutputHtml == null) {
+                    if (other.consoleOutputHtml != null) {
+                        return false;
+                    }
+                } else if (!this.consoleOutputHtml.equals(other.consoleOutputHtml)) {
+                    return false;
+                }
+
+                if (this.consoleOutputText == null) {
+                    if (other.consoleOutputText != null) {
+                        return false;
+                    }
+                } else if (!this.consoleOutputText.equals(other.consoleOutputText)) {
+                    return false;
+                }
+
+                if (this.culprits == null) {
+                    if (other.culprits != null) {
+                        return false;
+                    }
+                } else if (!this.culprits.equals(other.culprits)) {
+                    return false;
+                }
+
+                if (this.description == null) {
+                    if (other.description != null) {
+                        return false;
+                    }
+                } else if (!this.description.equals(other.description)) {
+                    return false;
+                }
+
+                if (this.displayName == null) {
+                    if (other.displayName != null) {
+                        return false;
+                    }
+                } else if (!this.displayName.equals(other.displayName)) {
+                    return false;
+                }
+
+                if (this.duration != other.duration) {
+                    return false;
+                } else if (this.estimatedDuration != other.estimatedDuration) {
+                    return false;
+                } else {
+                    if (this.fullDisplayName == null) {
+                        if (other.fullDisplayName != null) {
+                            return false;
+                        }
+                    } else if (!this.fullDisplayName.equals(other.fullDisplayName)) {
+                        return false;
+                    }
+
+                    if (this.id == null) {
+                        if (other.id != null) {
+                            return false;
+                        }
+                    } else if (!this.id.equals(other.id)) {
+                        return false;
+                    }
+
+                    if (this.result != other.result) {
+                        return false;
+                    } else {
+                        return this.timestamp == other.timestamp;
+                    }
+                }
+            }
+        }
     }
 
-    @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();

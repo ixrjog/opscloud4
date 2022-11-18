@@ -488,7 +488,6 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
         this.localContext = localContext;
     }
 
-
     private <T extends BaseModel> T objectFromResponse(Class<T> cls, HttpResponse response) throws IOException {
         InputStream content = response.getEntity().getContent();
         byte[] bytes = IOUtils.toByteArray(content);

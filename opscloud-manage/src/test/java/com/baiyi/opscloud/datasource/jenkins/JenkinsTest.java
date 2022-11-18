@@ -60,6 +60,7 @@ public class JenkinsTest extends BaseJenkinsTest {
 
     @Test
     void getJobsTest() {
+        // 18 60
         JenkinsConfig config = getConfigById(60);
         try {
             Map<String, Job> jobMap = JenkinsServerDriver.getJobs(config.getJenkins());
@@ -96,6 +97,22 @@ public class JenkinsTest extends BaseJenkinsTest {
             FolderJob folder = new FolderJob("templates", "https://leo-jenkins-1.chuanyinet.com/job/templates/");
             String xml = JenkinsServerDriver.getJobXml(config.getJenkins(), folder, "tpl_test");
             print(xml);
+
+        } catch (Exception e) {
+            print(e.getMessage());
+        }
+    }
+
+
+    @Test
+    void getJob2222Test() {
+        // 18 60
+        JenkinsConfig config = getConfigById(18);
+        try {
+            JobWithDetails jobWithDetails = JenkinsServerDriver.getJob(config.getJenkins(), "ACCOUNT-MANAGEMENT_account-management-prod");
+
+            Build build= jobWithDetails.details().getLastBuild();
+            build.details();
 
         } catch (Exception e) {
             print(e.getMessage());

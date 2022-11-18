@@ -1,8 +1,7 @@
-package com.baiyi.opscloud.leo.build.concrete;
+package com.baiyi.opscloud.leo.build.concrete.pre;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsJobDriver;
-import com.baiyi.opscloud.datasource.jenkins.model.BuildResult;
 import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
@@ -92,17 +91,16 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
                     // 设置启动时间
                     .startTime(new Date())
                     .build();
-            leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
-            logHelper.info(leoBuild, "执行构建任务成功: jenkinsName={}, jobName={}", dsInstance.getName(), leoBuild.getBuildJobName());
+            save(saveLeoBuild,"执行构建任务成功: jenkinsName={}, jobName={}", dsInstance.getName(), leoBuild.getBuildJobName());
         } catch (URISyntaxException | IOException e) {
             LeoBuild saveLeoBuild = LeoBuild.builder()
                     .id(leoBuild.getId())
                     .endTime(new Date())
                     .isFinish(true)
-                    .buildResult(BuildResult.FAILURE.name())
+                    .buildResult(BUILD_RESULT_ERROR)
                     .buildStatus("执行构建任务阶段")
                     .build();
-            leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
+            save(saveLeoBuild);
             throw new LeoBuildException("执行构建任务错误: jenkinsName={}, uuid={}, jobName={}", dsInstance.getName(), dsInstance.getUuid(), leoBuild.getBuildJobName());
         }
     }

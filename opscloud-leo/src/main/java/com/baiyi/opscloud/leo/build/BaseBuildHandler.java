@@ -18,6 +18,8 @@ import javax.annotation.Resource;
  */
 public abstract class BaseBuildHandler {
 
+    public static final String BUILD_RESULT_ERROR = "ERROR";
+
     @Resource
     protected DsConfigHelper dsConfigHelper;
 
@@ -34,8 +36,9 @@ public abstract class BaseBuildHandler {
         return dsConfigHelper.build(dsConfig, JenkinsConfig.class);
     }
 
-    public void setNextHandler(BaseBuildHandler next) {
+    public BaseBuildHandler setNextHandler(BaseBuildHandler next) {
         this.next = next;
+        return this.next;
     }
 
     public BaseBuildHandler getNext() {
@@ -57,9 +60,19 @@ public abstract class BaseBuildHandler {
 
     /**
      * 抽象方法，具体实现
+     *
      * @param leoBuild
      * @param buildConfig
      */
     protected abstract void handle(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig);
+
+    protected void save(LeoBuild saveLeoBuild) {
+        leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
+    }
+
+    protected void save(LeoBuild saveLeoBuild, String log, Object... var2) {
+        leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
+        logHelper.info(saveLeoBuild, log, var2);
+    }
 
 }

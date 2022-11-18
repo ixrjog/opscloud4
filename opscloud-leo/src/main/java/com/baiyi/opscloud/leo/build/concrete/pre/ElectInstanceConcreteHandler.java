@@ -1,14 +1,13 @@
-package com.baiyi.opscloud.leo.build.concrete;
+package com.baiyi.opscloud.leo.build.concrete.pre;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
 import com.baiyi.opscloud.datasource.jenkins.helper.JenkinsVersion;
-import com.baiyi.opscloud.datasource.jenkins.model.BuildResult;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.build.BaseBuildHandler;
-import com.baiyi.opscloud.leo.build.LeoJenkinsInstanceHelper;
+import com.baiyi.opscloud.leo.build.helper.LeoJenkinsInstanceHelper;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
@@ -26,7 +25,6 @@ import java.util.List;
 import java.util.Random;
 
 /**
- *
  * @Author baiyi
  * @Date 2022/11/14 17:10
  * @Version 1.0
@@ -40,6 +38,7 @@ public class ElectInstanceConcreteHandler extends BaseBuildHandler {
 
     /**
      * 选举Jenkins实例
+     *
      * @param leoBuild
      * @param buildConfig
      */
@@ -64,10 +63,10 @@ public class ElectInstanceConcreteHandler extends BaseBuildHandler {
                     .id(leoBuild.getId())
                     .endTime(new Date())
                     .isFinish(true)
-                    .buildResult(BuildResult.FAILURE.name())
+                    .buildResult(BUILD_RESULT_ERROR)
                     .buildStatus("选举实例阶段")
                     .build();
-            leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
+            save(saveLeoBuild);
             throw new LeoBuildException("无可用的Jenkins实例！");
         }
 
@@ -88,7 +87,7 @@ public class ElectInstanceConcreteHandler extends BaseBuildHandler {
                 .buildConfig(buildConfig.dump())
                 .build();
         leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
-        logHelper.info(leoBuild, "选举Jenkins实例: name={}, uuid={}", dsInstance.getName(), dsInstance.getUuid());
+        save(saveLeoBuild, "选举Jenkins实例: name={}, uuid={}", dsInstance.getName(), dsInstance.getUuid());
     }
 
     private List<DatasourceInstance> electLeoJenkinsInstances(List<String> tags) {

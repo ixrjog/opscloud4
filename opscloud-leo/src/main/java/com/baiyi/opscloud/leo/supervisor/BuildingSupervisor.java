@@ -7,6 +7,8 @@ import com.baiyi.opscloud.datasource.jenkins.model.BuildResult;
 import com.baiyi.opscloud.datasource.jenkins.model.BuildWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.model.JobWithDetails;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
+import com.baiyi.opscloud.leo.build.LeoPostBuildHandler;
+import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.log.BuildingLogHelper;
 import com.baiyi.opscloud.leo.supervisor.base.ISupervisor;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
@@ -14,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+
+import static com.baiyi.opscloud.leo.build.BaseBuildHandler.BUILD_RESULT_ERROR;
 
 /**
  * @Author baiyi
@@ -25,24 +29,32 @@ public class BuildingSupervisor implements ISupervisor {
 
     private static final int SLEEP_SECONDS = 8;
 
-    private final LeoBuild leoBuild;
-
     private final LeoBuildService leoBuildService;
 
     private final BuildingLogHelper logHelper;
 
     private final JenkinsConfig.Jenkins jenkins;
 
+    private final LeoPostBuildHandler leoPostBuildHandler;
+
+    private final LeoBuildModel.BuildConfig buildConfig;
+
     private Build build;
+
+    private final LeoBuild leoBuild;
 
     public BuildingSupervisor(LeoBuildService leoBuildService,
                               LeoBuild leoBuild,
                               BuildingLogHelper logHelper,
-                              JenkinsConfig.Jenkins jenkins) {
+                              JenkinsConfig.Jenkins jenkins,
+                              LeoBuildModel.BuildConfig buildConfig,
+                              LeoPostBuildHandler leoPostBuildHandler) {
         this.leoBuildService = leoBuildService;
         this.leoBuild = leoBuild;
         this.logHelper = logHelper;
         this.jenkins = jenkins;
+        this.buildConfig = buildConfig;
+        this.leoPostBuildHandler = leoPostBuildHandler;
     }
 
     @Override
@@ -51,14 +63,12 @@ public class BuildingSupervisor implements ISupervisor {
             JobWithDetails jobWithDetails = JenkinsServerDriver.getJob(jenkins, leoBuild.getBuildJobName());
             while (true) {
                 if (this.build == null) {
-                    Build build = JenkinsServerDriver.getLastBuildWithJob(jobWithDetails);
+                    Build build = jobWithDetails.details().getLastBuild();
                     if (build.equals(Build.BUILD_HAS_NEVER_RUN)) {
-                        // 未运行或在队列中
                         TimeUnit.SECONDS.sleep(SLEEP_SECONDS);
                         continue;
                     }
                     if (build.equals(Build.BUILD_HAS_BEEN_CANCELLED)) {
-                        logHelper.info(leoBuild, "用户取消任务！");
                         LeoBuild saveLeoBuild = LeoBuild.builder()
                                 .id(leoBuild.getId())
                                 .endTime(new Date())
@@ -66,17 +76,16 @@ public class BuildingSupervisor implements ISupervisor {
                                 .buildResult(BuildResult.CANCELLED.name())
                                 .buildStatus("用户取消任务")
                                 .build();
-                        leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
+                        save(saveLeoBuild, "用户取消任务！");
                         break;
                     }
                     this.build = build;
                 }
                 // 查询构建结果
-                BuildWithDetails buildWithDetails = build.details();
+                BuildWithDetails buildWithDetails = this.build.details();
                 if (buildWithDetails.isBuilding()) {
                     TimeUnit.SECONDS.sleep(SLEEP_SECONDS);
                 } else {
-                    logHelper.info(leoBuild, "执行构建任务阶段: 结束");
                     LeoBuild saveLeoBuild = LeoBuild.builder()
                             .id(leoBuild.getId())
                             .endTime(new Date())
@@ -84,20 +93,47 @@ public class BuildingSupervisor implements ISupervisor {
                             .buildResult(buildWithDetails.getResult().name())
                             .buildStatus("执行构建任务阶段: 结束")
                             .build();
-                    leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
+                    save(saveLeoBuild, "执行构建任务阶段: 结束");
+                    postBuildHandle();
+                    return;
                 }
             }
         } catch (Exception e) {
-            logHelper.error(leoBuild, "异常错误任务结束: err={}", e.getMessage());
             LeoBuild saveLeoBuild = LeoBuild.builder()
                     .id(leoBuild.getId())
                     .endTime(new Date())
                     .isFinish(true)
-                    .buildResult("ERROR")
+                    .buildResult(BUILD_RESULT_ERROR)
                     .buildStatus("监视任务阶段: 异常")
                     .build();
-            leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
+            save(saveLeoBuild);
+            logHelper.error(leoBuild, "异常错误任务结束: err={}", e.getMessage());
         }
+    }
+
+    private void postBuildHandle() {
+        leoPostBuildHandler.buildHandle(leoBuild, buildConfig);
+    }
+
+    /**
+     * 记录构建详情
+     *
+     * @param saveLeoBuild
+     */
+    protected void save(LeoBuild saveLeoBuild) {
+        leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
+    }
+
+    /**
+     * 记录构建详情和日志
+     *
+     * @param saveLeoBuild
+     * @param log
+     * @param var2
+     */
+    protected void save(LeoBuild saveLeoBuild, String log, Object... var2) {
+        leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
+        logHelper.info(saveLeoBuild, log, var2);
     }
 
 }
