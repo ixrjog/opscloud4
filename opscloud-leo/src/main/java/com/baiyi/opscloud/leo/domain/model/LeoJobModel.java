@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.leo.domain.model;
 
 import com.baiyi.opscloud.common.util.JSONUtil;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
 import com.google.gson.GsonBuilder;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,10 @@ import java.util.List;
  */
 @Slf4j
 public class LeoJobModel {
+
+    public static JobConfig load(LeoJob leoJob) {
+        return load(leoJob.getJobConfig());
+    }
 
     /**
      * 从配置加载

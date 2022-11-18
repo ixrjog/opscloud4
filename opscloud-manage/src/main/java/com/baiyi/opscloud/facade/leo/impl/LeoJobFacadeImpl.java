@@ -94,7 +94,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
         if (leoTemplate == null) {
             throw new LeoJobException("任务模板配置不正确！");
         }
-        LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(leoTemplate.getTemplateConfig());
+        LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(leoTemplate);
         final String templateVersion = Optional.ofNullable(templateConfig)
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getVersion)
@@ -126,6 +126,29 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .build();
         leoJobService.updateByPrimaryKeySelective(leoJob);
         updateTagsWithLeoJob(leoJob, jobConfig);
+    }
+
+    @Override
+    public void upgradeLeoJobTemplateContent(int jobId) {
+        LeoJob leoJob = leoJobService.getById(jobId);
+
+        LeoTemplate leoTemplate = leoTemplateService.getById(leoJob.getTemplateId());
+        LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(leoTemplate);
+        final String templateVersion = Optional.ofNullable(templateConfig)
+                .map(LeoTemplateModel.TemplateConfig::getTemplate)
+                .map(LeoTemplateModel.Template::getVersion)
+                .orElseThrow(() -> new LeoJobException("任务关联模板版本号配置不正确！"));
+
+        if (templateVersion.equals(leoJob.getTemplateVersion())) {
+            throw new LeoJobException("任务模板版本已是最新版本无需升级！");
+        }
+
+        LeoJob saveLeoJob = LeoJob.builder()
+                .id(leoJob.getId())
+                .templateVersion(templateVersion)
+                .templateContent(leoTemplate.getTemplateContent())
+                .build();
+        leoJobService.updateByPrimaryKeySelective(saveLeoJob);
     }
 
 }

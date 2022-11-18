@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.leo.domain.model;
 
 import com.baiyi.opscloud.common.util.JSONUtil;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoTemplate;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import lombok.AllArgsConstructor;
@@ -37,6 +38,10 @@ public class LeoTemplateModel {
             log.error(e.getMessage());
             return TemplateConfig.EMPTY_TEMPLATE;
         }
+    }
+
+    public static TemplateConfig load(LeoTemplate leoTemplate) {
+        return load(leoTemplate.getTemplateConfig());
     }
 
     @Builder
