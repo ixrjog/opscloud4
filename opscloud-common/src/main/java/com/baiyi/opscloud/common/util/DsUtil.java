@@ -5,7 +5,8 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import com.google.gson.JsonSyntaxException;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.SafeConstructor;
+import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.representer.Representer;
 
 /**
  * @Author baiyi
@@ -21,7 +22,10 @@ public class DsUtil {
         if (StringUtils.isEmpty(propsYml))
             throw new DatasourceRuntimeException(ErrorEnum.DATASOURCE_PROPS_EMPTY);
         try {
-            Yaml yaml = new Yaml(new SafeConstructor());
+            Representer representer = new Representer();
+            representer.getPropertyUtils().setSkipMissingProperties(true);
+            Yaml yaml = new Yaml(new Constructor(targetClass),representer);
+            //Yaml yaml = new Yaml(loadingConfig);
             return yaml.loadAs(propsYml, targetClass);
         } catch (JsonSyntaxException e) {
             throw new DatasourceRuntimeException(ErrorEnum.DATASOURCE_PROPS_CONVERT_ERROR);

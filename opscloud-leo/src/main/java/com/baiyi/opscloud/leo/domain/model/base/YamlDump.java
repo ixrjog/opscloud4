@@ -12,7 +12,6 @@ import org.yaml.snakeyaml.Yaml;
 public abstract class YamlDump {
 
     public String dump() throws JsonSyntaxException {
-
         DumperOptions dumperOptions = new DumperOptions();
         // 设置层级显示
         dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);

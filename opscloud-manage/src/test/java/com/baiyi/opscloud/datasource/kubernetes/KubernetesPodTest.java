@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.kubernetes;
 
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
@@ -36,22 +37,20 @@ public class KubernetesPodTest extends BaseKubernetesTest {
     @Test
     void getLogTest3() {
         try {
-            KubernetesClient kc = KubeClient.build(getConfigById(KubernetesClusterConfigs.ACK_DEV).getKubernetes());
+            KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.ACK_DEV);
+
+            KubernetesClient kc = KubeClient.build(kubernetesConfig.getKubernetes());
             kc.pods()
                     .inNamespace("dev")
                     .withName("merchant-rss-dev-766874c898-654hr")
                     .inContainer("merchant-rss-dev")
                     .withLogWaitTimeout(0)
                     .watchLog(System.out);
-
             Thread.sleep(10 * 1000L);
             kc.close();
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     @Test

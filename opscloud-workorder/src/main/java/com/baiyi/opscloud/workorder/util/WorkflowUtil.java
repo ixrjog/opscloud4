@@ -1,13 +1,12 @@
 package com.baiyi.opscloud.workorder.util;
 
-import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.vo.workorder.WorkflowVO;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.SafeConstructor;
+import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.representer.Representer;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,9 +26,10 @@ public class WorkflowUtil {
         if (StringUtils.isEmpty(workflow))
             return WorkflowVO.Workflow.EMPTY_WORKFLOW;
         try {
-            Yaml yaml = new Yaml(new SafeConstructor());
-            Object result = yaml.load(workflow);
-            return new GsonBuilder().create().fromJson(JSONUtil.writeValueAsString(result), WorkflowVO.Workflow.class);
+            Representer representer = new Representer();
+            representer.getPropertyUtils().setSkipMissingProperties(true);
+            Yaml yaml = new Yaml(new Constructor(WorkflowVO.Workflow.class), representer);
+            return yaml.loadAs(workflow, WorkflowVO.Workflow.class);
         } catch (JsonSyntaxException e) {
             log.error(e.getMessage());
             return WorkflowVO.Workflow.EMPTY_WORKFLOW;

@@ -3,7 +3,8 @@ package com.baiyi.opscloud.common.util;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.google.gson.JsonSyntaxException;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.SafeConstructor;
+import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.representer.Representer;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -16,7 +17,9 @@ import java.lang.reflect.Modifier;
 public class BusinessPropertyUtil {
 
     public static <T> T toProperty(String property, Class<T> targetClass) throws JsonSyntaxException {
-        Yaml yaml = new Yaml(new SafeConstructor());
+        Representer representer = new Representer();
+        representer.getPropertyUtils().setSkipMissingProperties(true);
+        Yaml yaml = new Yaml(new Constructor(targetClass), representer);
         return yaml.loadAs(property, targetClass);
     }
 

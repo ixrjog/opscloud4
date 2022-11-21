@@ -7,6 +7,8 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.representer.Representer;
 
 import java.util.List;
 import java.util.Map;
@@ -33,7 +35,9 @@ public class LeoBuildModel {
         if (StringUtils.isEmpty(config))
             return BuildConfig.EMPTY_BUILD;
         try {
-            Yaml yaml = new Yaml();
+            Representer representer = new Representer();
+            representer.getPropertyUtils().setSkipMissingProperties(true);
+            Yaml yaml = new Yaml(new Constructor(BuildConfig.class), representer);
             return yaml.loadAs(config, BuildConfig.class);
         } catch (Exception e) {
             throw new LeoJobException("转换配置文件错误: err={}", e.getMessage());
