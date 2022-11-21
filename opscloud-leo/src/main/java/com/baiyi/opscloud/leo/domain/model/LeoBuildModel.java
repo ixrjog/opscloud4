@@ -50,11 +50,8 @@ public class LeoBuildModel {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class BuildConfig extends YamlDump {
-
         private static final BuildConfig EMPTY_BUILD = BuildConfig.builder().build();
-
         private Build build;
-
     }
 
     @Builder
@@ -62,13 +59,9 @@ public class LeoBuildModel {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Build {
-
         private LeoBaseModel.GitLab gitLab;
-
         private LeoBaseModel.Jenkins jenkins;
-
         private LeoBaseModel.Notify notify;
-
         private String comment;
         // 构建字典
         private Map<String, String> dict;
@@ -76,7 +69,6 @@ public class LeoBuildModel {
         private List<LeoBaseModel.Parameter> parameters;
         // 构建标签
         private List<String> tags;
-
     }
 
 }

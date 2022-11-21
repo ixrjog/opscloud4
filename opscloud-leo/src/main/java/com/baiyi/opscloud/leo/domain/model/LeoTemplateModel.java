@@ -5,6 +5,7 @@ import com.google.gson.JsonSyntaxException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
@@ -48,19 +49,17 @@ public class LeoTemplateModel {
     @Builder
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class TemplateConfig {
-
         private static final TemplateConfig EMPTY_TEMPLATE = TemplateConfig.builder().build();
-
         private Template template;
-
     }
 
     @Builder
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Template {
-
         private Jenkins jenkins;
         private String name;
         // 任务目录
@@ -77,10 +76,9 @@ public class LeoTemplateModel {
 
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Jenkins {
-
         private LeoBaseModel.DsInstance instance;
-
     }
 
 }

@@ -5,6 +5,7 @@ import com.baiyi.opscloud.leo.exception.LeoJobException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
@@ -47,6 +48,7 @@ public class LeoJobModel {
     @Builder
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class JobConfig {
         private static final JobConfig EMPTY_JOB = JobConfig.builder().build();
         private Job job;
@@ -55,6 +57,7 @@ public class LeoJobModel {
     @Builder
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Job {
         //  private String version;
         private LeoBaseModel.GitLab gitLab;
@@ -77,6 +80,7 @@ public class LeoJobModel {
     @Builder
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Build {
         private Version version;
         private String type;
@@ -85,6 +89,7 @@ public class LeoJobModel {
     @Builder
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Version {
         private String prefix;
         private String suffix;
@@ -93,6 +98,7 @@ public class LeoJobModel {
     @Builder
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Sonar {
         private Boolean enabled;
     }
@@ -103,8 +109,8 @@ public class LeoJobModel {
     @Builder
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class CR {
-
         /**
          * ACR ECR
          */
@@ -112,7 +118,6 @@ public class LeoJobModel {
         private CRInstance instance;
         private Cloud cloud;
         private Repo repo;
-
     }
 
     /**
@@ -121,6 +126,7 @@ public class LeoJobModel {
     @Builder
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class CRInstance {
         private String regionId;
         private String id;
@@ -134,6 +140,7 @@ public class LeoJobModel {
     @Builder
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Cloud {
         private String uuid;
         private String name;
@@ -145,12 +152,11 @@ public class LeoJobModel {
     @Builder
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Repo {
-
         private String id;
         private String name;
         private String namespace;
-
     }
 
 }
