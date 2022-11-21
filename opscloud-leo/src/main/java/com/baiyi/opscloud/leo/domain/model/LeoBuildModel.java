@@ -1,11 +1,12 @@
 package com.baiyi.opscloud.leo.domain.model;
 
+import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.domain.model.base.YamlDump;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.baiyi.opscloud.leo.exception.LeoJobException;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.yaml.snakeyaml.Yaml;
 
 import java.util.List;
 import java.util.Map;
@@ -18,11 +19,35 @@ import java.util.Map;
 @Slf4j
 public class LeoBuildModel {
 
+    public static BuildConfig load(LeoBuild leoBuild) {
+        return load(leoBuild.getBuildConfig());
+    }
+
+    /**
+     * 从配置加载
+     *
+     * @param config
+     * @return
+     */
+    public static BuildConfig load(String config) {
+        if (StringUtils.isEmpty(config))
+            return BuildConfig.EMPTY_BUILD;
+        try {
+            Yaml yaml = new Yaml();
+            return yaml.loadAs(config, BuildConfig.class);
+        } catch (Exception e) {
+            throw new LeoJobException("转换配置文件错误: err={}", e.getMessage());
+        }
+    }
+
     @Builder
     @Data
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class BuildConfig extends YamlDump {
+
+        private static final BuildConfig EMPTY_BUILD = BuildConfig.builder().build();
 
         private Build build;
 
@@ -31,6 +56,7 @@ public class LeoBuildModel {
     @Builder
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Build {
 
         private LeoBaseModel.GitLab gitLab;

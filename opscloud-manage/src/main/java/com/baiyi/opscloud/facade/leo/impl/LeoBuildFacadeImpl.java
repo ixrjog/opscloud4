@@ -135,12 +135,13 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .versionName(JobUtil.generateVersionName(doBuild, jobConfig))
                 .versionDesc(doBuild.getVersionDesc())
                 .isFinish(false)
+                .isDeletedBuildJob(false)
                 .executionType(ExecutionTypeConstants.USER)
                 .username(SessionUtil.getUsername())
                 .buildConfig(buildConfig.dump())
                 .build();
         leoBuildService.add(leoBuild);
-        buildHandle(leoBuild, buildConfig);
+        handleBuild(leoBuild, buildConfig);
     }
 
     /**
@@ -149,8 +150,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
      * @param leoBuild
      * @param buildConfig
      */
-    private void buildHandle(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
-        leoBuildHandler.buildHandle(leoBuild, buildConfig);
+    private void handleBuild(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
+        leoBuildHandler.handleBuild(leoBuild, buildConfig);
     }
 
     /**

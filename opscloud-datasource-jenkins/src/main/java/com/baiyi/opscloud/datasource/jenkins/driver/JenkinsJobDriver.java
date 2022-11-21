@@ -73,6 +73,18 @@ public class JenkinsJobDriver {
         return jenkinsServer.createJob(jobName, jobXml, crumbFlag);
     }
 
+
+    public void deleteJob(JenkinsConfig.Jenkins jenkins, String jobName) throws URISyntaxException, IOException {
+        assert jenkins != null;
+        boolean crumbFlag = Optional.of(jenkins)
+                .map(JenkinsConfig.Jenkins::getSecurity)
+                .map(JenkinsConfig.Security::getCrumbFlag)
+                .orElse(false);
+        JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
+        jenkinsServer.deleteJob(jobName, crumbFlag);
+    }
+
+
     /**
      * 输出日志到会话
      *

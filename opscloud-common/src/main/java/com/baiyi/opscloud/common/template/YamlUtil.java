@@ -1,8 +1,5 @@
 package com.baiyi.opscloud.common.template;
 
-import com.baiyi.opscloud.common.util.JSONUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -26,9 +23,7 @@ public class YamlUtil {
             return YamlVars.Vars.EMPTY;
         try {
             Yaml yaml = new Yaml(new SafeConstructor(new LoaderOptions()));
-            Object result = yaml.load(vars);
-            Gson gson = new GsonBuilder().create();
-            return gson.fromJson(JSONUtil.writeValueAsString(result), YamlVars.Vars.class);
+            return yaml.loadAs(vars, YamlVars.Vars.class);
         } catch (Exception e) {
             return YamlVars.Vars.EMPTY;
         }

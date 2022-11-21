@@ -46,6 +46,10 @@
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-aliyun-acr</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-aws-ecr</artifactId>
+        </dependency>
 
     </dependencies>
 

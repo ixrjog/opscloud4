@@ -1,8 +1,6 @@
 package com.baiyi.opscloud.common.util;
 
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
@@ -19,9 +17,7 @@ public class BusinessPropertyUtil {
 
     public static <T> T toProperty(String property, Class<T> targetClass) throws JsonSyntaxException {
         Yaml yaml = new Yaml(new SafeConstructor());
-        Object result = yaml.load(property);
-        Gson gson = new GsonBuilder().create();
-        return gson.fromJson(JSONUtil.writeValueAsString(result), targetClass);
+        return yaml.loadAs(property, targetClass);
     }
 
     /**

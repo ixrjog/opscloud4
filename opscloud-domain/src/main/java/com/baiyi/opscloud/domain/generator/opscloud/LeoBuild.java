@@ -85,10 +85,16 @@ public class LeoBuild {
     private String buildResult;
 
     /**
-     * 任务是否完成
+     * 是否已完成任务
      */
     @Column(name = "is_finish")
     private Boolean isFinish;
+
+    /**
+     * 是否已删除构建任务
+     */
+    @Column(name = "is_deleted_build_job")
+    private Boolean isDeletedBuildJob;
 
     /**
      * 执行类型

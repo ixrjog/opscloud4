@@ -41,7 +41,7 @@ public class LeoBuildLogServiceImpl implements LeoBuildLogService {
         Example example = new Example(LeoBuildLog.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("buildId", buildId);
-        example.orderBy("id desc");
+        example.setOrderByClause("id desc");
         return leoBuildLogMapper.selectByExample(example);
     }
 

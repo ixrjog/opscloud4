@@ -20,6 +20,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LeoBuildHandler implements InitializingBean {
 
+    // 构建前删除历史构建任务
+    private final DeleteHistoricalBuildJobConcreteHandler deleteHistoricalBuildJobConcreteHandler;
+
     // 选举Jenkins执行实例
     private final ElectInstanceConcreteHandler electInstanceConcreteHandler;
 
@@ -36,14 +39,15 @@ public class LeoBuildHandler implements InitializingBean {
     private final BuildingSupervisorConcreteHandler buildingSupervisorConcreteHandler;
 
     @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
-    public void buildHandle(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
+    public void handleBuild(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
         // 使用责任链设计模式解耦代码
-        electInstanceConcreteHandler.handleRequest(leoBuild, buildConfig);
+        deleteHistoricalBuildJobConcreteHandler.handleRequest(leoBuild, buildConfig);
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        electInstanceConcreteHandler
+        deleteHistoricalBuildJobConcreteHandler
+                .setNextHandler(electInstanceConcreteHandler)
                 .setNextHandler(createJobConcreteHandler)
                 .setNextHandler(doBuildConcreteHandler)
                 .setNextHandler(startBuildNotificationConcreteHandler)

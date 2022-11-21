@@ -2,6 +2,8 @@ package com.baiyi.opscloud.service.leo;
 
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2022/11/8 16:03
@@ -21,5 +23,7 @@ public interface LeoBuildService {
      * @return
      */
     int getMaxBuildNumberWithJobId(Integer jobId);
+
+    List<LeoBuild> queryTheHistoricalBuildToBeDeleted(Integer jobId);
 
 }

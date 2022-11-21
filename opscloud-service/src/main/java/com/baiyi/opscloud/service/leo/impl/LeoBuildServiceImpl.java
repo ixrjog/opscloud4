@@ -5,6 +5,9 @@ import com.baiyi.opscloud.mapper.opscloud.LeoBuildMapper;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -36,6 +39,17 @@ public class LeoBuildServiceImpl implements LeoBuildService {
     public int getMaxBuildNumberWithJobId(Integer jobId) {
         Integer maxBuildNumber = leoBuildMapper.getMaxBuildNumberWithJobId(jobId);
         return maxBuildNumber == null ? 0 : maxBuildNumber;
+    }
+
+    @Override
+    public List<LeoBuild> queryTheHistoricalBuildToBeDeleted(Integer jobId) {
+        Example example = new Example(LeoBuild.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("jobId", jobId)
+                .andEqualTo("isFinish", true)
+                .andEqualTo("isDeletedBuildJob", false);
+        example.setOrderByClause("id desc");
+        return leoBuildMapper.selectByExample(example);
     }
 
 }

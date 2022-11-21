@@ -15,8 +15,8 @@ public enum BuildParameterConstants {
     SSH_URL("sshUrl"),
     ENV("env"),
     JOB_BUILD_NUMBER("jobBuildNumber"),
-    APPLICATION_NAME("applicationName");
-
+    APPLICATION_NAME("applicationName"),
+    REGISTRY_URL("registryUrl");
 
     @Getter
     private final String param;

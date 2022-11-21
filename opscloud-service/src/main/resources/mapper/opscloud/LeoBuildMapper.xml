@@ -18,6 +18,7 @@
         <result column="build_status" jdbcType="VARCHAR" property="buildStatus"/>
         <result column="build_result" jdbcType="VARCHAR" property="buildResult"/>
         <result column="is_finish" jdbcType="BIT" property="isFinish"/>
+        <result column="is_deleted_build_job" jdbcType="BIT" property="isDeletedBuildJob"/>
         <result column="execution_type" jdbcType="INTEGER" property="executionType"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>

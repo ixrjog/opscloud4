@@ -9,9 +9,11 @@ import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.leo.build.BaseBuildHandler;
+import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.constants.BuildParameterConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
+import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
@@ -23,6 +25,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -91,7 +94,7 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
                     // 设置启动时间
                     .startTime(new Date())
                     .build();
-            save(saveLeoBuild,"执行构建任务成功: jenkinsName={}, jobName={}", dsInstance.getName(), leoBuild.getBuildJobName());
+            save(saveLeoBuild, "执行构建任务成功: jenkinsName={}, jobName={}", dsInstance.getName(), leoBuild.getBuildJobName());
         } catch (URISyntaxException | IOException e) {
             LeoBuild saveLeoBuild = LeoBuild.builder()
                     .id(leoBuild.getId())
@@ -122,6 +125,25 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
         final String env = getEnvNameWithLeoJob(leoJob);
         final String applicationName = applicationService.getById(leoJob.getApplicationId()).getApplicationKey();
 
+        LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob);
+        if (!paramMap.containsKey(BuildParameterConstants.REGISTRY_URL.getParam())) {
+            final String registryUrl = Optional.ofNullable(jobConfig)
+                    .map(LeoJobModel.JobConfig::getJob)
+                    .map(LeoJobModel.Job::getCr)
+                    .map(LeoJobModel.CR::getInstance)
+                    .map(LeoJobModel.CRInstance::getUrl)
+                    .orElse("");
+            if (StringUtils.isNotBlank(registryUrl))
+                paramMap.put(BuildParameterConstants.REGISTRY_URL.getParam(), registryUrl);
+        }
+        // repoName -> parameters.project
+        Optional<String> optionalRepoName = Optional.ofNullable(jobConfig)
+                .map(LeoJobModel.JobConfig::getJob)
+                .map(LeoJobModel.Job::getCr)
+                .map(LeoJobModel.CR::getRepo)
+                .map(LeoJobModel.Repo::getName);
+        optionalRepoName.ifPresent(s -> paramMap.put(BuildParameterConstants.PROJECT.getParam(), s));
+
         paramMap.put(BuildParameterConstants.BRANCH.getParam(), gitLabProject.getBranch());
         paramMap.put(BuildParameterConstants.COMMIT_ID.getParam(), gitLabProject.getCommit().getId().substring(0, 8));
         paramMap.put(BuildParameterConstants.SSH_URL.getParam(), gitLabProject.getSshUrl());
@@ -131,7 +153,6 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
 
         return paramMap;
     }
-
 
     /**
      * 生成构建字典
@@ -170,22 +191,23 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
         final String envName = params.get(BuildParameterConstants.ENV.getParam());
         final String shortCommit = params.get(BuildParameterConstants.COMMIT_ID.getParam());
         final String buildNumber = String.valueOf(leoBuild.getBuildNumber());
-        dict.put("envName", envName);
-        dict.put("applicationName", params.get(BuildParameterConstants.APPLICATION_NAME.getParam()));
-        dict.put("applicationTags", applicationTags);
-        dict.put("jobName", leoBuild.getJobName());
-        dict.put("versionName", leoBuild.getVersionName());
-        dict.put("buildNumber", buildNumber);
-        dict.put("branch", params.get(BuildParameterConstants.BRANCH.getParam()));
-        dict.put("commit", shortCommit);
-        dict.put("displayName", displayName);
+        dict.put(BuildDictConstants.ENV_NAME.getKey(), envName);
+        dict.put(BuildDictConstants.APPLICATION_NAME.getKey(), params.get(BuildParameterConstants.APPLICATION_NAME.getParam()));
+        dict.put(BuildDictConstants.APPLICATION_TAGS.getKey(), applicationTags);
+        dict.put(BuildDictConstants.JOB_NAME.getKey(), leoBuild.getJobName());
+        dict.put(BuildDictConstants.VERSION_NAME.getKey(), leoBuild.getVersionName());
+        dict.put(BuildDictConstants.BUILD_NUMBER.getKey(), buildNumber);
+        dict.put(BuildDictConstants.BRANCH.getKey(), params.get(BuildParameterConstants.BRANCH.getParam()));
+        dict.put(BuildDictConstants.COMMIT.getKey(), shortCommit);
+        dict.put(BuildDictConstants.DISPLAY_NAME.getKey(), displayName);
 
         String project = params.get(BuildParameterConstants.PROJECT.getParam());
-        String registryUrl = "aliyun-cr-uk.chuanyinet.com";
-        String imageTag = shortCommit + "-" + buildNumber;
-        // aliyun-cr-uk.chuanyinet.com/daily/merchant-rss:460e7585-19
-        String img = "%s/%s/%s:%s";
-        dict.put("image", String.format(img, registryUrl, envName, project, imageTag));
+        String registryUrl = params.get(BuildParameterConstants.REGISTRY_URL.getParam());
+        // example: 460e7585-19
+        String imageTag = Joiner.on("-").join(shortCommit, buildNumber);
+        // example: aliyun-cr-uk.chuanyinet.com/daily/merchant-rss:460e7585-19
+        dict.put(BuildDictConstants.IMAGE.getKey(), String.format("%s/%s/%s:%s", registryUrl, envName, project, imageTag));
+        dict.put(BuildDictConstants.IMAGE_TAG.getKey(), imageTag);
         return dict;
     }
 

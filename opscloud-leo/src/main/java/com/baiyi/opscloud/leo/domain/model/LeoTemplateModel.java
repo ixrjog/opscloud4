@@ -1,8 +1,6 @@
 package com.baiyi.opscloud.leo.domain.model;
 
-import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoTemplate;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,8 +30,7 @@ public class LeoTemplateModel {
             return TemplateConfig.EMPTY_TEMPLATE;
         try {
             Yaml yaml = new Yaml();
-            Object result = yaml.load(config);
-            return new GsonBuilder().create().fromJson(JSONUtil.writeValueAsString(result), TemplateConfig.class);
+            return yaml.loadAs(config, TemplateConfig.class);
         } catch (JsonSyntaxException e) {
             log.error(e.getMessage());
             return TemplateConfig.EMPTY_TEMPLATE;
