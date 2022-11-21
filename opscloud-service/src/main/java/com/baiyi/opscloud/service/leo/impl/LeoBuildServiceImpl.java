@@ -52,4 +52,12 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         return leoBuildMapper.selectByExample(example);
     }
 
+    @Override
+    public int countWithJobId(Integer jobId) {
+        Example example = new Example(LeoBuild.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("jobId", jobId);
+        return leoBuildMapper.selectCountByExample(example);
+    }
+
 }

@@ -98,6 +98,12 @@ public class LeoJobVO {
         @ApiModelProperty(value = "描述")
         private String comment;
 
+        @ApiModelProperty(value = "构建次数")
+        private Integer buildSize;
+
+        @ApiModelProperty(value = "部署次数")
+        private Integer deploySize;
+
     }
 
     @Data

@@ -26,4 +26,6 @@ public interface LeoBuildService {
 
     List<LeoBuild> queryTheHistoricalBuildToBeDeleted(Integer jobId);
 
+    int countWithJobId(Integer jobId);
+
 }

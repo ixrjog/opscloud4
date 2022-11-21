@@ -80,6 +80,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
 
         LeoBaseModel.DsInstance instance = templateConfig.getTemplate().getJenkins().getInstance();
         LeoTemplate leoTemplate = LeoTemplate.builder()
+                .name(addTemplate.getName())
                 .jenkinsInstanceUuid(getUuidWithJenkinsInstance(instance))
                 .templateName(templateConfig.getTemplate().getName())
                 .templateConfig(addTemplate.getTemplateConfig())
@@ -89,7 +90,6 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
                 .build();
         leoTemplateService.add(leoTemplate);
         updateTagsWithLeoTemplate(leoTemplate, templateConfig);
-        //return toLeoTemplateVO(leoTemplate);
     }
 
     @Override
