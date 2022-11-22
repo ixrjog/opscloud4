@@ -24,6 +24,7 @@ import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
+import com.baiyi.opscloud.service.sys.EnvService;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,6 +65,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
     private final BuildingLogHelper logHelper;
 
     private final LeoBuildHandler leoBuildHandler;
+
+    private final EnvService envService;
 
 
     @Override
@@ -126,13 +129,15 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         final String jobName = JobUtil.generateJobName(application, leoJob);
         final String buildJobName = JobUtil.generateBuildJobName(application, leoJob, buildNumber);
 
+        Env env = envService.getByEnvType(leoJob.getEnvType());
+
         LeoBuild leoBuild = LeoBuild.builder()
                 .jobId(doBuild.getJobId())
                 .jobName(jobName)
                 .buildJobName(buildJobName)
                 .applicationId(leoJob.getApplicationId())
                 .buildNumber(buildNumber)
-                .versionName(JobUtil.generateVersionName(doBuild, jobConfig))
+                .versionName(JobUtil.generateVersionName(doBuild, jobConfig, application, env, buildNumber))
                 .versionDesc(doBuild.getVersionDesc())
                 .isFinish(false)
                 .isDeletedBuildJob(false)

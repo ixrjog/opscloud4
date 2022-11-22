@@ -16,9 +16,9 @@ public class HomeController {
      * 首页
      * @return
      */
-    @RequestMapping(value = {"/", "/index"})
-    public String index() {
-        return "index.html";
-    }
+//    @RequestMapping(value = {"/", "/index"})
+//    public String index() {
+//        return "index.html";
+//    }
 
 }
