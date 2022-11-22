@@ -86,6 +86,7 @@ public class EndBuildNotificationConcreteHandler extends BaseBuildHandler {
 
         Map<String, Object> contentMap = Maps.newHashMap(buildConfig.getBuild().getDict());
         contentMap.put("buildPhase", "构建结束");
+        contentMap.put("buildResult", leoBuild.getBuildResult());
         contentMap.put("nowDate", TimeUtil.nowDate());
         contentMap.put("users", Lists.newArrayList(user));
 

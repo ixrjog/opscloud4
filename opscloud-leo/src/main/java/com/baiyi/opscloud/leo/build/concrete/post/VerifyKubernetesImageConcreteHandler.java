@@ -5,19 +5,23 @@ import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.aliyun.acr.driver.AliyunAcrImageDriver;
 import com.baiyi.opscloud.datasource.aliyun.acr.driver.AliyunAcrRepositoryDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildImage;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.leo.build.BaseBuildHandler;
 import com.baiyi.opscloud.leo.build.concrete.post.verify.base.BaseCrImageValidator;
 import com.baiyi.opscloud.leo.build.concrete.post.verify.factory.CrImageValidatorFactory;
+import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
+import com.baiyi.opscloud.service.leo.LeoBuildImageService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.sys.EnvService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -46,6 +50,9 @@ public class VerifyKubernetesImageConcreteHandler extends BaseBuildHandler {
 
     @Resource
     private AliyunAcrImageDriver aliyunAcrImageDriver;
+
+    @Resource
+    private LeoBuildImageService leoBuildImageService;
 
     private static final String KUBERNETES_IMAGE = "kubernetes-image";
 
@@ -80,7 +87,19 @@ public class VerifyKubernetesImageConcreteHandler extends BaseBuildHandler {
             throw new LeoBuildException("任务CR类型配置不正确: crType={}", crType);
         }
         try {
+            // 校验
             crImageValidator.verify(leoJob, leoBuild, cr, buildConfig);
+            // 记录构建镜像
+            Map<String, String> dict = buildConfig.getBuild().getDict();
+            LeoBuildImage leoBuildImage = LeoBuildImage.builder()
+                    .buildId(leoBuild.getId())
+                    .jobId(leoJob.getId())
+                    .image(dict.get(BuildDictConstants.IMAGE.getKey()))
+                    .versionName(leoBuild.getVersionName())
+                    .versionDesc(leoBuild.getVersionDesc())
+                    .isActive(true)
+                    .build();
+            leoBuildImageService.add(leoBuildImage);
         } catch (LeoBuildException e) {
             logHelper.error(leoBuild, e.getMessage());
         }
