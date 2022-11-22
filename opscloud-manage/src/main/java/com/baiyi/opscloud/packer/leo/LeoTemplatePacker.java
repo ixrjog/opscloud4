@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.leo.LeoTemplateVO;
 import com.baiyi.opscloud.leo.domain.model.LeoTemplateModel;
 import com.baiyi.opscloud.packer.IWrapper;
+import com.baiyi.opscloud.service.leo.LeoJobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,8 @@ public class LeoTemplatePacker implements IWrapper<LeoTemplateVO.Template> {
 
     private final DsInstancePacker dsInstancePacker;
 
+    private final LeoJobService leoJobService;
+
     @Override
     @TagsWrapper
     public void wrap(LeoTemplateVO.Template template, IExtend iExtend) {
@@ -34,8 +37,9 @@ public class LeoTemplatePacker implements IWrapper<LeoTemplateVO.Template> {
         template.setVersion(version);
         if (iExtend.getExtend()) {
             dsInstancePacker.wrap(template);
+            // 任务数量
+            template.setJobSize(leoJobService.countWithTemplateId(template.getId()));
         }
-
     }
 
 }

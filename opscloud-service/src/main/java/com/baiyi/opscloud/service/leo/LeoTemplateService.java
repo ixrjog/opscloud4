@@ -21,4 +21,6 @@ public interface LeoTemplateService {
 
     LeoTemplate getById(Integer id);
 
+    void deleteById(Integer id);
+
 }

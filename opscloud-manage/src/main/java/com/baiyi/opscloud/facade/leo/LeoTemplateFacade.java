@@ -19,4 +19,6 @@ public interface LeoTemplateFacade {
 
     LeoTemplateVO.Template updateLeoTemplateContent(LeoTemplateParam.UpdateTemplate template);
 
+    void deleteLeoTemplateById(int templateId);
+
 }

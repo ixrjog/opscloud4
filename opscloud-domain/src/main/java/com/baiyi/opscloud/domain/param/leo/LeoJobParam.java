@@ -57,7 +57,6 @@ public class LeoJobParam {
     @AllArgsConstructor
     public static class AddJob {
 
-
         private Integer id;
 
         @Min(value = 0, message = "关联任务ID不能为空")
@@ -86,6 +85,10 @@ public class LeoJobParam {
         @NotNull
         @ApiModelProperty(value = "模板版本")
         private String templateVersion;
+
+        @NotNull
+        @ApiModelProperty(value = "任务Key")
+        private String jobKey;
 
         @NotNull
         @ApiModelProperty(value = "隐藏任务")

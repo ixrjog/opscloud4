@@ -19,6 +19,7 @@ import com.baiyi.opscloud.leo.exception.LeoTemplateException;
 import com.baiyi.opscloud.leo.helper.JenkinsJobHelper;
 import com.baiyi.opscloud.packer.leo.LeoTemplatePacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
+import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.leo.LeoTemplateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +53,8 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
     private final JenkinsJobHelper jenkinsJobHelper;
 
     private final LeoTagHelper leoTagHelper;
+
+    private final LeoJobService leoJobService;
 
     @Override
     public DataTable<LeoTemplateVO.Template> queryLeoTemplatePage(LeoTemplateParam.TemplatePageQuery pageQuery) {
@@ -165,6 +168,16 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
         if (!optionalDsInstance.isPresent())
             throw new LeoTemplateException("模板配置缺少Jenkins实例配置项: 实例名称无效！");
         return optionalDsInstance.get().getUuid();
+    }
+
+    @Override
+    public void deleteLeoTemplateById(int templateId) {
+        LeoTemplate leoTemplate = leoTemplateService.getById(templateId);
+        if (leoTemplate == null)
+            throw new LeoTemplateException("删除模板错误，模板不存在！");
+        if (leoJobService.countWithTemplateId(templateId) > 0)
+            throw new LeoTemplateException("删除模板错误，关联任务未删除！");
+        leoTemplateService.deleteById(templateId);
     }
 
 }

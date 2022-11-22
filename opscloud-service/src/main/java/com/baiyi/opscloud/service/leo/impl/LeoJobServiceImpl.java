@@ -9,6 +9,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -46,8 +47,21 @@ public class LeoJobServiceImpl implements LeoJobService {
     }
 
     @Override
+    public void deleteById(Integer id) {
+        leoJobMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
     public void updateByPrimaryKeySelective(LeoJob leoJob) {
         leoJobMapper.updateByPrimaryKeySelective(leoJob);
+    }
+
+    @Override
+    public  int countWithTemplateId(Integer templateId){
+        Example example = new Example(LeoJob.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("templateId", templateId);
+        return leoJobMapper.selectCountByExample(example);
     }
 
 }

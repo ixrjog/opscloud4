@@ -19,8 +19,11 @@ public interface LeoJobFacade {
 
     /**
      * 升级任务模板内容
+     *
      * @param jobId
      */
     void upgradeLeoJobTemplateContent(int jobId);
+
+    void deleteLeoJobById(int jobId);
 
 }

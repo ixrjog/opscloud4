@@ -73,6 +73,9 @@ public class LeoTemplateVO {
         @ApiModelProperty(value = "描述")
         private String comment;
 
+        @ApiModelProperty(value = "任务数量")
+        private Integer jobSize;
+
     }
 
 }

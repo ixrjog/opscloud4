@@ -38,20 +38,20 @@ public class LeoController {
 
     // Leo Template
 
-    @ApiOperation(value = "分页查询模板列表")
+    @ApiOperation(value = "分页查询任务模板列表")
     @PostMapping(value = "/template/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<LeoTemplateVO.Template>> queryLeoTemplatePage(@RequestBody @Valid LeoTemplateParam.TemplatePageQuery pageQuery) {
         return new HttpResult<>(leoTemplateFacade.queryLeoTemplatePage(pageQuery));
     }
 
-    @ApiOperation(value = "新增模板")
+    @ApiOperation(value = "新增任务模板")
     @PostMapping(value = "/template/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> addLeoTemplate(@RequestBody @Valid LeoTemplateParam.AddTemplate addTemplate) {
         leoTemplateFacade.addLeoTemplate(addTemplate);
         return HttpResult.SUCCESS;
     }
 
-    @ApiOperation(value = "更新模板")
+    @ApiOperation(value = "更新任务模板")
     @PutMapping(value = "/template/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> updateLeoTemplate(@RequestBody @Valid LeoTemplateParam.UpdateTemplate updateTemplate) {
         leoTemplateFacade.updateLeoTemplate(updateTemplate);
@@ -62,6 +62,13 @@ public class LeoController {
     @PutMapping(value = "/template/content/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<LeoTemplateVO.Template> updateLeoTemplateContent(@RequestBody @Valid LeoTemplateParam.UpdateTemplate updateTemplate) {
         return new HttpResult<>(leoTemplateFacade.updateLeoTemplateContent(updateTemplate));
+    }
+
+    @ApiOperation(value = "删除指定的任务模板")
+    @DeleteMapping(value = "/template/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteLeoTemplateById(@RequestParam @Valid int templateId) {
+        leoTemplateFacade.deleteLeoTemplateById(templateId);
+        return HttpResult.SUCCESS;
     }
 
     // Leo Job
@@ -93,6 +100,13 @@ public class LeoController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "删除指定的任务")
+    @DeleteMapping(value = "/job/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteLeoJobById(@RequestParam @Valid int jobId) {
+        leoJobFacade.deleteLeoJobById(jobId);
+        return HttpResult.SUCCESS;
+    }
+
     // Leo Build
 
     @ApiOperation(value = "执行构建")
@@ -106,6 +120,12 @@ public class LeoController {
     @PostMapping(value = "/build/branch/options/get", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<LeoBuildVO.BranchOptions> getBuildBranchOptions(@RequestBody @Valid LeoBuildParam.GetBuildBranchOptions getOptions) {
         return new HttpResult<>(leoBuildFacade.getBuildBranchOptions(getOptions));
+    }
+
+    @ApiOperation(value = "删除指定的构建信息")
+    @DeleteMapping(value = "/build/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteLeoBuildById(@RequestParam @Valid int buildId) {
+        return HttpResult.SUCCESS;
     }
 
 }

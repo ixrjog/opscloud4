@@ -13,6 +13,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.domain.model.LeoTemplateModel;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
 import com.baiyi.opscloud.packer.leo.LeoJobPacker;
+import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.leo.LeoTemplateService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,8 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
     private final LeoJobPacker leoJobPacker;
 
     private final LeoTagHelper leoTagHelper;
+
+    private final LeoBuildService leoBuildService;
 
     @Override
     public DataTable<LeoJobVO.Job> queryLeoJobPage(LeoJobParam.JobPageQuery pageQuery) {
@@ -131,24 +134,31 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
     @Override
     public void upgradeLeoJobTemplateContent(int jobId) {
         LeoJob leoJob = leoJobService.getById(jobId);
-
         LeoTemplate leoTemplate = leoTemplateService.getById(leoJob.getTemplateId());
         LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(leoTemplate);
         final String templateVersion = Optional.ofNullable(templateConfig)
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getVersion)
                 .orElseThrow(() -> new LeoJobException("任务关联模板版本号配置不正确！"));
-
         if (templateVersion.equals(leoJob.getTemplateVersion())) {
             throw new LeoJobException("任务模板版本已是最新版本无需升级！");
         }
-
         LeoJob saveLeoJob = LeoJob.builder()
                 .id(leoJob.getId())
                 .templateVersion(templateVersion)
                 .templateContent(leoTemplate.getTemplateContent())
                 .build();
         leoJobService.updateByPrimaryKeySelective(saveLeoJob);
+    }
+
+    @Override
+    public void deleteLeoJobById(int jobId) {
+        LeoJob leoJob = leoJobService.getById(jobId);
+        if (leoJob == null)
+            throw new LeoJobException("删除任务错误，任务不存在！");
+        if (leoBuildService.countWithJobId(jobId) > 0)
+            throw new LeoJobException("删除任务错误，构建信息未删除！");
+        leoJobService.deleteById(jobId);
     }
 
 }

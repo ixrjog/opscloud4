@@ -19,6 +19,10 @@ public interface LeoJobService {
 
     LeoJob getById(Integer id);
 
+    void deleteById(Integer id);
+
     void updateByPrimaryKeySelective(LeoJob leoJob);
+
+    int countWithTemplateId(Integer templateId);
 
 }

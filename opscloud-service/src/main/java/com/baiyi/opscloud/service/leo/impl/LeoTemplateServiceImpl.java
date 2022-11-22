@@ -50,4 +50,9 @@ public class LeoTemplateServiceImpl implements LeoTemplateService {
         return templateMapper.selectByPrimaryKey(id);
     }
 
+    @Override
+    public void deleteById(Integer id) {
+        templateMapper.deleteByPrimaryKey(id);
+    }
+
 }
