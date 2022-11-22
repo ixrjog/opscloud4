@@ -49,7 +49,8 @@ public abstract class BaseBuildHandler {
         this.handle(leoBuild, buildConfig);
         if (getNext() != null) {
             try {
-                getNext().handleRequest(leoBuild, buildConfig);
+                // 使用新的构建对象
+                getNext().handleRequest(leoBuildService.getById(leoBuild.getId()), buildConfig);
             } catch (LeoBuildException e) {
                 // 记录日志
                 logHelper.error(leoBuild, e.getMessage());
