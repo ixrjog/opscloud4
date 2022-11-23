@@ -52,7 +52,6 @@ public class GitlabFacade extends BaseManager {
         if (!optional.isPresent()) return; // 数据源配置文件未配置 SystemHooks.SecretToken
         IGitlabEventConsumer eventConsume = GitlabEventConsumerFactory.getByEventName(systemHook.getEvent_name());
         if (eventConsume != null) eventConsume.consumeEventV4(optional.get(), systemHook);
-
     }
 
     private Optional<DatasourceInstance> filterInstance() {
