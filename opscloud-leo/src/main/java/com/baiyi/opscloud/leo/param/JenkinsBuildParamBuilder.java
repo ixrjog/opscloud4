@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class JenkinsBuildParamBuilder {
 
-    private JenkinsBuildParamMap paramMap = new JenkinsBuildParamMap();
+    private final JenkinsBuildParamMap paramMap = new JenkinsBuildParamMap();
 
     private JenkinsBuildParamBuilder() {
     }
@@ -20,12 +20,6 @@ public class JenkinsBuildParamBuilder {
     static public JenkinsBuildParamBuilder newBuilder() {
         return new JenkinsBuildParamBuilder();
     }
-
-//    public JenkinsJobParamsBuilder paramEntry(String paramName, JobBuildParam.BuildParam buildParam) {
-//        if (buildParam.getParamMap().containsKey(paramName))
-//            paramMap.putParam(paramName, buildParam.getParamMap().get(paramName));
-//        return this;
-//    }
 
     public JenkinsBuildParamBuilder paramEntry(String paramName, Boolean value) {
         if (value != null)

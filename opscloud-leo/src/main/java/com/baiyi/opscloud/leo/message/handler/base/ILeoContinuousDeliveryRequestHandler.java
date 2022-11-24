@@ -1,0 +1,17 @@
+package com.baiyi.opscloud.leo.message.handler.base;
+
+import com.baiyi.opscloud.domain.param.leo.request.ILeoRequestParam;
+
+import javax.websocket.Session;
+
+
+/**
+ * @Author baiyi
+ * @Date 2022/11/23 15:51
+ * @Version 1.0
+ */
+public interface ILeoContinuousDeliveryRequestHandler extends ILeoRequestParam {
+
+    void handleRequest(Session session, String message);
+
+}

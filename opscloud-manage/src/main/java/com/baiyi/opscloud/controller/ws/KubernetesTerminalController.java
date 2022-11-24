@@ -86,7 +86,6 @@ public class KubernetesTerminalController extends SimpleAuthentication {
             ThreadPoolTaskExecutorPrint.print(kubernetesTerminalExecutor, "k8sTermExecutor");
         } catch (Exception e) {
             log.error("{} create connection error！", IF_NAME);
-            e.printStackTrace();
         }
     }
 

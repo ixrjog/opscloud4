@@ -105,7 +105,6 @@ public class ServerTerminalController extends SimpleAuthentication {
             log.info("{} session connection closed: instanceIP={}, connections={}", IF_NAME, serverInfo.getHostAddress(), cnt);
         } catch (Exception e) {
             log.error("{} OnClose error！", IF_NAME);
-            e.printStackTrace();
         }
     }
 
