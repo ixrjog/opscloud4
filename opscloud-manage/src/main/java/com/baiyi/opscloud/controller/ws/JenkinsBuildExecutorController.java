@@ -46,7 +46,7 @@ public class JenkinsBuildExecutorController {
     private static DsInstanceService dsInstanceService;
 
     @Autowired
-    public void setBean(JenkinsBuildExecutorHelper jenkinsBuildExecutorHelper, DsInstanceService dsInstanceService) {
+    public void setBeans(JenkinsBuildExecutorHelper jenkinsBuildExecutorHelper, DsInstanceService dsInstanceService) {
         JenkinsBuildExecutorController.jenkinsBuildExecutorHelper = jenkinsBuildExecutorHelper;
         JenkinsBuildExecutorController.dsInstanceService = dsInstanceService;
     }

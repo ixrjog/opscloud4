@@ -39,6 +39,7 @@ white:
     - /api/ws/terminal/session/audit
     - /api/ws/server/task/play
     - /api/ws/jenkins/build/executor/status
+    - /api/ws/continuous-delivery
     - /api/out/ticket/approve
 
 # 开发环境配置

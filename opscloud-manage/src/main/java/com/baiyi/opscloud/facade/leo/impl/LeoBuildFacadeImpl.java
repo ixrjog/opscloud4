@@ -11,6 +11,7 @@ import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
 import com.baiyi.opscloud.leo.build.LeoBuildHandler;
+import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.delegate.GitLabRepoDelegate;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
@@ -26,12 +27,14 @@ import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.gitlab4j.api.models.Commit;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
@@ -96,12 +99,11 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .map(LeoJobModel.Job::getNotify)
                 .orElse(LeoBaseModel.Notify.EMPTY_NOTIFY);
 
-
         List<LeoBaseModel.Parameter> jobParameters = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getParameters)
                 .orElse(Lists.newArrayList());
-
+        // List<LeoBaseModel.Parameter> parameters = jobParameters.stream().filter(e -> !e.getName().equals("branch")).collect(Collectors.toList()).add()
         // 设置commitId
         DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, gitLab.getProject().getSshUrl());
         final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
@@ -113,8 +115,10 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                         .id(commit.getId())
                         .build()
         );
-
+        Map<String, String> dict = Maps.newHashMap();
+        dict.put(BuildDictConstants.BRANCH.getKey(), doBuild.getBranch());
         LeoBuildModel.Build build = LeoBuildModel.Build.builder()
+                .dict(dict)
                 .tags(tags)
                 .gitLab(gitLab)
                 .notify(notify)

@@ -42,5 +42,4 @@ public class LeoJobResponsePacker {
         job.setBuildSize(leoBuildService.countWithJobId(job.getId()));
     }
 
-
 }

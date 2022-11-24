@@ -19,6 +19,7 @@ import com.baiyi.opscloud.service.leo.LeoTemplateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -92,6 +93,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
     }
 
     @Override
+    @Transactional(rollbackFor = {LeoJobException.class})
     public void updateLeoJob(LeoJobParam.UpdateJob updateJob) {
         LeoTemplate leoTemplate = leoTemplateService.getById(updateJob.getTemplateId());
         if (leoTemplate == null) {
@@ -110,8 +112,10 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .map(LeoBaseModel.GitLab::getProject)
                 .map(LeoBaseModel.GitLabProject::getBranch)
                 .orElse(updateJob.getBranch());
+        LeoJob leoJob = leoJobService.getById(updateJob.getId());
+        boolean isUpdateTemplate = !leoJob.getTemplateId().equals(updateJob.getTemplateId());
 
-        LeoJob leoJob = LeoJob.builder()
+        LeoJob saveLeoJob = LeoJob.builder()
                 .id(updateJob.getId())
                 .name(updateJob.getName())
                 .parentId(updateJob.getParentId())
@@ -120,15 +124,19 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .branch(branch)
                 .jobConfig(updateJob.getJobConfig())
                 .templateId(updateJob.getTemplateId())
-                .templateVersion(templateVersion)
-                .templateContent(leoTemplate.getTemplateContent())
+                .templateVersion(isUpdateTemplate ? "-" : templateVersion)
+                //.templateContent(leoTemplate.getTemplateContent())
                 .hide(updateJob.getHide())
                 .href(updateJob.getHref())
                 .isActive(updateJob.getIsActive())
                 .comment(updateJob.getComment())
                 .build();
-        leoJobService.updateByPrimaryKeySelective(leoJob);
-        updateTagsWithLeoJob(leoJob, jobConfig);
+        leoJobService.updateByPrimaryKeySelective(saveLeoJob);
+        if (isUpdateTemplate) {
+            // 变更模板
+            this.upgradeLeoJobTemplateContent(updateJob.getId());
+        }
+        updateTagsWithLeoJob(saveLeoJob, jobConfig);
     }
 
     @Override

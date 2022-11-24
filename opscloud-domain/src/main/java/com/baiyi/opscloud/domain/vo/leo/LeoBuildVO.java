@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,6 +17,35 @@ import java.util.List;
  * @Version 1.0
  */
 public class LeoBuildVO {
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ApiModel
+    public static class Build implements Serializable {
+
+        private static final long serialVersionUID = -697201191162725310L;
+
+        private Integer id;
+        private Integer jobId;
+        private String jobName;
+        private String buildJobName;
+        private Integer applicationId;
+        private Integer buildNumber;
+        private String versionName;
+        private String versionDesc;
+        private Date startTime;
+        private Date endTime;
+        private String buildStatus;
+        private String buildResult;
+        private Boolean isFinish;
+        private Boolean isDeletedBuildJob;
+        private Integer executionType;
+        private String username;
+        private String buildConfig;
+        private String comment;
+    }
 
     @Data
     @Builder

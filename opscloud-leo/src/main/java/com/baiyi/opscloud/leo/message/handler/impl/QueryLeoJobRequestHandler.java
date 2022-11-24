@@ -40,13 +40,13 @@ public class QueryLeoJobRequestHandler extends BaseLeoContinuousDeliveryRequestH
 
     @Override
     public void handleRequest(Session session, String message) {
-        QueryLeoJobLeoRequestParam param = toRequestParam(message);
-        DataTable<LeoJobVO.Job> dataTable = queryLeoJobPage(param);
+        QueryLeoJobLeoRequestParam queryParam = toRequestParam(message);
+        DataTable<LeoJobVO.Job> dataTable = queryLeoJobPage(queryParam);
         LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
                 .body(dataTable)
                 .messageType(getMessageType())
                 .build();
-        sendToSession(session, response);
+        sendToSession(session,dataTable );
     }
 
     public DataTable<LeoJobVO.Job> queryLeoJobPage(QueryLeoJobLeoRequestParam pageQuery) {

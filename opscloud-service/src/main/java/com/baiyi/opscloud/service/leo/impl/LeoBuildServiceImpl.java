@@ -1,8 +1,13 @@
 package com.baiyi.opscloud.service.leo.impl;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
+import com.baiyi.opscloud.domain.param.leo.request.QueryLeoBuildLeoRequestParam;
 import com.baiyi.opscloud.mapper.opscloud.LeoBuildMapper;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -50,6 +55,17 @@ public class LeoBuildServiceImpl implements LeoBuildService {
                 .andEqualTo("isDeletedBuildJob", false);
         example.setOrderByClause("id desc");
         return leoBuildMapper.selectByExample(example);
+    }
+
+    @Override
+    public DataTable<LeoBuild> queryBuildPage(QueryLeoBuildLeoRequestParam pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Example example = new Example(LeoBuild.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andIn("id", pageQuery.getJobIds());
+        example.setOrderByClause("id desc");
+        List<LeoBuild> data = leoBuildMapper.selectByExample(example);
+        return new DataTable<>(data, page.getTotal());
     }
 
     @Override

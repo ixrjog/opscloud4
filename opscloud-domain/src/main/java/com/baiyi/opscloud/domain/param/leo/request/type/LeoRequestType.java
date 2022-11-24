@@ -8,6 +8,7 @@ package com.baiyi.opscloud.domain.param.leo.request.type;
 public enum LeoRequestType {
 
     LOGIN,
-    QUERY_LEO_JOB
+    QUERY_LEO_JOB,
+    QUERY_LEO_BUILD
 
 }

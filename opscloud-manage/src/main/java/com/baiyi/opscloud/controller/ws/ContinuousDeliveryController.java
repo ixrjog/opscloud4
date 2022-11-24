@@ -2,11 +2,11 @@ package com.baiyi.opscloud.controller.ws;
 
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
-import com.baiyi.opscloud.domain.param.leo.request.ILeoRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.LoginLeoRequestParam;
-import com.baiyi.opscloud.leo.message.handler.base.ILeoContinuousDeliveryRequestHandler;
-import com.baiyi.opscloud.leo.message.factory.LeoContinuousDeliveryMessageHandlerFactory;
+import com.baiyi.opscloud.domain.param.leo.request.SimpleLeoRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
+import com.baiyi.opscloud.leo.message.factory.LeoContinuousDeliveryMessageHandlerFactory;
+import com.baiyi.opscloud.leo.message.handler.base.ILeoContinuousDeliveryRequestHandler;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -23,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @Version 1.0
  */
 @Slf4j
-@ServerEndpoint(value = "/api/ws/continuous/delivery")
+@ServerEndpoint(value = "/api/ws/continuous-delivery")
 @Component
 public class ContinuousDeliveryController extends SimpleAuthentication {
 
@@ -31,7 +32,10 @@ public class ContinuousDeliveryController extends SimpleAuthentication {
 
     private static final ThreadLocal<CopyOnWriteArraySet<Session>> sessionSet = ThreadLocal.withInitial(CopyOnWriteArraySet::new);
 
-    private String loginUsername;
+    // 当前会话ID
+    private final String sessionId = UUID.randomUUID().toString();
+
+    private String username;
 
     private Session session = null;
 
@@ -72,24 +76,24 @@ public class ContinuousDeliveryController extends SimpleAuthentication {
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;
         String messageType = getLeoMessageType(message);
         // 处理登录状态
-        if (StringUtils.isEmpty(this.loginUsername)) {
+        if (StringUtils.isEmpty(this.username)) {
             // 鉴权并更新会话信息
             if (LeoRequestType.LOGIN.name().equals(messageType))
                 hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));
         } else {
-            SessionUtil.setUsername(this.loginUsername);
+            SessionUtil.setUsername(this.username);
         }
         ILeoContinuousDeliveryRequestHandler iMessageHandler = LeoContinuousDeliveryMessageHandlerFactory.getHandlerByMessageType(messageType);
         if (iMessageHandler != null) {
             iMessageHandler.handleRequest(session, message);
         } else {
-            log.warn("ContinuousDelivery消息类型不存在: messageType={}", messageType);
+            log.warn("ContinuousDelivery消息类型不正确: messageType={}", messageType);
         }
     }
 
     protected String getLeoMessageType(String message) {
-        ILeoRequestParam im = new GsonBuilder().create().fromJson(message, ILeoRequestParam.class);
-        return im.getMessageType();
+        SimpleLeoRequestParam requestParam = new GsonBuilder().create().fromJson(message, SimpleLeoRequestParam.class);
+        return requestParam.getMessageType();
     }
 
     /**
@@ -101,4 +105,5 @@ public class ContinuousDeliveryController extends SimpleAuthentication {
     @OnError
     public void onError(Session session, Throwable error) {
     }
+
 }
