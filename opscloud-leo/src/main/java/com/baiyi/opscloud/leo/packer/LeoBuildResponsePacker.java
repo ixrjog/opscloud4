@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.leo.packer;
 
+import com.baiyi.opscloud.common.annotation.AgoWrapper;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
+import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +16,10 @@ import org.springframework.stereotype.Component;
 public class LeoBuildResponsePacker {
 
     //  @EnvWrapper(extend = true)
+    @AgoWrapper(extend = true)
     public void wrap(LeoBuildVO.Build build) {
-
+        LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.load(build.getBuildConfig());
+        build.setBuildDetails(buildConfig);
     }
 
 }

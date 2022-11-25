@@ -44,6 +44,17 @@ public class LeoJobServiceImpl implements LeoJobService {
         return new DataTable<>(data, page.getTotal());
     }
 
+
+    @Override
+    public List<LeoJob> querJobWithApplicationIdAndEnvType(Integer applicationId, Integer envType) {
+        Example example = new Example(LeoJob.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("applicationId", applicationId)
+                .andEqualTo("envType", envType)
+                .andEqualTo("isActive", true);
+        return leoJobMapper.selectByExample(example);
+    }
+
     @Override
     public void add(LeoJob leoJob) {
         leoJobMapper.insert(leoJob);

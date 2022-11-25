@@ -5,6 +5,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.QueryLeoJobLeoRequestParam;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2022/11/4 14:38
@@ -15,6 +17,8 @@ public interface LeoJobService {
     DataTable<LeoJob> queryJobPage(LeoJobParam.JobPageQuery pageQuery);
 
     DataTable<LeoJob> queryJobPage(QueryLeoJobLeoRequestParam pageQuery);
+
+    List<LeoJob> querJobWithApplicationIdAndEnvType(Integer applicationId, Integer envType);
 
     void add(LeoJob leoJob);
 

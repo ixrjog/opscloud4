@@ -1,7 +1,10 @@
 package com.baiyi.opscloud.domain.vo.leo;
 
+import com.baiyi.opscloud.domain.vo.base.ShowTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,9 +26,14 @@ public class LeoBuildVO {
     @NoArgsConstructor
     @AllArgsConstructor
     @ApiModel
-    public static class Build implements Serializable {
+    public static class Build implements Serializable, ShowTime.IAgo {
 
         private static final long serialVersionUID = -697201191162725310L;
+
+        @ApiModelProperty(value = "构建对象")
+        private Object buildDetails;
+
+        private String ago;
 
         private Integer id;
         private Integer jobId;
@@ -35,7 +43,9 @@ public class LeoBuildVO {
         private Integer buildNumber;
         private String versionName;
         private String versionDesc;
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date startTime;
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date endTime;
         private String buildStatus;
         private String buildResult;
@@ -43,8 +53,15 @@ public class LeoBuildVO {
         private Boolean isDeletedBuildJob;
         private Integer executionType;
         private String username;
+        private String displayName;
         private String buildConfig;
         private String comment;
+
+        @Override
+        public Date getAgoTime() {
+            return this.startTime;
+        }
+
     }
 
     @Data

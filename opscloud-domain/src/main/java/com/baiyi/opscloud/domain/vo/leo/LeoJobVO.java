@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import java.util.List;
 
 /**
@@ -71,13 +70,13 @@ public class LeoJobVO {
         @ApiModelProperty(value = "校验版本")
         private VerifyTemplateVersion verifyTemplateVersion;
 
-        @Column(name = "默认分支")
+        @ApiModelProperty(value = "默认分支")
         private String branch;
 
-        @Column(name = "环境类型")
+        @ApiModelProperty(value = "环境类型")
         private Integer envType;
 
-        @Column(name = "当前构建编号")
+        @ApiModelProperty(value = "当前构建编号")
         private Integer buildNumber;
 
         @ApiModelProperty(value = "隐藏任务")

@@ -2,7 +2,6 @@ package com.baiyi.opscloud.service.leo.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.param.leo.request.QueryLeoBuildLeoRequestParam;
 import com.baiyi.opscloud.mapper.opscloud.LeoBuildMapper;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
@@ -62,7 +61,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(LeoBuild.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andIn("id", pageQuery.getJobIds());
+        criteria.andIn("jobId", pageQuery.getJobIds());
         example.setOrderByClause("id desc");
         List<LeoBuild> data = leoBuildMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());

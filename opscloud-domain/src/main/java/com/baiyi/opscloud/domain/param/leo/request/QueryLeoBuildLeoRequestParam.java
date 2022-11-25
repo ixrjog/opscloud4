@@ -16,6 +16,10 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class QueryLeoBuildLeoRequestParam extends SuperPageParam implements ILeoRequestParam {
 
+    private Integer applicationId;
+
+    private Integer envType;
+
     private List<Integer> jobIds;
 
     @Override

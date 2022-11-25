@@ -3,14 +3,17 @@ package com.baiyi.opscloud.leo.message.handler.impl;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.param.leo.request.QueryLeoBuildLeoRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.leo.message.handler.base.BaseLeoContinuousDeliveryRequestHandler;
 import com.baiyi.opscloud.leo.packer.LeoBuildResponsePacker;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
+import com.baiyi.opscloud.service.leo.LeoJobService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import javax.websocket.Session;
@@ -30,6 +33,9 @@ public class QueryLeoBuildRequestHandler extends BaseLeoContinuousDeliveryReques
     private LeoBuildService leoBuildService;
 
     @Resource
+    private LeoJobService leoJobService;
+
+    @Resource
     private LeoBuildResponsePacker leoBuildResponsePacker;
 
     @Override
@@ -40,6 +46,11 @@ public class QueryLeoBuildRequestHandler extends BaseLeoContinuousDeliveryReques
     @Override
     public void handleRequest(Session session, String message) {
         QueryLeoBuildLeoRequestParam queryParam = toRequestParam(message);
+        List<Integer> jobIds = leoJobService.querJobWithApplicationIdAndEnvType(queryParam.getApplicationId(), queryParam.getEnvType()).stream()
+                .map(LeoJob::getId).collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(jobIds))
+            return;
+        queryParam.setJobIds(jobIds);
         DataTable<LeoBuildVO.Build> dataTable = queryLeoBuildPage(queryParam);
         sendToSession(session, dataTable);
     }
