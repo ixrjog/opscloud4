@@ -10,7 +10,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.leo.build.BaseBuildHandler;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
-import com.baiyi.opscloud.leo.constants.BuildParameterConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
@@ -25,7 +24,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -109,6 +107,14 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
         }
     }
 
+    /**
+     * 生成构建参数
+     *
+     * @param leoBuild
+     * @param buildConfig
+     * @param leoJob
+     * @return
+     */
     private Map<String, String> generateBuildParamMap(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig, LeoJob leoJob) {
         List<LeoBaseModel.Parameter> jobParameters = Optional.of(buildConfig)
                 .map(LeoBuildModel.BuildConfig::getBuild)
@@ -123,14 +129,14 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
         Map<String, String> paramMap = jobParameters.stream()
                 .collect(Collectors.toMap(LeoBaseModel.Parameter::getName, LeoBaseModel.Parameter::getValue, (k1, k2) -> k1));
 
-        paramMap.put(BuildParameterConstants.PROJECT.getParam(), dict.get(BuildParameterConstants.PROJECT.getParam()));
-        paramMap.put(BuildParameterConstants.REGISTRY_URL.getParam(), dict.get(BuildParameterConstants.REGISTRY_URL.getParam()));
-        paramMap.put(BuildParameterConstants.BRANCH.getParam(), dict.get(BuildParameterConstants.BRANCH.getParam()));
-        paramMap.put(BuildParameterConstants.COMMIT_ID.getParam(), dict.get(BuildParameterConstants.COMMIT_ID.getParam()));
-        paramMap.put(BuildParameterConstants.SSH_URL.getParam(), dict.get(BuildParameterConstants.SSH_URL.getParam()));
-        paramMap.put(BuildParameterConstants.ENV.getParam(), dict.get(BuildParameterConstants.ENV.getParam()));
-        paramMap.put(BuildParameterConstants.JOB_BUILD_NUMBER.getParam(), String.valueOf(leoBuild.getBuildNumber()));
-        paramMap.put(BuildParameterConstants.APPLICATION_NAME.getParam(), dict.get(BuildParameterConstants.APPLICATION_NAME.getParam()));
+        paramMap.put(BuildDictConstants.PROJECT.getKey(), dict.get(BuildDictConstants.PROJECT.getKey()));
+        paramMap.put(BuildDictConstants.REGISTRY_URL.getKey(), dict.get(BuildDictConstants.REGISTRY_URL.getKey()));
+        paramMap.put(BuildDictConstants.BRANCH.getKey(), dict.get(BuildDictConstants.BRANCH.getKey()));
+        paramMap.put(BuildDictConstants.COMMIT_ID.getKey(), dict.get(BuildDictConstants.COMMIT_ID.getKey()));
+        paramMap.put(BuildDictConstants.SSH_URL.getKey(), dict.get(BuildDictConstants.SSH_URL.getKey()));
+        paramMap.put(BuildDictConstants.ENV.getKey(), dict.get(BuildDictConstants.ENV.getKey()));
+        paramMap.put(BuildDictConstants.JOB_BUILD_NUMBER.getKey(), String.valueOf(leoBuild.getBuildNumber()));
+        paramMap.put(BuildDictConstants.APPLICATION_NAME.getKey(), dict.get(BuildDictConstants.APPLICATION_NAME.getKey()));
 
         return paramMap;
     }
@@ -180,44 +186,51 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
                 .map(LeoBuildModel.BuildConfig::getBuild)
                 .map(LeoBuildModel.Build::getGitLab)
                 .map(LeoBaseModel.GitLab::getProject)
-                .orElseThrow(() -> new LeoBuildException("执行构建任务错误, 未指GitLab项目配置！"));
+                .orElseThrow(() -> new LeoBuildException("执行构建任务错误: 未指定GitLab项目配置！"));
 
         final String envName = getEnvNameWithLeoJob(leoJob);
-        final String shortCommit = gitLabProject.getCommit().getId().substring(0, 8);
+        final String commit = gitLabProject.getCommit().getId();
+        final String commitId = gitLabProject.getCommit().getId().substring(0, 8);
         final String buildNumber = String.valueOf(leoBuild.getBuildNumber());
         final String applicationName = applicationService.getById(leoJob.getApplicationId()).getApplicationKey();
-        if (!paramMap.containsKey(BuildParameterConstants.REGISTRY_URL.getParam())) {
+        if (paramMap.containsKey(BuildDictConstants.REGISTRY_URL.getKey())) {
+            dict.put(BuildDictConstants.REGISTRY_URL.getKey(), paramMap.get(BuildDictConstants.REGISTRY_URL.getKey()));
+        } else {
             final String registryUrl = Optional.ofNullable(jobConfig)
                     .map(LeoJobModel.JobConfig::getJob)
                     .map(LeoJobModel.Job::getCr)
                     .map(LeoJobModel.CR::getInstance)
                     .map(LeoJobModel.CRInstance::getUrl)
-                    .orElse("");
-            if (StringUtils.isNotBlank(registryUrl))
-                paramMap.put(BuildParameterConstants.REGISTRY_URL.getParam(), registryUrl);
+                    .orElseThrow(() -> new LeoBuildException("执行构建任务错误: 未指定RegistryUrl配置！"));
+            dict.put(BuildDictConstants.REGISTRY_URL.getKey(), registryUrl);
         }
-
-        dict.put(BuildDictConstants.ENV_NAME.getKey(), envName);
+        dict.put(BuildDictConstants.ENV.getKey(), envName);
         dict.put(BuildDictConstants.APPLICATION_NAME.getKey(), applicationName);
         dict.put(BuildDictConstants.APPLICATION_TAGS.getKey(), applicationTags);
         dict.put(BuildDictConstants.JOB_NAME.getKey(), leoBuild.getJobName());
         dict.put(BuildDictConstants.VERSION_NAME.getKey(), leoBuild.getVersionName());
         dict.put(BuildDictConstants.BUILD_NUMBER.getKey(), buildNumber);
-        // dict.put(BuildDictConstants.BRANCH.getKey(), params.get(BuildParameterConstants.BRANCH.getParam()));
-        dict.put(BuildDictConstants.COMMIT.getKey(), shortCommit);
+        dict.put(BuildDictConstants.COMMIT.getKey(), commit);
+        dict.put(BuildDictConstants.COMMIT_ID.getKey(), commitId);
+        dict.put(BuildDictConstants.SSH_URL.getKey(), gitLabProject.getSshUrl());
         dict.put(BuildDictConstants.DISPLAY_NAME.getKey(), displayName);
 
-        Optional<String> optionalRepoName = Optional.ofNullable(jobConfig)
-                .map(LeoJobModel.JobConfig::getJob)
-                .map(LeoJobModel.Job::getCr)
-                .map(LeoJobModel.CR::getRepo)
-                .map(LeoJobModel.Repo::getName);
-        optionalRepoName.ifPresent(s -> paramMap.put(BuildParameterConstants.PROJECT.getParam(), s));
+        String project;
+        if (paramMap.containsKey(BuildDictConstants.PROJECT.getKey())) {
+            project = paramMap.get(BuildDictConstants.PROJECT.getKey());
+        } else {
+            project = Optional.ofNullable(jobConfig)
+                    .map(LeoJobModel.JobConfig::getJob)
+                    .map(LeoJobModel.Job::getCr)
+                    .map(LeoJobModel.CR::getRepo)
+                    .map(LeoJobModel.Repo::getName)
+                    .orElseThrow(() -> new LeoBuildException("执行构建任务错误: 未指定Project配置！"));
+        }
+        dict.put(BuildDictConstants.PROJECT.getKey(), project);
 
-        final String project = paramMap.get(BuildParameterConstants.PROJECT.getParam());
-        final String registryUrl = paramMap.get(BuildParameterConstants.REGISTRY_URL.getParam());
+        final String registryUrl = dict.get(BuildDictConstants.REGISTRY_URL.getKey());
         // example: 460e7585-19
-        final String imageTag = Joiner.on("-").join(shortCommit, buildNumber);
+        final String imageTag = Joiner.on("-").join(commitId, buildNumber);
         // example: aliyun-cr-uk.chuanyinet.com/daily/merchant-rss:460e7585-19
         dict.put(BuildDictConstants.IMAGE.getKey(), String.format("%s/%s/%s:%s", registryUrl, envName, project, imageTag));
         dict.put(BuildDictConstants.IMAGE_TAG.getKey(), imageTag);

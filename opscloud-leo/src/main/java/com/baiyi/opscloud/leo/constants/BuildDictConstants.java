@@ -9,8 +9,7 @@ import lombok.Getter;
  */
 public enum BuildDictConstants {
 
-
-    ENV_NAME("envName"),
+    ENV("env"),
     APPLICATION_NAME("applicationName"),
     APPLICATION_TAGS("applicationTags"),
     JOB_NAME("jobName"),
@@ -21,7 +20,11 @@ public enum BuildDictConstants {
     DISPLAY_NAME("displayName"),
     IMAGE("image"),
     IMAGE_TAG("imageTag"),
-
+    PROJECT("project"),
+    COMMIT_ID("commitId"),
+    SSH_URL("sshUrl"),
+    JOB_BUILD_NUMBER("jobBuildNumber"),
+    REGISTRY_URL("registryUrl")
     ;
 
 

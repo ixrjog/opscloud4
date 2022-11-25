@@ -57,7 +57,7 @@ public class EcrImageValidator extends BaseCrImageValidator<AwsConfig> {
         final String repoNamespace = Optional.of(cr)
                 .map(LeoJobModel.CR::getRepo)
                 .map(LeoJobModel.Repo::getNamespace)
-                .orElseGet(() -> dict.get(BuildDictConstants.ENV_NAME.getKey()));
+                .orElseGet(() -> dict.get(BuildDictConstants.ENV.getKey()));
         // ${evnName}/${repoName}
         final String repositoryName = Joiner.on("/").join(repoNamespace, crRepoName);
         final String crRegistryId = Optional.of(cr)

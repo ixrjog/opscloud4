@@ -54,7 +54,7 @@ public class AcrImageValidator extends BaseCrImageValidator<AliyunConfig> {
         final String crRepoName = cr.getRepo().getName();
         Map<String, String> dict = buildConfig.getBuild().getDict();
         final String imageTag = dict.get(BuildDictConstants.IMAGE_TAG.getKey());
-        final String envName = dict.get(BuildDictConstants.ENV_NAME.getKey());
+        final String envName = dict.get(BuildDictConstants.ENV.getKey());
         final String crRepoId = Optional.of(cr)
                 .map(LeoJobModel.CR::getRepo)
                 .map(LeoJobModel.Repo::getId)

@@ -67,7 +67,7 @@ public class JobUtil {
         if (StringUtils.isNotBlank(suffix)) {
             Map<String, String> dict = Maps.newHashMap();
             dict.put(BuildDictConstants.BUILD_NUMBER.getKey(), String.valueOf(buildNumber));
-            dict.put(BuildDictConstants.ENV_NAME.getKey(), env.getEnvName());
+            dict.put(BuildDictConstants.ENV.getKey(), env.getEnvName());
             return Joiner.on("-").skipNulls().join(prefix, project, TemplateUtil.render(suffix, dict));
         }
         return Joiner.on("-").skipNulls().join(prefix, project, buildNumber);
