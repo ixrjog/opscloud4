@@ -33,7 +33,7 @@ public class AgoWrapperAspect {
         try {
             result = joinPoint.proceed();
         } catch (Throwable e) {
-            throw new OCRuntimeException(e.getMessage());
+           throw new OCRuntimeException(e.getMessage());
         }
         boolean extend = agoWrapper.extend();
         ShowTime.IAgo targetAgo = null;

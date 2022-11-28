@@ -33,6 +33,8 @@ public class LeoBuildVO {
         @ApiModelProperty(value = "构建对象")
         private Object buildDetails;
 
+        private Pipeline pipeline;
+
         private String ago;
 
         private Integer id;
@@ -52,6 +54,7 @@ public class LeoBuildVO {
         private Boolean isFinish;
         private Boolean isDeletedBuildJob;
         private Integer executionType;
+        private String pipelineContent;
         private String username;
         private String displayName;
         private String buildConfig;
@@ -59,9 +62,11 @@ public class LeoBuildVO {
 
         @Override
         public Date getAgoTime() {
-            return this.startTime;
+            if (this.startTime != null) {
+                return this.startTime;
+            }
+            return new Date();
         }
-
     }
 
     @Data
@@ -121,6 +126,49 @@ public class LeoBuildVO {
         private String commit;
         private String commitMessage;
         private String commitUrl;
+
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
+    public static class Pipeline implements Serializable {
+
+        private static final long serialVersionUID = -2644838767573635251L;
+
+        private List<Node> nodes;
+
+    }
+
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
+    public static class Node implements Serializable {
+
+        public static final Node QUEUE = Node.builder()
+                .name("Queue")
+                .build();
+
+        public static final Node INVALID = Node.builder()
+                .name("Invalid")
+                .build();
+
+        private static final long serialVersionUID = -1465972308441846486L;
+        private String firstParent;
+        private String name;
+        private String state;
+        @Builder.Default
+        private Integer completePercent = 100;
+        private String id;
+        @Builder.Default
+        private String type = "STAGE";
+        @Builder.Default
+        private List<Node> children = Lists.newArrayList();
 
     }
 

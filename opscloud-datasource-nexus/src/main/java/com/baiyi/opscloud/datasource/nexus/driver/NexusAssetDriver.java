@@ -44,4 +44,5 @@ public class NexusAssetDriver {
             return nexusAPI.listAssets(buildCredential(config).toBasic(), repository, continuationToken);
         }
     }
+
 }

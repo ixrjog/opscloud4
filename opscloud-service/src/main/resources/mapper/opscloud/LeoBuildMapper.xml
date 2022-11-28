@@ -20,6 +20,7 @@
         <result column="is_finish" jdbcType="BIT" property="isFinish"/>
         <result column="is_deleted_build_job" jdbcType="BIT" property="isDeletedBuildJob"/>
         <result column="execution_type" jdbcType="INTEGER" property="executionType"/>
+        <result column="pipeline_content" jdbcType="LONGVARCHAR" property="pipelineContent"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>

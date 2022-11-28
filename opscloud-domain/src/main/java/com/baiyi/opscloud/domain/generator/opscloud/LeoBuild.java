@@ -103,6 +103,12 @@ public class LeoBuild {
     private Integer executionType;
 
     /**
+     * 流水线内容
+     */
+    @Column(name = "pipeline_content")
+    private String pipelineContent;
+
+    /**
      * 操作用户
      */
     private String username;

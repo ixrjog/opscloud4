@@ -85,8 +85,6 @@ public class ServerTerminalController extends SimpleAuthentication {
             // 线程启动
             serverTerminalExecutor.execute(new SentOutputTask(sessionId, session));
             ThreadPoolTaskExecutorPrint.print(serverTerminalExecutor, "serverTermExecutor");
-            //  Thread thread = new Thread(run);
-            //  thread.start();
         } catch (Exception e) {
             log.error("{} create connection error！", IF_NAME);
             log.error(e.getMessage());
