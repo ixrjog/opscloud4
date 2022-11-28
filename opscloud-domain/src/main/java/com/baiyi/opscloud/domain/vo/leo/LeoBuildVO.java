@@ -152,10 +152,12 @@ public class LeoBuildVO {
 
         public static final Node QUEUE = Node.builder()
                 .name("Queue")
+                .state("PAUSED")
                 .build();
 
         public static final Node INVALID = Node.builder()
                 .name("Invalid")
+                .state("SKIPPED")
                 .build();
 
         private static final long serialVersionUID = -1465972308441846486L;
