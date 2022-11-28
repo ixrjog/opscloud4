@@ -21,6 +21,7 @@ public interface LeoBuildService {
 
     /**
      * 查询job的最大构建编号
+     *
      * @param jobId
      * @return
      */
@@ -31,5 +32,7 @@ public interface LeoBuildService {
     DataTable<LeoBuild> queryBuildPage(QueryLeoBuildLeoRequestParam pageQuery);
 
     int countWithJobId(Integer jobId);
+
+    List<LeoBuild> queryLatestBuildWithJobId(Integer jobId, int size);
 
 }

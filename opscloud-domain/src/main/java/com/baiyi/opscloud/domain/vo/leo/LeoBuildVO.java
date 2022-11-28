@@ -69,6 +69,25 @@ public class LeoBuildVO {
         }
     }
 
+    /**
+     * 最新构建信息
+     */
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ApiModel
+    public static class LatestBuildInfo implements Serializable {
+
+        private static final long serialVersionUID = -7617778439412190882L;
+
+        private Integer buildId;
+        private Integer buildNumber;
+        private Boolean running;
+        private String color;
+
+    }
+
     @Data
     @Builder
     @NoArgsConstructor
@@ -141,7 +160,6 @@ public class LeoBuildVO {
         private List<Node> nodes;
 
     }
-
 
     @Data
     @Builder

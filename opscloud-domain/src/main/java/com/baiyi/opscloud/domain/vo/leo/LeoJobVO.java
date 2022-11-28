@@ -27,6 +27,9 @@ public class LeoJobVO {
 
         private final Integer businessType = BusinessTypeEnum.LEO_JOB.getType();
 
+        @ApiModelProperty(value = "最新构建信息")
+        private List<LeoBuildVO.LatestBuildInfo> latestBuildInfos;
+
         @Override
         public Integer getBusinessId() {
             return this.id;

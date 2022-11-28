@@ -75,4 +75,14 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         return leoBuildMapper.selectCountByExample(example);
     }
 
+    @Override
+    public List<LeoBuild> queryLatestBuildWithJobId(Integer jobId, int size) {
+        Page page = PageHelper.startPage(1, size);
+        Example example = new Example(LeoBuild.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("jobId", jobId);
+        example.setOrderByClause("id desc");
+        return leoBuildMapper.selectByExample(example);
+    }
+
 }
