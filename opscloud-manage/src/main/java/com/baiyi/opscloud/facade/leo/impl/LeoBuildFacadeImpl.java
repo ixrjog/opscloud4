@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.facade.leo.impl;
 
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
+import com.baiyi.opscloud.common.datasource.JenkinsConfig;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsJobDriver;
@@ -14,9 +16,11 @@ import com.baiyi.opscloud.leo.build.LeoBuildHandler;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.delegate.GitLabRepoDelegate;
+import com.baiyi.opscloud.leo.domain.model.JenkinsPipeline;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
+import com.baiyi.opscloud.leo.driver.BlueRestDriver;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.leo.log.BuildingLogHelper;
 import com.baiyi.opscloud.leo.util.JobUtil;
@@ -71,6 +75,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     private final EnvService envService;
 
+    private final BlueRestDriver blueRestDriver;
+
 
     @Override
     public void doBuild(LeoBuildParam.DoBuild doBuild) {
@@ -103,8 +109,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getParameters)
                 .orElse(Lists.newArrayList());
-        // List<LeoBaseModel.Parameter> parameters = jobParameters.stream().filter(e -> !e.getName().equals("branch")).collect(Collectors.toList()).add()
-        // 设置commitId
+
         DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, gitLab.getProject().getSshUrl());
         final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
@@ -151,6 +156,33 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .build();
         leoBuildService.add(leoBuild);
         handleBuild(leoBuild, buildConfig);
+    }
+
+    @Override
+    public void stopBuild(int buildId) {
+        LeoBuild leoBuild = leoBuildService.getById(buildId);
+        if (leoBuild == null) {
+            throw new LeoBuildException("构建不存在: buildId={}", buildId);
+        }
+        if (leoBuild.getIsFinish()) {
+            throw new LeoBuildException("构建任务已经结束！");
+        }
+        LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.load(leoBuild);
+        final String jenkinsUuid = Optional.ofNullable(buildConfig)
+                .map(LeoBuildModel.BuildConfig::getBuild)
+                .map(LeoBuildModel.Build::getJenkins)
+                .map(LeoBaseModel.Jenkins::getInstance)
+                .map(LeoBaseModel.DsInstance::getUuid)
+                .orElseThrow(() -> new LeoBuildException("Jenkins配置不存在！"));
+        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(jenkinsUuid);
+        JenkinsConfig jenkinsConfig = dsConfigHelper.build(dsConfig, JenkinsConfig.class);
+        try {
+            logHelper.info(leoBuild, "用户停止构建任务: username={}", SessionUtil.getUsername());
+            JenkinsPipeline.Step step = blueRestDriver.stopPipeline(jenkinsConfig.getJenkins(), leoBuild.getBuildJobName(), String.valueOf(1));
+            logHelper.info(leoBuild, "用户停止构建任务: {}", JSONUtil.writeValueAsString(step));
+        } catch (Exception e) {
+            logHelper.error(leoBuild, "停止构建任务失败: err={}", e.getMessage());
+        }
     }
 
     /**

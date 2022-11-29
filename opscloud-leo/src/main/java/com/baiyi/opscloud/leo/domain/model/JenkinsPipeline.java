@@ -78,6 +78,7 @@ public class JenkinsPipeline {
 
         private String displayDescription;
         private String displayName;
+        private Long durationInMillis;
         private String id;
         private String result;
         private String state;

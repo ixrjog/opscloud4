@@ -275,13 +275,13 @@ public class BuildWithDetails extends Build {
         return this.client.get(this.getUrl() + "/logText/progressiveHtml");
     }
 
-    public void streamConsoleOutput(BuildConsoleStreamListener listener, int poolingInterval, int poolingTimeout) throws InterruptedException, IOException {
+    public void streamConsoleOutput(BuildConsoleStreamListener listener, long poolingInterval, long poolingTimeout) throws InterruptedException, IOException {
         long startTime = System.currentTimeMillis();
-        long timeoutTime = startTime + (long) (poolingTimeout * 1000);
+        long timeoutTime = startTime + poolingTimeout * 1000;
         int bufferOffset = 0;
 
         while (true) {
-            Thread.sleep((long) (poolingInterval * 1000));
+            Thread.sleep(poolingInterval * 1000);
             ConsoleLog consoleLog = null;
             consoleLog = this.getConsoleOutputText(bufferOffset);
             String logString = consoleLog.getConsoleLog();
@@ -295,7 +295,6 @@ public class BuildWithDetails extends Build {
                 if (var11 <= timeoutTime) {
                     continue;
                 }
-
                 this.LOGGER.warn("Pooling for build {0} for {2} timeout! Check if job stuck in jenkins", this.getDisplayName(), this.getNumber());
                 break;
             }

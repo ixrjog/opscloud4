@@ -3,12 +3,15 @@ package com.baiyi.opscloud.controller.http;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
+import com.baiyi.opscloud.domain.param.leo.LeoBuildPipelineParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.LeoTemplateParam;
+import com.baiyi.opscloud.domain.vo.leo.LeoBuildPipelineVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoTemplateVO;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
+import com.baiyi.opscloud.facade.leo.LeoBuildPipelineFacade;
 import com.baiyi.opscloud.facade.leo.LeoJobFacade;
 import com.baiyi.opscloud.facade.leo.LeoTemplateFacade;
 import io.swagger.annotations.Api;
@@ -18,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -35,6 +39,8 @@ public class LeoController {
     private final LeoJobFacade leoJobFacade;
 
     private final LeoBuildFacade leoBuildFacade;
+
+    private final LeoBuildPipelineFacade leoBuildPipelineFacade;
 
     // Leo Template -------------
 
@@ -116,6 +122,13 @@ public class LeoController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "停止构建")
+    @PutMapping(value = "/build/stop", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> stopLeoBuild(@RequestParam @Valid int buildId) {
+        leoBuildFacade.stopBuild(buildId);
+        return HttpResult.SUCCESS;
+    }
+
     @ApiOperation(value = "构建分支选项")
     @PostMapping(value = "/build/branch/options/get", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<LeoBuildVO.BranchOptions> getBuildBranchOptions(@RequestBody @Valid LeoBuildParam.GetBuildBranchOptions getOptions) {
@@ -126,6 +139,14 @@ public class LeoController {
     @DeleteMapping(value = "/build/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteLeoBuildById(@RequestParam @Valid int buildId) {
         return HttpResult.SUCCESS;
+    }
+
+    // Leo Pipeline
+
+    @ApiOperation(value = "查询流水线节点步骤")
+    @PostMapping(value = "/pipeline/node/steps/get", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<LeoBuildPipelineVO.Step>> getPipelineRunNodeSteps(@RequestBody @Valid LeoBuildPipelineParam.GetPipelineRunNodeSteps param) {
+        return new HttpResult<>(leoBuildPipelineFacade.getPipelineRunNodeSteps(param));
     }
 
 }

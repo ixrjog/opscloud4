@@ -1,17 +1,19 @@
 package com.baiyi.opscloud.leo.driver;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
-import com.baiyi.opscloud.domain.model.Authorization;
 import com.baiyi.opscloud.leo.domain.model.JenkinsPipeline;
 import com.baiyi.opscloud.leo.driver.feign.BlueRestFeign;
 import feign.Feign;
+import feign.Request;
 import feign.Retryer;
+import feign.auth.BasicAuthRequestInterceptor;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -22,35 +24,41 @@ import java.util.List;
 @Component
 public class BlueRestDriver {
 
-    private Authorization.Credential toCredential(JenkinsConfig.Jenkins config) {
-        return Authorization.Credential.builder()
-                .username(config.getUsername())
-                .password(config.getToken())
-                .build();
-    }
-
     private BlueRestFeign buildFeign(JenkinsConfig.Jenkins config) {
         return Feign.builder()
                 .retryer(new Retryer.Default(3000, 3000, 3))
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
+                .options(new Request.Options(10L, TimeUnit.SECONDS, 60L, TimeUnit.SECONDS, false))
+                .requestInterceptor(new BasicAuthRequestInterceptor(config.getUsername(),
+                        config.getToken()))
+                .target(BlueRestFeign.class, config.getUrl());
+    }
+
+    private BlueRestFeign buildFeignWithLog(JenkinsConfig.Jenkins config) {
+        return Feign.builder()
+                .options(new Request.Options(10L, TimeUnit.SECONDS, 60L, TimeUnit.SECONDS, false))
+                .requestInterceptor(new BasicAuthRequestInterceptor(config.getUsername(),
+                        config.getToken()))
                 .target(BlueRestFeign.class, config.getUrl());
     }
 
     /**
      * 查询任务构建所有节点
+     *
      * @param config
      * @param jobName
      * @param buildNumber
      * @return
      */
-    public List<JenkinsPipeline.Node> getPipelineRunNodes(JenkinsConfig.Jenkins config, String jobName, String buildNumber) {
+    public List<JenkinsPipeline.Node> getPipelineNodes(JenkinsConfig.Jenkins config, String jobName, String buildNumber) {
         BlueRestFeign blueRestAPI = buildFeign(config);
-        return blueRestAPI.getPipelineRunNodes(toCredential(config).toBasic(), jobName, buildNumber);
+        return blueRestAPI.getPipelineNodes(jobName, buildNumber);
     }
 
     /**
      * 查询步骤日志
+     *
      * @param config
      * @param jobName
      * @param buildNumber
@@ -58,22 +66,34 @@ public class BlueRestDriver {
      * @param stepId
      * @return
      */
-    public String getPipelineRunNodeStepLog(JenkinsConfig.Jenkins config, String jobName, String buildNumber, String nodeId, String stepId) {
-        BlueRestFeign blueRestAPI = buildFeign(config);
-        return blueRestAPI.getPipelineRunNodeStepLog(toCredential(config).toBasic(), jobName, buildNumber, nodeId, stepId);
+    public String getPipelineNodeStepLog(JenkinsConfig.Jenkins config, String jobName, String buildNumber, String nodeId, String stepId) {
+        BlueRestFeign blueRestAPI = buildFeignWithLog(config);
+        return blueRestAPI.getPipelineNodeStepLog(jobName, buildNumber, nodeId, stepId);
     }
 
     /**
      * 查询节点步骤
+     *
      * @param config
      * @param jobName
      * @param buildNumber
      * @param nodeId
      * @return
      */
-    public List<JenkinsPipeline.Step> getPipelineRunNodeSteps(JenkinsConfig.Jenkins config, String jobName, String buildNumber, String nodeId) {
+    public List<JenkinsPipeline.Step> getPipelineNodeSteps(JenkinsConfig.Jenkins config, String jobName, String buildNumber, String nodeId) {
         BlueRestFeign blueRestAPI = buildFeign(config);
-        return blueRestAPI.getPipelineRunNodeSteps(toCredential(config).toBasic(), jobName, buildNumber, nodeId);
+        return blueRestAPI.getPipelineNodeSteps(jobName, buildNumber, nodeId);
     }
 
+    public JenkinsPipeline.Step stopPipeline(JenkinsConfig.Jenkins config, String jobName, String buildNumber) {
+        BlueRestFeign blueRestAPI = buildFeign(config);
+        return blueRestAPI.stopPipeline(jobName, buildNumber);
+    }
+
+//    private class CustomFeignErrorHandler implements ErrorDecoder {
+//        @Override
+//        public Exception decode(String s, Response response) {
+//            return null;
+//        }
+//    }
 }

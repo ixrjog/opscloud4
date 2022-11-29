@@ -40,7 +40,7 @@ public class RecordBuildPipelineConcreteHandler extends BaseBuildHandler {
         try {
             LeoBaseModel.DsInstance dsInstance = buildConfig.getBuild().getJenkins().getInstance();
             JenkinsConfig jenkinsConfig = getJenkinsConfigWithUuid(dsInstance.getUuid());
-            List<JenkinsPipeline.Node> nodes = blueRestDriver.getPipelineRunNodes(jenkinsConfig.getJenkins(), leoBuild.getBuildJobName(), String.valueOf(1));
+            List<JenkinsPipeline.Node> nodes = blueRestDriver.getPipelineNodes(jenkinsConfig.getJenkins(), leoBuild.getBuildJobName(), String.valueOf(1));
             LeoBuildVO.Pipeline pipeline = LeoBuildVO.Pipeline.builder()
                     .nodes(JenkinsPipelineConverter.toLeoBuildNodes(nodes))
                     .build();

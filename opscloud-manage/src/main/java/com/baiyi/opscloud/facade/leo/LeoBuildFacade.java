@@ -12,12 +12,21 @@ public interface LeoBuildFacade {
 
     /**
      * 手动执行构建
+     *
      * @param doBuild
      */
     void doBuild(LeoBuildParam.DoBuild doBuild);
 
+
+    /**
+     * 停止构建
+     * @param buildId
+     */
+    void stopBuild(int buildId);
+
     /**
      * 构建页面查询项目分支
+     *
      * @param getOptions
      * @return
      */

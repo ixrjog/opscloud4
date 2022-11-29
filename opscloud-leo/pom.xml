@@ -38,6 +38,7 @@
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-jenkins</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-message</artifactId>
@@ -46,10 +47,12 @@
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-aliyun-acr</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-aws-ecr</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>

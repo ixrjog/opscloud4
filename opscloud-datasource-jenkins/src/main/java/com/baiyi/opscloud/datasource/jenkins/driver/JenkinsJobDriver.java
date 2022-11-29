@@ -3,6 +3,7 @@ package com.baiyi.opscloud.datasource.jenkins.driver;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
 import com.baiyi.opscloud.datasource.jenkins.helper.BuildConsoleStreamListener;
+import com.baiyi.opscloud.datasource.jenkins.model.Build;
 import com.baiyi.opscloud.datasource.jenkins.model.BuildWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.model.JobWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.model.QueueReference;
@@ -84,6 +85,32 @@ public class JenkinsJobDriver {
         jenkinsServer.deleteJob(jobName, crumbFlag);
     }
 
+    /**
+     * 停止正在执行的构建
+     *
+     * @param jenkins
+     * @param jobName
+     * @param buildNumber
+     * @throws URISyntaxException
+     * @throws IOException
+     */
+    public void stopJobBuild(JenkinsConfig.Jenkins jenkins, String jobName, Integer buildNumber) throws URISyntaxException, IOException {
+        assert jenkins != null;
+        boolean crumbFlag = Optional.of(jenkins)
+                .map(JenkinsConfig.Jenkins::getSecurity)
+                .map(JenkinsConfig.Security::getCrumbFlag)
+                .orElse(false);
+        JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
+        JobWithDetails jobWithDetails = jenkinsServer.getJob(jobName);
+        Optional<Build> optionalBuild = jobWithDetails.getBuildByNumber(buildNumber);
+        if (optionalBuild.isPresent()) {
+            BuildWithDetails buildWithDetails = optionalBuild.get().details();
+            if (buildWithDetails.isBuilding()) {
+                log.info("停止正在执行的构建: url={}, jobName={}, buildNumber={}", jenkins.getUrl(), jobName, buildNumber);
+                buildWithDetails.Stop(crumbFlag);
+            }
+        }
+    }
 
     /**
      * 输出日志到会话
@@ -94,31 +121,30 @@ public class JenkinsJobDriver {
      * @throws InterruptedException
      */
     public void streamConsoleOutputToSession(BuildWithDetails buildWithDetails, Session session, boolean crumbFlag) throws IOException, InterruptedException {
-        buildWithDetails.streamConsoleOutput(
-                new BuildConsoleStreamListener() {
-                    @Override
-                    public void onData(String newLogChunk) {
-                        try {
-                            if (session.isOpen()) {
-                                session.getBasicRemote().sendText(newLogChunk);
-                            } else {
-                                finished();
-                            }
-                        } catch (IOException e) {
-                            log.error(e.getMessage());
-                        }
+        buildWithDetails.streamConsoleOutput(new BuildConsoleStreamListener() {
+            @Override
+            public void onData(String newLogChunk) {
+                try {
+                    if (session.isOpen()) {
+                        session.getBasicRemote().sendText(newLogChunk);
+                    } else {
+                        finished();
                     }
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
+            }
 
-                    @Override
-                    public void finished() {
-                        // 任务日志会话关闭！
-                        try {
-                            session.close();
-                        } catch (IOException e) {
-                            log.error(e.getMessage());
-                        }
-                    }
-                }, POOLING_INTERVAL, POOLING_TIMEOUT);
+            @Override
+            public void finished() {
+                // 任务日志会话关闭！
+                try {
+                    session.close();
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
+            }
+        }, POOLING_INTERVAL, POOLING_TIMEOUT);
     }
 
 }

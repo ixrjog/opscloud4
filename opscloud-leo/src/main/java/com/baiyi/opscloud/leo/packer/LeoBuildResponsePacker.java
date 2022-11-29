@@ -55,7 +55,7 @@ public class LeoBuildResponsePacker {
             try {
                 DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(buildConfig.getBuild().getJenkins().getInstance().getUuid());
                 JenkinsConfig jenkinsConfig = dsConfigHelper.build(dsConfig, JenkinsConfig.class);
-                List<JenkinsPipeline.Node> nodes = blueRestDriver.getPipelineRunNodes(jenkinsConfig.getJenkins(), build.getBuildJobName(), String.valueOf(1));
+                List<JenkinsPipeline.Node> nodes = blueRestDriver.getPipelineNodes(jenkinsConfig.getJenkins(), build.getBuildJobName(), String.valueOf(1));
                 return LeoBuildVO.Pipeline.builder()
                         .nodes(JenkinsPipelineConverter.toLeoBuildNodes(nodes))
                         .build();
