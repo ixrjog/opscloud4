@@ -1,13 +1,12 @@
 package com.baiyi.opscloud.datasource.jenkins.driver;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
+import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
 import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
 import com.baiyi.opscloud.datasource.jenkins.helper.BuildConsoleStreamListener;
-import com.baiyi.opscloud.datasource.jenkins.model.Build;
-import com.baiyi.opscloud.datasource.jenkins.model.BuildWithDetails;
-import com.baiyi.opscloud.datasource.jenkins.model.JobWithDetails;
-import com.baiyi.opscloud.datasource.jenkins.model.QueueReference;
+import com.baiyi.opscloud.datasource.jenkins.model.*;
 import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
+import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -120,13 +119,21 @@ public class JenkinsJobDriver {
      * @throws IOException
      * @throws InterruptedException
      */
-    public void streamConsoleOutputToSession(BuildWithDetails buildWithDetails, Session session, boolean crumbFlag) throws IOException, InterruptedException {
+    public void streamConsoleOutputToSession(String seesionId, int buildId, BuildWithDetails buildWithDetails, Session session, boolean crumbFlag) throws IOException, InterruptedException {
         buildWithDetails.streamConsoleOutput(new BuildConsoleStreamListener() {
+
             @Override
             public void onData(String newLogChunk) {
                 try {
                     if (session.isOpen()) {
-                        session.getBasicRemote().sendText(newLogChunk);
+                        LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
+                                .body(JenkinsConsoleLog.Log.builder()
+                                        .buildId(buildId)
+                                        .log(newLogChunk)
+                                        .build())
+                                .messageType(LeoRequestType.QUERY_LEO_BUILD_CONSOLE_STREAM.name())
+                                .build();
+                        session.getBasicRemote().sendText(response.toString());
                     } else {
                         finished();
                     }
@@ -141,9 +148,9 @@ public class JenkinsJobDriver {
                 try {
                     session.close();
                 } catch (IOException e) {
-                    log.error(e.getMessage());
                 }
             }
+
         }, POOLING_INTERVAL, POOLING_TIMEOUT);
     }
 

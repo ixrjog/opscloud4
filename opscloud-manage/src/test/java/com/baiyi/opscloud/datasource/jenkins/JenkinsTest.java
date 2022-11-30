@@ -124,10 +124,11 @@ public class JenkinsTest extends BaseJenkinsTest {
         // 18 60
         JenkinsConfig config = getConfigById(60);
         try {
-            JobWithDetails jobWithDetails = JenkinsServerDriver.getJob(config.getJenkins(), "MERCHANT-RSS_MERCHANT-RSS-DEV_20");
+            JobWithDetails jobWithDetails = JenkinsServerDriver.getJob(config.getJenkins(), "MERCHANT-RSS_MERCHANT-RSS-DEV_23");
 
             Build build= jobWithDetails.details().getLastBuild();
-            build.details();
+            BuildWithDetails buildWithDetails = build.details();
+            print(buildWithDetails.isBuilding());
 
         } catch (Exception e) {
             print(e.getMessage());

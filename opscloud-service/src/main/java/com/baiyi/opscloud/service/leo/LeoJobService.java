@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.leo;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
-import com.baiyi.opscloud.domain.param.leo.request.QueryLeoJobLeoRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.QueryLeoJobRequestParam;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface LeoJobService {
 
     DataTable<LeoJob> queryJobPage(LeoJobParam.JobPageQuery pageQuery);
 
-    DataTable<LeoJob> queryJobPage(QueryLeoJobLeoRequestParam pageQuery);
+    DataTable<LeoJob> queryJobPage(QueryLeoJobRequestParam pageQuery);
 
     List<LeoJob> querJobWithApplicationIdAndEnvType(Integer applicationId, Integer envType);
 

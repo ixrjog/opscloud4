@@ -2,13 +2,15 @@ package com.baiyi.opscloud.leo.task;
 
 import com.baiyi.opscloud.leo.message.factory.LeoContinuousDeliveryMessageHandlerFactory;
 import com.baiyi.opscloud.leo.message.handler.base.ILeoContinuousDeliveryRequestHandler;
-import com.baiyi.opscloud.leo.task.session.LeoSessionQueryMap;
+import com.baiyi.opscloud.common.leo.session.LeoSessionQueryMap;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.Session;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import static com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType.QUERY_LEO_BUILD_CONSOLE_STREAM;
 
 /**
  * @Author baiyi
@@ -40,9 +42,13 @@ public class WatchLeoQueryTask implements Runnable {
                 if (LeoSessionQueryMap.sessionQueryMapContainsKey(this.sessionId)) {
                     Map<String, String> queryMap = LeoSessionQueryMap.getSessionQueryMap(this.sessionId);
                     queryMap.keySet().forEach(messageType -> {
+                        if (messageType.equals(QUERY_LEO_BUILD_CONSOLE_STREAM.name())) {
+                            // 不处理控制台日志流
+                            return;
+                        }
                         ILeoContinuousDeliveryRequestHandler handler = LeoContinuousDeliveryMessageHandlerFactory.getHandlerByMessageType(messageType);
                         if (handler != null) {
-                            handler.handleRequest(session, queryMap.get(messageType));
+                            handler.handleRequest(this.sessionId, session, queryMap.get(messageType));
                         }
                     });
                 }

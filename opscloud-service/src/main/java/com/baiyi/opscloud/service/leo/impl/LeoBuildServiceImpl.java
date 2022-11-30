@@ -2,7 +2,7 @@ package com.baiyi.opscloud.service.leo.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.domain.param.leo.request.QueryLeoBuildLeoRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.QueryLeoBuildRequestParam;
 import com.baiyi.opscloud.mapper.opscloud.LeoBuildMapper;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.github.pagehelper.Page;
@@ -57,7 +57,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
     }
 
     @Override
-    public DataTable<LeoBuild> queryBuildPage(QueryLeoBuildLeoRequestParam pageQuery) {
+    public DataTable<LeoBuild> queryBuildPage(QueryLeoBuildRequestParam pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(LeoBuild.class);
         Example.Criteria criteria = example.createCriteria();

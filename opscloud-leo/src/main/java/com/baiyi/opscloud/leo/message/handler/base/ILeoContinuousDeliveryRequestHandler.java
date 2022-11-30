@@ -12,6 +12,6 @@ import javax.websocket.Session;
  */
 public interface ILeoContinuousDeliveryRequestHandler extends ILeoRequestParam {
 
-    void handleRequest(Session session, String message);
+    void handleRequest(String sessionId, Session session, String message);
 
 }

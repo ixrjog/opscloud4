@@ -9,6 +9,7 @@ public enum LeoRequestType {
 
     LOGIN,
     QUERY_LEO_JOB,
-    QUERY_LEO_BUILD
+    QUERY_LEO_BUILD,
+    QUERY_LEO_BUILD_CONSOLE_STREAM
 
 }

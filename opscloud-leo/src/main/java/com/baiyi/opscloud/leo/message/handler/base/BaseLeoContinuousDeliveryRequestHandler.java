@@ -2,7 +2,7 @@ package com.baiyi.opscloud.leo.message.handler.base;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.leo.message.factory.LeoContinuousDeliveryMessageHandlerFactory;
-import com.baiyi.opscloud.leo.message.response.LeoContinuousDeliveryResponse;
+import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;

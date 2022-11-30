@@ -40,6 +40,7 @@ white:
     - /api/ws/server/task/play
     - /api/ws/jenkins/build/executor/status
     - /api/ws/continuous-delivery
+    - /api/ws/continuous-delivery/jenkins/console/stream
     - /api/out/ticket/approve
 
 # 开发环境配置

@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.leo.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
-import com.baiyi.opscloud.domain.param.leo.request.QueryLeoJobLeoRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.QueryLeoJobRequestParam;
 import com.baiyi.opscloud.mapper.opscloud.LeoJobMapper;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.github.pagehelper.Page;
@@ -33,7 +33,7 @@ public class LeoJobServiceImpl implements LeoJobService {
     }
 
     @Override
-    public DataTable<LeoJob> queryJobPage(QueryLeoJobLeoRequestParam pageQuery) {
+    public DataTable<LeoJob> queryJobPage(QueryLeoJobRequestParam pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(LeoJob.class);
         Example.Criteria criteria = example.createCriteria();

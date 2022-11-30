@@ -1,12 +1,10 @@
 package com.baiyi.opscloud.controller.ws;
 
-import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.param.leo.request.LoginLeoRequestParam;
-import com.baiyi.opscloud.domain.param.leo.request.SimpleLeoRequestParam;
-import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
-import com.baiyi.opscloud.leo.task.WatchLeoQueryTask;
-import com.baiyi.opscloud.common.leo.session.LeoSessionQueryMap;
+import com.baiyi.opscloud.domain.param.leo.request.QueryLeoBuildConsoleStreamRequestParam;
+import com.baiyi.opscloud.leo.message.factory.LeoContinuousDeliveryMessageHandlerFactory;
+import com.baiyi.opscloud.leo.message.handler.base.ILeoContinuousDeliveryRequestHandler;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -19,16 +17,19 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.baiyi.opscloud.controller.ws.ServerTerminalController.WEBSOCKET_TIMEOUT;
+import static com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType.QUERY_LEO_BUILD_CONSOLE_STREAM;
 
 /**
+ * 持续交付Jenkins console stream 流处理
+ *
  * @Author baiyi
- * @Date 2022/11/23 15:17
+ * @Date 2022/11/30 11:07
  * @Version 1.0
  */
 @Slf4j
-@ServerEndpoint(value = "/api/ws/continuous-delivery")
+@ServerEndpoint(value = "/api/ws/continuous-delivery/jenkins/console/stream")
 @Component
-public class ContinuousDeliveryController extends SimpleAuthentication {
+public class JenkinsBuildConsoleStreamController extends SimpleAuthentication {
 
     private static final AtomicInteger onlineCount = new AtomicInteger(0);
 
@@ -51,9 +52,6 @@ public class ContinuousDeliveryController extends SimpleAuthentication {
             int cnt = onlineCount.incrementAndGet(); // 在线数加1
             this.session = session;
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
-            WatchLeoQueryTask watchLeoQueryTask = new WatchLeoQueryTask(this.sessionId, session);
-            Thread thread = new Thread(watchLeoQueryTask);
-            thread.start();
         } catch (Exception e) {
             log.error("Create connection error: {}", e.getMessage());
         }
@@ -80,24 +78,14 @@ public class ContinuousDeliveryController extends SimpleAuthentication {
      */
     @OnMessage(maxMessageSize = 512 * 1024)
     public void onMessage(String message, Session session) {
-        log.info("message={}", message);
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;
-        String messageType = getLeoMessageType(message);
+        QueryLeoBuildConsoleStreamRequestParam requestParam = new GsonBuilder().create().fromJson(message, QueryLeoBuildConsoleStreamRequestParam.class);
         // 处理登录状态
-        if (StringUtils.isEmpty(this.username)) {
-            // 鉴权并更新会话信息
-            if (LeoRequestType.LOGIN.name().equals(messageType))
-                hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));
-        } else {
-            SessionUtil.setUsername(this.username);
+        hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));
+        ILeoContinuousDeliveryRequestHandler handler = LeoContinuousDeliveryMessageHandlerFactory.getHandlerByMessageType(QUERY_LEO_BUILD_CONSOLE_STREAM.name());
+        if (handler != null) {
+            handler.handleRequest(this.sessionId, session, message);
         }
-        LeoSessionQueryMap.addSessionQueryMap(this.sessionId, messageType, message);
-        LeoSessionQueryMap.print();
-    }
-
-    protected String getLeoMessageType(String message) {
-        SimpleLeoRequestParam requestParam = new GsonBuilder().create().fromJson(message, SimpleLeoRequestParam.class);
-        return requestParam.getMessageType();
     }
 
     /**

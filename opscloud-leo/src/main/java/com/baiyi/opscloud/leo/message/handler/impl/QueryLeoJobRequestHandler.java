@@ -3,11 +3,11 @@ package com.baiyi.opscloud.leo.message.handler.impl;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.domain.param.leo.request.QueryLeoJobLeoRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.QueryLeoJobRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 import com.baiyi.opscloud.leo.message.handler.base.BaseLeoContinuousDeliveryRequestHandler;
-import com.baiyi.opscloud.leo.message.response.LeoContinuousDeliveryResponse;
+import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
 import com.baiyi.opscloud.leo.packer.LeoJobResponsePacker;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class QueryLeoJobRequestHandler extends BaseLeoContinuousDeliveryRequestHandler<QueryLeoJobLeoRequestParam> {
+public class QueryLeoJobRequestHandler extends BaseLeoContinuousDeliveryRequestHandler<QueryLeoJobRequestParam> {
 
     @Resource
     private LeoJobService leoJobService;
@@ -39,8 +39,8 @@ public class QueryLeoJobRequestHandler extends BaseLeoContinuousDeliveryRequestH
     }
 
     @Override
-    public void handleRequest(Session session, String message) {
-        QueryLeoJobLeoRequestParam queryParam = toRequestParam(message);
+    public void handleRequest(String sessionId, Session session, String message) {
+        QueryLeoJobRequestParam queryParam = toRequestParam(message);
         DataTable<LeoJobVO.Job> dataTable = queryLeoJobPage(queryParam);
         LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
                 .body(dataTable)
@@ -49,7 +49,7 @@ public class QueryLeoJobRequestHandler extends BaseLeoContinuousDeliveryRequestH
         sendToSession(session,dataTable );
     }
 
-    public DataTable<LeoJobVO.Job> queryLeoJobPage(QueryLeoJobLeoRequestParam pageQuery) {
+    public DataTable<LeoJobVO.Job> queryLeoJobPage(QueryLeoJobRequestParam pageQuery) {
         DataTable<LeoJob> table = leoJobService.queryJobPage(pageQuery);
         List<LeoJobVO.Job> data = BeanCopierUtil.copyListProperties(table.getData(), LeoJobVO.Job.class).stream()
                 .peek(leoJobResponsePacker::wrap)
@@ -57,8 +57,8 @@ public class QueryLeoJobRequestHandler extends BaseLeoContinuousDeliveryRequestH
         return new DataTable<>(data, table.getTotalNum());
     }
 
-    private QueryLeoJobLeoRequestParam toRequestParam(String message) {
-        return toLeoRequestParam(message, QueryLeoJobLeoRequestParam.class);
+    private QueryLeoJobRequestParam toRequestParam(String message) {
+        return toLeoRequestParam(message, QueryLeoJobRequestParam.class);
     }
 
 }

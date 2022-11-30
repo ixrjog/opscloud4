@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.leo.message.response;
+package com.baiyi.opscloud.common.leo.response;
 
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.param.leo.request.ILeoRequestParam;
