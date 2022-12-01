@@ -52,6 +52,30 @@ public class LeoJobParam {
     }
 
     @Data
+    @SuperBuilder(toBuilder = true)
+    @EqualsAndHashCode(callSuper = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ApiModel
+    public static class JobBuildPageQuery extends SuperPageParam implements IExtend {
+
+        @ApiModelProperty(value = "名称")
+        private String queryName;
+
+        @Min(value = 0, message = "任务ID不能为空")
+        @ApiModelProperty(value = "任务ID")
+        private Integer jobId;
+
+        @ApiModelProperty(value = "有效")
+        private Boolean isActive;
+
+        private final Integer businessType = BusinessTypeEnum.LEO_JOB.getType();
+
+        private Boolean extend;
+
+    }
+
+    @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor

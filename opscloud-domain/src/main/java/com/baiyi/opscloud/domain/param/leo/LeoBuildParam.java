@@ -63,4 +63,26 @@ public class LeoBuildParam {
 
     }
 
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateBuild {
+
+        @Min(value = 0, message = "构建ID不能为空")
+        @ApiModelProperty(value = "构建ID")
+        private Integer id;
+
+        @NotEmpty(message = "版本名称不能为空")
+        @ApiModelProperty(value = "版本名称")
+        private String versionName;
+
+        @ApiModelProperty(value = "版本描述")
+        private String versionDesc;
+
+        @ApiModelProperty(value = "有效")
+        private Boolean isActive;
+
+    }
+
 }

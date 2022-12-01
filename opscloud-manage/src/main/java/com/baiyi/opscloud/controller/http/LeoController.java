@@ -113,6 +113,12 @@ public class LeoController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "分页查询任务构建历史")
+    @PostMapping(value = "/job/build/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<LeoBuildVO.Build>> queryLeoJobBuildPage(@RequestBody @Valid LeoJobParam.JobBuildPageQuery pageQuery) {
+        return new HttpResult<>(leoBuildFacade.queryLeoJobBuildPage(pageQuery));
+    }
+
     // Leo Build
 
     @ApiOperation(value = "执行构建")
@@ -133,6 +139,13 @@ public class LeoController {
     @PostMapping(value = "/build/branch/options/get", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<LeoBuildVO.BranchOptions> getBuildBranchOptions(@RequestBody @Valid LeoBuildParam.GetBuildBranchOptions getOptions) {
         return new HttpResult<>(leoBuildFacade.getBuildBranchOptions(getOptions));
+    }
+
+    @ApiOperation(value = "更新构建详情")
+    @PutMapping(value = "/build/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updateLeoBuild(@RequestBody @Valid LeoBuildParam.UpdateBuild updateBuild) {
+        leoBuildFacade.updateLeoBuild(updateBuild);
+        return HttpResult.SUCCESS;
     }
 
     @ApiOperation(value = "删除指定的构建信息")

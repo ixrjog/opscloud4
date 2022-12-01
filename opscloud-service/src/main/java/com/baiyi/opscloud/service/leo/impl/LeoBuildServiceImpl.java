@@ -2,12 +2,15 @@ package com.baiyi.opscloud.service.leo.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
+import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.QueryLeoBuildRequestParam;
 import com.baiyi.opscloud.mapper.opscloud.LeoBuildMapper;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
+import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -62,6 +65,28 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         Example example = new Example(LeoBuild.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andIn("jobId", pageQuery.getJobIds());
+        example.setOrderByClause("id desc");
+        List<LeoBuild> data = leoBuildMapper.selectByExample(example);
+        return new DataTable<>(data, page.getTotal());
+    }
+
+    @Override
+    public DataTable<LeoBuild> queryBuildPage(LeoJobParam.JobBuildPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Example example = new Example(LeoBuild.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("jobId", pageQuery.getJobId());
+        if (pageQuery.getIsActive() != null) {
+            criteria.andEqualTo("isActive", pageQuery.getIsActive());
+        }
+        if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
+            String likeName = SQLUtil.toLike(pageQuery.getQueryName());
+            Example.Criteria criteria2 = example.createCriteria();
+            criteria2.orLike("username", likeName)
+                    .orLike("versionName", likeName)
+                    .orLike("versionDesc", likeName);
+            example.and(criteria2);
+        }
         example.setOrderByClause("id desc");
         List<LeoBuild> data = leoBuildMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());

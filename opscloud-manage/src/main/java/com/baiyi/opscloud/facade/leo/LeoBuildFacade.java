@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.facade.leo;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
+import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 
 /**
@@ -20,6 +22,7 @@ public interface LeoBuildFacade {
 
     /**
      * 停止构建
+     *
      * @param buildId
      */
     void stopBuild(int buildId);
@@ -31,5 +34,9 @@ public interface LeoBuildFacade {
      * @return
      */
     LeoBuildVO.BranchOptions getBuildBranchOptions(LeoBuildParam.GetBuildBranchOptions getOptions);
+
+    void updateLeoBuild(LeoBuildParam.UpdateBuild updateBuild);
+
+    DataTable<LeoBuildVO.Build> queryLeoJobBuildPage(LeoJobParam.JobBuildPageQuery pageQuery);
 
 }

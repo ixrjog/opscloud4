@@ -66,6 +66,7 @@ public class LeoBuildVO {
         private String username;
         private String displayName;
         private String buildConfig;
+        private Boolean isActive;
         private String comment;
 
         @Override

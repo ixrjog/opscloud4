@@ -2,14 +2,17 @@ package com.baiyi.opscloud.facade.leo.impl;
 
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsJobDriver;
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
+import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
 import com.baiyi.opscloud.leo.build.LeoBuildHandler;
@@ -23,10 +26,12 @@ import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.driver.BlueRestDriver;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
+import com.baiyi.opscloud.leo.packer.LeoBuildResponsePacker;
 import com.baiyi.opscloud.leo.util.JobUtil;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
+import com.baiyi.opscloud.service.leo.LeoBuildImageService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.sys.EnvService;
@@ -34,12 +39,15 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.gitlab4j.api.models.Commit;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
 
@@ -56,6 +64,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
     private final LeoJobService leoJobService;
 
     private final LeoBuildService leoBuildService;
+
+    private final LeoBuildImageService leoBuildImageService;
 
     private final ApplicationService applicationService;
 
@@ -77,6 +87,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     private final BlueRestDriver blueRestDriver;
 
+    private final LeoBuildResponsePacker leoBuildResponsePacker;
 
     @Override
     public void doBuild(LeoBuildParam.DoBuild doBuild) {
@@ -230,6 +241,35 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         return gitLabRepoDelegate.generatorGitLabBranchOptions(gitLabConfig.getGitlab(), projectId, openTag);
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateLeoBuild(LeoBuildParam.UpdateBuild updateBuild) {
+        LeoBuild leoBuild = leoBuildService.getById(updateBuild.getId());
+        if (!leoBuild.getIsFinish()) {
+            throw new LeoBuildException("构建任务未结束不能修改构建详情！");
+        }
+        LeoBuild saveLeoBuild = LeoBuild.builder()
+                .id(updateBuild.getId())
+                .versionName(updateBuild.getVersionName())
+                .versionDesc(StringUtils.isNotBlank(updateBuild.getVersionDesc()) ? updateBuild.getVersionDesc() : null)
+                .isActive(updateBuild.getIsActive())
+                .build();
+        leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
+        // 更新镜像版本信息
+        LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.load(leoBuild.getBuildConfig());
+        Map<String, String> dict = buildConfig.getBuild().getDict();
+        LeoBuildImage leoBuildImage = leoBuildImageService.getByUniqueKey(leoBuild.getId(), dict.get(BuildDictConstants.IMAGE.getKey()));
+        if (leoBuildImage == null) {
+            return;
+        }
+        LeoBuildImage saveLeoBuildImage = LeoBuildImage.builder()
+                .id(leoBuildImage.getId())
+                .versionName(updateBuild.getVersionName())
+                .versionDesc(StringUtils.isNotBlank(updateBuild.getVersionDesc()) ? updateBuild.getVersionDesc() : null)
+                .build();
+        leoBuildImageService.updateByPrimaryKeySelective(saveLeoBuildImage);
+    }
+
     /**
      * 获取 GitLab Project Asset
      *
@@ -248,6 +288,15 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 // 未找到资产抛出异常
                 .orElseThrow(() -> new LeoBuildException("GitLab项目不存在: applicationId={}, sshUrl={}", leoJob.getApplicationId(), sshUrl));
         return assetService.getById(resource.getBusinessId());
+    }
+
+    @Override
+    public DataTable<LeoBuildVO.Build> queryLeoJobBuildPage(LeoJobParam.JobBuildPageQuery pageQuery) {
+        DataTable<LeoBuild> table = leoBuildService.queryBuildPage(pageQuery);
+        List<LeoBuildVO.Build> data = BeanCopierUtil.copyListProperties(table.getData(), LeoBuildVO.Build.class).stream()
+                .peek(leoBuildResponsePacker::wrap)
+                .collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
 }

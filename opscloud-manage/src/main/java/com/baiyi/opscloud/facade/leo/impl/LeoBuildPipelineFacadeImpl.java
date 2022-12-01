@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,9 @@ public class LeoBuildPipelineFacadeImpl implements LeoBuildPipelineFacade {
     @Override
     public List<LeoBuildPipelineVO.Step> getPipelineRunNodeSteps(LeoBuildPipelineParam.GetPipelineRunNodeSteps param) {
         LeoBuild leoBuild = leoBuildService.getById(param.getBuildId());
+        if (leoBuild.getIsDeletedBuildJob()) {
+            return Collections.emptyList();
+        }
         LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.load(leoBuild);
         LeoBaseModel.DsInstance dsInstance = buildConfig.getBuild().getJenkins().getInstance();
         JenkinsConfig jenkinsConfig = getJenkinsConfigWithUuid(dsInstance.getUuid());
