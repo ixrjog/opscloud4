@@ -131,6 +131,9 @@ public class LeoBuild {
     @Column(name = "build_config")
     private String buildConfig;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     /**
      * 描述
      */

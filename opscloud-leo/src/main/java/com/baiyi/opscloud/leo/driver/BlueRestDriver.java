@@ -5,10 +5,13 @@ import com.baiyi.opscloud.leo.domain.model.JenkinsPipeline;
 import com.baiyi.opscloud.leo.driver.feign.BlueRestFeign;
 import feign.Feign;
 import feign.Request;
+import feign.Response;
 import feign.Retryer;
 import feign.auth.BasicAuthRequestInterceptor;
+import feign.codec.ErrorDecoder;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -90,10 +93,14 @@ public class BlueRestDriver {
         return blueRestAPI.stopPipeline(jobName, buildNumber);
     }
 
-//    private class CustomFeignErrorHandler implements ErrorDecoder {
-//        @Override
-//        public Exception decode(String s, Response response) {
-//            return null;
-//        }
-//    }
+    private class CustomFeignErrorHandler implements ErrorDecoder {
+
+        @SneakyThrows
+        @Override
+        public Exception decode(String s, Response response) {
+            log.error("decode error: s={}", s);
+            throw new Exception("decode error");
+        }
+    }
+
 }

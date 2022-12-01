@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.leo.log;
+package com.baiyi.opscloud.leo.helper;
 
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildLog;

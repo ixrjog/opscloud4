@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
+import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
@@ -37,7 +38,7 @@ public class JobUtil {
         return Joiner.on("_").join(applicationKey, jobKey, buildNumber);
     }
 
-    public static String generateVersionName(LeoBuildParam.DoBuild doBuild, LeoJobModel.JobConfig jobConfig, Application application, Env env, int buildNumber) {
+    public static String generateVersionName(LeoBuildParam.DoBuild doBuild, LeoJobModel.JobConfig jobConfig, LeoBaseModel.GitLab gitLab, Application application, Env env, int buildNumber) {
         // 用户输入版本号, 优先级最高
         if (StringUtils.isNotBlank(doBuild.getVersionName()))
             return doBuild.getVersionName();
@@ -64,10 +65,12 @@ public class JobUtil {
                 .map(LeoJobModel.Repo::getName)
                 .orElse(application.getName());
 
+
         if (StringUtils.isNotBlank(suffix)) {
             Map<String, String> dict = Maps.newHashMap();
             dict.put(BuildDictConstants.BUILD_NUMBER.getKey(), String.valueOf(buildNumber));
             dict.put(BuildDictConstants.ENV.getKey(), env.getEnvName());
+            dict.put(BuildDictConstants.COMMIT_ID.getKey(), gitLab.getProject().getCommit().getId().substring(0, 8));
             return Joiner.on("-").skipNulls().join(prefix, project, TemplateUtil.render(suffix, dict));
         }
         return Joiner.on("-").skipNulls().join(prefix, project, buildNumber).replaceAll("-{2,}", "-");

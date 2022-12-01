@@ -13,4 +13,6 @@ public interface LeoBuildImageService {
 
     void updateByPrimaryKeySelective(LeoBuildImage leoBuildImage);
 
+    LeoBuildImage getByUniqueKey(int buildId, String image);
+
 }

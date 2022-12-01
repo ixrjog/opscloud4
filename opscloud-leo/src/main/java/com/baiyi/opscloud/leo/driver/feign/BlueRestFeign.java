@@ -63,5 +63,4 @@ public interface BlueRestFeign {
     JenkinsPipeline.Step stopPipeline(@Param("jobName") String jobName,
                                       @Param("buildNumber") String buildNumber);
 
-
 }

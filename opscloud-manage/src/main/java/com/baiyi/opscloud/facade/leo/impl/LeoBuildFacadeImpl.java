@@ -22,7 +22,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.driver.BlueRestDriver;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
-import com.baiyi.opscloud.leo.log.BuildingLogHelper;
+import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
 import com.baiyi.opscloud.leo.util.JobUtil;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
@@ -146,10 +146,11 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .buildJobName(buildJobName)
                 .applicationId(leoJob.getApplicationId())
                 .buildNumber(buildNumber)
-                .versionName(JobUtil.generateVersionName(doBuild, jobConfig, application, env, buildNumber))
+                .versionName(JobUtil.generateVersionName(doBuild, jobConfig, gitLab, application, env, buildNumber))
                 .versionDesc(doBuild.getVersionDesc())
                 .isFinish(false)
                 .isDeletedBuildJob(false)
+                .isActive(true)
                 .executionType(ExecutionTypeConstants.USER)
                 .username(SessionUtil.getUsername())
                 .buildConfig(buildConfig.dump())

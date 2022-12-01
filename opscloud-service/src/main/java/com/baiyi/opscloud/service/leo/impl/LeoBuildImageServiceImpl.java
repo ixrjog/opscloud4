@@ -5,6 +5,7 @@ import com.baiyi.opscloud.mapper.opscloud.LeoBuildImageMapper;
 import com.baiyi.opscloud.service.leo.LeoBuildImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * @Author baiyi
@@ -18,13 +19,22 @@ public class LeoBuildImageServiceImpl implements LeoBuildImageService {
     private final LeoBuildImageMapper leoBuildImageMapper;
 
     @Override
-    public void add(LeoBuildImage leoBuildImage){
+    public void add(LeoBuildImage leoBuildImage) {
         leoBuildImageMapper.insert(leoBuildImage);
     }
 
     @Override
-    public void updateByPrimaryKeySelective(LeoBuildImage leoBuildImage){
+    public void updateByPrimaryKeySelective(LeoBuildImage leoBuildImage) {
         leoBuildImageMapper.updateByPrimaryKeySelective(leoBuildImage);
+    }
+
+    @Override
+    public LeoBuildImage getByUniqueKey(int buildId, String image) {
+        Example example = new Example(LeoBuildImage.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("buildId", buildId)
+                .andEqualTo("image", image);
+        return leoBuildImageMapper.selectOneByExample(example);
     }
 
 }

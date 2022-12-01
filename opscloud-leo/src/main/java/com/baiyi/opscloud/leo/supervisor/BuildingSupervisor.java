@@ -9,7 +9,7 @@ import com.baiyi.opscloud.datasource.jenkins.model.JobWithDetails;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.build.LeoPostBuildHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
-import com.baiyi.opscloud.leo.log.BuildingLogHelper;
+import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
 import com.baiyi.opscloud.leo.supervisor.base.ISupervisor;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import lombok.extern.slf4j.Slf4j;

@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
-import com.baiyi.opscloud.leo.log.BuildingLogHelper;
+import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 
 import javax.annotation.Resource;

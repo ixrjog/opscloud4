@@ -14,6 +14,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 /**
  * 注入runtime字段
  *
@@ -68,10 +70,15 @@ public class RuntimeWrapperAspect {
         if (StringUtils.isNotBlank(iRuntime.getRuntime())) {
             return;
         }
-        if (iRuntime.getStartTime() == null || iRuntime.getEndTime() == null) {
+        if (iRuntime.getStartTime() == null) {
             return;
         }
-        long runtime = iRuntime.getEndTime().getTime() - iRuntime.getStartTime().getTime();
+        long runtime;
+        if (iRuntime.getEndTime() != null) {
+            runtime = iRuntime.getEndTime().getTime() - iRuntime.getStartTime().getTime();
+        } else {
+            runtime = new Date().getTime() - iRuntime.getStartTime().getTime();
+        }
         iRuntime.setRuntime(TimeUtil.acqBuildTime(runtime));
     }
 

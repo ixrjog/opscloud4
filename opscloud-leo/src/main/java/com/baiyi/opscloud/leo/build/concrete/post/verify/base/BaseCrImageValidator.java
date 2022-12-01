@@ -12,7 +12,7 @@ import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
-import com.baiyi.opscloud.leo.log.BuildingLogHelper;
+import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
 import com.baiyi.opscloud.service.sys.EnvService;
 import org.springframework.beans.factory.InitializingBean;
 

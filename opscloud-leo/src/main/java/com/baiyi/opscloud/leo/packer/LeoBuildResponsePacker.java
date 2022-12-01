@@ -5,7 +5,9 @@ import com.baiyi.opscloud.common.annotation.RuntimeWrapper;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildImage;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
+import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.converter.JenkinsPipelineConverter;
 import com.baiyi.opscloud.leo.domain.model.JenkinsPipeline;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
@@ -19,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -44,6 +47,15 @@ public class LeoBuildResponsePacker {
         build.setBuildDetails(buildConfig);
         LeoBuildVO.Pipeline pipeline = getPipeline(build, buildConfig);
         build.setPipeline(pipeline);
+
+        Map<String, String> dict = buildConfig.getBuild().getDict();
+        if (dict.containsKey(BuildDictConstants.IMAGE.getKey())) {
+            final String image = dict.get(BuildDictConstants.IMAGE.getKey());
+            LeoBuildImage leoBuildImage = leoBuildImageService.getByUniqueKey(build.getId(), image);
+            build.setIsImageExists(leoBuildImage != null);
+        } else {
+            build.setIsImageExists(false);
+        }
     }
 
     private LeoBuildVO.Pipeline getPipeline(LeoBuildVO.Build build, LeoBuildModel.BuildConfig buildConfig) {
