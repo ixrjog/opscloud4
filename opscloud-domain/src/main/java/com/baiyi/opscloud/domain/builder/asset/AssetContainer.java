@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.builder.asset;
 
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.vo.base.ShowTime;
+import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AssetContainer implements ShowTime.IAgo {
+public class AssetContainer implements ReadableTime.IAgo {
 
     private DatasourceInstanceAsset asset;
 

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.vo.leo;
 
-import com.baiyi.opscloud.domain.vo.base.ShowTime;
+import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiModel;
@@ -26,16 +26,24 @@ public class LeoBuildVO {
     @NoArgsConstructor
     @AllArgsConstructor
     @ApiModel
-    public static class Build implements Serializable, ShowTime.IAgo {
+    public static class Build implements Serializable, ReadableTime.IAgo, ReadableTime.IRuntime {
 
         private static final long serialVersionUID = -697201191162725310L;
 
         @ApiModelProperty(value = "构建对象")
         private Object buildDetails;
 
+        @ApiModelProperty(value = "流水线")
         private Pipeline pipeline;
 
+        @ApiModelProperty(value = "以前")
         private String ago;
+
+        @ApiModelProperty(value = "运行时长")
+        private String runtime;
+
+        @ApiModelProperty(value = "镜像存在")
+        private Boolean isImageExists;
 
         private Integer id;
         private Integer jobId;

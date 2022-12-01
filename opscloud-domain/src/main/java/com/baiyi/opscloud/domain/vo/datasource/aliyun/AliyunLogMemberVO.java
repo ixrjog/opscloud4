@@ -2,7 +2,7 @@ package com.baiyi.opscloud.domain.vo.datasource.aliyun;
 
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import com.baiyi.opscloud.domain.vo.base.ShowTime;
+import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -25,7 +25,7 @@ public class AliyunLogMemberVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class LogMember extends BaseVO implements ShowTime.IAgo, EnvVO.IEnv {
+    public static class LogMember extends BaseVO implements ReadableTime.IAgo, EnvVO.IEnv {
 
         private AliyunLogVO.Log log;
 

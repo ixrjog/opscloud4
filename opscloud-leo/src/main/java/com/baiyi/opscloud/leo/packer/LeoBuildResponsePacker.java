@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.leo.packer;
 
 import com.baiyi.opscloud.common.annotation.AgoWrapper;
+import com.baiyi.opscloud.common.annotation.RuntimeWrapper;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -9,6 +10,7 @@ import com.baiyi.opscloud.leo.converter.JenkinsPipelineConverter;
 import com.baiyi.opscloud.leo.domain.model.JenkinsPipeline;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.driver.BlueRestDriver;
+import com.baiyi.opscloud.service.leo.LeoBuildImageService;
 import com.google.common.collect.Lists;
 import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +34,11 @@ public class LeoBuildResponsePacker {
 
     private final DsConfigHelper dsConfigHelper;
 
+    private final LeoBuildImageService leoBuildImageService;
+
     //  @EnvWrapper(extend = true)
     @AgoWrapper(extend = true)
+    @RuntimeWrapper(extend = true)
     public void wrap(LeoBuildVO.Build build) {
         LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.load(build.getBuildConfig());
         build.setBuildDetails(buildConfig);
@@ -67,6 +72,5 @@ public class LeoBuildResponsePacker {
             }
         }
     }
-
 
 }

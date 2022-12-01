@@ -3,17 +3,33 @@ package com.baiyi.opscloud.domain.vo.base;
 import java.util.Date;
 
 /**
+ * 人类可阅读时间格式
+ *
  * @Author baiyi
  * @Date 2021/8/5 10:08 上午
  * @Version 1.0
  */
-public class ShowTime {
+public class ReadableTime {
 
     public interface IAgo {
 
         Date getAgoTime();
 
         void setAgo(String ago);
+    }
+
+    /**
+     * 运行时间
+     */
+    public interface IRuntime {
+
+        void setRuntime(String runtime);
+
+        String getRuntime();
+
+        Date getStartTime();
+
+        Date getEndTime();
 
     }
 

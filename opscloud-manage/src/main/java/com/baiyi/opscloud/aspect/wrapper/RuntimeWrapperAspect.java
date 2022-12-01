@@ -1,11 +1,12 @@
 package com.baiyi.opscloud.aspect.wrapper;
 
-import com.baiyi.opscloud.common.annotation.LaterWrapper;
+import com.baiyi.opscloud.common.annotation.RuntimeWrapper;
 import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
-import com.baiyi.opscloud.common.util.time.LaterUtil;
+import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,30 +15,31 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
 /**
- * 注入later字段
+ * 注入runtime字段
+ *
  * @Author baiyi
- * @Date 2022/2/23 11:33 AM
+ * @Date 2022/11/30 22:04
  * @Version 1.0
  */
+@Slf4j
 @Aspect
 @Component
-@Slf4j
-public class LaterWrapperAspect {
+public class RuntimeWrapperAspect {
 
-    @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.LaterWrapper)")
+    @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.RuntimeWrapper)")
     public void annotationPoint() {
     }
 
-    @Around("@annotation(laterWrapper)")
-    public Object around(ProceedingJoinPoint joinPoint, LaterWrapper laterWrapper) throws OCRuntimeException {
+    @Around("@annotation(runtimeWrapper)")
+    public Object around(ProceedingJoinPoint joinPoint, RuntimeWrapper runtimeWrapper) throws OCRuntimeException {
         Object result;
         try {
             result = joinPoint.proceed();
         } catch (Throwable e) {
             throw new OCRuntimeException(e.getMessage());
         }
-        boolean extend = laterWrapper.extend();
-        ReadableTime.ILater laterTarget = null;
+        boolean extend = runtimeWrapper.extend();
+        ReadableTime.IRuntime runtimeTarget = null;
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String[] params = methodSignature.getParameterNames();// 获取参数名称
         Object[] args = joinPoint.getArgs();// 获取参数值
@@ -49,22 +51,28 @@ public class LaterWrapperAspect {
                         continue;
                     }
                 }
-                if (laterTarget == null) {
-                    if (arg instanceof ReadableTime.ILater) {
-                        laterTarget = (ReadableTime.ILater) arg;
+                if (runtimeTarget == null) {
+                    if (arg instanceof ReadableTime.IRuntime) {
+                        runtimeTarget = (ReadableTime.IRuntime) arg;
                     }
                 }
             }
         }
-        if (extend && laterTarget != null) {
-            wrap(laterTarget);
+        if (extend && runtimeTarget != null) {
+            wrap(runtimeTarget);
         }
         return result;
     }
 
-    public void wrap(ReadableTime.ILater iLater) {
-        if (iLater.getExpiredTime() == null) return;
-        iLater.setLater(LaterUtil.format(iLater.getExpiredTime()));
+    private void wrap(ReadableTime.IRuntime iRuntime) {
+        if (StringUtils.isNotBlank(iRuntime.getRuntime())) {
+            return;
+        }
+        if (iRuntime.getStartTime() == null || iRuntime.getEndTime() == null) {
+            return;
+        }
+        long runtime = iRuntime.getEndTime().getTime() - iRuntime.getStartTime().getTime();
+        iRuntime.setRuntime(TimeUtil.acqBuildTime(runtime));
     }
 
 }

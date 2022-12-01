@@ -70,7 +70,7 @@ public class JobUtil {
             dict.put(BuildDictConstants.ENV.getKey(), env.getEnvName());
             return Joiner.on("-").skipNulls().join(prefix, project, TemplateUtil.render(suffix, dict));
         }
-        return Joiner.on("-").skipNulls().join(prefix, project, buildNumber);
+        return Joiner.on("-").skipNulls().join(prefix, project, buildNumber).replaceAll("-{2,}", "-");
     }
 
 }

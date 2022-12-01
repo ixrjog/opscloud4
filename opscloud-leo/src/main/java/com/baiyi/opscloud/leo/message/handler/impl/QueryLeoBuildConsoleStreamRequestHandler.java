@@ -1,11 +1,13 @@
 package com.baiyi.opscloud.leo.message.handler.impl;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
+import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsJobDriver;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
 import com.baiyi.opscloud.datasource.jenkins.model.Build;
 import com.baiyi.opscloud.datasource.jenkins.model.BuildWithDetails;
+import com.baiyi.opscloud.datasource.jenkins.model.JenkinsConsoleLog;
 import com.baiyi.opscloud.datasource.jenkins.model.JobWithDetails;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
@@ -54,7 +56,8 @@ public class QueryLeoBuildConsoleStreamRequestHandler extends BaseLeoContinuousD
         QueryLeoBuildConsoleStreamRequestParam queryParam = toRequestParam(message);
         LeoBuild leoBuild = leoBuildService.getById(queryParam.getBuildId());
         if (leoBuild == null) {
-            return;
+           sendErrorMsgAndCloseSession(queryParam.getBuildId(),"构建信息不存在！",session);
+           return;
         }
         LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.load(leoBuild);
         final String jenkinsUuid = Optional.ofNullable(buildConfig)
@@ -87,6 +90,21 @@ public class QueryLeoBuildConsoleStreamRequestHandler extends BaseLeoContinuousD
 
     private QueryLeoBuildConsoleStreamRequestParam toRequestParam(String message) {
         return toLeoRequestParam(message, QueryLeoBuildConsoleStreamRequestParam.class);
+    }
+
+    private void sendErrorMsgAndCloseSession(Integer buildId, String msg, Session session) {
+        LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
+                .body(JenkinsConsoleLog.Log.builder()
+                        .buildId(buildId)
+                        .log(msg)
+                        .build())
+                .messageType(LeoRequestType.QUERY_LEO_BUILD_CONSOLE_STREAM.name())
+                .build();
+        try {
+            session.getBasicRemote().sendText(response.toString());
+            session.close();
+        } catch (IOException e) {
+        }
     }
 
 }

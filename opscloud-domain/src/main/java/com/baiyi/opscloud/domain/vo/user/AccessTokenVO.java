@@ -3,7 +3,7 @@ package com.baiyi.opscloud.domain.vo.user;
 import com.baiyi.opscloud.domain.annotation.DesensitizedField;
 import com.baiyi.opscloud.domain.constants.SensitiveTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import com.baiyi.opscloud.domain.vo.base.ShowTime;
+import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -25,7 +25,7 @@ public class AccessTokenVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class AccessToken extends BaseVO implements ShowTime.ILater {
+    public static class AccessToken extends BaseVO implements ReadableTime.ILater {
 
         private String later;
 
