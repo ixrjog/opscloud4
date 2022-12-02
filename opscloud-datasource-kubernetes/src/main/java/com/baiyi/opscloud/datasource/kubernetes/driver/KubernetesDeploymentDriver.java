@@ -60,6 +60,7 @@ public class KubernetesDeploymentDriver {
      * @param name
      * @param replicas   扩容后的副本数
      */
+    @Deprecated
     public static void scaleDeploymentReplicas(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, Integer replicas) throws KubernetesDeploymentException {
         Deployment deployment = getDeployment(kubernetes, namespace, name);
         Optional<Integer> optionalReplicas = Optional.ofNullable(deployment)
@@ -132,6 +133,22 @@ public class KubernetesDeploymentDriver {
                 .inNamespace(namespace)
                 .withName(name)
                 .get();
+    }
+
+    /**
+     * @param kubernetes
+     * @param namespace
+     * @param name       podName
+     * @return
+     */
+    public static Deployment rolloutSetImageEquivalentTest(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, String imageName, String image) {
+        return KubeClient.build(kubernetes)
+                .apps()
+                .deployments()
+                .inNamespace(namespace)
+                .withName(name)
+                .rolling()
+                .updateImage(Collections.singletonMap(imageName, image));
     }
 
     /**
