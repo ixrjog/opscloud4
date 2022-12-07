@@ -2,6 +2,7 @@ package com.baiyi.opscloud.service.leo;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
+import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.QueryLeoBuildRequestParam;
 
@@ -33,6 +34,8 @@ public interface LeoBuildService {
     DataTable<LeoBuild> queryBuildPage(QueryLeoBuildRequestParam pageQuery);
 
     DataTable<LeoBuild> queryBuildPage(LeoJobParam.JobBuildPageQuery pageQuery);
+
+    List<LeoBuild> queryBuildVersion(LeoBuildParam.QueryDeployVersion queryBuildVersion);
 
     int countWithJobId(Integer jobId);
 

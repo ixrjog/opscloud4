@@ -2,6 +2,7 @@ package com.baiyi.opscloud.service.leo.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
+import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.QueryLeoBuildRequestParam;
 import com.baiyi.opscloud.mapper.opscloud.LeoBuildMapper;
@@ -90,6 +91,30 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         example.setOrderByClause("id desc");
         List<LeoBuild> data = leoBuildMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
+    }
+
+    @Override
+    public List<LeoBuild> queryBuildVersion(LeoBuildParam.QueryDeployVersion queryBuildVersion) {
+        Page page = PageHelper.startPage(1, 10);
+        Example example = new Example(LeoBuild.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("jobId", queryBuildVersion.getJobId())
+                .andEqualTo("isFinish",true)
+                .andEqualTo("isActive", true);
+        if (StringUtils.isNotBlank(queryBuildVersion.getQueryName())) {
+            // 用户输入数字，搜索构建编号
+            if (StringUtils.isNumeric(queryBuildVersion.getQueryName())) {
+                criteria.andLike("buildNumber", queryBuildVersion.getQueryName());
+            } else {
+                String likeName = SQLUtil.toLike(queryBuildVersion.getQueryName());
+                Example.Criteria criteria2 = example.createCriteria();
+                criteria2.orLike("versionName", likeName)
+                        .orLike("versionDesc", likeName);
+                example.and(criteria2);
+            }
+        }
+        example.setOrderByClause("id desc");
+        return leoBuildMapper.selectByExample(example);
     }
 
     @Override

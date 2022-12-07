@@ -2,6 +2,8 @@ package com.baiyi.opscloud.common.util;
 
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.google.gson.JsonSyntaxException;
+import lombok.extern.slf4j.Slf4j;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
@@ -14,10 +16,11 @@ import java.lang.reflect.Modifier;
  * @Date 2021/8/20 4:00 下午
  * @Version 1.0
  */
+@Slf4j
 public class BusinessPropertyUtil {
 
     public static <T> T toProperty(String property, Class<T> targetClass) throws JsonSyntaxException {
-        Representer representer = new Representer();
+        Representer representer = new Representer(new DumperOptions());
         representer.getPropertyUtils().setSkipMissingProperties(true);
         Yaml yaml = new Yaml(new Constructor(targetClass), representer);
         return yaml.loadAs(property, targetClass);
@@ -52,9 +55,10 @@ public class BusinessPropertyUtil {
                     targetField.set(targetBean, sourceField.get(sourceBean));
                 }
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
         return targetBean;
     }
+
 }

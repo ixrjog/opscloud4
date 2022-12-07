@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
-import com.baiyi.opscloud.domain.param.business.BusinessDocumentParam;
+import com.baiyi.opscloud.domain.param.server.business.BusinessDocumentParam;
 import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
 import com.baiyi.opscloud.facade.business.BusinessDocumentFacade;

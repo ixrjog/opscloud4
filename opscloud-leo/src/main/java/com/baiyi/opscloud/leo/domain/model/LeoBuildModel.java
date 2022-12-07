@@ -6,6 +6,7 @@ import com.baiyi.opscloud.leo.exception.LeoJobException;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
@@ -35,7 +36,7 @@ public class LeoBuildModel {
         if (StringUtils.isEmpty(config))
             return BuildConfig.EMPTY_BUILD;
         try {
-            Representer representer = new Representer();
+            Representer representer = new Representer(new DumperOptions());
             representer.getPropertyUtils().setSkipMissingProperties(true);
             Yaml yaml = new Yaml(new Constructor(BuildConfig.class), representer);
             return yaml.loadAs(config, BuildConfig.class);
@@ -63,7 +64,7 @@ public class LeoBuildModel {
         private LeoBaseModel.Jenkins jenkins;
         private LeoBaseModel.Notify notify;
         private String comment;
-        // 构建字典
+        // 字典
         private Map<String, String> dict;
         // 构建参数
         private List<LeoBaseModel.Parameter> parameters;

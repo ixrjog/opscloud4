@@ -199,4 +199,5 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     public void afterPropertiesSet() {
         UserBusinessPermissionFactory.register(this);
     }
+
 }

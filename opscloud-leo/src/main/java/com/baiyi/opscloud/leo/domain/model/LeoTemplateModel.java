@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
@@ -32,7 +33,7 @@ public class LeoTemplateModel {
         if (StringUtils.isEmpty(config))
             return TemplateConfig.EMPTY_TEMPLATE;
         try {
-            Representer representer = new Representer();
+            Representer representer = new Representer(new DumperOptions());
             representer.getPropertyUtils().setSkipMissingProperties(true);
             Yaml yaml = new Yaml(new Constructor(TemplateConfig.class), representer);
             return yaml.loadAs(config, TemplateConfig.class);

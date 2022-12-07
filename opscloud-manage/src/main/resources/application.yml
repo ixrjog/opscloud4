@@ -39,7 +39,8 @@ white:
     - /api/ws/terminal/session/audit
     - /api/ws/server/task/play
     - /api/ws/jenkins/build/executor/status
-    - /api/ws/continuous-delivery
+    - /api/ws/continuous-delivery/build
+    - /api/ws/continuous-delivery/deploy
     - /api/ws/continuous-delivery/jenkins/console/stream
     - /api/out/ticket/approve
 

@@ -63,6 +63,37 @@ public class LeoBaseModel {
         private LeoBaseModel.DsInstance instance;
     }
 
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Kubernetes {
+        private LeoBaseModel.DsInstance instance;
+        private Deployment deployment;
+        private Integer assetId;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Deployment {
+        private String namespace;
+        private String name;
+        private Container container;
+
+        // 副本数
+        private Integer replicas;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Container {
+        private String name;
+    }
+
     @Builder
     @Data
     @AllArgsConstructor

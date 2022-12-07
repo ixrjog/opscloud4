@@ -30,7 +30,7 @@ public class LeoBuildVO {
 
         private static final long serialVersionUID = -697201191162725310L;
 
-        @ApiModelProperty(value = "构建对象")
+        @ApiModelProperty(value = "构建详情")
         private Object buildDetails;
 
         @ApiModelProperty(value = "流水线")
@@ -44,6 +44,9 @@ public class LeoBuildVO {
 
         @ApiModelProperty(value = "镜像存在")
         private Boolean isImageExists;
+
+        @ApiModelProperty(value = "镜像")
+        private LeoBuildVO.Image image;
 
         private Integer id;
         private Integer jobId;
@@ -198,6 +201,26 @@ public class LeoBuildVO {
         private String type = "STAGE";
         @Builder.Default
         private List<Node> children = Lists.newArrayList();
+
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
+    public static class Image implements Serializable {
+
+        private static final long serialVersionUID = -8085991676738506575L;
+        private Integer id;
+        private Integer buildId;
+        private Integer jobId;
+        private String image;
+        private String versionName;
+        private String versionDesc;
+        private Boolean isActive;
+        private Date createTime;
+        private Date updateTime;
 
     }
 

@@ -4,6 +4,8 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
+import io.fabric8.kubernetes.api.model.ContainerStatus;
+import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @Author baiyi
@@ -76,6 +80,22 @@ public class KubernetesPodTest extends BaseKubernetesTest {
         } catch (
                 Exception e) {
             e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    void getLogTest5() {
+        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_TEST);
+        while (true) {
+            List<Pod> pods = KubernetesPodDriver.listPod(kubernetesConfig.getKubernetes(), "test", "c-front");
+            for (Pod pod : pods) {
+                Optional<ContainerStatus> optCs = pod.getStatus().getContainerStatuses().stream().filter(e -> e.getName().equals("c-front")).findFirst();
+                if (!optCs.isPresent()) continue;
+                ContainerStatus cs = optCs.get();
+                if (cs.getState().getTerminated() != null)
+                    print(cs.getState());
+            }
         }
     }
 

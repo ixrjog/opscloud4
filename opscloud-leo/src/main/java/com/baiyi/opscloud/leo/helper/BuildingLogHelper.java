@@ -23,23 +23,23 @@ public class BuildingLogHelper {
     private final LeoBuildLogService logService;
 
     public void info(LeoBuild leoBuild, String log, Object... var2) {
-        save(leoBuild.getId(), Level.INFO, LogTypeConstants.DEF, log, var2);
+        saveBuildLog(leoBuild.getId(), Level.INFO, LogTypeConstants.DEF, log, var2);
     }
 
     public void warn(LeoBuild leoBuild, String log, Object... var2) {
-        save(leoBuild.getId(), Level.WARN, LogTypeConstants.DEF, log, var2);
+        saveBuildLog(leoBuild.getId(), Level.WARN, LogTypeConstants.DEF, log, var2);
     }
 
     public void error(LeoBuild leoBuild, String log, Object... var2) {
-        save(leoBuild.getId(), Level.ERROR, LogTypeConstants.DEF, log, var2);
+        saveBuildLog(leoBuild.getId(), Level.ERROR, LogTypeConstants.DEF, log, var2);
     }
 
     public void debug(LeoBuild leoBuild, String log, Object... var2) {
-        save(leoBuild.getId(), Level.DEBUG, LogTypeConstants.DEF, log, var2);
+        saveBuildLog(leoBuild.getId(), Level.DEBUG, LogTypeConstants.DEF, log, var2);
     }
 
     public void debug(LeoBuild leoBuild, LogTypeConstants logType, String log, Object... var2) {
-        save(leoBuild.getId(), Level.DEBUG, logType, log, var2);
+        saveBuildLog(leoBuild.getId(), Level.DEBUG, logType, log, var2);
     }
 
     /**
@@ -50,7 +50,7 @@ public class BuildingLogHelper {
      * @param log
      * @param var2
      */
-    private void save(int buildId, Level level, LogTypeConstants logType, String log, Object... var2) {
+    private void saveBuildLog(int buildId, Level level, LogTypeConstants logType, String log, Object... var2) {
         LeoBuildLog buildLog = LeoBuildLog.builder()
                 .buildId(buildId)
                 .logLevel(level.name())

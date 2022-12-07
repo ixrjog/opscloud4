@@ -9,7 +9,7 @@ import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessDocument;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
-import com.baiyi.opscloud.domain.param.business.BusinessDocumentParam;
+import com.baiyi.opscloud.domain.param.server.business.BusinessDocumentParam;
 import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
 import com.baiyi.opscloud.facade.business.BusinessDocumentFacade;
 import com.baiyi.opscloud.service.business.BusinessDocumentService;

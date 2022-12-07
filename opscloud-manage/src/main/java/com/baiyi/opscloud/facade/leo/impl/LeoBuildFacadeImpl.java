@@ -15,7 +15,7 @@ import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
-import com.baiyi.opscloud.leo.build.LeoBuildHandler;
+import com.baiyi.opscloud.leo.action.build.LeoBuildHandler;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.delegate.GitLabRepoDelegate;
@@ -113,7 +113,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
         LeoBaseModel.Notify notify = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
-                .map(LeoJobModel.Job::getNotify)
+                .map(LeoJobModel.Job::getBuild)
+                .map(LeoJobModel.Build::getNotify)
                 .orElse(LeoBaseModel.Notify.EMPTY_NOTIFY);
 
         List<LeoBaseModel.Parameter> jobParameters = Optional.of(jobConfig)
@@ -131,6 +132,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                         .id(commit.getId())
                         .build()
         );
+
         Map<String, String> dict = Maps.newHashMap();
         dict.put(BuildDictConstants.BRANCH.getKey(), doBuild.getBranch());
         LeoBuildModel.Build build = LeoBuildModel.Build.builder()

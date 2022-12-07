@@ -7,17 +7,19 @@ import com.baiyi.opscloud.datasource.jenkins.model.BuildResult;
 import com.baiyi.opscloud.datasource.jenkins.model.BuildWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.model.JobWithDetails;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.leo.build.LeoPostBuildHandler;
+import com.baiyi.opscloud.leo.action.build.LeoPostBuildHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
 import com.baiyi.opscloud.leo.supervisor.base.ISupervisor;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import static com.baiyi.opscloud.leo.build.BaseBuildHandler.BUILD_RESULT_ERROR;
+import static com.baiyi.opscloud.leo.action.build.BaseBuildHandler.BUILD_RESULT_ERROR;
 
 /**
  * @Author baiyi
@@ -59,9 +61,24 @@ public class BuildingSupervisor implements ISupervisor {
 
     @Override
     public void run() {
+        JobWithDetails jobWithDetails;
         try {
-            JobWithDetails jobWithDetails = JenkinsServerDriver.getJob(jenkins, leoBuild.getBuildJobName());
-            while (true) {
+            jobWithDetails = JenkinsServerDriver.getJob(jenkins, leoBuild.getBuildJobName());
+        } catch (URISyntaxException | IOException e) {
+            LeoBuild saveLeoBuild = LeoBuild.builder()
+                    .id(leoBuild.getId())
+                    .endTime(new Date())
+                    .isFinish(true)
+                    .isActive(false)
+                    .buildResult(BUILD_RESULT_ERROR)
+                    .buildStatus("监视任务阶段: 错误")
+                    .build();
+            save(saveLeoBuild);
+            logHelper.error(leoBuild, "异常错误任务结束: err={}", e.getMessage());
+            return;
+        }
+        while (true) {
+            try {
                 if (this.build == null) {
                     Build build = jobWithDetails.details().getLastBuild();
                     if (build.equals(Build.BUILD_HAS_NEVER_RUN)) {
@@ -97,18 +114,19 @@ public class BuildingSupervisor implements ISupervisor {
                     postBuildHandle();
                     return;
                 }
+            } catch (Exception e) {
+                LeoBuild saveLeoBuild = LeoBuild.builder()
+                        .id(leoBuild.getId())
+                        .endTime(new Date())
+                        .isFinish(true)
+                        .buildResult(BUILD_RESULT_ERROR)
+                        .buildStatus("监视任务阶段: 异常")
+                        .build();
+                save(saveLeoBuild);
+                logHelper.error(leoBuild, "异常错误任务结束: err={}", e.getMessage());
             }
-        } catch (Exception e) {
-            LeoBuild saveLeoBuild = LeoBuild.builder()
-                    .id(leoBuild.getId())
-                    .endTime(new Date())
-                    .isFinish(true)
-                    .buildResult(BUILD_RESULT_ERROR)
-                    .buildStatus("监视任务阶段: 异常")
-                    .build();
-            save(saveLeoBuild);
-            logHelper.error(leoBuild, "异常错误任务结束: err={}", e.getMessage());
         }
+
     }
 
     private void postBuildHandle() {

@@ -2,18 +2,13 @@ package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
-import com.baiyi.opscloud.domain.param.leo.LeoBuildPipelineParam;
-import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
-import com.baiyi.opscloud.domain.param.leo.LeoTemplateParam;
+import com.baiyi.opscloud.domain.param.leo.*;
+import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildPipelineVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoTemplateVO;
-import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
-import com.baiyi.opscloud.facade.leo.LeoBuildPipelineFacade;
-import com.baiyi.opscloud.facade.leo.LeoJobFacade;
-import com.baiyi.opscloud.facade.leo.LeoTemplateFacade;
+import com.baiyi.opscloud.facade.leo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +34,8 @@ public class LeoController {
     private final LeoJobFacade leoJobFacade;
 
     private final LeoBuildFacade leoBuildFacade;
+
+    private final LeoDeployFacade leoDeployFacade;
 
     private final LeoBuildPipelineFacade leoBuildPipelineFacade;
 
@@ -152,6 +149,27 @@ public class LeoController {
     @DeleteMapping(value = "/build/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteLeoBuildById(@RequestParam @Valid int buildId) {
         return HttpResult.SUCCESS;
+    }
+
+    // Leo Deploy
+
+    @ApiOperation(value = "执行部署")
+    @PostMapping(value = "/deploy/do", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> doLeoDeploy(@RequestBody @Valid LeoDeployParam.DoDeploy doDeploy) {
+        leoDeployFacade.doDeploy(doDeploy);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "查询部署版本")
+    @PostMapping(value = "/deploy/version/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<LeoBuildVO.Build>> queryLeoDeployVersion(@RequestBody @Valid LeoBuildParam.QueryDeployVersion queryBuildVersion) {
+        return new HttpResult<>(leoDeployFacade.queryLeoDeployVersion(queryBuildVersion));
+    }
+
+    @ApiOperation(value = "查询部署Deployment")
+    @PostMapping(value = "/deploy/deployment/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<ApplicationResourceVO.BaseResource>> queryLeoDeployDeployment(@RequestBody @Valid LeoBuildParam.QueryDeployDeployment queryDeployDeployment) {
+        return new HttpResult<>(leoDeployFacade.queryLeoBuildDeployment(queryDeployDeployment));
     }
 
     // Leo Pipeline
