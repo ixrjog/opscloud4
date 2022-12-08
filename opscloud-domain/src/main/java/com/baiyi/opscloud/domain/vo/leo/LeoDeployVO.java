@@ -64,7 +64,7 @@ public class LeoDeployVO {
         @Override
         public Date getAgoTime() {
             if (this.startTime != null) {
-                return this.startTime;
+                return this.createTime;
             }
             return new Date();
         }

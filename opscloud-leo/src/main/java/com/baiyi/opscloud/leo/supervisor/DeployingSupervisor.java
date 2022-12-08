@@ -1,8 +1,7 @@
 package com.baiyi.opscloud.leo.supervisor;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.common.util.TimeUtil;
+import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO;
@@ -10,7 +9,9 @@ import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.leo.helper.DeployingLogHelper;
+import com.baiyi.opscloud.leo.packer.PodDetailsPacker;
 import com.baiyi.opscloud.leo.supervisor.base.ISupervisor;
+import com.baiyi.opscloud.leo.util.SnapshotStash;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.ContainerStatus;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 import static com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO.MAX_RESTART;
 
 /**
+ * 部署监督
  * @Author baiyi
  * @Date 2022/12/6 14:52
  * @Version 1.0
@@ -37,7 +39,6 @@ public class DeployingSupervisor implements ISupervisor {
 
     private static final int SLEEP_SECONDS = 10;
 
-
     private final LeoDeployService leoDeployService;
 
     private final LeoDeployModel.DeployConfig deployConfig;
@@ -46,22 +47,26 @@ public class DeployingSupervisor implements ISupervisor {
 
     private final KubernetesConfig.Kubernetes kubernetes;
 
-    private final RedisUtil redisUtil;
-
     private final DeployingLogHelper logHelper;
+
+    private final PodDetailsPacker podDetailsPacker;
+
+    private final SnapshotStash snapshotStash;
 
     public DeployingSupervisor(LeoDeployService leoDeployService,
                                LeoDeploy leoDeploy,
                                DeployingLogHelper logHelper,
                                LeoDeployModel.DeployConfig deployConfig,
                                KubernetesConfig.Kubernetes kubernetes,
-                               RedisUtil redisUtil) {
+                               PodDetailsPacker podDetailsPacker,
+                               SnapshotStash snapshotStash) {
         this.leoDeployService = leoDeployService;
         this.leoDeploy = leoDeploy;
         this.logHelper = logHelper;
         this.deployConfig = deployConfig;
         this.kubernetes = kubernetes;
-        this.redisUtil = redisUtil;
+        this.podDetailsPacker = podDetailsPacker;
+        this.snapshotStash = snapshotStash;
     }
 
     @Override
@@ -75,8 +80,6 @@ public class DeployingSupervisor implements ISupervisor {
                 .orElseThrow(() -> new LeoDeployException("Kubernetes配置不存在！"));
 
         final String containerName = deployment.getContainer().getName();
-
-
         while (true) {
             try {
                 List<Pod> pods = KubernetesPodDriver.listPod(kubernetes, deployment.getNamespace(), deployment.getName());
@@ -99,25 +102,11 @@ public class DeployingSupervisor implements ISupervisor {
                     if (optionalContainer.isPresent()) {
                         Container container = optionalContainer.get();
                         String image = container.getImage();
-                        // 容器状态
-                        Optional<ContainerStatus> optionalContainerStatus = pod.getStatus().getContainerStatuses().stream().filter(e -> e.getName().equals(containerName)).findFirst();
-
-                        LeoDeployingVO.PodDetails podDetails = LeoDeployingVO.PodDetails.builder()
-                                .podIP(pod.getStatus().getPodIP())
-                                .hostIP(pod.getStatus().getHostIP())
-                                .phase(pod.getStatus().getPhase())
-                                .reason(pod.getStatus().getReason())
-                                .name(pod.getMetadata().getName())
-                                .namespace(pod.getMetadata().getNamespace())
-                                .terminating(optionalContainerStatus.isPresent() && optionalContainerStatus.get().getState().getTerminated() != null)
-                                .startTime(pod.getStatus().getStartTime())
-                                .conditions(pod.getStatus().getConditions().stream().collect(Collectors.toMap(PodCondition::getType, PodCondition::getStatus, (k1, k2) -> k1)))
-                                .restartCount(optionalContainerStatus.isPresent() ? optionalContainerStatus.get().getRestartCount() : 0)
-                                .build();
-                        podDetails.init();
+                        LeoDeployingVO.PodDetails podDetails = toPodDetails(pod, containerName);
                         // 上个版本
                         if (image.equals(previousVersion.getImage())) {
                             previousVersion.put(podDetails);
+                            continue;
                         }
                         // 发布版本
                         if (image.equals(releaseVersion.getImage())) {
@@ -136,7 +125,7 @@ public class DeployingSupervisor implements ISupervisor {
                         .build();
                 deploying.init();
                 // 缓存
-                caching(deploying);
+                snapshotStash.save(leoDeploy.getId(), deploying);
                 // 发布结束
                 if (deploying.getIsFinish() && CollectionUtils.isEmpty(deploying.getPreviousVersion().getPods())) {
                     LeoDeploy saveLeoDeploy = LeoDeploy.builder()
@@ -174,9 +163,26 @@ public class DeployingSupervisor implements ISupervisor {
         }
     }
 
-    private void caching(LeoDeployingVO.Deploying deploying) {
-        final String key = "deploying#deployId=" + this.leoDeploy.getId();
-        redisUtil.set(key, deploying, TimeUtil.dayTime / 1000 * 7);
+    private LeoDeployingVO.PodDetails toPodDetails(Pod pod, String containerName) {
+        // 容器状态
+        Optional<ContainerStatus> optionalContainerStatus = pod.getStatus().getContainerStatuses().stream().filter(e -> e.getName().equals(containerName)).findFirst();
+
+        Date startTime = com.baiyi.opscloud.core.util.TimeUtil.toDate(pod.getStatus().getStartTime(), TimeZoneEnum.UTC);
+        LeoDeployingVO.PodDetails podDetails = LeoDeployingVO.PodDetails.builder()
+                .podIP(pod.getStatus().getPodIP())
+                .hostIP(pod.getStatus().getHostIP())
+                .phase(pod.getStatus().getPhase())
+                .reason(pod.getStatus().getReason())
+                .name(pod.getMetadata().getName())
+                .namespace(pod.getMetadata().getNamespace())
+                .terminating(optionalContainerStatus.isPresent() && optionalContainerStatus.get().getState().getTerminated() != null)
+                .startTime(startTime)
+                .conditions(pod.getStatus().getConditions().stream().collect(Collectors.toMap(PodCondition::getType, PodCondition::getStatus, (k1, k2) -> k1)))
+                .restartCount(optionalContainerStatus.isPresent() ? optionalContainerStatus.get().getRestartCount() : 0)
+                .build();
+        podDetails.init();
+        podDetailsPacker.wrap(podDetails);
+        return podDetails;
     }
 
 }

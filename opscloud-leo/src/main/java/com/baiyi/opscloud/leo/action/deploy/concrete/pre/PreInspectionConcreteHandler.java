@@ -16,8 +16,10 @@ import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -90,19 +92,20 @@ public class PreInspectionConcreteHandler extends BaseDeployHandler {
                 .orElseThrow(() -> new LeoDeployException("未找到容器: container={}", project));
         final String image = container.getImage();
 
-        LeoBuildImage leoBuildImage = leoBuildImageService.getByUniqueKey(leoDeploy.getBuildId(), image);
-        // 之前的版本
+        List<LeoBuildImage> leoBuildImages = leoBuildImageService.queryImageWithJobIdAndImage(leoDeploy.getJobId(), image);
+        // 以前的版本
         LeoDeployModel.DeployVersion previousVersion;
-        if (leoBuildImage != null) {
+        if (CollectionUtils.isEmpty(leoBuildImages)) {
+            previousVersion = LeoDeployModel.DeployVersion.UNKNOWN;
+            previousVersion.setImage(image);
+        } else {
+            LeoBuildImage leoBuildImage = leoBuildImages.get(0);
             previousVersion = LeoDeployModel.DeployVersion.builder()
                     .buildId(leoDeploy.getBuildId())
                     .versionName(leoBuildImage.getVersionName())
                     .versionDesc(leoBuildImage.getVersionDesc())
                     .image(leoBuildImage.getImage())
                     .build();
-        } else {
-            previousVersion = LeoDeployModel.DeployVersion.UNKNOWN;
-            previousVersion.setImage(image);
         }
         // 发布的版本
         LeoBuild leoBuild = leoBuildService.getById(leoDeploy.getBuildId());
@@ -112,6 +115,10 @@ public class PreInspectionConcreteHandler extends BaseDeployHandler {
                 .versionDesc(leoBuild.getVersionDesc())
                 .image(dict.get(BuildDictConstants.IMAGE.getKey()))
                 .build();
+
+        if (releaseVersionVersion.getImage().equals(previousVersion.getImage())) {
+            throw new LeoDeployException("预检查失败发布镜像未变更: image={}", releaseVersionVersion.getImage());
+        }
 
         LeoBaseModel.Container containerModel = LeoBaseModel.Container.builder()
                 .name(container.getName())

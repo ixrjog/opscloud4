@@ -1,13 +1,14 @@
 package com.baiyi.opscloud.leo.action.deploy.concrete.pre;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.leo.action.build.LeoPostBuildHandler;
 import com.baiyi.opscloud.leo.action.deploy.BaseDeployHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
+import com.baiyi.opscloud.leo.packer.PodDetailsPacker;
 import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
+import com.baiyi.opscloud.leo.util.SnapshotStash;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -27,10 +28,13 @@ public class DeployingSupervisorConcreteHandler extends BaseDeployHandler {
     private LeoPostBuildHandler leoPostBuildHandler;
 
     @Resource
-    private RedisUtil redisUtil;
+    private  SnapshotStash snapshotStash;
 
     @Resource
     private LeoDeployService leoDeployService;
+
+    @Resource
+    private PodDetailsPacker podDetailsPacker;
 
     /**
      * 启动监视器
@@ -49,7 +53,8 @@ public class DeployingSupervisorConcreteHandler extends BaseDeployHandler {
                 logHelper,
                 deployConfig,
                 kubernetesConfig.getKubernetes(),
-                redisUtil
+                podDetailsPacker,
+                snapshotStash
         );
         Thread thread = new Thread(deployingSupervisor);
         thread.start();

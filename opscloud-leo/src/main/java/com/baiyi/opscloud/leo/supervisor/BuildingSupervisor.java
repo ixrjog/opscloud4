@@ -19,9 +19,10 @@ import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import static com.baiyi.opscloud.leo.action.build.BaseBuildHandler.BUILD_RESULT_ERROR;
+import static com.baiyi.opscloud.leo.action.build.BaseBuildHandler.RESULT_ERROR;
 
 /**
+ * 构建监督
  * @Author baiyi
  * @Date 2022/11/9 11:43
  * @Version 1.0
@@ -70,7 +71,7 @@ public class BuildingSupervisor implements ISupervisor {
                     .endTime(new Date())
                     .isFinish(true)
                     .isActive(false)
-                    .buildResult(BUILD_RESULT_ERROR)
+                    .buildResult(RESULT_ERROR)
                     .buildStatus("监视任务阶段: 错误")
                     .build();
             save(saveLeoBuild);
@@ -119,7 +120,7 @@ public class BuildingSupervisor implements ISupervisor {
                         .id(leoBuild.getId())
                         .endTime(new Date())
                         .isFinish(true)
-                        .buildResult(BUILD_RESULT_ERROR)
+                        .buildResult(RESULT_ERROR)
                         .buildStatus("监视任务阶段: 异常")
                         .build();
                 save(saveLeoBuild);

@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.domain.vo.leo;
 
+import com.baiyi.opscloud.domain.vo.base.ReadableTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiModel;
@@ -10,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +31,7 @@ public class LeoDeployingVO {
     @NoArgsConstructor
     @AllArgsConstructor
     @ApiModel
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Deploying implements Serializable {
         private static final long serialVersionUID = -2373193776064021868L;
         private String deployType;
@@ -81,8 +85,11 @@ public class LeoDeployingVO {
     @NoArgsConstructor
     @AllArgsConstructor
     @ApiModel
-    public static class PodDetails implements Serializable {
-        private static final long serialVersionUID = 6018564588461613238L;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class PodDetails implements Serializable, ReadableTime.IAgo {
+        
+        private static final long serialVersionUID = 6072373268821025901L;
+
         private Map<String, String> conditions;
         private String podIP;
         private String hostIP;
@@ -91,7 +98,10 @@ public class LeoDeployingVO {
         // 终结
         private Boolean terminating;
 
-        private String startTime;
+        private String ago;
+
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+        private Date startTime;
         // metadata.name
         private String name;
         // metadata.namespace
@@ -104,6 +114,12 @@ public class LeoDeployingVO {
         public void init() {
             this.isComplete = conditions.keySet().stream().filter(k -> conditions.get(k).equalsIgnoreCase("True")).count() == 4;
         }
+
+        @Override
+        public Date getAgoTime() {
+            return getStartTime();
+        }
+
     }
 
 }

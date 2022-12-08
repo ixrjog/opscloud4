@@ -55,7 +55,7 @@ public class CreateJobConcreteHandler extends BaseBuildHandler {
                     .id(leoBuild.getId())
                     .endTime(new Date())
                     .isFinish(true)
-                    .buildResult(BUILD_RESULT_ERROR)
+                    .buildResult(RESULT_ERROR)
                     .buildStatus("创建构建任务阶段")
                     .build();
             save(saveLeoBuild);

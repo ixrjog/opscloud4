@@ -99,7 +99,7 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
                     .id(leoBuild.getId())
                     .endTime(new Date())
                     .isFinish(true)
-                    .buildResult(BUILD_RESULT_ERROR)
+                    .buildResult(RESULT_ERROR)
                     .buildStatus("执行构建任务阶段")
                     .build();
             save(saveLeoBuild);

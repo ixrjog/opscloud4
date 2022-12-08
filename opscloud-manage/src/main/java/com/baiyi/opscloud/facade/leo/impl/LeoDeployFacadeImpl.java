@@ -11,6 +11,7 @@ import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoDeployFacade;
 import com.baiyi.opscloud.leo.action.deploy.LeoDeployHandler;
+import com.baiyi.opscloud.leo.constants.DeployDictConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
@@ -23,6 +24,7 @@ import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.sys.EnvService;
+import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -58,8 +60,13 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     private final LeoDeployHandler leoDeployHandler;
 
+    private final UserService userService;
+
     @Override
     public void doDeploy(LeoDeployParam.DoDeploy doDeploy) {
+        if (leoDeployService.countDeployingWithJobId(doDeploy.getJobId()) > 0) {
+            throw new LeoDeployException("有部署任务执行中，请勿并发部署！");
+        }
         // 执行部署任务
         LeoJob leoJob = leoJobService.getById(doDeploy.getJobId());
         LeoBuild leoBuild = leoBuildService.getById(doDeploy.getBuildId());
@@ -79,7 +86,15 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .map(LeoBuildModel.Build::getDict)
                 .orElseThrow(() -> new LeoDeployException("构建字典不存在！"));
 
-        LeoBaseModel.Kubernetes kubernetes =  LeoBaseModel.Kubernetes.builder()
+        User user = userService.getByUsername(SessionUtil.getUsername());
+        final String displayName = Optional.ofNullable(user)
+                .map(User::getDisplayName)
+                .orElse(Optional.ofNullable(user)
+                        .map(User::getName)
+                        .orElse(SessionUtil.getUsername())
+                );
+        dict.put(DeployDictConstants.DISPLAY_NAME.getKey(), displayName);
+        LeoBaseModel.Kubernetes kubernetes = LeoBaseModel.Kubernetes.builder()
                 .assetId(doDeploy.getAssetId())
                 .build();
 
@@ -116,6 +131,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     /**
      * 使用责任链设计模式解耦代码
+     *
      * @param leoDeploy
      * @param deployConfig
      */

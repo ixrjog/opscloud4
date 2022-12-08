@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2022/11/22 17:14
@@ -35,6 +37,15 @@ public class LeoBuildImageServiceImpl implements LeoBuildImageService {
         criteria.andEqualTo("buildId", buildId)
                 .andEqualTo("image", image);
         return leoBuildImageMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public List<LeoBuildImage> queryImageWithJobIdAndImage(int jobId, String image) {
+        Example example = new Example(LeoBuildImage.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("jobId", jobId)
+                .andEqualTo("image", image);
+        return leoBuildImageMapper.selectByExample(example);
     }
 
 }

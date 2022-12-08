@@ -21,4 +21,6 @@ public interface LeoDeployService {
 
     DataTable<LeoDeploy> queryDeployPage(QueryLeoDeployRequestParam pageQuery);
 
+    int countDeployingWithJobId(int jobId);
+
 }

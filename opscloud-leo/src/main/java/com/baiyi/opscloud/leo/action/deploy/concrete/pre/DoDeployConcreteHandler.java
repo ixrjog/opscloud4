@@ -4,6 +4,8 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.leo.action.deploy.BaseDeployHandler;
+import com.baiyi.opscloud.leo.constants.DeployDictConstants;
+import com.baiyi.opscloud.leo.constants.DeployTypeConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -52,6 +55,8 @@ public class DoDeployConcreteHandler extends BaseDeployHandler {
                 .map(LeoDeployModel.Deploy::getReleaseVersion)
                 .orElseThrow(() -> new LeoDeployException("发布版本配置不存在！"));
 
+        Map<String, String> dict = generateDeployDict(leoDeploy,deployConfig);
+        deployConfig.getDeploy().setDict(dict);
 
         final String instanceUuid = kubernetes.getInstance().getUuid();
         final String namespace = kubernetes.getDeployment().getNamespace();
@@ -76,12 +81,28 @@ public class DoDeployConcreteHandler extends BaseDeployHandler {
             LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                     .id(leoDeploy.getId())
                     .startTime(new Date())
+                    .deployConfig(deployConfig.dump())
                     .deployStatus("更新Deployment阶段: 成功")
                     .build();
             save(saveLeoDeploy, "更新Deployment成功");
         } catch (Exception e) {
             throw new LeoDeployException(e.getMessage());
         }
+    }
+
+    private Map<String, String> generateDeployDict(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
+        Map<String, String> dict = Optional.ofNullable(deployConfig)
+                .map(LeoDeployModel.DeployConfig::getDeploy)
+                .map(LeoDeployModel.Deploy::getDict)
+                .orElseThrow(() -> new LeoDeployException("部署字典不存在！"));
+
+        final String deployType = deployConfig.getDeploy().getDeployType();
+
+        dict.put(DeployDictConstants.DEPLOY_NUMBER.getKey(), String.valueOf(leoDeploy.getDeployNumber()) );
+        dict.put(DeployDictConstants.DEPLOY_TYPE.getKey(), deployType);
+        dict.put(DeployDictConstants.DEPLOY_TYPE_DESC.getKey(), DeployTypeConstants.getDesc(deployType));
+
+        return dict;
     }
 
 }

@@ -63,7 +63,7 @@ public class ElectInstanceConcreteHandler extends BaseBuildHandler {
                     .id(leoBuild.getId())
                     .endTime(new Date())
                     .isFinish(true)
-                    .buildResult(BUILD_RESULT_ERROR)
+                    .buildResult(RESULT_ERROR)
                     .buildStatus("选举实例阶段")
                     .build();
             save(saveLeoBuild);
