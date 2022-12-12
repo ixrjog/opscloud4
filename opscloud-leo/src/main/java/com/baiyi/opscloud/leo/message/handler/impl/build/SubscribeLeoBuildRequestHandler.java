@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.domain.param.leo.request.QueryLeoBuildRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.leo.message.handler.base.BaseLeoContinuousDeliveryRequestHandler;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class QueryLeoBuildRequestHandler extends BaseLeoContinuousDeliveryRequestHandler<QueryLeoBuildRequestParam> {
+public class SubscribeLeoBuildRequestHandler extends BaseLeoContinuousDeliveryRequestHandler<SubscribeLeoBuildRequestParam> {
 
     @Resource
     private LeoBuildService leoBuildService;
@@ -40,12 +40,12 @@ public class QueryLeoBuildRequestHandler extends BaseLeoContinuousDeliveryReques
 
     @Override
     public String getMessageType() {
-        return LeoRequestType.QUERY_LEO_BUILD.name();
+        return LeoRequestType.SUBSCRIBE_LEO_BUILD.name();
     }
 
     @Override
     public void handleRequest(String sessionId, Session session, String message) {
-        QueryLeoBuildRequestParam queryParam = toRequestParam(message);
+        SubscribeLeoBuildRequestParam queryParam = toRequestParam(message);
         List<Integer> jobIds = leoJobService.querJobWithApplicationIdAndEnvType(queryParam.getApplicationId(), queryParam.getEnvType()).stream()
                 .map(LeoJob::getId).collect(Collectors.toList());
         if (CollectionUtils.isEmpty(jobIds))
@@ -55,7 +55,7 @@ public class QueryLeoBuildRequestHandler extends BaseLeoContinuousDeliveryReques
         sendToSession(session, dataTable);
     }
 
-    public DataTable<LeoBuildVO.Build> queryLeoBuildPage(QueryLeoBuildRequestParam pageQuery) {
+    public DataTable<LeoBuildVO.Build> queryLeoBuildPage(SubscribeLeoBuildRequestParam pageQuery) {
         DataTable<LeoBuild> table = leoBuildService.queryBuildPage(pageQuery);
         List<LeoBuildVO.Build> data = BeanCopierUtil.copyListProperties(table.getData(), LeoBuildVO.Build.class).stream()
                 .peek(leoBuildResponsePacker::wrap)
@@ -63,8 +63,8 @@ public class QueryLeoBuildRequestHandler extends BaseLeoContinuousDeliveryReques
         return new DataTable<>(data, table.getTotalNum());
     }
 
-    private QueryLeoBuildRequestParam toRequestParam(String message) {
-        return toLeoRequestParam(message, QueryLeoBuildRequestParam.class);
+    private SubscribeLeoBuildRequestParam toRequestParam(String message) {
+        return toLeoRequestParam(message, SubscribeLeoBuildRequestParam.class);
     }
 
 }

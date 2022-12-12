@@ -105,12 +105,12 @@ public class DeployingSupervisor implements ISupervisor {
                         LeoDeployingVO.PodDetails podDetails = toPodDetails(pod, containerName);
                         // 上个版本
                         if (image.equals(previousVersion.getImage())) {
-                            previousVersion.put(podDetails);
+                            previousVersion.putPod(podDetails);
                             continue;
                         }
                         // 发布版本
                         if (image.equals(releaseVersion.getImage())) {
-                            releaseVersion.put(podDetails);
+                            releaseVersion.putPod(podDetails);
                         }
                     } else {
                         log.warn("没找到容器: container={}", containerName);
@@ -119,15 +119,15 @@ public class DeployingSupervisor implements ISupervisor {
 
                 LeoDeployingVO.Deploying deploying = LeoDeployingVO.Deploying.builder()
                         .deployType(deploy.getDeployType())
-                        .previousVersion(previousVersion)
-                        .releaseVersion(releaseVersion)
+                        .versionDetails1(previousVersion)
+                        .versionDetails2(releaseVersion)
                         .replicas(deployment.getReplicas())
                         .build();
                 deploying.init();
                 // 缓存
                 snapshotStash.save(leoDeploy.getId(), deploying);
                 // 发布结束
-                if (deploying.getIsFinish() && CollectionUtils.isEmpty(deploying.getPreviousVersion().getPods())) {
+                if (deploying.getIsFinish() && CollectionUtils.isEmpty(deploying.getVersionDetails1().getPods())) {
                     LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                             .id(this.leoDeploy.getId())
                             .endTime(new Date())

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.service.leo;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
-import com.baiyi.opscloud.domain.param.leo.request.QueryLeoDeployRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployRequestParam;
 
 /**
  * @Author baiyi
@@ -19,8 +19,10 @@ public interface LeoDeployService {
 
     void updateByPrimaryKeySelective(LeoDeploy leoDeploy);
 
-    DataTable<LeoDeploy> queryDeployPage(QueryLeoDeployRequestParam pageQuery);
+    DataTable<LeoDeploy> queryDeployPage(SubscribeLeoDeployRequestParam pageQuery);
 
     int countDeployingWithJobId(int jobId);
+
+    int countWithJobId(int jobId);
 
 }

@@ -10,7 +10,7 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-public class QueryLeoDeployDetailsRequestParam implements ILeoRequestParam, ILoginMessage {
+public class SubscribeLeoDeployDetailsRequestParam implements ILeoRequestParam, ILoginMessage {
 
     private String token;
 
@@ -18,7 +18,7 @@ public class QueryLeoDeployDetailsRequestParam implements ILeoRequestParam, ILog
 
     @Override
     public String getMessageType() {
-        return LeoRequestType.QUERY_LEO_DEPLOY_DETAILS.name();
+        return LeoRequestType.SUBSCRIBE_LEO_DEPLOY_DETAILS.name();
     }
 
 }

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.leo.message.handler.impl.deploy;
 
 import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
-import com.baiyi.opscloud.domain.param.leo.request.QueryLeoDeployDetailsRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployDetailsRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO;
 import com.baiyi.opscloud.leo.message.handler.base.BaseLeoContinuousDeliveryRequestHandler;
@@ -19,19 +19,19 @@ import javax.websocket.Session;
  */
 @Slf4j
 @Component
-public class QueryLeoDeployDetailsRequestHandler extends BaseLeoContinuousDeliveryRequestHandler<QueryLeoDeployDetailsRequestParam> {
+public class SubscribeLeoDeployDetailsRequestHandler extends BaseLeoContinuousDeliveryRequestHandler<SubscribeLeoDeployDetailsRequestParam> {
 
     @Resource
     private SnapshotStash snapshotStash;
 
     @Override
     public String getMessageType() {
-        return LeoRequestType.QUERY_LEO_DEPLOY_DETAILS.name();
+        return LeoRequestType.SUBSCRIBE_LEO_DEPLOY_DETAILS.name();
     }
 
     @Override
     public void handleRequest(String sessionId, Session session, String message) {
-        QueryLeoDeployDetailsRequestParam param = toRequestParam(message);
+        SubscribeLeoDeployDetailsRequestParam param = toRequestParam(message);
         LeoContinuousDeliveryResponse response;
         if (snapshotStash.isExist(param.getDeployId())) {
             LeoDeployingVO.Deploying deploying = snapshotStash.get(param.getDeployId());
@@ -48,8 +48,8 @@ public class QueryLeoDeployDetailsRequestHandler extends BaseLeoContinuousDelive
         sendToSession(session, response);
     }
 
-    private QueryLeoDeployDetailsRequestParam toRequestParam(String message) {
-        return toLeoRequestParam(message, QueryLeoDeployDetailsRequestParam.class);
+    private SubscribeLeoDeployDetailsRequestParam toRequestParam(String message) {
+        return toLeoRequestParam(message, SubscribeLeoDeployDetailsRequestParam.class);
     }
 
 }

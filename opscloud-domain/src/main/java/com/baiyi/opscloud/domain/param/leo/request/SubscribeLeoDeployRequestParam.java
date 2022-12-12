@@ -9,12 +9,12 @@ import java.util.List;
 
 /**
  * @Author baiyi
- * @Date 2022/11/24 17:23
+ * @Date 2022/12/6 19:50
  * @Version 1.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class QueryLeoBuildRequestParam extends SuperPageParam implements ILeoRequestParam {
+public class SubscribeLeoDeployRequestParam extends SuperPageParam implements ILeoRequestParam {
 
     private Integer applicationId;
 
@@ -24,7 +24,7 @@ public class QueryLeoBuildRequestParam extends SuperPageParam implements ILeoReq
 
     @Override
     public String getMessageType() {
-        return LeoRequestType.QUERY_LEO_BUILD.name();
+        return LeoRequestType.SUBSCRIBE_LEO_DEPLOY.name();
     }
 
 }

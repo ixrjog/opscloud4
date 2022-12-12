@@ -45,7 +45,6 @@ public class WatchLeoDeployQueryTask implements Runnable {
                     });
                 }
                 TimeUnit.SECONDS.sleep(5L);
-            } catch (InterruptedException ie) {
             } catch (Exception e) {
                 log.error(e.getMessage());
             }

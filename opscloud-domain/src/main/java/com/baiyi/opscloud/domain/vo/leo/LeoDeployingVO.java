@@ -35,8 +35,10 @@ public class LeoDeployingVO {
     public static class Deploying implements Serializable {
         private static final long serialVersionUID = -2373193776064021868L;
         private String deployType;
-        private VerionDetails previousVersion;
-        private VerionDetails releaseVersion;
+
+        // previous/release
+        private VerionDetails versionDetails1;
+        private VerionDetails versionDetails2;
         // 副本数
         private Integer replicas;
 
@@ -46,17 +48,17 @@ public class LeoDeployingVO {
         private Boolean maxRestartError;
 
         public void init() {
-            if (CollectionUtils.isEmpty(releaseVersion.pods)) {
+            if (CollectionUtils.isEmpty(versionDetails2.pods)) {
                 this.isFinish = false;
                 return;
             }
-            long count = releaseVersion.pods.stream().filter(e -> e.isComplete).count();
+            long count = versionDetails2.pods.stream().filter(e -> e.isComplete).count();
             this.isFinish = count >= replicas;
         }
 
         public Boolean isMaxRestartError() {
-            if (CollectionUtils.isEmpty(releaseVersion.pods)) return false;
-            return releaseVersion.pods.stream().anyMatch(e -> e.getRestartCount() >= MAX_RESTART);
+            if (CollectionUtils.isEmpty(versionDetails2.pods)) return false;
+            return versionDetails2.pods.stream().anyMatch(e -> e.getRestartCount() >= MAX_RESTART);
         }
 
     }
@@ -74,7 +76,7 @@ public class LeoDeployingVO {
         @Builder.Default
         private List<PodDetails> pods = Lists.newArrayList();
 
-        public void put(PodDetails podDetails) {
+        public void putPod(PodDetails podDetails) {
             this.pods.add(podDetails);
         }
 

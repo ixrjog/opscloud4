@@ -2,7 +2,7 @@ package com.baiyi.opscloud.service.leo.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
-import com.baiyi.opscloud.domain.param.leo.request.QueryLeoDeployRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployRequestParam;
 import com.baiyi.opscloud.mapper.opscloud.LeoDeployMapper;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.github.pagehelper.Page;
@@ -46,7 +46,7 @@ public class LeoDeployServiceImpl implements LeoDeployService {
     }
 
     @Override
-    public DataTable<LeoDeploy> queryDeployPage(QueryLeoDeployRequestParam pageQuery) {
+    public DataTable<LeoDeploy> queryDeployPage(SubscribeLeoDeployRequestParam pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(LeoDeploy.class);
         Example.Criteria criteria = example.createCriteria();
@@ -63,6 +63,14 @@ public class LeoDeployServiceImpl implements LeoDeployService {
         criteria.andEqualTo("jobId", jobId)
                 .andEqualTo("isActive", true)
                 .andEqualTo("isFinish", false);
+        return leoDeployMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public  int countWithJobId(int jobId){
+        Example example = new Example(LeoDeploy.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("jobId", jobId);
         return leoDeployMapper.selectCountByExample(example);
     }
 

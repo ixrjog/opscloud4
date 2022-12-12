@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.domain.param.leo.request.QueryLeoDeployRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployVO;
 import com.baiyi.opscloud.leo.message.handler.base.BaseLeoContinuousDeliveryRequestHandler;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class QueryLeoDeployRequestHandler extends BaseLeoContinuousDeliveryRequestHandler<QueryLeoDeployRequestParam> {
+public class SubscribeLeoDeployRequestHandler extends BaseLeoContinuousDeliveryRequestHandler<SubscribeLeoDeployRequestParam> {
 
     @Resource
     private LeoDeployService leoDeployService;
@@ -40,15 +40,16 @@ public class QueryLeoDeployRequestHandler extends BaseLeoContinuousDeliveryReque
 
     @Override
     public String getMessageType() {
-        return LeoRequestType.QUERY_LEO_DEPLOY.name();
+        return LeoRequestType.SUBSCRIBE_LEO_DEPLOY.name();
     }
 
     @Override
     public void handleRequest(String sessionId, Session session, String message) {
-        QueryLeoDeployRequestParam queryParam = toRequestParam(message);
+        SubscribeLeoDeployRequestParam queryParam = toRequestParam(message);
         List<Integer> jobIds = leoJobService.querJobWithApplicationIdAndEnvType(queryParam.getApplicationId(), queryParam.getEnvType())
                 .stream()
-                .map(LeoJob::getId).collect(Collectors.toList());
+                .map(LeoJob::getId)
+                .collect(Collectors.toList());
         if (CollectionUtils.isEmpty(jobIds))
             return;
         queryParam.setJobIds(jobIds);
@@ -56,7 +57,7 @@ public class QueryLeoDeployRequestHandler extends BaseLeoContinuousDeliveryReque
         sendToSession(session, dataTable);
     }
 
-    public DataTable<LeoDeployVO.Deploy> queryLeoDeployPage(QueryLeoDeployRequestParam pageQuery) {
+    public DataTable<LeoDeployVO.Deploy> queryLeoDeployPage(SubscribeLeoDeployRequestParam pageQuery) {
         DataTable<LeoDeploy> table = leoDeployService.queryDeployPage(pageQuery);
         List<LeoDeployVO.Deploy> data = BeanCopierUtil.copyListProperties(table.getData(), LeoDeployVO.Deploy.class).stream()
                 .peek(leoDeployResponsePacker::wrap)
@@ -64,8 +65,8 @@ public class QueryLeoDeployRequestHandler extends BaseLeoContinuousDeliveryReque
         return new DataTable<>(data, table.getTotalNum());
     }
 
-    private QueryLeoDeployRequestParam toRequestParam(String message) {
-        return toLeoRequestParam(message, QueryLeoDeployRequestParam.class);
+    private SubscribeLeoDeployRequestParam toRequestParam(String message) {
+        return toLeoRequestParam(message, SubscribeLeoDeployRequestParam.class);
     }
 
 }

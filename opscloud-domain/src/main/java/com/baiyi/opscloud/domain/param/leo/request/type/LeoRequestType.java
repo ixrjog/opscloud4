@@ -6,13 +6,14 @@ package com.baiyi.opscloud.domain.param.leo.request.type;
  * @Version 1.0
  */
 public enum LeoRequestType {
+
     // Build
     LOGIN,
-    QUERY_LEO_JOB,
-    QUERY_LEO_BUILD,
+    SUBSCRIBE_LEO_JOB,
+    SUBSCRIBE_LEO_BUILD,
     QUERY_LEO_BUILD_CONSOLE_STREAM,
     // Deploy
-    QUERY_LEO_DEPLOY,
-    QUERY_LEO_DEPLOY_DETAILS
+    SUBSCRIBE_LEO_DEPLOY,
+    SUBSCRIBE_LEO_DEPLOY_DETAILS
 
 }

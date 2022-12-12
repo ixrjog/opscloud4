@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class QueryLeoJobRequestParam extends SuperPageParam implements ILeoRequestParam {
+public class SubscribeLeoJobRequestParam extends SuperPageParam implements ILeoRequestParam {
 
     private Integer applicationId;
 
@@ -22,7 +22,7 @@ public class QueryLeoJobRequestParam extends SuperPageParam implements ILeoReque
 
     @Override
     public String getMessageType() {
-        return LeoRequestType.QUERY_LEO_JOB.name();
+        return LeoRequestType.SUBSCRIBE_LEO_JOB.name();
     }
 
 }

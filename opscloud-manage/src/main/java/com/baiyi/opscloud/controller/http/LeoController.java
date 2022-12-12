@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -38,6 +39,14 @@ public class LeoController {
     private final LeoDeployFacade leoDeployFacade;
 
     private final LeoBuildPipelineFacade leoBuildPipelineFacade;
+
+    private final LeoChartFacade leoChartFacade;
+
+    @ApiOperation(value = "图表-云词")
+    @GetMapping(value = "/chart/keywords/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Map<String,Integer>> getLeoChartKeywords() {
+        return new HttpResult<>(leoChartFacade.getKeywords());
+    }
 
     // Leo Template -------------
 

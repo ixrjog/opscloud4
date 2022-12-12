@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.leo.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
-import com.baiyi.opscloud.domain.param.leo.request.QueryLeoJobRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoJobRequestParam;
 import com.baiyi.opscloud.mapper.opscloud.LeoJobMapper;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.github.pagehelper.Page;
@@ -33,7 +33,7 @@ public class LeoJobServiceImpl implements LeoJobService {
     }
 
     @Override
-    public DataTable<LeoJob> queryJobPage(QueryLeoJobRequestParam pageQuery) {
+    public DataTable<LeoJob> queryJobPage(SubscribeLeoJobRequestParam pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(LeoJob.class);
         Example.Criteria criteria = example.createCriteria();
@@ -44,7 +44,6 @@ public class LeoJobServiceImpl implements LeoJobService {
         return new DataTable<>(data, page.getTotal());
     }
 
-
     @Override
     public List<LeoJob> querJobWithApplicationIdAndEnvType(Integer applicationId, Integer envType) {
         Example example = new Example(LeoJob.class);
@@ -52,6 +51,14 @@ public class LeoJobServiceImpl implements LeoJobService {
         criteria.andEqualTo("applicationId", applicationId)
                 .andEqualTo("envType", envType)
                 .andEqualTo("isActive", true);
+        return leoJobMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<LeoJob> querJobWithApplicationId(Integer applicationId){
+        Example example = new Example(LeoJob.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("applicationId", applicationId);
         return leoJobMapper.selectByExample(example);
     }
 
