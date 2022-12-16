@@ -1,25 +1,18 @@
 package com.baiyi.opscloud.leo.action.deploy.concrete.pre;
 
-import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.leo.action.deploy.BaseDeployHandler;
-import com.baiyi.opscloud.leo.constants.DeployDictConstants;
-import com.baiyi.opscloud.leo.constants.DeployTypeConstants;
-import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
+import com.baiyi.opscloud.leo.action.deploy.base.BaseDeployStrategy;
+import com.baiyi.opscloud.leo.action.deploy.base.DeployStrategyFactory;
+import com.baiyi.opscloud.leo.action.deploy.base.IDeployStep;
+import com.baiyi.opscloud.leo.constants.DeployStepConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
-import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
-import io.fabric8.kubernetes.api.model.Container;
-import io.fabric8.kubernetes.api.model.apps.Deployment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * @Author baiyi
@@ -28,7 +21,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
-public class DoDeployConcreteHandler extends BaseDeployHandler {
+public class DoDeployConcreteHandler extends BaseDeployHandler implements IDeployStep {
 
     @Resource
     private DsInstanceAssetService assetService;
@@ -44,65 +37,14 @@ public class DoDeployConcreteHandler extends BaseDeployHandler {
      */
     @Override
     protected void handle(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
-
-        LeoBaseModel.Kubernetes kubernetes = Optional.ofNullable(deployConfig)
-                .map(LeoDeployModel.DeployConfig::getDeploy)
-                .map(LeoDeployModel.Deploy::getKubernetes)
-                .orElseThrow(() -> new LeoDeployException("Kubernetes配置不存在！"));
-
-        LeoDeployModel.DeployVersion releaseVersion = Optional.of(deployConfig)
-                .map(LeoDeployModel.DeployConfig::getDeploy)
-                .map(LeoDeployModel.Deploy::getReleaseVersion)
-                .orElseThrow(() -> new LeoDeployException("发布版本配置不存在！"));
-
-        Map<String, String> dict = generateDeployDict(leoDeploy,deployConfig);
-        deployConfig.getDeploy().setDict(dict);
-
-        final String instanceUuid = kubernetes.getInstance().getUuid();
-        final String namespace = kubernetes.getDeployment().getNamespace();
-        final String deploymentName = kubernetes.getDeployment().getName();
-        final String containerName = kubernetes.getDeployment().getContainer().getName();
-        KubernetesConfig kubernetesConfig = getKubernetesConfigWithUuid(instanceUuid);
-        Deployment deployment = KubernetesDeploymentDriver.getDeployment(kubernetesConfig.getKubernetes(),
-                namespace,
-                deploymentName);
-        if (deployment == null) {
-            throw new LeoDeployException("Deployment不存在！");
-        }
-
-        Container container = deployment.getSpec().getTemplate().getSpec().getContainers()
-                .stream()
-                .filter(e -> e.getName().equals(containerName))
-                .findFirst()
-                .orElseThrow(() -> new LeoDeployException("未找到容器: container={}", containerName));
-        container.setImage(releaseVersion.getImage());
-        try {
-            KubernetesDeploymentDriver.createOrReplaceDeployment(kubernetesConfig.getKubernetes(), namespace, deployment);
-            LeoDeploy saveLeoDeploy = LeoDeploy.builder()
-                    .id(leoDeploy.getId())
-                    .startTime(new Date())
-                    .deployConfig(deployConfig.dump())
-                    .deployStatus("更新Deployment阶段: 成功")
-                    .build();
-            save(saveLeoDeploy, "更新Deployment成功");
-        } catch (Exception e) {
-            throw new LeoDeployException(e.getMessage());
-        }
+        BaseDeployStrategy deployStrategy = DeployStrategyFactory.getStrategy(getStep(), deployConfig.getDeploy().getDeployType());
+        // 基于策略模式实现
+        deployStrategy.handleRequest(leoDeploy, deployConfig);
     }
 
-    private Map<String, String> generateDeployDict(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
-        Map<String, String> dict = Optional.ofNullable(deployConfig)
-                .map(LeoDeployModel.DeployConfig::getDeploy)
-                .map(LeoDeployModel.Deploy::getDict)
-                .orElseThrow(() -> new LeoDeployException("部署字典不存在！"));
-
-        final String deployType = deployConfig.getDeploy().getDeployType();
-
-        dict.put(DeployDictConstants.DEPLOY_NUMBER.getKey(), String.valueOf(leoDeploy.getDeployNumber()) );
-        dict.put(DeployDictConstants.DEPLOY_TYPE.getKey(), deployType);
-        dict.put(DeployDictConstants.DEPLOY_TYPE_DESC.getKey(), DeployTypeConstants.getDesc(deployType));
-
-        return dict;
+    @Override
+    public String getStep() {
+        return DeployStepConstants.DO_DEPLOY.name();
     }
 
 }

@@ -92,6 +92,7 @@ public class LeoBaseModel {
     @NoArgsConstructor
     public static class Container {
         private String name;
+        private String image;
     }
 
     @Builder

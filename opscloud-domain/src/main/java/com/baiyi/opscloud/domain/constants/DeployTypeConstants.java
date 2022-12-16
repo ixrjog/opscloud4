@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.leo.constants;
+package com.baiyi.opscloud.domain.constants;
 
 import lombok.Getter;
 
@@ -13,6 +13,7 @@ import java.util.Arrays;
 public enum DeployTypeConstants {
 
     ROLLING("滚动 Rolling"),
+    REDEPLOY("重启 Redeploy"),
     GRAY("灰度 Gray"),
     BLUEGREEN("蓝绿 Blue/Green");
 

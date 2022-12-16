@@ -32,7 +32,7 @@ public class LeoPostBuildHandler implements InitializingBean {
     private final RecordBuildPipelineConcreteHandler recordBuildPipelineConcreteHandler;
 
     @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
-    public void buildHandle(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
+    public void handleBuild(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
         // 使用责任链设计模式解耦代码
         verifyKubernetesImageConcreteHandler.handleRequest(leoBuild, buildConfig);
     }

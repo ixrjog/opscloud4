@@ -131,7 +131,7 @@ public class BuildingSupervisor implements ISupervisor {
     }
 
     private void postBuildHandle() {
-        leoPostBuildHandler.buildHandle(leoBuild, buildConfig);
+        leoPostBuildHandler.handleBuild(leoBuild, buildConfig);
     }
 
     /**

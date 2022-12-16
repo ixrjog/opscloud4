@@ -2,13 +2,11 @@ package com.baiyi.opscloud.leo.action.build.concrete.pre;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsJobDriver;
-import com.baiyi.opscloud.domain.base.SimpleBusiness;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.leo.action.build.BaseBuildHandler;
+import com.baiyi.opscloud.leo.action.build.helper.ApplicationTagsHelper;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
@@ -17,15 +15,12 @@ import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.sys.EnvService;
-import com.baiyi.opscloud.service.tag.BusinessTagService;
-import com.baiyi.opscloud.service.tag.TagService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -60,11 +55,13 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
     @Resource
     private UserService userService;
 
-    @Resource
-    private BusinessTagService bizTagService;
+//    @Resource
+//    private BusinessTagService bizTagService;
+//
+//    @Resource
+//    private TagService tagService;
 
-    @Resource
-    private TagService tagService;
+    private ApplicationTagsHelper applicationTagsHelper;
 
 
     /**
@@ -171,16 +168,7 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
                         .orElse(leoBuild.getUsername())
                 );
 
-        SimpleBusiness simpleBusiness = SimpleBusiness.builder()
-                .businessType(BusinessTypeEnum.APPLICATION.getType())
-                .businessId(leoJob.getApplicationId())
-                .build();
-
-        List<BusinessTag> bizTags = bizTagService.queryByBusiness(simpleBusiness);
-        final String applicationTags = CollectionUtils.isEmpty(bizTags) ? "未定义标签" : Joiner.on("、").join(
-                bizTags.stream().map(t ->
-                        tagService.getById(t.getTagId()).getTagKey()
-                ).collect(Collectors.toList()));
+        final String applicationTags = applicationTagsHelper.getTagsStr(leoJob.getApplicationId());
 
         LeoBaseModel.GitLabProject gitLabProject = Optional.of(buildConfig)
                 .map(LeoBuildModel.BuildConfig::getBuild)

@@ -3,6 +3,7 @@ package com.baiyi.opscloud.leo.task;
 import com.baiyi.opscloud.common.leo.session.LeoBuildQuerySessionMap;
 import com.baiyi.opscloud.leo.message.factory.LeoContinuousDeliveryMessageHandlerFactory;
 import com.baiyi.opscloud.leo.message.handler.base.ILeoContinuousDeliveryRequestHandler;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.Session;
@@ -17,13 +18,13 @@ import static com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType.QU
  * @Version 1.0
  */
 @Slf4j
-public class WatchLeoBuildQueryTask implements Runnable {
+public class WatchLeoBuildTask implements Runnable {
 
     private final String sessionId;
 
     private final Session session;
 
-    public WatchLeoBuildQueryTask(String sessionId, Session session) {
+    public WatchLeoBuildTask(String sessionId, Session session) {
         this.sessionId = sessionId;
         this.session = session;
     }
@@ -33,12 +34,13 @@ public class WatchLeoBuildQueryTask implements Runnable {
         while (true) {
             try {
                 if (!this.session.isOpen()) {
-                    log.info("WatchLeoQueryTask会话关闭任务退出！");
+                    log.info("WatchLeoBuildTask会话关闭任务退出！");
                     LeoBuildQuerySessionMap.removeSessionQueryMap(this.sessionId);
                     break;
                 }
                 if (LeoBuildQuerySessionMap.sessionQueryMapContainsKey(this.sessionId)) {
-                    Map<String, String> queryMap = LeoBuildQuerySessionMap.getSessionQueryMap(this.sessionId);
+                    // 深copy
+                    Map<String, String> queryMap = Maps.newHashMap(LeoBuildQuerySessionMap.getSessionQueryMap(this.sessionId));
                     queryMap.keySet().forEach(messageType -> {
                         if (messageType.equals(QUERY_LEO_BUILD_CONSOLE_STREAM.name())) {
                             // 不处理控制台日志流
@@ -51,7 +53,6 @@ public class WatchLeoBuildQueryTask implements Runnable {
                     });
                 }
                 TimeUnit.SECONDS.sleep(5L);
-            } catch (InterruptedException ie) {
             } catch (Exception e) {
                 log.error(e.getMessage());
             }

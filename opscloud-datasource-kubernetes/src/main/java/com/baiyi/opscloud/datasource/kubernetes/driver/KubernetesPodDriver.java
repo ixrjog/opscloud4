@@ -7,6 +7,7 @@ import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.ExecListener;
 import io.fabric8.kubernetes.client.dsl.ExecWatch;
+import io.fabric8.kubernetes.client.dsl.Listable;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
 import lombok.Data;
 import org.springframework.util.CollectionUtils;
@@ -15,6 +16,7 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @Author baiyi
@@ -51,10 +53,10 @@ public class KubernetesPodDriver {
                 .getSelector()
                 .getMatchLabels();
         if (matchLabels.isEmpty()) return Collections.emptyList();
-        List<Pod> items = client.pods().inNamespace(namespace).withLabels(matchLabels).list().getItems();
-        if (CollectionUtils.isEmpty(items))
-            return Collections.emptyList();
-        return items;
+        return Optional.of(client.pods().inNamespace(namespace).withLabels(matchLabels))
+                .map(Listable::list)
+                .map(PodList::getItems)
+                .orElse(Collections.emptyList());
     }
 
     public static List<Pod> listPod(KubernetesConfig.Kubernetes kubernetes, String namespace, Map<String, String> labels) {
@@ -143,7 +145,7 @@ public class KubernetesPodDriver {
                 .writingError(out)
                 .withTTY()
                 .usingListener(listener)
-                .exec("env","TERM=xterm", "sh");
+                .exec("env", "TERM=xterm", "sh");
     }
 
 

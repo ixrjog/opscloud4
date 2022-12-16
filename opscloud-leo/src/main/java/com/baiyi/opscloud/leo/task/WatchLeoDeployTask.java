@@ -3,6 +3,7 @@ package com.baiyi.opscloud.leo.task;
 import com.baiyi.opscloud.common.leo.session.LeoDeployQuerySessionMap;
 import com.baiyi.opscloud.leo.message.factory.LeoContinuousDeliveryMessageHandlerFactory;
 import com.baiyi.opscloud.leo.message.handler.base.ILeoContinuousDeliveryRequestHandler;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.Session;
@@ -15,13 +16,13 @@ import java.util.concurrent.TimeUnit;
  * @Version 1.0
  */
 @Slf4j
-public class WatchLeoDeployQueryTask implements Runnable {
+public class WatchLeoDeployTask implements Runnable {
 
     private final String sessionId;
 
     private final Session session;
 
-    public WatchLeoDeployQueryTask(String sessionId, Session session) {
+    public WatchLeoDeployTask(String sessionId, Session session) {
         this.sessionId = sessionId;
         this.session = session;
     }
@@ -36,17 +37,21 @@ public class WatchLeoDeployQueryTask implements Runnable {
                     break;
                 }
                 if (LeoDeployQuerySessionMap.sessionQueryMapContainsKey(this.sessionId)) {
-                    Map<String, String> queryMap = LeoDeployQuerySessionMap.getSessionQueryMap(this.sessionId);
-                    queryMap.keySet().forEach(messageType -> {
-                        ILeoContinuousDeliveryRequestHandler handler = LeoContinuousDeliveryMessageHandlerFactory.getHandlerByMessageType(messageType);
-                        if (handler != null) {
-                            handler.handleRequest(this.sessionId, session, queryMap.get(messageType));
-                        }
-                    });
+                    // 深copy
+                    Map<String, String> queryMap = Maps.newHashMap(LeoDeployQuerySessionMap.getSessionQueryMap(this.sessionId));
+                    if (!queryMap.isEmpty()) {
+                        queryMap.keySet().forEach(messageType -> {
+                            ILeoContinuousDeliveryRequestHandler handler = LeoContinuousDeliveryMessageHandlerFactory.getHandlerByMessageType(messageType);
+                            if (handler != null) {
+                                handler.handleRequest(this.sessionId, session, queryMap.get(messageType));
+                            }
+                        });
+                    }
                 }
                 TimeUnit.SECONDS.sleep(5L);
             } catch (Exception e) {
                 log.error(e.getMessage());
+                e.printStackTrace();
             }
         }
     }

@@ -11,15 +11,14 @@ import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoDeployFacade;
 import com.baiyi.opscloud.leo.action.deploy.LeoDeployHandler;
-import com.baiyi.opscloud.leo.constants.DeployDictConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
-import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.packer.leo.LeoBuildVersionPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
+import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
@@ -32,7 +31,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -52,6 +50,8 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     private final ApplicationResourceService applicationResourceService;
 
+    private final ApplicationService applicationService;
+
     private final LeoBuildService leoBuildService;
 
     private final LeoBuildVersionPacker leoBuildVersionPacker;
@@ -69,7 +69,6 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         }
         // 执行部署任务
         LeoJob leoJob = leoJobService.getById(doDeploy.getJobId());
-        LeoBuild leoBuild = leoBuildService.getById(doDeploy.getBuildId());
         final int deployNumber = generateDeployNumberWithJobId(leoJob.getId());
 
         LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob.getJobConfig());
@@ -79,21 +78,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .map(LeoJobModel.Job::getDeploy)
                 .map(LeoJobModel.Deploy::getNotify)
                 .orElseThrow(() -> new LeoDeployException("部署通知配置不存在！"));
-        // 字典
-        LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.load(leoBuild.getBuildConfig());
-        Map<String, String> dict = Optional.ofNullable(buildConfig)
-                .map(LeoBuildModel.BuildConfig::getBuild)
-                .map(LeoBuildModel.Build::getDict)
-                .orElseThrow(() -> new LeoDeployException("构建字典不存在！"));
 
-        User user = userService.getByUsername(SessionUtil.getUsername());
-        final String displayName = Optional.ofNullable(user)
-                .map(User::getDisplayName)
-                .orElse(Optional.ofNullable(user)
-                        .map(User::getName)
-                        .orElse(SessionUtil.getUsername())
-                );
-        dict.put(DeployDictConstants.DISPLAY_NAME.getKey(), displayName);
         LeoBaseModel.Kubernetes kubernetes = LeoBaseModel.Kubernetes.builder()
                 .assetId(doDeploy.getAssetId())
                 .build();
@@ -101,7 +86,6 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         LeoDeployModel.Deploy deploy = LeoDeployModel.Deploy.builder()
                 .deployType(doDeploy.getDeployType())
                 .notify(notify)
-                .dict(dict)
                 .kubernetes(kubernetes)
                 .build();
 
@@ -113,11 +97,9 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .applicationId(leoJob.getApplicationId())
                 .jobId(leoJob.getId())
                 .jobName(leoJob.getName())
-                .buildId(doDeploy.getBuildId())
+                .buildId(doDeploy.getBuildId() == null ? 0 : doDeploy.getBuildId())
                 .deployNumber(deployNumber)
                 .deployConfig(deployConfig.dump())
-                .versionName(leoBuild.getVersionName())
-                .versionDesc(leoBuild.getVersionDesc())
                 .executionType(ExecutionTypeConstants.USER)
                 .username(SessionUtil.getUsername())
                 .isFinish(false)

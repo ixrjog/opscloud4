@@ -1,8 +1,10 @@
 package com.baiyi.opscloud.leo.domain.model;
 
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
+import com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO;
 import com.baiyi.opscloud.leo.domain.model.base.YamlDump;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
+import com.google.common.collect.Lists;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.DumperOptions;
@@ -67,10 +69,10 @@ public class LeoDeployModel {
         private LeoBaseModel.Notify notify;
         // 部署类型
         private String deployType;
-        // 以前的版本
-        private DeployVersion previousVersion;
-        // 发布版本
-        private DeployVersion releaseVersion;
+        // 部署版本1
+        private DeployVersion deployVersion1;
+        // 部署版本2
+        private DeployVersion deployVersion2;
         // 构建标签
         private List<String> tags;
     }
@@ -95,6 +97,12 @@ public class LeoDeployModel {
         private String versionDesc = "";
         // 镜像
         private String image;
+
+        @Builder.Default
+        private List<LeoDeployingVO.PodDetails> pods = Lists.newArrayList();
+
+        private String comment;
+
     }
 
 }

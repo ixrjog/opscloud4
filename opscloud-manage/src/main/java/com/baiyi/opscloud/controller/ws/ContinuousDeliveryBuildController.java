@@ -5,7 +5,7 @@ import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.param.leo.request.LoginLeoRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.SimpleLeoRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
-import com.baiyi.opscloud.leo.task.WatchLeoBuildQueryTask;
+import com.baiyi.opscloud.leo.task.WatchLeoBuildTask;
 import com.baiyi.opscloud.common.leo.session.LeoBuildQuerySessionMap;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +51,7 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
             int cnt = onlineCount.incrementAndGet(); // 在线数加1
             this.session = session;
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
-            WatchLeoBuildQueryTask watchLeoQueryTask = new WatchLeoBuildQueryTask(this.sessionId, session);
+            WatchLeoBuildTask watchLeoQueryTask = new WatchLeoBuildTask(this.sessionId, session);
             Thread thread = new Thread(watchLeoQueryTask);
             thread.start();
         } catch (Exception e) {

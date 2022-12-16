@@ -2,13 +2,11 @@ package com.baiyi.opscloud.leo.action.deploy.concrete.pre;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
-import com.baiyi.opscloud.leo.action.build.LeoPostBuildHandler;
 import com.baiyi.opscloud.leo.action.deploy.BaseDeployHandler;
+import com.baiyi.opscloud.leo.action.deploy.LeoPostDeployHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
-import com.baiyi.opscloud.leo.packer.PodDetailsPacker;
 import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
-import com.baiyi.opscloud.leo.util.SnapshotStash;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,16 +23,11 @@ import javax.annotation.Resource;
 public class DeployingSupervisorConcreteHandler extends BaseDeployHandler {
 
     @Resource
-    private LeoPostBuildHandler leoPostBuildHandler;
-
-    @Resource
-    private  SnapshotStash snapshotStash;
+    private LeoPostDeployHandler leoPostDeployHandler;
 
     @Resource
     private LeoDeployService leoDeployService;
 
-    @Resource
-    private PodDetailsPacker podDetailsPacker;
 
     /**
      * 启动监视器
@@ -53,8 +46,7 @@ public class DeployingSupervisorConcreteHandler extends BaseDeployHandler {
                 logHelper,
                 deployConfig,
                 kubernetesConfig.getKubernetes(),
-                podDetailsPacker,
-                snapshotStash
+                leoPostDeployHandler
         );
         Thread thread = new Thread(deployingSupervisor);
         thread.start();

@@ -35,6 +35,16 @@ public class KubernetesDeploymentDriver {
      */
     public static void redeployDeployment(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
         Deployment deployment = getDeployment(kubernetes, namespace, name);
+        redeployDeployment(kubernetes, deployment);
+    }
+
+    /**
+     * 重启容器
+     *
+     * @param kubernetes
+     * @param deployment
+     */
+    public static void redeployDeployment(KubernetesConfig.Kubernetes kubernetes, Deployment deployment) {
         if (deployment == null) return;
         Optional<Map<String, String>> optionalAnnotations = Optional.of(deployment)
                 .map(Deployment::getSpec)
@@ -49,7 +59,7 @@ public class KubernetesDeploymentDriver {
             annotations.put(REDEPLOY_TIMESTAMP, String.valueOf(new Date().getTime()));
             deployment.getSpec().getTemplate().getMetadata().setAnnotations(annotations);
         }
-        createOrReplaceDeployment(kubernetes, namespace, deployment);
+        createOrReplaceDeployment(kubernetes, deployment);
     }
 
     /**
@@ -231,13 +241,6 @@ public class KubernetesDeploymentDriver {
                 .inNamespace(deployment.getMetadata().getNamespace())
                 .createOrReplace(deployment);
     }
-
-//    public static Deployment replaceDeployment(KubernetesConfig.Kubernetes kubernetes, Deployment deployment) {
-//        return KubeClient.build(kubernetes).apps()
-//                .deployments()
-//                .inNamespace(deployment.getMetadata().getNamespace())
-//                .replace(deployment);
-//    }
 
     /**
      * 配置文件转换为无状态资源

@@ -3,7 +3,6 @@ package com.baiyi.opscloud.leo.action.deploy;
 import com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.leo.action.deploy.concrete.post.EndDeployNotificationConcreteHandler;
-import com.baiyi.opscloud.leo.action.deploy.concrete.pre.DeployingSupervisorConcreteHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,13 +22,9 @@ import javax.annotation.Resource;
 @RequiredArgsConstructor
 public class LeoPostDeployHandler implements InitializingBean {
 
-    // 启动部署通知
+    // 结束部署通知
     @Resource
     private EndDeployNotificationConcreteHandler endDeployNotificationConcreteHandler;
-
-    // 启动部署监视器
-    @Resource
-    private DeployingSupervisorConcreteHandler deployingSupervisorConcreteHandler;
 
     @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
     public void handleDeploy(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {

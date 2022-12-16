@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.vo.leo;
 
+import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -42,18 +43,39 @@ public class LeoDeployingVO {
         // 副本数
         private Integer replicas;
 
-        private Boolean isFinish;
+        @Builder.Default
+        private Boolean isFinish = false;
 
         @JsonIgnoreProperties
         private Boolean maxRestartError;
 
-        public void init() {
+        /**
+         * init with deployType
+         */
+        public Deploying init() {
+            if (DeployTypeConstants.ROLLING.name().equals(deployType)) {
+                initWithRefault();
+            }
+            if (DeployTypeConstants.REDEPLOY.name().equals(deployType)) {
+                initWithRefault();
+            }
+            return this;
+        }
+
+        /**
+         * 滚动发布
+         */
+        private void initWithRefault() {
+            // 没有新版本
             if (CollectionUtils.isEmpty(versionDetails2.pods)) {
-                this.isFinish = false;
                 return;
             }
-            long count = versionDetails2.pods.stream().filter(e -> e.isComplete).count();
-            this.isFinish = count >= replicas;
+            // 老版本为空
+            if (CollectionUtils.isEmpty(this.versionDetails1.pods)) {
+                // 判断完成启动的新版本副本数是否达成
+                long count = versionDetails2.pods.stream().filter(e -> e.isComplete).count();
+                this.isFinish = count >= replicas;
+            }
         }
 
         public Boolean isMaxRestartError() {
@@ -70,8 +92,13 @@ public class LeoDeployingVO {
     @ApiModel
     public static class VerionDetails implements Serializable {
         private static final long serialVersionUID = -605790384101352067L;
-        private String versionName;
-        private String versionDesc;
+
+        private String title;
+
+        @Builder.Default
+        private String versionName = "-";
+        @Builder.Default
+        private String versionDesc = "";
         private String image;
         @Builder.Default
         private List<PodDetails> pods = Lists.newArrayList();
@@ -89,7 +116,7 @@ public class LeoDeployingVO {
     @ApiModel
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class PodDetails implements Serializable, ReadableTime.IAgo {
-        
+
         private static final long serialVersionUID = 6072373268821025901L;
 
         private Map<String, String> conditions;
@@ -113,8 +140,9 @@ public class LeoDeployingVO {
 
         private Boolean isComplete;
 
-        public void init() {
+        public PodDetails init() {
             this.isComplete = conditions.keySet().stream().filter(k -> conditions.get(k).equalsIgnoreCase("True")).count() == 4;
+            return this;
         }
 
         @Override

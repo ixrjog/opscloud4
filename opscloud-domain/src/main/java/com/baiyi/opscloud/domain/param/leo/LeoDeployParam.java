@@ -25,7 +25,6 @@ public class LeoDeployParam {
         @ApiModelProperty(value = "关联任务ID")
         private Integer jobId;
 
-        @Min(value = 0, message = "构建ID不能为空")
         @ApiModelProperty(value = "构建ID")
         private Integer buildId;
 

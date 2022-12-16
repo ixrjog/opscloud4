@@ -34,6 +34,14 @@ public class LeoDeployQuerySessionMap {
         LeoDeployQuerySessionMap.sessionQueryMap.put(sessionId, queryMap);
     }
 
+    public static void removeSessionQueryMap(String sessionId, String messageType) {
+        Map<String, String> queryMap;
+        if (LeoDeployQuerySessionMap.sessionQueryMap.containsKey(sessionId)) {
+            queryMap = LeoDeployQuerySessionMap.sessionQueryMap.get(sessionId);
+            queryMap.remove(messageType);
+        }
+    }
+
     public static boolean sessionQueryMapContainsKey(String sessionId) {
         return LeoDeployQuerySessionMap.sessionQueryMap.containsKey(sessionId);
     }

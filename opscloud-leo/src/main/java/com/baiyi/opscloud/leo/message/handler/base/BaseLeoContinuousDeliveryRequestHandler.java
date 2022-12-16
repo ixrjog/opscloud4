@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.leo.message.handler.base;
 
+import com.baiyi.opscloud.common.leo.session.LeoDeployQuerySessionMap;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.leo.message.factory.LeoContinuousDeliveryMessageHandlerFactory;
 import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
@@ -33,17 +34,27 @@ public abstract class BaseLeoContinuousDeliveryRequestHandler<T> implements ILeo
     }
 
     protected void sendToSession(Session session, DataTable body) {
-        LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
-                .body(body)
-                .messageType(getMessageType())
-                .build();
         try {
             if (session.isOpen()) {
+                LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
+                        .body(body)
+                        .messageType(getMessageType())
+                        .build();
                 session.getBasicRemote().sendText(response.toString());
             }
         } catch (IOException e) {
-            log.warn(e.getMessage());
+            log.warn("发送会话消息错误: err={}", e.getMessage());
         }
+    }
+
+    /**
+     * 取消订阅
+     *
+     * @param sessionId
+     */
+    protected void unsubscribe(String sessionId) {
+        log.info("取消订阅: sessionId={}, messageType={}", sessionId, getMessageType());
+        LeoDeployQuerySessionMap.removeSessionQueryMap(sessionId, getMessageType());
     }
 
     @Override

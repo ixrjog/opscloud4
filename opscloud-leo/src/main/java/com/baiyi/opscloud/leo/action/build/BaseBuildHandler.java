@@ -79,7 +79,9 @@ public abstract class BaseBuildHandler {
             save(leoBuild);
             throw e;
         }
-        getNext().handleRequest(leoBuildService.getById(leoBuild.getId()), buildConfig);
+        if (getNext() != null) {
+            getNext().handleRequest(leoBuildService.getById(leoBuild.getId()), buildConfig);
+        }
     }
 
     /**
