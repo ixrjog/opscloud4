@@ -10,7 +10,8 @@ import java.net.UnknownHostException;
  */
 public class HostUtil {
 
-    private HostUtil(){}
+    private HostUtil() {
+    }
 
     public static String getHostAddress() throws UnknownHostException {
         return InetAddress.getLocalHost().getHostAddress();
@@ -18,6 +19,14 @@ public class HostUtil {
 
     public static InetAddress getInetAddress() throws UnknownHostException {
         return InetAddress.getLocalHost();
+    }
+
+    public static String getHostName() {
+        try {
+            return getInetAddress().getCanonicalHostName();
+        } catch (UnknownHostException e) {
+            return "UnknownHost";
+        }
     }
 
 }

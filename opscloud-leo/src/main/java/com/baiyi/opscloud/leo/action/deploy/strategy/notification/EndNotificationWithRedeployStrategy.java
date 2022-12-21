@@ -17,7 +17,7 @@ import java.util.Map;
 @Component
 public class EndNotificationWithRedeployStrategy extends EndNotificationStrategy {
 
-    private static final String LEO_DEPLOY_END = "LEO_DEPLOY_END";
+    private static final String LEO_REDEPLOY_END = "LEO_REDEPLOY_END";
 
     @Override
     protected Map<String, Object> buildContentMap(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
@@ -31,7 +31,7 @@ public class EndNotificationWithRedeployStrategy extends EndNotificationStrategy
 
     @Override
     protected String getMessageKey() {
-        return LEO_DEPLOY_END;
+        return LEO_REDEPLOY_END;
     }
 
 }

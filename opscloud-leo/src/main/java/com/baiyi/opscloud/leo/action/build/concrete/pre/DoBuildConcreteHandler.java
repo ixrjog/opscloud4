@@ -55,14 +55,8 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
     @Resource
     private UserService userService;
 
-//    @Resource
-//    private BusinessTagService bizTagService;
-//
-//    @Resource
-//    private TagService tagService;
-
+    @Resource
     private ApplicationTagsHelper applicationTagsHelper;
-
 
     /**
      * 执行构建

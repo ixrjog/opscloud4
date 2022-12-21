@@ -27,7 +27,7 @@ import java.util.Optional;
  */
 public abstract class BaseCrImageValidator<T extends BaseDsConfig> implements InitializingBean {
 
-    public interface CRS {
+    public interface CrTypes {
         String ACR = "ACR";
         String ECR = "ECR";
     }
@@ -56,16 +56,13 @@ public abstract class BaseCrImageValidator<T extends BaseDsConfig> implements In
      * @param cr
      * @param buildConfig
      */
-    private void preInspection(LeoJob leoJob, LeoJobModel.CR cr, LeoBuildModel.BuildConfig buildConfig) {
+    protected void preInspection(LeoJob leoJob, LeoJobModel.CR cr, LeoBuildModel.BuildConfig buildConfig) {
         LeoJobModel.CRInstance crInstance = Optional.of(cr)
                 .map(LeoJobModel.CR::getInstance)
                 .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job.cr.instance"));
         Optional.of(crInstance)
                 .map(LeoJobModel.CRInstance::getRegionId)
                 .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job.cr.instance.regionId"));
-        Optional.of(crInstance)
-                .map(LeoJobModel.CRInstance::getId)
-                .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job.cr.instance.id"));
         Optional.of(cr)
                 .map(LeoJobModel.CR::getRepo)
                 .map(LeoJobModel.Repo::getName)

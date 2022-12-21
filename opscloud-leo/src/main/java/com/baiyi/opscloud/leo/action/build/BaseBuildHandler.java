@@ -14,7 +14,6 @@ import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.message.MessageTemplateService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -115,10 +114,9 @@ public abstract class BaseBuildHandler {
 
         User user = userService.getByUsername(leoBuild.getUsername());
 
-        Map<String, Object> messageMap = Maps.newHashMap(buildConfig.getBuild().getDict());
-        messageMap.put("nowDate", TimeUtil.nowDate());
-        messageMap.put("users", Lists.newArrayList(user));
-
+        contentMap.putAll(buildConfig.getBuild().getDict());
+        contentMap.put("nowDate", TimeUtil.nowDate());
+        contentMap.put("users", Lists.newArrayList(user));
         final String msg = renderTemplate(messageTemplate, contentMap);
         leoRobotHelper.send(dsInstance, msg);
     }

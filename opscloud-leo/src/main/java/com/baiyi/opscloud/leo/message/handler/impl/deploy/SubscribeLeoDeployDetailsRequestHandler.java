@@ -36,7 +36,7 @@ public class SubscribeLeoDeployDetailsRequestHandler extends BaseLeoContinuousDe
         if (snapshotStash.isExist(param.getDeployId())) {
             LeoDeployingVO.Deploying deploying = snapshotStash.get(param.getDeployId());
             // 结束订阅
-            if (deploying.getIsFinish()) {
+            if (Boolean.TRUE.equals(deploying.getIsFinish())) {
                 unsubscribe(sessionId);
             }
             response = LeoContinuousDeliveryResponse.builder()

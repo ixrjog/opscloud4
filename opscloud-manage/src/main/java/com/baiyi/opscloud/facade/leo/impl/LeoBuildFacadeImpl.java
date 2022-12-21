@@ -15,6 +15,7 @@ import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
+import com.baiyi.opscloud.facade.sys.impl.InstanceFacadeImpl;
 import com.baiyi.opscloud.leo.action.build.LeoBuildHandler;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
@@ -167,6 +168,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .executionType(ExecutionTypeConstants.USER)
                 .username(SessionUtil.getUsername())
                 .buildConfig(buildConfig.dump())
+                .ocInstance(InstanceFacadeImpl.ocInstance)
                 .build();
         leoBuildService.add(leoBuild);
         handleBuild(leoBuild, buildConfig);

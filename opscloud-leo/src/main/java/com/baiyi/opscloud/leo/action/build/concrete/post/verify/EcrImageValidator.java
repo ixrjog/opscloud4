@@ -14,13 +14,14 @@ import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.baiyi.opscloud.leo.action.build.concrete.post.verify.base.BaseCrImageValidator.CRS.ECR;
+import static com.baiyi.opscloud.leo.action.build.concrete.post.verify.base.BaseCrImageValidator.CrTypes.ECR;
 
 /**
  * @Author baiyi
@@ -49,9 +50,7 @@ public class EcrImageValidator extends BaseCrImageValidator<AwsConfig> {
 
     @Override
     protected void handleVerify(LeoJob leoJob, LeoJobModel.CR cr, LeoBuildModel.BuildConfig buildConfig, AwsConfig dsConfig) {
-        LeoJobModel.CRInstance crInstance = cr.getInstance();
         final String crRegionId = cr.getInstance().getRegionId();
-        final String crInstanceId = crInstance.getId();
         final String crRepoName = cr.getRepo().getName();
         Map<String, String> dict = buildConfig.getBuild().getDict();
         final String repoNamespace = Optional.of(cr)
@@ -63,18 +62,25 @@ public class EcrImageValidator extends BaseCrImageValidator<AwsConfig> {
         final String crRegistryId = Optional.of(cr)
                 .map(LeoJobModel.CR::getRepo)
                 .map(LeoJobModel.Repo::getId)
-                .orElseGet(() -> getCrRegistryId(cr, leoJob, crRegionId, crInstanceId, repoNamespace, repositoryName, dsConfig));
+                .orElseGet(() -> getCrRegistryId(cr, leoJob, crRegionId, repoNamespace, repositoryName, dsConfig));
         try {
-            // public List<ImageDetail> describeImages(String regionId, AwsConfig.Aws config, String registryId, String repositoryName, int size) {
             List<ImageDetail> imageDetails = amazonEcrImageDriver.describeImages(crRegionId, dsConfig.getAws(), crRegistryId, repositoryName, QUERY_IMAGES_SIZE);
-            String imageTag = dict.get(BuildDictConstants.IMAGE_TAG.getKey());
+            if (CollectionUtils.isEmpty(imageDetails)) {
+                throw new LeoBuildException("查询AWS-ECR镜像列表为空！");
+            }
+            final String imageTag = dict.get(BuildDictConstants.IMAGE_TAG.getKey());
             imageDetails.stream()
-                    .filter(imageDetail -> imageDetail.getImageTags().stream().anyMatch(t -> t.equals(imageTag)))
+                    .filter(imageDetail -> filterImageTag(imageDetail, imageTag))
                     .findFirst()
                     .orElseThrow(() -> new LeoBuildException("查询AWS-ECR镜像未找到对应的标签: imageTag={}", imageTag));
         } catch (Exception e) {
             throw new LeoBuildException("查询AWS-ECR镜像错误: err={}", e.getMessage());
         }
+    }
+
+    private boolean filterImageTag(ImageDetail imageDetail, String imageTag) {
+        if (CollectionUtils.isEmpty(imageDetail.getImageTags())) return false;
+        return imageDetail.getImageTags().stream().anyMatch(t -> t.equals(imageTag));
     }
 
     /**
@@ -83,21 +89,20 @@ public class EcrImageValidator extends BaseCrImageValidator<AwsConfig> {
      * @param cr
      * @param leoJob
      * @param crRegionId
-     * @param crInstanceId
      * @param repoNamespace
      * @param repositoryName
      * @param dsConfig
      * @return
      */
-    protected String getCrRegistryId(LeoJobModel.CR cr, LeoJob leoJob, String crRegionId, String crInstanceId, String repoNamespace, String repositoryName, AwsConfig dsConfig) {
+    protected String getCrRegistryId(LeoJobModel.CR cr, LeoJob leoJob, String crRegionId, String repoNamespace, String repositoryName, AwsConfig dsConfig) {
         try {
             Repository repository = amazonEcrRepositoryDirver.describeRepository(crRegionId, dsConfig.getAws(), repositoryName);
             if (repository == null) {
-                throw new LeoBuildException("AWS-ECR RegistryId查询失败: regionId={}, instanceId={}, repositoryName={}", crRegionId, crInstanceId, repositoryName);
+                throw new LeoBuildException("AWS-ECR RegistryId查询失败: regionId={}, repositoryName={}", crRegionId, repositoryName);
             }
             return repository.getRegistryId();
         } catch (Exception e) {
-            throw new LeoBuildException("AWS-ECR RegistryId查询错误: regionId={}, instanceId={}, repositoryName={}, err={}", crRegionId, crInstanceId, repositoryName, e.getMessage());
+            throw new LeoBuildException("AWS-ECR RegistryId查询错误: regionId={}, repositoryName={}, err={}", crRegionId, repositoryName, e.getMessage());
         }
     }
 

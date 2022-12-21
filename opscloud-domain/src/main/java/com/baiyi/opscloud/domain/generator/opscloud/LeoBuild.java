@@ -134,6 +134,9 @@ public class LeoBuild {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "oc_instance")
+    private String ocInstance;
+
     /**
      * 描述
      */
