@@ -70,7 +70,7 @@ public class EcrImageValidator extends BaseCrImageValidator<AwsConfig> {
             }
             final String imageTag = dict.get(BuildDictConstants.IMAGE_TAG.getKey());
             imageDetails.stream()
-                    .filter(imageDetail -> filterImageTag(imageDetail, imageTag))
+                    .filter(imageDetail -> filterWithImageTag(imageDetail, imageTag))
                     .findFirst()
                     .orElseThrow(() -> new LeoBuildException("查询AWS-ECR镜像未找到对应的标签: imageTag={}", imageTag));
         } catch (Exception e) {
@@ -78,7 +78,7 @@ public class EcrImageValidator extends BaseCrImageValidator<AwsConfig> {
         }
     }
 
-    private boolean filterImageTag(ImageDetail imageDetail, String imageTag) {
+    private boolean filterWithImageTag(ImageDetail imageDetail, String imageTag) {
         if (CollectionUtils.isEmpty(imageDetail.getImageTags())) return false;
         return imageDetail.getImageTags().stream().anyMatch(t -> t.equals(imageTag));
     }
@@ -97,10 +97,9 @@ public class EcrImageValidator extends BaseCrImageValidator<AwsConfig> {
     protected String getCrRegistryId(LeoJobModel.CR cr, LeoJob leoJob, String crRegionId, String repoNamespace, String repositoryName, AwsConfig dsConfig) {
         try {
             Repository repository = amazonEcrRepositoryDirver.describeRepository(crRegionId, dsConfig.getAws(), repositoryName);
-            if (repository == null) {
-                throw new LeoBuildException("AWS-ECR RegistryId查询失败: regionId={}, repositoryName={}", crRegionId, repositoryName);
-            }
-            return repository.getRegistryId();
+            return Optional.ofNullable(repository)
+                    .map(Repository::getRegistryId)
+                    .orElseThrow(() -> new LeoBuildException("AWS-ECR RegistryId查询失败: regionId={}, repositoryName={}", crRegionId, repositoryName));
         } catch (Exception e) {
             throw new LeoBuildException("AWS-ECR RegistryId查询错误: regionId={}, repositoryName={}, err={}", crRegionId, repositoryName, e.getMessage());
         }

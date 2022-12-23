@@ -109,9 +109,9 @@ public abstract class BaseBuildHandler {
 
         DatasourceInstance dsInstance = leoRobotHelper.getRobotInstance(dingtalkRobot);
         MessageTemplate messageTemplate = msgTemplateService.getByUniqueKey(messageKey, "DINGTALK_ROBOT", "markdown");
-        if (messageTemplate == null)
+        if (messageTemplate == null) {
             throw new LeoBuildException("发送消息失败: 消息模板未配置！");
-
+        }
         User user = userService.getByUsername(leoBuild.getUsername());
 
         contentMap.putAll(buildConfig.getBuild().getDict());
