@@ -62,7 +62,7 @@ public class KubernetesPodTest extends BaseKubernetesTest {
         try {
             KubernetesClient kubernetesClient = KubeClient.build(getConfigById(KubernetesClusterConfigs.ACK_DEV).getKubernetes());
 
-            LogWatch logWatch = kubernetesClient.pods().inNamespace("dev").withName("merchant-rss-dev-766874c898-654hr").inContainer("merchant-rss-dev").withPrettyOutput().watchLog(System.out);
+            LogWatch logWatch = kubernetesClient.pods().inNamespace("dev").withName("merchant-rss-dev-645c8964db-l4vk7").inContainer("merchant-rss-dev").withPrettyOutput().watchLog(System.out);
             InputStream is = logWatch.getOutput();
             Thread.sleep(10 * 1000L);
 

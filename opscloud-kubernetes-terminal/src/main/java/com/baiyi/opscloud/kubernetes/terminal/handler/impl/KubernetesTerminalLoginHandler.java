@@ -108,7 +108,6 @@ public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMe
         );
     }
 
-
     @Override
     protected KubernetesMessage.Login toMessage(String message) {
         return new GsonBuilder().create().fromJson(message, KubernetesMessage.Login.class);

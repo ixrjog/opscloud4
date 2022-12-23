@@ -288,7 +288,6 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         PodContext podContext = podMapper.get(id);
         KubernetesConfig kubernetesDsInstanceConfig = buildConfig(podContext.getInstanceUuid());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
         if (StringUtils.isEmpty(name)) {
             List<String> names = podContext.getContainerNames().stream().filter(n -> tryIgnoreName(kubernetesDsInstanceConfig.getKubernetes(), n)).collect(Collectors.toList());
             if (CollectionUtils.isEmpty(names)) {
@@ -302,7 +301,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
             name = names.get(0);
         }
 
-        LogWatch logWatch = KubernetesPodDriver.getPodLogWatch2(kubernetesDsInstanceConfig.getKubernetes(), podContext.getNamespace(), podContext.getPodName(), name, lines, baos);
+        LogWatch logWatch = KubernetesPodDriver.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(), podContext.getNamespace(), podContext.getPodName(), name, lines, baos);
 
         TerminalUtil.rawModeSupportVintr(terminal);
         ServerSession serverSession = sshShellHelper.getSshSession();
