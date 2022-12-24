@@ -4,8 +4,8 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import com.baiyi.opscloud.datasource.kubernetes.client.provider.eks.AmazonEksHelper;
 import io.fabric8.kubernetes.client.ConfigBuilder;
+import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.client.KubernetesClientBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -50,10 +50,10 @@ public class AmazonEksProvider {
                 //.withRequestTimeout(KubeClient.Config.REQUEST_TIMEOUT)
                 .withWatchReconnectInterval(60000)
                 .build();
-        // 5.x
-        // return new DefaultKubernetesClient(config);
         // 6.x 写法
-        return new KubernetesClientBuilder().withConfig(config).build();
+        // return new KubernetesClientBuilder().withConfig(config).build();
+        // 5.x
+        return new DefaultKubernetesClient(config);
     }
 
     /**
