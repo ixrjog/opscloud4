@@ -6,8 +6,8 @@ import com.baiyi.opscloud.leo.action.deploy.BaseDeployHandler;
 import com.baiyi.opscloud.leo.action.deploy.LeoPostDeployHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
+import com.baiyi.opscloud.leo.helper.LeoDeployHelper;
 import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
-import com.baiyi.opscloud.service.leo.LeoDeployService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +26,7 @@ public class DeployingSupervisorConcreteHandler extends BaseDeployHandler {
     private LeoPostDeployHandler leoPostDeployHandler;
 
     @Resource
-    private LeoDeployService leoDeployService;
+    private LeoDeployHelper leoDeployHelper;
 
 
     /**
@@ -41,7 +41,7 @@ public class DeployingSupervisorConcreteHandler extends BaseDeployHandler {
         final String instanceUuid = dsInstance.getUuid();
         KubernetesConfig kubernetesConfig = getKubernetesConfigWithUuid(instanceUuid);
         DeployingSupervisor deployingSupervisor = new DeployingSupervisor(
-                this.leoDeployService,
+                this.leoDeployHelper,
                 leoDeploy,
                 logHelper,
                 deployConfig,

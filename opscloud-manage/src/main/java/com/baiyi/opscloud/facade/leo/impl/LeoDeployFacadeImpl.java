@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.leo.impl;
 
+import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
@@ -10,7 +11,6 @@ import com.baiyi.opscloud.domain.param.leo.LeoDeployParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoDeployFacade;
-import com.baiyi.opscloud.facade.sys.impl.InstanceFacadeImpl;
 import com.baiyi.opscloud.leo.action.deploy.LeoDeployHandler;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
@@ -106,9 +106,8 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .isFinish(false)
                 .isActive(true)
                 .isRollback(false)
-                .ocInstance(InstanceFacadeImpl.ocInstance)
+                .ocInstance(OcInstance.ocInstance)
                 .build();
-
         leoDeployService.add(leoDeploy);
         handleDeploy(leoDeploy, deployConfig);
     }

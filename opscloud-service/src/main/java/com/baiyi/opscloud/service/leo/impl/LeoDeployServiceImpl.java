@@ -57,6 +57,18 @@ public class LeoDeployServiceImpl implements LeoDeployService {
     }
 
     @Override
+    public List<LeoDeploy> queryRunningDeployWithOcInstance(String ocInstance) {
+        Example example = new Example(LeoDeploy.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isFinish", false)
+                .andEqualTo("isActive", true)
+                .andEqualTo("ocInstance", ocInstance);
+        example.setOrderByClause("id desc");
+        return leoDeployMapper.selectByExample(example);
+    }
+
+
+    @Override
     public int countDeployingWithJobId(int jobId) {
         Example example = new Example(LeoDeploy.class);
         Example.Criteria criteria = example.createCriteria();
@@ -67,7 +79,7 @@ public class LeoDeployServiceImpl implements LeoDeployService {
     }
 
     @Override
-    public  int countWithJobId(int jobId){
+    public int countWithJobId(int jobId) {
         Example example = new Example(LeoDeploy.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("jobId", jobId);

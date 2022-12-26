@@ -7,10 +7,10 @@ import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.leo.helper.DeployingLogHelper;
+import com.baiyi.opscloud.leo.helper.LeoDeployHelper;
 import com.baiyi.opscloud.leo.supervisor.base.ISupervisor;
 import com.baiyi.opscloud.leo.supervisor.strategy.base.SupervisingStrategy;
 import com.baiyi.opscloud.leo.supervisor.strategy.base.SupervisingStrategyFactroy;
-import com.baiyi.opscloud.service.leo.LeoDeployService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
@@ -28,7 +28,9 @@ public class DeployingSupervisor implements ISupervisor {
 
     private static final int SLEEP_SECONDS = 10;
 
-    private final LeoDeployService leoDeployService;
+    //private final LeoDeployService leoDeployService;
+
+    private final LeoDeployHelper leoDeployHelper;
 
     private final LeoDeployModel.DeployConfig deployConfig;
 
@@ -40,13 +42,13 @@ public class DeployingSupervisor implements ISupervisor {
 
     private final LeoPostDeployHandler leoPostDeployHandler;
 
-    public DeployingSupervisor(LeoDeployService leoDeployService,
+    public DeployingSupervisor(LeoDeployHelper leoDeployHelper,
                                LeoDeploy leoDeploy,
                                DeployingLogHelper logHelper,
                                LeoDeployModel.DeployConfig deployConfig,
                                KubernetesConfig.Kubernetes kubernetes,
                                LeoPostDeployHandler leoPostDeployHandler) {
-        this.leoDeployService = leoDeployService;
+        this.leoDeployHelper = leoDeployHelper;
         this.leoDeploy = leoDeploy;
         this.logHelper = logHelper;
         this.deployConfig = deployConfig;
@@ -59,6 +61,7 @@ public class DeployingSupervisor implements ISupervisor {
         LeoDeployModel.Deploy deploy = Optional.ofNullable(this.deployConfig)
                 .map(LeoDeployModel.DeployConfig::getDeploy)
                 .orElseThrow(() -> new LeoDeployException("部署配置不存在！"));
+
         LeoBaseModel.Deployment deployment = Optional.of(deploy)
                 .map(LeoDeployModel.Deploy::getKubernetes)
                 .map(LeoBaseModel.Kubernetes::getDeployment)
@@ -68,11 +71,12 @@ public class DeployingSupervisor implements ISupervisor {
         if (deployingStrategy == null) {
             throw new LeoDeployException("未找到对应的部署策略: deployType={}", deploy.getDeployType());
         }
-        // 循环Watch
+        // 循环
         while (true) {
+            setHeartbeat();
             try {
                 deployingStrategy.handle(leoDeploy, deployConfig, kubernetes, deploy, deployment);
-                if (leoDeployService.getById(leoDeploy.getId()).getIsFinish()) {
+                if (leoDeployHelper.isFinish(leoDeploy.getId())) {
                     // 结束
                     postHandle();
                     break;
@@ -86,6 +90,10 @@ public class DeployingSupervisor implements ISupervisor {
             } catch (InterruptedException ignored) {
             }
         }
+    }
+
+    private void setHeartbeat(){
+        leoDeployHelper.setHeartbeat(leoDeploy.getId());
     }
 
     private void postHandle() {

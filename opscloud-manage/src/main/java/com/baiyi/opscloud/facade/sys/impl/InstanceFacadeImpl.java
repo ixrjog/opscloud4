@@ -42,11 +42,6 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
 
     private static final InetAddress inetAddress = getInetAddress();
 
-    /**
-     * 实例名称
-     */
-    public static final String ocInstance = HostUtil.getHostName();
-
     public interface HealthStatus {
         String OK = "OK";
         String ERROR = "ERROR";

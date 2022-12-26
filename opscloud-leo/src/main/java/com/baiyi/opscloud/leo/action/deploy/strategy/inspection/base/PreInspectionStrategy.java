@@ -81,8 +81,11 @@ public abstract class PreInspectionStrategy extends BaseDeployStrategy {
                 kubernetesNamespace,
                 deploymentName);
 
-        final Integer replicas = deployment.getSpec().getReplicas();
-
+        int replicas = deployment.getSpec().getReplicas();
+        if (replicas == 0) {
+            replicas = 1;
+        }
+        
         final String project = dict.containsKey(BuildDictConstants.PROJECT.getKey()) ?
                 dict.get(BuildDictConstants.PROJECT.getKey()) : dict.get(BuildDictConstants.APPLICATION_NAME.getKey()).toLowerCase();
 

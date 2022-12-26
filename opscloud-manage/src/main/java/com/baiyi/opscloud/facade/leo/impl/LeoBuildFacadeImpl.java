@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.leo.impl;
 
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
+import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
@@ -15,7 +16,6 @@ import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
-import com.baiyi.opscloud.facade.sys.impl.InstanceFacadeImpl;
 import com.baiyi.opscloud.leo.action.build.LeoBuildHandler;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
@@ -168,7 +168,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .executionType(ExecutionTypeConstants.USER)
                 .username(SessionUtil.getUsername())
                 .buildConfig(buildConfig.dump())
-                .ocInstance(InstanceFacadeImpl.ocInstance)
+                .ocInstance(OcInstance.ocInstance)
                 .build();
         leoBuildService.add(leoBuild);
         handleBuild(leoBuild, buildConfig);

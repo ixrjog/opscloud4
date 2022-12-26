@@ -4,6 +4,8 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployRequestParam;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2022/12/5 18:02
@@ -20,6 +22,12 @@ public interface LeoDeployService {
     void updateByPrimaryKeySelective(LeoDeploy leoDeploy);
 
     DataTable<LeoDeploy> queryDeployPage(SubscribeLeoDeployRequestParam pageQuery);
+
+    /**
+     * 查询正在运行的任务
+     * @return
+     */
+    List<LeoDeploy> queryRunningDeployWithOcInstance(String ocInstance);
 
     int countDeployingWithJobId(int jobId);
 

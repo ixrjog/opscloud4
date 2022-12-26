@@ -59,6 +59,9 @@ public class LeoDeployingVO {
             if (DeployTypeConstants.REDEPLOY.name().equals(deployType)) {
                 initWithRefault();
             }
+            if (DeployTypeConstants.OFFLINE.name().equals(deployType)) {
+                this.isFinish = CollectionUtils.isEmpty(this.versionDetails1.pods);
+            }
             return this;
         }
 

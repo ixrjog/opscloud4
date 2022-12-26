@@ -14,7 +14,8 @@ public enum DeployTypeConstants {
 
     ROLLING("滚动 Rolling"),
     REDEPLOY("重启 Redeploy"),
-    GRAY("灰度 Gray"),
+    OFFLINE("下线 Offline"),
+    // GRAY("灰度 Gray"),
     BLUEGREEN("蓝绿 Blue/Green");
 
     private final String desc;
