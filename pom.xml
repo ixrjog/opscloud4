@@ -119,11 +119,6 @@
             <version>8.0.30</version>
             <scope>runtime</scope>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>com.alibaba</groupId>-->
-        <!--            <artifactId>druid</artifactId>-->
-        <!--            <version>1.2.5</version>-->
-        <!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
         <dependency>
@@ -182,7 +177,7 @@
         <dependency>
             <groupId>com.github.ulisesbocchio</groupId>
             <artifactId>jasypt-spring-boot-starter</artifactId>
-            <version>3.0.4</version>
+            <version>3.0.5</version>
         </dependency>
 
         <dependency>
@@ -195,7 +190,7 @@
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
-            <version>6.3.2</version>
+            <version>6.4.0</version>
         </dependency>
 
         <!--yaml工具-->
@@ -570,18 +565,5 @@
             </plugin>
         </plugins>
     </build>
-
-<!--    <distributionManagement>-->
-<!--        <snapshotRepository>-->
-<!--            <id>nexus-snapshots</id>-->
-<!--            <name>Internal Snapshot</name>-->
-<!--            <url>https://nexus.chuanyinet.com/repository/maven-snapshots/</url>-->
-<!--        </snapshotRepository>-->
-<!--        <repository>-->
-<!--            <id>nexus-releases</id>-->
-<!--            <name>Releases</name>-->
-<!--            <url>https://nexus.chuanyinet.com/repository/maven-releases/</url>-->
-<!--        </repository>-->
-<!--    </distributionManagement>-->
 
 </project>
