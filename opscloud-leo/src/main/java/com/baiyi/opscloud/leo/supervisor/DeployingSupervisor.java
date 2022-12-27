@@ -82,6 +82,7 @@ public class DeployingSupervisor implements ISupervisor {
                     break;
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 log.warn(e.getMessage());
             }
             // 延迟执行

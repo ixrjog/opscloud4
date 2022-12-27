@@ -82,6 +82,7 @@ public class LeoDeployingVO {
         }
 
         public Boolean isMaxRestartError() {
+            if (versionDetails2 == null) return false;
             if (CollectionUtils.isEmpty(versionDetails2.pods)) return false;
             return versionDetails2.pods.stream().anyMatch(e -> e.getRestartCount() >= MAX_RESTART);
         }

@@ -11,10 +11,10 @@ import com.baiyi.opscloud.leo.supervisor.strategy.base.SupervisingStrategy;
 import io.fabric8.kubernetes.api.model.Pod;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO.MAX_RESTART;
 
@@ -34,16 +34,18 @@ public class SupervisingWithOfflineStrategy extends SupervisingStrategy {
                                                     LeoDeployModel.Deploy deploy,
                                                     LeoBaseModel.Deployment deployment) {
         List<Pod> pods = KubernetesPodDriver.listPod(kubernetes, deployment.getNamespace(), deployment.getName());
-        if (CollectionUtils.isEmpty(pods)) {
-            return LeoDeployingVO.Deploying.builder().build();
-        }
         final String containerName = deployment.getContainer().getName();
+        final String image = Optional.of(deployConfig)
+                .map(LeoDeployModel.DeployConfig::getDeploy)
+                .map(LeoDeployModel.Deploy::getKubernetes)
+                .map(LeoBaseModel.Kubernetes::getDeployment)
+                .map(LeoBaseModel.Deployment::getContainer)
+                .map(LeoBaseModel.Container::getImage)
+                .orElse("N/A");
 
         LeoDeployingVO.VerionDetails offlineVersion = LeoDeployingVO.VerionDetails.builder()
                 .title("下线中")
-                .versionName(deploy.getDeployVersion1().getVersionName())
-                .versionDesc(deploy.getDeployVersion1().getVersionDesc())
-                .image(deploy.getDeployVersion1().getImage())
+                .image(image)
                 .build();
 
         for (Pod pod : pods) {

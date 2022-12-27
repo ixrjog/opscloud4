@@ -52,7 +52,6 @@ public class PreInspectionWithRedeployStrategy extends PreInspectionStrategy {
                 .map(LeoBaseModel.Container::getImage)
                 .orElseThrow(() -> new LeoDeployException("未找到容器image配置！"));
 
-
         Map<String, String> dict = Optional.of(deploy)
                 .map(LeoDeployModel.Deploy::getDict)
                 .orElseThrow(() -> new LeoDeployException("字典配置不存在！"));
