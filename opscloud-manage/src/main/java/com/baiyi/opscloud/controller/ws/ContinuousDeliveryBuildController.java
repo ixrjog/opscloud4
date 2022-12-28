@@ -1,12 +1,11 @@
 package com.baiyi.opscloud.controller.ws;
 
+import com.baiyi.opscloud.common.leo.session.LeoBuildQuerySessionMap;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.param.leo.request.LoginLeoRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.SimpleLeoRequestParam;
-import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
 import com.baiyi.opscloud.leo.task.WatchLeoBuildTask;
-import com.baiyi.opscloud.common.leo.session.LeoBuildQuerySessionMap;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -85,9 +84,10 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
         String messageType = getLeoMessageType(message);
         // 处理登录状态
         if (StringUtils.isEmpty(this.username)) {
-            // 鉴权并更新会话信息
-            if (LeoRequestType.LOGIN.name().equals(messageType))
-                hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));
+            // 鉴权
+            hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));
+//            if (LeoRequestType.LOGIN.name().equals(messageType))
+//                hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));
         } else {
             SessionUtil.setUsername(this.username);
         }
