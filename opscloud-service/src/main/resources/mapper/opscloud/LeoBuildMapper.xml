@@ -30,6 +30,34 @@
         <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
     </resultMap>
 
+    <select id="queryPageByParam" parameterType="com.baiyi.opscloud.domain.param.leo.LeoJobParam$JobBuildPageQuery" resultMap="BaseResultMap">
+        select a0.* from leo_build a0
+        <if test="envType != null">
+            join leo_job a1 on a0.job_id = a1.id
+        </if>
+        <where>
+            <if test="envType != null">
+                a1.env_type = #{envType}
+            </if>
+            <if test="jobId != null">
+                and a0.job_id = #{jobId}
+            </if>
+            <if test="isActive != null">
+                and a0.is_active = #{isActive}
+            </if>
+            <if test="applicationId != null and applicationId &gt; 0">
+                and a0.application_id = #{applicationId}
+            </if>
+            <if test="buildResult != null and buildResult != ''">
+                and a0.build_result = #{buildResult}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and a0.username like "%" #{queryName} "%"
+            </if>
+        </where>
+        order by id desc
+    </select>
+
     <select id="getMaxBuildNumberWithJobId" resultType="java.lang.Integer">
         select max(build_number)
         from leo_build

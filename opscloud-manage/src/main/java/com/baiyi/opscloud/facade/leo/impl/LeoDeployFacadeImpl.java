@@ -3,13 +3,16 @@ package com.baiyi.opscloud.facade.leo.impl;
 import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoDeployParam;
+import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
+import com.baiyi.opscloud.domain.vo.leo.LeoDeployVO;
 import com.baiyi.opscloud.facade.leo.LeoDeployFacade;
 import com.baiyi.opscloud.leo.action.deploy.LeoDeployHandler;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
@@ -17,6 +20,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
+import com.baiyi.opscloud.leo.packer.LeoDeployResponsePacker;
 import com.baiyi.opscloud.packer.leo.LeoBuildVersionPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
@@ -62,6 +66,8 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     private final LeoDeployHandler leoDeployHandler;
 
     private final UserService userService;
+
+    private final LeoDeployResponsePacker leoDeployResponsePacker;
 
     @Override
     public void doDeploy(LeoDeployParam.DoDeploy doDeploy) {
@@ -167,6 +173,22 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
             return false;
         }).collect(Collectors.toList());
         return BeanCopierUtil.copyListProperties(result, ApplicationResourceVO.BaseResource.class);
+    }
+
+
+    @Override
+    public DataTable<LeoDeployVO.Deploy> queryLeoJobDeployPage(LeoJobParam.JobDeployPageQuery pageQuery) {
+        List<LeoJob> leoJobs = leoJobService.querJobWithApplicationIdAndEnvType(pageQuery.getApplicationId(), pageQuery.getEnvType());
+        if (CollectionUtils.isEmpty(leoJobs)) {
+            return DataTable.EMPTY;
+        }
+        List<Integer> jobIds = leoJobs.stream().map(LeoJob::getId).collect(Collectors.toList());
+        pageQuery.setJobIds(jobIds);
+        DataTable<LeoDeploy> table = leoDeployService.queryDeployPage(pageQuery);
+        List<LeoDeployVO.Deploy> data = BeanCopierUtil.copyListProperties(table.getData(), LeoDeployVO.Deploy.class).stream()
+                .peek(leoDeployResponsePacker::wrap)
+                .collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
 }

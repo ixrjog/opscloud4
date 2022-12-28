@@ -11,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -66,8 +67,49 @@ public class LeoJobParam {
         @ApiModelProperty(value = "任务ID")
         private Integer jobId;
 
+        @ApiModelProperty(value = "应用ID")
+        private Integer applicationId;
+
+        @ApiModelProperty(value = "环境类型")
+        private Integer envType;
+
         @ApiModelProperty(value = "有效")
         private Boolean isActive;
+
+        @ApiModelProperty(value = "构建结果")
+        private String buildResult;
+
+        private final Integer businessType = BusinessTypeEnum.LEO_JOB.getType();
+
+        private Boolean extend;
+
+    }
+
+    @Data
+    @SuperBuilder(toBuilder = true)
+    @EqualsAndHashCode(callSuper = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ApiModel
+    public static class JobDeployPageQuery extends SuperPageParam implements IExtend {
+
+        @ApiModelProperty(value = "名称")
+        private String queryName;
+
+        @Min(value = 0, message = "应用ID不能为空")
+        @ApiModelProperty(value = "应用ID")
+        private Integer applicationId;
+
+        @ApiModelProperty(value = "环境类型")
+        private Integer envType;
+
+        @ApiModelProperty(value = "部署结果")
+        private String deployResult;
+
+        @ApiModelProperty(value = "有效")
+        private Boolean isActive;
+
+        private List<Integer> jobIds;
 
         private final Integer businessType = BusinessTypeEnum.LEO_JOB.getType();
 

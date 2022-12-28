@@ -2,12 +2,14 @@ package com.baiyi.opscloud.service.leo.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
+import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployRequestParam;
 import com.baiyi.opscloud.mapper.opscloud.LeoDeployMapper;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -57,6 +59,20 @@ public class LeoDeployServiceImpl implements LeoDeployService {
     }
 
     @Override
+    public DataTable<LeoDeploy> queryDeployPage(LeoJobParam.JobDeployPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Example example = new Example(LeoDeploy.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andIn("jobId", pageQuery.getJobIds());
+        if (StringUtils.isNotBlank(pageQuery.getDeployResult())) {
+            criteria.andEqualTo("deployResult", pageQuery.getDeployResult());
+        }
+        example.setOrderByClause("id desc");
+        List<LeoDeploy> data = leoDeployMapper.selectByExample(example);
+        return new DataTable<>(data, page.getTotal());
+    }
+
+    @Override
     public List<LeoDeploy> queryRunningDeployWithOcInstance(String ocInstance) {
         Example example = new Example(LeoDeploy.class);
         Example.Criteria criteria = example.createCriteria();
@@ -66,7 +82,6 @@ public class LeoDeployServiceImpl implements LeoDeployService {
         example.setOrderByClause("id desc");
         return leoDeployMapper.selectByExample(example);
     }
-
 
     @Override
     public int countDeployingWithJobId(int jobId) {

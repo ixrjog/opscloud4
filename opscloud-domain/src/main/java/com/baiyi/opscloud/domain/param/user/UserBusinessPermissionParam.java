@@ -28,14 +28,15 @@ public class UserBusinessPermissionParam {
     @ApiModel
     public static class UserBusinessPermissionPageQuery extends SuperPageParam implements IExtend {
 
+        private int businessType;
+
         @ApiModelProperty(value = "查询名称")
         private String queryName;
 
         @ApiModelProperty(value = "应用ID")
         private Integer applicationId;
 
-        @ApiModelProperty(value = "用户id")
-//        @NotNull(message = "用户id不能为空")
+        @ApiModelProperty(value = "用户ID")
         private Integer userId;
 
         @ApiModelProperty(value = "是否授权")
@@ -50,7 +51,6 @@ public class UserBusinessPermissionParam {
         @Builder.Default
         private Boolean extend = false;
 
-        private int businessType;
     }
 
     @Data

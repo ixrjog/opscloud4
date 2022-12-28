@@ -77,6 +77,21 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     }
 
     @Override
+    public DataTable<ApplicationVO.Application> queryMyApplicationPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
+        pageQuery.setBusinessType(getBusinessType());
+        if (isAdmin(SessionUtil.getUsername())) {
+            pageQuery.setAdmin(true);
+        } else {
+            pageQuery.setUserId(userService.getByUsername(SessionUtil.getUsername()).getId());
+        }
+        DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
+        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class)
+                .stream()
+                .peek(e -> applicationPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
+    }
+
+    @Override
     public DataTable<ApplicationVO.Application> queryApplicationKubernetesPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
         pageQuery.setBusinessType(getBusinessType());
         if (isAdmin(SessionUtil.getUsername())) {

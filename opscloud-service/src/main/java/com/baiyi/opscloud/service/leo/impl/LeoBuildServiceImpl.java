@@ -74,22 +74,31 @@ public class LeoBuildServiceImpl implements LeoBuildService {
     @Override
     public DataTable<LeoBuild> queryBuildPage(LeoJobParam.JobBuildPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
-        Example example = new Example(LeoBuild.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("jobId", pageQuery.getJobId());
-        if (pageQuery.getIsActive() != null) {
-            criteria.andEqualTo("isActive", pageQuery.getIsActive());
-        }
-        if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
-            String likeName = SQLUtil.toLike(pageQuery.getQueryName());
-            Example.Criteria criteria2 = example.createCriteria();
-            criteria2.orLike("username", likeName)
-                    .orLike("versionName", likeName)
-                    .orLike("versionDesc", likeName);
-            example.and(criteria2);
-        }
-        example.setOrderByClause("id desc");
-        List<LeoBuild> data = leoBuildMapper.selectByExample(example);
+//        Example example = new Example(LeoBuild.class);
+//        Example.Criteria criteria = example.createCriteria();
+//        if (IdUtil.isNotEmpty(pageQuery.getJobId())) {
+//            criteria.andEqualTo("jobId", pageQuery.getJobId());
+//        }
+//        if (IdUtil.isNotEmpty(pageQuery.getApplicationId())) {
+//            criteria.andEqualTo("applicationId", pageQuery.getApplicationId());
+//        }
+//        if (IdUtil.isNotEmpty(pageQuery.getEnvType())) {
+//            criteria.andEqualTo("envType", pageQuery.getEnvType());
+//        }
+//        if (pageQuery.getIsActive() != null) {
+//            criteria.andEqualTo("isActive", pageQuery.getIsActive());
+//        }
+//        if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
+//            String likeName = SQLUtil.toLike(pageQuery.getQueryName());
+//            Example.Criteria criteria2 = example.createCriteria();
+//            criteria2.orLike("username", likeName)
+//                    .orLike("versionName", likeName)
+//                    .orLike("versionDesc", likeName);
+//            example.and(criteria2);
+//        }
+//        example.setOrderByClause("id desc");
+//        List<LeoBuild> data = leoBuildMapper.selectByExample(example);
+        List<LeoBuild> data = leoBuildMapper.queryPageByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
 
@@ -99,7 +108,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         Example example = new Example(LeoBuild.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("jobId", queryBuildVersion.getJobId())
-                .andEqualTo("isFinish",true)
+                .andEqualTo("isFinish", true)
                 .andEqualTo("isActive", true);
         if (StringUtils.isNotBlank(queryBuildVersion.getQueryName())) {
             // 用户输入数字，搜索构建编号

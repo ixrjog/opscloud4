@@ -47,6 +47,12 @@ public class ApplicationController {
         return new HttpResult<>(applicationFacade.queryApplicationPage(pageQuery));
     }
 
+    @ApiOperation(value = "分页查询我的应用列表")
+    @PostMapping(value = "/my/page/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<ApplicationVO.Application>> queryMyApplicationPage(@RequestBody @Valid UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
+        return new HttpResult<>(applicationFacade.queryMyApplicationPage(pageQuery));
+    }
+
     @ApiOperation(value = "分页查询容器应用列表")
     @PostMapping(value = "/kubernetes/page/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<ApplicationVO.Application>> queryApplicationKubernetesPage(@RequestBody @Valid UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {

@@ -2,6 +2,7 @@ package com.baiyi.opscloud.service.leo;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
+import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployRequestParam;
 
 import java.util.List;
@@ -23,8 +24,11 @@ public interface LeoDeployService {
 
     DataTable<LeoDeploy> queryDeployPage(SubscribeLeoDeployRequestParam pageQuery);
 
+    DataTable<LeoDeploy> queryDeployPage(LeoJobParam.JobDeployPageQuery pageQuery);
+
     /**
      * 查询正在运行的任务
+     *
      * @return
      */
     List<LeoDeploy> queryRunningDeployWithOcInstance(String ocInstance);

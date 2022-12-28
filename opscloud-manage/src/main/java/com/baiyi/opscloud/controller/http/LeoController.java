@@ -4,10 +4,7 @@ import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.leo.*;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
-import com.baiyi.opscloud.domain.vo.leo.LeoBuildPipelineVO;
-import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
-import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
-import com.baiyi.opscloud.domain.vo.leo.LeoTemplateVO;
+import com.baiyi.opscloud.domain.vo.leo.*;
 import com.baiyi.opscloud.facade.leo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -123,6 +120,12 @@ public class LeoController {
     @PostMapping(value = "/job/build/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<LeoBuildVO.Build>> queryLeoJobBuildPage(@RequestBody @Valid LeoJobParam.JobBuildPageQuery pageQuery) {
         return new HttpResult<>(leoBuildFacade.queryLeoJobBuildPage(pageQuery));
+    }
+
+    @ApiOperation(value = "分页查询任务部署历史")
+    @PostMapping(value = "/job/deploy/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<LeoDeployVO.Deploy>> queryLeoJobDeployPage(@RequestBody @Valid LeoJobParam.JobDeployPageQuery pageQuery) {
+        return new HttpResult<>(leoDeployFacade.queryLeoJobDeployPage(pageQuery));
     }
 
     // Leo Build
