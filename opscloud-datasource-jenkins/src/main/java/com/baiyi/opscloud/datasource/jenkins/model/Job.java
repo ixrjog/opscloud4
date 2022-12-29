@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,7 @@ public class Job extends BaseModel {
 
     public Job() {
     }
-    
+
     public Job(String name, String url) {
         this();
         this.name = name;
@@ -47,7 +48,7 @@ public class Job extends BaseModel {
     public String getUrl() {
         return url;
     }
-    
+
     public String getFullName() {
         return fullName;
     }
@@ -58,9 +59,9 @@ public class Job extends BaseModel {
 
     /**
      * Get a file from workspace.
-     * 
+     *
      * @param fileName The name of the file to download from workspace. You can
-     *            also access files which are in sub folders of the workspace.
+     *                 also access files which are in sub folders of the workspace.
      * @return The string which contains the content of the file.
      * @throws IOException in case of an error.
      */
@@ -77,19 +78,18 @@ public class Job extends BaseModel {
 
     /**
      * Trigger a build without parameters
-     * 
+     *
      * @return {@link QueueReference} for further analysis of the queued build.
      * @throws IOException in case of an error.
      */
     public QueueReference build() throws IOException {
         ExtractHeader location = client.post(url + "build", null, ExtractHeader.class, false);
         return new QueueReference(location.getLocation());
-
     }
 
     /**
      * Trigger a build with crumbFlag.
-     * 
+     *
      * @param crumbFlag true or false.
      * @return {@link QueueReference} for further analysis of the queued build.
      * @throws IOException in case of an error.
@@ -107,39 +107,39 @@ public class Job extends BaseModel {
      * @throws IOException in case of an error.
      */
     public QueueReference build(Map<String, String> params) throws IOException {
-        return build(params, null,false);
+        return build(params, null, false);
     }
 
     /**
      * Trigger a parameterized build with string parameters only
      *
-     * @param params the job parameters
+     * @param params    the job parameters
      * @param crumbFlag true or false.
      * @return {@link QueueReference} for further analysis of the queued build.
      * @throws IOException in case of an error.
      */
     public QueueReference build(Map<String, String> params, boolean crumbFlag) throws IOException {
-        return build(params,null,crumbFlag);
+        return build(params, null, crumbFlag);
     }
 
     /**
      * Trigger a parameterized build with file parameters
      *
-     * @param params the job parameters
+     * @param params     the job parameters
      * @param fileParams the job file parameters
      * @return {@link QueueReference} for further analysis of the queued build.
      * @throws IOException in case of an error.
      */
     public QueueReference build(Map<String, String> params, Map<String, File> fileParams) throws IOException {
-        return build(params,fileParams,false);
+        return build(params, fileParams, false);
     }
 
     /**
      * Trigger a parameterized build with file parameters and crumbFlag
      *
-     * @param params the job parameters
+     * @param params     the job parameters
      * @param fileParams the job file parameters
-     * @param crumbFlag determines whether crumb flag is used
+     * @param crumbFlag  determines whether crumb flag is used
      * @return {@link QueueReference} for further analysis of the queued build.
      * @throws IOException in case of an error.
      */
@@ -148,7 +148,7 @@ public class Job extends BaseModel {
                 .map(s -> s.getKey() + "=" + s.getValue())
                 .collect(Collectors.joining("&"));
 //        String qs = join(Collections2.transform(params.entrySet(), new MapEntryToQueryStringPair()), "&");
-        ExtractHeader location = client.post(url + "buildWithParameters?" + qs,null, ExtractHeader.class, fileParams, crumbFlag);
+        ExtractHeader location = client.post(url + "buildWithParameters?" + qs, null, ExtractHeader.class, fileParams, crumbFlag);
         return new QueueReference(location.getLocation());
     }
 
@@ -161,13 +161,12 @@ public class Job extends BaseModel {
 
         Job job = (Job) o;
 
-        if (name != null ? !name.equals(job.name) : job.name != null)
+        if (Optional.ofNullable(name).map(s -> !s.equals(job.name)).orElseGet(() -> job.name != null))
             return false;
-        if (url != null ? !url.equals(job.url) : job.url != null)
+        if (Optional.ofNullable(url).map(s -> !s.equals(job.url)).orElseGet(() -> job.url != null))
             return false;
-        if (fullName != null ? !fullName.equals(job.fullName) : job.fullName != null)
+        if (Optional.ofNullable(fullName).map(s -> !s.equals(job.fullName)).orElseGet(() -> job.fullName != null))
             return false;
-
         return true;
     }
 

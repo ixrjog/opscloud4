@@ -22,7 +22,7 @@ public class NoticeListener implements ApplicationListener<NoticeEvent> {
     @Override
     @Async(value = CORE)
     public void onApplicationEvent(NoticeEvent noticeEvent) {
-        log.info("监听事件: eventType = {} , action = {}", noticeEvent.getMessage().getEventType(), noticeEvent.getMessage().getAction());
+        log.info("监听事件: eventType={}, action={}", noticeEvent.getMessage().getEventType(), noticeEvent.getMessage().getAction());
         IEventConsumer iEventConsumer = EventConsumerFactory.getConsumer(noticeEvent.getMessage().getEventType());
         if (iEventConsumer == null) {
             log.info("当前事件没有Consumer");

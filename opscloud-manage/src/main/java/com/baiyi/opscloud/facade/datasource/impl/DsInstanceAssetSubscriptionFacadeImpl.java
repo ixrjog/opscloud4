@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.datasource.impl;
 
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.common.template.YamlUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IOUtil;
@@ -30,6 +31,7 @@ import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -55,7 +57,7 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
         DataTable<DatasourceInstanceAssetSubscription> table = dsInstanceAssetSubscriptionService.queryPageByParam(pageQuery);
 
         List<DsAssetSubscriptionVO.AssetSubscription> data = BeanCopierUtil.copyListProperties(table.getData(), DsAssetSubscriptionVO.AssetSubscription.class)
-                .stream().peek(e->dsAssetSubscriptionPacker.wrap(e,pageQuery)).collect(Collectors.toList());
+                .stream().peek(e -> dsAssetSubscriptionPacker.wrap(e, pageQuery)).collect(Collectors.toList());
 
         return new DataTable<>(data, table.getTotalNum());
     }
@@ -94,12 +96,15 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
                 .build();
         CommandLine commandLine = AnsiblePlaybookArgumentsBuilder.build(ansible, args);
         AnsibleExecuteResult er = AnsibleExecutor.execute(commandLine, TimeUtil.minuteTime * 2);
+        Optional.ofNullable(er)
+                .map(AnsibleExecuteResult::getOutput)
+                .orElseThrow(() -> new OCRuntimeException("AnsibleExecuteResult 不存在！"));
         try {
             datasourceInstanceAssetSubscription.setLastSubscriptionLog(er.getOutput().toString("utf8"));
             datasourceInstanceAssetSubscription.setLastSubscriptionTime(new Date());
             dsInstanceAssetSubscriptionService.update(datasourceInstanceAssetSubscription);
         } catch (UnsupportedEncodingException e) {
-            log.error("发布订阅任务失败！id = {}", datasourceInstanceAssetSubscription.getId());
+            log.error("发布订阅任务失败: id={}", datasourceInstanceAssetSubscription.getId());
         }
     }
 

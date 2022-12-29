@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.vo.workorder;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import com.baiyi.opscloud.domain.vo.base.ShowTime;
+import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -112,7 +112,7 @@ public class WorkOrderTicketVO {
     @NoArgsConstructor
     @Data
     @ApiModel
-    public static class Ticket extends BaseVO implements WorkOrderVO.IWorkOrder, IApprover, ShowTime.IAgo, Serializable {
+    public static class Ticket extends BaseVO implements WorkOrderVO.IWorkOrder, IApprover, ReadableTime.IAgo, Serializable {
 
         private static final long serialVersionUID = -3191271933875590264L;
 

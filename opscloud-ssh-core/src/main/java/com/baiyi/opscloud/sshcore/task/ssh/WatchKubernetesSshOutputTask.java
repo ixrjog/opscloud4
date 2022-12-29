@@ -41,7 +41,7 @@ public class WatchKubernetesSshOutputTask extends AbstractSshChannelOutputTask {
             return;
         }
         this.channelOutput.write(toBytes(buf), off, len);
-        this.channelOutput.flush();
+        //this.channelOutput.flush();
     }
 
 }

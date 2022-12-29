@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.factory.gitlab;
 
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
+import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
 
 import java.util.List;
 
@@ -20,6 +20,6 @@ public interface IGitlabEventConsumer {
      * @param instance
      * @param systemHook
      */
-    void consumeEventV4(DatasourceInstance instance, GitlabNotifyParam.SystemHook systemHook);
+    void consumeEventV4(DatasourceInstance instance, GitLabNotifyParam.SystemHook systemHook);
 
 }

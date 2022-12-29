@@ -27,7 +27,7 @@ public abstract class AbstractAttributeValidator<IAttributeValidator> {
         Set<ConstraintViolation<IAttributeValidator>> constraintViolationSet = validator.validate(iAttributeValidator);
         List<String> messages = constraintViolationSet.stream().map(ConstraintViolation::getMessage).collect(Collectors.toList());
         if (!CollectionUtils.isEmpty(messages)) {
-            throw new TicketVerifyException("校验工单条目失败: " + Joiner.on("、").join(messages));
+            throw new TicketVerifyException("校验工单条目失败: {}", Joiner.on("、").join(messages));
         }
     }
 

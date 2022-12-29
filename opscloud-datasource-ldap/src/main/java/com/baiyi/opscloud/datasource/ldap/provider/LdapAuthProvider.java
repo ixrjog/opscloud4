@@ -36,6 +36,5 @@ public class LdapAuthProvider extends BaseAuthProvider {
         return DsTypeEnum.LDAP.name();
     }
 
-
 }
 

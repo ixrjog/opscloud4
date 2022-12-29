@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.ansible.provider;
 
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.common.constants.enums.CredentialKindEnum;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.util.IOUtil;
@@ -84,17 +84,17 @@ public class AnsibleSetConfigProvider extends AbstractSetDsInstanceConfigProvide
 
     private String getPrivateKey(DsInstanceContext dsInstanceContext) {
         if (dsInstanceContext.getDsConfig().getCredentialId() == null)
-            throw new CommonRuntimeException("凭据没有配置！");
+            throw new OCRuntimeException("凭据没有配置！");
         //   CredentialKindEnum.SSH_USERNAME_WITH_KEY_PAIR.getKind();
         Credential credential = getCredential(dsInstanceContext.getDsConfig().getCredentialId());
         if (credential == null) {
-            throw new CommonRuntimeException("凭据不存在！");
+            throw new OCRuntimeException("凭据不存在！");
         }
         if (credential.getKind() == CredentialKindEnum.SSH_USERNAME_WITH_KEY_PAIR.getKind() ||
                 credential.getKind() == CredentialKindEnum.SSH_USERNAME_WITH_PRIVATE_KEY.getKind()) {
             return stringEncryptor.decrypt(credential.getCredential());
         } else {
-            throw new CommonRuntimeException("凭据类型不符！");
+            throw new OCRuntimeException("凭据类型不符！");
         }
     }
 

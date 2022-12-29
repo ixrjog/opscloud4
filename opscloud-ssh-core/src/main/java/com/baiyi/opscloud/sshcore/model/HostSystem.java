@@ -54,6 +54,7 @@ public class HostSystem {
     private String authorizedKeys = "~/.ssh/authorized_keys";
     @Builder.Default
     private Boolean checked = false;
+    @Builder.Default
     private String statusCd = INITIAL_STATUS;
     private String errorMsg;
     // List<String> publicKeyList;

@@ -8,6 +8,8 @@ spring:
     enabled: false
   profiles:
     active: '@env@'
+  thymeleaf:
+    cache: off
 
 management:
   server:
@@ -37,6 +39,9 @@ white:
     - /api/ws/terminal/session/audit
     - /api/ws/server/task/play
     - /api/ws/jenkins/build/executor/status
+    - /api/ws/continuous-delivery/build
+    - /api/ws/continuous-delivery/deploy
+    - /api/ws/continuous-delivery/jenkins/console/stream
     - /api/out/ticket/approve
 
 # 开发环境配置
@@ -78,10 +83,10 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
 
+# ssh-server
 ssh:
   arthas:
     server: "cd /tmp && curl -O https://arthas.aliyun.com/arthas-boot.jar && sudo su - app -c 'java -jar /tmp/arthas-boot.jar'\n"
-
   shell:
     enable: true
     # 'simple' or 'security'
@@ -102,53 +107,10 @@ ssh:
           - ...
         authorized-roles:
           - ACTUATOR
-      # since 1.4.0
-      jmx:
-        create: false
-        enable: false
-        restricted: false
-        authorized-roles:
-          - ADMIN
-      system:
-        create: false
-        enable: false
-        restricted: false
-        authorized-roles:
-          - ADMIN
-      # since 1.4.0
-      datasource:
-        create: false
-        enable: false
-        restricted: false
-        authorized-roles:
-          - ADMIN
-        excludes:
-          - datasource-list
-          - datasource-properties
-          - datasource-query
-          - datasource-update
-      postprocessors:
-        create: true
-        enable: true
-        restricted: false
-      # since 1.3.0, command which allows you to list ssh sessions, and stop them
-      manage-sessions:
-        create: false
-        enable: false
-        restricted: false
-        authorized-roles:
-          - ADMIN
-      # since 1.5.0
-      tasks:
-        create: true
-        enable: false
-        restricted: false
-        authorized-roles:
-          - ADMIN
     display-banner: true
     # to use ExtendedFileValueProviderTest instead of spring shell FileValueProvider for all File option parameters
     # if set to false, it still can be used via '@ShellOption(valueProvider = ExtendedFileValueProviderTest.class) File file'
-    extended-file-provider: true
+    extended-file-provider: false
     history-file: ${home}/opscloud-data/ssh-server/sshShellHistory.log
     # since 1.3.0, set to false to have one file per user (<history-directory>/sshShellHistory-<user>.log)
     shared-history: false

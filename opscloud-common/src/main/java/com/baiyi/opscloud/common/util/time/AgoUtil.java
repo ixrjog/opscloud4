@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.common.util.time;
 
-import com.baiyi.opscloud.domain.vo.base.ShowTime;
+import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,7 +42,7 @@ public class AgoUtil {
      * @param iAgo
      */
     @Deprecated
-    public static void wrap(ShowTime.IAgo iAgo) {
+    public static void wrap(ReadableTime.IAgo iAgo) {
         if (iAgo.getAgoTime() == null) return;
         iAgo.setAgo(format(iAgo.getAgoTime()));
     }

@@ -19,4 +19,5 @@ public interface NexusAssetsV1Feign {
     @RequestLine("GET /service/rest/v1/assets?repository={repository}&continuationToken={continuationToken}")
     @Headers({"accept: application/json", "Authorization: Basic {authBasic}"})
     NexusAsset.Assets listAssets(@Param("authBasic") String authBasic, @Param("repository") String repository, @Param("continuationToken") String continuationToken);
+
 }

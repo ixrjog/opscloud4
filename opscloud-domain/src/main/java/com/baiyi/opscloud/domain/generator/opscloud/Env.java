@@ -32,6 +32,12 @@ public class Env implements Serializable {
     @Column(name = "prompt_color")
     private Integer promptColor;
 
+    /**
+     * 有效
+     */
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     private String comment;
 
     @Column(name = "create_time", insertable = false, updatable = false)

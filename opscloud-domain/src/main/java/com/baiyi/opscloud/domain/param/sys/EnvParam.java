@@ -26,5 +26,8 @@ public class EnvParam {
         @ApiModelProperty(value = "环境值")
         private Integer envType;
 
+        @ApiModelProperty(value = "有效")
+        private Boolean isActive;
+
     }
 }

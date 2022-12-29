@@ -75,7 +75,7 @@ public class SshAuthenticationConfig {
                 fw.close();
                 return new SshShellPublicKeyAuthenticationProvider(tmp).authenticate(username, publicKey, serverSession);
             } catch (Exception e) {
-                log.error("写入公钥错误: username = {}", username);
+                log.error("写入公钥错误: username={}", username);
                 log.error(e.getMessage());
             } finally {
                 if (fw != null) {

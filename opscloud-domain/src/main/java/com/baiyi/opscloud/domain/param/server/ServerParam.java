@@ -32,7 +32,7 @@ public class ServerParam {
 //        @ApiModelProperty(value = "查询ip")
 //        private String queryIp;
 
-        @ApiModelProperty(value = "服务器组id")
+        @ApiModelProperty(value = "服务器组ID")
         private Integer serverGroupId;
 
         @ApiModelProperty(value = "环境类型")
@@ -47,7 +47,7 @@ public class ServerParam {
         @ApiModelProperty(value = "监控状态")
         private Integer monitorStatus;
 
-        @ApiModelProperty(value = "标签id")
+        @ApiModelProperty(value = "标签ID")
         private Integer tagId;
 
         private final Integer businessType = BusinessTypeEnum.SERVER.getType();

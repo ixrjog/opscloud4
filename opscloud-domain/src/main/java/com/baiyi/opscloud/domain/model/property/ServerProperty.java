@@ -2,8 +2,10 @@ package com.baiyi.opscloud.domain.model.property;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.GsonBuilder;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
@@ -19,8 +21,10 @@ import java.util.stream.Collectors;
  */
 public class ServerProperty {
 
-    @Builder
     @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Server implements Serializable {
 
         private static final long serialVersionUID = -4846682649445122975L;
@@ -42,8 +46,10 @@ public class ServerProperty {
         
     }
 
-    @Builder
     @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Metadata implements Serializable {
         private static final long serialVersionUID = 8854978086918993503L;
         @Builder.Default
@@ -57,8 +63,10 @@ public class ServerProperty {
 
     }
 
-    @Builder
     @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Zabbix implements Serializable {
 
         private static final long serialVersionUID = 5911353965481533349L;
@@ -82,6 +90,9 @@ public class ServerProperty {
     }
 
     @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Macro implements Serializable {
         private static final long serialVersionUID = -5748446862825981795L;
@@ -90,13 +101,14 @@ public class ServerProperty {
         private String description;
     }
 
-    @Builder
     @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Ansible implements Serializable {
         private static final long serialVersionUID = -8106749818500817348L;
         @Builder.Default
         private Integer subgroup = 2;
     }
-
 
 }

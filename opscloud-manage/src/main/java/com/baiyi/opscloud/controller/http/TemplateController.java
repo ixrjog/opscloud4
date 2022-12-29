@@ -22,7 +22,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/template")
-@Api(tags = "模版管理")
+@Api(tags = "模板管理")
 @RequiredArgsConstructor
 public class TemplateController {
 
@@ -78,7 +78,7 @@ public class TemplateController {
         return HttpResult.SUCCESS;
     }
 
-    @ApiOperation(value = "业务模版创建资产")
+    @ApiOperation(value = "业务模板创建资产")
     @PutMapping(value = "/business/asset/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<BusinessTemplateVO.BusinessTemplate> createAssetByBusinessTemplateId(@RequestParam int id) {
         return new HttpResult<>(templateFacade.createAssetByBusinessTemplate(id));

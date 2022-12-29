@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.aspect;
 
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.facade.datasource.BusinessAssetRelationFacade;
@@ -33,12 +33,12 @@ public class AssetBusinessRelationAspect {
     }
 
     @Around("@annotation(assetBusinessRelation)")
-    public Object around(ProceedingJoinPoint joinPoint, AssetBusinessRelation assetBusinessRelation) throws CommonRuntimeException {
+    public Object around(ProceedingJoinPoint joinPoint, AssetBusinessRelation assetBusinessRelation) throws OCRuntimeException {
         Object result;
         try {
             result = joinPoint.proceed();
         } catch (Throwable e) {
-            throw new CommonRuntimeException(e.getMessage());
+            throw new OCRuntimeException(e.getMessage());
         }
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String[] params = methodSignature.getParameterNames();// 获取参数名称
@@ -59,7 +59,7 @@ public class AssetBusinessRelationAspect {
      * @param bar
      */
     private void bindRelation(BusinessAssetRelationVO.IBusinessAssetRelation bar) {
-        log.info("业务对象绑定资产: businessType = {} , businessId = {} , assetId = {}", bar.getBusinessType(), bar.getBusinessId(), bar.getAssetId());
+        log.info("业务对象绑定资产: businessType={}, businessId={}, assetId={}", bar.getBusinessType(), bar.getBusinessId(), bar.getAssetId());
         businessAssetRelationFacade.bindAsset(bar);
     }
 

@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
+import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.factory.gitlab.GitlabEventNameEnum;
 import org.springframework.stereotype.Component;
@@ -40,7 +40,7 @@ public class GitlabKeyEventConsumer extends AbstractGitlabEventConsumer {
 
     protected AssetContainer toAssetContainer() {
         DatasourceInstance dsInstance = eventContext.get().getInstance();
-        GitlabNotifyParam.SystemHook systemHook = eventContext.get().getSystemHook();
+        GitLabNotifyParam.SystemHook systemHook = eventContext.get().getSystemHook();
 
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())

@@ -38,13 +38,13 @@ public class Template {
     private String instanceType;
 
     /**
-     * 模版key
+     * 模板key
      */
     @Column(name = "template_key")
     private String templateKey;
 
     /**
-     * 模版类型
+     * 模板类型
      */
     @Column(name = "template_type")
     private String templateType;
@@ -62,12 +62,12 @@ public class Template {
     private Date updateTime;
 
     /**
-     * 模版变量
+     * 模板变量
      */
     private String vars;
 
     /**
-     * 模版内容
+     * 模板内容
      */
     private String content;
 

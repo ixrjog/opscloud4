@@ -1,11 +1,12 @@
 package com.baiyi.opscloud.common.util;
 
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import lombok.extern.slf4j.Slf4j;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.SafeConstructor;
+import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.representer.Representer;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -15,13 +16,14 @@ import java.lang.reflect.Modifier;
  * @Date 2021/8/20 4:00 下午
  * @Version 1.0
  */
+@Slf4j
 public class BusinessPropertyUtil {
 
     public static <T> T toProperty(String property, Class<T> targetClass) throws JsonSyntaxException {
-        Yaml yaml = new Yaml(new SafeConstructor());
-        Object result = yaml.load(property);
-        Gson gson = new GsonBuilder().create();
-        return gson.fromJson(JSONUtil.writeValueAsString(result), targetClass);
+        Representer representer = new Representer(new DumperOptions());
+        representer.getPropertyUtils().setSkipMissingProperties(true);
+        Yaml yaml = new Yaml(new Constructor(targetClass), representer);
+        return yaml.loadAs(property, targetClass);
     }
 
     /**
@@ -53,9 +55,10 @@ public class BusinessPropertyUtil {
                     targetField.set(targetBean, sourceField.get(sourceBean));
                 }
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
         return targetBean;
     }
+
 }

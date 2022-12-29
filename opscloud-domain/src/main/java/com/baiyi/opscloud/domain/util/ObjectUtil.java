@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.domain.util;
 
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.util.Collections;
@@ -12,6 +13,7 @@ import java.util.Map;
  * @Date 2021/12/1 7:18 下午
  * @Version 1.0
  */
+@Slf4j
 public class ObjectUtil {
 
     private ObjectUtil() {
@@ -34,7 +36,7 @@ public class ObjectUtil {
                 }
                 return map;
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
         return Collections.emptyMap();

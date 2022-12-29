@@ -6,6 +6,8 @@
 
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import java.util.Optional;
+
 public class BuildCause {
     private String shortDescription;
 
@@ -88,17 +90,17 @@ public class BuildCause {
 
         BuildCause that = (BuildCause) o;
 
-        if (shortDescription != null ? !shortDescription.equals(that.shortDescription) : that.shortDescription != null)
+        if (Optional.ofNullable(shortDescription).map(description -> !description.equals(that.shortDescription)).orElseGet(() -> that.shortDescription != null))
             return false;
-        if (upstreamBuild != null ? !upstreamBuild.equals(that.upstreamBuild) : that.upstreamBuild != null)
+        if (Optional.ofNullable(upstreamBuild).map(build -> !build.equals(that.upstreamBuild)).orElseGet(() -> that.upstreamBuild != null))
             return false;
-        if (upstreamProject != null ? !upstreamProject.equals(that.upstreamProject) : that.upstreamProject != null)
+        if (Optional.ofNullable(upstreamProject).map(project -> !project.equals(that.upstreamProject)).orElseGet(() -> that.upstreamProject != null))
             return false;
-        if (upstreamUrl != null ? !upstreamUrl.equals(that.upstreamUrl) : that.upstreamUrl != null)
+        if (Optional.ofNullable(upstreamUrl).map(url -> !url.equals(that.upstreamUrl)).orElseGet(() -> that.upstreamUrl != null))
             return false;
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null)
+        if (Optional.ofNullable(userId).map(id -> !id.equals(that.userId)).orElseGet(() -> that.userId != null))
             return false;
-        if (userName != null ? !userName.equals(that.userName) : that.userName != null)
+        if (Optional.ofNullable(userName).map(name -> !name.equals(that.userName)).orElseGet(() -> that.userName != null))
             return false;
 
         return true;

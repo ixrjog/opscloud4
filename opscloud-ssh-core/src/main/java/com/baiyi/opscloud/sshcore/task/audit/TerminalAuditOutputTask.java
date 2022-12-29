@@ -42,7 +42,7 @@ public class TerminalAuditOutputTask implements Runnable {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        log.info("outputTask线程结束! sessionId = {} , instanceId = {}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
+        log.info("outputTask线程结束! sessionId={} , instanceId={}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
     }
 
     private void send(String auditLog) throws IOException {

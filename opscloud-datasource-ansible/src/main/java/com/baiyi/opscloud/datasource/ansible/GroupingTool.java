@@ -39,7 +39,7 @@ public class GroupingTool {
      */
     @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'grouping_' + #serverGroupId", beforeInvocation = true)
     public void evictGrouping1(Integer serverGroupId) {
-        log.info("evictBuild 清除缓存，serverGroupId = {}", serverGroupId);
+        log.info("evictBuild 清除缓存，serverGroupId={}", serverGroupId);
     }
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'grouping_' + #serverGroup.id")

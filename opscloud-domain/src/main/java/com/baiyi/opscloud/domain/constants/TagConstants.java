@@ -21,6 +21,7 @@ public enum TagConstants {
     DMS("DMS"),
     VMS("VMS"),
     SMS("SMS"),
+    LEO("Leo"),
     ;
 
     @Getter

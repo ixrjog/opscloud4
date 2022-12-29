@@ -1,10 +1,13 @@
 package com.baiyi.opscloud.common.datasource;
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
+import com.google.common.collect.Sets;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 /**
  * @Author baiyi
@@ -24,9 +27,37 @@ public class JenkinsConfig extends BaseDsConfig {
 
         private String version;
         private String url;
+        private Security security;
         private String name;
         private String username;
         private String token;
+        private Template template;
+
+    }
+
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Template {
+
+        public static final Set<String> DEF_FOLDERS = Sets.newHashSet("templates");
+
+        public static final String DEF_PREFIX = "tpl_";
+
+        private Set<String> folders;
+        private String prefix;
+        private String _class;
+
+    }
+
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Security {
+
+        private Boolean crumbFlag;
 
     }
 

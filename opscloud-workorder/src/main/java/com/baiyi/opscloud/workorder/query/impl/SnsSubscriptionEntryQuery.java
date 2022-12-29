@@ -48,4 +48,5 @@ public class SnsSubscriptionEntryQuery extends DatasourceAssetExtendedTicketEntr
                 .content(entry.getAssetKey2())
                 .build();
     }
+
 }

@@ -58,7 +58,7 @@ public class UserHandler {
                     .build();
             authFacade.updateUserRole(updateUserRole);
         } catch (Exception e) {
-            log.error("初始化用户角色错误: username = {} , e = {}", username, e.getMessage());
+            log.error("初始化用户角色错误: username={}, err={}", username, e.getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ public class UserHandler {
                 permissionFacade.grantUserBusinessPermission(userBizPermission);
             });
         } catch (Exception e) {
-            log.error("初始化用户的用户组错误: userId = {} , e = {}", userId, e.getMessage());
+            log.error("初始化用户的用户组错误: userId={}, err={}", userId, e.getMessage());
         }
     }
 

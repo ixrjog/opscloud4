@@ -45,7 +45,7 @@ public class IamPolicyTicketProcessor extends AbstractDsAssetPermissionExtendedB
         try {
             userAmFacade.grantPolicy(grantPolicy);
         } catch (Exception e) {
-            throw new TicketProcessException("工单授权策略失败: " + e.getMessage());
+            throw new TicketProcessException("工单授权策略失败: {}", e.getMessage());
         }
     }
 

@@ -92,15 +92,15 @@ public abstract class AbstractAlertRule implements IRule, IInstanceType {
         if (redisUtil.hasKey(cacheKey)) {
             Integer count = (Integer) redisUtil.get(cacheKey);
             if (count >= matchExpression.getFailureThreshold() - 1) {
-                log.error("达到错误阈值，key = {}", cacheKey);
+                log.error("达到错误阈值，key={}", cacheKey);
                 return true;
             }
             redisUtil.incr(cacheKey, 1);
-            log.warn("发生故障，当前次数 {}, key = {}", count + 1, cacheKey);
+            log.warn("发生故障，当前次数 {}, key={}", count + 1, cacheKey);
             return false;
         }
         redisUtil.set(cacheKey, 1, 60L * matchExpression.getFailureThreshold() + 30L);
-        log.warn("发生故障，当前次数 1, key = {}", cacheKey);
+        log.warn("发生故障，当前次数 1, key={}", cacheKey);
         return false;
     }
 
@@ -108,7 +108,7 @@ public abstract class AbstractAlertRule implements IRule, IInstanceType {
     public Boolean silence(DsAssetVO.Asset asset, AlertRuleMatchExpression matchExpression) {
         String cacheKey = Joiner.on("#").join(getCacheKeyPrefix(asset), matchExpression.getWeight());
         if (redisUtil.hasKey(cacheKey)) {
-            log.info("告警规则静默中，key = {}", cacheKey);
+            log.info("告警规则静默中，key={}", cacheKey);
             return true;
         }
         redisUtil.set(cacheKey, true, matchExpression.getSilenceSeconds());

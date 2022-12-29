@@ -51,7 +51,7 @@ public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<Se
             heartbeat(terminalSession.getSessionId());
             for (ServerNode serverNode : loginMessage.getServerNodes()) {
                 executor.submit(() -> {
-                    log.info("登录服务器节点: instanceId = {} ", serverNode.getInstanceId());
+                    log.info("登录服务器节点: instanceId={}", serverNode.getInstanceId());
                     sAInterceptor.interceptLoginServer(serverNode.getId());
                     HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverNode, loginMessage);
                     Server server = serverService.getById(serverNode.getId());

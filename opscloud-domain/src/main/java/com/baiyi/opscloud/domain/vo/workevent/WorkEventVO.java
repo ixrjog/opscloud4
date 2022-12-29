@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.constants.FrontEndTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkEventProperty;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkItem;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkRole;
-import com.baiyi.opscloud.domain.vo.base.ShowTime;
+import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -32,7 +32,7 @@ public class WorkEventVO {
     @NoArgsConstructor
     @AllArgsConstructor
     @ApiModel
-    public static class WorkEvent implements ShowTime.IAgo, TagVO.ITags, UserVO.IUser, Serializable {
+    public static class WorkEvent implements ReadableTime.IAgo, TagVO.ITags, UserVO.IUser, Serializable {
 
         private static final long serialVersionUID = 5241869056680855688L;
 

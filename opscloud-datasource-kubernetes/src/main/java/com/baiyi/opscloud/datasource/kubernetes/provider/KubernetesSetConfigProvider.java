@@ -44,7 +44,7 @@ public class KubernetesSetConfigProvider extends AbstractSetDsInstanceConfigProv
         // 取配置文件路径
         String kubeconfigPath = SystemEnvUtil.renderEnvHome(kubernetes.getKubeconfig().getPath());
         if (StringUtils.isEmpty(kubeconfigPath)) {
-            throw new KubernetesException("kubeconfigPath未配置!");
+            throw new KubernetesException("kubeconfig路径未配置!");
         }
         Credential credential = getCredential(dsInstanceContext.getDsConfig().getCredentialId());
         String kubeconfig = stringEncryptor.decrypt(credential.getCredential());

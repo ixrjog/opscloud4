@@ -55,6 +55,7 @@
         <module>opscloud-datasource-consul</module>
         <module>opscloud-datasource-aws-ecr</module>
         <module>opscloud-datasource-lxhl</module>
+        <module>opscloud-leo</module>
     </modules>
     <parent>
         <!--https://spring.io/projects/spring-boot#learn-->
@@ -86,15 +87,20 @@
             <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.2.2</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.mybatis.spring.boot</groupId>-->
+<!--            <artifactId>mybatis-spring-boot-starter</artifactId>-->
+<!--            <version>2.2.2</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
         <dependency>
@@ -113,17 +119,12 @@
             <version>8.0.30</version>
             <scope>runtime</scope>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>com.alibaba</groupId>-->
-        <!--            <artifactId>druid</artifactId>-->
-        <!--            <version>1.2.5</version>-->
-        <!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.2.13</version>
+            <version>1.2.15</version>
         </dependency>
 
         <dependency>
@@ -176,20 +177,20 @@
         <dependency>
             <groupId>com.github.ulisesbocchio</groupId>
             <artifactId>jasypt-spring-boot-starter</artifactId>
-            <version>3.0.4</version>
+            <version>3.0.5</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.9.0</version>
+            <version>2.10</version>
         </dependency>
 
         <!-- 系统信息 -->
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
-            <version>6.2.2</version>
+            <version>6.4.0</version>
         </dependency>
 
         <!--yaml工具-->
@@ -200,37 +201,35 @@
             <version>1.33</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.jcraft</groupId>-->
-<!--            <artifactId>jsch</artifactId>-->
-<!--            <version>0.1.55</version>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.2.4</version>
+            <version>0.2.5</version>
         </dependency>
 
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
+
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-domain</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-manage</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-service</artifactId>
@@ -519,6 +518,12 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-leo</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -558,18 +563,5 @@
             </plugin>
         </plugins>
     </build>
-
-<!--    <distributionManagement>-->
-<!--        <snapshotRepository>-->
-<!--            <id>nexus-snapshots</id>-->
-<!--            <name>Internal Snapshot</name>-->
-<!--            <url>https://nexus.chuanyinet.com/repository/maven-snapshots/</url>-->
-<!--        </snapshotRepository>-->
-<!--        <repository>-->
-<!--            <id>nexus-releases</id>-->
-<!--            <name>Releases</name>-->
-<!--            <url>https://nexus.chuanyinet.com/repository/maven-releases/</url>-->
-<!--        </repository>-->
-<!--    </distributionManagement>-->
 
 </project>

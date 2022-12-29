@@ -29,7 +29,8 @@ public class DataTable<T> {
     }
 
     public DataTable() {
-        this.data = Collections.EMPTY_LIST;
+        this.data = Collections.emptyList();
         this.totalNum = 0;
     }
+
 }

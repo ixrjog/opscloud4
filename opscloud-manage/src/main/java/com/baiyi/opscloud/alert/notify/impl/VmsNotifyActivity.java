@@ -72,7 +72,7 @@ public class VmsNotifyActivity extends AbstractNotifyActivity {
                 if (aliyunVmsDriver.queryCallDetailByCallId(config.getRegionId(), config, callId, callTime)) {
                     return true;
                 }
-                log.error("电话 = {} , 未接通，90秒后继续拨打，当前第 {} 次", phone, time);
+                log.error("电话={} , 未接通，90秒后继续拨打，当前第 {} 次", phone, time);
                 time++;
                 callTime = System.currentTimeMillis();
                 callId = aliyunVmsDriver.singleCallByTts(config.getRegionId(), config, phone, ttsCode);

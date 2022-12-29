@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.SingleTaskConstants;
 import com.baiyi.opscloud.common.datasource.DingtalkConfig;
 import com.baiyi.opscloud.common.util.EmailUtil;
+import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.util.AssetUtil;
@@ -78,9 +79,9 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
             });
             return entities;
         } catch (Exception e) {
-            log.error("查询钉钉用户错误: err={}", e.getMessage());
+            log.error(e.getMessage());
+            throw new DatasourceProviderException(e.getMessage());
         }
-        throw new RuntimeException("查询条目失败!");
     }
 
     private Map<String, DingtalkUser.User> queryAllUserMap(DingtalkConfig.Dingtalk dingtalk, Set<Long> deptIdSet) {

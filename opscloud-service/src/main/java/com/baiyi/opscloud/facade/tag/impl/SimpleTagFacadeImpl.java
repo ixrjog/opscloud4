@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.tag.impl;
 
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
@@ -65,7 +65,7 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
         try {
             tagService.add(BeanCopierUtil.copyProperties(tag, Tag.class));
         } catch (Exception ex) {
-            throw new CommonRuntimeException(ErrorEnum.TAG_ADD_ERROR);
+            throw new OCRuntimeException(ErrorEnum.TAG_ADD_ERROR);
         }
     }
 
@@ -78,7 +78,7 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
         try {
             tagService.update(pre);
         } catch (Exception ex) {
-            throw new CommonRuntimeException(ErrorEnum.TAG_UPDATE_ERROR);
+            throw new OCRuntimeException(ErrorEnum.TAG_UPDATE_ERROR);
         }
     }
 
@@ -126,7 +126,7 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
     @Override
     public void deleteTagById(int id) {
         if (businessTagService.countByTagId(id) > 0)
-            throw new CommonRuntimeException("标签使用中！");
+            throw new OCRuntimeException("标签使用中！");
         tagService.deleteById(id);
     }
 }

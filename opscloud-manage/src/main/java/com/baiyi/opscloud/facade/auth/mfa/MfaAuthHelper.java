@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.auth.mfa;
 
 import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
-import com.baiyi.opscloud.common.exception.auth.AuthCommonException;
+import com.baiyi.opscloud.common.exception.auth.AuthException;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserCredential;
@@ -42,19 +42,19 @@ public class MfaAuthHelper {
      */
     public void verify(User user, LoginParam.Login loginParam) {
         if (StringUtils.isEmpty(loginParam.getOtp()))
-            throw new AuthCommonException(ErrorEnum.AUTH_USER_LOGIN_OTP_FAILURE); // OTP
+            throw new AuthException(ErrorEnum.AUTH_USER_LOGIN_OTP_FAILURE); // OTP
         List<UserCredential> credentials = userCredentialService.queryByUserIdAndType(user.getId(), UserCredentialTypeEnum.OTP_SK.getType());
         try {
             SecretKey key = OtpUtil.toKey(credentials.get(0).getCredential());
             final String otp = OtpUtil.generateOtp(key);
             if (!otp.equals(loginParam.getOtp()))
-                throw new AuthCommonException(ErrorEnum.AUTH_USER_LOGIN_OTP_FAILURE); // 登录失败
+                throw new AuthException(ErrorEnum.AUTH_USER_LOGIN_OTP_FAILURE); // 登录失败
         } catch (OtpException.DecodingException e) {
-            throw new AuthCommonException("MFA认证失败: Decoding Exception!");
+            throw new AuthException("MFA认证失败: Decoding Exception!");
         } catch (NoSuchAlgorithmException e2) {
-            throw new AuthCommonException("MFA认证失败: No Such Algorithm Exception!");
+            throw new AuthException("MFA认证失败: No Such Algorithm Exception!");
         } catch (InvalidKeyException e3) {
-            throw new AuthCommonException("MFA认证失败: Invalid Key Exception!");
+            throw new AuthException("MFA认证失败: Invalid Key Exception!");
         }
     }
 
@@ -70,7 +70,7 @@ public class MfaAuthHelper {
         try {
             verify(user, loginParam);
         } catch (Exception e) {
-            log.info("尝试绑定MFA失败用户提交的OTP不正确: username = {}", loginParam.getUsername());
+            log.info("尝试绑定MFA失败用户提交的OTP不正确: username={}", loginParam.getUsername());
             return false;
         }
         return true;

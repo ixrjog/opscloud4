@@ -88,7 +88,7 @@ public class ZabbixInstanceManager extends BaseManager {
 
     private void updateServerMonitorStatus(Server server, ServerMonitorStatusEnum serverMonitorStatusEnum) {
         if (serverMonitorStatusEnum.getStatus() != server.getMonitorStatus()) {
-            log.info("更新服务器监控状态: ip = {} , monitorStatus = {}", server.getPrivateIp(), serverMonitorStatusEnum.getStatus());
+            log.info("更新服务器监控状态: ip={}, monitorStatus={}", server.getPrivateIp(), serverMonitorStatusEnum.getStatus());
             server.setMonitorStatus(serverMonitorStatusEnum.getStatus());
             serverService.update(server);
         }

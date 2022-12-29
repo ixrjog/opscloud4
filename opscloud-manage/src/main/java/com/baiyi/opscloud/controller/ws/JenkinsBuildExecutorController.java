@@ -39,14 +39,14 @@ public class JenkinsBuildExecutorController {
     private final String sessionId = UUID.randomUUID().toString();
 
     // concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。
-    private static final CopyOnWriteArraySet<Session> sessionSet = new CopyOnWriteArraySet<>();
+    private static final ThreadLocal<CopyOnWriteArraySet<Session>> sessionSet = ThreadLocal.withInitial(CopyOnWriteArraySet::new);
 
     private static JenkinsBuildExecutorHelper jenkinsBuildExecutorHelper;
 
     private static DsInstanceService dsInstanceService;
 
     @Autowired
-    public void setBean(JenkinsBuildExecutorHelper jenkinsBuildExecutorHelper, DsInstanceService dsInstanceService) {
+    public void setBeans(JenkinsBuildExecutorHelper jenkinsBuildExecutorHelper, DsInstanceService dsInstanceService) {
         JenkinsBuildExecutorController.jenkinsBuildExecutorHelper = jenkinsBuildExecutorHelper;
         JenkinsBuildExecutorController.dsInstanceService = dsInstanceService;
     }
@@ -54,9 +54,9 @@ public class JenkinsBuildExecutorController {
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
-        sessionSet.add(session);
+        sessionSet.get().add(session);
         int cnt = onlineCount.incrementAndGet(); // 在线数加1
-        log.info("Jenkins Build Executor Status: 当前连接数为 = {}", cnt);
+        log.info("Jenkins Build Executor Status: 当前连接数为={}", cnt);
         session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
     }
 
@@ -91,9 +91,9 @@ public class JenkinsBuildExecutorController {
      */
     @OnClose
     public void onClose() {
-        sessionSet.remove(session);
+        sessionSet.get().remove(session);
         int cnt = onlineCount.decrementAndGet();
-        log.info("Jenkins Build Executor Status: 当前连接数为 = {}", cnt);
+        log.info("Jenkins Build Executor Status: 当前连接数为={}", cnt);
     }
 
 }

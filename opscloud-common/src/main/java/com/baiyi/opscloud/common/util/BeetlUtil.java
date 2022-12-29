@@ -19,7 +19,7 @@ public class BeetlUtil {
     private BeetlUtil(){}
 
     /**
-     * 渲染模版
+     * 渲染模板
      *
      * @param template
      * @param contentMap
@@ -40,7 +40,7 @@ public class BeetlUtil {
     }
 
     /**
-     * 渲染模版
+     * 渲染模板
      * @param template
      * @param vars
      * @return

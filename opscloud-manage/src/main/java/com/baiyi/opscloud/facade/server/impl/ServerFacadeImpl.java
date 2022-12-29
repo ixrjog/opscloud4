@@ -16,7 +16,7 @@ import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
-import com.baiyi.opscloud.factory.resource.base.AbstractApplicationResourceQuery;
+import com.baiyi.opscloud.factory.resource.base.AbstractAppResQuery;
 import com.baiyi.opscloud.packer.server.ServerPacker;
 import com.baiyi.opscloud.service.server.ServerService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskP
 @BusinessType(BusinessTypeEnum.SERVER)
 @Service
 @RequiredArgsConstructor
-public class ServerFacadeImpl extends AbstractApplicationResourceQuery implements ServerFacade {
+public class ServerFacadeImpl extends AbstractAppResQuery implements ServerFacade {
 
     private final ServerService serverService;
 
@@ -65,7 +65,7 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
                         .name(e.getDisplayName())
                         .applicationId(pageQuery.getApplicationId())
                         .businessId(e.getBusinessId())
-                        .resourceType(getApplicationResType())
+                        .resourceType(getAppResType())
                         .businessType(getBusinessType())
                         .comment(e.getPrivateIp())
                         .build())

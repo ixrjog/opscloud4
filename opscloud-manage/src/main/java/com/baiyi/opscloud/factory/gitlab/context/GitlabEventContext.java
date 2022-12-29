@@ -2,7 +2,7 @@ package com.baiyi.opscloud.factory.gitlab.context;
 
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
-import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
+import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +19,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class GitlabEventContext {
     private DatasourceInstance instance;
-    private GitlabNotifyParam.SystemHook systemHook;
+    private GitLabNotifyParam.SystemHook systemHook;
     private Event event;
 }

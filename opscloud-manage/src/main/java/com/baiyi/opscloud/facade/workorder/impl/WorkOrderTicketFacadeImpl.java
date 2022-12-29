@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
-import com.baiyi.opscloud.common.util.WorkflowUtil;
+import com.baiyi.opscloud.workorder.util.WorkflowUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
@@ -201,7 +201,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
             throw new TicketCommonException("工单状态不允许变更！");
         saveTicketComment(workOrderTicket, saveTicket);
         WorkOrder workOrder = workOrderService.getById(workOrderTicket.getWorkOrderId());
-        Map<String, WorkflowVO.Node> originalWorkflowNodeMap = WorkflowUtil.toWorkflowNodeMap(workOrder.getWorkflow());
+        Map<String, WorkflowVO.Node> originalWorkflowNodeMap = WorkflowUtil.toNodeMap(workOrder.getWorkflow());
         saveTicket.getWorkflowView().getNodes().forEach(node -> {
             if (NodeTypeConstants.USER_LIST.getCode() == node.getType() && node.getAuditUser() != null) {
                 // 更新用户指定审批人

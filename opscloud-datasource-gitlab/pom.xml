@@ -18,23 +18,24 @@
             <artifactId>opscloud-datasource-core</artifactId>
         </dependency>
 
+        <!--   https://github.com/gitlab4j/gitlab4j-api   -->
         <dependency>
             <groupId>org.gitlab4j</groupId>
             <artifactId>gitlab4j-api</artifactId>
             <version>5.0.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.gitlab</groupId>
-            <artifactId>java-gitlab-api</artifactId>
-            <version>4.1.1</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>org.slf4j</artifactId>
-                    <groupId>slf4j-api</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.gitlab</groupId>-->
+<!--            <artifactId>java-gitlab-api</artifactId>-->
+<!--            <version>4.1.1</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <artifactId>org.slf4j</artifactId>-->
+<!--                    <groupId>slf4j-api</groupId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
 
     </dependencies>
 

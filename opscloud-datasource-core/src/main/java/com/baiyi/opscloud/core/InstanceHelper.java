@@ -32,6 +32,10 @@ public class InstanceHelper {
         return dsInstanceService.getByUuid(uuid);
     }
 
+    public DatasourceInstance getInstanceByName(String name) {
+        return dsInstanceService.getByInstanceName(name);
+    }
+
     /**
      * 查询实例
      *

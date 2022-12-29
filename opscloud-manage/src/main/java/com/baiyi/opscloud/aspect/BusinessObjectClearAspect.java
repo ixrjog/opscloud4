@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.aspect;
 
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.domain.annotation.BusinessObjectClear;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
@@ -37,7 +37,7 @@ public class BusinessObjectClearAspect {
     }
 
     @Around("@annotation(businessObjectClear)")
-    public Object around(ProceedingJoinPoint joinPoint, BusinessObjectClear businessObjectClear) throws CommonRuntimeException {
+    public Object around(ProceedingJoinPoint joinPoint, BusinessObjectClear businessObjectClear) throws OCRuntimeException {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String[] params = methodSignature.getParameterNames();// 获取参数名称
         Object[] args = joinPoint.getArgs();// 获取参数值
@@ -56,14 +56,14 @@ public class BusinessObjectClearAspect {
         try {
             return joinPoint.proceed();
         } catch (Throwable e) {
-            throw new CommonRuntimeException(e.getMessage());
+            throw new OCRuntimeException(e.getMessage());
         }
     }
 
     private void doClear(Integer businessType, Integer businessId) {
-        log.info("清除业务属性: businessType = {} , businessId = {}", businessType, businessId);
+        log.info("清除业务属性: businessType={}, businessId={}", businessType, businessId);
         businessPropertyService.deleteByUniqueKey(businessType, businessId);
-        log.info("清除业务文档: businessType = {} , businessId = {}", businessType, businessId);
+        log.info("清除业务文档: businessType={}, businessId={}", businessType, businessId);
         businessDocumentService.deleteByUniqueKey(businessType, businessId);
     }
 

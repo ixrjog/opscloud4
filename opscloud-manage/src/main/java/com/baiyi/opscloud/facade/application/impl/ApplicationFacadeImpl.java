@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.facade.application.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
-import com.baiyi.opscloud.common.exception.auth.AuthCommonException;
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.auth.AuthException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
@@ -24,8 +24,8 @@ import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.application.ApplicationFacade;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
-import com.baiyi.opscloud.factory.resource.ApplicationResourceQueryFactory;
-import com.baiyi.opscloud.factory.resource.IApplicationResourceQuery;
+import com.baiyi.opscloud.factory.resource.AppResQueryFactory;
+import com.baiyi.opscloud.factory.resource.IAppResQuery;
 import com.baiyi.opscloud.packer.application.ApplicationPacker;
 import com.baiyi.opscloud.packer.user.UserPermissionPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
@@ -77,6 +77,21 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     }
 
     @Override
+    public DataTable<ApplicationVO.Application> queryMyApplicationPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
+        pageQuery.setBusinessType(getBusinessType());
+        if (isAdmin(SessionUtil.getUsername())) {
+            pageQuery.setAdmin(true);
+        } else {
+            pageQuery.setUserId(userService.getByUsername(SessionUtil.getUsername()).getId());
+        }
+        DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
+        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class)
+                .stream()
+                .peek(e -> applicationPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
+    }
+
+    @Override
     public DataTable<ApplicationVO.Application> queryApplicationKubernetesPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
         pageQuery.setBusinessType(getBusinessType());
         if (isAdmin(SessionUtil.getUsername())) {
@@ -95,7 +110,7 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
                         .userId(pageQuery.getUserId())
                         .build();
                 if (userPermissionService.getByUniqueKey(query) == null) {
-                    throw new AuthCommonException(ErrorEnum.AUTHENTICATION_FAILURE);
+                    throw new AuthException(ErrorEnum.AUTHENTICATION_FAILURE);
                 }
             }
             table = new DataTable<>(Lists.newArrayList(applicationService.getById(pageQuery.getApplicationId())), 1);
@@ -124,15 +139,15 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
 
     @Override
     public DataTable<ApplicationResourceVO.Resource> previewApplicationResourcePage(ApplicationResourceParam.ResourcePageQuery pageQuery) {
-        IApplicationResourceQuery iApplicationResourceQuery = ApplicationResourceQueryFactory.getIApplicationResourceQuery(pageQuery.getApplicationResType(), pageQuery.getBusinessType());
-        if (iApplicationResourceQuery == null) throw new CommonRuntimeException("无法预览应用资源，未找到对应的方法！");
-        return iApplicationResourceQuery.queryResourcePage(pageQuery);
+        IAppResQuery appResQuery = AppResQueryFactory.getAppResQuery(pageQuery.getAppResType(), pageQuery.getBusinessType());
+        if (appResQuery == null) throw new OCRuntimeException("无法预览应用资源，未找到对应的方法！");
+        return appResQuery.queryResourcePage(pageQuery);
     }
 
     @Override
     public ApplicationVO.Application getApplicationById(Integer id) {
         Application application = applicationService.getById(id);
-        if (application == null) throw new CommonRuntimeException(ErrorEnum.APPLICATION_NOT_EXIST);
+        if (application == null) throw new OCRuntimeException(ErrorEnum.APPLICATION_NOT_EXIST);
         ApplicationVO.Application vo = BeanCopierUtil.copyProperties(application, ApplicationVO.Application.class);
         applicationPacker.wrap(vo, SimpleExtend.EXTEND);
         return vo;
@@ -141,7 +156,7 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     @Override
     public void addApplication(ApplicationVO.Application application) {
         if (applicationService.getByKey(application.getApplicationKey()) != null)
-            throw new CommonRuntimeException(ErrorEnum.APPLICATION_ALREADY_EXIST);
+            throw new OCRuntimeException(ErrorEnum.APPLICATION_ALREADY_EXIST);
         Application app = BeanCopierUtil.copyProperties(application, Application.class);
         applicationService.add(app);
     }
@@ -149,7 +164,7 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     @Override
     public void updateApplication(ApplicationVO.Application application) {
         Application app = applicationService.getByKey(application.getApplicationKey());
-        if (app == null) throw new CommonRuntimeException(ErrorEnum.APPLICATION_ALREADY_EXIST);
+        if (app == null) throw new OCRuntimeException(ErrorEnum.APPLICATION_ALREADY_EXIST);
         app.setComment(application.getComment());
         app.setName(application.getName());
         applicationService.update(app);
@@ -159,14 +174,14 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     @TagClear
     public void deleteApplication(Integer id) {
         if (!CollectionUtils.isEmpty(applicationResourceService.queryByApplication(id)))
-            throw new CommonRuntimeException(ErrorEnum.APPLICATION_RES_IS_NOT_EMPTY);
+            throw new OCRuntimeException(ErrorEnum.APPLICATION_RES_IS_NOT_EMPTY);
         applicationService.deleteById(id);
     }
 
     @Override
     public void bindApplicationResource(ApplicationResourceVO.Resource resource) {
         if (applicationResourceService.getByUniqueKey(resource.getApplicationId(), resource.getBusinessType(), resource.getBusinessId()) != null)
-            throw new CommonRuntimeException(ErrorEnum.APPLICATION_RES_ALREADY_EXIST);
+            throw new OCRuntimeException(ErrorEnum.APPLICATION_RES_ALREADY_EXIST);
         ApplicationResource res = BeanCopierUtil.copyProperties(resource, ApplicationResource.class);
         applicationResourceService.add(res);
     }
@@ -199,4 +214,5 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     public void afterPropertiesSet() {
         UserBusinessPermissionFactory.register(this);
     }
+
 }

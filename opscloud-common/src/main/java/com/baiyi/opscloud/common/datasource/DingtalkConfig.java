@@ -19,6 +19,18 @@ public class DingtalkConfig extends BaseDsConfig {
 
     private Dingtalk dingtalk;
 
+    private Robot robot;
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Robot {
+
+        private String token;
+        private String desc;
+
+    }
+
     @Data
     @NoArgsConstructor
     @ApiModel

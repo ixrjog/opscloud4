@@ -4,7 +4,7 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
-import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
+import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
 import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import com.baiyi.opscloud.facade.datasource.SimpleDsAssetFacade;
 import com.baiyi.opscloud.facade.event.EventFacade;
@@ -56,7 +56,7 @@ public abstract class AbstractGitlabEventConsumer implements IGitlabEventConsume
 
     @Override
     @Async(value = CORE)
-    public void consumeEventV4(DatasourceInstance instance, GitlabNotifyParam.SystemHook systemHook) {
+    public void consumeEventV4(DatasourceInstance instance, GitLabNotifyParam.SystemHook systemHook) {
         eventContext.get().setInstance(instance);
         eventContext.get().setSystemHook(systemHook);
         preHandle();

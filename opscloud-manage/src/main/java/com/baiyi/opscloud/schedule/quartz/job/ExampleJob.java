@@ -23,16 +23,14 @@ public class ExampleJob extends QuartzJobBean {
         // 获取参数
         JobDataMap jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
         // 业务逻辑 ...
-      //  log.error("---task执行" + jobDataMap.get("name").toString() + "######" + jobExecutionContext.getTrigger());
         //任务开始时间
         Instant instant = Instant.now();
         try {
-            log.info("instanceId = {}", jobDataMap.get("instanceId"));
+            log.info("instanceId={}", jobDataMap.get("instanceId"));
             //任务执行总时长
-            log.error("任务执行完毕，任务ID：" + jobExecutionContext.getJobDetail() + "  总共耗时：" + InstantUtil.timerSeconds(instant) + "毫秒");
+            log.error("任务执行完毕: 任务ID={}, 总共耗时={}毫秒", jobExecutionContext.getJobDetail(), InstantUtil.timerSeconds(instant));
         } catch (Exception e) {
-            log.error("任务执行失败，任务ID：" + jobExecutionContext.getJobDetail() + "  总共耗时：" + InstantUtil.timerSeconds(instant) + "毫秒", e);
-
+            log.error("任务执行失败，任务ID={}, 耗时={}毫秒", jobExecutionContext.getJobDetail(), InstantUtil.timerSeconds(instant), e);
         }
     }
 

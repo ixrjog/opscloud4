@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.LeoDeployMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="application_id" jdbcType="INTEGER" property="applicationId"/>
+        <result column="job_id" jdbcType="INTEGER" property="jobId"/>
+        <result column="job_name" jdbcType="VARCHAR" property="jobName"/>
+        <result column="deploy_number" jdbcType="INTEGER" property="deployNumber"/>
+        <result column="build_id" jdbcType="INTEGER" property="buildId"/>
+        <result column="version_name" jdbcType="VARCHAR" property="versionName"/>
+        <result column="version_desc" jdbcType="VARCHAR" property="versionDesc"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="deploy_status" jdbcType="VARCHAR" property="deployStatus"/>
+        <result column="deploy_result" jdbcType="VARCHAR" property="deployResult"/>
+        <result column="is_finish" jdbcType="BIT" property="isFinish"/>
+        <result column="execution_type" jdbcType="INTEGER" property="executionType"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="is_active" jdbcType="BIT" property="isActive"/>
+        <result column="is_rollback" jdbcType="BIT" property="isRollback"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="deploy_config" jdbcType="LONGVARCHAR" property="deployConfig"/>
+        <result column="oc_instance" jdbcType="VARCHAR" property="ocInstance"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+    <select id="getMaxDeployNumberWithJobId" resultType="java.lang.Integer">
+        select max(deploy_number)
+        from leo_deploy
+        where job_id = #{jobId}
+    </select>
+
+</mapper>

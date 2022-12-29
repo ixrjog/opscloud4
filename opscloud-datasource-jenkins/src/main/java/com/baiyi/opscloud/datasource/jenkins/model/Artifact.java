@@ -6,6 +6,8 @@
 
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import java.util.Optional;
+
 public class Artifact extends BaseModel {
 
     private String displayPath;
@@ -48,11 +50,11 @@ public class Artifact extends BaseModel {
 
         Artifact artifact = (Artifact) o;
 
-        if (displayPath != null ? !displayPath.equals(artifact.displayPath) : artifact.displayPath != null)
+        if (Optional.ofNullable(displayPath).map(path -> !path.equals(artifact.displayPath)).orElseGet(() -> artifact.displayPath != null))
             return false;
-        if (fileName != null ? !fileName.equals(artifact.fileName) : artifact.fileName != null)
+        if (Optional.ofNullable(fileName).map(name -> !name.equals(artifact.fileName)).orElseGet(() -> artifact.fileName != null))
             return false;
-        if (relativePath != null ? !relativePath.equals(artifact.relativePath) : artifact.relativePath != null)
+        if (Optional.ofNullable(relativePath).map(path -> !path.equals(artifact.relativePath)).orElseGet(() -> artifact.relativePath != null))
             return false;
 
         return true;

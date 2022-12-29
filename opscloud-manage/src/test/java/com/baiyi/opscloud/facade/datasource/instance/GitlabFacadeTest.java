@@ -2,14 +2,12 @@ package com.baiyi.opscloud.facade.datasource.instance;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.util.GitlabTokenUtil;
-import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
+import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
 import com.baiyi.opscloud.factory.gitlab.GitlabEventNameEnum;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @Author baiyi
@@ -26,7 +24,7 @@ class GitlabFacadeTest extends BaseUnit implements InitializingBean {
 
     @Test
     void consumeEventV4Test() {
-        GitlabNotifyParam.SystemHook systemHook = GitlabNotifyParam.SystemHook.builder()
+        GitLabNotifyParam.SystemHook systemHook = GitLabNotifyParam.SystemHook.builder()
                 .event_name(GitlabEventNameEnum.KEY_CREATE.name().toLowerCase())
                 .user_name("baiyi")
                 .id(999)

@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.workorder.processor.impl;
 
-import com.baiyi.opscloud.common.constants.GitlabAccessLevelConstants;
+import com.baiyi.opscloud.common.constants.GitLabAccessLevelConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.common.datasource.GitlabConfig;
+import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.core.InstanceHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
@@ -17,9 +17,9 @@ import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExtendedBaseTicketProcessor;
 import lombok.extern.slf4j.Slf4j;
-import org.gitlab.api.models.GitlabAccessLevel;
-import org.gitlab.api.models.GitlabProjectMember;
-import org.gitlab.api.models.GitlabUser;
+import org.gitlab4j.api.models.AccessLevel;
+import org.gitlab4j.api.models.Member;
+import org.gitlab4j.api.models.User;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -34,7 +34,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
-public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcessor<DatasourceInstanceAsset, GitlabConfig> {
+public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcessor<DatasourceInstanceAsset, GitLabConfig> {
 
     @Resource
     private GitlabProjectDelegate gitlabProjectDelegate;
@@ -47,40 +47,38 @@ public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTic
 
     @Override
     protected void processHandle(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
-        GitlabConfig.Gitlab config = getDsConfig(ticketEntry, GitlabConfig.class).getGitlab();
+        GitLabConfig.Gitlab config = getDsConfig(ticketEntry, GitLabConfig.class).getGitlab();
         WorkOrderTicket ticket = getTicketById(ticketEntry.getWorkOrderTicketId());
         String username = ticket.getUsername();
         String role = ticketEntry.getRole();
-        List<GitlabUser> gitlabUsers;
+        User gitLabUser = getOrCreateUser(config, username);
+        GitLabAccessLevelConstants gitlabAccessLevel = Arrays.stream(GitLabAccessLevelConstants.values()).filter(e -> e.getRole().equalsIgnoreCase(role)).findFirst()
+                .orElseThrow(() -> new TicketProcessException("GitLab角色名称错误: role={}", role));
+        AccessLevel accessLevel = AccessLevel.forValue(gitlabAccessLevel.getAccessValue());
+        List<Member> projectMembers = gitlabProjectDelegate.getProjectMembers(config, Long.valueOf(entry.getAssetId()));
 
-        gitlabUsers = gitlabUserDelegate.findUser(config, username);
-        Optional<GitlabUser> optionalGitlabUser = gitlabUsers.stream().filter(e -> e.getUsername().equals(username)).findFirst();
-        // throw new TicketProcessException("Gitlab实例无申请用户账户: 请登录Gitlab实例后再申请权限！");
-        GitlabUser gitlabUser = optionalGitlabUser.orElseGet(() -> gitlabUserDelegate.createGitlabUser(config, username));
-        Optional<GitlabAccessLevelConstants> optionalGitlabAccessLevelConstants = Arrays.stream(GitlabAccessLevelConstants.values())
-                .filter(e -> e.getRole().equalsIgnoreCase(role))
-                .findFirst();
-
-        if (!optionalGitlabAccessLevelConstants.isPresent())
-            throw new TicketProcessException("Gitlab角色名称错误: role = " + role);
-
-        GitlabAccessLevel gitlabAccessLevel = GitlabAccessLevel.fromAccessValue(optionalGitlabAccessLevelConstants.get().getAccessValue());
-        List<GitlabProjectMember> gitlabProjectMembers = gitlabProjectDelegate.getProjectMembers(config, Integer.parseInt(entry.getAssetId()));
-
-        Optional<GitlabProjectMember> optionalGitlabProjectMember = gitlabProjectMembers.stream().filter(e -> e.getId().equals(gitlabUser.getId())).findFirst();
-        if (optionalGitlabProjectMember.isPresent()) {
-            if (optionalGitlabProjectMember.get().getAccessLevel().accessValue != gitlabAccessLevel.accessValue) {
+        Optional<Member> optionalProjectMember = projectMembers.stream().filter(e -> e.getId().equals(gitLabUser.getId())).findFirst();
+        if (optionalProjectMember.isPresent()) {
+            if (!accessLevel.value.equals(optionalProjectMember.get().getAccessLevel().value)) {
+                log.info("更新用户项目角色: userId={}, projectId={}, accessLevel={}", gitLabUser.getId(), entry.getAssetId(), accessLevel.name());
                 gitlabProjectDelegate.updateProjectMember(config,
-                        Integer.parseInt(entry.getAssetId()),
-                        gitlabUser.getId(),
-                        gitlabAccessLevel);
+                        Long.valueOf(entry.getAssetId()),
+                        gitLabUser.getId(),
+                        accessLevel);
             }
         } else {
+            log.info("新增用户项目角色: userId={}, projectId={}, accessLevel={}", gitLabUser.getId(), entry.getAssetId(), accessLevel.name());
             gitlabProjectDelegate.addProjectMember(config,
-                    Integer.parseInt(entry.getAssetId()),
-                    gitlabUser.getId(),
-                    gitlabAccessLevel);
+                    Long.valueOf(entry.getAssetId()),
+                    gitLabUser.getId(),
+                    accessLevel);
         }
+    }
+
+    private User getOrCreateUser(GitLabConfig.Gitlab config, String username) {
+        List<User> gitlabUsers = gitlabUserDelegate.findUsers(config, username);
+        Optional<User> optionalGitlabUser = gitlabUsers.stream().filter(e -> e.getUsername().equals(username)).findFirst();
+        return optionalGitlabUser.orElseGet(() -> gitlabUserDelegate.createUser(config, username));
     }
 
     @Override
@@ -114,8 +112,8 @@ public class GitlabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTic
         if (!OrderTicketPhaseCodeConstants.NEW.name().equals(ticket.getTicketPhase()))
             throw new TicketProcessException("工单进度不是新建，无法更新配置条目！");
         String role = ticketEntry.getRole();
-        if (Arrays.stream(GitlabAccessLevelConstants.values()).noneMatch(e -> e.getRole().equalsIgnoreCase(role))) {
-            throw new TicketProcessException("更新角色错误: 不支持的角色名称！");
+        if (Arrays.stream(GitLabAccessLevelConstants.values()).noneMatch(e -> e.getRole().equalsIgnoreCase(role))) {
+            throw new TicketProcessException("修改角色错误，不支持该名称！");
         }
         WorkOrderTicketEntry preTicketEntry = ticketEntryService.getById(ticketEntry.getId());
         preTicketEntry.setRole(role);

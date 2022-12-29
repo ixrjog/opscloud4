@@ -3,6 +3,7 @@ package com.baiyi.opscloud.datasource.dingtalk.provider;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.SingleTaskConstants;
 import com.baiyi.opscloud.common.datasource.DingtalkConfig;
+import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.util.AssetUtil;
@@ -13,6 +14,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -24,6 +26,7 @@ import java.util.Set;
  * @Date 2021/11/30 1:26 下午
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class DingtalkDepartmentProvider extends AbstractDingtalkAssetProvider<DingtalkDepartment.Department> {
 
@@ -55,9 +58,9 @@ public class DingtalkDepartmentProvider extends AbstractDingtalkAssetProvider<Di
             });
             return entities;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+            throw new DatasourceProviderException(e.getMessage());
         }
-        throw new RuntimeException("查询条目失败");
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.message.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.LXHLConfig;
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.core.InstanceHelper;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
@@ -53,7 +53,7 @@ public class MessageFacadeImpl implements MessageFacade {
         AuthPlatform authPlatform = platformAuthHelper.verify(param);
         List<DatasourceInstance> instances = instanceHelper.listInstance(FILTER_INSTANCE_TYPES, param.getMedia());
         if (CollectionUtils.isEmpty(instances))
-            throw new CommonRuntimeException("无可用实例，请联系运维");
+            throw new OCRuntimeException("无可用实例，请联系运维");
         String mobiles = Joiner.on(",").join(Sets.newHashSet(param.getMobile()));
         LXHLMessageResponse.SendMessage sendMessage = lxhlMessageDriver.sendMessage(getInstanceConfig(instances), mobiles, param.getContent(), SIGN_NAME);
         param.setPlatformToken(StringUtils.EMPTY);

@@ -47,6 +47,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -167,7 +168,7 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
                 response.getStatusLine().getStatusCode());
         try {
             httpResponseValidator.validateResponse(response);
-            return IOUtils.toString(response.getEntity().getContent());
+            return IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
         } finally {
             EntityUtils.consume(response.getEntity());
             releaseConnection(getMethod);
@@ -362,7 +363,7 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
         jenkinsVersion = ResponseUtils.getJenkinsVersion(response);
         try {
             httpResponseValidator.validateResponse(response);
-            return IOUtils.toString(response.getEntity().getContent());
+            return IOUtils.toString(response.getEntity().getContent(),StandardCharsets.UTF_8);
         } finally {
             EntityUtils.consume(response.getEntity());
             releaseConnection(request);
@@ -393,7 +394,7 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
         jenkinsVersion = ResponseUtils.getJenkinsVersion(response);
         try {
             httpResponseValidator.validateResponse(response);
-            return IOUtils.toString(response.getEntity().getContent());
+            return IOUtils.toString(response.getEntity().getContent(),StandardCharsets.UTF_8);
         } finally {
             EntityUtils.consume(response.getEntity());
             releaseConnection(request);
@@ -487,7 +488,6 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
     protected void setLocalContext(final HttpContext localContext) {
         this.localContext = localContext;
     }
-
 
     private <T extends BaseModel> T objectFromResponse(Class<T> cls, HttpResponse response) throws IOException {
         InputStream content = response.getEntity().getContent();

@@ -16,4 +16,5 @@ public interface BuildConsoleStreamListener {
      * Called when streaming console output is finished
      */
      void finished();
+
 }

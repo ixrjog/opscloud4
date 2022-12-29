@@ -5,8 +5,7 @@ import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.jenkins.base.BaseJenkinsTest;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
 import com.baiyi.opscloud.datasource.jenkins.engine.JenkinsBuildExecutorHelper;
-import com.baiyi.opscloud.datasource.jenkins.model.Computer;
-import com.baiyi.opscloud.datasource.jenkins.model.ComputerWithDetails;
+import com.baiyi.opscloud.datasource.jenkins.model.*;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.datasource.jenkins.status.JenkinsBuildExecutorStatusVO;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
@@ -57,6 +56,83 @@ public class JenkinsTest extends BaseJenkinsTest {
         DatasourceInstance datasourceInstance = dsInstanceService.getById(18);
         JenkinsBuildExecutorStatusVO.Children children = jenkinsEngineFacade.generatorBuildExecutorStatus(datasourceInstance);
         print(children);
+    }
+
+    @Test
+    void getJobsTest() {
+        // 18 60
+        JenkinsConfig config = getConfigById(60);
+        try {
+            Map<String, Job> jobMap = JenkinsServerDriver.getJobs(config.getJenkins());
+            for (String s : jobMap.keySet()) {
+                Job job = jobMap.get(s);
+                print(job);
+            }
+        } catch (Exception e) {
+            print(e.getMessage());
+        }
+    }
+
+    @Test
+    void getJobs2Test() {
+        JenkinsConfig config = getConfigById(60);
+        try {
+            FolderJob folder = new FolderJob("templates", "https://leo-jenkins-1.chuanyinet.com/job/templates/");
+            Map<String, Job> jobMap = JenkinsServerDriver.getJobs(config.getJenkins(), folder);
+            for (String s : jobMap.keySet()) {
+                Job job = jobMap.get(s);
+                JobWithDetails jd = job.details();
+                print(jd);
+            }
+        } catch (Exception e) {
+            print(e.getMessage());
+        }
+    }
+
+    @Test
+    void getJobXmlTest() {
+        JenkinsConfig config = getConfigById(60);
+        try {
+            // https://leo-jenkins-1.chuanyinet.com/job/templates/job/tpl_test/
+            FolderJob folder = new FolderJob("templates", "https://leo-jenkins-1.chuanyinet.com/job/templates/");
+            String xml = JenkinsServerDriver.getJobXml(config.getJenkins(), folder, "tpl_test");
+            print(xml);
+
+        } catch (Exception e) {
+            print(e.getMessage());
+        }
+    }
+
+
+    @Test
+    void getJob2222Test() {
+        // 18 60
+        JenkinsConfig config = getConfigById(18);
+        try {
+            JobWithDetails jobWithDetails = JenkinsServerDriver.getJob(config.getJenkins(), "ACCOUNT-MANAGEMENT_account-management-prod");
+
+            Build build= jobWithDetails.details().getLastBuild();
+            build.details();
+
+        } catch (Exception e) {
+            print(e.getMessage());
+        }
+    }
+
+    @Test
+    void getJob2223Test() {
+        // 18 60
+        JenkinsConfig config = getConfigById(60);
+        try {
+            JobWithDetails jobWithDetails = JenkinsServerDriver.getJob(config.getJenkins(), "MERCHANT-RSS_MERCHANT-RSS-DEV_23");
+
+            Build build= jobWithDetails.details().getLastBuild();
+            BuildWithDetails buildWithDetails = build.details();
+            print(buildWithDetails.isBuilding());
+
+        } catch (Exception e) {
+            print(e.getMessage());
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.common.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.io.IOException;
  * @Date 2022/5/23 1:22 PM
  * @Since 1.0
  */
+@Slf4j
 public class JacksonUtil {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -39,10 +41,9 @@ public class JacksonUtil {
         try {
             return objectMapper.writeValueAsString(object);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return StringUtils.EMPTY;
     }
-
 
 }

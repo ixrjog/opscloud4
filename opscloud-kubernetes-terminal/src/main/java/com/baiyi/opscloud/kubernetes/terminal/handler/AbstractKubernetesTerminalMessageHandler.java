@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.kubernetes.terminal.handler;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -55,7 +55,7 @@ public abstract class AbstractKubernetesTerminalMessageHandler<T extends Kuberne
             if (DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name().equals(asset.getAssetType()))
                 return asset;
         }
-        throw new CommonRuntimeException("类型不符合");
+        throw new OCRuntimeException("类型不符合");
     }
 
     protected void heartbeat(String sessionId) {

@@ -80,7 +80,7 @@ public class ZabbixV5HostDriver extends SimpleZabbixV5HostDriver {
 
     @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_host_ip_' + #ip")
     public void evictHostByIp(ZabbixConfig.Zabbix config, String ip) {
-        log.info("清除ZabbixHost缓存 : ip = {}", ip);
+        log.info("清除ZabbixHost缓存: ip={}", ip);
     }
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_host_ip_' + #ip", unless = "#result == null")

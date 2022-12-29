@@ -47,10 +47,10 @@ public abstract class AbstractDsAssetExtendedBaseTicketProcessor<T, C extends Ba
         try {
             DatasourceInstanceAsset asset = dsInstanceAssetService.getByUniqueKey(queryParam);
             if (asset == null)
-                throw new TicketVerifyException("校验工单条目失败: 授权资产不存在!");
+                throw new TicketVerifyException("校验工单条目失败: 授权资产不存在！");
             return asset;
         } catch (Exception e) {
-            throw new TicketVerifyException("查询授权资产错误: " + e.getMessage());
+            throw new TicketVerifyException("查询授权资产错误: {}", e.getMessage());
         }
     }
 
@@ -84,7 +84,7 @@ public abstract class AbstractDsAssetExtendedBaseTicketProcessor<T, C extends Ba
         try {
             dsInstanceFacade.pullAsset(ticketEntry.getInstanceUuid(), getAssetType(), entry);
         } catch (Exception e) {
-            log.error("推送数据源资产失败: instanceUuid = {} , entry = {}", ticketEntry.getInstanceUuid(), JSONUtil.writeValueAsString(entry));
+            log.error("推送数据源资产失败: instanceUuid={}, entry={}", ticketEntry.getInstanceUuid(), JSONUtil.writeValueAsString(entry));
         }
     }
 

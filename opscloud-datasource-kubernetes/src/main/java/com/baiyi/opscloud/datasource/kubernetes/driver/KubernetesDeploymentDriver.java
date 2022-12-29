@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.kubernetes.driver;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesDeploymentException;
 import com.baiyi.opscloud.datasource.kubernetes.util.KubernetesUtil;
@@ -35,6 +35,16 @@ public class KubernetesDeploymentDriver {
      */
     public static void redeployDeployment(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
         Deployment deployment = getDeployment(kubernetes, namespace, name);
+        redeployDeployment(kubernetes, deployment);
+    }
+
+    /**
+     * 重启容器
+     *
+     * @param kubernetes
+     * @param deployment
+     */
+    public static void redeployDeployment(KubernetesConfig.Kubernetes kubernetes, Deployment deployment) {
         if (deployment == null) return;
         Optional<Map<String, String>> optionalAnnotations = Optional.of(deployment)
                 .map(Deployment::getSpec)
@@ -49,7 +59,7 @@ public class KubernetesDeploymentDriver {
             annotations.put(REDEPLOY_TIMESTAMP, String.valueOf(new Date().getTime()));
             deployment.getSpec().getTemplate().getMetadata().setAnnotations(annotations);
         }
-        createOrReplaceDeployment(kubernetes, namespace, deployment);
+        createOrReplaceDeployment(kubernetes, deployment);
     }
 
     /**
@@ -60,6 +70,7 @@ public class KubernetesDeploymentDriver {
      * @param name
      * @param replicas   扩容后的副本数
      */
+    @Deprecated
     public static void scaleDeploymentReplicas(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, Integer replicas) throws KubernetesDeploymentException {
         Deployment deployment = getDeployment(kubernetes, namespace, name);
         Optional<Integer> optionalReplicas = Optional.ofNullable(deployment)
@@ -84,15 +95,13 @@ public class KubernetesDeploymentDriver {
      */
     public static void scaleDeploymentReplicas2(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, Integer replicas) throws KubernetesDeploymentException {
         Deployment deployment = getDeployment(kubernetes, namespace, name);
-        Optional<Integer> optionalReplicas = Optional.ofNullable(deployment)
+        final Integer nowReplicas = Optional.ofNullable(deployment)
                 .map(Deployment::getSpec)
-                .map(DeploymentSpec::getReplicas);
-        if (!optionalReplicas.isPresent())
-            throw new KubernetesDeploymentException("Kubernetes Deployment扩容失败: 读取副本数量错误！");
+                .map(DeploymentSpec::getReplicas)
+                .orElseThrow(() -> new KubernetesDeploymentException("Deployment扩容失败: 读取副本数量错误！"));
         // 更新副本数
-        if (optionalReplicas.get() >= replicas)
-            throw new KubernetesDeploymentException("Kubernetes Deployment扩容失败: 只能扩容不能缩容 nowReplicas={}, newReplicas={} ！", optionalReplicas.get(), replicas);
-        deployment.getSpec().setReplicas(replicas);
+        if (nowReplicas >= replicas)
+            throw new KubernetesDeploymentException("Deployment扩容失败: 只能扩容不能缩容 nowReplicas={}, newReplicas={} ！", nowReplicas, replicas);
         KubeClient.build(kubernetes)
                 .apps()
                 .deployments()
@@ -132,6 +141,22 @@ public class KubernetesDeploymentDriver {
                 .inNamespace(namespace)
                 .withName(name)
                 .get();
+    }
+
+    /**
+     * @param kubernetes
+     * @param namespace
+     * @param name       podName
+     * @return
+     */
+    public static Deployment rolloutSetImageEquivalentTest(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, String imageName, String image) {
+        return KubeClient.build(kubernetes)
+                .apps()
+                .deployments()
+                .inNamespace(namespace)
+                .withName(name)
+                .rolling()
+                .updateImage(Collections.singletonMap(imageName, image));
     }
 
     /**
@@ -217,13 +242,6 @@ public class KubernetesDeploymentDriver {
                 .createOrReplace(deployment);
     }
 
-//    public static Deployment replaceDeployment(KubernetesConfig.Kubernetes kubernetes, Deployment deployment) {
-//        return KubeClient.build(kubernetes).apps()
-//                .deployments()
-//                .inNamespace(deployment.getMetadata().getNamespace())
-//                .replace(deployment);
-//    }
-
     /**
      * 配置文件转换为无状态资源
      *
@@ -232,11 +250,11 @@ public class KubernetesDeploymentDriver {
      * @return
      * @throws RuntimeException
      */
-    public static Deployment toDeployment(KubernetesClient kuberClient, String content) throws CommonRuntimeException {
+    public static Deployment toDeployment(KubernetesClient kuberClient, String content) throws OCRuntimeException {
         HasMetadata resource = KubernetesUtil.toResource(kuberClient, content);
         if (resource instanceof io.fabric8.kubernetes.api.model.apps.Deployment)
             return (Deployment) resource;
-        throw new CommonRuntimeException("Kubernetes deployment 配置文件类型不匹配!");
+        throw new OCRuntimeException("Kubernetes deployment 配置文件类型不匹配!");
     }
 
 }

@@ -30,7 +30,7 @@ public abstract class AbstractUserGroupPermissionExtendedAbstractUserPermission 
 
     private void checkName(UserGroup entry) {
         if (getGroupNames().stream().noneMatch(groupName -> groupName.equals(entry.getName())))
-            throw new TicketProcessException("授权条目不合规");
+            throw new TicketProcessException("授权条目不合规！");
     }
 
     /**

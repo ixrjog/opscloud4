@@ -17,6 +17,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.annotation.Async;
 
 import javax.annotation.Resource;
+
 import java.util.Date;
 
 import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
@@ -65,8 +66,9 @@ public abstract class AbstractApproveTicket implements ITicketApprove, Initializ
     abstract protected void postHandle(WorkOrderTicket ticket, WorkOrderTicketNode ticketNode);
 
     protected void updateTicket(WorkOrderTicket ticket, boolean isFinished) {
-        if (isFinished)
+        if (isFinished) {
             ticket.setEndTime(new Date());
+        }
         ticketService.update(ticket);
     }
 

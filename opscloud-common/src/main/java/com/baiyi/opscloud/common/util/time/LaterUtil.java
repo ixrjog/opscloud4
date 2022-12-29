@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.common.util.time;
 
-import com.baiyi.opscloud.domain.vo.base.ShowTime;
+import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,7 +39,7 @@ public class LaterUtil {
         }
     }
 
-    public static void wrap(ShowTime.ILater iLater) {
+    public static void wrap(ReadableTime.ILater iLater) {
         iLater.setLater(format(iLater.getExpiredTime()));
     }
 

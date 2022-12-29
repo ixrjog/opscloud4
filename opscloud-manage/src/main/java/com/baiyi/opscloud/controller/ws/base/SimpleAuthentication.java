@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.controller.ws.base;
 
-import com.baiyi.opscloud.common.exception.auth.AuthCommonException;
+import com.baiyi.opscloud.common.exception.auth.AuthException;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserToken;
@@ -39,15 +39,15 @@ public class SimpleAuthentication {
 
     public String hasLogin(ILoginMessage loginMessage) {
         if (StringUtils.isBlank(loginMessage.getToken()))
-            throw new AuthCommonException("鉴权失败: Token为Null!");
+            throw new AuthException("鉴权失败: Token为Null!");
         UserToken userToken = userTokenService.getByVaildToken(loginMessage.getToken());
         if (userToken == null) {
-            throw new AuthCommonException("鉴权失败: 无效的Token!");
+            throw new AuthException("鉴权失败: 无效的Token!");
         }
         SessionUtil.setUsername(userToken.getUsername()); // 设置当前会话用户身份
         User user = userService.getByUsername(userToken.getUsername());
         if (user == null) {
-            throw new AuthCommonException("鉴权失败: 无效的用户!");
+            throw new AuthException("鉴权失败: 无效的用户!");
         }
         SessionUtil.setUserId(user.getId());
         return userToken.getUsername();

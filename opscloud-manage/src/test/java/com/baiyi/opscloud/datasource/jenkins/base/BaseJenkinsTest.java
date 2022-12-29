@@ -21,4 +21,9 @@ public class BaseJenkinsTest extends BaseUnit {
         return dsConfigHelper.build(dsConfigHelper.getConfigByDsType(DsTypeEnum.JENKINS.getType()), JenkinsConfig.class);
     }
 
+
+    protected JenkinsConfig getConfigById(int id) {
+        return dsConfigHelper.build(dsConfigHelper.getConfigById(id), JenkinsConfig.class);
+    }
+
 }

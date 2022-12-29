@@ -24,6 +24,8 @@ public interface WorkOrderTicketService {
 
     void update(WorkOrderTicket workOrderTicket);
 
+    void updateByPrimaryKeySelective(WorkOrderTicket workOrderTicket);
+
     WorkOrderTicket getById(int id);
 
     WorkOrderTicket getNewTicketByUser(String workOrderKey, String username);

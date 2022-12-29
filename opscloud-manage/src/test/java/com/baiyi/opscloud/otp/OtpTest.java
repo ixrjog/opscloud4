@@ -40,12 +40,12 @@ public class OtpTest extends BaseUnit {
             final int macLengthInBytes = Mac.getInstance(totp.getAlgorithm()).getMacLength();
 
 
-            print("macLengthInBytes =" + macLengthInBytes * 8);
+            print("macLengthInBytes=" + macLengthInBytes * 8);
             keyGenerator.init(macLengthInBytes * 8);
             // LACYXBI6WBQ4O5WW273USF5S7QMVMYBT
             key = keyGenerator.generateKey();
 
-            log.info("Algorithm = {} , Encoded = {} , Format = {}", key.getAlgorithm(), Base32StringUtil.encode(key.getEncoded()), key.getFormat());
+            log.info("Algorithm={}, Encoded={}, Format={}", key.getAlgorithm(), Base32StringUtil.encode(key.getEncoded()), key.getFormat());
 
 //            print("getAlgorithm() = " ,  key.getAlgorithm(),key.getEncoded(),key.getFormat());
 //            print("Encoded = " + key.getEncoded());

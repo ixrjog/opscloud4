@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.business;
 
-import com.baiyi.opscloud.domain.param.business.BusinessDocumentParam;
+import com.baiyi.opscloud.domain.param.server.business.BusinessDocumentParam;
 import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
 
 /**

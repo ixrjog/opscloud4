@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.filter;
 
 import com.baiyi.opscloud.common.HttpResult;
-import com.baiyi.opscloud.common.exception.auth.AuthCommonException;
+import com.baiyi.opscloud.common.exception.auth.AuthException;
 import com.baiyi.opscloud.common.util.GitlabTokenUtil;
 import com.baiyi.opscloud.config.properties.WhiteConfigurationProperties;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.stream.Stream;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 
@@ -78,8 +77,8 @@ public class AuthFilter extends OncePerRequestFilter {
                     userAuthFacade.verifyUserHasResourcePermissionWithAccessToken(accessToken, resourceName);
                 }
                 filterChain.doFilter(request, response);
-            } catch (AuthCommonException ex) {
-                response.setContentType(APPLICATION_JSON_UTF8_VALUE);
+            } catch (AuthException ex) {
+                response.setContentType("application/json;charset=UTF-8");
                 setHeaders(request, response);
                 HttpResult result = new HttpResult(ex);
                 response.getWriter().println(result);

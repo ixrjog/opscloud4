@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.vo.auth;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import com.baiyi.opscloud.domain.vo.base.ShowTime;
+import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -39,7 +39,7 @@ public class AuthPlatformVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class AuthPlatformLog extends BaseVO implements ShowTime.IAgo {
+    public static class AuthPlatformLog extends BaseVO implements ReadableTime.IAgo {
 
         private Integer id;
 

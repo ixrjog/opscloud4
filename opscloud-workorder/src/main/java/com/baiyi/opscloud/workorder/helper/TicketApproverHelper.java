@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.workorder.helper;
 
 import com.baiyi.opscloud.common.util.SessionUtil;
-import com.baiyi.opscloud.common.util.WorkflowUtil;
+import com.baiyi.opscloud.workorder.util.WorkflowUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrder;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
@@ -59,7 +59,7 @@ public class TicketApproverHelper {
             iApprover.setIsApprover(ticketNode.getUsername().equals(username));
         } else {
             WorkOrder workOrder = workOrderService.getById(workOrderTicket.getWorkOrderId());
-            Map<String, WorkflowVO.Node> nodeMap = WorkflowUtil.toWorkflowNodeMap(workOrder.getWorkflow());
+            Map<String, WorkflowVO.Node> nodeMap = WorkflowUtil.toNodeMap(workOrder.getWorkflow());
 
             if (!nodeMap.containsKey(ticketNode.getNodeName())) {
                 return;

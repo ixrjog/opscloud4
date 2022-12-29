@@ -73,20 +73,18 @@ public class ServerTerminalController extends SimpleAuthentication {
     @OnOpen
     public void onOpen(Session session) {
         try {
-            log.info("{} session try to connect: instanceIP = {} , sessionId = {}", IF_NAME, serverInfo.getHostAddress(), sessionId);
+            log.info("{} session try to connect: instanceIP={}, sessionId={}", IF_NAME, serverInfo.getHostAddress(), sessionId);
             TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.WEB_TERMINAL);
             terminalSessionService.add(terminalSession);
             this.terminalSession = terminalSession;
             sessionSet.get().add(session);
             int cnt = onlineCount.incrementAndGet(); // 在线数加1
-            log.info("{} session connection join: instanceIP = {} , connections = {}", IF_NAME, serverInfo.getHostAddress(), cnt);
+            log.info("{} session connection join: instanceIP={}, connections={}", IF_NAME, serverInfo.getHostAddress(), cnt);
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
             this.session = session;
             // 线程启动
             serverTerminalExecutor.execute(new SentOutputTask(sessionId, session));
             ThreadPoolTaskExecutorPrint.print(serverTerminalExecutor, "serverTermExecutor");
-            //  Thread thread = new Thread(run);
-            //  thread.start();
         } catch (Exception e) {
             log.error("{} create connection error！", IF_NAME);
             log.error(e.getMessage());
@@ -102,10 +100,9 @@ public class ServerTerminalController extends SimpleAuthentication {
             ServerTerminalMessageHandlerFactory.getHandlerByState(MessageState.CLOSE.getState()).handle("", session, terminalSession);
             sessionSet.get().remove(session);
             int cnt = onlineCount.decrementAndGet();
-            log.info("{} session connection closed: instanceIP = {} , connections = {}", IF_NAME, serverInfo.getHostAddress(), cnt);
+            log.info("{} session connection closed: instanceIP={}, connections={}", IF_NAME, serverInfo.getHostAddress(), cnt);
         } catch (Exception e) {
             log.error("{} OnClose error！", IF_NAME);
-            e.printStackTrace();
         }
     }
 
@@ -141,7 +138,7 @@ public class ServerTerminalController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.debug("{} error: instanceIP = {} , e = {}，sessionID = {}",
+        log.debug("{} error: instanceIP={}, err={}, sessionID={}",
                 IF_NAME,
                 serverInfo.getHostAddress(),
                 error.getMessage(),

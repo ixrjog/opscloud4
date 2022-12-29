@@ -45,6 +45,9 @@ public class EnvVO {
         @ApiModelProperty(value = "环境值", example = "1")
         private Integer envType;
 
+        @ApiModelProperty(value = "有效", example = "true")
+        private Boolean isActive;
+
         @ApiModelProperty(value = "描述")
         private String comment;
 

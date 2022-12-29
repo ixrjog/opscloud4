@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.vo.application;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import com.baiyi.opscloud.domain.vo.base.ShowTime;
+import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
@@ -22,7 +22,7 @@ public class ApplicationResourceOperationLogVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class OperationLog extends BaseVO implements ShowTime.IAgo, UserVO.IUser, Serializable {
+    public static class OperationLog extends BaseVO implements ReadableTime.IAgo, UserVO.IUser, Serializable {
 
         private static final long serialVersionUID = 4028480531533162951L;
 

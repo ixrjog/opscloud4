@@ -116,7 +116,7 @@ public abstract class AbstractEventHandler<E extends IRecover> extends SimpleDsI
                 try {
                     eventMessage = getByEventId(e.getInstanceUuid(), e.getEventId());
                 } catch (Exception ex) {
-                    log.error("回顾事件错误，查询事件失败; eventId = {}", e.getEventId());
+                    log.error("回顾事件错误，查询事件失败: eventId={}", e.getEventId());
                 }
                 if (eventMessage != null && !eventMessage.isRecover()) {
                     // 没有恢复

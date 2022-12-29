@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.datasource.instance;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.common.datasource.GitlabConfig;
+import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.common.util.GitlabTokenUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.InstanceConfigHelper;
@@ -9,7 +9,7 @@ import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
+import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
 import com.baiyi.opscloud.factory.gitlab.GitlabEventConsumerFactory;
 import com.baiyi.opscloud.factory.gitlab.IGitlabEventConsumer;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
@@ -43,7 +43,7 @@ public class GitlabFacade extends BaseManager {
 
     private final InstanceConfigHelper instanceConfigHelper;
 
-    public void consumeEventV4(GitlabNotifyParam.SystemHook systemHook) {
+    public void consumeEventV4(GitLabNotifyParam.SystemHook systemHook) {
         if (StringUtils.isEmpty(GitlabTokenUtil.getToken())) {
             log.warn("未配置Gitlab SystemHooks SecretToken 无法路由消息!");
             return;
@@ -52,7 +52,6 @@ public class GitlabFacade extends BaseManager {
         if (!optional.isPresent()) return; // 数据源配置文件未配置 SystemHooks.SecretToken
         IGitlabEventConsumer eventConsume = GitlabEventConsumerFactory.getByEventName(systemHook.getEvent_name());
         if (eventConsume != null) eventConsume.consumeEventV4(optional.get(), systemHook);
-
     }
 
     private Optional<DatasourceInstance> filterInstance() {
@@ -60,10 +59,10 @@ public class GitlabFacade extends BaseManager {
         if (CollectionUtils.isEmpty(instances)) return Optional.empty();
         return instances.stream().filter(i -> {
             DatasourceConfig datasourceConfig = dsConfigService.getById(i.getConfigId());
-            GitlabConfig gitlabDsInstanceConfig = dsConfigHelper.build(datasourceConfig,GitlabConfig.class);
+            GitLabConfig gitlabDsInstanceConfig = dsConfigHelper.build(datasourceConfig, GitLabConfig.class);
             Optional<String> tokenOptional = Optional.ofNullable(gitlabDsInstanceConfig.getGitlab())
-                    .map(GitlabConfig.Gitlab::getSystemHooks)
-                    .map(GitlabConfig.SystemHooks::getToken);
+                    .map(GitLabConfig.Gitlab::getSystemHooks)
+                    .map(GitLabConfig.SystemHooks::getToken);
             return tokenOptional.filter(s -> GitlabTokenUtil.getToken().equals(s))
                     .isPresent();
         }).findFirst();

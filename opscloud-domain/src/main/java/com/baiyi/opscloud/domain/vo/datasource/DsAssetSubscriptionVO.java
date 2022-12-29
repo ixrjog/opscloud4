@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.vo.datasource;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import com.baiyi.opscloud.domain.vo.base.ShowTime;
+import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class DsAssetSubscriptionVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class AssetSubscription extends BaseVO implements DsInstanceVO.IDsInstance, DsAssetVO.IDsAsset, ShowTime.IAgo {
+    public static class AssetSubscription extends BaseVO implements DsInstanceVO.IDsInstance, DsAssetVO.IDsAsset, ReadableTime.IAgo {
 
         private DsInstanceVO.Instance instance;
 

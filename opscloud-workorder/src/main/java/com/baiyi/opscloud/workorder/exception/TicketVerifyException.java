@@ -22,6 +22,11 @@ public class TicketVerifyException extends BaseException {
         setCode(code);
     }
 
+    public TicketVerifyException(String message, Object... var2) {
+        super(message,var2);
+        setCode(code);
+    }
+
     public TicketVerifyException(ErrorEnum errorEnum) {
         super(errorEnum);
     }

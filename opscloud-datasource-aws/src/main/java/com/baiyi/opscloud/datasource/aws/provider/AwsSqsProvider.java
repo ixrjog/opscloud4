@@ -74,7 +74,7 @@ public class AwsSqsProvider extends AbstractAssetBusinessRelationProvider<Simple
         aws.getRegionIds().forEach(regionId -> {
                     List<String> queues = amazonSQSDriver.listQueues(aws, regionId);
                     entities.addAll(queues.stream().map(e -> {
-                                log.info("查询Queue属性: queueUrl = {}", e);
+                                log.info("查询Queue属性: queueUrl={}", e);
                                 Map<String, String> attributes = amazonSQSDriver.getQueueAttributes(aws, regionId, e);
                                 return SimpleQueueService.Queue.builder()
                                         .queueUrl(e)

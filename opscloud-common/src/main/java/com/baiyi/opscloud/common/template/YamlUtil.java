@@ -1,12 +1,9 @@
 package com.baiyi.opscloud.common.template;
 
-import com.baiyi.opscloud.common.util.JSONUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
-import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.SafeConstructor;
+import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.representer.Representer;
 
 /**
  * @Author baiyi
@@ -25,10 +22,10 @@ public class YamlUtil {
         if (StringUtils.isEmpty(vars))
             return YamlVars.Vars.EMPTY;
         try {
-            Yaml yaml = new Yaml(new SafeConstructor(new LoaderOptions()));
-            Object result = yaml.load(vars);
-            Gson gson = new GsonBuilder().create();
-            return gson.fromJson(JSONUtil.writeValueAsString(result), YamlVars.Vars.class);
+            Representer representer = new Representer();
+            representer.getPropertyUtils().setSkipMissingProperties(true);
+            Yaml yaml = new Yaml(new Constructor(YamlVars.Vars.class),representer);
+            return yaml.loadAs(vars, YamlVars.Vars.class);
         } catch (Exception e) {
             return YamlVars.Vars.EMPTY;
         }
