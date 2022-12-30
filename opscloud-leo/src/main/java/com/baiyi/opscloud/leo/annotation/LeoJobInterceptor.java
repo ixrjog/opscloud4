@@ -15,8 +15,10 @@ public @interface LeoJobInterceptor {
 
     public static final boolean DISABLED = false;
 
-
-    // SpEL语法
+    /**
+     * 任务ID （SpEL语法）
+     * @return
+     */
     String jobIdSpEL() default "";
 
     /**

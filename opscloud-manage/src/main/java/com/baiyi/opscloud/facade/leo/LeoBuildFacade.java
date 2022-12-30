@@ -35,6 +35,8 @@ public interface LeoBuildFacade {
      */
     LeoBuildVO.BranchOptions getBuildBranchOptions(LeoBuildParam.GetBuildBranchOptions getOptions);
 
+    LeoBuildVO.BranchOptions createBuildBranch(LeoBuildParam.CreateBuildBranch createBuildBranch);
+
     void updateLeoBuild(LeoBuildParam.UpdateBuild updateBuild);
 
     DataTable<LeoBuildVO.Build> queryLeoJobBuildPage(LeoJobParam.JobBuildPageQuery pageQuery);

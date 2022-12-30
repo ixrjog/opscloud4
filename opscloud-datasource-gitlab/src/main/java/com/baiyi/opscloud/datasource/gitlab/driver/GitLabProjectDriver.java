@@ -103,6 +103,10 @@ public class GitLabProjectDriver {
         return buildAPI(gitlab).getRepositoryApi().getOptionalBranch(projectId, branchName);
     }
 
+    public static Branch createBranch(GitLabConfig.Gitlab gitlab, Long projectId, String branchName, String ref) throws GitLabApiException {
+        return buildAPI(gitlab).getRepositoryApi().createBranch(projectId, branchName, ref);
+    }
+
     private static GitLabApi buildAPI(GitLabConfig.Gitlab gitlab) {
         return GitLabApiFactory.buildGitLabApi(gitlab);
     }

@@ -236,15 +236,25 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         if (leoJob == null) {
             throw new LeoBuildException("任务配置不存在: jobId={}", getOptions.getJobId());
         }
-
         DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, getOptions.getSshUrl());
         final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
         final boolean openTag = getOptions.getOpenTag() != null && getOptions.getOpenTag();
-
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
         GitLabConfig gitLabConfig = dsConfigHelper.build(dsConfig, GitLabConfig.class);
-
         return gitLabRepoDelegate.generatorGitLabBranchOptions(gitLabConfig.getGitlab(), projectId, openTag);
+    }
+
+    @Override
+    public LeoBuildVO.BranchOptions createBuildBranch(LeoBuildParam.CreateBuildBranch createBuildBranch) {
+        LeoJob leoJob = leoJobService.getById(createBuildBranch.getJobId());
+        if (leoJob == null) {
+            throw new LeoBuildException("任务配置不存在: jobId={}", createBuildBranch.getJobId());
+        }
+        DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, createBuildBranch.getSshUrl());
+        final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
+        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
+        GitLabConfig gitLabConfig = dsConfigHelper.build(dsConfig, GitLabConfig.class);
+        return gitLabRepoDelegate.createGitLabBranch(gitLabConfig.getGitlab(), projectId, createBuildBranch.getRef());
     }
 
     @Override

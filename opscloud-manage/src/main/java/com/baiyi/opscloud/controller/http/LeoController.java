@@ -45,7 +45,7 @@ public class LeoController {
         return new HttpResult<>(leoChartFacade.getKeywords());
     }
 
-    // Leo Template -------------
+    // Template -------------
 
     @ApiOperation(value = "分页查询任务模板列表")
     @PostMapping(value = "/template/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -80,7 +80,7 @@ public class LeoController {
         return HttpResult.SUCCESS;
     }
 
-    // Leo Job
+    // Job
 
     @ApiOperation(value = "分页查询任务列表")
     @PostMapping(value = "/job/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -128,7 +128,7 @@ public class LeoController {
         return new HttpResult<>(leoDeployFacade.queryLeoJobDeployPage(pageQuery));
     }
 
-    // Leo Build
+    // Build
 
     @ApiOperation(value = "执行构建")
     @PostMapping(value = "/build/do", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -150,6 +150,12 @@ public class LeoController {
         return new HttpResult<>(leoBuildFacade.getBuildBranchOptions(getOptions));
     }
 
+    @ApiOperation(value = "创建默认分支")
+    @PostMapping(value = "/build/branch/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<LeoBuildVO.BranchOptions> createBuildBranch(@RequestBody @Valid LeoBuildParam.CreateBuildBranch createBuildBranch) {
+        return new HttpResult<>(leoBuildFacade.createBuildBranch(createBuildBranch));
+    }
+
     @ApiOperation(value = "更新构建详情")
     @PutMapping(value = "/build/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> updateLeoBuild(@RequestBody @Valid LeoBuildParam.UpdateBuild updateBuild) {
@@ -163,7 +169,7 @@ public class LeoController {
         return HttpResult.SUCCESS;
     }
 
-    // Leo Deploy
+    // Deploy
 
     @ApiOperation(value = "执行部署")
     @PostMapping(value = "/deploy/do", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -184,7 +190,7 @@ public class LeoController {
         return new HttpResult<>(leoDeployFacade.queryLeoBuildDeployment(queryDeployDeployment));
     }
 
-    // Leo Pipeline
+    // Pipeline
 
     @ApiOperation(value = "查询流水线节点步骤")
     @PostMapping(value = "/pipeline/node/steps/get", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

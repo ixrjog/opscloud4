@@ -84,12 +84,32 @@ public class LeoBuildParam {
         @ApiModelProperty(value = "关联任务ID")
         private Integer jobId;
 
-        @NotEmpty(message = "必须指定项目SshUrl")
-        @ApiModelProperty(value = "项目SshUrl")
+        @NotEmpty(message = "必须指定项目SshURL")
+        @ApiModelProperty(value = "项目SshURL")
         private String sshUrl;
 
         @ApiModelProperty(value = "查询Tag")
         private Boolean openTag;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CreateBuildBranch {
+
+        @Min(value = 0, message = "关联任务ID不能为空")
+        @ApiModelProperty(value = "关联任务ID")
+        private Integer jobId;
+
+        @NotEmpty(message = "必须指定项目SshURL")
+        @ApiModelProperty(value = "项目SshURL")
+        private String sshUrl;
+
+        @NotEmpty(message = "必须指定从哪个分支创建")
+        @ApiModelProperty(value = "从这个分支创建")
+        private String ref;
 
     }
 
