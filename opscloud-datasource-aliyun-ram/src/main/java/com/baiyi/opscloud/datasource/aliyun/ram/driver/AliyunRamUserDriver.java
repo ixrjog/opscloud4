@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.aliyun.ram.driver;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.ram.model.v20150501.*;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.ValidationUtil;
 import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
@@ -52,7 +52,7 @@ public class AliyunRamUserDriver {
                 createLoginProfile(regionId, aliyun, user, NO_PASSWORD_RESET_REQUIRED, enableMFA);
             return BeanCopierUtil.copyProperties(createUser, RamUser.User.class);
         } catch (ClientException e) {
-            throw new OCRuntimeException("创建RAM用户错误: " + e.getMessage());
+            throw new OCException("创建RAM用户错误: " + e.getMessage());
         }
     }
 

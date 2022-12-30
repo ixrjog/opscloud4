@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.factory.resource.base;
 
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.domain.annotation.ApplicationResType;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.factory.resource.AppResQueryFactory;
@@ -22,7 +22,7 @@ public abstract class AbstractAppResQuery implements IAppResQuery, InitializingB
             ApplicationResType annotation = this.getClass().getAnnotation(ApplicationResType.class);
             return annotation.value().name();
         }
-        throw new OCRuntimeException("未找到@ApplicationResourceType注解,无法指定应用资源类型");
+        throw new OCException("未找到@ApplicationResourceType注解,无法指定应用资源类型");
     }
 
     @Override
@@ -31,7 +31,7 @@ public abstract class AbstractAppResQuery implements IAppResQuery, InitializingB
             BusinessType annotation = this.getClass().getAnnotation(BusinessType.class);
             return annotation.value().getType();
         }
-        throw new OCRuntimeException("未找到@BusinessType注解,无法指定业务类型");
+        throw new OCException("未找到@BusinessType注解,无法指定业务类型");
     }
 
     @Override

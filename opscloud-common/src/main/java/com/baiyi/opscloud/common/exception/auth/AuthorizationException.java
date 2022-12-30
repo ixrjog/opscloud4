@@ -6,30 +6,32 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
+ * 权限校验
+ *
  * @Author baiyi
- * @Date 2021/5/13 4:05 下午
+ * @Date 2022/12/29 11:49
  * @Version 1.0
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AuthException extends BaseException {
+public class AuthorizationException extends BaseException {
 
-    private static final long serialVersionUID = -1331639499184065986L;
+    private static final long serialVersionUID = 7450373461196192021L;
+
     private Integer code;
 
-    public AuthException(String message) {
+    public AuthorizationException(String message) {
         super(message);
         this.code = 999;
     }
 
-    public AuthException(Integer code, String message) {
+    public AuthorizationException(Integer code, String message) {
         super(message);
         this.code = code;
     }
 
-    public AuthException(ErrorEnum errorEnum) {
+    public AuthorizationException(ErrorEnum errorEnum) {
         super(errorEnum.getMessage());
         this.code = errorEnum.getCode();
     }
 }
-

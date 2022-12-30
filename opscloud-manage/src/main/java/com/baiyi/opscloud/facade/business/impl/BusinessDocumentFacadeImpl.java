@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.business.impl;
 
 import com.baiyi.opscloud.common.annotation.BizDocWrapper;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
@@ -65,7 +65,7 @@ public class BusinessDocumentFacadeImpl implements BusinessDocumentFacade {
             businessDocumentService.add(document);
             evictCache(document);
         } catch (Exception e) {
-            throw new OCRuntimeException("业务文档已存在!");
+            throw new OCException("业务文档已存在!");
         }
     }
 

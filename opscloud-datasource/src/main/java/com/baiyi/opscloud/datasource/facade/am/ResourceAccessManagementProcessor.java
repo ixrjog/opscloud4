@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.facade.am;
 import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.InstanceHelper;
 import com.baiyi.opscloud.datasource.aliyun.ram.driver.AliyunRamPolicyDriver;
@@ -62,14 +62,14 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
             if (ramUser == null) ramUser = createUser(aliyun, grantPolicy.getInstanceUuid(), user);
             RamPolicy.Policy ramPolicy = BeanCopierUtil.copyProperties(grantPolicy.getPolicy(), RamPolicy.Policy.class);
             if (aliyunRamUserDriver.listUsersForPolicy(aliyun.getRegionId(), aliyun, ramPolicy.getPolicyType(), ramPolicy.getPolicyName()).stream().anyMatch(e -> e.getUserName().equals(grantPolicy.getUsername())))
-                throw new OCRuntimeException("RAM用户授权策略错误: 重复授权！");
+                throw new OCException("RAM用户授权策略错误: 重复授权！");
             aliyunRamPolicyDriver.attachPolicyToUser(aliyun.getRegionId(), aliyun, ramUser.getUserName(), ramPolicy);
             RamPolicy.Policy policy = aliyunRamPolicyDriver.getPolicy(aliyun.getRegionId(), aliyun, ramPolicy);
             // 同步资产 RAM_USER
             dsInstanceFacade.pullAsset(grantPolicy.getInstanceUuid(), DsAssetTypeConstants.RAM_USER.name(), ramUser);
             postHandle(grantPolicy.getInstanceUuid(), policy);
         } catch (ClientException e) {
-            throw new OCRuntimeException("阿里云接口查询错误: err={}", e.getMessage());
+            throw new OCException("阿里云接口查询错误: err={}", e.getMessage());
         }
     }
 
@@ -118,7 +118,7 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
                 dsInstanceFacade.pullAsset(revokePolicy.getInstanceUuid(), DsAssetTypeConstants.RAM_USER.name(), ramUser);
             }
         } catch (ClientException e) {
-            throw new OCRuntimeException("阿里云接口查询错误: err={}", e.getMessage());
+            throw new OCException("阿里云接口查询错误: err={}", e.getMessage());
         }
 
     }

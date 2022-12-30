@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.SSHUtil;
@@ -79,7 +79,7 @@ public class UserCredentialFacadeImpl implements UserCredentialFacade {
             Key key = OtpUtil.generateOtpSK();
             otpSK = Base32StringUtil.encode(key.getEncoded());
         } catch (NoSuchAlgorithmException e) {
-            throw new OCRuntimeException("生成OTP-SecretKey错误: " + e.getMessage());
+            throw new OCException("生成OTP-SecretKey错误: " + e.getMessage());
         }
         UserCredential userCredential = UserCredential.builder()
                 .userId(user.getId())

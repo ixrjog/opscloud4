@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.template.factory.base;
 
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.template.YamlUtil;
 import com.baiyi.opscloud.common.template.YamlVars;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
@@ -56,7 +56,7 @@ public abstract class AbstractTemplateConsume<T> implements ITemplateConsume, In
             return BeetlUtil.renderTemplate(template.getContent(), vars);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new OCRuntimeException("无法创建资产: 渲染模板失败!");
+            throw new OCException("无法创建资产: 渲染模板失败!");
         }
     }
 
@@ -64,17 +64,17 @@ public abstract class AbstractTemplateConsume<T> implements ITemplateConsume, In
 
     public BusinessTemplateVO.BusinessTemplate produce(BusinessTemplate bizTemplate) {
         if (bizTemplate == null)
-            throw new OCRuntimeException("无法创建资产: 业务模板不存在!");
+            throw new OCException("无法创建资产: 业务模板不存在!");
         Template template = templateService.getById(bizTemplate.getTemplateId());
         if (template == null)
-            throw new OCRuntimeException("无法创建资产: 模板不存在!");
+            throw new OCException("无法创建资产: 模板不存在!");
         YamlVars.Vars vars = toVars(bizTemplate);
         // 渲染模板
         String content = renderTemplate(template, vars);
         T entity = produce(bizTemplate,content);
         List<DatasourceInstanceAsset> assets = dsInstanceFacade.pullAsset(bizTemplate.getInstanceUuid(), getAssetType(), entity);
         if (CollectionUtils.isEmpty(assets)) {
-            throw new OCRuntimeException("创建资产错误: 无法从生产者获取资产对象!");
+            throw new OCException("创建资产错误: 无法从生产者获取资产对象!");
         }
         bizTemplate.setBusinessId(assets.get(0).getId());
         businessTemplateService.update(bizTemplate); // 更新关联资产

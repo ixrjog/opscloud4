@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.ansible.provider;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
@@ -76,7 +76,7 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
                     .type(AnsibleVersion.VersionType.ANSIBLE)
                     .build();
         } catch (UnsupportedEncodingException e) {
-            throw new OCRuntimeException("AnsibleVersion执行错误！");
+            throw new OCException("AnsibleVersion执行错误！");
         }
     }
 
@@ -93,7 +93,7 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
                     .type(AnsibleVersion.VersionType.ANSIBLE_PLAYBOOK)
                     .build();
         } catch (UnsupportedEncodingException e) {
-            throw new OCRuntimeException("AnsibleVersion执行错误！");
+            throw new OCException("AnsibleVersion执行错误！");
         }
     }
 

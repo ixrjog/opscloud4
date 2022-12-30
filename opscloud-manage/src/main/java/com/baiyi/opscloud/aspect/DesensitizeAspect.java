@@ -56,7 +56,6 @@ public class DesensitizeAspect {
         }
     }
 
-
     private String setNewValueForField(String value, SensitiveTypeEnum type) {
         switch (type) {
             case MOBILE_PHONE:

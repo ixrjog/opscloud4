@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.task.impl;
 
 import com.baiyi.opscloud.common.base.ServerTaskStatusEnum;
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.template.YamlUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
@@ -100,7 +100,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
      */
     private List<ServerTaskMember> record(ServerTask serverTask, List<ServerVO.Server> servers) {
         if (CollectionUtils.isEmpty(servers))
-            throw new OCRuntimeException("服务器列表为空！");
+            throw new OCException("服务器列表为空！");
         List<ServerTaskMember> members = Lists.newArrayList();
         servers.forEach(server -> {
             ServerTaskMember member = ServerTaskMemberBuilder.newBuilder(serverTask, server);

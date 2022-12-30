@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.common.util;
 
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import org.apache.commons.lang3.StringUtils;
 
@@ -41,7 +41,7 @@ public class ValidationUtil {
      */
     public static void isUsernameRule(String username) {
         if (!username.matches(RegexMatches.USERNAME)) {
-            throw new OCRuntimeException(ErrorEnum.USER_USERNAME_NON_COMPLIANCE_WITH_RULES);
+            throw new OCException(ErrorEnum.USER_USERNAME_NON_COMPLIANCE_WITH_RULES);
         }
     }
 
@@ -53,12 +53,12 @@ public class ValidationUtil {
      */
     public static void tryServerGroupNameRule(String serverGroupName) {
         if (!serverGroupName.matches(RegexMatches.SERVER_GROUP_NAME))
-            throw new OCRuntimeException(ErrorEnum.SERVERGROUP_NAME_NON_COMPLIANCE_WITH_RULES);
+            throw new OCException(ErrorEnum.SERVERGROUP_NAME_NON_COMPLIANCE_WITH_RULES);
     }
 
     public static void tryServerNameRule(String serverName) {
         if (!serverName.matches(RegexMatches.SERVER_NAME))
-            throw new OCRuntimeException(ErrorEnum.SERVER_NAME_NON_COMPLIANCE_WITH_RULES);
+            throw new OCException(ErrorEnum.SERVER_NAME_NON_COMPLIANCE_WITH_RULES);
     }
 
     public static boolean isEmail(String email) {
@@ -70,11 +70,11 @@ public class ValidationUtil {
 
     public static void checkPasswordRule(String password) {
         if (StringUtils.isEmpty(password)) {
-            throw new OCRuntimeException("密码不能为空");
+            throw new OCException("密码不能为空");
         }
 
         if (password.length() < 8 || password.length() > 30) {
-            throw new OCRuntimeException("密码长度需在8-30个字符之间");
+            throw new OCException("密码长度需在8-30个字符之间");
         }
 
         String errCommon = "数字、大小写字母及特殊字符 " + SPECIAL_SIGNS;
@@ -95,7 +95,7 @@ public class ValidationUtil {
             }
         }
         if (!hasNum || !hasBigChar || !hasSmallChar || !hasSign) {
-            throw new OCRuntimeException("密码需要同时包含" + errCommon);
+            throw new OCException("密码需要同时包含" + errCommon);
         }
     }
 

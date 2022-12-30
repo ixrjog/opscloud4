@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.facade;
 
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.datasource.facade.am.base.IAccessManagementProcessor;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.user.UserAmParam;
@@ -59,10 +59,10 @@ public class UserAmFacade {
     private IAccessManagementProcessor getAmProcessorByInstanceUuid(String uuid) {
         DatasourceInstance instance = dsInstanceService.getByUuid(uuid);
         if (instance == null) {
-            throw new OCRuntimeException("数据源实例不存在！");
+            throw new OCException("数据源实例不存在！");
         }
         if (!context.containsKey(instance.getInstanceType())) {
-            throw new OCRuntimeException("数据源实例类型不正确！");
+            throw new OCException("数据源实例类型不正确！");
         }
         return context.get(instance.getInstanceType());
     }

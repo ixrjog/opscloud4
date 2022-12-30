@@ -5,13 +5,12 @@ import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsJobDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.leo.action.build.BaseBuildHandler;
-import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
+import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
-import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -20,7 +19,6 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -41,6 +39,9 @@ public class DeleteHistoricalBuildJobConcreteHandler extends BaseBuildHandler {
     @Resource
     private JenkinsJobDriver jenkinsJobDriver;
 
+    @Resource
+    private ApplicationService applicationService;
+
     // 保留数量
     private static final int RESERVED_SIZE = 2;
 
@@ -58,6 +59,7 @@ public class DeleteHistoricalBuildJobConcreteHandler extends BaseBuildHandler {
         if (CollectionUtils.isEmpty(leoBuilds) || leoBuilds.size() <= RESERVED_SIZE)
             return;
         List<LeoBuild> subLeoBuilds = leoBuilds.subList(RESERVED_SIZE, leoBuilds.size());
+
         subLeoBuilds.forEach(e -> {
             try {
                 deleteJob(e);
@@ -79,10 +81,7 @@ public class DeleteHistoricalBuildJobConcreteHandler extends BaseBuildHandler {
                 .map(LeoBaseModel.DsInstance::getUuid)
                 .orElseThrow(() -> new LeoBuildException("无Jenkins实例属性，不需要删除任务!"));
         JenkinsConfig jenkinsConfig = getJenkinsConfigWithUuid(uuid);
-        Map<String, String> dict = Optional.ofNullable(buildConfig.getBuild())
-                .map(LeoBuildModel.Build::getDict)
-                .orElseThrow(() -> new LeoBuildException("无构建字典，无法删除任务！"));
-        String jobName = Joiner.on("_").join(dict.get(BuildDictConstants.JOB_NAME.getKey()), dict.get(BuildDictConstants.BUILD_NUMBER.getKey()));
+        String jobName = leoBuild.getBuildJobName();
         deleteJob(leoBuild, jenkinsConfig, uuid, jobName);
     }
 

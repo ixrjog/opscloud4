@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.aspect;
 
 import com.baiyi.opscloud.common.annotation.TagsWrapper;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Tag;
@@ -42,12 +42,12 @@ public class TagsWrapperAspect {
     }
 
     @Around("@annotation(tagsWrapper)")
-    public Object around(ProceedingJoinPoint joinPoint, TagsWrapper tagsWrapper) throws OCRuntimeException {
+    public Object around(ProceedingJoinPoint joinPoint, TagsWrapper tagsWrapper) throws OCException {
         Object result;
         try {
             result = joinPoint.proceed();
         } catch (Throwable e) {
-            throw new OCRuntimeException(e.getMessage());
+            throw new OCException(e.getMessage());
         }
         boolean extend = tagsWrapper.extend();
         TagVO.ITags targetTags = null;

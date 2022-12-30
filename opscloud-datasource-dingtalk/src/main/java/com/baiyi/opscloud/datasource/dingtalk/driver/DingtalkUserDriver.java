@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.dingtalk.driver;
 
 import com.baiyi.opscloud.common.datasource.DingtalkConfig;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkToken;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkUser;
 import com.baiyi.opscloud.datasource.dingtalk.feign.DingtalkUserFeign;
@@ -63,7 +63,7 @@ public class DingtalkUserDriver {
             FileUtils.copyInputStreamToFile(res.body().asInputStream(), file);
             return file;
         }
-        throw new OCRuntimeException("下载文件错误");
+        throw new OCException("下载文件错误");
     }
 
 }

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.scheduler;
 
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.CronUtil;
 import com.baiyi.opscloud.domain.vo.datasource.ScheduleVO;
 import com.google.common.collect.Lists;
@@ -215,7 +215,7 @@ public class QuartzService {
             return job;
         } catch (SchedulerException e) {
             log.error(e.getMessage());
-            throw new OCRuntimeException(e.getMessage());
+            throw new OCException(e.getMessage());
         }
     }
 

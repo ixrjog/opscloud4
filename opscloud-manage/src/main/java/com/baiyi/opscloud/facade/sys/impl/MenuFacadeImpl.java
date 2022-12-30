@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.sys.impl;
 
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthRoleMenu;
@@ -44,7 +44,7 @@ public class MenuFacadeImpl implements MenuFacade {
     @Override
     public void saveMenu(MenuParam.MenuSave param) {
         List<Menu> menuList = menuPacker.toDOList(param.getMenuList());
-        if (!validMenuList(menuList)) throw new OCRuntimeException(ErrorEnum.MENU_CONTENT_EMPTY);
+        if (!validMenuList(menuList)) throw new OCException(ErrorEnum.MENU_CONTENT_EMPTY);
         menuList.forEach(menu -> {
             menu.setSeq(menuList.indexOf(menu));
             if (menu.getId() == null) {
@@ -62,7 +62,7 @@ public class MenuFacadeImpl implements MenuFacade {
     @Override
     public void saveMenuChild(MenuParam.MenuChildSave param) {
         List<MenuChild> menuChildList = menuPacker.toChildDOList(param.getMenuChildList());
-        if (!validMenuChildList(menuChildList)) throw new OCRuntimeException(ErrorEnum.MENU_CHILD_CONTENT_EMPTY);
+        if (!validMenuChildList(menuChildList)) throw new OCException(ErrorEnum.MENU_CHILD_CONTENT_EMPTY);
         menuChildList.forEach(menuChild -> {
             menuChild.setSeq(menuChildList.indexOf(menuChild));
             if (menuChild.getId() == null) {
@@ -93,7 +93,7 @@ public class MenuFacadeImpl implements MenuFacade {
     public void delMenuById(Integer id) {
         List<MenuChild> menuChildList = menuChildService.listByMenuId(id);
         if (!CollectionUtils.isEmpty(menuChildList))
-            throw new OCRuntimeException(ErrorEnum.MENU_CHILD_IS_NOT_EMPTY);
+            throw new OCException(ErrorEnum.MENU_CHILD_IS_NOT_EMPTY);
         menuService.del(id);
     }
 
@@ -108,7 +108,7 @@ public class MenuFacadeImpl implements MenuFacade {
     }
 
     @Override
-    @Transactional(rollbackFor = {OCRuntimeException.class, Exception.class})
+    @Transactional(rollbackFor = {OCException.class, Exception.class})
     public void saveAuthRoleMenu(MenuParam.AuthRoleMenuSave param) {
         authRoleMenuService.deleteByRoleId(param.getRoleId());
         List<AuthRoleMenu> authRoleMenuList = param.getMenuChildIdList().stream().map(menuChildId -> {
@@ -120,7 +120,7 @@ public class MenuFacadeImpl implements MenuFacade {
         try {
             authRoleMenuService.addList(authRoleMenuList);
         } catch (Exception e) {
-            throw new OCRuntimeException(ErrorEnum.ROLE_MENU_SAVE_FAIL);
+            throw new OCException(ErrorEnum.ROLE_MENU_SAVE_FAIL);
         }
     }
 

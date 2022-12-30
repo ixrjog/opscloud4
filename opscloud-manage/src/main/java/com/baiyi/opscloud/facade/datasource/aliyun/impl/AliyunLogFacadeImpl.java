@@ -4,7 +4,7 @@ import com.aliyun.openservices.log.common.MachineGroup;
 import com.aliyun.openservices.log.common.Project;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.aliyun.log.driver.AliyunLogDriver;
@@ -98,7 +98,7 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
     @Override
     public void deleteLogById(Integer id) {
         if (aliyunLogMemberService.countByAliyunLogId(id) > 0)
-            throw new OCRuntimeException("日志服务成员未删除！");
+            throw new OCException("日志服务成员未删除！");
         aliyunLogService.deleteById(id);
     }
 

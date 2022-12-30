@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>aliyun-java-sdk-ecs</artifactId>
-            <version>4.24.39</version>
+            <version>4.24.44</version>
         </dependency>
 
     </dependencies>

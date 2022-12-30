@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.aspect;
 
-import com.baiyi.opscloud.common.exception.auth.AuthException;
+import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.PermitEmptyPasswords;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
@@ -48,11 +48,11 @@ public class PermitEmptyPasswordsAspect {
                 User user = userService.getByUsername(loginParam.getUsername());
                 // 判断用户是否有效
                 if (user == null || !user.getIsActive())
-                    throw new AuthException(ErrorEnum.AUTH_USER_LOGIN_FAILURE);
+                    throw new AuthenticationException(ErrorEnum.AUTH_USER_LOGIN_FAILURE);
                 if (loginParam.isEmptyPassword()) {
                     if (StringUtils.isEmpty(user.getPassword()))
                         return userTokenFacade.userLogin(user);     // 空密码登录成功
-                    throw new AuthException(ErrorEnum.AUTH_USER_LOGIN_FAILURE);
+                    throw new AuthenticationException(ErrorEnum.AUTH_USER_LOGIN_FAILURE);
                 }
             }
         }
