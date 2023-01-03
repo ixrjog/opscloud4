@@ -17,7 +17,6 @@ import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
 import com.baiyi.opscloud.leo.action.build.LeoBuildHandler;
-import com.baiyi.opscloud.leo.annotation.LeoJobInterceptor;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.delegate.GitLabRepoDelegate;
@@ -92,7 +91,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
     private final LeoBuildResponsePacker leoBuildResponsePacker;
 
     @Override
-    @LeoJobInterceptor(jobIdSpEL = "#doBuild.jobId")
+    //@LeoJobInterceptor(jobIdSpEL = "#doBuild.jobId")
     public void doBuild(LeoBuildParam.DoBuild doBuild) {
         LeoJob leoJob = leoJobService.getById(doBuild.getJobId());
         if (leoJob == null)
