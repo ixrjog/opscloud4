@@ -72,6 +72,8 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .map(LeoTemplateModel.Template::getVersion)
                 .orElse("0.0.0");
         LeoJob leoJob = BeanCopierUtil.copyProperties(addJob, LeoJob.class);
+        // JobKey转大写
+        leoJob.setJobKey(leoJob.getJobKey().toUpperCase());
         leoJob.setTemplateVersion(templateVersion);
         leoJob.setTemplateContent(leoTemplate.getTemplateContent());
         leoJobService.add(leoJob);
