@@ -73,7 +73,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     private final LeoDeployResponsePacker leoDeployResponsePacker;
 
     @Override
-    @LeoJobInterceptor(jobIdSpEL = "#doDeploy.jobId", concurrent = DISABLED)
+    @LeoJobInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType", concurrent = DISABLED)
     public void doDeploy(LeoDeployParam.DoDeploy doDeploy) {
         // 执行部署任务
         LeoJob leoJob = leoJobService.getById(doDeploy.getJobId());

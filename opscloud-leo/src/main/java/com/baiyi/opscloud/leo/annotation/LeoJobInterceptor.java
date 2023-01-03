@@ -21,6 +21,9 @@ public @interface LeoJobInterceptor {
      */
     String jobIdSpEL() default "";
 
+
+    String deployTypeSpEL() default "";
+
     /**
      * 并发控制
      * 允许并发 true

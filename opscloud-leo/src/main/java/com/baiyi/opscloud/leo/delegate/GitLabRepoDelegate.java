@@ -30,6 +30,9 @@ public class GitLabRepoDelegate {
     public static final String BRANCHES = "Branches";
     public static final String TAGS = "Tags";
 
+    /**
+     * 默认创建分支（发布分支）
+     */
     public static final List<String> DEF_BRANCHES = Lists.newArrayList("dev", "daily", "pre", "gray", "master");
 
     /**
