@@ -6,6 +6,7 @@ import com.baiyi.opscloud.leo.action.build.BaseBuildHandler;
 import com.baiyi.opscloud.leo.action.build.LeoPostBuildHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
+import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
 import com.baiyi.opscloud.leo.supervisor.BuildingSupervisor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,9 @@ public class BuildingSupervisorConcreteHandler extends BaseBuildHandler {
     @Resource
     private LeoPostBuildHandler leoPostBuildHandler;
 
+    @Resource
+    private LeoHeartbeatHelper heartbeatHelper;
+
     /**
      * 启动监视器
      *
@@ -35,6 +39,7 @@ public class BuildingSupervisorConcreteHandler extends BaseBuildHandler {
         LeoBaseModel.DsInstance dsInstance = buildConfig.getBuild().getJenkins().getInstance();
         JenkinsConfig jenkinsConfig = getJenkinsConfigWithUuid(dsInstance.getUuid());
         BuildingSupervisor buildingSupervisor = new BuildingSupervisor(
+                this.heartbeatHelper,
                 this.leoBuildService,
                 leoBuild,
                 logHelper,

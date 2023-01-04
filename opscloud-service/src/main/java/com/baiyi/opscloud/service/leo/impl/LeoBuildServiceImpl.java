@@ -2,6 +2,7 @@ package com.baiyi.opscloud.service.leo.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
@@ -140,6 +141,17 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         Example example = new Example(LeoBuild.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("jobId", jobId);
+        example.setOrderByClause("id desc");
+        return leoBuildMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<LeoBuild> queryBuildRunningWithOcInstance(String ocInstance) {
+        Example example = new Example(LeoDeploy.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isFinish", false)
+                .andEqualTo("isActive", true)
+                .andEqualTo("ocInstance", ocInstance);
         example.setOrderByClause("id desc");
         return leoBuildMapper.selectByExample(example);
     }

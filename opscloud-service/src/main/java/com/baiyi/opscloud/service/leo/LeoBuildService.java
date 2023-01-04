@@ -41,4 +41,6 @@ public interface LeoBuildService {
 
     List<LeoBuild> queryLatestBuildWithJobId(Integer jobId, int size);
 
+    List<LeoBuild> queryBuildRunningWithOcInstance(String ocInstance);
+
 }

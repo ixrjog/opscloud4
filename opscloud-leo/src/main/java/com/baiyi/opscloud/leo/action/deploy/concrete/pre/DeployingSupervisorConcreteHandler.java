@@ -6,7 +6,7 @@ import com.baiyi.opscloud.leo.action.deploy.BaseDeployHandler;
 import com.baiyi.opscloud.leo.action.deploy.LeoPostDeployHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
-import com.baiyi.opscloud.leo.helper.LeoDeployHelper;
+import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
 import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class DeployingSupervisorConcreteHandler extends BaseDeployHandler {
     private LeoPostDeployHandler leoPostDeployHandler;
 
     @Resource
-    private LeoDeployHelper leoDeployHelper;
+    private LeoHeartbeatHelper leoDeployHelper;
 
 
     /**
