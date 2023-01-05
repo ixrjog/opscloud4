@@ -27,6 +27,7 @@ public class JenkinsConfig extends BaseDsConfig {
 
         private String version;
         private String url;
+        private String ip;
         private Security security;
         private String name;
         private String username;

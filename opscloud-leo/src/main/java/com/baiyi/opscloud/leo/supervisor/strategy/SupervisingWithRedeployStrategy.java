@@ -11,6 +11,8 @@ import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.leo.supervisor.strategy.base.SupervisingStrategy;
 import io.fabric8.kubernetes.api.model.Pod;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -32,6 +34,7 @@ import static com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO.MAX_RESTART;
 public class SupervisingWithRedeployStrategy extends SupervisingStrategy {
 
     @Override
+    @Retryable(value = LeoDeployException.class, maxAttempts = 2, backoff = @Backoff(delay = 1000, multiplier = 1.5))
     protected LeoDeployingVO.Deploying getDeploying(LeoDeploy leoDeploy,
                                                     LeoDeployModel.DeployConfig deployConfig,
                                                     KubernetesConfig.Kubernetes kubernetes,
@@ -66,7 +69,7 @@ public class SupervisingWithRedeployStrategy extends SupervisingStrategy {
         Map<String, LeoDeployingVO.PodDetails> originalPodMap = podDetailsList
                 .stream()
                 .collect(Collectors.toMap(LeoDeployingVO.PodDetails::getPodIP, a -> a, (k1, k2) -> k1));
-        for (Pod pod : pods) {
+        pods.forEach(pod -> {
             LeoDeployingVO.PodDetails podDetails = podDetailsHelper.toPodDetails(pod, containerName);
             if (originalPodMap.containsKey(pod.getStatus().getPodIP())) {
                 // 重启前
@@ -75,7 +78,7 @@ public class SupervisingWithRedeployStrategy extends SupervisingStrategy {
                 // 重启后
                 afterRedeployVersion.putPod(podDetails);
             }
-        }
+        });
 
         return LeoDeployingVO.Deploying.builder()
                 .deployType(deploy.getDeployType())

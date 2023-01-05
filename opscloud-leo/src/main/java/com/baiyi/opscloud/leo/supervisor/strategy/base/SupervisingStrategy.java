@@ -10,6 +10,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.helper.PodDetailsHelper;
 import com.baiyi.opscloud.leo.util.SnapshotStash;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
@@ -19,6 +20,7 @@ import javax.annotation.Resource;
  * @Date 2022/12/13 15:25
  * @Version 1.0
  */
+@Slf4j
 public abstract class SupervisingStrategy implements IDeployStrategy, InitializingBean {
 
     @Resource
@@ -40,17 +42,23 @@ public abstract class SupervisingStrategy implements IDeployStrategy, Initializi
                        KubernetesConfig.Kubernetes kubernetes,
                        LeoDeployModel.Deploy deploy,
                        LeoBaseModel.Deployment deployment) {
-        LeoDeployingVO.Deploying deploying = getDeploying(leoDeploy, deployConfig, kubernetes, deploy, deployment);
-        stash(leoDeploy, deploying);
-        if (verifyFinish(leoDeploy, deploying)) {
-            // 任务正常结束
-        } else {
-            verifyError(leoDeploy, deploying);
+        try {
+            LeoDeployingVO.Deploying deploying = getDeploying(leoDeploy, deployConfig, kubernetes, deploy, deployment);
+            stash(leoDeploy, deploying);
+            if (verifyFinish(leoDeploy, deploying)) {
+                // 任务正常结束
+                log.info("任务结束: deployId={}", leoDeploy.getId());
+            } else {
+                verifyError(leoDeploy, deploying);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
     }
 
     /**
      * 校验任务是否结束
+     *
      * @param leoDeploy
      * @param deploying
      * @return
@@ -59,6 +67,7 @@ public abstract class SupervisingStrategy implements IDeployStrategy, Initializi
 
     /**
      * 校验任务是否错误
+     *
      * @param leoDeploy
      * @param deploying
      */

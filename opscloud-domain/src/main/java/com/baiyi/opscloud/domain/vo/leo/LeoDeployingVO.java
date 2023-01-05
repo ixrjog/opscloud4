@@ -97,6 +97,10 @@ public class LeoDeployingVO {
     public static class VerionDetails implements Serializable {
         private static final long serialVersionUID = -605790384101352067L;
 
+        public static final VerionDetails NO_SHOW = VerionDetails.builder()
+                .show(false)
+                .build();
+
         private String title;
 
         @Builder.Default
@@ -106,6 +110,9 @@ public class LeoDeployingVO {
         private String image;
         @Builder.Default
         private List<PodDetails> pods = Lists.newArrayList();
+
+        @Builder.Default
+        private Boolean show = true;
 
         public void putPod(PodDetails podDetails) {
             this.pods.add(podDetails);
