@@ -2,6 +2,8 @@ package com.baiyi.opscloud.leo.action.build.concrete.pre;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsJobDriver;
+import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
+import com.baiyi.opscloud.datasource.jenkins.model.JobWithDetails;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.leo.action.build.BaseBuildHandler;
@@ -63,7 +65,8 @@ public class DeleteHistoricalBuildJobConcreteHandler extends BaseBuildHandler {
         subLeoBuilds.forEach(e -> {
             try {
                 deleteJob(e);
-            } catch (LeoBuildException buildException) {
+            } catch (Exception ex) {
+                log.error(ex.getMessage());
             }
             LeoBuild saveLeoBuild = LeoBuild.builder()
                     .id(e.getId())
@@ -87,7 +90,10 @@ public class DeleteHistoricalBuildJobConcreteHandler extends BaseBuildHandler {
 
     private void deleteJob(LeoBuild leoBuild, JenkinsConfig jenkinsConfig, String uuid, String jobName) {
         try {
-            jenkinsJobDriver.deleteJob(jenkinsConfig.getJenkins(), jobName);
+            JobWithDetails jobWithDetails = JenkinsServerDriver.getJob(jenkinsConfig.getJenkins(), jobName);
+            if (jobWithDetails != null) {
+                jenkinsJobDriver.deleteJob(jenkinsConfig.getJenkins(), jobName);
+            }
         } catch (URISyntaxException | IOException e) {
             logHelper.warn(leoBuild, "删除Jenkins历史构建任务失败: instanceUuid={}, jobName={}", uuid, jobName);
         }

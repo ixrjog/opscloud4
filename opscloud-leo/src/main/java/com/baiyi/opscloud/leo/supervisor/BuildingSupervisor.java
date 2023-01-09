@@ -111,6 +111,7 @@ public class BuildingSupervisor implements ISupervisor {
                 if (buildWithDetails.isBuilding()) {
                     TimeUnit.SECONDS.sleep(SLEEP_SECONDS);
                 } else {
+                    // 任务正常完成
                     LeoBuild saveLeoBuild = LeoBuild.builder()
                             .id(leoBuild.getId())
                             .endTime(new Date())
@@ -123,6 +124,7 @@ public class BuildingSupervisor implements ISupervisor {
                     return;
                 }
             } catch (Exception e) {
+                // 任务异常完成
                 LeoBuild saveLeoBuild = LeoBuild.builder()
                         .id(leoBuild.getId())
                         .endTime(new Date())

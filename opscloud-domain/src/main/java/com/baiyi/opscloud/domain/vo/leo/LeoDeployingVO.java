@@ -53,32 +53,22 @@ public class LeoDeployingVO {
          * init with deployType
          */
         public Deploying init() {
-            if (DeployTypeConstants.ROLLING.name().equals(deployType)) {
-                initWithRefault();
-            }
-            if (DeployTypeConstants.REDEPLOY.name().equals(deployType)) {
-                initWithRefault();
+            if (DeployTypeConstants.ROLLING.name().equals(deployType) || DeployTypeConstants.REDEPLOY.name().equals(deployType)) {
+                // 没有新版本
+                if (CollectionUtils.isEmpty(versionDetails2.pods)) {
+                    return this;
+                }
+                // 老版本为空
+                if (CollectionUtils.isEmpty(this.versionDetails1.pods)) {
+                    // 判断完成启动的新版本副本数是否达成
+                    long count = versionDetails2.pods.stream().filter(e -> e.isComplete).count();
+                    this.isFinish = count >= replicas;
+                }
             }
             if (DeployTypeConstants.OFFLINE.name().equals(deployType)) {
                 this.isFinish = CollectionUtils.isEmpty(this.versionDetails1.pods);
             }
             return this;
-        }
-
-        /**
-         * 滚动发布
-         */
-        private void initWithRefault() {
-            // 没有新版本
-            if (CollectionUtils.isEmpty(versionDetails2.pods)) {
-                return;
-            }
-            // 老版本为空
-            if (CollectionUtils.isEmpty(this.versionDetails1.pods)) {
-                // 判断完成启动的新版本副本数是否达成
-                long count = versionDetails2.pods.stream().filter(e -> e.isComplete).count();
-                this.isFinish = count >= replicas;
-            }
         }
 
         public Boolean isMaxRestartError() {

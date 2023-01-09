@@ -7,10 +7,12 @@ import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.leo.domain.model.LeoRuleModel;
+import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.leo.exception.LeoInterceptorException;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
+import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.leo.LeoRuleService;
@@ -38,6 +40,8 @@ public class LeoDoJobInterceptorHandler {
 
     private final LeoDeployService leoDeployService;
 
+    private final LeoBuildService leoBuildService;
+
     private final LeoJobService leoJobService;
 
     private final LeoRuleService leoRuleService;
@@ -52,31 +56,61 @@ public class LeoDoJobInterceptorHandler {
 
     private final ApplicationService applicationService;
 
-    public void intercept(int jobId) {
-    }
-
-    // 并发拦截
-    public void verifyConcurrent(int jobId) {
-        // 并发拦截
-        int jobRunning = leoDeployService.countDeployingWithJobId(jobId);
-        if (jobRunning > 0) {
+    /**
+     * 部署并发控制
+     *
+     * @param jobId
+     */
+    public void limitConcurrentWithDeploy(int jobId) {
+        int deploying = leoDeployService.countRunningWithJobId(jobId);
+        if (deploying > 0) {
             throw new LeoDeployException("部署任务执行中，请勿并发操作！");
         }
     }
 
-    // 权限校验
+    /**
+     * 构建并发控制
+     *
+     * @param jobId
+     */
+    public void limitConcurrentWithBuild(int jobId) {
+        int building = leoBuildService.countRunningWithJobId(jobId);
+        if (building > 0) {
+            throw new LeoBuildException("构建任务执行中，请勿并发操作！");
+        }
+    }
+
+    /**
+     * 权限校验
+     *
+     * @param jobId
+     */
     public void verifyAuthorization(int jobId) {
         // 权限校验
         LeoJob leoJob = leoJobService.getById(jobId);
         String username = SessionUtil.getUsername();
+
+        // 用户是平台管理员则通过
         if (isAdmin(username)) {
             return;
         }
+
         User user = userService.getByUsername(username);
         if (user == null || !user.getIsActive()) {
             throw new AuthenticationException("用户不存在或无效！");
         }
-        // 判断用户是否授权
+
+        // 任务级授权
+        if (hasJobPermission(user, jobId)) {
+            // 用户有任务授权
+            return;
+        }
+
+        // 应用级授权，判断用户是否授权
+        verifyApplicationPermission(user, leoJob);
+    }
+
+    private void verifyApplicationPermission(User user, LeoJob leoJob) {
         UserPermission queryParam = UserPermission.builder()
                 .userId(user.getId())
                 .businessType(BusinessTypeEnum.APPLICATION.getType())
@@ -94,6 +128,17 @@ public class LeoDoJobInterceptorHandler {
         }
     }
 
+    private boolean hasJobPermission(User user, int jobId) {
+        // 任务级授权
+        UserPermission queryParam = UserPermission.builder()
+                .userId(user.getId())
+                .businessType(BusinessTypeEnum.LEO_JOB.getType())
+                .businessId(jobId)
+                .build();
+        UserPermission userPermission = userPermissionService.getByUniqueKey(queryParam);
+        return userPermission != null;
+    }
+
     public void verifyRule(int jobId) {
         List<LeoRule> rules = leoRuleService.queryAll();
         LeoJob leoJob = leoJobService.getById(jobId);
@@ -105,9 +150,9 @@ public class LeoDoJobInterceptorHandler {
                     .map(LeoRuleModel.Rule::getEnvs)
                     .orElse(Collections.emptyList());
             if (!CollectionUtils.isEmpty(envs)) {
-               if(envs.stream().anyMatch(e-> e.equalsIgnoreCase(env.getEnvName()))){
-                   throw new LeoInterceptorException("非应用管理员禁止操作生产环境！");
-               }
+                if (envs.stream().anyMatch(e -> e.equalsIgnoreCase(env.getEnvName()))) {
+                    throw new LeoInterceptorException("非应用管理员禁止操作生产环境！");
+                }
             }
         }
     }

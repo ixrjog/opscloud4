@@ -147,13 +147,23 @@ public class LeoBuildServiceImpl implements LeoBuildService {
 
     @Override
     public List<LeoBuild> queryBuildRunningWithOcInstance(String ocInstance) {
-        Example example = new Example(LeoDeploy.class);
+        Example example = new Example(LeoBuild.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("isFinish", false)
                 .andEqualTo("isActive", true)
                 .andEqualTo("ocInstance", ocInstance);
         example.setOrderByClause("id desc");
         return leoBuildMapper.selectByExample(example);
+    }
+
+    @Override
+    public int countRunningWithJobId(int jobId) {
+        Example example = new Example(LeoBuild.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("jobId", jobId)
+                .andEqualTo("isActive", true)
+                .andEqualTo("isFinish", false);
+        return leoBuildMapper.selectCountByExample(example);
     }
 
 }

@@ -43,4 +43,6 @@ public interface LeoBuildService {
 
     List<LeoBuild> queryBuildRunningWithOcInstance(String ocInstance);
 
+    int countRunningWithJobId(int jobId);
+
 }

@@ -12,6 +12,13 @@ import java.util.Calendar;
  */
 public class CalendarTest extends BaseUnit {
 
+    /**
+     * 星期日为一周的第一天	SUN	MON	TUE	WED	THU	FRI	SAT
+     * DAY_OF_WEEK返回值	1	2	3	4	5	6	7
+     * 星期一为一周的第一天	MON	TUE	WED	THU	FRI	SAT	SUN
+     * DAY_OF_WEEK返回值	1	2	3	4	5	6	7
+     */
+
     @Test
     void calendarTest() {
         Calendar calendar = Calendar.getInstance();

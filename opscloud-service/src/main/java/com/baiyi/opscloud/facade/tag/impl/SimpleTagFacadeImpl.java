@@ -5,6 +5,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
 import com.baiyi.opscloud.domain.generator.opscloud.Tag;
@@ -42,6 +43,15 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
     private final TagPacker tagPacker;
 
     private final UserPermissionFacade userPermissionFacade;
+
+    @Override
+    public List<TagVO.Tag> queryTagByBusiness(BaseBusiness.IBusiness iBusiness) {
+        List<BusinessTag> businessTags = businessTagService.queryByBusiness(iBusiness);
+        if (CollectionUtils.isEmpty(businessTags))
+            return Collections.emptyList();
+        List<Tag> tags = businessTags.stream().map(e -> tagService.getById(e.getTagId())).collect(Collectors.toList());
+        return BeanCopierUtil.copyListProperties(tags, TagVO.Tag.class).stream().peek(tagPacker::wrap).collect(Collectors.toList());
+    }
 
     @Override
     public List<TagVO.Tag> queryTagByBusinessType(Integer businessType) {
@@ -100,6 +110,7 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
 
     /**
      * 增加业务逻辑 SA标签只有SUPER_ADMIN角色才能删除
+     *
      * @param bizTag
      */
     private void deleteBizTag(BusinessTag bizTag) {

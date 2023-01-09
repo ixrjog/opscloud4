@@ -84,7 +84,7 @@ public class LeoDeployServiceImpl implements LeoDeployService {
     }
 
     @Override
-    public int countDeployingWithJobId(int jobId) {
+    public int countRunningWithJobId(int jobId) {
         Example example = new Example(LeoDeploy.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("jobId", jobId)

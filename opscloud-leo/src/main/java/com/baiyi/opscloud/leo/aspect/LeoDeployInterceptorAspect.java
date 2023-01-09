@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.leo.aspect;
 
 import com.baiyi.opscloud.common.util.IdUtil;
-import com.baiyi.opscloud.leo.annotation.LeoJobInterceptor;
+import com.baiyi.opscloud.leo.annotation.LeoDeployInterceptor;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
 import com.baiyi.opscloud.leo.interceptor.LeoDoJobInterceptorHandler;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ import java.util.Objects;
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class LeoJobInterceptorAspect {
+public class LeoDeployInterceptorAspect {
 
     private final DefaultParameterNameDiscoverer discoverer = new DefaultParameterNameDiscoverer();
 
@@ -39,12 +39,12 @@ public class LeoJobInterceptorAspect {
 
     private final LeoDoJobInterceptorHandler leoDoJobInterceptorHandler;
 
-    @Pointcut(value = "@annotation(com.baiyi.opscloud.leo.annotation.LeoJobInterceptor)")
+    @Pointcut(value = "@annotation(com.baiyi.opscloud.leo.annotation.LeoDeployInterceptor)")
     public void annotationPoint() {
     }
 
-    @Around("@annotation(leoJobInterceptor)")
-    public Object around(ProceedingJoinPoint joinPoint, LeoJobInterceptor leoJobInterceptor) throws Throwable {
+    @Around("@annotation(leoDeployInterceptor)")
+    public Object around(ProceedingJoinPoint joinPoint, LeoDeployInterceptor leoDeployInterceptor) throws Throwable {
         //获取切面方法
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
@@ -58,17 +58,18 @@ public class LeoJobInterceptorAspect {
             context.setVariable(params[len], arguments[len]);
         }
         //解析表达式并获取SpEL的值
-        Expression expression = expressionParser.parseExpression(leoJobInterceptor.jobIdSpEL());
+        Expression expression = expressionParser.parseExpression(leoDeployInterceptor.jobIdSpEL());
         Object jobIdParam = expression.getValue(context);
         if (jobIdParam instanceof Integer) {
             Integer jobId = (Integer) jobIdParam;
             if (IdUtil.isEmpty(jobId)) {
                 throw new LeoJobException("任务ID不存在！");
             }
+            // 权限校验
             leoDoJobInterceptorHandler.verifyAuthorization(jobId);
             // 并发校验
-            if (!leoJobInterceptor.concurrent()) {
-                leoDoJobInterceptorHandler.verifyConcurrent(jobId);
+            if (!leoDeployInterceptor.allowConcurrency()) {
+                leoDoJobInterceptorHandler.limitConcurrentWithDeploy(jobId);
             }
         } else {
             throw new LeoJobException("任务ID类型不正确！");

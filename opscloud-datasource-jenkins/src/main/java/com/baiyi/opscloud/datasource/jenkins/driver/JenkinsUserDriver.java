@@ -18,7 +18,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-public class JenkinsUsersDriver {
+public class JenkinsUserDriver {
 
     public JenkinsUser.User getUser(JenkinsConfig.Jenkins jenkins, String username) {
         JenkinsUserFeign jenkinsAPI = Feign.builder()

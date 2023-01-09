@@ -15,6 +15,7 @@ import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployVO;
 import com.baiyi.opscloud.facade.leo.LeoDeployFacade;
 import com.baiyi.opscloud.leo.action.deploy.LeoDeployHandler;
+import com.baiyi.opscloud.leo.annotation.LeoDeployInterceptor;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
@@ -70,7 +71,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     private final LeoDeployResponsePacker leoDeployResponsePacker;
 
     @Override
-    // @LeoJobInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType", concurrent = DISABLED)
+    @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType")
     public void doDeploy(LeoDeployParam.DoDeploy doDeploy) {
         // 执行部署任务
         LeoJob leoJob = leoJobService.getById(doDeploy.getJobId());

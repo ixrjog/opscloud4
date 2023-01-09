@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface LeoJobInterceptor {
+public @interface LeoDeployInterceptor {
 
     public static final boolean DISABLED = false;
 
@@ -25,11 +25,9 @@ public @interface LeoJobInterceptor {
     String deployTypeSpEL() default "";
 
     /**
-     * 并发控制
-     * 允许并发 true
-     * 禁止并发 false
+     * 允许并发
      * @return
      */
-    boolean concurrent() default true;
+    boolean allowConcurrency() default false;
 
 }

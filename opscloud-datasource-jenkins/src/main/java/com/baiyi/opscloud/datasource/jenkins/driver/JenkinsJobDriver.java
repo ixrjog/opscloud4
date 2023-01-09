@@ -42,7 +42,6 @@ public class JenkinsJobDriver {
      */
     @Retryable(value = IOException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000))
     public QueueReference buildJobWithParams(JenkinsConfig.Jenkins jenkins, String jobName, Map<String, String> params) throws URISyntaxException, IOException {
-        assert jenkins != null;
         boolean crumbFlag = Optional.of(jenkins)
                 .map(JenkinsConfig.Jenkins::getSecurity)
                 .map(JenkinsConfig.Security::getCrumbFlag)
@@ -64,7 +63,6 @@ public class JenkinsJobDriver {
      */
     @Retryable(value = IOException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000))
     public JenkinsServer createJob(JenkinsConfig.Jenkins jenkins, String jobName, String jobXml) throws URISyntaxException, IOException {
-        assert jenkins != null;
         boolean crumbFlag = Optional.of(jenkins)
                 .map(JenkinsConfig.Jenkins::getSecurity)
                 .map(JenkinsConfig.Security::getCrumbFlag)
@@ -75,7 +73,6 @@ public class JenkinsJobDriver {
 
 
     public void deleteJob(JenkinsConfig.Jenkins jenkins, String jobName) throws URISyntaxException, IOException {
-        assert jenkins != null;
         boolean crumbFlag = Optional.of(jenkins)
                 .map(JenkinsConfig.Jenkins::getSecurity)
                 .map(JenkinsConfig.Security::getCrumbFlag)
