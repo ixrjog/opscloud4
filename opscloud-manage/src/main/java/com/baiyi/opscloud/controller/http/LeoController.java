@@ -37,11 +37,13 @@ public class LeoController {
 
     private final LeoBuildPipelineFacade leoBuildPipelineFacade;
 
+    private final LeoRuleFacade leoRuleFacade;
+
     private final LeoChartFacade leoChartFacade;
 
     @ApiOperation(value = "图表-云词")
     @GetMapping(value = "/chart/keywords/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Map<String,Integer>> getLeoChartKeywords() {
+    public HttpResult<Map<String, Integer>> getLeoChartKeywords() {
         return new HttpResult<>(leoChartFacade.getKeywords());
     }
 
@@ -196,6 +198,34 @@ public class LeoController {
     @PostMapping(value = "/pipeline/node/steps/get", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<List<LeoBuildPipelineVO.Step>> getPipelineRunNodeSteps(@RequestBody @Valid LeoBuildPipelineParam.GetPipelineRunNodeSteps param) {
         return new HttpResult<>(leoBuildPipelineFacade.getPipelineRunNodeSteps(param));
+    }
+
+    // Rule
+    @ApiOperation(value = "分页查询规则配置列表")
+    @PostMapping(value = "/rule/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<LeoRuleVO.Rule>> queryLeoRulePage(@RequestBody @Valid LeoRuleParam.RulePageQuery pageQuery) {
+        return new HttpResult<>(leoRuleFacade.queryLeoRulePage(pageQuery));
+    }
+
+    @ApiOperation(value = "更新规则配置")
+    @PutMapping(value = "/rule/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updateLeoRule(@RequestBody @Valid LeoRuleParam.UpdateRule updateRule) {
+        leoRuleFacade.updateLeoRule(updateRule);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "新增规则配置")
+    @PostMapping(value = "/rule/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> addLeoRule(@RequestBody @Valid LeoRuleParam.AddRule addRule) {
+        leoRuleFacade.addLeoRule(addRule);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "删除指定的规则配置")
+    @DeleteMapping(value = "/rule/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteLeoRuleById(@RequestParam @Valid int ruleId) {
+        leoRuleFacade.deleteLeoRuleById(ruleId);
+        return HttpResult.SUCCESS;
     }
 
 }

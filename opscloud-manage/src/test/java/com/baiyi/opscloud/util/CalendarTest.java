@@ -20,9 +20,15 @@ public class CalendarTest extends BaseUnit {
      */
 
     @Test
-    void calendarTest() {
+    void calendarTest1() {
         Calendar calendar = Calendar.getInstance();
         System.out.println("今天星期几: " + calendar.get(Calendar.DAY_OF_WEEK));
+    }
+
+    @Test
+    void calendarTest2() {
+        Calendar calendar = Calendar.getInstance();
+        System.out.println("日期:" + calendar.get(Calendar.DAY_OF_MONTH));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.leo.domain.model;
 
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoRule;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
 import lombok.AllArgsConstructor;
@@ -78,8 +79,14 @@ public class LeoRuleModel {
     @NoArgsConstructor
     public static class Expression {
 
+        private String type;
         private String begin;
         private String end;
+
+        @Override
+        public String toString() {
+            return JSONUtil.writeValueAsString(this);
+        }
 
     }
 

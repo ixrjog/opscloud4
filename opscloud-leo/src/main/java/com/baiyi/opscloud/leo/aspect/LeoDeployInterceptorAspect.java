@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 /**
  * @Author baiyi
@@ -54,14 +55,12 @@ public class LeoDeployInterceptorAspect {
         Object[] arguments = joinPoint.getArgs();
         //设置解析SpEL所需的数据上下文
         EvaluationContext context = new StandardEvaluationContext();
-        for (int len = 0; len < Objects.requireNonNull(params).length; len++) {
-            context.setVariable(params[len], arguments[len]);
-        }
+        IntStream.range(0, Objects.requireNonNull(params).length).forEach(len -> context.setVariable(params[len], arguments[len]));
         //解析表达式并获取SpEL的值
         Expression expression = expressionParser.parseExpression(leoDeployInterceptor.jobIdSpEL());
         Object jobIdParam = expression.getValue(context);
         if (jobIdParam instanceof Integer) {
-            Integer jobId = (Integer) jobIdParam;
+            int jobId = (Integer) jobIdParam;
             if (IdUtil.isEmpty(jobId)) {
                 throw new LeoJobException("任务ID不存在！");
             }
@@ -71,6 +70,8 @@ public class LeoDeployInterceptorAspect {
             if (!leoDeployInterceptor.allowConcurrency()) {
                 leoDoJobInterceptorHandler.limitConcurrentWithDeploy(jobId);
             }
+            // 规则校验
+            leoDoJobInterceptorHandler.verifyRule(jobId);
         } else {
             throw new LeoJobException("任务ID类型不正确！");
         }
