@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployRequestParam;
+import com.baiyi.opscloud.domain.vo.base.ReportVO;
 
 import java.util.List;
 
@@ -36,5 +37,7 @@ public interface LeoDeployService {
     int countRunningWithJobId(int jobId);
 
     int countWithJobId(int jobId);
+
+    List<ReportVO.Report> statByMonth();
 
 }

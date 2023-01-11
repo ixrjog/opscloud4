@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
+import com.baiyi.opscloud.domain.vo.base.ReportVO;
 
 import java.util.List;
 
@@ -44,5 +45,7 @@ public interface LeoBuildService {
     List<LeoBuild> queryBuildRunningWithOcInstance(String ocInstance);
 
     int countRunningWithJobId(int jobId);
+
+    List<ReportVO.Report> statByMonth();
 
 }

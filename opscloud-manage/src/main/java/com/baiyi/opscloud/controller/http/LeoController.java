@@ -41,13 +41,15 @@ public class LeoController {
 
     private final LeoChartFacade leoChartFacade;
 
+    // Chart
+
     @ApiOperation(value = "图表-云词")
     @GetMapping(value = "/chart/keywords/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Map<String, Integer>> getLeoChartKeywords() {
         return new HttpResult<>(leoChartFacade.getKeywords());
     }
 
-    // Template -------------
+    // Template
 
     @ApiOperation(value = "分页查询任务模板列表")
     @PostMapping(value = "/template/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -201,6 +203,7 @@ public class LeoController {
     }
 
     // Rule
+
     @ApiOperation(value = "分页查询规则配置列表")
     @PostMapping(value = "/rule/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<LeoRuleVO.Rule>> queryLeoRulePage(@RequestBody @Valid LeoRuleParam.RulePageQuery pageQuery) {

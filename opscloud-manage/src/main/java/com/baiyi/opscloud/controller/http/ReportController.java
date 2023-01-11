@@ -2,8 +2,10 @@ package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
+import com.baiyi.opscloud.domain.vo.leo.LeoReportVO;
 import com.baiyi.opscloud.domain.vo.terminal.TerminalReportVO;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventReportVO;
+import com.baiyi.opscloud.facade.leo.LeoReportFacade;
 import com.baiyi.opscloud.facade.terminal.TerminalReportFacade;
 import com.baiyi.opscloud.facade.workevent.WorkEventFacade;
 import io.swagger.annotations.Api;
@@ -31,6 +33,8 @@ public class ReportController {
     private final TerminalReportFacade terminalReportFacade;
 
     private final WorkEventFacade workEventFacade;
+
+    private final LeoReportFacade leoReportFacade;
 
     @ApiOperation(value = "查询终端报表")
     @GetMapping(value = "/terminal/get", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -73,4 +77,11 @@ public class ReportController {
     public HttpResult<List<ReportVO.CommonReport>> getWorkEventSolveReport() {
         return new HttpResult<>(workEventFacade.getWorkEventSolveReport());
     }
+
+    @ApiOperation(value = "查询Leo报表")
+    @GetMapping(value = "/leo/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<LeoReportVO.LeoReport> getLeoReport() {
+        return new HttpResult<>(leoReportFacade.statLeoReport());
+    }
+
 }

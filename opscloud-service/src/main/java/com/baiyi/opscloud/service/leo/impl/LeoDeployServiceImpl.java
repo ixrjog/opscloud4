@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployRequestParam;
+import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.baiyi.opscloud.mapper.opscloud.LeoDeployMapper;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.github.pagehelper.Page;
@@ -99,6 +100,11 @@ public class LeoDeployServiceImpl implements LeoDeployService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("jobId", jobId);
         return leoDeployMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public List<ReportVO.Report> statByMonth() {
+        return leoDeployMapper.statByMonth();
     }
 
 }

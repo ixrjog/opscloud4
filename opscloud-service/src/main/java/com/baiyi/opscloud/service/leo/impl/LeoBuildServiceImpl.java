@@ -2,10 +2,10 @@ package com.baiyi.opscloud.service.leo.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
+import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.baiyi.opscloud.mapper.opscloud.LeoBuildMapper;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.util.SQLUtil;
@@ -164,6 +164,11 @@ public class LeoBuildServiceImpl implements LeoBuildService {
                 .andEqualTo("isActive", true)
                 .andEqualTo("isFinish", false);
         return leoBuildMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public List<ReportVO.Report> statByMonth() {
+        return leoBuildMapper.statByMonth();
     }
 
 }
