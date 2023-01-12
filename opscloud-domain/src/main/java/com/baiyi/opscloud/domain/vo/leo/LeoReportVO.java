@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.domain.vo.leo;
 
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
+import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,6 +35,8 @@ public class LeoReportVO {
         @ApiModelProperty(value = "部署月报表")
         private MonthReport deployMonthReport;
 
+        private List<LeoJenkinsInstance> instances;
+
     }
 
     @Data
@@ -63,6 +66,26 @@ public class LeoReportVO {
                     .values(values)
                     .build();
         }
+
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
+    public static class LeoJenkinsInstance implements Serializable {
+
+        private static final long serialVersionUID = -8703855218611943799L;
+
+        @ApiModelProperty(value = "数据源实例ID")
+        private Integer instanceId;
+
+        @ApiModelProperty(value = "数据源实例名称")
+        private String instanceName;
+
+        @ApiModelProperty(value = "数据源实例标签")
+        private List<TagVO.Tag> tags;
 
     }
 
