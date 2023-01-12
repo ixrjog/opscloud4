@@ -7,10 +7,13 @@ import com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO;
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
+import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.leo.supervisor.strategy.base.SupervisingStrategy;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.Pod;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -30,6 +33,7 @@ import static com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO.MAX_RESTART;
 public class SupervisingWithRollingStrategy extends SupervisingStrategy {
 
     @Override
+    @Retryable(value = LeoDeployException.class, maxAttempts = 2, backoff = @Backoff(delay = 1000, multiplier = 1.5))
     protected LeoDeployingVO.Deploying getDeploying(LeoDeploy leoDeploy,
                                                     LeoDeployModel.DeployConfig deployConfig,
                                                     KubernetesConfig.Kubernetes kubernetes,

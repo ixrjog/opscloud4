@@ -7,7 +7,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.leo.helper.DeployingLogHelper;
-import com.baiyi.opscloud.leo.helper.LeoDeployHelper;
+import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
 import com.baiyi.opscloud.leo.supervisor.base.ISupervisor;
 import com.baiyi.opscloud.leo.supervisor.strategy.base.SupervisingStrategy;
 import com.baiyi.opscloud.leo.supervisor.strategy.base.SupervisingStrategyFactroy;
@@ -30,7 +30,7 @@ public class DeployingSupervisor implements ISupervisor {
 
     //private final LeoDeployService leoDeployService;
 
-    private final LeoDeployHelper leoDeployHelper;
+    private final LeoHeartbeatHelper heartbeatHelper;
 
     private final LeoDeployModel.DeployConfig deployConfig;
 
@@ -42,13 +42,13 @@ public class DeployingSupervisor implements ISupervisor {
 
     private final LeoPostDeployHandler leoPostDeployHandler;
 
-    public DeployingSupervisor(LeoDeployHelper leoDeployHelper,
+    public DeployingSupervisor(LeoHeartbeatHelper heartbeatHelper,
                                LeoDeploy leoDeploy,
                                DeployingLogHelper logHelper,
                                LeoDeployModel.DeployConfig deployConfig,
                                KubernetesConfig.Kubernetes kubernetes,
                                LeoPostDeployHandler leoPostDeployHandler) {
-        this.leoDeployHelper = leoDeployHelper;
+        this.heartbeatHelper = heartbeatHelper;
         this.leoDeploy = leoDeploy;
         this.logHelper = logHelper;
         this.deployConfig = deployConfig;
@@ -76,13 +76,12 @@ public class DeployingSupervisor implements ISupervisor {
             setHeartbeat();
             try {
                 deployingStrategy.handle(leoDeploy, deployConfig, kubernetes, deploy, deployment);
-                if (leoDeployHelper.isFinish(leoDeploy.getId())) {
+                if (heartbeatHelper.isFinish(leoDeploy.getId())) {
                     // 结束
                     postHandle();
                     break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
                 log.warn(e.getMessage());
             }
             // 延迟执行
@@ -93,8 +92,8 @@ public class DeployingSupervisor implements ISupervisor {
         }
     }
 
-    private void setHeartbeat(){
-        leoDeployHelper.setHeartbeat(leoDeploy.getId());
+    private void setHeartbeat() {
+        heartbeatHelper.setHeartbeat(LeoHeartbeatHelper.HeartbeatTypes.DEPLOY, leoDeploy.getId());
     }
 
     private void postHandle() {

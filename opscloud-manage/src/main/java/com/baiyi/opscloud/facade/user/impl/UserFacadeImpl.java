@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade.user.impl;
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.builder.SimpleDictBuilder;
 import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -187,7 +187,7 @@ public class UserFacadeImpl implements UserFacade {
         if (!checkUser.getUsername().equals(SessionUtil.getUsername())) {
             int accessLevel = userPermissionFacade.getUserAccessLevel(SessionUtil.getUsername());
             if (accessLevel < AccessLevel.OPS.getLevel()) {
-                throw new OCRuntimeException("权限不足: 需要管理员才能修改其他用户信息!");
+                throw new OCException("权限不足: 需要管理员才能修改其他用户信息!");
             }
         }
         User preUpdateUser = UserConverter.toDO(updateUser);
@@ -212,7 +212,7 @@ public class UserFacadeImpl implements UserFacade {
         User user = userService.getById(id);
         if (user == null) return;
         if (user.getIsActive()) {
-            throw new OCRuntimeException("当前用户为活跃状态不能删除！");
+            throw new OCException("当前用户为活跃状态不能删除！");
         }
         userService.delete(user);
     }
@@ -229,7 +229,7 @@ public class UserFacadeImpl implements UserFacade {
         IUserBusinessPermissionPageQuery iQuery = UserBusinessPermissionFactory.getByBusinessType(pageQuery.getBusinessType());
         if (iQuery != null)
             return iQuery.queryUserBusinessPermissionPage(pageQuery);
-        throw new OCRuntimeException(ErrorEnum.USER_BUSINESS_TYPE_ERROR);
+        throw new OCException(ErrorEnum.USER_BUSINESS_TYPE_ERROR);
     }
 
     @Override
@@ -290,13 +290,13 @@ public class UserFacadeImpl implements UserFacade {
         return createMfa(user);
     }
 
-    @Transactional(rollbackFor = {OCRuntimeException.class, Exception.class})
+    @Transactional(rollbackFor = {OCException.class, Exception.class})
     @Override
     public UserVO.UserMFA resetUserMFA() {
         String username = SessionUtil.getUsername();
         User user = userService.getByUsername(username);
         if (user.getForceMfa())
-            throw new OCRuntimeException("MFA无法重置: 管理员强制启用!");
+            throw new OCException("MFA无法重置: 管理员强制启用!");
         if (user.getMfa()) {
             User userMfa = User.builder()
                     .id(user.getId())
@@ -312,13 +312,13 @@ public class UserFacadeImpl implements UserFacade {
         return createMfa(user);
     }
 
-    @Transactional(rollbackFor = {OCRuntimeException.class, Exception.class})
+    @Transactional(rollbackFor = {OCException.class, Exception.class})
     @Override
     public UserVO.UserMFA bindUserMFA(String otp) {
         String username = SessionUtil.getUsername();
         User user = userService.getByUsername(username);
         if (user.getMfa())
-            throw new OCRuntimeException("MFA无法绑定: 重复操作!");
+            throw new OCException("MFA无法绑定: 重复操作!");
         mfaAuthHelper.verify(user, LoginParam.Login.builder().otp(otp).build());
         user.setMfa(true);
         userService.updateMfa(user);

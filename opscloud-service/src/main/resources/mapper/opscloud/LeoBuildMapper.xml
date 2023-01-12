@@ -30,6 +30,20 @@
         <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
     </resultMap>
 
+    <resultMap id="ReportResultMap" type="com.baiyi.opscloud.domain.vo.base.ReportVO$Report">
+        <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+        <result column="value" jdbcType="INTEGER" property="value"/>
+    </resultMap>
+
+    <select id="statByMonth" resultMap="ReportResultMap">
+        select date_format(create_time, '%Y-%m') as `c_name`, sum(1) as `value`
+        from leo_build
+        where
+            build_result = 'SUCCESS'
+        group by `c_name`
+        order by `c_name`;
+    </select>
+
     <select id="queryPageByParam" parameterType="com.baiyi.opscloud.domain.param.leo.LeoJobParam$JobBuildPageQuery" resultMap="BaseResultMap">
         select a0.* from leo_build a0
         <if test="envType != null">

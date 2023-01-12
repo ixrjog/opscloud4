@@ -13,13 +13,19 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class LeoDeployHelper {
+public class LeoHeartbeatHelper {
+
+    public interface HeartbeatTypes {
+        String DEPLOY = "deploy";
+        String BUILD = "build";
+    }
 
     private final LeoDeployService leoDeployService;
 
     private final RedisUtil redisUtil;
 
-    private final static String KEY = "leo#heartbeat#deploying#id=%s";
+    private final static String HEARTBEAT_KEY = "leo#heartbeat#%s#id=%s";
+
 
     public boolean isFinish(Integer leoDeployId) {
         LeoDeploy leoDeploy = leoDeployService.getById(leoDeployId);
@@ -28,19 +34,21 @@ public class LeoDeployHelper {
 
     /**
      * 设置心跳
-     * @param leoDeployId
+     * @param heartbeatType
+     * @param id
      */
-    public void setHeartbeat(Integer leoDeployId) {
-        redisUtil.set(String.format(KEY, leoDeployId), true, 20L);
+    public void setHeartbeat(String heartbeatType, Integer id) {
+        redisUtil.set(String.format(HEARTBEAT_KEY ,heartbeatType, id), true, 20L);
     }
 
     /**
      * 任务是否存活
-     * @param leoDeployId
+     * @param heartbeatType
+     * @param id
      * @return
      */
-    public boolean isLive(Integer leoDeployId) {
-        return redisUtil.hasKey(String.format(KEY, leoDeployId));
+    public boolean isLive(String heartbeatType, Integer id) {
+        return redisUtil.hasKey(String.format(HEARTBEAT_KEY ,heartbeatType, id));
     }
 
 }

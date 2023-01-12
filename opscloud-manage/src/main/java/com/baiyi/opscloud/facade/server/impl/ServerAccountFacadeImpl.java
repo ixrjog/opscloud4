@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.server.impl;
 
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
@@ -53,7 +53,7 @@ public class ServerAccountFacadeImpl implements ServerAccountFacade {
         try {
             accountService.add(serverAccount);
         } catch (Exception e) {
-            throw new OCRuntimeException("新增服务器账户错误: 请确认账户名称和类型是否重复！");
+            throw new OCException("新增服务器账户错误: 请确认账户名称和类型是否重复！");
         }
     }
 
@@ -109,7 +109,7 @@ public class ServerAccountFacadeImpl implements ServerAccountFacade {
     @Override
     public void deleteServerAccountById(Integer id) {
         if (accountPermissionService.countByServerAccountId(id) != 0) {
-            throw new OCRuntimeException("删除服务器账户错误: 账户使用中！");
+            throw new OCException("删除服务器账户错误: 账户使用中！");
         }
         accountService.deleteById(id);
     }

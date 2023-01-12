@@ -9,7 +9,7 @@ import com.baiyi.opscloud.leo.action.deploy.LeoPostDeployHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.helper.DeployingLogHelper;
-import com.baiyi.opscloud.leo.helper.LeoDeployHelper;
+import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
 import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class LeoDeployCompensationTask {
 
     private final LeoDeployService leoDeployService;
 
-    private final LeoDeployHelper leoDeployHelper;
+    private final LeoHeartbeatHelper heartbeatHelper;
 
     private final DeployingLogHelper logHelper;
 
@@ -40,18 +40,18 @@ public class LeoDeployCompensationTask {
     private final LeoPostDeployHandler leoPostDeployHandler;
 
     public void handleTask() {
-        List<LeoDeploy> leoDeploys = leoDeployService.queryRunningDeployWithOcInstance(OcInstance.ocInstance);
+        List<LeoDeploy> leoDeploys = leoDeployService.queryDeployRunningWithOcInstance(OcInstance.ocInstance);
         if (CollectionUtils.isEmpty(leoDeploys)) {
             return;
         }
         leoDeploys.forEach(leoDeploy -> {
-            if (!leoDeployHelper.isLive(leoDeploy.getId())) {
+            if (!heartbeatHelper.isLive(LeoHeartbeatHelper.HeartbeatTypes.DEPLOY, leoDeploy.getId())) {
                 LeoDeployModel.DeployConfig deployConfig = LeoDeployModel.load(leoDeploy);
                 LeoBaseModel.DsInstance dsInstance = deployConfig.getDeploy().getKubernetes().getInstance();
                 final String instanceUuid = dsInstance.getUuid();
                 KubernetesConfig kubernetesConfig = getKubernetesConfigWithUuid(instanceUuid);
                 DeployingSupervisor deployingSupervisor = new DeployingSupervisor(
-                        this.leoDeployHelper,
+                        this.heartbeatHelper,
                         leoDeploy,
                         logHelper,
                         deployConfig,

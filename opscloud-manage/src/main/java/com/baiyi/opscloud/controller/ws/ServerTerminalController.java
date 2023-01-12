@@ -122,7 +122,9 @@ public class ServerTerminalController extends SimpleAuthentication {
         } else {
             SessionUtil.setUsername(this.terminalSession.getUsername());
         }
-        ServerTerminalMessageHandlerFactory.getHandlerByState(state).handle(message, session, terminalSession);
+        ServerTerminalMessageHandlerFactory
+                .getHandlerByState(state)
+                .handle(message, session, terminalSession);
     }
 
     private void updateSessionUsername(String username) {

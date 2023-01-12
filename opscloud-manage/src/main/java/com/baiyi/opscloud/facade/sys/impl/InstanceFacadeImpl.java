@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.sys.impl;
 
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.HostUtil;
 import com.baiyi.opscloud.domain.DataTable;
@@ -65,7 +65,7 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
         if (instance.getIsActive()) {
             List<Instance> instanceList = instanceService.listActiveInstance();
             if (instanceList.size() <= 1) {
-                throw new OCRuntimeException("至少保留一个可用实例");
+                throw new OCException("至少保留一个可用实例");
             }
         }
         instance.setIsActive(!instance.getIsActive());

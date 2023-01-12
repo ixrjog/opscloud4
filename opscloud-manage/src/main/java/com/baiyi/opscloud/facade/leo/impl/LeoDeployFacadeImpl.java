@@ -15,6 +15,7 @@ import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployVO;
 import com.baiyi.opscloud.facade.leo.LeoDeployFacade;
 import com.baiyi.opscloud.leo.action.deploy.LeoDeployHandler;
+import com.baiyi.opscloud.leo.annotation.LeoDeployInterceptor;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
@@ -70,10 +71,8 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     private final LeoDeployResponsePacker leoDeployResponsePacker;
 
     @Override
+    @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType")
     public void doDeploy(LeoDeployParam.DoDeploy doDeploy) {
-        if (leoDeployService.countDeployingWithJobId(doDeploy.getJobId()) > 0) {
-            throw new LeoDeployException("有部署任务执行中，请勿并发部署！");
-        }
         // 执行部署任务
         LeoJob leoJob = leoJobService.getById(doDeploy.getJobId());
         final int deployNumber = generateDeployNumberWithJobId(leoJob.getId());

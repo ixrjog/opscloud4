@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.auth.impl;
 
-import com.baiyi.opscloud.common.exception.auth.AuthException;
+import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthPlatform;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.param.auth.IAuthPlatform;
@@ -31,15 +31,15 @@ public class AuthPlatformHelperImpl implements PlatformAuthHelper {
     public AuthPlatform verify(IAuthPlatform iAuthPlatform) {
         AuthPlatform authPlatform = authPlatformService.getByName(iAuthPlatform.getPlatform());
         if (authPlatform == null)
-            throw new AuthException("平台认证错误: 无效的平台名称！");
+            throw new AuthenticationException("平台认证错误: 无效的平台名称！");
         Credential credential = credentialService.getById(authPlatform.getCredentialId());
         if (credential == null)
-            throw new AuthException("平台认证错误: 凭据不存在！");
+            throw new AuthenticationException("平台认证错误: 凭据不存在！");
         String token = stringEncryptor.decrypt(credential.getCredential());
         if (StringUtils.isBlank(token))
-            throw new AuthException("平台认证错误: 凭据不存在！");
+            throw new AuthenticationException("平台认证错误: 凭据不存在！");
         if (!token.equals(iAuthPlatform.getPlatformToken()))
-            throw new AuthException("平台认证错误: Token错误！");
+            throw new AuthenticationException("平台认证错误: Token错误！");
         return authPlatform;
     }
 

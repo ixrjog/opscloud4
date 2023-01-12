@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.facade.workevent.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
-import com.baiyi.opscloud.common.exception.auth.AuthException;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
@@ -104,7 +104,7 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
         // ADMIN角色可以操作所有
         if (accessLevel >= AccessLevel.ADMIN.getLevel()) return;
         if (SessionUtil.equalsUsername(workEvent.getUsername())) return;
-        throw new OCRuntimeException("只能变更自己创建的工作事件");
+        throw new OCException("只能变更自己创建的工作事件");
     }
 
     @Override
@@ -147,7 +147,7 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
     @Override
     public List<WorkRole> queryMyWorkRole() {
         User user = userService.getByUsername(SessionUtil.getUsername());
-        if (ObjectUtils.isEmpty(user)) throw new AuthException(ErrorEnum.AUTHENTICATION_FAILURE);
+        if (ObjectUtils.isEmpty(user)) throw new AuthenticationException(ErrorEnum.AUTHENTICATION_FAILURE);
         List<Tag> tags = businessTagService.queryByBusiness(
                         SimpleBusiness.builder()
                                 .businessType(BusinessTypeEnum.USER.getType())

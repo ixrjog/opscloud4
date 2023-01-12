@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.datasource.impl;
 
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.template.YamlUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IOUtil;
@@ -98,7 +98,7 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
         AnsibleExecuteResult er = AnsibleExecutor.execute(commandLine, TimeUtil.minuteTime * 2);
         Optional.ofNullable(er)
                 .map(AnsibleExecuteResult::getOutput)
-                .orElseThrow(() -> new OCRuntimeException("AnsibleExecuteResult 不存在！"));
+                .orElseThrow(() -> new OCException("AnsibleExecuteResult 不存在！"));
         try {
             datasourceInstanceAssetSubscription.setLastSubscriptionLog(er.getOutput().toString("utf8"));
             datasourceInstanceAssetSubscription.setLastSubscriptionTime(new Date());

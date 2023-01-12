@@ -31,6 +31,11 @@ public class GitLabRepoDelegate {
     public static final String TAGS = "Tags";
 
     /**
+     * 默认创建分支（发布分支）
+     */
+    public static final List<String> DEF_BRANCHES = Lists.newArrayList("dev", "daily", "pre", "gray", "master");
+
+    /**
      * 生成GitLab分支选项
      *
      * @param gitlab
@@ -59,6 +64,17 @@ public class GitLabRepoDelegate {
             log.warn("查询GitLab branches tags: url={}, projectId={}, err={}", gitlab.getUrl(), projectId, e.getMessage());
             return LeoBuildVO.BranchOptions.EMPTY_OPTIONS;
         }
+    }
+
+    public LeoBuildVO.BranchOptions createGitLabBranch(GitLabConfig.Gitlab gitlab, Long projectId, String ref) {
+        for (String branch : DEF_BRANCHES) {
+            try {
+                GitLabProjectDriver.createBranch(gitlab, projectId, branch, ref);
+            } catch (GitLabApiException e) {
+                log.warn("创建GitLab分支错误: url={}, projectId={}, branch={}, ref={}, err={}", gitlab.getUrl(), projectId, branch, ref, e.getMessage());
+            }
+        }
+        return generatorGitLabBranchOptions(gitlab, projectId, false);
     }
 
     public Commit getBranchOrTagCommit(GitLabConfig.Gitlab gitlab, Long projectId, String branchNameOrTagName) {

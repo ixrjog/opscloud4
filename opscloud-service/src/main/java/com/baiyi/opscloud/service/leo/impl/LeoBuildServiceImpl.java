@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
+import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.baiyi.opscloud.mapper.opscloud.LeoBuildMapper;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.util.SQLUtil;
@@ -142,6 +143,32 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         criteria.andEqualTo("jobId", jobId);
         example.setOrderByClause("id desc");
         return leoBuildMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<LeoBuild> queryBuildRunningWithOcInstance(String ocInstance) {
+        Example example = new Example(LeoBuild.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isFinish", false)
+                .andEqualTo("isActive", true)
+                .andEqualTo("ocInstance", ocInstance);
+        example.setOrderByClause("id desc");
+        return leoBuildMapper.selectByExample(example);
+    }
+
+    @Override
+    public int countRunningWithJobId(int jobId) {
+        Example example = new Example(LeoBuild.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("jobId", jobId)
+                .andEqualTo("isActive", true)
+                .andEqualTo("isFinish", false);
+        return leoBuildMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public List<ReportVO.Report> statByMonth() {
+        return leoBuildMapper.statByMonth();
     }
 
 }

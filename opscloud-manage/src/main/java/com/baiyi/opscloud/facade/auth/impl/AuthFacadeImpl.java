@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.auth.impl;
 
 
 import com.baiyi.opscloud.common.base.AccessLevel;
-import com.baiyi.opscloud.common.exception.auth.AuthException;
+import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
@@ -82,7 +82,7 @@ public class AuthFacadeImpl implements AuthFacade {
     @Override
     public void deleteRoleById(int id) {
         if (authRoleResourceService.countByRoleId(id) != 0)
-            throw new AuthException(ErrorEnum.AUTH_ROLE_HAS_USED);
+            throw new AuthenticationException(ErrorEnum.AUTH_ROLE_HAS_USED);
         authRoleService.deleteById(id);
     }
 
@@ -107,7 +107,7 @@ public class AuthFacadeImpl implements AuthFacade {
     @Override
     public void deleteGroupById(int id) {
         if (authResourceService.countByGroupId(id) != 0)
-            throw new AuthException(ErrorEnum.AUTH_GROUP_HAS_USED);
+            throw new AuthenticationException(ErrorEnum.AUTH_GROUP_HAS_USED);
         authGroupService.deleteById(id);
     }
 
@@ -151,7 +151,7 @@ public class AuthFacadeImpl implements AuthFacade {
     }
 
     @Override
-    @Transactional(rollbackFor = {AuthException.class, Exception.class})
+    @Transactional(rollbackFor = {AuthenticationException.class, Exception.class})
     public void deleteResourceById(int id) {
         authRoleResourceService.deleteByResourceId(id);
         authResourceService.deleteById(id);

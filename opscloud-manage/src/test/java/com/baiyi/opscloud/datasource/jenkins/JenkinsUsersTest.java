@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.jenkins;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.datasource.jenkins.base.BaseJenkinsTest;
-import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsUsersDriver;
+import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsUserDriver;
 import com.baiyi.opscloud.datasource.jenkins.entity.JenkinsUser;
 import com.baiyi.opscloud.leo.domain.model.JenkinsPipeline;
 import com.baiyi.opscloud.leo.driver.BlueRestDriver;
@@ -19,7 +19,7 @@ import java.util.List;
 public class JenkinsUsersTest extends BaseJenkinsTest {
 
     @Resource
-    private JenkinsUsersDriver jenkinsUsersDrive;
+    private JenkinsUserDriver jenkinsUsersDrive;
 
     @Resource
     private BlueRestDriver blueRestDriver;

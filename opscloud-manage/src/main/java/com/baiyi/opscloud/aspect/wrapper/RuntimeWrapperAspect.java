@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.aspect.wrapper;
 
 import com.baiyi.opscloud.common.annotation.RuntimeWrapper;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.base.ReadableTime;
@@ -33,12 +33,12 @@ public class RuntimeWrapperAspect {
     }
 
     @Around("@annotation(runtimeWrapper)")
-    public Object around(ProceedingJoinPoint joinPoint, RuntimeWrapper runtimeWrapper) throws OCRuntimeException {
+    public Object around(ProceedingJoinPoint joinPoint, RuntimeWrapper runtimeWrapper) throws OCException {
         Object result;
         try {
             result = joinPoint.proceed();
         } catch (Throwable e) {
-            throw new OCRuntimeException(e.getMessage());
+            throw new OCException(e.getMessage());
         }
         boolean extend = runtimeWrapper.extend();
         ReadableTime.IRuntime runtimeTarget = null;

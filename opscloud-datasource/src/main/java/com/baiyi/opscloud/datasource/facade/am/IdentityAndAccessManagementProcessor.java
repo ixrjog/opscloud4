@@ -4,7 +4,7 @@ import com.amazonaws.services.identitymanagement.model.VirtualMFADevice;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamPolicy;
 import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementMFADriver;
@@ -73,7 +73,7 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
             // 同步资产 IAM_USER
             dsInstanceFacade.pullAsset(grantPolicy.getInstanceUuid(), DsAssetTypeConstants.IAM_USER.name(), iamUser);
         } catch (Exception e) {
-            throw new OCRuntimeException("AWS接口查询错误: msg={}", e.getMessage());
+            throw new OCException("AWS接口查询错误: msg={}", e.getMessage());
         }
     }
 
@@ -93,7 +93,7 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
                 dsInstanceFacade.pullAsset(revokePolicy.getInstanceUuid(), DsAssetTypeConstants.IAM_USER.name(), iamUser);
             }
         } catch (Exception e) {
-            throw new OCRuntimeException("AWS接口查询错误: msg={}", e.getMessage());
+            throw new OCException("AWS接口查询错误: msg={}", e.getMessage());
         }
     }
 

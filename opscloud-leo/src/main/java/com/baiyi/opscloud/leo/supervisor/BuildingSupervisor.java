@@ -10,6 +10,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.action.build.LeoPostBuildHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
+import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
 import com.baiyi.opscloud.leo.supervisor.base.ISupervisor;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import static com.baiyi.opscloud.leo.action.build.BaseBuildHandler.RESULT_ERROR;
 
 /**
  * 构建监督
+ *
  * @Author baiyi
  * @Date 2022/11/9 11:43
  * @Version 1.0
@@ -40,18 +42,22 @@ public class BuildingSupervisor implements ISupervisor {
 
     private final LeoPostBuildHandler leoPostBuildHandler;
 
+    private final LeoHeartbeatHelper heartbeatHelper;
+
     private final LeoBuildModel.BuildConfig buildConfig;
 
     private Build build;
 
     private final LeoBuild leoBuild;
 
-    public BuildingSupervisor(LeoBuildService leoBuildService,
+    public BuildingSupervisor(LeoHeartbeatHelper heartbeatHelper,
+                              LeoBuildService leoBuildService,
                               LeoBuild leoBuild,
                               BuildingLogHelper logHelper,
                               JenkinsConfig.Jenkins jenkins,
                               LeoBuildModel.BuildConfig buildConfig,
                               LeoPostBuildHandler leoPostBuildHandler) {
+        this.heartbeatHelper = heartbeatHelper;
         this.leoBuildService = leoBuildService;
         this.leoBuild = leoBuild;
         this.logHelper = logHelper;
@@ -79,6 +85,7 @@ public class BuildingSupervisor implements ISupervisor {
             return;
         }
         while (true) {
+            setHeartbeat();
             try {
                 if (this.build == null) {
                     Build build = jobWithDetails.details().getLastBuild();
@@ -104,6 +111,7 @@ public class BuildingSupervisor implements ISupervisor {
                 if (buildWithDetails.isBuilding()) {
                     TimeUnit.SECONDS.sleep(SLEEP_SECONDS);
                 } else {
+                    // 任务正常完成
                     LeoBuild saveLeoBuild = LeoBuild.builder()
                             .id(leoBuild.getId())
                             .endTime(new Date())
@@ -116,6 +124,7 @@ public class BuildingSupervisor implements ISupervisor {
                     return;
                 }
             } catch (Exception e) {
+                // 任务异常完成
                 LeoBuild saveLeoBuild = LeoBuild.builder()
                         .id(leoBuild.getId())
                         .endTime(new Date())
@@ -128,6 +137,10 @@ public class BuildingSupervisor implements ISupervisor {
             }
         }
 
+    }
+
+    private void setHeartbeat() {
+        heartbeatHelper.setHeartbeat(LeoHeartbeatHelper.HeartbeatTypes.BUILD, leoBuild.getId());
     }
 
     private void postBuildHandle() {

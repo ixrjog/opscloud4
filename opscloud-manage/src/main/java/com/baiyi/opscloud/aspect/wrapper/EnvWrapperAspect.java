@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.aspect.wrapper;
 
 import com.baiyi.opscloud.common.annotation.EnvWrapper;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.param.IExtend;
@@ -36,12 +36,12 @@ public class EnvWrapperAspect {
     }
 
     @Around("@annotation(envWrapper)")
-    public Object around(ProceedingJoinPoint joinPoint, EnvWrapper envWrapper) throws OCRuntimeException {
+    public Object around(ProceedingJoinPoint joinPoint, EnvWrapper envWrapper) throws OCException {
         Object result;
         try {
             result = joinPoint.proceed();
         } catch (Throwable e) {
-            throw new OCRuntimeException(e.getMessage());
+            throw new OCException(e.getMessage());
         }
         boolean extend = envWrapper.extend();
         EnvVO.IEnv targetEnv = null;

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.kubernetes.driver;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesDeploymentException;
 import com.baiyi.opscloud.datasource.kubernetes.util.KubernetesUtil;
@@ -250,11 +250,11 @@ public class KubernetesDeploymentDriver {
      * @return
      * @throws RuntimeException
      */
-    public static Deployment toDeployment(KubernetesClient kuberClient, String content) throws OCRuntimeException {
+    public static Deployment toDeployment(KubernetesClient kuberClient, String content) throws OCException {
         HasMetadata resource = KubernetesUtil.toResource(kuberClient, content);
         if (resource instanceof io.fabric8.kubernetes.api.model.apps.Deployment)
             return (Deployment) resource;
-        throw new OCRuntimeException("Kubernetes deployment 配置文件类型不匹配!");
+        throw new OCException("Kubernetes deployment 配置文件类型不匹配!");
     }
 
 }

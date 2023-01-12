@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.common.aspect;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.InstantUtil;
 import com.baiyi.opscloud.common.util.StringToDurationUtil;
@@ -62,7 +62,7 @@ public class SingleTaskAspect {
                 return result;
             } else {
                 log.warn("Asset Synchronization Task Repeat: taskKey={}", key);
-                return new OCRuntimeException(ErrorEnum.SINGLE_TASK_RUNNING);
+                return new OCException(ErrorEnum.SINGLE_TASK_RUNNING);
             }
         } catch (Exception e) {
             log.error("Asset Synchronization Task: err={}", e.getMessage());

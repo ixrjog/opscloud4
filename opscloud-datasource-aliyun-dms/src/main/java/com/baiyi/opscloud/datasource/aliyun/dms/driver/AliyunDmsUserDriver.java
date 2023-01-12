@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.aliyun.dms.driver;
 
 import com.aliyun.dms_enterprise20181101.models.*;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
-import com.baiyi.opscloud.common.exception.common.OCRuntimeException;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.dms.client.DmsClient;
 import com.baiyi.opscloud.datasource.aliyun.dms.client.AliyunDmsClient;
@@ -27,7 +27,7 @@ public class AliyunDmsUserDriver {
                 .map(AliyunConfig.Dms::getTid)
                 .orElse(-1L);
         if (tid == -1L)
-            throw new OCRuntimeException("租户TID未配置！");
+            throw new OCException("租户TID未配置！");
         return listUser(aliyun, tid);
     }
 
@@ -63,7 +63,7 @@ public class AliyunDmsUserDriver {
         request.setRoleNames("USER");
         RegisterUserResponse response = client.registerUser(request);
         if (!response.getBody().getSuccess())
-            throw new OCRuntimeException(response.getBody().errorMessage);
+            throw new OCException(response.getBody().errorMessage);
     }
 
 }

@@ -74,9 +74,7 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
             Map<String, String> dict = generateBuildDict(leoBuild, buildConfig, leoJob);
             buildConfig.getBuild().setDict(dict);
             Map<String, String> params = generateBuildParamMap(leoBuild, buildConfig, leoJob);
-
             jenkinsJobDriver.buildJobWithParams(jenkinsConfig.getJenkins(), leoBuild.getBuildJobName(), params);
-
             LeoBuild saveLeoBuild = LeoBuild.builder()
                     .id(leoBuild.getId())
                     .buildStatus("执行构建任务阶段: 成功")

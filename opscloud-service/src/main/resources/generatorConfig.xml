@@ -95,7 +95,7 @@
         <!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
         <!--        </table>-->
 
-        <table tableName="sys_announcement">
+        <table tableName="leo_rule">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
