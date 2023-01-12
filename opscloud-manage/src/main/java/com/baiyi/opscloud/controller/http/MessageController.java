@@ -8,10 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -30,7 +27,16 @@ public class MessageController {
 
     @ApiOperation(value = "发送消息")
     @PostMapping(value = "/send", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<LXHLMessageResponse.SendMessage> platformLogin(@Valid @RequestBody MessageParam.SendMessage param) {
+    public HttpResult<LXHLMessageResponse.SendMessage> sendMessage(@Valid @RequestBody MessageParam.SendMessage param) {
         return new HttpResult<>(messageFacade.sendMessage(param));
+    }
+
+    @ApiOperation(value = "发送消息 for grafana")
+    @PostMapping(value = "/send/grafana", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<LXHLMessageResponse.SendMessage> sendMessage4Grafana(
+            @RequestParam String media, @RequestParam String message,
+            @RequestParam String mobiles, @RequestParam String platform,
+            @RequestParam String platformToken) {
+        return new HttpResult<>(messageFacade.sendMessage(media, message, mobiles, platform, platformToken));
     }
 }

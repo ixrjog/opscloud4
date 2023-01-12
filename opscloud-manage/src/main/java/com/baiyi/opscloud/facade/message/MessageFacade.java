@@ -11,4 +11,7 @@ import com.baiyi.opscloud.domain.param.message.MessageParam;
 public interface MessageFacade {
 
     LXHLMessageResponse.SendMessage sendMessage(MessageParam.SendMessage param);
+
+
+    LXHLMessageResponse.SendMessage sendMessage(String media, String content, String mobiles, String platform, String platformToken);
 }

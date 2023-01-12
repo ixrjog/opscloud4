@@ -16,6 +16,7 @@ import com.baiyi.opscloud.facade.auth.PlatformAuthHelper;
 import com.baiyi.opscloud.facade.message.MessageFacade;
 import com.baiyi.opscloud.service.auth.PlatformNotifyHistoryService;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -65,6 +66,19 @@ public class MessageFacadeImpl implements MessageFacade {
                 .build();
         platformNotifyHistoryService.add(history);
         return sendMessage;
+    }
+
+    @Override
+    public LXHLMessageResponse.SendMessage sendMessage(String media, String content, String mobiles, String platform, String platformToken) {
+        List<String> mobile = Lists.newArrayList(mobiles.split(","));
+        MessageParam.SendMessage param = MessageParam.SendMessage.builder()
+                .content(content)
+                .media(media)
+                .platform(platform)
+                .platformToken(platformToken)
+                .mobile(mobile)
+                .build();
+        return sendMessage(param);
     }
 
     /**
