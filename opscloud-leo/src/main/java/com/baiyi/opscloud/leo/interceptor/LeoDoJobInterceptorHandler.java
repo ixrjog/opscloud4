@@ -162,7 +162,7 @@ public class LeoDoJobInterceptorHandler {
      *
      * @return
      */
-    private boolean isAdmin(String username) {
+    public boolean isAdmin(String username) {
         int accessLevel = authRoleService.getRoleAccessLevelByUsername(username);
         return accessLevel >= AccessLevel.OPS.getLevel();
     }

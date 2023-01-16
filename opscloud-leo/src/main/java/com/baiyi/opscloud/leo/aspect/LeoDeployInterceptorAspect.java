@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.leo.aspect;
 
 import com.baiyi.opscloud.common.util.IdUtil;
+import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.leo.annotation.LeoDeployInterceptor;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
 import com.baiyi.opscloud.leo.interceptor.LeoDoJobInterceptorHandler;
@@ -64,14 +65,18 @@ public class LeoDeployInterceptorAspect {
             if (IdUtil.isEmpty(jobId)) {
                 throw new LeoJobException("任务ID不存在！");
             }
-            // 权限校验
-            leoDoJobInterceptorHandler.verifyAuthorization(jobId);
             // 并发校验
             if (!leoDeployInterceptor.allowConcurrency()) {
                 leoDoJobInterceptorHandler.limitConcurrentWithDeploy(jobId);
             }
-            // 规则校验
-            leoDoJobInterceptorHandler.verifyRule(jobId);
+            if (leoDoJobInterceptorHandler.isAdmin(SessionUtil.getUsername())) {
+                // 管理员操作，跳过验证
+            } else {
+                // 权限校验
+                leoDoJobInterceptorHandler.verifyAuthorization(jobId);
+                // 规则校验
+                leoDoJobInterceptorHandler.verifyRule(jobId);
+            }
         } else {
             throw new LeoJobException("任务ID类型不正确！");
         }

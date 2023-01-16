@@ -64,12 +64,12 @@ public class LeoBuildInterceptorAspect {
             if (IdUtil.isEmpty(jobId)) {
                 throw new LeoJobException("任务ID不存在！");
             }
-            // 权限校验
-            leoDoJobInterceptorHandler.verifyAuthorization(jobId);
             // 并发校验
             if (!leoBuildInterceptor.allowConcurrency()) {
                 leoDoJobInterceptorHandler.limitConcurrentWithBuild(jobId);
             }
+            // 权限校验
+            leoDoJobInterceptorHandler.verifyAuthorization(jobId);
             // 构建不校验规则
         } else {
             throw new LeoJobException("任务ID类型不正确！");
