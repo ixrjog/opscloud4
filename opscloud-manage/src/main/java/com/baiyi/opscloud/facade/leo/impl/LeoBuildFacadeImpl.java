@@ -166,7 +166,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .versionDesc(doBuild.getVersionDesc())
                 .isFinish(false)
                 .isDeletedBuildJob(false)
-                .isActive(true)
+                .isActive(false)
                 .executionType(ExecutionTypeConstants.USER)
                 .username(SessionUtil.getUsername())
                 .buildConfig(buildConfig.dump())
