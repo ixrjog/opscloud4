@@ -91,6 +91,12 @@
             </properties>
         </profile>
         <profile>
+            <id>pre</id>
+            <properties>
+                <env>pre</env>
+            </properties>
+        </profile>
+        <profile>
             <id>prod</id>
             <properties>
                 <env>prod</env>
@@ -107,6 +113,7 @@
                 <excludes>
                     <exclude>application-dev.yml</exclude>
                     <exclude>application-github.yml</exclude>
+                    <exclude>application-pre.yml</exclude>
                     <exclude>application-prod.yml</exclude>
                     <exclude>static/fonts/**</exclude>
                 </excludes>
