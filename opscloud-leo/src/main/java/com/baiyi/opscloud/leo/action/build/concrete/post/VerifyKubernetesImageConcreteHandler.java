@@ -8,8 +8,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildImage;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.leo.action.build.BaseBuildHandler;
-import com.baiyi.opscloud.leo.action.build.concrete.post.verify.base.BaseCrImageValidator;
-import com.baiyi.opscloud.leo.action.build.concrete.post.verify.factory.CrImageValidatorFactory;
+import com.baiyi.opscloud.leo.action.build.concrete.post.verify.base.BaseCrValidator;
+import com.baiyi.opscloud.leo.action.build.concrete.post.verify.factory.CrValidatorFactory;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
@@ -82,13 +82,13 @@ public class VerifyKubernetesImageConcreteHandler extends BaseBuildHandler {
                 .map(LeoJobModel.CR::getType)
                 .orElseThrow(() -> new LeoBuildException("任务CR类型配置不存在无法验证镜像是否推送成功！"));
 
-        BaseCrImageValidator crImageValidator = CrImageValidatorFactory.getValidatorByCrType(crType);
-        if (crImageValidator == null) {
+        BaseCrValidator crValidator = CrValidatorFactory.getValidatorByCrType(crType);
+        if (crValidator == null) {
             throw new LeoBuildException("任务CR类型配置不正确: crType={}", crType);
         }
         try {
             // 校验
-            crImageValidator.verify(leoJob, leoBuild, cr, buildConfig);
+            crValidator.verifyImage(leoJob, leoBuild, cr, buildConfig);
             // 记录构建镜像
             Map<String, String> dict = buildConfig.getBuild().getDict();
             LeoBuildImage leoBuildImage = LeoBuildImage.builder()

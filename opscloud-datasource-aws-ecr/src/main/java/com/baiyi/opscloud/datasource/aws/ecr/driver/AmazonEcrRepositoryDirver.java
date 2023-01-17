@@ -1,8 +1,6 @@
 package com.baiyi.opscloud.datasource.aws.ecr.driver;
 
-import com.amazonaws.services.ecr.model.DescribeRepositoriesRequest;
-import com.amazonaws.services.ecr.model.DescribeRepositoriesResult;
-import com.amazonaws.services.ecr.model.Repository;
+import com.amazonaws.services.ecr.model.*;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.datasource.aws.ecr.service.AmazonEcrService;
 import com.google.common.collect.Lists;
@@ -47,6 +45,7 @@ public class AmazonEcrRepositoryDirver {
 
     /**
      * https://docs.aws.amazon.com/AmazonECR/latest/APIReference/API_DescribeRepositories.html
+     *
      * @param regionId
      * @param config
      * @param repositoryNames
@@ -66,6 +65,13 @@ public class AmazonEcrRepositoryDirver {
             }
         }
         return repositories;
+    }
+
+    public Repository createRepository(String regionId, AwsConfig.Aws config, String repositoryName) {
+        CreateRepositoryRequest request = new CreateRepositoryRequest();
+        request.setRepositoryName(repositoryName);
+        CreateRepositoryResult result = AmazonEcrService.buildAmazonECR(regionId, config).createRepository(request);
+        return result.getRepository();
     }
 
 }

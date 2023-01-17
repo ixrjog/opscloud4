@@ -132,6 +132,13 @@ public class LeoController {
         return new HttpResult<>(leoDeployFacade.queryLeoJobDeployPage(pageQuery));
     }
 
+    @ApiOperation(value = "创建CR仓库")
+    @PutMapping(value = "/job/cr/repository/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> createCrRepositoryWithLeoJobId(@RequestParam @Valid int jobId) {
+        leoJobFacade.createCrRepositoryWithLeoJobId(jobId);
+        return HttpResult.SUCCESS;
+    }
+
     // Build
 
     @ApiOperation(value = "执行构建")

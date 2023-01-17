@@ -8,6 +8,8 @@ import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 import com.baiyi.opscloud.facade.leo.LeoJobFacade;
 import com.baiyi.opscloud.facade.leo.tags.LeoTagHelper;
+import com.baiyi.opscloud.leo.action.build.concrete.post.verify.base.BaseCrValidator;
+import com.baiyi.opscloud.leo.action.build.concrete.post.verify.factory.CrValidatorFactory;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.domain.model.LeoTemplateModel;
@@ -25,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 /**
  * @Author baiyi
@@ -159,6 +162,30 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .templateContent(leoTemplate.getTemplateContent())
                 .build();
         leoJobService.updateByPrimaryKeySelective(saveLeoJob);
+    }
+
+    @Override
+    public void createCrRepositoryWithLeoJobId(int jobId) {
+        LeoJob leoJob = leoJobService.getById(jobId);
+        LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob.getJobConfig());
+        final LeoJobModel.CR cr = Optional.ofNullable(jobConfig)
+                .map(LeoJobModel.JobConfig::getJob)
+                .map(LeoJobModel.Job::getCr)
+                .orElseThrow(() -> new LeoJobException("任务CR配置不存在无法验证镜像是否推送成功！"));
+
+        final String crType = Optional.of(cr)
+                .map(LeoJobModel.CR::getType)
+                .orElseThrow(() -> new LeoJobException("任务CR类型配置不存在无法验证镜像是否推送成功！"));
+
+        BaseCrValidator crValidator = CrValidatorFactory.getValidatorByCrType(crType);
+        if (crValidator == null) {
+            throw new LeoJobException("任务CR类型配置不正确: crType={}", crType);
+        }
+        try {
+            crValidator.createRepository(leoJob, cr);
+        } catch (LeoJobException e) {
+            throw new LeoJobException("创建CR仓库错误: {}", e.getMessage());
+        }
     }
 
     @Override

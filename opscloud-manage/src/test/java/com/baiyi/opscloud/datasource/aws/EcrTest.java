@@ -32,4 +32,10 @@ public class EcrTest extends BaseAwsTest {
         print(imageDetails);
     }
 
+
+    @Test
+    void createRepositoriesTest() {
+        Repository repository = amazonEcrRepositoryDirver.createRepository("ap-east-1", getConfig().getAws(), "aaa/baiyi");
+    }
+
 }

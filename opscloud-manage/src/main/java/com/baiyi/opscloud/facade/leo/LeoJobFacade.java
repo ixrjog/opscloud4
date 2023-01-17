@@ -26,4 +26,6 @@ public interface LeoJobFacade {
 
     void deleteLeoJobById(int jobId);
 
+    void createCrRepositoryWithLeoJobId(int jobId);
+
 }

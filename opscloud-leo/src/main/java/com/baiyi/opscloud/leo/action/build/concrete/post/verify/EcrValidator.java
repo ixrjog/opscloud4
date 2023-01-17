@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.datasource.aws.ecr.driver.AmazonEcrImageDriver;
 import com.baiyi.opscloud.datasource.aws.ecr.driver.AmazonEcrRepositoryDirver;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.leo.action.build.concrete.post.verify.base.BaseCrImageValidator;
+import com.baiyi.opscloud.leo.action.build.concrete.post.verify.base.BaseCrValidator;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.baiyi.opscloud.leo.action.build.concrete.post.verify.base.BaseCrImageValidator.CrTypes.ECR;
+import static com.baiyi.opscloud.leo.action.build.concrete.post.verify.base.BaseCrValidator.CrTypes.ECR;
 
 /**
  * @Author baiyi
@@ -30,7 +30,7 @@ import static com.baiyi.opscloud.leo.action.build.concrete.post.verify.base.Base
  */
 @Slf4j
 @Component
-public class EcrImageValidator extends BaseCrImageValidator<AwsConfig> {
+public class EcrValidator extends BaseCrValidator<AwsConfig> {
 
     @Resource
     private AmazonEcrRepositoryDirver amazonEcrRepositoryDirver;
@@ -49,7 +49,7 @@ public class EcrImageValidator extends BaseCrImageValidator<AwsConfig> {
     }
 
     @Override
-    protected void handleVerify(LeoJob leoJob, LeoJobModel.CR cr, LeoBuildModel.BuildConfig buildConfig, AwsConfig dsConfig) {
+    protected void handleVerifyImage(LeoJob leoJob, LeoJobModel.CR cr, LeoBuildModel.BuildConfig buildConfig, AwsConfig dsConfig) {
         final String crRegionId = cr.getInstance().getRegionId();
         final String crRepoName = cr.getRepo().getName();
         Map<String, String> dict = buildConfig.getBuild().getDict();
@@ -75,6 +75,27 @@ public class EcrImageValidator extends BaseCrImageValidator<AwsConfig> {
                     .orElseThrow(() -> new LeoBuildException("查询AWS-ECR镜像未找到对应的标签: imageTag={}", imageTag));
         } catch (Exception e) {
             throw new LeoBuildException("查询AWS-ECR镜像错误: err={}", e.getMessage());
+        }
+    }
+
+    @Override
+    protected void handleCreateRepository(LeoJob leoJob, LeoJobModel.CR cr, AwsConfig dsConfig) {
+        final String crRegionId = cr.getInstance().getRegionId();
+        final String crRepoName = cr.getRepo().getName();
+        final String repoNamespace = Optional.of(cr)
+                .map(LeoJobModel.CR::getRepo)
+                .map(LeoJobModel.Repo::getNamespace)
+                .orElseGet(() -> envService.getByEnvType(leoJob.getEnvType()).getEnvName());
+        // ${evnName}/${repoName}
+        final String repositoryName = Joiner.on("/").join(repoNamespace, crRepoName);
+        final String crRegistryId = Optional.of(cr)
+                .map(LeoJobModel.CR::getRepo)
+                .map(LeoJobModel.Repo::getId)
+                .orElseGet(() -> getCrRegistryId(cr, leoJob, crRegionId, repoNamespace, repositoryName, dsConfig));
+        try {
+            Repository repository = amazonEcrRepositoryDirver.createRepository(crRegionId, dsConfig.getAws(), repositoryName);
+        } catch (Exception e) {
+            throw new LeoBuildException("创建ECR仓库错误: err={}", e.getMessage());
         }
     }
 

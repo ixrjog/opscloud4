@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.acr.driver.AliyunAcrImageDriver;
 import com.baiyi.opscloud.datasource.aliyun.acr.driver.AliyunAcrRepositoryDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.leo.action.build.concrete.post.verify.base.BaseCrImageValidator;
+import com.baiyi.opscloud.leo.action.build.concrete.post.verify.base.BaseCrValidator;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
@@ -26,7 +26,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
-public class AcrImageValidator extends BaseCrImageValidator<AliyunConfig> {
+public class AcrValidator extends BaseCrValidator<AliyunConfig> {
 
     @Resource
     private AliyunAcrRepositoryDriver aliyunAcrRepositoryDriver;
@@ -54,7 +54,7 @@ public class AcrImageValidator extends BaseCrImageValidator<AliyunConfig> {
     }
 
     @Override
-    protected void handleVerify(LeoJob leoJob, LeoJobModel.CR cr, LeoBuildModel.BuildConfig buildConfig, AliyunConfig dsConfig) {
+    protected void handleVerifyImage(LeoJob leoJob, LeoJobModel.CR cr, LeoBuildModel.BuildConfig buildConfig, AliyunConfig dsConfig) {
         LeoJobModel.CRInstance crInstance = cr.getInstance();
         final String crRegionId = cr.getInstance().getRegionId();
         final String crInstanceId = crInstance.getId();
@@ -74,6 +74,11 @@ public class AcrImageValidator extends BaseCrImageValidator<AliyunConfig> {
         } catch (ClientException e) {
             throw new LeoBuildException("查询阿里云-ACR镜像错误: err={}", e.getMessage());
         }
+    }
+
+    @Override
+    protected void handleCreateRepository(LeoJob leoJob, LeoJobModel.CR cr, AliyunConfig dsConfig) {
+        // TODO ACR可开启主动创建
     }
 
     private String getCrRepoId(LeoJobModel.CR cr, LeoJob leoJob, String crRegionId, String crInstanceId, String crRepoName, AliyunConfig dsConfig, String envName) {
