@@ -73,4 +73,17 @@ public class LeoRuleExpressionWithMonthly extends BaseLeoRuleExpression {
         return hitEnd;
     }
 
+    private static final String displayName = "每月封网; 开始时间: 第%s天 %s, 结束时间: 第%s天 %s";
+
+    /**
+     *
+     * @param expression
+     * @return 每月封网; 开始时间: 第5天 18:00:00, 结束时间: 第7天 24:00:00
+     */
+    public String toDisplayName(LeoRuleModel.Expression expression) {
+        List<String> beginArgs = getExpressionArgs(expression.getBegin());
+        List<String> endArgs = getExpressionArgs(expression.getEnd());
+        return String.format(displayName, beginArgs.get(0),beginArgs.get(1), endArgs.get(0),endArgs.get(1));
+    }
+
 }

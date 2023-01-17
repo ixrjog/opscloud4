@@ -22,9 +22,9 @@ public class ThreadPoolTaskConfiguration {
 
     public interface TaskPools {
         String CORE = "coreExecutor";
-        String COMMON = "commonExecutor";
         String SERVER_TERMINAL = "serverTerminalExecutor";
         String KUBERNETES_TERMINAL = "kubernetesTerminalExecutor";
+        String LEO = "leoExecutor";
     }
 
     /**
@@ -69,8 +69,8 @@ public class ThreadPoolTaskConfiguration {
         return executor;
     }
 
-    @Bean(name = COMMON)
-    public ThreadPoolTaskExecutor commonExecutor() {
+    @Bean(name = LEO)
+    public ThreadPoolTaskExecutor leoExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         /**
          * 那么poolSize、corePoolSize、maximumPoolSize三者的关系是如何的呢？
@@ -83,7 +83,7 @@ public class ThreadPoolTaskConfiguration {
          * 所以通过上面的描述可知corePoolSize<=maximumPoolSize，poolSize<=maximumPoolSize；而poolSize和corePoolSize无法比较，poolSize是有可能比corePoolSize大的。
          */
         executor.setCorePoolSize(50); // 核心线程数（默认线程数）
-        executor.setMaxPoolSize(400); // 最大线程数
+        executor.setMaxPoolSize(200); // 最大线程数
         executor.setQueueCapacity(queueCapacity);
         executor.setKeepAliveSeconds(keepAliveTime);
         executor.setThreadNamePrefix(THREAD_NAME_PREFIX);

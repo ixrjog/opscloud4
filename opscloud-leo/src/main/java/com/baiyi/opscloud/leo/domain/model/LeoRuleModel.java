@@ -2,6 +2,7 @@ package com.baiyi.opscloud.leo.domain.model;
 
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoRule;
+import com.baiyi.opscloud.domain.vo.leo.LeoRuleVO;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,11 @@ public class LeoRuleModel {
     public static LeoRuleModel.RuleConfig load(LeoRule leoRule) {
         return load(leoRule.getRuleConfig());
     }
+
+    public static LeoRuleModel.RuleConfig load( LeoRuleVO.Rule rule) {
+        return load(rule.getRuleConfig());
+    }
+
 
     /**
      * 从配置加载

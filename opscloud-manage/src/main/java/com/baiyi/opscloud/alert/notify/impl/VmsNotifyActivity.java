@@ -2,11 +2,11 @@ package com.baiyi.opscloud.alert.notify.impl;
 
 import com.baiyi.opscloud.alert.notify.NotifyMediaEnum;
 import com.baiyi.opscloud.alert.notify.NotifyStatusEnum;
-import com.baiyi.opscloud.domain.alert.AlertContext;
-import com.baiyi.opscloud.domain.alert.AlertNotifyMedia;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.message.driver.AliyunVmsDriver;
+import com.baiyi.opscloud.domain.alert.AlertContext;
+import com.baiyi.opscloud.domain.alert.AlertNotifyMedia;
 import com.baiyi.opscloud.domain.generator.opscloud.AlertNotifyEvent;
 import com.baiyi.opscloud.domain.generator.opscloud.AlertNotifyHistory;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class VmsNotifyActivity extends AbstractNotifyActivity {
 
     @Autowired
-    private ThreadPoolTaskExecutor commonExecutor;
+    private ThreadPoolTaskExecutor coreExecutor;
 
     @Resource
     private AliyunVmsDriver aliyunVmsDriver;
@@ -48,7 +48,7 @@ public class VmsNotifyActivity extends AbstractNotifyActivity {
         AliyunConfig.Aliyun config = getConfig().getAliyun();
         AlertNotifyEvent event = alertNotifyEventService.getByUuid(context.getEventUuid());
         media.getUsers().forEach(
-                user -> commonExecutor.submit(() -> {
+                user -> coreExecutor.submit(() -> {
                     AlertNotifyHistory alertNotifyHistory = buildAlertNotifyHistory();
                     alertNotifyHistory.setUsername(user.getUsername());
                     alertNotifyHistory.setAlertNotifyEventId(event.getId());

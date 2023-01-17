@@ -9,6 +9,8 @@ import com.baiyi.opscloud.leo.task.WatchLeoDeployTask;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -40,6 +42,13 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
 
     private Session session = null;
 
+    private static ThreadPoolTaskExecutor leoExecutor;
+
+    @Autowired
+    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor leoExecutor) {
+        ContinuousDeliveryDeployController.leoExecutor = leoExecutor;
+    }
+
     /**
      * 连接建立成功调用的方法
      */
@@ -50,9 +59,7 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
             int cnt = onlineCount.incrementAndGet(); // 在线数加1
             this.session = session;
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
-            WatchLeoDeployTask watchLeoDeployTask = new WatchLeoDeployTask(this.sessionId, session);
-            Thread thread = new Thread(watchLeoDeployTask);
-            thread.start();
+            leoExecutor.execute(new WatchLeoDeployTask(this.sessionId, session));
         } catch (Exception e) {
             log.error("Create connection error: {}", e.getMessage());
         }

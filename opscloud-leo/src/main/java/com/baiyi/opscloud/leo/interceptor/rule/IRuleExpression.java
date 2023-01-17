@@ -13,4 +13,6 @@ public interface IRuleExpression {
 
     public boolean parse(LeoRuleModel.Expression expression);
 
+    public String toDisplayName(LeoRuleModel.Expression expression);
+
 }

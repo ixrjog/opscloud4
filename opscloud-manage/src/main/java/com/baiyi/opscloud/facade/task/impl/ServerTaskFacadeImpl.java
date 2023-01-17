@@ -44,7 +44,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.COMMON;
+import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi
@@ -83,7 +83,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
         return new DataTable<>(data, table.getTotalNum());
     }
 
-    @Async(value = COMMON)
+    @Async(value = CORE)
     @Override
     public void submitServerTask(ServerTaskParam.SubmitServerTask submitServerTask, String username) {
         ServerTask serverTask = ServerTaskBuilder.newBuilder(submitServerTask, username);

@@ -6,12 +6,14 @@ import com.baiyi.opscloud.domain.generator.opscloud.LeoRule;
 import com.baiyi.opscloud.domain.param.leo.LeoRuleParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoRuleVO;
 import com.baiyi.opscloud.facade.leo.LeoRuleFacade;
+import com.baiyi.opscloud.packer.leo.LeoRulePacker;
 import com.baiyi.opscloud.service.leo.LeoRuleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -25,10 +27,13 @@ public class LeoRuleFacadeImpl implements LeoRuleFacade {
 
     private final LeoRuleService leoRuleService;
 
+    private final LeoRulePacker leoRulePacker;
+
     @Override
     public DataTable<LeoRuleVO.Rule> queryLeoRulePage(LeoRuleParam.RulePageQuery pageQuery) {
         DataTable<LeoRule> table = leoRuleService.queryRulePage(pageQuery);
-        List<LeoRuleVO.Rule> data = BeanCopierUtil.copyListProperties(table.getData(), LeoRuleVO.Rule.class);
+        List<LeoRuleVO.Rule> data = BeanCopierUtil.copyListProperties(table.getData(), LeoRuleVO.Rule.class).stream()
+                .peek(leoRulePacker::wrap).collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 

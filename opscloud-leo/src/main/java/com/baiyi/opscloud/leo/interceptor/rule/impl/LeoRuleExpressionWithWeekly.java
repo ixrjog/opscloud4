@@ -24,6 +24,8 @@ public class LeoRuleExpressionWithWeekly extends BaseLeoRuleExpression {
         return "WEEKLY";
     }
 
+
+
     /**
      * 解析表达式
      *
@@ -71,6 +73,19 @@ public class LeoRuleExpressionWithWeekly extends BaseLeoRuleExpression {
 
         log.info("结束时间: hitEndTime={}", hitEnd);
         return hitEnd;
+    }
+
+    private static final String displayName = "每周封网; 开始时间: 星期%s %s, 结束时间: 星期%s %s";
+
+    /**
+     *
+     * @param expression
+     * @return 每周封网; 开始时间: 星期5 18:00:00, 结束时间: 星期7 24:00:00
+     */
+    public String toDisplayName(LeoRuleModel.Expression expression) {
+        List<String> beginArgs = getExpressionArgs(expression.getBegin());
+        List<String> endArgs = getExpressionArgs(expression.getEnd());
+        return String.format(displayName, beginArgs.get(0),beginArgs.get(1), endArgs.get(0),endArgs.get(1));
     }
 
 }

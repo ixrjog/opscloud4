@@ -23,6 +23,8 @@ public class LeoRuleExpressionWithDate extends BaseLeoRuleExpression {
         return "DATE";
     }
 
+    private static final String displayName = "封网开始时间: %s, 封网结束时间: %s";
+
     public boolean parse(LeoRuleModel.Expression expression) {
         Date beginDate = TimeUtil.gmtToDate(expression.getBegin());
         Date endDate = TimeUtil.gmtToDate(expression.getEnd());
@@ -32,6 +34,15 @@ public class LeoRuleExpressionWithDate extends BaseLeoRuleExpression {
         boolean hitEnd = nowDate.before(endDate);
         log.info("结束时间: hitEndTime={}", hitEnd);
         return hitBegin && hitEnd;
+    }
+
+    /**
+     *
+     * @param expression
+     * @return 封网开始时间: 2023-01-16 00:00:00, 封网结束时间 2023-01-29 09:00:00
+     */
+    public String toDisplayName(LeoRuleModel.Expression expression) {
+        return String.format(displayName, expression.getBegin(), expression.getEnd());
     }
 
 }

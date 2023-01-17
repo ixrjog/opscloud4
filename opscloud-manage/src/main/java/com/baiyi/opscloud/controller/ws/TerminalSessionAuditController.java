@@ -25,7 +25,7 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
 
     private static final AtomicInteger onlineCount = new AtomicInteger(0);
     // concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。
-    private static final CopyOnWriteArraySet<Session> sessionSet = new CopyOnWriteArraySet<>();
+    private static final ThreadLocal<CopyOnWriteArraySet<Session>> sessionSet = ThreadLocal.withInitial(CopyOnWriteArraySet::new);
 
     private Session session = null;
     // 超时时间1H
@@ -36,7 +36,7 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
      */
     @OnOpen
     public void onOpen(Session session) {
-        sessionSet.add(session);
+        sessionSet.get().add(session);
         int cnt = onlineCount.incrementAndGet(); // 在线数加1
         log.info("终端会话审计有连接加入: 当前连接数为={}", cnt);
         session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
@@ -48,7 +48,7 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
      */
     @OnClose
     public void onClose() {
-        sessionSet.remove(session);
+        sessionSet.get().remove(session);
         int cnt = onlineCount.decrementAndGet();
         log.info("有连接关闭: 当前连接数为={}", cnt);
     }

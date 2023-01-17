@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.vo.leo;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +29,9 @@ public class LeoRuleVO {
         private String ruleConfig;
 
         private String comment;
+
+        @ApiModelProperty(value = "显示名称")
+        private String displayName;
 
     }
 
