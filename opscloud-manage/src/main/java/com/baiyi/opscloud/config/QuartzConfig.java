@@ -1,9 +1,11 @@
 package com.baiyi.opscloud.config;
 
+import com.baiyi.opscloud.config.condition.EnvCondition;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
@@ -21,6 +23,7 @@ import java.util.Properties;
 
 @Configuration
 @AutoConfigureAfter(DatasourceConfiguration.class)
+@Conditional(EnvCondition.class)
 public class QuartzConfig {
 
     @Resource
