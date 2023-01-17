@@ -151,7 +151,7 @@ public class LeoDoJobInterceptorHandler {
                     .orElse(Collections.emptyList());
             if (!CollectionUtils.isEmpty(envs)) {
                 if (envs.stream().anyMatch(e -> e.equalsIgnoreCase(env.getEnvName()))) {
-                    throw new LeoInterceptorException("非应用管理员禁止操作生产环境！");
+                    throw new LeoInterceptorException("当前规则禁执行: {}！", rule.getName());
                 }
             }
         }
