@@ -88,10 +88,6 @@ public class EcrValidator extends BaseCrValidator<AwsConfig> {
                 .orElseGet(() -> envService.getByEnvType(leoJob.getEnvType()).getEnvName());
         // ${evnName}/${repoName}
         final String repositoryName = Joiner.on("/").join(repoNamespace, crRepoName);
-        final String crRegistryId = Optional.of(cr)
-                .map(LeoJobModel.CR::getRepo)
-                .map(LeoJobModel.Repo::getId)
-                .orElseGet(() -> getCrRegistryId(cr, leoJob, crRegionId, repoNamespace, repositoryName, dsConfig));
         try {
             Repository repository = amazonEcrRepositoryDirver.createRepository(crRegionId, dsConfig.getAws(), repositoryName);
         } catch (Exception e) {
