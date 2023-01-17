@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.config.condition;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
@@ -12,7 +11,6 @@ import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
  * @Date 2023/1/17 11:13 AM
  * @Since 1.0
  */
-@Slf4j
 public class EnvCondition implements Condition {
 
     @Override
