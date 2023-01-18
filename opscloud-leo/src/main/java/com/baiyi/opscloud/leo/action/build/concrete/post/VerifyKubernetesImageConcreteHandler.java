@@ -100,6 +100,7 @@ public class VerifyKubernetesImageConcreteHandler extends BaseBuildHandler {
                     .isActive(true)
                     .build();
             leoBuildImageService.add(leoBuildImage);
+            // 设置构建任务有效
             LeoBuild saveLeoBuild = LeoBuild.builder()
                     .id(leoBuild.getId())
                     .isActive(true)
