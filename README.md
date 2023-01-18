@@ -10,8 +10,8 @@ Welcome to the opscloud wiki!
 
 ![GitHub Stats Card](https://github-readme-stats.vercel.app/api?username=ixrjog&show_icons=true&theme=onedark)
 
-# OpsCloud4.0 云上运维
-<img src="https://img.shields.io/badge/version-4.0.8-brightgreen.svg"></img>
+# OpsCloud 4 云上运维
+<img src="https://img.shields.io/badge/version-4.2.0-brightgreen.svg"></img>
 <img src="https://img.shields.io/badge/java-8-brightgreen.svg"></img> 
 <img src="https://img.shields.io/badge/springboot-2.4.13-brightgreen.svg"></img> 
 <img src="https://img.shields.io/badge/mysql-8-brightgreen.svg"></img>
@@ -26,11 +26,34 @@ Welcome to the opscloud wiki!
   + [https://github.com/ixrjog/opscloud4-web](https://github.com/ixrjog/opscloud4-web)
 
 #### 开发环境
-+ MacBook M1 PRO (macOS Monterey 12.3.1)
-+ IntelliJ IDEA 2022.1 (Ultimate Edition)
-+ WebStorm 2022.1
++ MacBook M1 PRO (macOS Ventura 13.1)
++ IntelliJ IDEA 2022.3。1 (Ultimate Edition)
++ WebStorm 2022.3.1
+
+#### 企业级-Leo持续交付模块发布 （4.2.0）
++ 部署
+
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-0.png" width="600"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-1.png" width="600"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-2.png" width="600"></img>
+
++ 构建
+
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-3.png" width="600"></img>
+
++ 规则配置（封网）
+
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-4.png" width="600"></img>
+
++ 任务配置
+
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-5.png" width="600"></img>
 
 #### 主要功能
++ Leo持续交付（Kubernetes）
+  + 多Jenkins实例调度
+  + 权限控制/封网策略
+  + 可视化发布过程
 + 动态数据源
   + Zabbix、Nacos、LDAP、Jenkins、Guacamole、Ansible、Nexus、Gitlab、Sonar、Dingtalk、TencentExmail、Consul
   + `Kubernetes`
