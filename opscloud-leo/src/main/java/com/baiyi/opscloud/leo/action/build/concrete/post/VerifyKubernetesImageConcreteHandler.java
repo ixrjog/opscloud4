@@ -100,6 +100,11 @@ public class VerifyKubernetesImageConcreteHandler extends BaseBuildHandler {
                     .isActive(true)
                     .build();
             leoBuildImageService.add(leoBuildImage);
+            LeoBuild saveLeoBuild = LeoBuild.builder()
+                    .id(leoBuild.getId())
+                    .isActive(true)
+                    .build();
+            leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
         } catch (LeoBuildException e) {
             logHelper.error(leoBuild, e.getMessage());
         }
