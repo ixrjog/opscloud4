@@ -107,4 +107,13 @@ public class LeoDeployServiceImpl implements LeoDeployService {
         return leoDeployMapper.statByMonth();
     }
 
+    @Override
+    public int countWithReport() {
+        Example example = new Example(LeoDeploy.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isActive", true)
+                .andEqualTo("isFinish", true);
+        return leoDeployMapper.selectCountByExample(example);
+    }
+
 }

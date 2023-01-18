@@ -43,7 +43,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public List<Application> queryAll(){
+    public List<Application> queryAll() {
         return applicationMapper.selectAll();
     }
 
@@ -89,4 +89,11 @@ public class ApplicationServiceImpl implements ApplicationService {
     public void deleteById(Integer id) {
         applicationMapper.deleteByPrimaryKey(id);
     }
+
+    @Override
+    public int countWithReport() {
+        Example example = new Example(Application.class);
+        return applicationMapper.selectCountByExample(example);
+    }
+
 }

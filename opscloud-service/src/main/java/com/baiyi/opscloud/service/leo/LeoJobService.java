@@ -34,6 +34,6 @@ public interface LeoJobService {
 
     int countWithTemplateId(Integer templateId);
 
-
+    int countWithReport();
 
 }

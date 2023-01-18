@@ -1,8 +1,6 @@
 package com.baiyi.opscloud.domain.vo.terminal;
 
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -11,8 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @Author baiyi
@@ -42,61 +38,14 @@ public class TerminalReportVO {
         @ApiModelProperty(value = "命令总数")
         private Integer commandTotal;
 
-        private MonthlyReport sessionReport;
+        private ReportVO.MonthlyReport sessionReport;
 
-        private MonthlyReport instanceReport;
+        private ReportVO.MonthlyReport instanceReport;
 
-        private MonthReport commandMonthReport;
-
-    }
-
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @ApiModel
-    public static class MonthlyReport implements Serializable {
-
-        private static final long serialVersionUID = 4131580978973119640L;
-
-        @ApiModelProperty(value = "月份")
-        private List<String> dateCat;
-
-        @ApiModelProperty(value = "月度统计数据")
-        @Builder.Default
-        private Map<String, List<Integer>> valueMap = Maps.newHashMap();
+        private ReportVO.MonthReport commandMonthReport;
 
     }
 
 
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @ApiModel
-    public static class MonthReport implements Serializable {
-
-        private static final long serialVersionUID = 2165068012664529432L;
-
-        @ApiModelProperty(value = "日期(月)")
-        private List<String> dateCat;
-
-        @ApiModelProperty(value = "月度统计")
-        private List<Integer> values;
-
-        public static TerminalReportVO.MonthReport buildMonthReport(List<ReportVO.Report> reports) {
-            List<String> dateCat = Lists.newArrayList();
-            List<Integer> values = Lists.newArrayList();
-            reports.forEach(e -> {
-                dateCat.add(e.getCName());
-                values.add(e.getValue());
-            });
-            return TerminalReportVO.MonthReport.builder()
-                    .dateCat(dateCat)
-                    .values(values)
-                    .build();
-        }
-
-    }
 
 }

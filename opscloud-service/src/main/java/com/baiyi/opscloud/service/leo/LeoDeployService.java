@@ -40,4 +40,6 @@ public interface LeoDeployService {
 
     List<ReportVO.Report> statByMonth();
 
+    int countWithReport();
+
 }

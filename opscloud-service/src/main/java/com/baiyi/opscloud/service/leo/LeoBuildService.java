@@ -48,4 +48,8 @@ public interface LeoBuildService {
 
     List<ReportVO.Report> statByMonth();
 
+    List<ReportVO.Report> queryMonth();
+
+    int countWithReport();
+
 }

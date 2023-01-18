@@ -35,6 +35,15 @@
         <result column="value" jdbcType="INTEGER" property="value"/>
     </resultMap>
 
+    <select id="queryMonth" resultMap="ReportResultMap">
+        select date_format(create_time, '%Y-%m') as `c_name`
+        from leo_build
+        where
+            build_result = 'SUCCESS'
+        group by `c_name`
+        order by `c_name`;
+    </select>
+
     <select id="statByMonth" resultMap="ReportResultMap">
         select date_format(create_time, '%Y-%m') as `c_name`, sum(1) as `value`
         from leo_build
