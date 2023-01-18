@@ -27,7 +27,7 @@ Welcome to the opscloud wiki!
 
 #### 开发环境
 + MacBook M1 PRO (macOS Ventura 13.1)
-+ IntelliJ IDEA 2022.3。1 (Ultimate Edition)
++ IntelliJ IDEA 2022.3.1 (Ultimate Edition)
 + WebStorm 2022.3.1
 
 #### 企业级-Leo持续交付模块发布 （4.2.0）
