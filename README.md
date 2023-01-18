@@ -33,21 +33,21 @@ Welcome to the opscloud wiki!
 #### 企业级-Leo持续交付模块发布 （4.2.0）
 + 部署
 
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-0.png" width="600"></img>
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-1.png" width="600"></img>
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-2.png" width="600"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-0.png" width="830"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-1.png" width="830"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-2.png" width="830"></img>
 
 + 构建
 
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-3.png" width="600"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-3.png" width="830"></img>
 
 + 规则配置（封网）
 
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-4.png" width="600"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-4.png" width="830"></img>
 
 + 任务配置
 
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-5.png" width="600"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-5.png" width="830"></img>
 
 #### 主要功能
 + Leo持续交付（Kubernetes）
