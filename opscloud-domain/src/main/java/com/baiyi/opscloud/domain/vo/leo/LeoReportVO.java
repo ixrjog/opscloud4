@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * @Author baiyi
- * @Date 2023/1/11 18:20
+ * @Date 2023/1/11 8:20
  * @Version 1.0
  */
 public class LeoReportVO {
@@ -29,13 +29,43 @@ public class LeoReportVO {
 
         private static final long serialVersionUID = 5737296480391365951L;
 
-        @ApiModelProperty(value = "构建月报表")
-        private MonthReport buildMonthReport;
+        @ApiModelProperty(value = "仪表盘")
+        private Dashboard dashboard;
 
-        @ApiModelProperty(value = "部署月报表")
-        private MonthReport deployMonthReport;
+        @ApiModelProperty(value = "持续交付报表")
+        private ReportVO.MonthlyReport continuousDeliveryReport;
 
+//        @ApiModelProperty(value = "构建月报表")
+//        private MonthReport buildMonthReport;
+//
+//        @ApiModelProperty(value = "部署月报表")
+//        private MonthReport deployMonthReport;
+
+        @ApiModelProperty(value = "Jenkins实例")
         private List<LeoJenkinsInstance> instances;
+
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
+    public static class Dashboard implements Serializable {
+
+        private static final long serialVersionUID = -2386828955543538401L;
+
+        @ApiModelProperty(value = "应用总数")
+        private Integer applicationTotal;
+
+        @ApiModelProperty(value = "任务总数")
+        private Integer jobTotal;
+
+        @ApiModelProperty(value = "构建总数")
+        private Integer buildTotal;
+
+        @ApiModelProperty(value = "部署总数")
+        private Integer deployTotal;
 
     }
 

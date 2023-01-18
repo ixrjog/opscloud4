@@ -95,4 +95,12 @@ public class LeoJobServiceImpl implements LeoJobService {
         return leoJobMapper.selectCountByExample(example);
     }
 
+    @Override
+    public int countWithReport() {
+        Example example = new Example(LeoJob.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isActive", true);
+        return leoJobMapper.selectCountByExample(example);
+    }
+
 }

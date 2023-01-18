@@ -171,4 +171,18 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         return leoBuildMapper.statByMonth();
     }
 
+    @Override
+    public List<ReportVO.Report> queryMonth() {
+        return leoBuildMapper.queryMonth();
+    }
+
+    @Override
+    public int countWithReport() {
+        Example example = new Example(LeoBuild.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isActive", true)
+                .andEqualTo("isFinish", false);
+        return leoBuildMapper.selectCountByExample(example);
+    }
+
 }

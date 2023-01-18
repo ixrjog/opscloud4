@@ -31,4 +31,7 @@ public interface ApplicationService {
     void update(Application application);
 
     void deleteById(Integer id);
+
+    int countWithReport();
+
 }
