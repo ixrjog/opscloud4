@@ -84,7 +84,7 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
      *
      * @param message 客户端发送过来的消息
      */
-    @OnMessage(maxMessageSize = 512 * 1024)
+    @OnMessage(maxMessageSize = 100 * 1024)
     public void onMessage(String message, Session session) {
         log.info("message={}", message);
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;

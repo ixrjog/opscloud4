@@ -66,7 +66,7 @@ public class JenkinsBuildExecutorController {
      *
      * @param message 客户端发送过来的消息
      */
-    @OnMessage(maxMessageSize = 512 * 1024)
+    @OnMessage(maxMessageSize = 64 * 1024)
     public void onMessage(String message, Session session) {
         SimpleMessage simpleMessage = toMessage(message);
         DatasourceInstance instance = null;
