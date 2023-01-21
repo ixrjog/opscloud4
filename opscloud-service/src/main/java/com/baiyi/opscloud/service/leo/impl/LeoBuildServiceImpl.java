@@ -146,11 +146,11 @@ public class LeoBuildServiceImpl implements LeoBuildService {
     }
 
     @Override
-    public List<LeoBuild> queryBuildRunningWithOcInstance(String ocInstance) {
+    public List<LeoBuild> queryUnfinishBuildWithOcInstance(String ocInstance) {
         Example example = new Example(LeoBuild.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("isFinish", false)
-                .andEqualTo("isActive", true)
+                //.andEqualTo("isActive", false)
                 .andEqualTo("ocInstance", ocInstance);
         example.setOrderByClause("id desc");
         return leoBuildMapper.selectByExample(example);

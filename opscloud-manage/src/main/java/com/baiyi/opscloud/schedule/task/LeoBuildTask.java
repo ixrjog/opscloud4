@@ -24,7 +24,7 @@ public class LeoBuildTask extends AbstractTask {
     private final LeoDeployCompensationTask leoDeployCompensationTask;
 
     @InstanceHealth // 实例健康检查，高优先级
-    @Scheduled(initialDelay = 30000, fixedRate = 60 * 1000)
+    @Scheduled(initialDelay = 30000, fixedRate = 180 * 1000)
     public void listenerTask() {
         // 非生产环境不执行任务
         if (ENV_PROD.equals(env)) {

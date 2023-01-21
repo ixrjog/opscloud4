@@ -32,7 +32,7 @@ public interface LeoDeployService {
      *
      * @return
      */
-    List<LeoDeploy> queryDeployRunningWithOcInstance(String ocInstance);
+    List<LeoDeploy> queryUnfinishDeployWithOcInstance(String ocInstance);
 
     int countRunningWithJobId(int jobId);
 

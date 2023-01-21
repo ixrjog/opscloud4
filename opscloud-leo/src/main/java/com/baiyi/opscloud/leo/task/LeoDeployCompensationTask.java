@@ -40,7 +40,7 @@ public class LeoDeployCompensationTask {
     private final LeoPostDeployHandler leoPostDeployHandler;
 
     public void handleTask() {
-        List<LeoDeploy> leoDeploys = leoDeployService.queryDeployRunningWithOcInstance(OcInstance.ocInstance);
+        List<LeoDeploy> leoDeploys = leoDeployService.queryUnfinishDeployWithOcInstance(OcInstance.ocInstance);
         if (CollectionUtils.isEmpty(leoDeploys)) {
             return;
         }

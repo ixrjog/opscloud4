@@ -74,11 +74,11 @@ public class LeoDeployServiceImpl implements LeoDeployService {
     }
 
     @Override
-    public List<LeoDeploy> queryDeployRunningWithOcInstance(String ocInstance) {
+    public List<LeoDeploy> queryUnfinishDeployWithOcInstance(String ocInstance) {
         Example example = new Example(LeoDeploy.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("isFinish", false)
-                .andEqualTo("isActive", true)
+                //.andEqualTo("isActive", false)
                 .andEqualTo("ocInstance", ocInstance);
         example.setOrderByClause("id desc");
         return leoDeployMapper.selectByExample(example);
