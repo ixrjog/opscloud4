@@ -14,6 +14,7 @@ import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -39,6 +40,8 @@ public class LeoDeployCompensationTask {
 
     private final LeoPostDeployHandler leoPostDeployHandler;
 
+    private final ThreadPoolTaskExecutor leoExecutor;
+
     public void handleTask() {
         List<LeoDeploy> leoDeploys = leoDeployService.queryUnfinishDeployWithOcInstance(OcInstance.ocInstance);
         if (CollectionUtils.isEmpty(leoDeploys)) {
@@ -59,8 +62,7 @@ public class LeoDeployCompensationTask {
                         leoPostDeployHandler
                 );
                 log.info("执行补偿任务: deployId={}", leoDeploy.getId());
-                Thread thread = new Thread(deployingSupervisor);
-                thread.start();
+                leoExecutor.execute(new Thread(deployingSupervisor));
             }
         });
     }
