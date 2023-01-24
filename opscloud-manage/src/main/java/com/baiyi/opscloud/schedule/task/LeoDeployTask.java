@@ -19,7 +19,7 @@ import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class LeoDeployTask  extends AbstractTask {
+public class LeoDeployTask extends AbstractTask {
 
     private final LeoDeployCompensationTask leoDeployCompensationTask;
 
