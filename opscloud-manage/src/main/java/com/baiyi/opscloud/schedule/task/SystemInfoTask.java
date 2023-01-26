@@ -27,9 +27,14 @@ public class SystemInfoTask extends AbstractTask {
 
     // key = "system_info_instance_ip_
 
+    private static final boolean enable = false;
+
     @InstanceHealth // 实例健康检查，高优先级
     @Scheduled(initialDelay = 10000, fixedRate = 30 * 1000)
     public void refreshSystemInfoTask() {
+
+        if(!enable) return;
+
         try {
             Instance instance = instanceFacade.getInstance();
             if (instance == null) return;
