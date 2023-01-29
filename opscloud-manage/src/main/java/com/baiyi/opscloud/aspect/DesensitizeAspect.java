@@ -65,10 +65,9 @@ public class DesensitizeAspect {
                     return sb.replace(3, 7, getSymbol(4)).toString();
                 }
                 return value;
-            case PASSWORD:
-                return StringUtils.EMPTY;
             case TOKEN:
                 return getSymbol(6);
+            case PASSWORD:
             default:
                 return StringUtils.EMPTY;
         }

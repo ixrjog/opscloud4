@@ -3,6 +3,7 @@ package com.baiyi.opscloud.schedule.task;
 import com.baiyi.opscloud.common.annotation.TaskWatch;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.helper.TopicHelper;
+import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.datasource.ansible.provider.AnsibleHostsProvider;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -10,7 +11,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetSubscription;
 import com.baiyi.opscloud.facade.datasource.DsInstanceAssetSubscriptionFacade;
-import com.baiyi.opscloud.schedule.task.base.AbstractTask;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetSubscriptionService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
@@ -33,7 +33,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AssetSubscriptionTask extends AbstractTask {
+public class AssetSubscriptionTask {
 
     private final DsInstanceService dsInstanceService;
 
@@ -44,6 +44,14 @@ public class AssetSubscriptionTask extends AbstractTask {
     private final DsInstanceAssetSubscriptionService dsInstanceAssetSubscriptionService;
 
     private final DsInstanceAssetSubscriptionFacade dsInstanceAssetSubscriptionFacade;
+
+    protected final RedisUtil redisUtil;
+
+    private final TopicHelper topicHelper;
+
+    protected Object receive() {
+        return topicHelper.receive(TopicHelper.Topics.ASSET_SUBSCRIPTION_TASK);
+    }
 
     @InstanceHealth // 实例健康检查，高优先级
     @Scheduled(initialDelay = 5000, fixedRate = 60 * 1000)
@@ -57,7 +65,7 @@ public class AssetSubscriptionTask extends AbstractTask {
     @SchedulerLock(name = "asset_subscription_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
     @TaskWatch(name = "Asset subscription")
     public void run() {
-        if (receive(TopicHelper.Topics.ASSET_SUBSCRIPTION_TASK) == null) return;
+        if (receive() == null) return;
         task();
     }
 

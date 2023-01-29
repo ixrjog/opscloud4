@@ -36,7 +36,7 @@ public class LeoBuildEventLoop implements Runnable {
         while (true) {
             try {
                 if (!this.session.isOpen()) {
-                    log.info("Leo build event loop end!");
+                    log.info("Leo build event loop end: sessionId={}", this.sessionId);
                     LeoBuildQuerySessionMap.removeSessionQueryMap(this.sessionId);
                     break;
                 }

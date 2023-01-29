@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.consul;
 
-import com.baiyi.opscloud.alert.rule.impl.ConsulAlertRule;
+import com.baiyi.opscloud.schedule.task.ConsulAlertTask;
 import com.baiyi.opscloud.datasource.consul.base.BaseConsulUnit;
 import com.baiyi.opscloud.datasource.consul.driver.ConsulServiceDriver;
 import com.baiyi.opscloud.datasource.consul.entity.ConsulHealth;
@@ -20,7 +20,7 @@ public class ConsulTest extends BaseConsulUnit {
     private ConsulServiceDriver consulServiceDriver;
 
     @Resource
-    private ConsulAlertRule consulAlertRule;
+    private ConsulAlertTask consulAlertRule;
 
     @Test
     void listHealthServiceTest() {

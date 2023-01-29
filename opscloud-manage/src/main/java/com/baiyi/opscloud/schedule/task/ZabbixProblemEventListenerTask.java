@@ -6,7 +6,6 @@ import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.event.IEventHandler;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
 import com.baiyi.opscloud.event.factory.EventFactory;
-import com.baiyi.opscloud.schedule.task.base.AbstractTask;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.context.annotation.Conditional;
@@ -22,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 // 非生产环境不执行
 @Conditional(EnvCondition.class)
-public class ZabbixProblemEventListenerTask extends AbstractTask {
+public class ZabbixProblemEventListenerTask {
 
     @InstanceHealth // 实例健康检查，高优先级
     @Scheduled(initialDelay = 8000, fixedRate = 120 * 1000)

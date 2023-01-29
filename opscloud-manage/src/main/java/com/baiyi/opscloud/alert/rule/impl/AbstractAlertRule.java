@@ -1,10 +1,10 @@
 package com.baiyi.opscloud.alert.rule.impl;
 
 import com.baiyi.opscloud.alert.rule.IRule;
-import com.baiyi.opscloud.domain.alert.AlertContext;
-import com.baiyi.opscloud.domain.alert.AlertRuleMatchExpression;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.domain.alert.AlertContext;
+import com.baiyi.opscloud.domain.alert.AlertRuleMatchExpression;
 import com.baiyi.opscloud.domain.base.IInstanceType;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -14,7 +14,6 @@ import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -31,9 +30,6 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public abstract class AbstractAlertRule implements IRule, IInstanceType {
-
-    @Value("${spring.profiles.active}")
-    protected String env;
 
     @Resource
     private RedisUtil redisUtil;
@@ -92,15 +88,15 @@ public abstract class AbstractAlertRule implements IRule, IInstanceType {
         if (redisUtil.hasKey(cacheKey)) {
             Integer count = (Integer) redisUtil.get(cacheKey);
             if (count >= matchExpression.getFailureThreshold() - 1) {
-                log.error("达到错误阈值，key={}", cacheKey);
+                log.info("达到错误阈值: key={}", cacheKey);
                 return true;
             }
             redisUtil.incr(cacheKey, 1);
-            log.warn("发生故障，当前次数 {}, key={}", count + 1, cacheKey);
+            log.info("触发告警: key={}, cnt={}", cacheKey, count + 1);
             return false;
         }
         redisUtil.set(cacheKey, 1, 60L * matchExpression.getFailureThreshold() + 30L);
-        log.warn("发生故障，当前次数 1, key={}", cacheKey);
+        log.info("触发告警: key={}, cnt={}", cacheKey, 1);
         return false;
     }
 
@@ -108,7 +104,7 @@ public abstract class AbstractAlertRule implements IRule, IInstanceType {
     public Boolean silence(DsAssetVO.Asset asset, AlertRuleMatchExpression matchExpression) {
         String cacheKey = Joiner.on("#").join(getCacheKeyPrefix(asset), matchExpression.getWeight());
         if (redisUtil.hasKey(cacheKey)) {
-            log.info("告警规则静默中，key={}", cacheKey);
+            log.debug("告警规则静默中: key={}", cacheKey);
             return true;
         }
         redisUtil.set(cacheKey, true, matchExpression.getSilenceSeconds());

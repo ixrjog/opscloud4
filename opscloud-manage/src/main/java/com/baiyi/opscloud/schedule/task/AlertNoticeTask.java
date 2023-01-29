@@ -4,7 +4,6 @@ import com.baiyi.opscloud.common.annotation.TaskWatch;
 import com.baiyi.opscloud.config.condition.EnvCondition;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.event.alert.AlertHandler;
-import com.baiyi.opscloud.schedule.task.base.AbstractTask;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
@@ -22,7 +21,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 // 非生产环境不执行
 @Conditional(EnvCondition.class)
-public class AlertNoticeTask extends AbstractTask {
+public class AlertNoticeTask {
 
     private final AlertHandler alertHandler;
 

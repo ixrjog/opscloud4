@@ -1,10 +1,13 @@
-package com.baiyi.opscloud.alert.rule.impl;
+package com.baiyi.opscloud.schedule.task;
 
+import com.baiyi.opscloud.alert.rule.impl.AbstractAlertRule;
 import com.baiyi.opscloud.alert.strategy.AlertStrategyFactory;
 import com.baiyi.opscloud.alert.strategy.IAlertStrategy;
+import com.baiyi.opscloud.common.annotation.TaskWatch;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ConsulConfig;
 import com.baiyi.opscloud.common.util.IdUtil;
+import com.baiyi.opscloud.config.condition.EnvCondition;
 import com.baiyi.opscloud.datasource.consul.driver.ConsulServiceDriver;
 import com.baiyi.opscloud.datasource.consul.entity.ConsulHealth;
 import com.baiyi.opscloud.domain.alert.AlertContext;
@@ -20,21 +23,20 @@ import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.baiyi.opscloud.service.user.UserService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
-import javax.annotation.Resource;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
 
 /**
  * @Author 修远
@@ -44,19 +46,18 @@ import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
 
 @Slf4j
 @Component
-public class ConsulAlertRule extends AbstractAlertRule {
+// 非生产环境不执行
+@Conditional(EnvCondition.class)
+@AllArgsConstructor
+public class ConsulAlertTask extends AbstractAlertRule {
 
-    @Resource
-    private ApplicationService applicationService;
+    private final ApplicationService applicationService;
 
-    @Resource
-    private UserPermissionService userPermissionService;
+    private final UserPermissionService userPermissionService;
 
-    @Resource
-    private UserService userService;
+    private final UserService userService;
 
-    @Resource
-    private ConsulServiceDriver consulServiceDriver;
+    private final ConsulServiceDriver consulServiceDriver;
 
     private static final String DATA_CENTER = "dc1";
 
@@ -65,29 +66,28 @@ public class ConsulAlertRule extends AbstractAlertRule {
     @InstanceHealth
     @Scheduled(cron = "10 */1 * * * ?")
     @SchedulerLock(name = "consul_alert_rule_evaluate_task", lockAtMostFor = "30s", lockAtLeastFor = "30s")
+    @TaskWatch(name = "Consul alert")
     public void ruleEvaluate() {
-        // 非生产环境不执行任务
-        if (ENV_PROD.equals(env)) {
-            log.info("consul 告警规则评估");
-            preData();
-            List<DatasourceInstance> datasourceInstances = dsInstanceService.listByInstanceType(getInstanceType());
-            datasourceInstances.forEach(dsInstance -> {
-                DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
-                        .assetType(DsAssetTypeConstants.CONSUL_SERVICE.name())
-                        .extend(true)
-                        .instanceId(dsInstance.getId())
-                        .length(1000)
-                        .page(1)
-                        .queryName("")
-                        .relation(false)
-                        .build();
-                List<DsAssetVO.Asset> assetList = dsInstanceAssetFacade.queryAssetPage(pageQuery).getData();
-                assetList.forEach(asset ->
-                        evaluate(asset, getConfig(dsInstance.getUuid()).getStrategyMatchExpressions())
-                );
-            });
-            log.info("consul 告警规则结束");
-        }
+        preData();
+        List<DatasourceInstance> datasourceInstances = dsInstanceService.listByInstanceType(getInstanceType());
+        datasourceInstances.forEach(dsInstance -> {
+            DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
+                    .assetType(DsAssetTypeConstants.CONSUL_SERVICE.name())
+                    .extend(true)
+                    .instanceId(dsInstance.getId())
+                    .length(1000)
+                    .page(1)
+                    .queryName("")
+                    .relation(false)
+                    .build();
+            List<DsAssetVO.Asset> assetList = dsInstanceAssetFacade.queryAssetPage(pageQuery).getData();
+            if (CollectionUtils.isEmpty(assetList)) {
+                return;
+            }
+            assetList.forEach(asset ->
+                    evaluate(asset, getConfig(dsInstance.getUuid()).getStrategyMatchExpressions())
+            );
+        });
     }
 
     private ConsulConfig.Consul getConfig(String instanceUuid) {
@@ -157,7 +157,7 @@ public class ConsulAlertRule extends AbstractAlertRule {
         }
         IAlertStrategy alertStrategy = AlertStrategyFactory.getAlertActivity(context.getSeverity());
         Application application = applicationService.getByName(context.getService());
-        if (ObjectUtils.isEmpty(application)){
+        if (ObjectUtils.isEmpty(application)) {
             return;
         }
         UserPermission userPermission = UserPermission.builder()

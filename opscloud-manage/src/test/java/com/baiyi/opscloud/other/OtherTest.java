@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.other;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.alert.rule.impl.ConsulAlertRule;
+import com.baiyi.opscloud.schedule.task.ConsulAlertTask;
 import com.baiyi.opscloud.common.datasource.ConsulConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
@@ -46,7 +46,7 @@ public class OtherTest extends BaseUnit {
     private DsInstanceAssetFacade dsInstanceAssetFacade;
 
     @Resource
-    private ConsulAlertRule consulAlertRule;
+    private ConsulAlertTask consulAlertRule;
 
     @Resource
     private RedisUtil redisUtil;

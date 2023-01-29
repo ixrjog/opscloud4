@@ -33,7 +33,7 @@ public class LeoDeployEventLoop implements Runnable {
         while (true) {
             try {
                 if (!this.session.isOpen()) {
-                    log.info("Leo deploy event loop end!");
+                    log.info("Leo deploy event loop end: sessionId={}", this.sessionId);
                     LeoDeployQuerySessionMap.removeSessionQueryMap(this.sessionId);
                     break;
                 }
