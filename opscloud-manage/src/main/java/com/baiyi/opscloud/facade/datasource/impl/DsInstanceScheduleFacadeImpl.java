@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceScheduleParam;
 import com.baiyi.opscloud.domain.vo.datasource.ScheduleVO;
 import com.baiyi.opscloud.facade.datasource.DsInstanceScheduleFacade;
-import com.baiyi.opscloud.schedule.quartz.AssetPullJob;
+import com.baiyi.opscloud.schedule.quartz.job.AssetPullJob;
 import com.baiyi.opscloud.scheduler.QuartzService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.google.common.collect.ImmutableMap;

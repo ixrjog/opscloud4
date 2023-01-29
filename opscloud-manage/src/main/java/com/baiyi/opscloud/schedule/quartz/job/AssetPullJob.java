@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.schedule.quartz;
+package com.baiyi.opscloud.schedule.quartz.job;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
