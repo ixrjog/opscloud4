@@ -75,7 +75,7 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
             int cnt = onlineCount.decrementAndGet();
         } catch (Exception e) {
         }
-        log.info("会话关闭！");
+        //log.info("会话关闭！");
     }
 
     /**
