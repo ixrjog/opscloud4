@@ -87,15 +87,13 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
      */
     @OnMessage(maxMessageSize = 100 * 1024)
     public void onMessage(String message, Session session) {
-        log.info("message={}", message);
+        // log.info("message={}", message);
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;
         String messageType = getLeoMessageType(message);
         // 处理登录状态
         if (StringUtils.isEmpty(this.username)) {
             // 鉴权
             hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));
-//            if (LeoRequestType.LOGIN.name().equals(messageType))
-//                hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));
         } else {
             SessionUtil.setUsername(this.username);
         }
@@ -115,7 +113,7 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.info("会话错误: err={}", error.getMessage());
+       // log.info("会话错误: err={}", error.getMessage());
     }
 
 }
