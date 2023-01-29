@@ -111,7 +111,7 @@ public class OtherTest extends BaseUnit {
                 .instanceId(36)
                 .length(5)
                 .page(1)
-                .queryName("tecno-mail")
+                .queryName("device-check")
                 .relation(false)
                 .build();
         List<DsAssetVO.Asset> assetList = dsInstanceAssetFacade.queryAssetPage(pageQuery).getData();

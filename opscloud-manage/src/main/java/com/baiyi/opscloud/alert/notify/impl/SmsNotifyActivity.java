@@ -1,17 +1,18 @@
 package com.baiyi.opscloud.alert.notify.impl;
 
 import com.baiyi.opscloud.alert.notify.NotifyMediaEnum;
-import com.baiyi.opscloud.domain.alert.AlertContext;
-import com.baiyi.opscloud.domain.alert.AlertNotifyMedia;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.message.driver.AliyunSmsDriver;
+import com.baiyi.opscloud.domain.alert.AlertContext;
+import com.baiyi.opscloud.domain.alert.AlertNotifyMedia;
 import com.baiyi.opscloud.domain.generator.opscloud.AlertNotifyHistory;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -42,6 +43,9 @@ public class SmsNotifyActivity extends AbstractNotifyActivity {
 
     @Override
     public void doNotify(AlertNotifyMedia media, AlertContext context) {
+        if (CollectionUtils.isEmpty(media.getUsers())) {
+            return;
+        }
         Set<String> phones = media.getUsers().stream().map(User::getPhone).collect(Collectors.toSet());
         String cacheKey = getCacheKeyPrefix(context);
         if (redisUtil.hasKey(cacheKey)) {

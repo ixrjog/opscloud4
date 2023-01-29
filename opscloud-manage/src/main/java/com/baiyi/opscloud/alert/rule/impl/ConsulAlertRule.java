@@ -2,15 +2,15 @@ package com.baiyi.opscloud.alert.rule.impl;
 
 import com.baiyi.opscloud.alert.strategy.AlertStrategyFactory;
 import com.baiyi.opscloud.alert.strategy.IAlertStrategy;
-import com.baiyi.opscloud.domain.alert.AlertContext;
-import com.baiyi.opscloud.domain.alert.AlertNotifyMedia;
-import com.baiyi.opscloud.domain.alert.AlertRuleMatchExpression;
-import com.baiyi.opscloud.domain.alert.Metadata;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ConsulConfig;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.datasource.consul.driver.ConsulServiceDriver;
 import com.baiyi.opscloud.datasource.consul.entity.ConsulHealth;
+import com.baiyi.opscloud.domain.alert.AlertContext;
+import com.baiyi.opscloud.domain.alert.AlertNotifyMedia;
+import com.baiyi.opscloud.domain.alert.AlertRuleMatchExpression;
+import com.baiyi.opscloud.domain.alert.Metadata;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -152,9 +152,14 @@ public class ConsulAlertRule extends AbstractAlertRule {
 
     @Override
     public void execute(AlertContext context) {
-        if (ObjectUtils.isEmpty(context)) return;
+        if (ObjectUtils.isEmpty(context)) {
+            return;
+        }
         IAlertStrategy alertStrategy = AlertStrategyFactory.getAlertActivity(context.getSeverity());
         Application application = applicationService.getByName(context.getService());
+        if (ObjectUtils.isEmpty(application)){
+            return;
+        }
         UserPermission userPermission = UserPermission.builder()
                 .businessId(application.getId())
                 .businessType(BusinessTypeEnum.APPLICATION.getType())
@@ -162,10 +167,16 @@ public class ConsulAlertRule extends AbstractAlertRule {
         List<UserPermission> userPermissions = userPermissionService.queryByBusiness(userPermission).stream()
                 .filter(x -> "admin".equals(x.getPermissionRole()))
                 .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(userPermissions)) {
+            return;
+        }
         List<User> users = userPermissions.stream()
                 .map(permission -> userService.getById(permission.getUserId()))
                 .filter(User::getIsActive)
                 .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(users)) {
+            return;
+        }
         ConsulConfig.Consul consul = getConfig(context.getSource());
         AlertNotifyMedia media = AlertNotifyMedia.builder()
                 .users(users)
