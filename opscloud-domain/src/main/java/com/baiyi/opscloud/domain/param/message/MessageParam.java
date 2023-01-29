@@ -53,4 +53,10 @@ public class MessageParam {
         public String platformToken;
 
     }
+
+    @Data
+    public static class GrafanaMessage {
+        private String message;
+    }
+
 }

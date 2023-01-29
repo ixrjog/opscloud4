@@ -69,10 +69,10 @@ public class MessageFacadeImpl implements MessageFacade {
     }
 
     @Override
-    public LXHLMessageResponse.SendMessage sendMessage(String media, String content, String mobiles, String platform, String platformToken) {
+    public LXHLMessageResponse.SendMessage sendMessage(String media, String mobiles, String platform, String platformToken, MessageParam.GrafanaMessage parma) {
         List<String> mobile = Lists.newArrayList(mobiles.split(","));
         MessageParam.SendMessage param = MessageParam.SendMessage.builder()
-                .content(content)
+                .content(parma.getMessage())
                 .media(media)
                 .platform(platform)
                 .platformToken(platformToken)

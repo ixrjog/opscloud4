@@ -33,10 +33,11 @@ public class MessageController {
 
     @ApiOperation(value = "发送消息 for grafana")
     @PostMapping(value = "/send/grafana", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<LXHLMessageResponse.SendMessage> sendMessage4Grafana(
-            @RequestParam String media, @RequestParam String message,
-            @RequestParam String mobiles, @RequestParam String platform,
-            @RequestParam String platformToken) {
-        return new HttpResult<>(messageFacade.sendMessage(media, message, mobiles, platform, platformToken));
+    public HttpResult<LXHLMessageResponse.SendMessage> sendMessage4Grafana(@RequestParam String media,
+                                                                           @RequestParam String mobiles,
+                                                                           @RequestParam String platform,
+                                                                           @RequestParam String platformToken,
+                                                                           @RequestBody MessageParam.GrafanaMessage param) {
+        return new HttpResult<>(messageFacade.sendMessage(media, mobiles, platform, platformToken, param));
     }
 }

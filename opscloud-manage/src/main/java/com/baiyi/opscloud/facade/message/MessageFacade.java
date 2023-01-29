@@ -12,6 +12,5 @@ public interface MessageFacade {
 
     LXHLMessageResponse.SendMessage sendMessage(MessageParam.SendMessage param);
 
-
-    LXHLMessageResponse.SendMessage sendMessage(String media, String content, String mobiles, String platform, String platformToken);
+    LXHLMessageResponse.SendMessage sendMessage(String media, String mobiles, String platform, String platformToken, MessageParam.GrafanaMessage parma);
 }
