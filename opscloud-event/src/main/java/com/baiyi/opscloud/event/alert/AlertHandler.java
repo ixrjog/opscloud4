@@ -52,7 +52,7 @@ public class AlertHandler extends SimpleDsInstanceProvider {
 
     private final MessageTemplateService messageTemplateService;
 
-    protected static final int dsInstanceBusinessType = BusinessTypeEnum.DATASOURCE_INSTANCE.getType();
+    protected static final int DATASOURCE_INSTANCE_TYPE = BusinessTypeEnum.DATASOURCE_INSTANCE.getType();
 
     protected static final String EVENT_TAG = "Event";
 
@@ -109,7 +109,7 @@ public class AlertHandler extends SimpleDsInstanceProvider {
         String msg = renderTemplate(key, eventMap.get(key), hostMap);
         String cacheKey = Joiner.on("#").join(PREFIX, key);
         if (redisUtil.hasKey(cacheKey)) {
-            log.info("告警静默: cacheKey = " + cacheKey);
+            log.info("告警静默: cacheKey={}" + cacheKey);
             return; // 静默
         }
         dingtalkSendHelper.send(zabbixConfig.getZabbix(), msg);
@@ -157,7 +157,7 @@ public class AlertHandler extends SimpleDsInstanceProvider {
         List<DatasourceInstance> instances = Lists.newArrayList();
         DsInstanceParam.DsInstanceQuery query = DsInstanceParam.DsInstanceQuery.builder().instanceType(getDsInstanceType().getName()).build();
         // 过滤掉没有标签的实例
-        instances.addAll(dsInstanceService.queryByParam(query).stream().filter(e -> simpleTagService.hasBusinessTag(EVENT_TAG, dsInstanceBusinessType, e.getId())).collect(Collectors.toList()));
+        instances.addAll(dsInstanceService.queryByParam(query).stream().filter(e -> simpleTagService.hasBusinessTag(EVENT_TAG, DATASOURCE_INSTANCE_TYPE, e.getId())).collect(Collectors.toList()));
         return instances;
     }
 
