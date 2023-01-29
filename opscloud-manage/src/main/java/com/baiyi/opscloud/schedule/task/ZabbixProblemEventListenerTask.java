@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.schedule.task;
 
-import cn.hutool.core.date.StopWatch;
+import com.baiyi.opscloud.common.annotation.TaskWatch;
 import com.baiyi.opscloud.config.condition.EnvCondition;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.event.IEventHandler;
@@ -27,14 +27,11 @@ public class ZabbixProblemEventListenerTask extends AbstractTask {
     @InstanceHealth // 实例健康检查，高优先级
     @Scheduled(initialDelay = 8000, fixedRate = 120 * 1000)
     @SchedulerLock(name = "zabbix_problem_event_listener_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
+    @TaskWatch(name = "Listen for zabbix problems")
     public void run() {
         IEventHandler iEventProcess = EventFactory.getIEventProcessByEventType(EventTypeEnum.ZABBIX_PROBLEM);
         if (iEventProcess == null) return;
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start("Scheduled task: 监听zabbix问题！");
         iEventProcess.listener();
-        stopWatch.stop();
-        log.info(stopWatch.shortSummary());
     }
 
 }

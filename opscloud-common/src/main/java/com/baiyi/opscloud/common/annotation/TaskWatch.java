@@ -1,8 +1,22 @@
-package com.baiyi.opscloud.common;
+package com.baiyi.opscloud.common.annotation;
+
+import java.lang.annotation.*;
+
 /**
- * @Author  baiyi
- * @Date  2023/1/29 14:00
+ * @Author baiyi
+ * @Date 2023/1/29 14:00
  * @Version 1.0
  */
-public class TaskWatch {
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+@Documented
+public  @interface TaskWatch {
+
+    /**
+     * 任务名称
+     * @return
+     */
+    String name() default "";
+
 }
