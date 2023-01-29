@@ -1,10 +1,9 @@
 package com.baiyi.opscloud.schedule.task.base;
 
 
-import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.helper.TopicHelper;
+import com.baiyi.opscloud.common.redis.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.Resource;
 
@@ -16,9 +15,6 @@ import javax.annotation.Resource;
  */
 @Slf4j
 public abstract class AbstractTask {
-
-    @Value("${spring.profiles.active}")
-    protected String env;
 
     @Resource
     protected RedisUtil redisUtil;

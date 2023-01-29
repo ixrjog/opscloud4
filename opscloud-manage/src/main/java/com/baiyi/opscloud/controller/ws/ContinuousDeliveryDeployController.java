@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.param.leo.request.LoginLeoRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.SimpleLeoRequestParam;
-import com.baiyi.opscloud.leo.task.WatchLeoDeployTask;
+import com.baiyi.opscloud.leo.task.loop.LeoDeployEventLoop;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -59,7 +59,7 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
             int cnt = onlineCount.incrementAndGet(); // 在线数加1
             this.session = session;
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
-            leoExecutor.execute(new WatchLeoDeployTask(this.sessionId, session));
+            leoExecutor.execute(new LeoDeployEventLoop(this.sessionId, session));
         } catch (Exception e) {
             log.error("Create connection error: {}", e.getMessage());
         }
@@ -75,7 +75,7 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
             int cnt = onlineCount.decrementAndGet();
         } catch (Exception e) {
         }
-        log.info("会话关闭！");
+        //log.info("会话关闭！");
     }
 
     /**
@@ -86,15 +86,13 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
      */
     @OnMessage(maxMessageSize = 100 * 1024)
     public void onMessage(String message, Session session) {
-        log.info("message={}", message);
+        // log.info("message={}", message);
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;
         String messageType = getLeoMessageType(message);
         // 处理登录状态
         if (StringUtils.isEmpty(this.username)) {
             // 鉴权
             hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));
-//            if (LeoRequestType.LOGIN.name().equals(messageType))
-//                hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));
         } else {
             SessionUtil.setUsername(this.username);
         }
@@ -114,7 +112,7 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.info("会话错误: err={}", error.getMessage());
+        // log.info("会话错误: err={}", error.getMessage());
     }
 
 }

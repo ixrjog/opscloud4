@@ -49,7 +49,7 @@ public class SmsNotifyActivity extends AbstractNotifyActivity {
         Set<String> phones = media.getUsers().stream().map(User::getPhone).collect(Collectors.toSet());
         String cacheKey = getCacheKeyPrefix(context);
         if (redisUtil.hasKey(cacheKey)) {
-            log.info("短信发送静默中，key={}", cacheKey);
+            log.debug("短信发送静默中，key={}", cacheKey);
             return;
         }
         aliyunSmsDriver.sendBatchSms(getConfig().getAliyun(), phones, media.getTemplateCode());

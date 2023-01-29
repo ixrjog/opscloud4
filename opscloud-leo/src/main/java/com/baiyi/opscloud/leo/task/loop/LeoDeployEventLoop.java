@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.leo.task;
+package com.baiyi.opscloud.leo.task.loop;
 
 import com.baiyi.opscloud.common.leo.session.LeoDeployQuerySessionMap;
 import com.baiyi.opscloud.leo.message.factory.LeoContinuousDeliveryMessageHandlerFactory;
@@ -11,18 +11,19 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 用户部署事件循环
  * @Author baiyi
  * @Date 2022/12/6 18:09
  * @Version 1.0
  */
 @Slf4j
-public class WatchLeoDeployTask implements Runnable {
+public class LeoDeployEventLoop implements Runnable {
 
     private final String sessionId;
 
     private final Session session;
 
-    public WatchLeoDeployTask(String sessionId, Session session) {
+    public LeoDeployEventLoop(String sessionId, Session session) {
         this.sessionId = sessionId;
         this.session = session;
     }
@@ -32,7 +33,7 @@ public class WatchLeoDeployTask implements Runnable {
         while (true) {
             try {
                 if (!this.session.isOpen()) {
-                    log.info("WatchLeoDeployTask会话关闭任务退出！");
+                    log.info("Leo deploy event loop end!");
                     LeoDeployQuerySessionMap.removeSessionQueryMap(this.sessionId);
                     break;
                 }
@@ -48,10 +49,9 @@ public class WatchLeoDeployTask implements Runnable {
                         });
                     }
                 }
-                TimeUnit.SECONDS.sleep(5L);
+                TimeUnit.SECONDS.sleep(3L);
             } catch (Exception e) {
                 log.error(e.getMessage());
-                e.printStackTrace();
             }
         }
     }

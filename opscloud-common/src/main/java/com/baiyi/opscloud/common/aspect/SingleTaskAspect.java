@@ -3,7 +3,6 @@ package com.baiyi.opscloud.common.aspect;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.common.util.InstantUtil;
 import com.baiyi.opscloud.common.util.StringToDurationUtil;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +15,9 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 import java.time.Duration;
-import java.time.Instant;
 
 /**
  * @Author baiyi
@@ -52,23 +51,25 @@ public class SingleTaskAspect {
     public Object around(ProceedingJoinPoint joinPoint, SingleTask singleTask) throws Throwable {
         String key = buildKey(singleTask.name());
         try {
-            if (!isLocked(key)) {
-                log.info("Asset Synchronization Task Start: taskKey={}", key);
-                Instant instant = Instant.now();
-                lock(key, singleTask.lockTime());
-                Object result = joinPoint.proceed();
-                unlocking(key);
-                log.info("Asset Synchronization Task End: taskKey={}, 消耗时间={}s", key, InstantUtil.timerSeconds(instant));
-                return result;
-            } else {
-                log.warn("Asset Synchronization Task Repeat: taskKey={}", key);
+            if (isLocked(key)) {
+                log.warn("Asset synchronization task repeat: taskKey={}", key);
                 return new OCException(ErrorEnum.SINGLE_TASK_RUNNING);
+            } else {
+                // 加锁
+                lock(key, singleTask.lockTime());
+                log.info("Asset synchronization task start: taskKey={}", key);
+                StopWatch stopWatch = new StopWatch();
+                stopWatch.start("Asset synchronization task");
+                Object result = joinPoint.proceed();
+                unlock(key);
+                stopWatch.stop();
+                log.info("Asset synchronization task end: taskKey={}, runtime={}/s", key, stopWatch.getTotalTimeSeconds());
+                return result;
             }
         } catch (Exception e) {
-            log.error("Asset Synchronization Task: err={}", e.getMessage());
-            unlocking(key);
-        } finally {
-            unlocking(key);
+            log.error("Asset synchronization task error: {}", e.getMessage());
+            // 解锁
+            unlock(key);
         }
         return new Throwable();
     }
@@ -78,7 +79,7 @@ public class SingleTaskAspect {
         redisUtil.set(lockKey, RUNNING, duration.getSeconds());
     }
 
-    private void unlocking(String lockKey) {
+    private void unlock(String lockKey) {
         redisUtil.del(lockKey);
     }
 

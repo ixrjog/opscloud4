@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.schedule.task;
 
-import cn.hutool.core.date.StopWatch;
+import com.baiyi.opscloud.common.annotation.TaskWatch;
 import com.baiyi.opscloud.config.condition.EnvCondition;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.leo.task.LeoDeployCompensationTask;
@@ -27,12 +27,9 @@ public class LeoBuildTask extends AbstractTask {
 
     @InstanceHealth // 实例健康检查，高优先级
     @Scheduled(initialDelay = 30000, fixedRate = 180 * 1000)
+    @TaskWatch(name = "Leo build compensate")
     public void run() {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start("Scheduled task: Leo Build补偿任务执行！");
         leoDeployCompensationTask.handleTask();
-        stopWatch.stop();
-        log.info(stopWatch.shortSummary());
     }
 
 }
