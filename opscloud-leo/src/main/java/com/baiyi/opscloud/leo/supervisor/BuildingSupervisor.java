@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 import static com.baiyi.opscloud.leo.action.build.BaseBuildHandler.RESULT_ERROR;
 
 /**
- * 构建监督
+ * 构建事件循环
  *
  * @Author baiyi
  * @Date 2022/11/9 11:43

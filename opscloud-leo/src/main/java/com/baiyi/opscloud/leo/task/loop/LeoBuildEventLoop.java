@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.leo.task;
+package com.baiyi.opscloud.leo.task.loop;
 
 import com.baiyi.opscloud.common.leo.session.LeoBuildQuerySessionMap;
 import com.baiyi.opscloud.leo.message.factory.LeoContinuousDeliveryMessageHandlerFactory;
@@ -13,18 +13,20 @@ import java.util.concurrent.TimeUnit;
 import static com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType.QUERY_LEO_BUILD_CONSOLE_STREAM;
 
 /**
+ * 用户构建事件循环
+ *
  * @Author baiyi
  * @Date 2022/11/28 09:48
  * @Version 1.0
  */
 @Slf4j
-public class WatchLeoBuildTask implements Runnable {
+public class LeoBuildEventLoop implements Runnable {
 
     private final String sessionId;
 
     private final Session session;
 
-    public WatchLeoBuildTask(String sessionId, Session session) {
+    public LeoBuildEventLoop(String sessionId, Session session) {
         this.sessionId = sessionId;
         this.session = session;
     }
@@ -34,7 +36,7 @@ public class WatchLeoBuildTask implements Runnable {
         while (true) {
             try {
                 if (!this.session.isOpen()) {
-                    log.info("WatchLeoBuildTask会话关闭任务退出！");
+                    log.info("Leo build event loop end!");
                     LeoBuildQuerySessionMap.removeSessionQueryMap(this.sessionId);
                     break;
                 }
