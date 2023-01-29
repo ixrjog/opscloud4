@@ -44,7 +44,7 @@ public class InstanceHealthAspect {
                 log.debug("Opscloud instance health examination: passed !");
                 return joinPoint.proceed();
             } else {
-                log.info("Opscloud instance health examination: down !");
+                log.debug("Opscloud instance health examination: down !");
                 return joinPoint;
             }
         }
