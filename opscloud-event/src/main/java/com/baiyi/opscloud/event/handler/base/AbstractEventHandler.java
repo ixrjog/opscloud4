@@ -116,6 +116,7 @@ public abstract class AbstractEventHandler<E extends IRecover> extends SimpleDsI
                     E eventMessage = getByEventId(event.getInstanceUuid(), event.getEventId());
                     if (eventMessage == null || eventMessage.isRecover()) {
                         Event saveEvent = Event.builder()
+                                .id(event.getId())
                                 .isActive(false)
                                 .expiredTime(new Date())
                                 .build();

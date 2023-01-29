@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class NoticeHelper {
                 iMessageCustomer.send(instance, user, mt, text);
                 return;
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
     }
@@ -68,10 +69,9 @@ public class NoticeHelper {
                     MessageConsumerFactory.getConsumerByInstanceType(instance.getInstanceType());
             if (iMessageCustomer == null) return;
             iMessageCustomer.send(instance, user, mt, text);
-            log.info("发送用户消息！instanceName={}, username={}", instance.getInstanceName(), user.getUsername());
+            log.info("发送用户消息: instanceName={}, username={}", instance.getInstanceName(), user.getUsername());
         } catch (IOException e) {
-            log.error("发送用户消息错误！instanceName={}, username={}", instance.getInstanceName(), user.getUsername());
-            e.printStackTrace();
+            log.error("发送用户消息错误: instanceName={}, username={}", instance.getInstanceName(), user.getUsername());
         }
     }
 
