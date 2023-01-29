@@ -15,7 +15,7 @@ import javax.annotation.Resource;
  * @Date 2021/7/2 2:44 下午
  * @Since 1.0
  */
-
+@SuppressWarnings("SpringFacetCodeInspection")
 @Slf4j
 @Configuration
 public class InitialRedisConfiguration implements ApplicationContextAware {

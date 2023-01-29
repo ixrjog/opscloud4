@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.schedule.task;
 
+import cn.hutool.core.date.StopWatch;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.helper.TopicHelper;
 import com.baiyi.opscloud.datasource.ansible.provider.AnsibleHostsProvider;
@@ -54,14 +55,16 @@ public class AssetSubscriptionTask extends AbstractTask {
      * it may be executed again and the results will be unpredictable (more processes will hold the lock).
      */
     @SchedulerLock(name = "asset_subscription_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
-    public void assetSubscriptionTask() {
+    public void run() {
         if (receive(TopicHelper.Topics.ASSET_SUBSCRIPTION_TASK) == null) return;
-        log.info("定时任务开始: 资产订阅！");
-        doTask();
-        log.info("定时任务结束: 资产订阅！");
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start("Scheduled task: 资产订阅！");
+        task();
+        stopWatch.stop();
+        log.info(stopWatch.shortSummary());
     }
 
-    private void doTask() {
+    private void task() {
         List<DatasourceInstance> instances = dsInstanceService.listByInstanceType(DsTypeEnum.ANSIBLE.name());
         if (CollectionUtils.isEmpty(instances)) return;
         instances.forEach(i -> {

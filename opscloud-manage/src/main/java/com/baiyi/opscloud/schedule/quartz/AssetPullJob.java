@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.schedule.quartz.job;
+package com.baiyi.opscloud.schedule.quartz;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
@@ -55,7 +55,7 @@ public class AssetPullJob extends QuartzJobBean {
         // 任务
         String assetType = jobDataMap.getString(ASSET_TYPE);
         Integer instanceId = jobDataMap.getInt(INSTANCE_ID);
-        log.info("---Quartz Task执行: assetType={}, instanceId={}, trigger={}", assetType, instanceId, jobExecutionContext.getTrigger());
+        log.info("QuartzTask[拉取资产]: assetType={}, instanceId={}, trigger={}", assetType, instanceId, jobExecutionContext.getTrigger());
         // 任务开始时间
         DsAssetParam.PullAsset pullAsset = DsAssetParam.PullAsset.builder()
                 .assetType(assetType)
@@ -65,7 +65,9 @@ public class AssetPullJob extends QuartzJobBean {
             List<SimpleAssetProvider> providers = getProviders(pullAsset.getInstanceId(), pullAsset.getAssetType());
             assert providers != null;
             providers.forEach(x -> x.pullAsset(pullAsset.getInstanceId()));
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            log.error("QuartzTask[拉取资产]错误: assetType={}, instanceId={}, trigger={}, err={}", assetType, instanceId, jobExecutionContext.getTrigger(), e.getMessage());
+            throw new JobExecutionException(e.getMessage());
         }
     }
 

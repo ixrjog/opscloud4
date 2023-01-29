@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.schedule.quartz.job;
+package com.baiyi.opscloud.schedule.quartz.example;
 
 import com.baiyi.opscloud.common.util.InstantUtil;
 import lombok.extern.slf4j.Slf4j;

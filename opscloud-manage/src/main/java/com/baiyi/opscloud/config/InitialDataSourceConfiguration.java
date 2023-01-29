@@ -16,7 +16,7 @@ import javax.sql.DataSource;
  * @Date 2021/7/2 2:38 下午
  * @Since 1.0
  */
-
+@SuppressWarnings("SpringFacetCodeInspection")
 @Slf4j
 @Configuration
 public class InitialDataSourceConfiguration implements ApplicationContextAware {
@@ -36,4 +36,5 @@ public class InitialDataSourceConfiguration implements ApplicationContextAware {
             configurableApplicationContext.close();
         }
     }
+
 }

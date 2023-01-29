@@ -1,15 +1,15 @@
 package com.baiyi.opscloud.schedule.task;
 
 import cn.hutool.core.date.StopWatch;
+import com.baiyi.opscloud.config.condition.EnvCondition;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.leo.task.LeoDeployCompensationTask;
 import com.baiyi.opscloud.schedule.task.base.AbstractTask;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
 
 /**
  * @Author baiyi
@@ -19,25 +19,20 @@ import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+// 非生产环境不执行
+@Conditional(EnvCondition.class)
 public class LeoBuildTask extends AbstractTask {
 
     private final LeoDeployCompensationTask leoDeployCompensationTask;
 
-    private static final boolean enable = false;
-
     @InstanceHealth // 实例健康检查，高优先级
     @Scheduled(initialDelay = 30000, fixedRate = 180 * 1000)
-    public void listenerTask() {
-        if(!enable) return;
-
-        // 非生产环境不执行任务
-        if (ENV_PROD.equals(env)) {
-            StopWatch stopWatch = new StopWatch();
-            stopWatch.start("LeoBuild补偿任务执行");
-            leoDeployCompensationTask.handleTask();
-            stopWatch.stop();
-            log.info(stopWatch.shortSummary());
-        }
+    public void run() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start("Scheduled task: Leo Build补偿任务执行！");
+        leoDeployCompensationTask.handleTask();
+        stopWatch.stop();
+        log.info(stopWatch.shortSummary());
     }
 
 }

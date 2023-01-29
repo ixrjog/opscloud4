@@ -20,7 +20,7 @@ import java.util.Properties;
  * @Date 2022/1/19 3:59 PM
  * @Since 1.0
  */
-
+@SuppressWarnings("SpringFacetCodeInspection")
 @Configuration
 @AutoConfigureAfter(DatasourceConfiguration.class)
 @Conditional(EnvCondition.class)
