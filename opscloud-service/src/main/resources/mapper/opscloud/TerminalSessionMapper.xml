@@ -44,7 +44,7 @@
   </select>
 
   <select id="statTotal" resultType="int">
-    select count(distinct(id))
+    select count(*)
     from terminal_session
   </select>
 
