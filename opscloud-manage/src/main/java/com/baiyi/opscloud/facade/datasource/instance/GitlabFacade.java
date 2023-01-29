@@ -44,14 +44,23 @@ public class GitlabFacade extends BaseManager {
     private final InstanceConfigHelper instanceConfigHelper;
 
     public void consumeEventV4(GitLabNotifyParam.SystemHook systemHook) {
+        if (StringUtils.isBlank(systemHook.getEvent_name())) {
+            // 未知的事件名称
+            return;
+        }
         if (StringUtils.isEmpty(GitlabTokenUtil.getToken())) {
             log.warn("未配置Gitlab SystemHooks SecretToken 无法路由消息!");
             return;
         }
         Optional<DatasourceInstance> optional = filterInstance();
-        if (!optional.isPresent()) return; // 数据源配置文件未配置 SystemHooks.SecretToken
+        if (!optional.isPresent()) {
+            // 数据源配置文件未配置 SystemHooks.SecretToken
+            return;
+        }
         IGitlabEventConsumer eventConsume = GitlabEventConsumerFactory.getByEventName(systemHook.getEvent_name());
-        if (eventConsume != null) eventConsume.consumeEventV4(optional.get(), systemHook);
+        if (eventConsume != null) {
+            eventConsume.consumeEventV4(optional.get(), systemHook);
+        }
     }
 
     private Optional<DatasourceInstance> filterInstance() {
