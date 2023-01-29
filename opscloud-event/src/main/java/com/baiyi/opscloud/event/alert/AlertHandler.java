@@ -109,7 +109,7 @@ public class AlertHandler extends SimpleDsInstanceProvider {
         String msg = renderTemplate(key, eventMap.get(key), hostMap);
         String cacheKey = Joiner.on("#").join(PREFIX, key);
         if (redisUtil.hasKey(cacheKey)) {
-            log.info("告警静默: cacheKey={}" + cacheKey);
+            log.debug("告警静默: cacheKey={}", cacheKey);
             return; // 静默
         }
         dingtalkSendHelper.send(zabbixConfig.getZabbix(), msg);
