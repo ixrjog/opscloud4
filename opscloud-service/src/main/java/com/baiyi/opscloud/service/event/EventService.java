@@ -17,6 +17,8 @@ public interface EventService {
 
     void update(Event event);
 
+    void updateByExampleSelective(Event event);
+
     List<Event> queryEventByInstance(String instanceUuid);
 
     Event getByUniqueKey(String instanceUuid, String eventId);

@@ -35,6 +35,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public void updateByExampleSelective(Event event) {
+        eventMapper.updateByPrimaryKeySelective(event);
+    }
+
+    @Override
     public List<Event> queryEventByInstance(String instanceUuid) {
         Example example = new Example(Event.class);
         Example.Criteria criteria = example.createCriteria();

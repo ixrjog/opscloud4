@@ -4,14 +4,14 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.base.IRecover;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.domain.generator.opscloud.EventBusiness;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
 import com.baiyi.opscloud.domain.param.event.EventParam;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.event.IEventHandler;
 import com.baiyi.opscloud.event.factory.EventFactory;
 import com.baiyi.opscloud.service.event.EventBusinessService;
@@ -110,20 +110,22 @@ public abstract class AbstractEventHandler<E extends IRecover> extends SimpleDsI
      */
     protected void retrospectiveEvents(Map<String, Event> newEventMap, List<Event> activeEvents) {
         if (CollectionUtils.isEmpty(activeEvents)) return; // 无活跃事件
-        activeEvents.forEach(e -> {
-            if (!newEventMap.containsKey(e.getEventId())) {
-                E eventMessage = null;
+        activeEvents.forEach(event -> {
+            if (!newEventMap.containsKey(event.getEventId())) {
                 try {
-                    eventMessage = getByEventId(e.getInstanceUuid(), e.getEventId());
+                    E eventMessage = getByEventId(event.getInstanceUuid(), event.getEventId());
+                    if (eventMessage == null || eventMessage.isRecover()) {
+                        Event saveEvent = Event.builder()
+                                .isActive(false)
+                                .expiredTime(new Date())
+                                .build();
+                        // 恢复事件
+                        eventService.updateByExampleSelective(saveEvent);
+                    } else {
+                        // 没有恢复
+                    }
                 } catch (Exception ex) {
-                    log.error("回顾事件错误，查询事件失败: eventId={}", e.getEventId());
-                }
-                if (eventMessage != null && !eventMessage.isRecover()) {
-                    // 没有恢复
-                } else {
-                    e.setIsActive(false);
-                    e.setExpiredTime(new Date());
-                    eventService.update(e); // 恢复事件
+                    log.error("查询事件失败: eventId={}", event.getEventId());
                 }
             }
         });
