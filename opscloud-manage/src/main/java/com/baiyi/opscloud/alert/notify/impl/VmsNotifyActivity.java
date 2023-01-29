@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +46,9 @@ public class VmsNotifyActivity extends AbstractNotifyActivity {
 
     @Override
     public void doNotify(AlertNotifyMedia media, AlertContext context) {
+        if (CollectionUtils.isEmpty(media.getUsers())) {
+            return;
+        }
         AliyunConfig.Aliyun config = getConfig().getAliyun();
         AlertNotifyEvent event = alertNotifyEventService.getByUuid(context.getEventUuid());
         media.getUsers().forEach(
