@@ -17,8 +17,6 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.baiyi.opscloud.controller.ws.ServerTerminalController.WEBSOCKET_TIMEOUT;
 
@@ -49,7 +47,6 @@ public class JenkinsBuildExecutorController {
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
-        log.info("Jenkins Build Executor Status: 当前连接数为={}", cnt);
         session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
     }
 
