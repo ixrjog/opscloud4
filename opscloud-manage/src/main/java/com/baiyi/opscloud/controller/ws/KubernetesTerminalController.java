@@ -24,8 +24,6 @@ import javax.annotation.Resource;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @Author baiyi
@@ -37,9 +35,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 public class KubernetesTerminalController extends SimpleAuthentication {
 
-    private static final AtomicInteger onlineCount = new AtomicInteger(0);
+    // private static final AtomicInteger onlineCount = new AtomicInteger(0);
     // concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。
-    private static final ThreadLocal<CopyOnWriteArraySet<Session>> sessionSet = ThreadLocal.withInitial(CopyOnWriteArraySet::new);
+    //  private static final ThreadLocal<CopyOnWriteArraySet<Session>> sessionSet = ThreadLocal.withInitial(CopyOnWriteArraySet::new);
     // 当前会话 uuid
     private final String sessionId = UUID.randomUUID().toString();
 
@@ -77,9 +75,6 @@ public class KubernetesTerminalController extends SimpleAuthentication {
             TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.KUBERNETES_TERMINAL);
             this.terminalSession = terminalSession;
             terminalSessionService.add(terminalSession);
-            sessionSet.get().add(session);
-            int cnt = onlineCount.incrementAndGet(); // 在线数加1
-            log.info("{} session connection join: instanceIP={}, connections={}", IF_NAME, serverInfo.getHostAddress(), cnt);
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
             this.session = session;
             kubernetesTerminalExecutor.execute(new SentOutputTask(sessionId, session));
@@ -95,9 +90,6 @@ public class KubernetesTerminalController extends SimpleAuthentication {
     @OnClose
     public void onClose() {
         KubernetesTerminalMessageHandlerFactory.getHandlerByState(MessageState.CLOSE.getState()).handle("", session, terminalSession);
-        sessionSet.get().remove(session);
-        int cnt = onlineCount.decrementAndGet();
-        log.info("{} session connection closed: instanceIP={}, connections={}", IF_NAME, serverInfo.getHostAddress(), cnt);
     }
 
     /**

@@ -16,8 +16,6 @@ import org.springframework.stereotype.Component;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.baiyi.opscloud.controller.ws.ServerTerminalController.WEBSOCKET_TIMEOUT;
 
@@ -31,9 +29,9 @@ import static com.baiyi.opscloud.controller.ws.ServerTerminalController.WEBSOCKE
 @Component
 public class ContinuousDeliveryBuildController extends SimpleAuthentication {
 
-    private static final AtomicInteger onlineCount = new AtomicInteger(0);
+    // private static final AtomicInteger onlineCount = new AtomicInteger(0);
 
-    private static final ThreadLocal<CopyOnWriteArraySet<Session>> sessionSet = ThreadLocal.withInitial(CopyOnWriteArraySet::new);
+    // private static final ThreadLocal<CopyOnWriteArraySet<Session>> sessionSet = ThreadLocal.withInitial(CopyOnWriteArraySet::new);
 
     // 当前会话ID
     private final String sessionId = UUID.randomUUID().toString();
@@ -55,8 +53,8 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
     @OnOpen
     public void onOpen(Session session) {
         try {
-            sessionSet.get().add(session);
-            int cnt = onlineCount.incrementAndGet(); // 在线数加1
+            //  sessionSet.get().add(session);
+            //  int cnt = onlineCount.incrementAndGet(); // 在线数加1
             this.session = session;
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
             // 线程池执行
@@ -71,12 +69,6 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
      */
     @OnClose
     public void onClose() {
-        try {
-            sessionSet.get().remove(session);
-            int cnt = onlineCount.decrementAndGet();
-        } catch (Exception e) {
-        }
-        //log.info("会话关闭！");
     }
 
     /**
@@ -113,7 +105,7 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-       // log.info("会话错误: err={}", error.getMessage());
+        // log.info("会话错误: err={}", error.getMessage());
     }
 
 }

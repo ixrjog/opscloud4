@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @Author baiyi
@@ -23,9 +21,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 public class ServerTaskPlayController extends SimpleAuthentication {
 
-    private static final AtomicInteger onlineCount = new AtomicInteger(0);
+    // private static final AtomicInteger onlineCount = new AtomicInteger(0);
     // concurrent包是线程安全Set，用来存放每个客户端对应的Session对象。
-    private static final ThreadLocal<CopyOnWriteArraySet<Session>> sessionSet = ThreadLocal.withInitial(CopyOnWriteArraySet::new);
+    //  private static final ThreadLocal<CopyOnWriteArraySet<Session>> sessionSet = ThreadLocal.withInitial(CopyOnWriteArraySet::new);
 
     private Session session = null;
     // 超时时间1H
@@ -36,9 +34,9 @@ public class ServerTaskPlayController extends SimpleAuthentication {
      */
     @OnOpen
     public void onOpen(Session session) {
-        sessionSet.get().add(session);
-        int cnt = onlineCount.incrementAndGet(); // 在线数加1
-        log.info("剧本任务日志有连接加入: 当前连接数为：{}", cnt);
+        // sessionSet.get().add(session);
+        // int cnt = onlineCount.incrementAndGet(); // 在线数加1
+        //   log.info("剧本任务日志有连接加入: 当前连接数为：{}", cnt);
         session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
         this.session = session;
     }
@@ -48,7 +46,7 @@ public class ServerTaskPlayController extends SimpleAuthentication {
      */
     @OnClose
     public void onClose() {
-        sessionSet.get().remove(session);
+        // sessionSet.get().remove(session);
     }
 
     /**
