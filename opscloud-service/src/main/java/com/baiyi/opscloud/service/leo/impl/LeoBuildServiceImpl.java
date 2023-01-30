@@ -181,7 +181,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         Example example = new Example(LeoBuild.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("isActive", true)
-                .andEqualTo("isFinish", false);
+                .andEqualTo("isFinish", true);
         return leoBuildMapper.selectCountByExample(example);
     }
 
