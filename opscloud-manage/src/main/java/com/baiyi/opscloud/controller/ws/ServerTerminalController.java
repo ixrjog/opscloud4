@@ -40,7 +40,7 @@ public class ServerTerminalController extends SimpleAuthentication {
 
     private Session session = null;
     // 超时时间15分钟
-    public static final Long WEBSOCKET_TIMEOUT = TimeUtil.minuteTime * 15;
+    public static final Long WEBSOCKET_TIMEOUT = TimeUtil.minuteTime * 5;
 
     private static final HostInfo serverInfo = HostInfo.build();
 

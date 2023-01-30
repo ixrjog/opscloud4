@@ -46,16 +46,16 @@ public class WebSocketConfiguration implements ServletContextInitializer {
          * for text messages. The default buffer size for text messages is 8192 bytes. This may be changed for a web application
          * by setting the servlet context initialization parameter org.apache.tomcat.websocket.textBufferSize to the desired value in bytes.
          */
-        servletContext.setInitParameter("org.apache.tomcat.websocket.textBufferSize", "524288");
-        servletContext.setInitParameter("org.apache.tomcat.websocket.binaryBufferSize","524288");
+        servletContext.setInitParameter("org.apache.tomcat.websocket.textBufferSize", "102400");
+        servletContext.setInitParameter("org.apache.tomcat.websocket.binaryBufferSize", "102400");
         /**
          * 线程池的核心容量大小
          */
-        servletContext.setInitParameter("org.apache.tomcat.websocket.executorCoreSize","30");
+        servletContext.setInitParameter("org.apache.tomcat.websocket.executorCoreSize", "30");
         /**
          * 线程池的最大容量大小
          */
-        servletContext.setInitParameter("org.apache.tomcat.websocket.executorMaxSize","400");
+        servletContext.setInitParameter("org.apache.tomcat.websocket.executorMaxSize", "400");
     }
 
 }
