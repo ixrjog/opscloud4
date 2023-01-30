@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.otp;
 
 import com.baiyi.opscloud.otp.exception.OtpException;
+import com.google.common.collect.Maps;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -31,7 +32,7 @@ public class Base32StringUtil {
         DIGITS = alphabet.toCharArray();
         MASK = DIGITS.length - 1;
         SHIFT = Integer.numberOfTrailingZeros(DIGITS.length);
-        CHAR_MAP = new HashMap<>();
+        CHAR_MAP = Maps.newHashMap();
         for (int i = 0; i < DIGITS.length; i++) {
             CHAR_MAP.put(DIGITS[i], i);
         }
