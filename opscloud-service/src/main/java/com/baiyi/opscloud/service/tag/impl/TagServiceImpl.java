@@ -38,7 +38,6 @@ public class TagServiceImpl implements TagService {
         return tagMapper.queryBusinessTagByParam(queryParam);
     }
 
-
     @Override
     public List<Tag> queryTagByBusinessType(Integer businessType) {
         Example example = new Example(Tag.class);

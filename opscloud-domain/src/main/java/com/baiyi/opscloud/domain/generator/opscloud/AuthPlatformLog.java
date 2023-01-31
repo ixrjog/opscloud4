@@ -48,9 +48,9 @@ public class AuthPlatformLog {
     @Column(name = "result_msg")
     private String resultMsg;
 
-    @Column(name = "create_time")
+    @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
-    @Column(name = "update_time")
+    @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 }
