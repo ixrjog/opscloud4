@@ -36,7 +36,7 @@ public class EcrImageDelegate {
      * @param imageTag
      */
     @Retryable(value = LeoBuildException.class, backoff = @Backoff(delay = 1000, multiplier = 3))
-    public void verify(String crRegionId, AwsConfig dsConfig, String crRegistryId, String repositoryName, int querySize, String imageTag) {
+    public void verify(String crRegionId, AwsConfig dsConfig, String crRegistryId, String repositoryName, int querySize, String imageTag) throws LeoBuildException {
         try {
             List<ImageDetail> imageDetails = amazonEcrImageDriver.describeImages(crRegionId, dsConfig.getAws(), crRegistryId, repositoryName, querySize);
             if (CollectionUtils.isEmpty(imageDetails)) {
@@ -47,10 +47,8 @@ public class EcrImageDelegate {
                     .filter(imageDetail -> filterWithImageTag(imageDetail, imageTag))
                     .findFirst()
                     .orElseThrow(() ->
-                    {
-                        log.error("查询AWS-ECR镜像未找到对应的标签: imageTag={}", imageTag);
-                        throw new LeoBuildException("查询AWS-ECR镜像未找到对应的标签: imageTag={}", imageTag);
-                    });
+                            new LeoBuildException("查询AWS-ECR镜像未找到对应的标签: imageTag={}", imageTag)
+                    );
         } catch (Exception e) {
             log.error("查询AWS-ECR镜像错误: err={}", e.getMessage());
             throw new LeoBuildException("查询AWS-ECR镜像错误: err={}", e.getMessage());
