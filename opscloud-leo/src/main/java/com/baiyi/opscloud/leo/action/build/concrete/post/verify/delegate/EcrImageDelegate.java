@@ -35,7 +35,7 @@ public class EcrImageDelegate {
      * @param querySize
      * @param imageTag
      */
-    @Retryable(value = LeoBuildException.class, backoff = @Backoff(delay = 1000, multiplier = 3))
+    @Retryable(value = LeoBuildException.class, backoff = @Backoff(delay = 3000, multiplier = 2))
     public void verify(String crRegionId, AwsConfig dsConfig, String crRegistryId, String repositoryName, int querySize, String imageTag) throws LeoBuildException {
         try {
             List<ImageDetail> imageDetails = amazonEcrImageDriver.describeImages(crRegionId, dsConfig.getAws(), crRegistryId, repositoryName, querySize);
