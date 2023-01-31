@@ -127,26 +127,26 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     @PermitEmptyPasswords // 允许空密码登录
     public LogVO.Login login(LoginParam.Login loginParam) {
         User user = userService.getByUsername(loginParam.getUsername());
-        // 尝试使用authProvider 认证
-        if (dsAuthManager.tryLogin(user, loginParam)) {
-            boolean bindMfa = false;
-            if (user.getMfa()) {
-                mfaAuthHelper.verify(user, loginParam);
-            } else {
-                bindMfa = mfaAuthHelper.tryBind(user, loginParam);
-            }
-            // 更新用户登录信息
-            user.setPassword(stringEncryptor.encrypt(loginParam.getPassword()));
-            // 更新用户登录时间
-            user.setLastLogin(new Date());
-            if (bindMfa) {
-                user.setMfa(true);
-            }
-            userService.updateLogin(user);
-            return userTokenFacade.userLogin(user);
-        } else {
+        // 尝试使用Provider认证
+        if (!dsAuthManager.tryLogin(user, loginParam)) {
             throw new AuthenticationException(ErrorEnum.AUTH_USER_LOGIN_FAILURE);
         }
+        boolean bindMfa = false;
+        if (user.getMfa()) {
+            mfaAuthHelper.verify(user, loginParam);
+        } else {
+            bindMfa = mfaAuthHelper.tryBind(user, loginParam);
+        }
+        // 更新用户登录信息
+        User saveUser = User.builder()
+                .id(user.getId())
+                .password(stringEncryptor.encrypt(loginParam.getPassword()))
+                .lastLogin(new Date())
+                .mfa(bindMfa ? true : null)
+                .build();
+        userService.updateLogin(user);
+        return userTokenFacade.userLogin(user);
+
     }
 
     @Override
@@ -191,7 +191,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
 
     @Override
     public void logout() {
-        log.info("用户登出: username={}", SessionUtil.getUsername());
+        log.info("User logout: {}", SessionUtil.getUsername());
         userTokenFacade.revokeUserToken(SessionUtil.getUsername());
     }
 
