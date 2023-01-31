@@ -3,6 +3,7 @@ package com.baiyi.opscloud.datasource.aws.ecr.driver;
 import com.amazonaws.services.ecr.model.DescribeImagesRequest;
 import com.amazonaws.services.ecr.model.DescribeImagesResult;
 import com.amazonaws.services.ecr.model.ImageDetail;
+import com.amazonaws.services.ecr.model.ImageIdentifier;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.datasource.aws.ecr.service.AmazonEcrService;
 import com.google.common.collect.Lists;
@@ -57,11 +58,13 @@ public class AmazonEcrImageDriver {
      * @param repositoryName
      * @return
      */
-    public List<ImageDetail> describeImages(String regionId, AwsConfig.Aws config, String registryId, String repositoryName, int size) {
+    public List<ImageDetail> describeImages(String regionId, AwsConfig.Aws config, String registryId, String repositoryName, String imageTag, int size) {
         DescribeImagesRequest request = new DescribeImagesRequest();
         request.setMaxResults(Math.min(size, MAX_RESULTS));
         request.setRegistryId(registryId);
         request.setRepositoryName(repositoryName);
+        ImageIdentifier imageIdentifier = new ImageIdentifier().withImageTag(imageTag);
+        request.setImageIds(Lists.newArrayList(imageIdentifier));
         DescribeImagesResult result = AmazonEcrService.buildAmazonECR(regionId, config).describeImages(request);
         return result.getImageDetails();
     }
