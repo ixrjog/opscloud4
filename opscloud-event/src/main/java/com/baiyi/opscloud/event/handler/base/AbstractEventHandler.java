@@ -126,7 +126,7 @@ public abstract class AbstractEventHandler<E extends IRecover> extends SimpleDsI
                         // 没有恢复
                     }
                 } catch (Exception ex) {
-                    log.error("查询事件失败: eventId={}", event.getEventId());
+                    log.debug("查询事件失败: eventId={}", event.getEventId());
                 }
             }
         });
