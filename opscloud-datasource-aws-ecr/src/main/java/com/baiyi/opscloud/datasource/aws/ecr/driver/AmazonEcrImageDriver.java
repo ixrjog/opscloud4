@@ -58,9 +58,27 @@ public class AmazonEcrImageDriver {
      * @param repositoryName
      * @return
      */
-    public List<ImageDetail> describeImages(String regionId, AwsConfig.Aws config, String registryId, String repositoryName, String imageTag, int size) {
+    public List<ImageDetail> describeImages(String regionId, AwsConfig.Aws config, String registryId, String repositoryName, int size) {
         DescribeImagesRequest request = new DescribeImagesRequest();
         request.setMaxResults(Math.min(size, MAX_RESULTS));
+        request.setRegistryId(registryId);
+        request.setRepositoryName(repositoryName);
+        DescribeImagesResult result = AmazonEcrService.buildAmazonECR(regionId, config).describeImages(request);
+        return result.getImageDetails();
+    }
+
+    /**
+     * 查询仓库镜像
+     *
+     * @param regionId
+     * @param config
+     * @param registryId
+     * @param repositoryName
+     * @return
+     */
+    public List<ImageDetail> describeImages(String regionId, AwsConfig.Aws config, String registryId, String repositoryName, String imageTag) {
+        DescribeImagesRequest request = new DescribeImagesRequest();
+        //request.setMaxResults(Math.min(size, MAX_RESULTS));
         request.setRegistryId(registryId);
         request.setRepositoryName(repositoryName);
         ImageIdentifier imageIdentifier = new ImageIdentifier().withImageTag(imageTag);

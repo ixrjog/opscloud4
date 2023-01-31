@@ -33,13 +33,12 @@ public class EcrImageDelegate {
      * @param dsConfig
      * @param crRegistryId
      * @param repositoryName
-     * @param querySize
      * @param imageTag
      */
     @Retryable(value = LeoBuildException.class, maxAttempts = 5, backoff = @Backoff(delay = 6000, multiplier = 1))
-    public void verify(String crRegionId, AwsConfig dsConfig, String crRegistryId, String repositoryName, int querySize, String imageTag) throws LeoBuildException {
+    public void verify(String crRegionId, AwsConfig dsConfig, String crRegistryId, String repositoryName, String imageTag) throws LeoBuildException {
         try {
-            List<ImageDetail> imageDetails = amazonEcrImageDriver.describeImages(crRegionId, dsConfig.getAws(), crRegistryId, repositoryName, imageTag, querySize);
+            List<ImageDetail> imageDetails = amazonEcrImageDriver.describeImages(crRegionId, dsConfig.getAws(), crRegistryId, repositoryName, imageTag);
             if (CollectionUtils.isEmpty(imageDetails)) {
                 log.warn("查询AWS-ECR镜像列表为空: regionId={}, registryId={}, repositoryName={}", crRegionId, crRegistryId, repositoryName);
                 throw new LeoBuildException("查询AWS-ECR镜像列表为空: regionId={}, registryId={}, repositoryName={}", crRegionId, crRegistryId, repositoryName);

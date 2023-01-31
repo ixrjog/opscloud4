@@ -62,7 +62,7 @@ public class EcrValidator extends BaseCrValidator<AwsConfig> {
                 .orElseGet(() -> getCrRegistryId(cr, leoJob, crRegionId, repoNamespace, repositoryName, dsConfig));
         try {
             final String imageTag = dict.get(BuildDictConstants.IMAGE_TAG.getKey());
-            ecrImageDelegate.verify(crRegionId, dsConfig, crRegistryId, repositoryName, QUERY_IMAGES_SIZE, imageTag);
+            ecrImageDelegate.verify(crRegionId, dsConfig, crRegistryId, repositoryName, imageTag);
         } catch (Exception e) {
             throw new LeoBuildException("查询AWS-ECR镜像错误: err={}", e.getMessage());
         }
