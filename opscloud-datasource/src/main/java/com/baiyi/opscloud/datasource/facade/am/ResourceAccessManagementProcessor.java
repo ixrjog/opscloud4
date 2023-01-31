@@ -118,7 +118,7 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
                 dsInstanceFacade.pullAsset(revokePolicy.getInstanceUuid(), DsAssetTypeConstants.RAM_USER.name(), ramUser);
             }
         } catch (ClientException e) {
-            throw new OCException("阿里云接口查询错误: err={}", e.getMessage());
+            throw new OCException("阿里云接口查询错误: {}", e.getMessage());
         }
 
     }

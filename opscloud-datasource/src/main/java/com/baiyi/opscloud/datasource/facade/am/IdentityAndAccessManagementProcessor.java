@@ -129,7 +129,7 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
             amazonIMMFADriver.deleteVirtualMFADevice(config, serialNumber);
             log.debug("删除IAM虚拟MFA设备: serialNumber={}", serialNumber);
         } catch (Exception e) {
-            log.debug("删除IAM虚拟MFA设备错误: serialNumber={},err={}", serialNumber, e.getMessage());
+            log.debug("删除IAM虚拟MFA设备错误: serialNumber={}, err={}", serialNumber, e.getMessage());
         }
         try {
             log.info("创建用户的IAM虚拟MFA: username={}", user.getUsername());
