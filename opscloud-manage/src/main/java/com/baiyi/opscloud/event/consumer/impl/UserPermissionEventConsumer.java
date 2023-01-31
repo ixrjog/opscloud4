@@ -44,7 +44,7 @@ public class UserPermissionEventConsumer extends AbstractEventConsumer<UserPermi
             return;
         }
         if (eventData.getBusinessType() == BusinessTypeEnum.APPLICATION.getType()) {
-            applicationManager.created(eventData);
+            applicationManager.create(eventData);
 
             return;
         }

@@ -47,17 +47,23 @@ public class DsAuthManager extends BaseManager {
 
     public boolean tryLogin(User user, LoginParam.Login loginParam) throws AuthenticationException {
         List<DatasourceInstance> instances = listInstance();
-        if (!CollectionUtils.isEmpty(instances)) {
-            Authorization.Credential credential = Authorization.Credential.builder().username(loginParam.getUsername()).password(loginParam.getPassword()).build();
-            for (DatasourceInstance instance : instances) {
-                BaseAuthProvider authProvider = AuthProviderFactory.getProvider(instance.getInstanceType());
-                if (authProvider == null) continue;
-                if (authProvider.login(instance, credential)) return true;
-            }
-            // 有认证实例不允许本地认证
-            return false;
+        if (CollectionUtils.isEmpty(instances)) {
+            return loginWithLocal(user, loginParam);
         }
-        return loginWithLocal(user, loginParam);
+        Authorization.Credential credential = Authorization.Credential.builder()
+                .username(loginParam.getUsername())
+                .password(loginParam.getPassword())
+                .build();
+        for (DatasourceInstance instance : instances) {
+            BaseAuthProvider authProvider = AuthProviderFactory.getProvider(instance.getInstanceType());
+            if (authProvider == null) {
+                continue;
+            }
+            if (authProvider.login(instance, credential)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

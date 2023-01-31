@@ -24,17 +24,17 @@ public class ApplicationManager implements IManager<BaseBusiness.IBusiness> {
     private final ApplicationService applicationService;
 
     @Override
-    public void created(BaseBusiness.IBusiness businessResource) {
+    public void create(BaseBusiness.IBusiness businessResource) {
         handle(businessResource);
     }
 
     @Override
-    public void updated(BaseBusiness.IBusiness businessResource) {
+    public void update(BaseBusiness.IBusiness businessResource) {
         handle(businessResource);
     }
 
     @Override
-    public void deleted(BaseBusiness.IBusiness businessResource) {
+    public void delete(BaseBusiness.IBusiness businessResource) {
         handle(businessResource);
     }
 

@@ -40,7 +40,7 @@ public class DsAccountGroupManager extends BaseManager implements IManager<UserG
     }
 
     @Override
-    public void created(UserGroup userGroup) {
+    public void create(UserGroup userGroup) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
             log.info("{} 数据源账户组管理: 无可用实例", this.getClass().getSimpleName());
@@ -50,12 +50,12 @@ public class DsAccountGroupManager extends BaseManager implements IManager<UserG
     }
 
     @Override
-    public void updated(UserGroup userGroup) {
+    public void update(UserGroup userGroup) {
         // 不处理更新 用户组不允许变更
     }
 
     @Override
-    public void deleted(UserGroup userGroup) {
+    public void delete(UserGroup userGroup) {
         // 不处理删除
     }
 

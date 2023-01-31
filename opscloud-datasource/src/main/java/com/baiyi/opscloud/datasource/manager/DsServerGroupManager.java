@@ -40,7 +40,7 @@ public class DsServerGroupManager extends BaseManager implements IManager<Server
     }
 
     @Override
-    public void created(ServerGroup serverGroup) {
+    public void create(ServerGroup serverGroup) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
             log.info("{} 数据源服务器组管理: 无可用实例", this.getClass().getSimpleName());
@@ -50,7 +50,7 @@ public class DsServerGroupManager extends BaseManager implements IManager<Server
     }
 
     @Override
-    public void updated(ServerGroup serverGroup) {
+    public void update(ServerGroup serverGroup) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
             log.info("{} 数据源服务器组管理: 无可用实例", this.getClass().getSimpleName());
@@ -60,7 +60,7 @@ public class DsServerGroupManager extends BaseManager implements IManager<Server
     }
 
     @Override
-    public void deleted(ServerGroup serverGroup) {
+    public void delete(ServerGroup serverGroup) {
         // TODO
     }
 

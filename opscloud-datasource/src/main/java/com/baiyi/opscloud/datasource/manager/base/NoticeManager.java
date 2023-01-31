@@ -74,7 +74,7 @@ public class NoticeManager {
                 noticeHelper.sendMessage(user, msgKey, instances, iNoticeMessage);
             }
         } catch (Exception e) {
-            log.error("发送消息失败: err={}", e.getMessage());
+            log.error("发送消息失败: {}", e.getMessage());
         }
     }
 

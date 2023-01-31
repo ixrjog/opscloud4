@@ -28,19 +28,19 @@ public class DsAccountManagerTest extends BaseUnit {
     @Test
     void create() {
         User user = buildTestUser();
-        dsAccountManager.created(user);
+        dsAccountManager.create(user);
     }
 
     @Test
     void update() {
         User user = buildTestUser();
-        dsAccountManager.updated(user);
+        dsAccountManager.update(user);
     }
 
     @Test
     void delete() {
         User user = buildTestUser();
-        dsAccountManager.deleted(user);
+        dsAccountManager.delete(user);
     }
 
     private User buildTestUser(){

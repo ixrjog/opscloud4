@@ -15,21 +15,21 @@ public interface IManager<T> {
      *
      * @param t
      */
-    void created(T t);
+    void create(T t);
 
     /**
      * 业务对象更新资产(User -> Account)
      *
      * @param t
      */
-    void updated(T t);
+    void update(T t);
 
     /**
      * 业务对象删除资产(User -> Account)
      *
      * @param t
      */
-    void deleted(T t);
+    void delete(T t);
 
     void grant(User user, BaseBusiness.IBusiness businessResource);
 
