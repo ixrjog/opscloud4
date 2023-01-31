@@ -2,7 +2,6 @@ package com.baiyi.opscloud.controller.ws;
 
 import com.baiyi.opscloud.common.model.HostInfo;
 import com.baiyi.opscloud.common.util.SessionUtil;
-import com.baiyi.opscloud.common.util.ThreadPoolTaskExecutorPrint;
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
@@ -43,7 +42,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
 
     private Session session = null;
     // 超时时间1H
-    public static final Long WEBSOCKET_TIMEOUT = TimeUtil.hourTime;
+    public static final Long WEBSOCKET_TIMEOUT = TimeUtil.minuteTime * 15;
 
     private static final HostInfo serverInfo = HostInfo.build();
 
@@ -52,8 +51,6 @@ public class KubernetesTerminalController extends SimpleAuthentication {
     private static TerminalSessionService terminalSessionService;
 
     private static ThreadPoolTaskExecutor kubernetesTerminalExecutor;
-
-    private static final String IF_NAME = "Kubernetes terminal";
 
     @Autowired
     public void setTerminalSessionService(TerminalSessionService terminalSessionService) {
@@ -71,16 +68,16 @@ public class KubernetesTerminalController extends SimpleAuthentication {
     @OnOpen
     public void onOpen(Session session) {
         try {
-            log.info("{} session try to connect: instanceIP={}, sessionId={}", IF_NAME, serverInfo.getHostAddress(), sessionId);
+            log.info("Kubernetes terminal session try to connect: instanceIP={}, sessionId={}", serverInfo.getHostAddress(), sessionId);
             TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.KUBERNETES_TERMINAL);
             this.terminalSession = terminalSession;
             terminalSessionService.add(terminalSession);
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
             this.session = session;
             kubernetesTerminalExecutor.execute(new SentOutputTask(sessionId, session));
-            ThreadPoolTaskExecutorPrint.print(kubernetesTerminalExecutor, "k8sTermExecutor");
+            //  ThreadPoolTaskExecutorPrint.print(kubernetesTerminalExecutor, "k8sTermExecutor");
         } catch (Exception e) {
-            log.error("{} create connection error！", IF_NAME);
+            log.error("Kubernetes terminal create connection error: {}", e.getMessage());
         }
     }
 
@@ -124,11 +121,6 @@ public class KubernetesTerminalController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("{} onError: instanceIP={}, sessionID={}, err={}",
-                IF_NAME,
-                serverInfo.getHostAddress(),
-                error.getMessage(),
-                session.getId());
     }
 
 }

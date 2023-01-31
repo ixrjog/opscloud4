@@ -2,7 +2,6 @@ package com.baiyi.opscloud.controller.ws;
 
 import com.baiyi.opscloud.common.model.HostInfo;
 import com.baiyi.opscloud.common.util.SessionUtil;
-import com.baiyi.opscloud.common.util.ThreadPoolTaskExecutorPrint;
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
@@ -39,7 +38,8 @@ public class ServerTerminalController extends SimpleAuthentication {
     private final String sessionId = UUID.randomUUID().toString();
 
     private Session session = null;
-    // 超时时间15分钟
+
+    // 超时时间5分钟
     public static final Long WEBSOCKET_TIMEOUT = TimeUtil.minuteTime * 5;
 
     private static final HostInfo serverInfo = HostInfo.build();
@@ -49,8 +49,6 @@ public class ServerTerminalController extends SimpleAuthentication {
     private TerminalSession terminalSession;
 
     private static ThreadPoolTaskExecutor serverTerminalExecutor;
-
-    private static final String IF_NAME = "Server terminal";
 
     @Autowired
     public void setTerminalSessionService(TerminalSessionService terminalSessionService) {
@@ -68,7 +66,7 @@ public class ServerTerminalController extends SimpleAuthentication {
     @OnOpen
     public void onOpen(Session session) {
         try {
-            log.info("{} session try to connect: instanceIP={}, sessionId={}", IF_NAME, serverInfo.getHostAddress(), sessionId);
+            log.info("Server terminal session try to connect: instanceIP={}, sessionId={}", serverInfo.getHostAddress(), sessionId);
             TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.WEB_TERMINAL);
             terminalSessionService.add(terminalSession);
             this.terminalSession = terminalSession;
@@ -76,10 +74,9 @@ public class ServerTerminalController extends SimpleAuthentication {
             this.session = session;
             // 线程启动
             serverTerminalExecutor.execute(new SentOutputTask(sessionId, session));
-            ThreadPoolTaskExecutorPrint.print(serverTerminalExecutor, "serverTermExecutor");
+            // ThreadPoolTaskExecutorPrint.print(serverTerminalExecutor, "serverTermExecutor");
         } catch (Exception e) {
-            log.error("{} create connection error！", IF_NAME);
-            log.error(e.getMessage());
+            log.error("Server terminal create connection error: {}", e.getMessage());
         }
     }
 
@@ -91,7 +88,6 @@ public class ServerTerminalController extends SimpleAuthentication {
         try {
             ServerTerminalMessageHandlerFactory.getHandlerByState(MessageState.CLOSE.getState()).handle("", session, terminalSession);
         } catch (Exception e) {
-            log.error("{} OnClose error！", IF_NAME);
         }
     }
 
@@ -129,11 +125,6 @@ public class ServerTerminalController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.debug("{} error: instanceIP={}, err={}, sessionID={}",
-                IF_NAME,
-                serverInfo.getHostAddress(),
-                error.getMessage(),
-                session.getId());
     }
 
 }

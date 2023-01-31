@@ -6,6 +6,8 @@ import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.task.audit.TerminalAuditOutputTask;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.Session;
@@ -18,6 +20,9 @@ import javax.websocket.Session;
 @Slf4j
 @Component
 public class TerminalAuditPlayHandler extends AbstractTerminalAuditHandler<TerminalAuditPlayMessage> {
+
+    @Autowired
+    private ThreadPoolTaskExecutor serverTerminalExecutor;
 
     /**
      * 播放
@@ -34,9 +39,7 @@ public class TerminalAuditPlayHandler extends AbstractTerminalAuditHandler<Termi
         TerminalAuditPlayMessage playMessage = getMessage(message);
         SessionOutput sessionOutput = new SessionOutput(playMessage.getSessionId(), playMessage.getInstanceId());
         // 启动线程处理会话
-        Runnable run = new TerminalAuditOutputTask(session, sessionOutput);
-        Thread thread = new Thread(run);
-        thread.start();
+        serverTerminalExecutor.execute(new TerminalAuditOutputTask(session, sessionOutput));
     }
 
     @Override
