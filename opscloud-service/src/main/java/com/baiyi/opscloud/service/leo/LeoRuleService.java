@@ -15,6 +15,8 @@ public interface LeoRuleService {
 
     List<LeoRule> queryAll();
 
+    List<LeoRule> queryAllTest();
+
     DataTable<LeoRule> queryRulePage(LeoRuleParam.RulePageQuery pageQuery);
 
     void updateByPrimaryKeySelective(LeoRule leoRule);

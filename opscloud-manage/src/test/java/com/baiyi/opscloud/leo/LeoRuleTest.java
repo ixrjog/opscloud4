@@ -29,7 +29,7 @@ public class LeoRuleTest extends BaseUnit {
 
     @Test
     void test() {
-        List<LeoRule> rules = leoRuleService.queryAll();
+        List<LeoRule> rules = leoRuleService.queryAllTest();
         // cfront-prod
         LeoJob leoJob = leoJobService.getById(4);
         for (LeoRule rule : rules) {

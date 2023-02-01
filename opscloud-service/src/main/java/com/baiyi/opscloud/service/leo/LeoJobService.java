@@ -36,4 +36,6 @@ public interface LeoJobService {
 
     int countWithReport();
 
+    List<LeoJob> queryAll();
+
 }
