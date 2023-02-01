@@ -1,11 +1,9 @@
 package com.baiyi.opscloud.leo.domain.model;
 
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
+import com.baiyi.opscloud.leo.domain.model.base.YamlDump;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.DumperOptions;
@@ -46,11 +44,12 @@ public class LeoJobModel {
         }
     }
 
+    @EqualsAndHashCode(callSuper = true)
     @Builder
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class JobConfig {
+    public static class JobConfig extends YamlDump {
         private static final JobConfig EMPTY_JOB = JobConfig.builder().build();
         private Job job;
     }

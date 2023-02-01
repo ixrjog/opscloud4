@@ -2,8 +2,9 @@ package com.baiyi.opscloud.facade.leo.impl;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.domain.generator.opscloud.LeoTemplate;
+import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 import com.baiyi.opscloud.facade.leo.LeoJobFacade;
@@ -15,13 +16,18 @@ import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.domain.model.LeoTemplateModel;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
 import com.baiyi.opscloud.packer.leo.LeoJobPacker;
+import com.baiyi.opscloud.service.application.ApplicationResourceService;
+import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.leo.LeoTemplateService;
+import com.baiyi.opscloud.service.sys.EnvService;
+import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -48,6 +54,12 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
     private final LeoTagHelper leoTagHelper;
 
     private final LeoBuildService leoBuildService;
+
+    private final ApplicationService applicationService;
+
+    private final ApplicationResourceService applicationResourceService;
+
+    private final EnvService envService;
 
     @Override
     public DataTable<LeoJobVO.Job> queryLeoJobPage(LeoJobParam.JobPageQuery pageQuery) {
@@ -192,10 +204,69 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
     public void deleteLeoJobById(int jobId) {
         LeoJob leoJob = leoJobService.getById(jobId);
         if (leoJob == null)
-            throw new LeoJobException("删除任务错误，任务不存在！");
+            throw new LeoJobException("删除任务错误: 任务不存在！");
         if (leoBuildService.countWithJobId(jobId) > 0)
-            throw new LeoJobException("删除任务错误，构建信息未删除！");
+            throw new LeoJobException("删除任务错误: 构建信息未删除！");
         leoJobService.deleteById(jobId);
+    }
+
+    @Override
+    public void cloneJob(LeoJobParam.CloneJob cloneJob) {
+        Application srcApplication = applicationService.getById(cloneJob.getSrcApplicationId());
+        if (srcApplication == null) {
+            throw new LeoJobException("复制任务错误: 源应用不存在！");
+        }
+        Application destApplication = applicationService.getById(cloneJob.getDestApplicationId());
+        if (destApplication == null) {
+            throw new LeoJobException("复制任务错误: 目标应用不存在！");
+        }
+        List<LeoJob> srcJobs = leoJobService.querJobWithApplicationId(srcApplication.getId());
+        if (CollectionUtils.isEmpty(srcJobs)) {
+            throw new LeoJobException("复制任务错误: 源应用下任务为空！");
+        }
+
+        List<ApplicationResource> resources = applicationResourceService.queryByApplication(destApplication.getId(), ApplicationResTypeEnum.GITLAB_PROJECT.name(), BusinessTypeEnum.ASSET.getType());
+        if (CollectionUtils.isEmpty(resources)) {
+            throw new LeoJobException("复制任务错误: 应用未绑定GitLab项目！");
+        }
+
+        for (LeoJob srcJob : srcJobs) {
+            // 校验任务
+            if (CollectionUtils.isEmpty(leoJobService.querJobWithApplicationIdAndEnvType(destApplication.getId(), srcJob.getEnvType()))) {
+                Env env = envService.getByEnvType(srcJob.getEnvType());
+
+                final String name = Joiner.on("-").join(destApplication.getName(), env.getEnvName());
+                final String jobKey = Joiner.on("-").join(destApplication.getApplicationKey(), env.getEnvName().toUpperCase());
+
+                String config = srcJob.getJobConfig().replaceAll(srcApplication.getName(), destApplication.getName());
+                LeoJobModel.JobConfig jobConfig = LeoJobModel.load(config);
+
+                // 修改GitLab project
+                jobConfig.getJob().getGitLab().getProject()
+                        .setSshUrl(resources.get(0).getName());
+
+                LeoJob cloneLeoJob = LeoJob.builder()
+                        .parentId(0)
+                        .applicationId(destApplication.getId())
+                        .name(name)
+                        .jobKey(jobKey)
+                        .branch(srcJob.getBranch())
+                        .envType(srcJob.getEnvType())
+                        .jobConfig(jobConfig.dump())
+                        .buildNumber(0)
+                        .templateId(srcJob.getTemplateId())
+                        .templateVersion(srcJob.getTemplateVersion())
+                        .templateContent(srcJob.getTemplateContent())
+                        .hide(false)
+                        .isActive(true)
+                        .build();
+                leoJobService.add(cloneLeoJob);
+                // 绑定Tags
+                updateTagsWithLeoJob(cloneLeoJob, jobConfig);
+                // 创建CR
+                createCrRepositoryWithLeoJobId(cloneLeoJob.getId());
+            }
+        }
     }
 
 }

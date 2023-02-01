@@ -28,4 +28,6 @@ public interface LeoJobFacade {
 
     void createCrRepositoryWithLeoJobId(int jobId);
 
+    void cloneJob(LeoJobParam.CloneJob cloneJob);
+
 }

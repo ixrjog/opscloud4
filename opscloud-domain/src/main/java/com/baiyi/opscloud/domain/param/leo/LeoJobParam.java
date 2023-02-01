@@ -239,4 +239,23 @@ public class LeoJobParam {
 
     }
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ApiModel
+    public static class CloneJob {
+
+        @Min(value = 1, message = "必须指定源应用ID")
+        @ApiModelProperty(value = "源应用ID")
+        private Integer srcApplicationId;
+
+        @Min(value = 1, message = "必须指定目标应用ID")
+        @ApiModelProperty(value = "目标应用ID")
+        private Integer  destApplicationId;
+
+        @ApiModelProperty(value = "克隆标签")
+        private Boolean cloneTag;
+
+    }
+
 }

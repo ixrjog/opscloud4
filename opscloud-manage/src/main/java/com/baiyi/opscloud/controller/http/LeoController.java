@@ -139,6 +139,13 @@ public class LeoController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "从应用复制任务")
+    @PostMapping(value = "/job/clone", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> cloneJob(@RequestBody @Valid LeoJobParam.CloneJob cloneJob) {
+        leoJobFacade.cloneJob(cloneJob);
+        return HttpResult.SUCCESS;
+    }
+
     // Build
 
     @ApiOperation(value = "执行构建")
