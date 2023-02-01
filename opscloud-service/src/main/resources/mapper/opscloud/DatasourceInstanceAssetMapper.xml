@@ -43,9 +43,9 @@
             </if>
             <if test="userId != null">
                 and id in (
-                select business_id from application_resource where resource_type = 'KUBERNETES_DEPLOYMENT'
-                and application_id in ( select business_id from user_permission where business_type = #{businessType}
-                and user_id = #{userId} )
+                    select business_id from application_resource where resource_type = 'KUBERNETES_DEPLOYMENT'
+                    and application_id in ( select business_id from user_permission where business_type = #{businessType}
+                    and user_id = #{userId} )
                 )
             </if>
         </where>

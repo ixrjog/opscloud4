@@ -19,13 +19,10 @@
             resultMap="BaseResultMap">
         select * from tag
         where
-        id in (
-        select tag_id from business_tag where business_id = #{businessId} and business_type = #{businessType}
-        )
+        id in ( select tag_id from business_tag where business_id = #{businessId} and business_type = #{businessType} )
         <if test="tagKey != null and tagKey!= ''">
             and tag_key like "%" #{tagKey} "%"
         </if>
     </select>
-
 
 </mapper>

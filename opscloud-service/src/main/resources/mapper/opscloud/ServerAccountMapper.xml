@@ -16,10 +16,8 @@
         <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
     </resultMap>
 
-
     <!--  查询服务器授权的账户-->
-    <select id="getPermissionServerAccountByTypeAndProtocol"
-            resultMap="BaseResultMap">
+    <select id="getPermissionServerAccountByTypeAndProtocol" resultMap="BaseResultMap">
         select * from server_account_permission a0
         join server_account a1 on a0.server_account_id = a1.id
         where a0.server_id = #{serverId}
@@ -31,13 +29,11 @@
         </if>
     </select>
 
-    <select id="getPermissionServerAccountByUsernameAndProtocol"
-            resultMap="BaseResultMap">
-      select * from server_account
-         where id in ( select server_account_id from server_account_permission where server_id = #{serverId} )
-         and protocol = #{protocol}
-         and username = #{username}
-         limit 1
+    <select id="getPermissionServerAccountByUsernameAndProtocol" resultMap="BaseResultMap">
+        select * from server_account
+        where id in (select server_account_id from server_account_permission where server_id = #{serverId})
+          and protocol = #{protocol}
+          and username = #{username} limit 1
     </select>
 
 </mapper>

@@ -40,7 +40,7 @@
         where
             deploy_result = 'SUCCESS'
         group by `c_name`
-        order by `c_name`;
+        order by `c_name`
     </select>
 
     <select id="getMaxDeployNumberWithJobId" resultType="java.lang.Integer">

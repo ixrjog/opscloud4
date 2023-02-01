@@ -18,8 +18,8 @@
         select access_level from auth_role
         <where>
             id in ( select role_id from auth_user_role where username = #{username} )
-            order by access_level desc limit 1
         </where>
+        order by access_level desc limit 1
     </select>
 
 </mapper>

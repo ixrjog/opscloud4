@@ -50,7 +50,7 @@
         where
             build_result = 'SUCCESS'
         group by `c_name`
-        order by `c_name`;
+        order by `c_name`
     </select>
 
     <select id="queryPageByParam" parameterType="com.baiyi.opscloud.domain.param.leo.LeoJobParam$JobBuildPageQuery" resultMap="BaseResultMap">
