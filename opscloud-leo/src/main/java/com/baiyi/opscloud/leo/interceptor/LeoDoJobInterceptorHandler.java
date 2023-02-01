@@ -100,7 +100,7 @@ public class LeoDoJobInterceptorHandler {
 
         User user = userService.getByUsername(username);
         if (user == null || !user.getIsActive()) {
-            throw new AuthenticationException("用户不存在或无效！");
+            throw new AuthenticationException(42100, "用户不存在或无效！");
         }
 
         // 任务级授权
@@ -121,12 +121,12 @@ public class LeoDoJobInterceptorHandler {
                 .build();
         UserPermission userPermission = userPermissionService.getByUniqueKey(queryParam);
         if (userPermission == null) {
-            throw new AuthorizationException("非授权用户禁止操作！");
+            throw new AuthorizationException(42100, "非授权用户禁止操作！");
         }
         Env env = envService.getByEnvType(leoJob.getEnvType());
         if (ENV_PROD.equalsIgnoreCase(env.getEnvName())) {
             if (!"ADMIN".equalsIgnoreCase(userPermission.getPermissionRole())) {
-                throw new AuthorizationException("非应用管理员禁止操作生产环境！");
+                throw new AuthorizationException(42100, "非应用管理员禁止操作生产环境！");
             }
         }
     }
