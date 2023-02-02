@@ -146,7 +146,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
     }
 
     @Override
-    public List<LeoBuild> queryUnfinishBuildWithOcInstance(String ocInstance) {
+    public List<LeoBuild> queryNotFinishBuildWithOcInstance(String ocInstance) {
         Example example = new Example(LeoBuild.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("isFinish", false)

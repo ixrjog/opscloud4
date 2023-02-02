@@ -28,11 +28,11 @@ public interface LeoDeployService {
     DataTable<LeoDeploy> queryDeployPage(LeoJobParam.JobDeployPageQuery pageQuery);
 
     /**
-     * 查询正在运行的任务
+     * 查询未完成的任务
      *
      * @return
      */
-    List<LeoDeploy> queryUnfinishDeployWithOcInstance(String ocInstance);
+    List<LeoDeploy> queryNotFinishDeployWithOcInstance(String ocInstance);
 
     int countRunningWithJobId(int jobId);
 

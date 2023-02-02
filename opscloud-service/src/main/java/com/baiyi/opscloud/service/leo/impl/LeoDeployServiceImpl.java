@@ -74,7 +74,7 @@ public class LeoDeployServiceImpl implements LeoDeployService {
     }
 
     @Override
-    public List<LeoDeploy> queryUnfinishDeployWithOcInstance(String ocInstance) {
+    public List<LeoDeploy> queryNotFinishDeployWithOcInstance(String ocInstance) {
         Example example = new Example(LeoDeploy.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("isFinish", false)

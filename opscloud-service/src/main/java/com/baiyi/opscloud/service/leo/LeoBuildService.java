@@ -42,7 +42,7 @@ public interface LeoBuildService {
 
     List<LeoBuild> queryLatestBuildWithJobId(Integer jobId, int size);
 
-    List<LeoBuild> queryUnfinishBuildWithOcInstance(String ocInstance);
+    List<LeoBuild> queryNotFinishBuildWithOcInstance(String ocInstance);
 
     int countRunningWithJobId(int jobId);
 

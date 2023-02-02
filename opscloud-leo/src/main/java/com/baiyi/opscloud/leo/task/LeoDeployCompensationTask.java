@@ -43,7 +43,7 @@ public class LeoDeployCompensationTask {
     private final ThreadPoolTaskExecutor leoExecutor;
 
     public void handleTask() {
-        List<LeoDeploy> leoDeploys = leoDeployService.queryUnfinishDeployWithOcInstance(OcInstance.ocInstance);
+        List<LeoDeploy> leoDeploys = leoDeployService.queryNotFinishDeployWithOcInstance(OcInstance.ocInstance);
         if (CollectionUtils.isEmpty(leoDeploys)) {
             return;
         }
