@@ -71,13 +71,12 @@ public class ApplicationScaleReplicasTicketProcessor extends AbstractDsAssetExte
             throw new TicketVerifyException("校验工单条目失败: 未指定Deployment(无状态)名称！");
         if (entry.getScaleReplicas() == null)
             throw new TicketVerifyException("校验工单条目失败: 未指定扩容后副本数！");
-        Deployment deployment = KubernetesDeploymentDriver.getDeployment(config, entry.getNamespace(), entry.getDeploymentName());
-        Optional<Integer> optionalReplicas = Optional.ofNullable(deployment)
+
+        int replicas = Optional.ofNullable(KubernetesDeploymentDriver.getDeployment(config, entry.getNamespace(), entry.getDeploymentName()))
                 .map(Deployment::getSpec)
-                .map(DeploymentSpec::getReplicas);
-        if (!optionalReplicas.isPresent())
-            throw new TicketVerifyException("校验工单条目失败: 无法获取当前副本数！");
-        if (entry.getScaleReplicas() <= optionalReplicas.get())
+                .map(DeploymentSpec::getReplicas)
+                .orElseThrow(() -> new TicketVerifyException("校验工单条目失败: 无法获取当前副本数！"));
+        if (entry.getScaleReplicas() <= replicas)
             throw new TicketVerifyException("校验工单条目失败: 扩容后副本数小于当前副本数！");
     }
 

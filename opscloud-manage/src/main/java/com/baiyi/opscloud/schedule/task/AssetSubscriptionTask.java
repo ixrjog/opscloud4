@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.annotation.TaskWatch;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.helper.TopicHelper;
 import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.config.condition.EnvCondition;
 import com.baiyi.opscloud.datasource.ansible.provider.AnsibleHostsProvider;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -17,6 +18,7 @@ import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -33,6 +35,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@Conditional(EnvCondition.class)
 public class AssetSubscriptionTask {
 
     private final DsInstanceService dsInstanceService;
@@ -45,7 +48,7 @@ public class AssetSubscriptionTask {
 
     private final DsInstanceAssetSubscriptionFacade dsInstanceAssetSubscriptionFacade;
 
-    protected final RedisUtil redisUtil;
+    private final RedisUtil redisUtil;
 
     private final TopicHelper topicHelper;
 
@@ -65,7 +68,9 @@ public class AssetSubscriptionTask {
     @SchedulerLock(name = "asset_subscription_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
     @TaskWatch(name = "Asset subscription")
     public void run() {
-        if (receive() == null) return;
+        if (receive() == null) {
+            return;
+        }
         task();
     }
 
@@ -75,7 +80,7 @@ public class AssetSubscriptionTask {
         instances.forEach(i -> {
             List<DatasourceInstanceAsset> assets = dsInstanceAssetService.listByInstanceAssetType(i.getUuid(), DsAssetTypeConstants.ANSIBLE_HOSTS.name());
             if (CollectionUtils.isEmpty(assets)) return;
-            log.info("构建Ansible主机清单文件！");
+            log.info("构建Ansible主机清单文件: instanceId={}", i.getId());
             ansibleHostsProvider.pullAsset(i.getId());
             assets.forEach(this::publish);
         });

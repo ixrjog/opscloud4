@@ -29,8 +29,9 @@ public class ZabbixProblemEventListenerTask {
     @TaskWatch(name = "Listen for zabbix problems")
     public void run() {
         IEventHandler iEventProcess = EventFactory.getIEventProcessByEventType(EventTypeEnum.ZABBIX_PROBLEM);
-        if (iEventProcess == null) return;
-        iEventProcess.listener();
+        if (iEventProcess != null) {
+            iEventProcess.listener();
+        }
     }
 
 }

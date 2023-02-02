@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Author baiyi
@@ -66,11 +67,8 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
     public int getUserAccessLevel(String username) {
         if (StringUtils.isEmpty(username))
             return AccessLevel.ADMIN.getLevel();
-        try {
-            return authRoleService.getRoleAccessLevelByUsername(username);
-        } catch (Exception e) {
-            return AccessLevel.DEF.getLevel();
-        }
+        return Optional.of(authRoleService.getRoleAccessLevelByUsername(username))
+                .orElse(AccessLevel.DEF.getLevel());
     }
 
 }

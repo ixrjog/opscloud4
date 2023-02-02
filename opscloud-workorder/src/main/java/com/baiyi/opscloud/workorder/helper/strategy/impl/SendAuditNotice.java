@@ -101,7 +101,7 @@ public class SendAuditNotice extends AbstractSendNotice {
                         noticeManager.sendMessage(user, msgKey, approveNoticeMessage);
                     }
                 } catch (Exception e) {
-                    log.error("工单移动端审批Token写入失败: err={}", e.getMessage());
+                    log.error("工单移动端审批Token写入失败: {}", e.getMessage());
                 }
             }
         });
@@ -111,7 +111,7 @@ public class SendAuditNotice extends AbstractSendNotice {
     protected INoticeMessage buildNoticeMessage(WorkOrderTicket ticket) {
         // 工单创建者
         User user = userService.getByUsername(ticket.getUsername());
-        String userDisplayName = user.getUsername() + "<" + Joiner.on(":").skipNulls().join(user.getDisplayName(), user.getName()) + ">";
+        String userDisplayName = String.format("%s<%s>", user.getUsername(), Joiner.on(":").skipNulls().join(user.getDisplayName(), user.getName()));
         // 工单名称
         WorkOrder workOrder = workOrderService.getById(ticket.getWorkOrderId());
         // 工单条目

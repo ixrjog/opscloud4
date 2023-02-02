@@ -40,7 +40,7 @@ public class QuartzService {
      * 增加一个job
      *
      * @param jobClass 任务实现类
-     * @param jobName  任务名称(建议唯一)z
+     * @param jobName  任务名称(建议唯一)
      * @param group    任务组名
      * @param jobTime  时间表达式 （如：0/5 * * * * ? ）
      * @param jobData  参数
@@ -70,7 +70,7 @@ public class QuartzService {
             // 把作业和触发器注册到任务调度中
             scheduler.scheduleJob(jobDetail, trigger);
         } catch (Exception e) {
-            log.error("注册作业错误: err={}", e.getMessage());
+            log.error("注册作业错误: {}", e.getMessage());
         }
     }
 
@@ -85,12 +85,14 @@ public class QuartzService {
         try {
             TriggerKey triggerKey = TriggerKey.triggerKey(jobName, group);
             CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
-            trigger = trigger.getTriggerBuilder().withIdentity(triggerKey)
-                    .withSchedule(CronScheduleBuilder.cronSchedule(jobTime)).build();
+            trigger = trigger.getTriggerBuilder()
+                    .withIdentity(triggerKey)
+                    .withSchedule(CronScheduleBuilder.cronSchedule(jobTime))
+                    .build();
             // 重启触发器
             scheduler.rescheduleJob(triggerKey, trigger);
         } catch (SchedulerException e) {
-            log.error("更新作业错误: err={}", e.getMessage());
+            log.error("更新作业错误: {}", e.getMessage());
         }
     }
 
@@ -99,8 +101,7 @@ public class QuartzService {
      * @param group   instanceUuid
      */
     public void deleteJob(String group, String jobName) {
-        TriggerKey triggerKey = TriggerKey.triggerKey(
-                jobName, group);
+        TriggerKey triggerKey = TriggerKey.triggerKey(jobName, group);
         JobKey jobKey = JobKey.jobKey(jobName, group);
         try {
             Trigger trigger = scheduler.getTrigger(triggerKey);
@@ -114,7 +115,7 @@ public class QuartzService {
             // 删除任务
             scheduler.deleteJob(jobKey);
         } catch (SchedulerException e) {
-            log.error("删除作业错误: err={}", e.getMessage());
+            log.error("删除作业错误: {}", e.getMessage());
         }
     }
 
@@ -129,7 +130,7 @@ public class QuartzService {
             JobKey jobKey = JobKey.jobKey(jobName, group);
             scheduler.pauseJob(jobKey);
         } catch (SchedulerException e) {
-            log.error("暂停作业错误: err={}", e.getMessage());
+            log.error("暂停作业错误: {}", e.getMessage());
         }
     }
 
@@ -144,7 +145,7 @@ public class QuartzService {
             JobKey jobKey = JobKey.jobKey(jobName, group);
             scheduler.resumeJob(jobKey);
         } catch (SchedulerException e) {
-            log.error("恢复作业错误: err={}", e.getMessage());
+            log.error("恢复作业错误: {}", e.getMessage());
         }
     }
 
@@ -159,7 +160,7 @@ public class QuartzService {
             JobKey jobKey = JobKey.jobKey(jobName, group);
             scheduler.triggerJob(jobKey);
         } catch (SchedulerException e) {
-            log.error("执行作业错误: err={}", e.getMessage());
+            log.error("执行作业错误: {}", e.getMessage());
         }
     }
 
@@ -175,7 +176,7 @@ public class QuartzService {
             Set<JobKey> jobKeys = scheduler.getJobKeys(matcher);
             return jobKeys.size();
         } catch (SchedulerException e) {
-            log.error("查询数据源实例任务数量: err={}", e.getMessage());
+            log.error("查询数据源实例任务数量: {}", e.getMessage());
             return 0;
         }
     }

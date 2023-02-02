@@ -35,20 +35,24 @@ public class SuperAdminInterceptor {
     public void interceptLoginServer(int serverId) {
         Tag tag = tagService.getByTagKey(TagConstants.SUPER_ADMIN.getTag());
         // SA标签不存在
-        if (tag == null) return;
+        if (tag == null) {
+            return;
+        }
         BusinessTag bizTag = BusinessTag.builder()
                 .businessType(BusinessTypeEnum.SERVER.getType())
                 .businessId(serverId)
                 .tagId(tag.getId())
                 .build();
         // 服务器未打SA标签
-        if (bizTagService.countByBusinessTag(bizTag) == 0) return;
+        if (bizTagService.countByBusinessTag(bizTag) == 0) {
+            return;
+        }
         int accessLevel = userPermissionFacade.getUserAccessLevel(SessionUtil.getUsername());
         if (accessLevel < 100) {
             log.warn("越权访问: 业务资源只有{SUPER_SA}才能访问！");
             throw new AuthenticationException("越权访问: 业务资源只有{SUPER_SA}才能访问！");
         }
-        log.info("SA Interceptor: passed！");
+        log.info("SA Interceptor passed: serverId={}", serverId);
     }
 
 }

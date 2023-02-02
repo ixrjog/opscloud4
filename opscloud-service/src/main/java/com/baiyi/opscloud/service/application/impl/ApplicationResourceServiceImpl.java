@@ -44,7 +44,9 @@ public class ApplicationResourceServiceImpl implements ApplicationResourceServic
     public ApplicationResource getByUniqueKey(Integer applicationId, Integer businessType, Integer businessId) {
         Example example = new Example(ApplicationResource.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("applicationId", applicationId).andEqualTo("businessType", businessType).andEqualTo("businessId", businessId);
+        criteria.andEqualTo("applicationId", applicationId)
+                .andEqualTo("businessType", businessType)
+                .andEqualTo("businessId", businessId);
         return applicationResourceMapper.selectOneByExample(example);
     }
 
@@ -60,7 +62,8 @@ public class ApplicationResourceServiceImpl implements ApplicationResourceServic
     public List<ApplicationResource> queryByApplication(Integer applicationId, String resourceType) {
         Example example = new Example(ApplicationResource.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("applicationId", applicationId).andEqualTo("resourceType", resourceType);
+        criteria.andEqualTo("applicationId", applicationId)
+                .andEqualTo("resourceType", resourceType);
         return applicationResourceMapper.selectByExample(example);
     }
 
@@ -78,7 +81,8 @@ public class ApplicationResourceServiceImpl implements ApplicationResourceServic
     public List<ApplicationResource> queryByBusiness(Integer businessType, Integer businessId) {
         Example example = new Example(ApplicationResource.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("businessType", businessType).andEqualTo("businessId", businessId);
+        criteria.andEqualTo("businessType", businessType)
+                .andEqualTo("businessId", businessId);
         return applicationResourceMapper.selectByExample(example);
     }
 }
