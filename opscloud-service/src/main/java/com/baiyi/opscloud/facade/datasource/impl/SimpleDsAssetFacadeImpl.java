@@ -70,7 +70,6 @@ public class SimpleDsAssetFacadeImpl implements SimpleDsAssetFacade {
                 applicationResourceService.delete(e.getId());
             }
         }
-
         List<DatasourceInstanceAsset> assetList = dsInstanceAssetService.listByParentId(id);
         if (!CollectionUtils.isEmpty(assetList)) {
             for (DatasourceInstanceAsset e : assetList) {
@@ -89,4 +88,5 @@ public class SimpleDsAssetFacadeImpl implements SimpleDsAssetFacade {
         log.info("删除资产: asseteId={}", id);
         dsInstanceAssetService.deleteById(id);
     }
+
 }

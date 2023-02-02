@@ -81,12 +81,14 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
 
     @Override
     public void updateTag(TagVO.Tag tag) {
-        Tag pre = tagService.getById(tag.getId());
-        pre.setColor(tag.getColor());
-        pre.setComment(tag.getComment());
-        pre.setBusinessType(tag.getBusinessType());
+        Tag saveTag = Tag.builder()
+                .id(tag.getId())
+                .color(tag.getColor())
+                .comment(tag.getComment())
+                .businessType(tag.getBusinessType())
+                .build();
         try {
-            tagService.update(pre);
+            tagService.updateByPrimaryKeySelective(saveTag);
         } catch (Exception ex) {
             throw new OCException(ErrorEnum.TAG_UPDATE_ERROR);
         }

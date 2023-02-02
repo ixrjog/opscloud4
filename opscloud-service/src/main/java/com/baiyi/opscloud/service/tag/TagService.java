@@ -21,7 +21,7 @@ public interface TagService {
 
     void add(Tag tag);
 
-    void update(Tag tag);
+    void updateByPrimaryKeySelective(Tag tag);
 
     void deleteById(Integer id);
 

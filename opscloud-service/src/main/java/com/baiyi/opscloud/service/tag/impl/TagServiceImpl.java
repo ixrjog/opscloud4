@@ -53,8 +53,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void update(Tag tag) {
-        tagMapper.updateByPrimaryKey(tag);
+    public void updateByPrimaryKeySelective(Tag tag) {
+        tagMapper.updateByPrimaryKeySelective(tag);
     }
 
     @Override
