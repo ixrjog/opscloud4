@@ -17,4 +17,6 @@ public interface LeoBuildMapper extends Mapper<LeoBuild> {
 
     List<ReportVO.Report> queryMonth();
 
+    int statUserTotal();
+
 }

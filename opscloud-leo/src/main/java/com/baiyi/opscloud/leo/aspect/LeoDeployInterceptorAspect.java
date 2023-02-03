@@ -2,6 +2,7 @@ package com.baiyi.opscloud.leo.aspect;
 
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.leo.annotation.LeoDeployInterceptor;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
 import com.baiyi.opscloud.leo.interceptor.LeoDoJobInterceptorHandler;
@@ -54,12 +55,14 @@ public class LeoDeployInterceptorAspect {
         String[] params = discoverer.getParameterNames(method);
         //获取方法的实际参数值
         Object[] arguments = joinPoint.getArgs();
+
         //设置解析SpEL所需的数据上下文
         EvaluationContext context = new StandardEvaluationContext();
         IntStream.range(0, Objects.requireNonNull(params).length).forEach(len -> context.setVariable(params[len], arguments[len]));
-        //解析表达式并获取SpEL的值
-        Expression expression = expressionParser.parseExpression(leoDeployInterceptor.jobIdSpEL());
-        Object jobIdParam = expression.getValue(context);
+
+        // jobId Expression 解析表达式并获取SpEL的值
+        Expression jobIdExpression = expressionParser.parseExpression(leoDeployInterceptor.jobIdSpEL());
+        Object jobIdParam = jobIdExpression.getValue(context);
         if (jobIdParam instanceof Integer) {
             int jobId = (Integer) jobIdParam;
             if (IdUtil.isEmpty(jobId)) {
@@ -74,8 +77,19 @@ public class LeoDeployInterceptorAspect {
             } else {
                 // 权限校验
                 leoDoJobInterceptorHandler.verifyAuthorization(jobId);
-                // 规则校验
-                leoDoJobInterceptorHandler.verifyRule(jobId);
+
+                // deployType Expression 解析表达式并获取SpEL的值
+                Expression deployTypeExpression = expressionParser.parseExpression(leoDeployInterceptor.deployTypeSpEL());
+                Object deployTypeParam = deployTypeExpression.getValue(context);
+                if (deployTypeParam instanceof String) {
+                    String deployType = (String) deployTypeParam;
+                    if (DeployTypeConstants.ROLLING.name().equalsIgnoreCase(deployType)) {
+                        // 规则校验
+                        leoDoJobInterceptorHandler.verifyRule(jobId);
+                    }
+                } else {
+                    throw new LeoJobException("DeployType类型不正确！");
+                }
             }
         } else {
             throw new LeoJobException("任务ID类型不正确！");

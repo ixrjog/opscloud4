@@ -23,7 +23,7 @@ public class LeoRuleExpressionWithDate extends BaseLeoRuleExpression {
         return "DATE";
     }
 
-    private static final String displayName = "封网开始时间: %s, 封网结束时间: %s";
+    private static final String displayName = "按时间封网(开始时间: %s, 结束时间: %s)";
 
     public boolean parse(LeoRuleModel.Expression expression) {
         Date beginDate = TimeUtil.gmtToDate(expression.getBegin());

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.common.util;
 
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,7 +66,7 @@ public class TimeUtil {
     public static String calculateDateDifference(Date fromDate, Date toDate) {
         long subTime = toDate.getTime() - fromDate.getTime();
         if (subTime < 0) {
-            throw new RuntimeException("计算时间有误!");
+            throw new OCException("计算时间有误!");
         }
         StringBuilder buffer = new StringBuilder();
         long day = subTime / dayTime;

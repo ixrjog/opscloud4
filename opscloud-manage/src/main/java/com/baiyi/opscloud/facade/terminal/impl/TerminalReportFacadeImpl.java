@@ -51,7 +51,7 @@ public class TerminalReportFacadeImpl implements TerminalReportFacade {
                 .build();
         for (SessionTypeEnum value : SessionTypeEnum.values()) {
             List<ReportVO.Report> reports = terminalSessionService.statMonthlyBySessionType(value.name());
-            ReportVO.MonthlyReport.init(monthlyReport, value.name(), reports);
+            ReportVO.MonthlyReport.put(monthlyReport, value.name(), reports);
         }
         return monthlyReport;
     }
@@ -62,7 +62,7 @@ public class TerminalReportFacadeImpl implements TerminalReportFacade {
                 .build();
         for (InstanceSessionTypeEnum value : InstanceSessionTypeEnum.values()) {
             List<ReportVO.Report> reports = terminalSessionInstanceService.statMonthlyByInstanceSessionType(value.name());
-            ReportVO.MonthlyReport.init(monthlyReport, value.name(), reports);
+            ReportVO.MonthlyReport.put(monthlyReport, value.name(), reports);
         }
         return monthlyReport;
     }

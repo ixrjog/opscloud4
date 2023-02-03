@@ -1,16 +1,17 @@
 package com.baiyi.opscloud.facade.user.impl;
 
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessUnbindRelation;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.annotation.TagClear;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserGroupParam;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.user.UserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.user.UserGroupFacade;
@@ -87,7 +88,7 @@ public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermis
                 .build();
         List<UserPermission> userPermissions = userPermissionService.queryByBusiness(userPermission);
         if (!CollectionUtils.isEmpty(userPermissions))
-            throw new RuntimeException("必须删除用户组中的用户！");
+            throw new OCException("必须删除用户组中的用户！");
         userGroupService.deleteById(id);
     }
 

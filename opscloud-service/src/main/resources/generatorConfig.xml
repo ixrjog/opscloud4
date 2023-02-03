@@ -69,7 +69,6 @@
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
-
         <!-- 对于mybatis来说，即生成Mapper接口，注意，如果没有配置该元素，那么默认不会生成Mapper接口
             targetPackage/targetProject:同javaModelGenerator
             type：选择怎么生成mapper接口（在MyBatis3/MyBatis3Simple下）：
@@ -95,7 +94,7 @@
         <!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
         <!--        </table>-->
 
-        <table tableName="leo_rule">
+        <table tableName="user_profile">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 

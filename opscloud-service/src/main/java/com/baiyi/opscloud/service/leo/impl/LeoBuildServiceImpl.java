@@ -185,4 +185,9 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         return leoBuildMapper.selectCountByExample(example);
     }
 
+    @Override
+    public int statUserTotal() {
+        return leoBuildMapper.statUserTotal();
+    }
+
 }

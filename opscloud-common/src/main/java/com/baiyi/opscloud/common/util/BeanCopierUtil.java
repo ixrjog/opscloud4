@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.common.util;
 
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.google.common.collect.MapMaker;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.util.CollectionUtils;
@@ -44,7 +45,7 @@ public class BeanCopierUtil {
         try {
             targetObject = targetClass.newInstance();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new OCException(e.getMessage());
         }
 
         copier.copy(source, targetObject, null);

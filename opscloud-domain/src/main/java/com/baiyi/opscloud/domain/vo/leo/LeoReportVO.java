@@ -67,6 +67,11 @@ public class LeoReportVO {
         @ApiModelProperty(value = "部署总数")
         private Integer deployTotal;
 
+        @ApiModelProperty(value = "用户总数<使用过的>")
+        private Integer userTotal;
+
+        @ApiModelProperty(value = "授权用户总数")
+        private Integer authorizedUserTotal;
     }
 
     @Data

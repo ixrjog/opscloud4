@@ -38,7 +38,7 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
 
     private String username;
 
-    private Session session = null;
+    //private Session session = null;
 
     private static ThreadPoolTaskExecutor leoExecutor;
 
@@ -53,7 +53,7 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
     @OnOpen
     public void onOpen(Session session) {
         try {
-            this.session = session;
+            // this.session = session;
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
             leoExecutor.execute(new LeoDeployEventLoop(this.sessionId, session));
         } catch (Exception e) {

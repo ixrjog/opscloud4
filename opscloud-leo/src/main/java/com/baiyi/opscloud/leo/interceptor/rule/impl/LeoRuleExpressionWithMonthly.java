@@ -73,7 +73,7 @@ public class LeoRuleExpressionWithMonthly extends BaseLeoRuleExpression {
         return hitEnd;
     }
 
-    private static final String displayName = "每月封网; 开始时间: 第%s天 %s, 结束时间: 第%s天 %s";
+    private static final String displayName = "每月封网(开始时间: 第%s天 %s, 结束时间: 第%s天 %s)";
 
     /**
      *

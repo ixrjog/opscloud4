@@ -52,4 +52,6 @@ public interface LeoBuildService {
 
     int countWithReport();
 
+    int statUserTotal();
+
 }

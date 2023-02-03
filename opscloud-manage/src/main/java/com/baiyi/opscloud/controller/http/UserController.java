@@ -37,6 +37,8 @@ public class UserController {
 
     private final UserFacade userFacade;
 
+    private final UserProfileFacade userProfileFacade;
+
     private final UserGroupFacade userGroupFacade;
 
     private final UserCredentialFacade userCredentialFacade;
@@ -246,6 +248,12 @@ public class UserController {
     @GetMapping(value = "/mfa/iam/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<UserVO.UserIAMMFA> getUserIAMMFA() {
         return new HttpResult<>(userFacade.getUserIAMMFA());
+    }
+
+    @ApiOperation(value = "获取用户配置")
+    @GetMapping(value = "/profile/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<UserProfileVO.Profiles> getUserProfiles() {
+        return new HttpResult<>(userProfileFacade.getProfiles());
     }
 
 }

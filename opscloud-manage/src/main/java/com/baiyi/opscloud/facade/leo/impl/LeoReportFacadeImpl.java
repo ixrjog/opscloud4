@@ -15,6 +15,7 @@ import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
+import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,16 +48,18 @@ public class LeoReportFacadeImpl implements LeoReportFacade {
 
     private final SimpleTagFacade simpleTagFacade;
 
+    private final UserPermissionService userPermissionService;
+
     private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.JENKINS};
 
     @Override
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10M, key = "'opscloud.v4.report#statLeoReport'")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10S, key = "'opscloud.v4.report#statLeoReport'")
     public LeoReportVO.LeoReport statLeoReport() {
         ReportVO.MonthlyReport monthlyReport = ReportVO.MonthlyReport.builder()
                 .dateCat(leoBuildService.queryMonth().stream().map(ReportVO.Report::getCName).collect(Collectors.toList()))
                 .build()
-                .init("BUILD", leoBuildService.statByMonth())
-                .init("DEPLOY", leoDeployService.statByMonth());
+                .put("BUILD", leoBuildService.statByMonth())
+                .put("DEPLOY", leoDeployService.statByMonth());
 
         return LeoReportVO.LeoReport.builder()
                 .dashboard(buildDashboard())
@@ -71,6 +74,8 @@ public class LeoReportFacadeImpl implements LeoReportFacade {
                 .jobTotal(leoJobService.countWithReport())
                 .buildTotal(leoBuildService.countWithReport())
                 .deployTotal(leoDeployService.countWithReport())
+                .userTotal(leoBuildService.statUserTotal())
+                .authorizedUserTotal(userPermissionService.statTotal(BusinessTypeEnum.APPLICATION.getType()))
                 .build();
     }
 

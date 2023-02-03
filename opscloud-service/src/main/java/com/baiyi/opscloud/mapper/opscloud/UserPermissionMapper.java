@@ -5,5 +5,8 @@ import tk.mybatis.mapper.common.Mapper;
 
 public interface UserPermissionMapper extends Mapper<UserPermission> {
 
-    int getRoleAccessLevelByUsername(String username);
+    // int getRoleAccessLevelByUsername(String username);
+
+    int statTotal(int businessType);
+
 }

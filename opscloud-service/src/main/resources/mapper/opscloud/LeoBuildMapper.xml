@@ -87,4 +87,9 @@
         where job_id = #{jobId}
     </select>
 
+    <select id="statUserTotal" resultType="int">
+        select count(distinct(username))
+        from leo_build
+    </select>
+
 </mapper>

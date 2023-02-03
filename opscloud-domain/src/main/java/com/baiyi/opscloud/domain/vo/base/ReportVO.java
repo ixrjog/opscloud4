@@ -53,7 +53,7 @@ public class ReportVO {
 
         private static final long serialVersionUID = -7788541472908274625L;
 
-        public static void init(MonthlyReport monthlyReport, String name, List<Report> reports) {
+        public static void put(MonthlyReport monthlyReport, String name, List<Report> reports) {
             if (CollectionUtils.isEmpty(reports)) {
                 return;
             }
@@ -62,7 +62,7 @@ public class ReportVO {
             monthlyReport.getValueMap().put(name, values);
         }
 
-        public MonthlyReport init(String name, List<Report> reports) {
+        public MonthlyReport put(String name, List<Report> reports) {
             if (CollectionUtils.isEmpty(reports)) {
                 return this;
             }

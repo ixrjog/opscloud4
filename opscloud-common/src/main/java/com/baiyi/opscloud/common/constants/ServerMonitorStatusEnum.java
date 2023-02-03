@@ -12,7 +12,7 @@ public enum ServerMonitorStatusEnum {
 
     /**
      * status	integer	Status and function of the host.
-     *
+     * <p>
      * Possible values are:
      * 0 - (default) monitored host;
      * 1 - unmonitored host.
@@ -25,7 +25,7 @@ public enum ServerMonitorStatusEnum {
     private final int status;
 
     ServerMonitorStatusEnum(int status) {
-        this.status =status;
+        this.status = status;
     }
 
 }

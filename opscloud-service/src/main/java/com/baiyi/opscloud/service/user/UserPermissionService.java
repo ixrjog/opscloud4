@@ -52,4 +52,12 @@ public interface UserPermissionService {
     List<UserPermission> queryByUserPermission(Integer userId, Integer businessType);
 
     List<UserPermission> queryByUserId(Integer userId);
+
+    /**
+     * 按业务类型查询不重复的用户总数
+     * @param businessType
+     * @return
+     */
+    int statTotal(int businessType);
+
 }

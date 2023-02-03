@@ -81,6 +81,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
 
     /**
      * 查询授权不展示离职用户
+     *
      * @param userPermission
      * @return
      */
@@ -108,6 +109,11 @@ public class UserPermissionServiceImpl implements UserPermissionService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("userId", userId);
         return permissionMapper.selectByExample(example);
+    }
+
+    @Override
+    public int statTotal(int businessType) {
+        return permissionMapper.statTotal(businessType);
     }
 
 }

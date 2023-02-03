@@ -65,8 +65,7 @@ public class LeoDoJobInterceptorHandler {
      * @param jobId
      */
     public void limitConcurrentWithDeploy(int jobId) {
-        int deploying = leoDeployService.countRunningWithJobId(jobId);
-        if (deploying > 0) {
+        if (leoDeployService.countRunningWithJobId(jobId) > 0) {
             throw new LeoDeployException("部署任务执行中，请勿并发操作！");
         }
     }
@@ -77,8 +76,7 @@ public class LeoDoJobInterceptorHandler {
      * @param jobId
      */
     public void limitConcurrentWithBuild(int jobId) {
-        int building = leoBuildService.countRunningWithJobId(jobId);
-        if (building > 0) {
+        if (leoBuildService.countRunningWithJobId(jobId) > 0) {
             throw new LeoBuildException("构建任务执行中，请勿并发操作！");
         }
     }
