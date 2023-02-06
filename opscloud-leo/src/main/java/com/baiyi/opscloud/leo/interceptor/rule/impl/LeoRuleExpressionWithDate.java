@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.leo.interceptor.rule.impl;
 
 import com.baiyi.opscloud.common.util.TimeUtil;
+import com.baiyi.opscloud.leo.constants.RuleExpressionCononstants;
 import com.baiyi.opscloud.leo.domain.model.LeoRuleModel;
 import com.baiyi.opscloud.leo.interceptor.rule.BaseLeoRuleExpression;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ import java.util.Date;
 public class LeoRuleExpressionWithDate extends BaseLeoRuleExpression {
 
     public String getType() {
-        return "DATE";
+        return RuleExpressionCononstants.DATE.name();
     }
 
     private static final String displayName = "按时间封网(开始时间: %s, 结束时间: %s)";
@@ -37,7 +38,6 @@ public class LeoRuleExpressionWithDate extends BaseLeoRuleExpression {
     }
 
     /**
-     *
      * @param expression
      * @return 封网开始时间: 2023-01-16 00:00:00, 封网结束时间 2023-01-29 09:00:00
      */

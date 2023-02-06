@@ -3,7 +3,7 @@ package com.baiyi.opscloud.leo.aspect;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.leo.annotation.LeoBuildInterceptor;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
-import com.baiyi.opscloud.leo.interceptor.LeoDoJobInterceptorHandler;
+import com.baiyi.opscloud.leo.interceptor.LeoExecuteJobInterceptorHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -38,7 +38,7 @@ public class LeoBuildInterceptorAspect {
 
     private final ExpressionParser expressionParser = new SpelExpressionParser();
 
-    private final LeoDoJobInterceptorHandler leoDoJobInterceptorHandler;
+    private final LeoExecuteJobInterceptorHandler executeJobInterceptorHandler;
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.leo.annotation.LeoBuildInterceptor)")
     public void annotationPoint() {
@@ -65,11 +65,11 @@ public class LeoBuildInterceptorAspect {
                 throw new LeoJobException("任务ID不存在！");
             }
             // 并发校验
-            if (!leoBuildInterceptor.allowConcurrency()) {
-                leoDoJobInterceptorHandler.limitConcurrentWithBuild(jobId);
+            if (leoBuildInterceptor.lock()) {
+                executeJobInterceptorHandler.tryLockWithBuild(jobId);
             }
             // 权限校验
-            leoDoJobInterceptorHandler.verifyAuthorization(jobId);
+            executeJobInterceptorHandler.verifyAuthorization(jobId);
             // 构建不校验规则
         } else {
             throw new LeoJobException("任务ID类型不正确！");

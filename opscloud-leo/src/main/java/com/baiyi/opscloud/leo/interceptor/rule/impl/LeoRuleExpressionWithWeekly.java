@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.leo.interceptor.rule.impl;
 
+import com.baiyi.opscloud.leo.constants.RuleExpressionCononstants;
 import com.baiyi.opscloud.leo.domain.model.LeoRuleModel;
 import com.baiyi.opscloud.leo.interceptor.rule.BaseLeoRuleExpression;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ import java.util.List;
 public class LeoRuleExpressionWithWeekly extends BaseLeoRuleExpression {
 
     public String getType() {
-        return "WEEKLY";
+        return RuleExpressionCononstants.WEEKLY.name();
     }
 
     /**
@@ -76,14 +77,13 @@ public class LeoRuleExpressionWithWeekly extends BaseLeoRuleExpression {
     private static final String displayName = "每周封网(开始时间: 星期%s %s, 结束时间: 星期%s %s)";
 
     /**
-     *
      * @param expression
      * @return 每周封网; 开始时间: 星期5 18:00:00, 结束时间: 星期7 24:00:00
      */
     public String toDisplayName(LeoRuleModel.Expression expression) {
         List<String> beginArgs = getExpressionArgs(expression.getBegin());
         List<String> endArgs = getExpressionArgs(expression.getEnd());
-        return String.format(displayName, beginArgs.get(0),beginArgs.get(1), endArgs.get(0),endArgs.get(1));
+        return String.format(displayName, beginArgs.get(0), beginArgs.get(1), endArgs.get(0), endArgs.get(1));
     }
 
 }

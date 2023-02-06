@@ -13,18 +13,22 @@ import java.lang.annotation.*;
 @Documented
 public @interface LeoBuildInterceptor {
 
-    public static final boolean DISABLED = false;
+    public static final boolean OFF = false;
+
+    public static final boolean ON = true;
 
     /**
      * 任务ID （SpEL语法）
+     *
      * @return
      */
     String jobIdSpEL() default "";
 
     /**
-     * 允许并发
+     * 任务锁
+     *
      * @return
      */
-    boolean allowConcurrency() default true;
+    boolean lock() default OFF;
 
 }

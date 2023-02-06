@@ -13,10 +13,13 @@ import java.lang.annotation.*;
 @Documented
 public @interface LeoDeployInterceptor {
 
-    public static final boolean DISABLED = false;
+    public static final boolean OFF = false;
+
+    public static final boolean ON = true;
 
     /**
      * 任务ID （SpEL语法）
+     *
      * @return
      */
     String jobIdSpEL() default "";
@@ -25,9 +28,10 @@ public @interface LeoDeployInterceptor {
     String deployTypeSpEL() default "";
 
     /**
-     * 允许并发
+     * 任务锁
+     *
      * @return
      */
-    boolean allowConcurrency() default false;
+    boolean lock() default ON;
 
 }

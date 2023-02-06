@@ -37,7 +37,7 @@ import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
  */
 @Component
 @RequiredArgsConstructor
-public class LeoDoJobInterceptorHandler {
+public class LeoExecuteJobInterceptorHandler {
 
     private final LeoDeployService leoDeployService;
 
@@ -64,7 +64,7 @@ public class LeoDoJobInterceptorHandler {
      *
      * @param jobId
      */
-    public void limitConcurrentWithDeploy(int jobId) {
+    public void tryLockWithDeploy(int jobId) {
         if (leoDeployService.countRunningWithJobId(jobId) > 0) {
             throw new LeoDeployException("部署任务执行中，请勿并发操作！");
         }
@@ -75,7 +75,7 @@ public class LeoDoJobInterceptorHandler {
      *
      * @param jobId
      */
-    public void limitConcurrentWithBuild(int jobId) {
+    public void tryLockWithBuild(int jobId) {
         if (leoBuildService.countRunningWithJobId(jobId) > 0) {
             throw new LeoBuildException("构建任务执行中，请勿并发操作！");
         }
