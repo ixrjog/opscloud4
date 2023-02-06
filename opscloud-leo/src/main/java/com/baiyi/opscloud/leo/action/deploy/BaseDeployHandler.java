@@ -49,16 +49,23 @@ public abstract class BaseDeployHandler {
     public void handleRequest(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
         try {
             this.handle(leoDeploy, deployConfig);
-        } catch (LeoDeployException e) {
+        } catch (Exception e) {
             // 记录日志
             logHelper.error(leoDeploy, e.getMessage());
-            leoDeploy.setDeployResult(RESULT_ERROR);
-            leoDeploy.setEndTime(new Date());
-            leoDeploy.setIsFinish(true);
-            leoDeploy.setDeployStatus(e.getMessage());
-            leoDeploy.setIsActive(false);
-            save(leoDeploy);
-            throw e;
+            LeoDeploy saveLeoDeploy = LeoDeploy.builder()
+                    .id(leoDeploy.getId())
+                    .deployResult(RESULT_ERROR)
+                    .endTime(new Date())
+                    .isFinish(true)
+                    .isActive(false)
+                    .deployStatus(e.getMessage())
+                    .build();
+            save(saveLeoDeploy);
+            if (e instanceof LeoDeployException) {
+                throw e;
+            } else {
+                throw new LeoDeployException(e.getMessage());
+            }
         }
         if (getNext() != null) {
             getNext().handleRequest(leoDeployService.getById(leoDeploy.getId()), deployConfig);
