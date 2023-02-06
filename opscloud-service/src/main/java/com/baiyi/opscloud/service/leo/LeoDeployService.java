@@ -34,6 +34,8 @@ public interface LeoDeployService {
      */
     List<LeoDeploy> queryNotFinishDeployWithOcInstance(String ocInstance);
 
+    List<LeoDeploy> queryWithJobId(Integer jobId);
+
     int countRunningWithJobId(int jobId);
 
     int countWithJobId(int jobId);
@@ -41,5 +43,7 @@ public interface LeoDeployService {
     List<ReportVO.Report> statByMonth();
 
     int countWithReport();
+
+    void deleteById(Integer id);
 
 }

@@ -18,9 +18,7 @@ import com.baiyi.opscloud.leo.exception.LeoJobException;
 import com.baiyi.opscloud.packer.leo.LeoJobPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
-import com.baiyi.opscloud.service.leo.LeoBuildService;
-import com.baiyi.opscloud.service.leo.LeoJobService;
-import com.baiyi.opscloud.service.leo.LeoTemplateService;
+import com.baiyi.opscloud.service.leo.*;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
@@ -45,15 +43,21 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LeoJobFacadeImpl implements LeoJobFacade {
 
-    private final LeoJobService leoJobService;
+    private final LeoJobService jobService;
 
-    private final LeoTemplateService leoTemplateService;
+    private final LeoTemplateService templateService;
 
     private final LeoJobPacker leoJobPacker;
 
     private final LeoTagHelper leoTagHelper;
 
-    private final LeoBuildService leoBuildService;
+    private final LeoBuildService buildService;
+
+    private final LeoBuildLogService buildLogService;
+
+    private final LeoDeployService deployService;
+
+    private final LeoDeployLogService deployLogService;
 
     private final ApplicationService applicationService;
 
@@ -63,7 +67,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
 
     @Override
     public DataTable<LeoJobVO.Job> queryLeoJobPage(LeoJobParam.JobPageQuery pageQuery) {
-        DataTable<LeoJob> table = leoJobService.queryJobPage(pageQuery);
+        DataTable<LeoJob> table = jobService.queryJobPage(pageQuery);
         List<LeoJobVO.Job> data = BeanCopierUtil.copyListProperties(table.getData(), LeoJobVO.Job.class).stream()
                 .peek(e -> leoJobPacker.wrap(e, pageQuery))
                 .collect(Collectors.toList());
@@ -77,7 +81,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .map(LeoJobModel.JobConfig::getJob)
                 .orElseThrow(() -> new LeoJobException("缺少任务配置！"));
 
-        LeoTemplate leoTemplate = leoTemplateService.getById(addJob.getTemplateId());
+        LeoTemplate leoTemplate = templateService.getById(addJob.getTemplateId());
         if (leoTemplate == null) {
             throw new LeoJobException("任务模板配置不正确！");
         }
@@ -91,7 +95,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
         leoJob.setJobKey(leoJob.getJobKey().toUpperCase());
         leoJob.setTemplateVersion(templateVersion);
         leoJob.setTemplateContent(leoTemplate.getTemplateContent());
-        leoJobService.add(leoJob);
+        jobService.add(leoJob);
         updateTagsWithLeoJob(leoJob, jobConfig);
     }
 
@@ -112,7 +116,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
     @Override
     @Transactional(rollbackFor = {LeoJobException.class})
     public void updateLeoJob(LeoJobParam.UpdateJob updateJob) {
-        LeoTemplate leoTemplate = leoTemplateService.getById(updateJob.getTemplateId());
+        LeoTemplate leoTemplate = templateService.getById(updateJob.getTemplateId());
         if (leoTemplate == null) {
             throw new LeoJobException("任务模板配置不正确！");
         }
@@ -129,7 +133,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .map(LeoBaseModel.GitLab::getProject)
                 .map(LeoBaseModel.GitLabProject::getBranch)
                 .orElse(updateJob.getBranch());
-        LeoJob leoJob = leoJobService.getById(updateJob.getId());
+        LeoJob leoJob = jobService.getById(updateJob.getId());
         boolean isUpdateTemplate = !leoJob.getTemplateId().equals(updateJob.getTemplateId());
 
         LeoJob saveLeoJob = LeoJob.builder()
@@ -148,7 +152,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .isActive(updateJob.getIsActive())
                 .comment(updateJob.getComment())
                 .build();
-        leoJobService.updateByPrimaryKeySelective(saveLeoJob);
+        jobService.updateByPrimaryKeySelective(saveLeoJob);
         if (isUpdateTemplate) {
             // 变更模板
             this.upgradeLeoJobTemplateContent(updateJob.getId());
@@ -158,8 +162,8 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
 
     @Override
     public void upgradeLeoJobTemplateContent(int jobId) {
-        LeoJob leoJob = leoJobService.getById(jobId);
-        LeoTemplate leoTemplate = leoTemplateService.getById(leoJob.getTemplateId());
+        LeoJob leoJob = jobService.getById(jobId);
+        LeoTemplate leoTemplate = templateService.getById(leoJob.getTemplateId());
         LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(leoTemplate);
         final String templateVersion = Optional.ofNullable(templateConfig)
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
@@ -173,12 +177,12 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .templateVersion(templateVersion)
                 .templateContent(leoTemplate.getTemplateContent())
                 .build();
-        leoJobService.updateByPrimaryKeySelective(saveLeoJob);
+        jobService.updateByPrimaryKeySelective(saveLeoJob);
     }
 
     @Override
     public void createCrRepositoryWithLeoJobId(int jobId) {
-        LeoJob leoJob = leoJobService.getById(jobId);
+        LeoJob leoJob = jobService.getById(jobId);
         LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob.getJobConfig());
         final LeoJobModel.CR cr = Optional.ofNullable(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
@@ -201,13 +205,37 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void deleteLeoJobById(int jobId) {
-        LeoJob leoJob = leoJobService.getById(jobId);
-        if (leoJob == null)
+        LeoJob leoJob = jobService.getById(jobId);
+        if (leoJob == null) {
             throw new LeoJobException("删除任务错误: 任务不存在！");
-        if (leoBuildService.countWithJobId(jobId) > 0)
-            throw new LeoJobException("删除任务错误: 构建信息未删除！");
-        leoJobService.deleteById(jobId);
+        }
+        if (leoJob.getIsActive()) {
+            throw new LeoJobException("删除任务错误: 当前任务有效！");
+        }
+        // 删除 deploy
+        List<LeoDeploy> deploys = deployService.queryWithJobId(jobId);
+        if (!CollectionUtils.isEmpty(deploys)) {
+            for (LeoDeploy deploy : deploys) {
+                log.info("删除部署日志: jobId={}, deployId={}", jobId, deploy.getId());
+                deployLogService.deleteWithDeployId(deploy.getId());
+                log.info("删除部署记录: deployId={}", deploy.getId());
+                deployService.deleteById(deploy.getId());
+            }
+        }
+        // 删除 build
+        List<LeoBuild> builds = buildService.queryWithJobId(jobId);
+        if (!CollectionUtils.isEmpty(builds)) {
+            for (LeoBuild build : builds) {
+                log.info("删除构建日志: jobId={}, buildId={}", jobId, build.getId());
+                buildLogService.deleteWithBuildId(build.getId());
+                log.info("删除构建记录: buildId={}", build.getId());
+                buildService.deleteById(build.getId());
+            }
+        }
+        log.info("删除LeoJob: jobId={}", jobId);
+        jobService.deleteById(jobId);
     }
 
     @Override
@@ -220,7 +248,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
         if (destApplication == null) {
             throw new LeoJobException("复制任务错误: 目标应用不存在！");
         }
-        List<LeoJob> srcJobs = leoJobService.querJobWithApplicationId(srcApplication.getId());
+        List<LeoJob> srcJobs = jobService.querJobWithApplicationId(srcApplication.getId());
         if (CollectionUtils.isEmpty(srcJobs)) {
             throw new LeoJobException("复制任务错误: 源应用下任务为空！");
         }
@@ -232,7 +260,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
 
         for (LeoJob srcJob : srcJobs) {
             // 校验任务
-            if (CollectionUtils.isEmpty(leoJobService.querJobWithApplicationIdAndEnvType(destApplication.getId(), srcJob.getEnvType()))) {
+            if (CollectionUtils.isEmpty(jobService.querJobWithApplicationIdAndEnvType(destApplication.getId(), srcJob.getEnvType()))) {
                 Env env = envService.getByEnvType(srcJob.getEnvType());
 
                 final String name = Joiner.on("-").join(destApplication.getName(), env.getEnvName());
@@ -260,7 +288,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                         .hide(false)
                         .isActive(true)
                         .build();
-                leoJobService.add(cloneLeoJob);
+                jobService.add(cloneLeoJob);
                 // 绑定Tags
                 updateTagsWithLeoJob(cloneLeoJob, jobConfig);
                 // 创建CR

@@ -62,6 +62,14 @@ public class LeoBuildServiceImpl implements LeoBuildService {
     }
 
     @Override
+    public List<LeoBuild> queryWithJobId(Integer jobId) {
+        Example example = new Example(LeoBuild.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("jobId", jobId);
+        return leoBuildMapper.selectByExample(example);
+    }
+
+    @Override
     public DataTable<LeoBuild> queryBuildPage(SubscribeLeoBuildRequestParam pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(LeoBuild.class);
@@ -188,6 +196,11 @@ public class LeoBuildServiceImpl implements LeoBuildService {
     @Override
     public int statUserTotal() {
         return leoBuildMapper.statUserTotal();
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        leoBuildMapper.deleteByPrimaryKey(id);
     }
 
 }

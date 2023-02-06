@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.service.leo.impl;
 
-import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildLog;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeployLog;
 import com.baiyi.opscloud.mapper.opscloud.LeoDeployLogMapper;
 import com.baiyi.opscloud.service.leo.LeoDeployLogService;
@@ -44,6 +43,14 @@ public class LeoDeployLogServiceImpl implements LeoDeployLogService {
         criteria.andEqualTo("deployId", deployId);
         example.setOrderByClause("id desc");
         return leoDeployLogMapper.selectByExample(example);
+    }
+
+    @Override
+    public void deleteWithDeployId(Integer deployId) {
+        Example example = new Example(LeoDeployLog.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("deployId", deployId);
+        leoDeployLogMapper.deleteByExample(example);
     }
 
 }

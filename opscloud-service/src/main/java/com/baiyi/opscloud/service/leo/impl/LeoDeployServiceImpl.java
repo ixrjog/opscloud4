@@ -85,6 +85,14 @@ public class LeoDeployServiceImpl implements LeoDeployService {
     }
 
     @Override
+    public List<LeoDeploy> queryWithJobId(Integer jobId) {
+        Example example = new Example(LeoDeploy.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("jobId", jobId);
+        return leoDeployMapper.selectByExample(example);
+    }
+
+    @Override
     public int countRunningWithJobId(int jobId) {
         Example example = new Example(LeoDeploy.class);
         Example.Criteria criteria = example.createCriteria();
@@ -114,6 +122,11 @@ public class LeoDeployServiceImpl implements LeoDeployService {
         criteria.andEqualTo("isActive", true)
                 .andEqualTo("isFinish", true);
         return leoDeployMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        leoDeployMapper.deleteByPrimaryKey(id);
     }
 
 }

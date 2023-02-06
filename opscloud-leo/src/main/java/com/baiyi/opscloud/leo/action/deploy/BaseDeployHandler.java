@@ -85,8 +85,8 @@ public abstract class BaseDeployHandler {
     }
 
     protected void save(LeoDeploy saveLeoDeploy, String log, Object... var2) {
-        leoDeployService.updateByPrimaryKeySelective(saveLeoDeploy);
         logHelper.info(saveLeoDeploy, log, var2);
+        leoDeployService.updateByPrimaryKeySelective(saveLeoDeploy);
     }
 
 }

@@ -14,6 +14,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
+import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.leo.LeoTemplateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,9 @@ public class LeoJobPacker implements IWrapper<LeoJobVO.Job> {
 
     private final ApplicationService applicationService;
 
-    private final LeoBuildService leoBuildService;
+    private final LeoBuildService buildService;
+
+    private final LeoDeployService deployService;
 
     private final LeoTemplateService leoTemplateService;
 
@@ -69,7 +72,8 @@ public class LeoJobPacker implements IWrapper<LeoJobVO.Job> {
             }
             LeoJobModel.JobConfig jobConfig = LeoJobModel.load(job.getJobConfig());
             job.setConfigDetails(jobConfig);
-            job.setBuildSize(leoBuildService.countWithJobId(job.getId()));
+            job.setBuildSize(buildService.countWithJobId(job.getId()));
+            job.setDeploySize(deployService.countWithJobId(job.getId()));
         }
     }
 

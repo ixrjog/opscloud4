@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.service.leo.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildLog;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoDeployLog;
 import com.baiyi.opscloud.mapper.opscloud.LeoBuildLogMapper;
 import com.baiyi.opscloud.service.leo.LeoBuildLogService;
 import com.github.pagehelper.Page;
@@ -43,6 +44,14 @@ public class LeoBuildLogServiceImpl implements LeoBuildLogService {
         criteria.andEqualTo("buildId", buildId);
         example.setOrderByClause("id desc");
         return leoBuildLogMapper.selectByExample(example);
+    }
+
+    @Override
+    public void deleteWithBuildId(Integer buildId) {
+        Example example = new Example(LeoBuildLog.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("buildId", buildId);
+        leoBuildLogMapper.deleteByExample(example);
     }
 
 }

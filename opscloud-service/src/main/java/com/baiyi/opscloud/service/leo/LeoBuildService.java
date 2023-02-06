@@ -32,6 +32,8 @@ public interface LeoBuildService {
 
     List<LeoBuild> queryTheHistoricalBuildToBeDeleted(Integer jobId);
 
+    List<LeoBuild> queryWithJobId(Integer jobId);
+
     DataTable<LeoBuild> queryBuildPage(SubscribeLeoBuildRequestParam pageQuery);
 
     DataTable<LeoBuild> queryBuildPage(LeoJobParam.JobBuildPageQuery pageQuery);
@@ -53,5 +55,7 @@ public interface LeoBuildService {
     int countWithReport();
 
     int statUserTotal();
+
+    void deleteById(Integer id);
 
 }

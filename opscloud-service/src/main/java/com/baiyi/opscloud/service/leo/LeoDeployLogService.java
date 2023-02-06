@@ -17,4 +17,6 @@ public interface LeoDeployLogService {
 
     List<LeoDeployLog> queryLatestLogByDeployId(Integer deployId, int size);
 
+    void deleteWithDeployId(Integer deployId);
+
 }
