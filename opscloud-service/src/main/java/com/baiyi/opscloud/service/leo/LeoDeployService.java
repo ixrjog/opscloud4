@@ -36,6 +36,8 @@ public interface LeoDeployService {
 
     List<LeoDeploy> queryWithJobId(Integer jobId);
 
+    List<LeoDeploy> queryWithBuildId(Integer buildId);
+
     int countRunningWithJobId(int jobId);
 
     int countWithJobId(int jobId);

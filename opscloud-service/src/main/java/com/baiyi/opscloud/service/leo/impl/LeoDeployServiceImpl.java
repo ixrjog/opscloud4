@@ -93,6 +93,14 @@ public class LeoDeployServiceImpl implements LeoDeployService {
     }
 
     @Override
+    public List<LeoDeploy> queryWithBuildId(Integer buildId) {
+        Example example = new Example(LeoDeploy.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("buildId", buildId);
+        return leoDeployMapper.selectByExample(example);
+    }
+
+    @Override
     public int countRunningWithJobId(int jobId) {
         Example example = new Example(LeoDeploy.class);
         Example.Criteria criteria = example.createCriteria();

@@ -35,6 +35,7 @@ import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.leo.LeoBuildImageService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
+import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.google.common.collect.Lists;
@@ -45,6 +46,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.gitlab4j.api.models.Commit;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -63,11 +65,13 @@ import static java.util.Optional.ofNullable;
 @RequiredArgsConstructor
 public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
-    private final LeoJobService leoJobService;
+    private final LeoJobService jobService;
 
-    private final LeoBuildService leoBuildService;
+    private final LeoBuildService buildService;
 
-    private final LeoBuildImageService leoBuildImageService;
+    private final LeoBuildImageService buildImageService;
+
+    private final LeoDeployService deployService;
 
     private final ApplicationService applicationService;
 
@@ -83,7 +87,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     private final BuildingLogHelper logHelper;
 
-    private final LeoBuildHandler leoBuildHandler;
+    private final LeoBuildHandler buildHandler;
 
     private final EnvService envService;
 
@@ -94,7 +98,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
     @Override
     @LeoBuildInterceptor(jobIdSpEL = "#doBuild.jobId")
     public void doBuild(LeoBuildParam.DoBuild doBuild) {
-        LeoJob leoJob = leoJobService.getById(doBuild.getJobId());
+        LeoJob leoJob = jobService.getById(doBuild.getJobId());
         if (leoJob == null)
             throw new LeoBuildException("任务不存在: jobId={}", doBuild.getJobId());
 
@@ -172,13 +176,13 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .buildConfig(buildConfig.dump())
                 .ocInstance(OcInstance.ocInstance)
                 .build();
-        leoBuildService.add(leoBuild);
+        buildService.add(leoBuild);
         handleBuild(leoBuild, buildConfig);
     }
 
     @Override
     public void stopBuild(int buildId) {
-        LeoBuild leoBuild = leoBuildService.getById(buildId);
+        LeoBuild leoBuild = buildService.getById(buildId);
         if (leoBuild == null) {
             throw new LeoBuildException("构建不存在: buildId={}", buildId);
         }
@@ -210,7 +214,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
      * @param buildConfig
      */
     private void handleBuild(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
-        leoBuildHandler.handleBuild(leoBuild, buildConfig);
+        buildHandler.handleBuild(leoBuild, buildConfig);
     }
 
     /**
@@ -221,7 +225,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
      * @return
      */
     private int generateBuildNumberWithJobId(int jobId) {
-        return leoBuildService.getMaxBuildNumberWithJobId(jobId) + 1;
+        return buildService.getMaxBuildNumberWithJobId(jobId) + 1;
     }
 
     /**
@@ -232,7 +236,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
      */
     @Override
     public LeoBuildVO.BranchOptions getBuildBranchOptions(LeoBuildParam.GetBuildBranchOptions getOptions) {
-        LeoJob leoJob = leoJobService.getById(getOptions.getJobId());
+        LeoJob leoJob = jobService.getById(getOptions.getJobId());
         if (leoJob == null) {
             throw new LeoBuildException("任务配置不存在: jobId={}", getOptions.getJobId());
         }
@@ -246,7 +250,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     @Override
     public LeoBuildVO.BranchOptions createBuildBranch(LeoBuildParam.CreateBuildBranch createBuildBranch) {
-        LeoJob leoJob = leoJobService.getById(createBuildBranch.getJobId());
+        LeoJob leoJob = jobService.getById(createBuildBranch.getJobId());
         if (leoJob == null) {
             throw new LeoBuildException("任务配置不存在: jobId={}", createBuildBranch.getJobId());
         }
@@ -260,21 +264,24 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateLeoBuild(LeoBuildParam.UpdateBuild updateBuild) {
-        LeoBuild leoBuild = leoBuildService.getById(updateBuild.getId());
+        LeoBuild leoBuild = buildService.getById(updateBuild.getId());
         if (!leoBuild.getIsFinish()) {
             throw new LeoBuildException("构建任务未结束不能修改构建详情！");
         }
+
+        final String versionDesc = StringUtils.isNotBlank(updateBuild.getVersionDesc()) ? updateBuild.getVersionDesc() : null;
+
         LeoBuild saveLeoBuild = LeoBuild.builder()
                 .id(updateBuild.getId())
                 .versionName(updateBuild.getVersionName())
-                .versionDesc(StringUtils.isNotBlank(updateBuild.getVersionDesc()) ? updateBuild.getVersionDesc() : null)
+                .versionDesc(versionDesc)
                 .isActive(updateBuild.getIsActive())
                 .build();
-        leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
+        buildService.updateByPrimaryKeySelective(saveLeoBuild);
         // 更新镜像版本信息
         LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.load(leoBuild.getBuildConfig());
         Map<String, String> dict = buildConfig.getBuild().getDict();
-        LeoBuildImage leoBuildImage = leoBuildImageService.getByUniqueKey(leoBuild.getId(), dict.get(BuildDictConstants.IMAGE.getKey()));
+        LeoBuildImage leoBuildImage = buildImageService.getByUniqueKey(leoBuild.getId(), dict.get(BuildDictConstants.IMAGE.getKey()));
         if (leoBuildImage == null) {
             return;
         }
@@ -283,7 +290,19 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .versionName(updateBuild.getVersionName())
                 .versionDesc(StringUtils.isNotBlank(updateBuild.getVersionDesc()) ? updateBuild.getVersionDesc() : null)
                 .build();
-        leoBuildImageService.updateByPrimaryKeySelective(saveLeoBuildImage);
+        buildImageService.updateByPrimaryKeySelective(saveLeoBuildImage);
+        // 更新部署记录
+        List<LeoDeploy> deploys = deployService.queryWithBuildId(updateBuild.getId());
+        if (!CollectionUtils.isEmpty(deploys)) {
+            for (LeoDeploy deploy : deploys) {
+                LeoDeploy saveLeoDeploy = LeoDeploy.builder()
+                        .id(deploy.getId())
+                        .versionName(updateBuild.getVersionName())
+                        .versionDesc(versionDesc)
+                        .build();
+                deployService.updateByPrimaryKeySelective(saveLeoDeploy);
+            }
+        }
     }
 
     /**
@@ -308,7 +327,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     @Override
     public DataTable<LeoBuildVO.Build> queryLeoJobBuildPage(LeoJobParam.JobBuildPageQuery pageQuery) {
-        DataTable<LeoBuild> table = leoBuildService.queryBuildPage(pageQuery);
+        DataTable<LeoBuild> table = buildService.queryBuildPage(pageQuery);
         List<LeoBuildVO.Build> data = BeanCopierUtil.copyListProperties(table.getData(), LeoBuildVO.Build.class).stream()
                 .peek(leoBuildResponsePacker::wrap)
                 .collect(Collectors.toList());
