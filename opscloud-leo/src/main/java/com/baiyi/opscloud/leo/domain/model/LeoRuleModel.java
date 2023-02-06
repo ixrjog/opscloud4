@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.leo.domain.model;
 
 import com.baiyi.opscloud.common.util.JSONUtil;
+import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoRule;
 import com.baiyi.opscloud.domain.vo.leo.LeoRuleVO;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
@@ -8,12 +9,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.baiyi.opscloud.leo.domain.model.LeoRuleModel.RuleConfig.EMPTY_RULE;
@@ -29,7 +32,7 @@ public class LeoRuleModel {
         return load(leoRule.getRuleConfig());
     }
 
-    public static LeoRuleModel.RuleConfig load( LeoRuleVO.Rule rule) {
+    public static LeoRuleModel.RuleConfig load(LeoRuleVO.Rule rule) {
         return load(rule.getRuleConfig());
     }
 
@@ -88,6 +91,40 @@ public class LeoRuleModel {
         private String type;
         private String begin;
         private String end;
+
+        @Override
+        public String toString() {
+            return JSONUtil.writeValueAsString(this);
+        }
+
+    }
+
+    @Slf4j
+    @Builder
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DateExpression {
+
+        private Date beginDate;
+        private Date endDate;
+        @Builder.Default
+        private Date nowDate = new Date();
+
+        public static DateExpression build(Expression expression) {
+            return DateExpression.builder()
+                    .beginDate(TimeUtil.gmtToDate(expression.getBegin()))
+                    .endDate(TimeUtil.gmtToDate(expression.getEnd()))
+                    .build();
+        }
+
+        public boolean parse() {
+            boolean hitBegin = this.nowDate.after(this.beginDate);
+            log.info("开始时间: hitBeginTime={}", hitBegin);
+            boolean hitEnd = this.nowDate.before(this.endDate);
+            log.info("结束时间: hitEndTime={}", hitEnd);
+            return hitBegin && hitEnd;
+        }
 
         @Override
         public String toString() {
