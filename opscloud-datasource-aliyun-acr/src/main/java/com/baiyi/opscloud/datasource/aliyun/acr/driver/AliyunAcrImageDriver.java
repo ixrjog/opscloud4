@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.datasource.aliyun.acr.driver;
 
+import com.aliyuncs.cr.model.v20181201.GetRepoTagRequest;
+import com.aliyuncs.cr.model.v20181201.GetRepoTagResponse;
 import com.aliyuncs.cr.model.v20181201.ListRepoTagRequest;
 import com.aliyuncs.cr.model.v20181201.ListRepoTagResponse;
 import com.aliyuncs.exceptions.ClientException;
@@ -77,6 +79,15 @@ public class AliyunAcrImageDriver extends BaseAliyunAcrDriver {
         request.setPageSize(Math.min(size, Query.PAGE_SIZE));
         ListRepoTagResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
         return response.getImages();
+    }
+
+    public GetRepoTagResponse getImage(String regionId, AliyunConfig.Aliyun aliyun, String instanceId, String repoId, String tag) throws ClientException {
+        GetRepoTagRequest request = new GetRepoTagRequest();
+        request.setSysRegionId(regionId);
+        request.setInstanceId(instanceId);
+        request.setRepoId(repoId);
+        request.setTag(tag);
+        return aliyunClient.getAcsResponse(regionId, aliyun, request);
     }
 
 }

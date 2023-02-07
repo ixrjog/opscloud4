@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.leo.action.build.concrete.post.verify;
 
-import com.aliyuncs.cr.model.v20181201.ListRepoTagResponse;
+import com.aliyuncs.cr.model.v20181201.GetRepoTagResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.acr.driver.AliyunAcrImageDriver;
@@ -12,10 +12,10 @@ import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -67,10 +67,14 @@ public class AcrValidator extends BaseCrValidator<AliyunConfig> {
                 .map(LeoJobModel.Repo::getId)
                 .orElseGet(() -> getCrRepoId(cr, leoJob, crRegionId, crInstanceId, crRepoName, dsConfig, envName));
         try {
-            List<ListRepoTagResponse.ImagesItem> imagesItems = aliyunAcrImageDriver.listImage(crRegionId, dsConfig.getAliyun(), crInstanceId, crRepoId, QUERY_IMAGES_SIZE);
-            imagesItems.stream().filter(image -> image.getTag().equals(imageTag))
-                    .findFirst()
-                    .orElseThrow(() -> new LeoBuildException("阿里云ACR中未找到构建镜像: repoId={}, imageTag={}", crRepoId, imageTag));
+            GetRepoTagResponse imageResponse = aliyunAcrImageDriver.getImage(crRegionId, dsConfig.getAliyun(), crInstanceId, crRepoId, imageTag);
+            if (imageResponse == null || StringUtils.isBlank(imageResponse.getImageId())) {
+                throw new LeoBuildException("阿里云ACR中未找到构建镜像: repoId={}, imageTag={}", crRepoId, imageTag);
+            }
+//            List<ListRepoTagResponse.ImagesItem> imagesItems = aliyunAcrImageDriver.listImage(crRegionId, dsConfig.getAliyun(), crInstanceId, crRepoId, QUERY_IMAGES_SIZE);
+//            imagesItems.stream().filter(image -> image.getTag().equals(imageTag))
+//                    .findFirst()
+//                    .orElseThrow(() -> new LeoBuildException("阿里云ACR中未找到构建镜像: repoId={}, imageTag={}", crRepoId, imageTag));
         } catch (ClientException e) {
             throw new LeoBuildException("查询阿里云-ACR镜像错误: err={}", e.getMessage());
         }
