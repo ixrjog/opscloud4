@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
-    private final LeoJobService leoJobService;
+    private final LeoJobService jobService;
 
     private final EnvService envService;
 
@@ -58,23 +58,23 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     private final ApplicationService applicationService;
 
-    private final LeoBuildService leoBuildService;
+    private final LeoBuildService buildService;
 
-    private final LeoBuildVersionPacker leoBuildVersionPacker;
+    private final LeoBuildVersionPacker buildVersionPacker;
 
-    private final LeoDeployService leoDeployService;
+    private final LeoDeployService deployService;
 
-    private final LeoDeployHandler leoDeployHandler;
+    private final LeoDeployHandler deployHandler;
 
     private final UserService userService;
 
-    private final LeoDeployResponsePacker leoDeployResponsePacker;
+    private final LeoDeployResponsePacker deployResponsePacker;
 
     @Override
     @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType")
     public void doDeploy(LeoDeployParam.DoDeploy doDeploy) {
         // 执行部署任务
-        LeoJob leoJob = leoJobService.getById(doDeploy.getJobId());
+        LeoJob leoJob = jobService.getById(doDeploy.getJobId());
         final int deployNumber = generateDeployNumberWithJobId(leoJob.getId());
 
         LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob.getJobConfig());
@@ -113,7 +113,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .isRollback(false)
                 .ocInstance(OcInstance.ocInstance)
                 .build();
-        leoDeployService.add(leoDeploy);
+        deployService.add(leoDeploy);
         handleDeploy(leoDeploy, deployConfig);
     }
 
@@ -124,7 +124,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
      * @param deployConfig
      */
     private void handleDeploy(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
-        leoDeployHandler.handleDeploy(leoDeploy, deployConfig);
+        deployHandler.handleDeploy(leoDeploy, deployConfig);
     }
 
     /**
@@ -135,20 +135,20 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
      * @return
      */
     private int generateDeployNumberWithJobId(int jobId) {
-        return leoDeployService.getMaxDeployNumberWithJobId(jobId) + 1;
+        return deployService.getMaxDeployNumberWithJobId(jobId) + 1;
     }
 
     @Override
     public List<LeoBuildVO.Build> queryLeoDeployVersion(LeoBuildParam.QueryDeployVersion queryBuildVersion) {
-        List<LeoBuild> builds = leoBuildService.queryBuildVersion(queryBuildVersion);
+        List<LeoBuild> builds = buildService.queryBuildVersion(queryBuildVersion);
         return BeanCopierUtil.copyListProperties(builds, LeoBuildVO.Build.class).stream()
-                .peek(e -> leoBuildVersionPacker.wrap(e, queryBuildVersion))
+                .peek(e -> buildVersionPacker.wrap(e, queryBuildVersion))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ApplicationResourceVO.BaseResource> queryLeoBuildDeployment(LeoBuildParam.QueryDeployDeployment queryBuildDeployment) {
-        LeoJob leoJob = leoJobService.getById(queryBuildDeployment.getJobId());
+        LeoJob leoJob = jobService.getById(queryBuildDeployment.getJobId());
         Env env = envService.getByEnvType(leoJob.getEnvType());
         List<ApplicationResource> resources = applicationResourceService.queryByApplication(leoJob.getApplicationId(),
                 DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name(),
@@ -177,17 +177,22 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     @Override
     public DataTable<LeoDeployVO.Deploy> queryLeoJobDeployPage(LeoJobParam.JobDeployPageQuery pageQuery) {
-        List<LeoJob> leoJobs = leoJobService.querJobWithApplicationIdAndEnvType(pageQuery.getApplicationId(), pageQuery.getEnvType());
+        List<LeoJob> leoJobs = jobService.querJobWithApplicationIdAndEnvType(pageQuery.getApplicationId(), pageQuery.getEnvType());
         if (CollectionUtils.isEmpty(leoJobs)) {
             return DataTable.EMPTY;
         }
         List<Integer> jobIds = leoJobs.stream().map(LeoJob::getId).collect(Collectors.toList());
         pageQuery.setJobIds(jobIds);
-        DataTable<LeoDeploy> table = leoDeployService.queryDeployPage(pageQuery);
+        DataTable<LeoDeploy> table = deployService.queryDeployPage(pageQuery);
         List<LeoDeployVO.Deploy> data = BeanCopierUtil.copyListProperties(table.getData(), LeoDeployVO.Deploy.class).stream()
-                .peek(leoDeployResponsePacker::wrap)
+                .peek(deployResponsePacker::wrap)
                 .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
+    }
+
+    @Override
+    public void stopDeploy(int deployId) {
+
     }
 
 }

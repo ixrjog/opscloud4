@@ -32,6 +32,7 @@ public class OptionsVO {
     public static class Option {
         private String label;
         private Object value;
+        private Object comment;
     }
 
 }

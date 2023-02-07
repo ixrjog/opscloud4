@@ -17,8 +17,9 @@ public class OptionsUtil {
 
     public static OptionsVO.Options toBusinessTypeOptions() {
         List<OptionsVO.Option> optionList = Arrays.stream(BusinessTypeEnum.values()).map(e -> OptionsVO.Option.builder()
-                .label(e.getName())
+                .label(e.name())
                 .value(e.getType())
+                .comment(e.getName())
                 .build()).collect(Collectors.toList());
         return OptionsVO.Options.builder()
                 .options(optionList)
@@ -29,6 +30,7 @@ public class OptionsUtil {
         List<OptionsVO.Option> optionList = Arrays.stream(BusinessTypeEnum.values()).filter(BusinessTypeEnum::isInApplication).map(e -> OptionsVO.Option.builder()
                 .label(e.getName())
                 .value(e.getType())
+                .comment(e.getName())
                 .build()).collect(Collectors.toList());
         return OptionsVO.Options.builder()
                 .options(optionList)

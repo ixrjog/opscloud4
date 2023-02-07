@@ -25,4 +25,6 @@ public interface LeoDeployFacade {
 
     DataTable<LeoDeployVO.Deploy> queryLeoJobDeployPage(LeoJobParam.JobDeployPageQuery pageQuery);
 
+    void stopDeploy(int deployId);
+
 }

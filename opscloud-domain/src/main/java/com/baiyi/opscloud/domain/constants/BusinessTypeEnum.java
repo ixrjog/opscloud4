@@ -12,28 +12,20 @@ import java.util.Arrays;
 @Getter
 public enum BusinessTypeEnum {
 
-
     COMMON(0, "通用"),
     SERVER(1, "服务器", true),
     SERVERGROUP(2, "服务器组", true),
     USER(3, "用户"),
     USERGROUP(4, "用户组"),
     ASSET(5, "资产", true),
-    /**
-     * 服务器器管理员账户
-     **/
-    SERVER_ADMINISTRATOR_ACCOUNT(6, "SERVER_ADMINISTRATOR_ACCOUNT"),
-
-    /**
-     * 应用授权
-     **/
-    APPLICATION(8, "APPLICATION"),
+    SERVER_ADMINISTRATOR_ACCOUNT(6, "服务器器管理员账户"),
+    APPLICATION(8, "应用"),
     DATASOURCE_INSTANCE(16, "数据源实例", true),
-    LEO_TEMPLATE(20, "LEO_TEMPLATE"),
-    LEO_JOB(21, "LEO_JOB"),
-    USER_PERMISSION(100, "USER_PERMISSION"),
-    BUSINESS_ASSET_RELATION(101, "BUSINESS_ASSET_RELATION"),
-    WORK_EVENT(102, "WORK_EVENT");
+    LEO_TEMPLATE(20, "持续交付模板"),
+    LEO_JOB(21, "持续交付作业"),
+    USER_PERMISSION(100, "用户授权"),
+    BUSINESS_ASSET_RELATION(101, "业务资产关系"),
+    WORK_EVENT(102, "工作事件");
 
     private final String name;
     private final int type;
