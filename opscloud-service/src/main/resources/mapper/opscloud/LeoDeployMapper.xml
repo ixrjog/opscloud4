@@ -37,8 +37,7 @@
     <select id="statByMonth" resultMap="ReportResultMap">
         select date_format(create_time, '%Y-%m') as `c_name`, sum(1) as `value`
         from leo_deploy
-        where
-            deploy_result = 'SUCCESS'
+        where deploy_result = 'SUCCESS'
         group by `c_name`
         order by `c_name`
     </select>
@@ -47,6 +46,15 @@
         select max(deploy_number)
         from leo_deploy
         where job_id = #{jobId}
+    </select>
+
+    <select id="statByEnvName" resultMap="ReportResultMap">
+        select a2.env_name as `c_name`, count(*) as `value`, a2.color
+        from leo_deploy a0
+                 join leo_job a1 on a0.job_id = a1.id
+                 join sys_env a2 on a1.env_type = a2.env_type
+        group by a1.env_type
+        order by a1.env_type
     </select>
 
 </mapper>

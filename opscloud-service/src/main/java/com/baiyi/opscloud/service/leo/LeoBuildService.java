@@ -52,6 +52,8 @@ public interface LeoBuildService {
 
     List<ReportVO.Report> queryMonth();
 
+    List<ReportVO.Report> statByEnvName();
+
     int countWithReport();
 
     int statUserTotal();

@@ -25,27 +25,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LeoDeployServiceImpl implements LeoDeployService {
 
-    private final LeoDeployMapper leoDeployMapper;
+    private final LeoDeployMapper deployMapper;
 
     @Override
     public int getMaxDeployNumberWithJobId(Integer jobId) {
-        Integer maxDeployNumber = leoDeployMapper.getMaxDeployNumberWithJobId(jobId);
+        Integer maxDeployNumber = deployMapper.getMaxDeployNumberWithJobId(jobId);
         return maxDeployNumber == null ? 0 : maxDeployNumber;
     }
 
     @Override
     public void add(LeoDeploy leoDeploy) {
-        leoDeployMapper.insert(leoDeploy);
+        deployMapper.insert(leoDeploy);
     }
 
     @Override
     public LeoDeploy getById(Integer id) {
-        return leoDeployMapper.selectByPrimaryKey(id);
+        return deployMapper.selectByPrimaryKey(id);
     }
 
     @Override
     public void updateByPrimaryKeySelective(LeoDeploy leoDeploy) {
-        leoDeployMapper.updateByPrimaryKeySelective(leoDeploy);
+        deployMapper.updateByPrimaryKeySelective(leoDeploy);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class LeoDeployServiceImpl implements LeoDeployService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andIn("jobId", pageQuery.getJobIds());
         example.setOrderByClause("id desc");
-        List<LeoDeploy> data = leoDeployMapper.selectByExample(example);
+        List<LeoDeploy> data = deployMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }
 
@@ -69,7 +69,7 @@ public class LeoDeployServiceImpl implements LeoDeployService {
             criteria.andEqualTo("deployResult", pageQuery.getDeployResult());
         }
         example.setOrderByClause("id desc");
-        List<LeoDeploy> data = leoDeployMapper.selectByExample(example);
+        List<LeoDeploy> data = deployMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }
 
@@ -81,7 +81,7 @@ public class LeoDeployServiceImpl implements LeoDeployService {
                 //.andEqualTo("isActive", false)
                 .andEqualTo("ocInstance", ocInstance);
         example.setOrderByClause("id desc");
-        return leoDeployMapper.selectByExample(example);
+        return deployMapper.selectByExample(example);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class LeoDeployServiceImpl implements LeoDeployService {
         Example example = new Example(LeoDeploy.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("jobId", jobId);
-        return leoDeployMapper.selectByExample(example);
+        return deployMapper.selectByExample(example);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class LeoDeployServiceImpl implements LeoDeployService {
         Example example = new Example(LeoDeploy.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("buildId", buildId);
-        return leoDeployMapper.selectByExample(example);
+        return deployMapper.selectByExample(example);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class LeoDeployServiceImpl implements LeoDeployService {
         criteria.andEqualTo("jobId", jobId)
                 .andEqualTo("isActive", true)
                 .andEqualTo("isFinish", false);
-        return leoDeployMapper.selectCountByExample(example);
+        return deployMapper.selectCountByExample(example);
     }
 
     @Override
@@ -115,12 +115,12 @@ public class LeoDeployServiceImpl implements LeoDeployService {
         Example example = new Example(LeoDeploy.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("jobId", jobId);
-        return leoDeployMapper.selectCountByExample(example);
+        return deployMapper.selectCountByExample(example);
     }
 
     @Override
     public List<ReportVO.Report> statByMonth() {
-        return leoDeployMapper.statByMonth();
+        return deployMapper.statByMonth();
     }
 
     @Override
@@ -129,12 +129,17 @@ public class LeoDeployServiceImpl implements LeoDeployService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("isActive", true)
                 .andEqualTo("isFinish", true);
-        return leoDeployMapper.selectCountByExample(example);
+        return deployMapper.selectCountByExample(example);
     }
 
     @Override
     public void deleteById(Integer id) {
-        leoDeployMapper.deleteByPrimaryKey(id);
+        deployMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public List<ReportVO.Report> statByEnvName() {
+        return deployMapper.statByEnvName();
     }
 
 }

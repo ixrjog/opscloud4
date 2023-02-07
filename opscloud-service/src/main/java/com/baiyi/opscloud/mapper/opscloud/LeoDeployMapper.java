@@ -12,4 +12,6 @@ public interface LeoDeployMapper extends Mapper<LeoDeploy> {
 
     List<ReportVO.Report> statByMonth();
 
+    List<ReportVO.Report> statByEnvName();
+
 }

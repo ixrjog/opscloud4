@@ -33,6 +33,7 @@
     <resultMap id="ReportResultMap" type="com.baiyi.opscloud.domain.vo.base.ReportVO$Report">
         <result column="c_name" jdbcType="VARCHAR" property="cName"/>
         <result column="value" jdbcType="INTEGER" property="value"/>
+        <result column="color" jdbcType="VARCHAR" property="color"/>
     </resultMap>
 
     <select id="queryMonth" resultMap="ReportResultMap">
@@ -90,6 +91,15 @@
     <select id="statUserTotal" resultType="int">
         select count(distinct(username))
         from leo_build
+    </select>
+
+    <select id="statByEnvName" resultMap="ReportResultMap">
+        select a2.env_name as `c_name`, count(*) as `value`, a2.color
+        from leo_build  a0
+           join leo_job a1 on a0.job_id = a1.id
+           join sys_env a2 on a1.env_type = a2.env_type
+        group by a1.env_type
+        order by a1.env_type
     </select>
 
 </mapper>

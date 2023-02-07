@@ -19,4 +19,6 @@ public interface LeoBuildMapper extends Mapper<LeoBuild> {
 
     int statUserTotal();
 
+    List<ReportVO.Report> statByEnvName();
+
 }

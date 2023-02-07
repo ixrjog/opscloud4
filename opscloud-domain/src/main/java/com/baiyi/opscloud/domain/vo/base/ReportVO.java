@@ -25,7 +25,8 @@ public class ReportVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Report {
+    public static class Report implements Serializable {
+        private static final long serialVersionUID = -2683596358424500001L;
         private String cName;
         private Integer value;
         private String color;

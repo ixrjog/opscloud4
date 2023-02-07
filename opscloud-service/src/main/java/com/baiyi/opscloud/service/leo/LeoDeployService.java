@@ -48,4 +48,6 @@ public interface LeoDeployService {
 
     void deleteById(Integer id);
 
+    List<ReportVO.Report> statByEnvName();
+
 }

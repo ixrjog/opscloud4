@@ -35,6 +35,10 @@ public class LeoReportVO {
         @ApiModelProperty(value = "持续交付报表")
         private ReportVO.MonthlyReport continuousDeliveryReport;
 
+        private List<ReportVO.Report> buildWithEnvReport;
+
+        private List<ReportVO.Report> deployWithEnvReport;
+
 //        @ApiModelProperty(value = "构建月报表")
 //        private MonthReport buildMonthReport;
 //

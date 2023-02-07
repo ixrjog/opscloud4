@@ -27,26 +27,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LeoBuildServiceImpl implements LeoBuildService {
 
-    private final LeoBuildMapper leoBuildMapper;
+    private final LeoBuildMapper buildMapper;
 
     @Override
     public void add(LeoBuild leoBuild) {
-        leoBuildMapper.insert(leoBuild);
+        buildMapper.insert(leoBuild);
     }
 
     @Override
     public LeoBuild getById(Integer id) {
-        return leoBuildMapper.selectByPrimaryKey(id);
+        return buildMapper.selectByPrimaryKey(id);
     }
 
     @Override
     public void updateByPrimaryKeySelective(LeoBuild leoBuild) {
-        leoBuildMapper.updateByPrimaryKeySelective(leoBuild);
+        buildMapper.updateByPrimaryKeySelective(leoBuild);
     }
 
     @Override
     public int getMaxBuildNumberWithJobId(Integer jobId) {
-        Integer maxBuildNumber = leoBuildMapper.getMaxBuildNumberWithJobId(jobId);
+        Integer maxBuildNumber = buildMapper.getMaxBuildNumberWithJobId(jobId);
         return maxBuildNumber == null ? 0 : maxBuildNumber;
     }
 
@@ -58,7 +58,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
                 .andEqualTo("isFinish", true)
                 .andEqualTo("isDeletedBuildJob", false);
         example.setOrderByClause("id desc");
-        return leoBuildMapper.selectByExample(example);
+        return buildMapper.selectByExample(example);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         Example example = new Example(LeoBuild.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("jobId", jobId);
-        return leoBuildMapper.selectByExample(example);
+        return buildMapper.selectByExample(example);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andIn("jobId", pageQuery.getJobIds());
         example.setOrderByClause("id desc");
-        List<LeoBuild> data = leoBuildMapper.selectByExample(example);
+        List<LeoBuild> data = buildMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }
 
@@ -107,7 +107,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
 //        }
 //        example.setOrderByClause("id desc");
 //        List<LeoBuild> data = leoBuildMapper.selectByExample(example);
-        List<LeoBuild> data = leoBuildMapper.queryPageByParam(pageQuery);
+        List<LeoBuild> data = buildMapper.queryPageByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
 
@@ -132,7 +132,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
             }
         }
         example.setOrderByClause("id desc");
-        return leoBuildMapper.selectByExample(example);
+        return buildMapper.selectByExample(example);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         Example example = new Example(LeoBuild.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("jobId", jobId);
-        return leoBuildMapper.selectCountByExample(example);
+        return buildMapper.selectCountByExample(example);
     }
 
     @Override
@@ -150,7 +150,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("jobId", jobId);
         example.setOrderByClause("id desc");
-        return leoBuildMapper.selectByExample(example);
+        return buildMapper.selectByExample(example);
     }
 
     @Override
@@ -161,7 +161,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
                 //.andEqualTo("isActive", false)
                 .andEqualTo("ocInstance", ocInstance);
         example.setOrderByClause("id desc");
-        return leoBuildMapper.selectByExample(example);
+        return buildMapper.selectByExample(example);
     }
 
     @Override
@@ -171,17 +171,22 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         criteria.andEqualTo("jobId", jobId)
                 .andEqualTo("isActive", true)
                 .andEqualTo("isFinish", false);
-        return leoBuildMapper.selectCountByExample(example);
+        return buildMapper.selectCountByExample(example);
     }
 
     @Override
     public List<ReportVO.Report> statByMonth() {
-        return leoBuildMapper.statByMonth();
+        return buildMapper.statByMonth();
     }
 
     @Override
     public List<ReportVO.Report> queryMonth() {
-        return leoBuildMapper.queryMonth();
+        return buildMapper.queryMonth();
+    }
+
+    @Override
+    public List<ReportVO.Report> statByEnvName() {
+        return buildMapper.statByEnvName();
     }
 
     @Override
@@ -190,17 +195,17 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("isActive", true)
                 .andEqualTo("isFinish", true);
-        return leoBuildMapper.selectCountByExample(example);
+        return buildMapper.selectCountByExample(example);
     }
 
     @Override
     public int statUserTotal() {
-        return leoBuildMapper.statUserTotal();
+        return buildMapper.statUserTotal();
     }
 
     @Override
     public void deleteById(Integer id) {
-        leoBuildMapper.deleteByPrimaryKey(id);
+        buildMapper.deleteByPrimaryKey(id);
     }
 
 }

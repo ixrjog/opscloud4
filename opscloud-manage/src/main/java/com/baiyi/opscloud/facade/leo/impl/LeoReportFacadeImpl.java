@@ -60,11 +60,12 @@ public class LeoReportFacadeImpl implements LeoReportFacade {
                 .build()
                 .put("BUILD", buildService.statByMonth())
                 .put("DEPLOY", deployService.statByMonth());
-
         return LeoReportVO.LeoReport.builder()
                 .dashboard(buildDashboard())
                 .instances(buildInstances())
                 .continuousDeliveryReport(monthlyReport)
+                .buildWithEnvReport(buildService.statByEnvName())
+                .deployWithEnvReport(deployService.statByEnvName())
                 .build();
     }
 
