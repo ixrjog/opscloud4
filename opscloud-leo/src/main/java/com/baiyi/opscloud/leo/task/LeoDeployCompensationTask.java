@@ -30,7 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LeoDeployCompensationTask {
 
-    private final LeoDeployService leoDeployService;
+    private final LeoDeployService deployService;
 
     private final LeoHeartbeatHelper heartbeatHelper;
 
@@ -38,12 +38,12 @@ public class LeoDeployCompensationTask {
 
     private final DsConfigHelper dsConfigHelper;
 
-    private final LeoPostDeployHandler leoPostDeployHandler;
+    private final LeoPostDeployHandler postDeployHandler;
 
     private final ThreadPoolTaskExecutor leoExecutor;
 
     public void handleTask() {
-        List<LeoDeploy> leoDeploys = leoDeployService.queryNotFinishDeployWithOcInstance(OcInstance.ocInstance);
+        List<LeoDeploy> leoDeploys = deployService.queryNotFinishDeployWithOcInstance(OcInstance.ocInstance);
         if (CollectionUtils.isEmpty(leoDeploys)) {
             return;
         }
@@ -56,10 +56,11 @@ public class LeoDeployCompensationTask {
                 DeployingSupervisor deployingSupervisor = new DeployingSupervisor(
                         this.heartbeatHelper,
                         leoDeploy,
+                        deployService,
                         logHelper,
                         deployConfig,
                         kubernetesConfig.getKubernetes(),
-                        leoPostDeployHandler
+                        postDeployHandler
                 );
                 log.info("执行补偿任务: deployId={}", leoDeploy.getId());
                 leoExecutor.execute(new Thread(deployingSupervisor));

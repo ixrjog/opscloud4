@@ -43,6 +43,7 @@ public class DeployingSupervisorConcreteHandler extends BaseDeployHandler {
         DeployingSupervisor deployingSupervisor = new DeployingSupervisor(
                 this.leoDeployHelper,
                 leoDeploy,
+                deployService,
                 logHelper,
                 deployConfig,
                 kubernetesConfig.getKubernetes(),

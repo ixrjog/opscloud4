@@ -28,7 +28,7 @@ public abstract class BaseDeployHandler {
     protected DeployingLogHelper logHelper;
 
     @Resource
-    protected LeoDeployService leoDeployService;
+    protected LeoDeployService deployService;
 
     private BaseDeployHandler next;
 
@@ -68,7 +68,7 @@ public abstract class BaseDeployHandler {
             }
         }
         if (getNext() != null) {
-            getNext().handleRequest(leoDeployService.getById(leoDeploy.getId()), deployConfig);
+            getNext().handleRequest(deployService.getById(leoDeploy.getId()), deployConfig);
         }
     }
 
@@ -81,12 +81,12 @@ public abstract class BaseDeployHandler {
     protected abstract void handle(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig);
 
     protected void save(LeoDeploy saveLeoDeploy) {
-        leoDeployService.updateByPrimaryKeySelective(saveLeoDeploy);
+        deployService.updateByPrimaryKeySelective(saveLeoDeploy);
     }
 
     protected void save(LeoDeploy saveLeoDeploy, String log, Object... var2) {
         logHelper.info(saveLeoDeploy, log, var2);
-        leoDeployService.updateByPrimaryKeySelective(saveLeoDeploy);
+        deployService.updateByPrimaryKeySelective(saveLeoDeploy);
     }
 
 }
