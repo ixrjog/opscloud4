@@ -142,6 +142,8 @@ public class AliyunEcrTest extends BaseAliyunTest {
         try {
             String repoId = aliyunAcrRepositoryDriver.getRepositoryId("eu-west-1", config.getAliyun(), "cri-4v9b8l2gc3en0x34", "gray", "mgw-core-aliyun");
             print(repoId);
+
+             repoId = aliyunAcrRepositoryDriver.getRepositoryId("eu-central-1", config.getAliyun(), "cri-koab4h4dfgxosahl", "daily", "data-message-frankfurt");
         } catch (Exception e) {
             e.printStackTrace();
         }
