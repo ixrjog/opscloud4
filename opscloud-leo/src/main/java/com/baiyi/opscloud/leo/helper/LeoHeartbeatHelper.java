@@ -2,6 +2,8 @@ package com.baiyi.opscloud.leo.helper;
 
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
+import com.baiyi.opscloud.leo.domain.model.DeployStop;
+import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -34,21 +36,35 @@ public class LeoHeartbeatHelper {
 
     /**
      * 设置心跳
+     *
      * @param heartbeatType
      * @param id
      */
     public void setHeartbeat(String heartbeatType, Integer id) {
-        redisUtil.set(String.format(HEARTBEAT_KEY ,heartbeatType, id), true, 20L);
+        redisUtil.set(String.format(HEARTBEAT_KEY, heartbeatType, id), true, 20L);
     }
 
     /**
      * 任务是否存活
+     *
      * @param heartbeatType
      * @param id
      * @return
      */
     public boolean isLive(String heartbeatType, Integer id) {
-        return redisUtil.hasKey(String.format(HEARTBEAT_KEY ,heartbeatType, id));
+        return redisUtil.hasKey(String.format(HEARTBEAT_KEY, heartbeatType, id));
+    }
+
+    public DeployStop tryDeployStop(int deployId) {
+        final String key = String.format(DeployingSupervisor.STOP_SIGNAL, deployId);
+        if (redisUtil.hasKey(key)) {
+            return DeployStop.builder()
+                    .isStop(true)
+                    .username((String) redisUtil.get(key))
+                    .build();
+        } else {
+            return DeployStop.builder().build();
+        }
     }
 
 }

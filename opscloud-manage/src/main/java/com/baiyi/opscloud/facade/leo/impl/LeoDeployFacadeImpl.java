@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.leo.impl;
 
 import com.baiyi.opscloud.common.instance.OcInstance;
+import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
@@ -21,7 +22,9 @@ import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
+import com.baiyi.opscloud.leo.interceptor.LeoExecuteJobInterceptorHandler;
 import com.baiyi.opscloud.leo.packer.LeoDeployResponsePacker;
+import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
 import com.baiyi.opscloud.packer.leo.LeoBuildVersionPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
@@ -70,6 +73,10 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     private final LeoDeployResponsePacker deployResponsePacker;
 
+    private final LeoExecuteJobInterceptorHandler executeJobInterceptorHandler;
+
+    private final RedisUtil redisUtil;
+
     @Override
     @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType")
     public void doDeploy(LeoDeployParam.DoDeploy doDeploy) {
@@ -99,7 +106,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .deploy(deploy)
                 .build();
 
-        LeoDeploy leoDeploy = LeoDeploy.builder()
+        LeoDeploy newLeoDeploy = LeoDeploy.builder()
                 .applicationId(leoJob.getApplicationId())
                 .jobId(leoJob.getId())
                 .jobName(leoJob.getName())
@@ -113,8 +120,8 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .isRollback(false)
                 .ocInstance(OcInstance.ocInstance)
                 .build();
-        deployService.add(leoDeploy);
-        handleDeploy(leoDeploy, deployConfig);
+        deployService.add(newLeoDeploy);
+        handleDeploy(newLeoDeploy, deployConfig);
     }
 
     /**
@@ -157,7 +164,9 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
             return Collections.emptyList();
         final String envName = env.getEnvName();
         List<ApplicationResource> result = resources.stream().filter(e -> {
-            if (e.getName().startsWith(envName + ":")) return true;
+            if (e.getName().startsWith(envName + ":")) {
+                return true;
+            }
             // TODO 环境标准化后以下代码可以删除
             if (env.getEnvName().equals("dev")) {
                 return e.getName().startsWith("ci:");
@@ -166,14 +175,15 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 return e.getName().startsWith("test:");
             }
             if (env.getEnvName().equals("prod")) {
-                if (e.getName().startsWith("gray:")) return true;
+                if (e.getName().startsWith("gray:")) {
+                    return true;
+                }
                 return e.getName().startsWith("canary:");
             }
             return false;
         }).collect(Collectors.toList());
         return BeanCopierUtil.copyListProperties(result, ApplicationResourceVO.BaseResource.class);
     }
-
 
     @Override
     public DataTable<LeoDeployVO.Deploy> queryLeoJobDeployPage(LeoJobParam.JobDeployPageQuery pageQuery) {
@@ -192,7 +202,20 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     @Override
     public void stopDeploy(int deployId) {
-
+        LeoDeploy leoDeploy = deployService.getById(deployId);
+        if (leoDeploy == null) {
+            throw new LeoDeployException("部署记录不存在: deployId={}", deployId);
+        }
+        LeoJob leoJob = jobService.getById(leoDeploy.getJobId());
+        final String username = SessionUtil.getUsername();
+        if (executeJobInterceptorHandler.isAdmin(username)) {
+            // 管理员操作，跳过验证
+        } else {
+            // 权限校验
+            executeJobInterceptorHandler.verifyAuthorization(leoJob.getId());
+        }
+        // 设置信号量
+        redisUtil.set(String.format(DeployingSupervisor.STOP_SIGNAL, deployId), username, 100L);
     }
 
 }
