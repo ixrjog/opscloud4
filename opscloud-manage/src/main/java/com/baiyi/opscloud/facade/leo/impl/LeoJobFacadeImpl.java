@@ -47,9 +47,9 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
 
     private final LeoTemplateService templateService;
 
-    private final LeoJobPacker leoJobPacker;
+    private final LeoJobPacker jobPacker;
 
-    private final LeoTagHelper leoTagHelper;
+    private final LeoTagHelper tagHelper;
 
     private final LeoBuildService buildService;
 
@@ -69,7 +69,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
     public DataTable<LeoJobVO.Job> queryLeoJobPage(LeoJobParam.JobPageQuery pageQuery) {
         DataTable<LeoJob> table = jobService.queryJobPage(pageQuery);
         List<LeoJobVO.Job> data = BeanCopierUtil.copyListProperties(table.getData(), LeoJobVO.Job.class).stream()
-                .peek(e -> leoJobPacker.wrap(e, pageQuery))
+                .peek(e -> jobPacker.wrap(e, pageQuery))
                 .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
@@ -110,7 +110,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getTags)
                 .orElse(Collections.emptyList());
-        leoTagHelper.updateTagsWithLeoBusiness(leoJob, tags);
+        tagHelper.updateTagsWithLeoBusiness(leoJob, tags);
     }
 
     @Override

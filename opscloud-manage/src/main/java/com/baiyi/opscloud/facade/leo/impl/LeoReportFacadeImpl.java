@@ -36,13 +36,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LeoReportFacadeImpl implements LeoReportFacade {
 
-    private final LeoBuildService leoBuildService;
+    private final LeoBuildService buildService;
 
-    private final LeoDeployService leoDeployService;
+    private final LeoDeployService deployService;
 
     private final ApplicationService applicationService;
 
-    private final LeoJobService leoJobService;
+    private final LeoJobService jobService;
 
     private final InstanceHelper instanceHelper;
 
@@ -56,10 +56,10 @@ public class LeoReportFacadeImpl implements LeoReportFacade {
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10S, key = "'opscloud.v4.report#statLeoReport'")
     public LeoReportVO.LeoReport statLeoReport() {
         ReportVO.MonthlyReport monthlyReport = ReportVO.MonthlyReport.builder()
-                .dateCat(leoBuildService.queryMonth().stream().map(ReportVO.Report::getCName).collect(Collectors.toList()))
+                .dateCat(buildService.queryMonth().stream().map(ReportVO.Report::getCName).collect(Collectors.toList()))
                 .build()
-                .put("BUILD", leoBuildService.statByMonth())
-                .put("DEPLOY", leoDeployService.statByMonth());
+                .put("BUILD", buildService.statByMonth())
+                .put("DEPLOY", deployService.statByMonth());
 
         return LeoReportVO.LeoReport.builder()
                 .dashboard(buildDashboard())
@@ -71,10 +71,10 @@ public class LeoReportFacadeImpl implements LeoReportFacade {
     private LeoReportVO.Dashboard buildDashboard() {
         return LeoReportVO.Dashboard.builder()
                 .applicationTotal(applicationService.countWithReport())
-                .jobTotal(leoJobService.countWithReport())
-                .buildTotal(leoBuildService.countWithReport())
-                .deployTotal(leoDeployService.countWithReport())
-                .userTotal(leoBuildService.statUserTotal())
+                .jobTotal(jobService.countWithReport())
+                .buildTotal(buildService.countWithReport())
+                .deployTotal(deployService.countWithReport())
+                .userTotal(buildService.statUserTotal())
                 .authorizedUserTotal(userPermissionService.statTotal(BusinessTypeEnum.APPLICATION.getType()))
                 .build();
     }

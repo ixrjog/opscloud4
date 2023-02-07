@@ -25,33 +25,33 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LeoRuleFacadeImpl implements LeoRuleFacade {
 
-    private final LeoRuleService leoRuleService;
+    private final LeoRuleService ruleService;
 
-    private final LeoRulePacker leoRulePacker;
+    private final LeoRulePacker rulePacker;
 
     @Override
     public DataTable<LeoRuleVO.Rule> queryLeoRulePage(LeoRuleParam.RulePageQuery pageQuery) {
-        DataTable<LeoRule> table = leoRuleService.queryRulePage(pageQuery);
+        DataTable<LeoRule> table = ruleService.queryRulePage(pageQuery);
         List<LeoRuleVO.Rule> data = BeanCopierUtil.copyListProperties(table.getData(), LeoRuleVO.Rule.class).stream()
-                .peek(leoRulePacker::wrap).collect(Collectors.toList());
+                .peek(rulePacker::wrap).collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
     public void updateLeoRule(LeoRuleParam.UpdateRule updateRule) {
         LeoRule saveLeoRule = BeanCopierUtil.copyProperties(updateRule, LeoRule.class);
-        leoRuleService.updateByPrimaryKeySelective(saveLeoRule);
+        ruleService.updateByPrimaryKeySelective(saveLeoRule);
     }
 
     @Override
     public void addLeoRule(LeoRuleParam.AddRule addRule) {
         LeoRule leoRule = BeanCopierUtil.copyProperties(addRule, LeoRule.class);
-        leoRuleService.add(leoRule);
+        ruleService.add(leoRule);
     }
 
     @Override
     public void deleteLeoRuleById(int ruleId) {
-        leoRuleService.deleteById(ruleId);
+        ruleService.deleteById(ruleId);
     }
 
 }

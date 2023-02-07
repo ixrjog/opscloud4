@@ -42,32 +42,32 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
 
-    private final LeoTemplateService leoTemplateService;
+    private final LeoTemplateService templateService;
 
     private final DsInstanceService dsInstanceService;
 
-    private final LeoTemplatePacker leoTemplatePacker;
+    private final LeoTemplatePacker templatePacker;
 
     private final DsConfigHelper dsConfigHelper;
 
     private final JenkinsJobHelper jenkinsJobHelper;
 
-    private final LeoTagHelper leoTagHelper;
+    private final LeoTagHelper tagHelper;
 
-    private final LeoJobService leoJobService;
+    private final LeoJobService jobService;
 
     @Override
     public DataTable<LeoTemplateVO.Template> queryLeoTemplatePage(LeoTemplateParam.TemplatePageQuery pageQuery) {
-        DataTable<LeoTemplate> table = leoTemplateService.queryTemplatePage(pageQuery);
+        DataTable<LeoTemplate> table = templateService.queryTemplatePage(pageQuery);
         List<LeoTemplateVO.Template> data = BeanCopierUtil.copyListProperties(table.getData(), LeoTemplateVO.Template.class).stream()
-                .peek(e -> leoTemplatePacker.wrap(e, pageQuery))
+                .peek(e -> templatePacker.wrap(e, pageQuery))
                 .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
     private LeoTemplateVO.Template toLeoTemplateVO(LeoTemplate leoTemplate) {
         LeoTemplateVO.Template templateVO = BeanCopierUtil.copyProperties(leoTemplate, LeoTemplateVO.Template.class);
-        leoTemplatePacker.wrap(templateVO, SimpleExtend.EXTEND);
+        templatePacker.wrap(templateVO, SimpleExtend.EXTEND);
         return templateVO;
     }
 
@@ -91,7 +91,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
                 .comment(addTemplate.getComment())
                 .isActive(true)
                 .build();
-        leoTemplateService.add(leoTemplate);
+        templateService.add(leoTemplate);
         updateTagsWithLeoTemplate(leoTemplate, templateConfig);
     }
 
@@ -115,7 +115,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
                 .templateConfig(updateTemplate.getTemplateConfig())
                 .build();
 
-        leoTemplateService.updateByPrimaryKeySelective(leoTemplate);
+        templateService.updateByPrimaryKeySelective(leoTemplate);
         updateTagsWithLeoTemplate(leoTemplate, templateConfig);
         //return toLeoTemplateVO(leoTemplate);
     }
@@ -126,7 +126,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(template.getJenkinsInstanceUuid());
         JenkinsConfig jenkinsConfig = dsConfigHelper.build(dsConfig, JenkinsConfig.class);
         // 从DB中获取配置
-        LeoTemplate leoTemplate = leoTemplateService.getById(template.getId());
+        LeoTemplate leoTemplate = templateService.getById(template.getId());
         LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(leoTemplate.getTemplateConfig());
 
         Optional.ofNullable(templateConfig)
@@ -139,7 +139,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
 
         String jobXml = jenkinsJobHelper.getJobXml(templateConfig, jenkinsConfig, folder);
         leoTemplate.setTemplateContent(jobXml);
-        leoTemplateService.updateByPrimaryKeySelective(leoTemplate);
+        templateService.updateByPrimaryKeySelective(leoTemplate);
         return toLeoTemplateVO(leoTemplate);
     }
 
@@ -154,7 +154,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getTags)
                 .orElse(Collections.emptyList());
-        leoTagHelper.updateTagsWithLeoBusiness(leoTemplate, tags);
+        tagHelper.updateTagsWithLeoBusiness(leoTemplate, tags);
     }
 
     private String getUuidWithJenkinsInstance(LeoBaseModel.DsInstance instance) {
@@ -172,12 +172,12 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
 
     @Override
     public void deleteLeoTemplateById(int templateId) {
-        LeoTemplate leoTemplate = leoTemplateService.getById(templateId);
+        LeoTemplate leoTemplate = templateService.getById(templateId);
         if (leoTemplate == null)
             throw new LeoTemplateException("删除模板错误，模板不存在！");
-        if (leoJobService.countWithTemplateId(templateId) > 0)
+        if (jobService.countWithTemplateId(templateId) > 0)
             throw new LeoTemplateException("删除模板错误，关联任务未删除！");
-        leoTemplateService.deleteById(templateId);
+        templateService.deleteById(templateId);
     }
 
 }

@@ -33,13 +33,13 @@ public class LeoBuildPipelineFacadeImpl implements LeoBuildPipelineFacade {
 
     private final BlueRestDriver blueRestDriver;
 
-    private final LeoBuildService leoBuildService;
+    private final LeoBuildService buildService;
 
     private final DsConfigHelper dsConfigHelper;
 
     @Override
     public List<LeoBuildPipelineVO.Step> getPipelineRunNodeSteps(LeoBuildPipelineParam.GetPipelineRunNodeSteps param) {
-        LeoBuild leoBuild = leoBuildService.getById(param.getBuildId());
+        LeoBuild leoBuild = buildService.getById(param.getBuildId());
         if (leoBuild.getIsDeletedBuildJob()) {
             return Collections.emptyList();
         }
