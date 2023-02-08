@@ -49,12 +49,12 @@ public class BootDeployWithOfflineStrategy extends BootDeployStrategy {
         Env env = envService.getByEnvType(leoJob.getEnvType());
 
         Map<String, String> dict = SimpleDictBuilder.newBuilder()
-                .putParam(BuildDictConstants.APPLICATION_NAME.getKey(), application.getApplicationKey())
-                .putParam(BuildDictConstants.JOB_NAME.getKey(), leoJob.getJobKey())
-                .putParam(BuildDictConstants.APPLICATION_TAGS.getKey(), tags)
-                .putParam(BuildDictConstants.VERSION_NAME.getKey(),"-")
-                .putParam(BuildDictConstants.ENV.getKey(), env.getEnvName())
-                .putParam(BuildDictConstants.IMAGE.getKey(), "-")
+                .put(BuildDictConstants.APPLICATION_NAME.getKey(), application.getApplicationKey())
+                .put(BuildDictConstants.JOB_NAME.getKey(), leoJob.getJobKey())
+                .put(BuildDictConstants.APPLICATION_TAGS.getKey(), tags)
+                .put(BuildDictConstants.VERSION_NAME.getKey(),"-")
+                .put(BuildDictConstants.ENV.getKey(), env.getEnvName())
+                .put(BuildDictConstants.IMAGE.getKey(), "-")
                 .build().getDict();
         deployConfig.getDeploy().setDict(dict);
     }

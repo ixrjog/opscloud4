@@ -79,8 +79,8 @@ public class NacosAuthDriver {
             password = IdUtil.buildUUID();
         }
         Map<String, String> paramMap = SimpleDictBuilder.newBuilder()
-                .putParam("username", username)
-                .putParam("password", password)
+                .put("username", username)
+                .put("password", password)
                 .build().getDict();
         NacosLogin.AccessToken accessToken = this.login(config);
         NacosAuthV1Feign nacosAPI = buildFeign(config);
@@ -95,8 +95,8 @@ public class NacosAuthDriver {
      */
     public NacosUser.AuthRoleResponse authRole(NacosConfig.Nacos config, String username, String role) {
         Map<String, String> paramMap = SimpleDictBuilder.newBuilder()
-                .putParam("username", username)
-                .putParam("role", role)
+                .put("username", username)
+                .put("role", role)
                 .build().getDict();
         NacosLogin.AccessToken accessToken = this.login(config);
         NacosAuthV1Feign nacosAPI = buildFeign(config);

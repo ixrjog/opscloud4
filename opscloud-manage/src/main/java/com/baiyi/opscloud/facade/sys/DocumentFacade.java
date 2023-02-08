@@ -12,4 +12,6 @@ public interface DocumentFacade {
 
     DocumentVO.Doc previewDocument(DocumentParam.DocumentQuery query);
 
+    DocumentVO.DocZone getDocZone(DocumentParam.DocumentZoneQuery query);
+
 }

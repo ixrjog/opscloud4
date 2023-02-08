@@ -334,8 +334,8 @@ public class UserFacadeImpl implements UserFacade {
                 .map(e -> {
                     String name = StringUtils.isNotBlank(e.getComment()) ? e.getComment() : username;
                     Map<String, String> dict = SimpleDictBuilder.newBuilder()
-                            .putParam("NAME", name)
-                            .putParam("SECRET", e.getCredential())
+                            .put("NAME", name)
+                            .put("SECRET", e.getCredential())
                             .build()
                             .getDict();
                     final String qrcode = TemplateUtil.render(defQrcode, dict);

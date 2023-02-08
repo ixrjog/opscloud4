@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2021/6/16 11:33 上午
@@ -25,4 +27,15 @@ public class DocumentServiceImpl implements DocumentService {
         criteria.andEqualTo("documentKey", key);
         return documentMapper.selectOneByExample(example);
     }
+
+    @Override
+    public List<Document> queryByMountZone(String mountZone) {
+        Example example = new Example(Document.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("mountZone", mountZone)
+                .andEqualTo("isActive", true);
+        example.setOrderByClause("seq");
+        return documentMapper.selectByExample(example);
+    }
+
 }

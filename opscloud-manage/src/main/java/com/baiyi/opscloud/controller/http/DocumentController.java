@@ -34,4 +34,10 @@ public class DocumentController {
         return new HttpResult<>(documentFacade.previewDocument(query));
     }
 
+    @ApiOperation(value = "按挂载区查询文档")
+    @PostMapping(value = "/zone/get", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DocumentVO.DocZone> getDocumentZone(@RequestBody @Valid DocumentParam.DocumentZoneQuery query) {
+        return new HttpResult<>(documentFacade.getDocZone(query));
+    }
+
 }

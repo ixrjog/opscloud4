@@ -20,14 +20,14 @@ public class SimpleDictBuilder {
         return new SimpleDictBuilder();
     }
 
-    public SimpleDictBuilder putParam(String name, String value) {
+    public SimpleDictBuilder put(String name, String value) {
         if (!StringUtils.isEmpty(value)) {
             simpleDict.put(name, value);
         }
         return this;
     }
 
-    public SimpleDictBuilder putWithDict(Map<String, String> dict) {
+    public SimpleDictBuilder put(Map<String, String> dict) {
         if (dict != null) {
             simpleDict.put(dict);
         }
