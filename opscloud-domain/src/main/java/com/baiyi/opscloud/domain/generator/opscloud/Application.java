@@ -44,6 +44,12 @@ public class Application {
     private Date updateTime;
 
     /**
+     * 有效
+     */
+    @Column(name = "is_active")
+    private Boolean isActive;
+
+    /**
      * 描述
      */
     private String comment;

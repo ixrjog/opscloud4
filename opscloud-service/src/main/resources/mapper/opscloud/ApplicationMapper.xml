@@ -11,6 +11,7 @@
         <result column="application_type" jdbcType="INTEGER" property="applicationType"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_active" jdbcType="BIT" property="isActive" />
         <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
     </resultMap>
 
@@ -32,6 +33,7 @@
         </choose>
         <if test="queryName != null and queryName != ''">
             and name like "%" #{queryName} "%"
+            and is_active = true
             order by replace( name, #{queryName}, '' )
         </if>
     </select>

@@ -72,6 +72,8 @@ public class ApplicationVO {
         // 应用授权角度
         private Integer userId;
 
+        private Boolean isActive;
+
         private UserPermissionVO.UserPermission userPermission;
 
     }
