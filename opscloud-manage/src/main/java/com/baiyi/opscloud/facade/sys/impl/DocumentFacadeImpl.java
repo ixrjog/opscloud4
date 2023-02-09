@@ -70,7 +70,7 @@ public class DocumentFacadeImpl implements DocumentFacade {
                 .dict(simpleDict.getDict())
                 .build();
     }
-    
+
     @Override
     // @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10M, key = "'preview_document_key_'+ #query.documentKey", unless = "#result == null")
     public DocumentVO.Doc previewDocument(DocumentParam.DocumentQuery query) {
