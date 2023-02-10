@@ -38,4 +38,28 @@
         </if>
     </select>
 
+    <select id="queryApplicationByParam"
+            parameterType="com.baiyi.opscloud.domain.param.application.ApplicationParam$ApplicationPageQuery"
+            resultMap="BaseResultMap">
+        select a0.* from application a0
+        <if test="tagId != null and tagId > 0">
+            join business_tag a1 on a0.id = a1.business_id
+        </if>
+        <where>
+            <if test="tagId != null and tagId > 0">
+                a1.business_type = 8 and a1.tag_id = #{tagId}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and ( a0.name like "%" #{queryName} "%"
+                or a0.application_key like "%" #{queryName} "%"
+                or a0.comment like "%" #{queryName} "%" )
+            </if>
+<!--            <if test="isActive != null">-->
+<!--                and a0.is_active = #{isActive}-->
+<!--            </if>-->
+        </where>
+        order by replace( a0.name, #{queryName}, '' ), a0.create_time
+    </select>
+
+
 </mapper>

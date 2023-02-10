@@ -79,7 +79,7 @@
             and is_active = true
             and os_type != 'Windows'
         </where>
-        order by name, serial_number,create_time
+        order by name, serial_number, create_time
     </select>
 
     <select id="queryUserRemoteServerPage"

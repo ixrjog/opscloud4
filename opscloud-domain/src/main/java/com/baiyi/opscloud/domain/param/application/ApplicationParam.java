@@ -28,6 +28,9 @@ public class ApplicationParam {
         @ApiModelProperty(value = "应用名称")
         private String queryName;
 
+        @ApiModelProperty(value = "标签ID")
+        private Integer tagId;
+
         @ApiModelProperty(value = "展开")
         private Boolean extend;
 

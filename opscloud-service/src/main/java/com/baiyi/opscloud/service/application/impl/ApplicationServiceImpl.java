@@ -6,11 +6,9 @@ import com.baiyi.opscloud.domain.param.application.ApplicationParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.mapper.opscloud.ApplicationMapper;
 import com.baiyi.opscloud.service.application.ApplicationService;
-import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -27,18 +25,25 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     private final ApplicationMapper applicationMapper;
 
+//    @Override
+//    public DataTable<Application> queryPageByParam(ApplicationParam.ApplicationPageQuery pageQuery) {
+//        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+//        Example example = new Example(Application.class);
+//        if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
+//            Example.Criteria criteria = example.createCriteria();
+//            criteria.andLike("name", SQLUtil.toLike(pageQuery.getQueryName()));
+//            example.setOrderByClause(String.format("replace( name, '%s', '' )", pageQuery.getQueryName()));
+//        } else {
+//            example.setOrderByClause("create_time");
+//        }
+//        List<Application> data = applicationMapper.selectByExample(example);
+//        return new DataTable<>(data, page.getTotal());
+//    }
+
     @Override
     public DataTable<Application> queryPageByParam(ApplicationParam.ApplicationPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
-        Example example = new Example(Application.class);
-        if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
-            Example.Criteria criteria = example.createCriteria();
-            criteria.andLike("name", SQLUtil.toLike(pageQuery.getQueryName()));
-            example.setOrderByClause(String.format("replace( name, '%s', '' )", pageQuery.getQueryName()));
-        } else {
-            example.setOrderByClause("create_time");
-        }
-        List<Application> data = applicationMapper.selectByExample(example);
+        List<Application> data = applicationMapper.queryApplicationByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
 
