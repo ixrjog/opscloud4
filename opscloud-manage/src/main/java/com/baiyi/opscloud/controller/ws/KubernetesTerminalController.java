@@ -70,7 +70,6 @@ public class KubernetesTerminalController extends SimpleAuthentication {
             terminalSessionService.add(terminalSession);
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
             kubernetesTerminalExecutor.execute(new SentOutputTask(sessionId, session));
-            //  ThreadPoolTaskExecutorPrint.print(kubernetesTerminalExecutor, "k8sTermExecutor");
         } catch (Exception e) {
             log.error("Kubernetes terminal create connection error: {}", e.getMessage());
         }
@@ -90,7 +89,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
      *
      * @param message 客户端发送过来的消息
      */
-    @OnMessage(maxMessageSize = 512 * 1024)
+    @OnMessage(maxMessageSize = 1024)
     public void onMessage(String message, Session session) {
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;
         String state = getState(message);

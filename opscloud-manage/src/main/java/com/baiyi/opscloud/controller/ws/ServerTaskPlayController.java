@@ -46,7 +46,7 @@ public class ServerTaskPlayController extends SimpleAuthentication {
      *
      * @param message 客户端发送过来的消息
      */
-    @OnMessage
+    @OnMessage(maxMessageSize = 1024)
     public void onMessage(String message, Session session) {
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;
         String state = getState(message);
