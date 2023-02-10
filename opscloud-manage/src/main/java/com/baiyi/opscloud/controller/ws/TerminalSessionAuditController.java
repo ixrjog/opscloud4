@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.controller.ws;
 
-import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.terminal.audit.ITerminalAuditHandler;
 import com.baiyi.opscloud.terminal.audit.TerminalAuditHandlerFactory;
@@ -21,15 +20,12 @@ import javax.websocket.server.ServerEndpoint;
 @Component
 public class TerminalSessionAuditController extends SimpleAuthentication {
 
-    // 超时时间1H
-    public static final Long WEBSOCKET_TIMEOUT = TimeUtil.hourTime;
-
     /**
      * 连接建立成功调用的方法
      */
     @OnOpen
     public void onOpen(Session session) {
-        session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
+        session.setMaxIdleTimeout(ServerTerminalController.WEBSOCKET_TIMEOUT);
     }
 
     /**
@@ -61,7 +57,6 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.debug("发生错误: err={}, SessionID={}", error.getMessage(), session.getId());
     }
 
 }

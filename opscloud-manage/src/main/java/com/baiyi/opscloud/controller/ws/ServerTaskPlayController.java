@@ -62,7 +62,6 @@ public class ServerTaskPlayController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("发生错误：{}，Session ID： {}", error.getMessage(), session.getId());
     }
 
 }
