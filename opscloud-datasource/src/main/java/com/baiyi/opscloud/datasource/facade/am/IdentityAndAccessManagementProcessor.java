@@ -73,7 +73,7 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
             // 同步资产 IAM_USER
             dsInstanceFacade.pullAsset(grantPolicy.getInstanceUuid(), DsAssetTypeConstants.IAM_USER.name(), iamUser);
         } catch (Exception e) {
-            throw new OCException("AWS接口查询错误: msg={}", e.getMessage());
+            throw new OCException("AWS接口查询错误: {}", e.getMessage());
         }
     }
 
@@ -93,7 +93,7 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
                 dsInstanceFacade.pullAsset(revokePolicy.getInstanceUuid(), DsAssetTypeConstants.IAM_USER.name(), iamUser);
             }
         } catch (Exception e) {
-            throw new OCException("AWS接口查询错误: msg={}", e.getMessage());
+            throw new OCException("AWS接口查询错误: {}", e.getMessage());
         }
     }
 
@@ -129,7 +129,7 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
             amazonIMMFADriver.deleteVirtualMFADevice(config, serialNumber);
             log.debug("删除IAM虚拟MFA设备: serialNumber={}", serialNumber);
         } catch (Exception e) {
-            log.debug("删除IAM虚拟MFA设备错误: serialNumber={}, err={}", serialNumber, e.getMessage());
+            log.debug("删除IAM虚拟MFA设备错误: serialNumber={}, {}", serialNumber, e.getMessage());
         }
         try {
             log.info("创建用户的IAM虚拟MFA: username={}", user.getUsername());

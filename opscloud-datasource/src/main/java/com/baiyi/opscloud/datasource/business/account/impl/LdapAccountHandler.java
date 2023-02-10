@@ -39,20 +39,23 @@ public class LdapAccountHandler extends AbstractAccountHandler {
 
     @Override
     protected void doCreate(User user) {
-        if (!personRepo.checkPersonInLdap(configContext.get(), user.getUsername()))
+        if (!personRepo.checkPersonInLdap(configContext.get(), user.getUsername())) {
             personRepo.create(configContext.get(), AccountConverter.toLdapPerson(user));
+        }
     }
 
     @Override
     protected void doUpdate(User user) {
-        if (personRepo.checkPersonInLdap(configContext.get(), user.getUsername()))
+        if (personRepo.checkPersonInLdap(configContext.get(), user.getUsername())) {
             personRepo.update(configContext.get(), AccountConverter.toLdapPerson(user));
+        }
     }
 
     @Override
     protected void doDelete(User user) {
-        if (personRepo.checkPersonInLdap(configContext.get(), user.getUsername()))
+        if (personRepo.checkPersonInLdap(configContext.get(), user.getUsername())) {
             personRepo.delete(configContext.get(), user.getUsername());
+        }
     }
 
     @Override

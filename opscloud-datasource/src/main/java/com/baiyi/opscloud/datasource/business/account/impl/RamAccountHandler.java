@@ -81,7 +81,7 @@ public class RamAccountHandler extends AbstractAccountHandler {
                     aliyunRamUserDriver.updateUser(aliyun.getRegionId(), aliyun, preRamUser);
                 }
             } catch (Exception e) {
-                log.error(e.getMessage());
+                log.error("更新RAM信息错误: username={}, {}", user.getUsername(), e.getMessage());
             }
         });
     }
@@ -103,7 +103,7 @@ public class RamAccountHandler extends AbstractAccountHandler {
 //            }
             aliyunRamUserDriver.deleteLoginProfile(aliyun.getRegionId(), aliyun, user.getUsername());
         } catch (ClientException e) {
-            log.error("删除RAM用户错误: username={}, message={}", user.getUsername(), e.getMessage());
+            log.error("删除RAM用户错误: username={}, {}", user.getUsername(), e.getMessage());
         }
     }
 

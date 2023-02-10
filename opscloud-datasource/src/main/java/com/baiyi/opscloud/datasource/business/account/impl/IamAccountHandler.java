@@ -50,14 +50,11 @@ public class IamAccountHandler extends AbstractAccountHandler {
         AwsConfig.Aws aws = configContext.get();
         try {
             IamUser.User iamUser = amazonIMUserDriver.getUser(aws, user.getUsername());
-            if (iamUser == null) return;
+            if (iamUser != null) {
+                amazonIMUserDriver.deleteLoginProfile(aws, user.getUsername());
+            }
         } catch (Exception e) {
-            return;
-        }
-        try {
-            amazonIMUserDriver.deleteLoginProfile(aws, user.getUsername());
-        } catch (Exception e) {
-            log.info("删除IAM用户错误: username={}, message={}", user.getUsername(), e.getMessage());
+            log.error("删除IAM用户错误: username={}, {}", user.getUsername(), e.getMessage());
         }
     }
 
