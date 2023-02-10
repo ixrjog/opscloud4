@@ -17,7 +17,6 @@ public interface DingtalkUserFeign {
     @Headers({"Content-Type: application/json;charset=utf-8"})
     DingtalkUser.UserResponse list(@Param("accessToken") String accessToken, DingtalkUserParam.QueryUserPage queryUserPage);
 
-
     /**
      * https://static-legacy.dingtalk.com/media/lQDPDhvVtvtbMfPNA8LNA8CwHt7eHxEhYoQDLtLPsEC3AA_960_962.jpg
      * @return

@@ -34,13 +34,9 @@ import java.util.UUID;
 @Component
 public class KubernetesTerminalController extends SimpleAuthentication {
 
-    // private static final AtomicInteger onlineCount = new AtomicInteger(0);
-    // concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。
-    //  private static final ThreadLocal<CopyOnWriteArraySet<Session>> sessionSet = ThreadLocal.withInitial(CopyOnWriteArraySet::new);
     // 当前会话 uuid
     private final String sessionId = UUID.randomUUID().toString();
 
-    private Session session = null;
     // 超时时间1H
     public static final Long WEBSOCKET_TIMEOUT = TimeUtil.minuteTime * 15;
 
@@ -73,7 +69,6 @@ public class KubernetesTerminalController extends SimpleAuthentication {
             this.terminalSession = terminalSession;
             terminalSessionService.add(terminalSession);
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
-            this.session = session;
             kubernetesTerminalExecutor.execute(new SentOutputTask(sessionId, session));
             //  ThreadPoolTaskExecutorPrint.print(kubernetesTerminalExecutor, "k8sTermExecutor");
         } catch (Exception e) {
@@ -85,7 +80,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
      * 连接关闭调用的方法
      */
     @OnClose
-    public void onClose() {
+    public void onClose(Session session) {
         KubernetesTerminalMessageHandlerFactory.getHandlerByState(MessageState.CLOSE.getState()).handle("", session, terminalSession);
     }
 

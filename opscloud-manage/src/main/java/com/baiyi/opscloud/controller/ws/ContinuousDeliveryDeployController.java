@@ -29,16 +29,11 @@ import static com.baiyi.opscloud.controller.ws.ServerTerminalController.WEBSOCKE
 @Component
 public class ContinuousDeliveryDeployController extends SimpleAuthentication {
 
-//    private static final AtomicInteger onlineCount = new AtomicInteger(0);
-//
-//    private static final ThreadLocal<CopyOnWriteArraySet<Session>> sessionSet = ThreadLocal.withInitial(CopyOnWriteArraySet::new);
-
     // 当前会话ID
     private final String sessionId = UUID.randomUUID().toString();
 
     private String username;
 
-    //private Session session = null;
 
     private static ThreadPoolTaskExecutor leoExecutor;
 
@@ -53,7 +48,6 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
     @OnOpen
     public void onOpen(Session session) {
         try {
-            // this.session = session;
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
             leoExecutor.execute(new LeoDeployEventLoop(this.sessionId, session));
         } catch (Exception e) {
@@ -74,7 +68,7 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
      *
      * @param message 客户端发送过来的消息
      */
-    @OnMessage(maxMessageSize = 100 * 1024)
+    @OnMessage(maxMessageSize = 1024)
     public void onMessage(String message, Session session) {
         // log.info("message={}", message);
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;

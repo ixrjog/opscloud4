@@ -29,16 +29,10 @@ import static com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType.QU
 @Component
 public class JenkinsBuildConsoleStreamController extends SimpleAuthentication {
 
-//    private static final AtomicInteger onlineCount = new AtomicInteger(0);
-//
-//    private static final ThreadLocal<CopyOnWriteArraySet<Session>> sessionSet = ThreadLocal.withInitial(CopyOnWriteArraySet::new);
-
     // 当前会话ID
     private final String sessionId = UUID.randomUUID().toString();
 
     private String username;
-
-    private Session session = null;
 
     /**
      * 连接建立成功调用的方法
@@ -46,7 +40,6 @@ public class JenkinsBuildConsoleStreamController extends SimpleAuthentication {
     @OnOpen
     public void onOpen(Session session) {
         try {
-            this.session = session;
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
         } catch (Exception e) {
             log.error("Create connection error: {}", e.getMessage());

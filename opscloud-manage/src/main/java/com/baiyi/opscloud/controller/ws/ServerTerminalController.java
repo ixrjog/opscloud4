@@ -37,8 +37,6 @@ public class ServerTerminalController extends SimpleAuthentication {
     // 当前会话 uuid
     private final String sessionId = UUID.randomUUID().toString();
 
-    private Session session = null;
-
     // 超时时间5分钟
     public static final Long WEBSOCKET_TIMEOUT = TimeUtil.minuteTime * 5;
 
@@ -71,7 +69,6 @@ public class ServerTerminalController extends SimpleAuthentication {
             terminalSessionService.add(terminalSession);
             this.terminalSession = terminalSession;
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
-            this.session = session;
             // 线程启动
             serverTerminalExecutor.execute(new SentOutputTask(sessionId, session));
             // ThreadPoolTaskExecutorPrint.print(serverTerminalExecutor, "serverTermExecutor");
@@ -84,7 +81,7 @@ public class ServerTerminalController extends SimpleAuthentication {
      * 连接关闭调用的方法
      */
     @OnClose
-    public void onClose() {
+    public void onClose(Session session) {
         try {
             ServerTerminalMessageHandlerFactory.getHandlerByState(MessageState.CLOSE.getState()).handle("", session, terminalSession);
         } catch (Exception e) {

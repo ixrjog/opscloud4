@@ -30,8 +30,6 @@ import static com.baiyi.opscloud.controller.ws.ServerTerminalController.WEBSOCKE
 @Component
 public class JenkinsBuildExecutorController {
 
-    private Session session = null;
-
     private final String sessionId = UUID.randomUUID().toString();
 
     private static JenkinsBuildExecutorHelper jenkinsBuildExecutorHelper;
@@ -46,7 +44,6 @@ public class JenkinsBuildExecutorController {
 
     @OnOpen
     public void onOpen(Session session) {
-        this.session = session;
         session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
     }
 

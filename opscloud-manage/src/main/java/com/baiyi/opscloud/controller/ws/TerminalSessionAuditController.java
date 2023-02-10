@@ -21,7 +21,6 @@ import javax.websocket.server.ServerEndpoint;
 @Component
 public class TerminalSessionAuditController extends SimpleAuthentication {
 
-    private Session session = null;
     // 超时时间1H
     public static final Long WEBSOCKET_TIMEOUT = TimeUtil.hourTime;
 
@@ -31,7 +30,6 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
     @OnOpen
     public void onOpen(Session session) {
         session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
-        this.session = session;
     }
 
     /**

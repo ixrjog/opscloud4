@@ -134,7 +134,7 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
     }
 
     @Override
-    @SingleTask(name = SingleTaskConstants.PULL_DINGTALK_USER, lockTime = "5m")
+    @SingleTask(name = SingleTaskConstants.PULL_DINGTALK_USER, lockTime = "10m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
