@@ -25,5 +25,4 @@ public enum GitLabAccessLevelConstants {
         this.accessValue = accessValue;
     }
 
-
 }
