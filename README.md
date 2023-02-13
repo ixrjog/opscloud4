@@ -66,18 +66,18 @@ Welcome to the opscloud wiki!
   + `华为云`
     + ECS 
 + 堡垒机
-  + 远程桌面[RDP、VNC]
-    + apache-guacamole
-  + ServerTerminal(Web终端)
-    + 支持多开、会话复制、命令同步、会话心跳
-  + KubernetesTerminal(Web终端)
-    + 支持多开、容器日志、Bash、命令同步、会话心跳 
+  + 远程桌面
+    + RDP、VNC
+  + 服务器Web终端
+    + 多服务器同时连接+命令同步、会话复制、会话心跳
+    + 支持ED25519、RSA密钥
+  + KubernetesWeb终端
+    + 多容器同时登录+命令同步、容器日志、会话心跳 
   + SSH-Server
     + 原生SSH协议实现，支持ED25519、RSA密钥
-    + 简化用户登录，自动关联用户Gitlab账户公钥
-    + 展示服务器环境，标签，授权账户
-    + 支持Kubernetes容器登录或直接查看容器日志
-    + 事件驱动技术
+    + 简化用户登录，自动关联用户GitLab账户公钥
+    + 支持服务器、容器登录
+    + 支持告警事件登录
 ```mermaid
 flowchart LR
     A[User] -->|SSH:22| B{SLB}
