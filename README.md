@@ -179,3 +179,6 @@ flowchart LR
 #### 帮助文档
 
 <a style="color:#2b669a" href="https://www.kancloud.cn/ixrjog/opscloud4/2361886" target="_blank">传送门:https://www.kancloud.cn/ixrjog/opscloud4/2361886</a>
+
+#### 交流群
+Q群: 630913972
