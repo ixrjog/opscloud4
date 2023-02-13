@@ -71,7 +71,6 @@ public class ServerTerminalController extends SimpleAuthentication {
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
             // 线程启动
             serverTerminalExecutor.execute(new SentOutputTask(sessionId, session));
-            // ThreadPoolTaskExecutorPrint.print(serverTerminalExecutor, "serverTermExecutor");
         } catch (Exception e) {
             log.error("Server terminal create connection error: {}", e.getMessage());
         }
@@ -82,10 +81,8 @@ public class ServerTerminalController extends SimpleAuthentication {
      */
     @OnClose
     public void onClose(Session session) {
-        try {
-            ServerTerminalMessageHandlerFactory.getHandlerByState(MessageState.CLOSE.getState()).handle("", session, terminalSession);
-        } catch (Exception e) {
-        }
+        ServerTerminalMessageHandlerFactory.getHandlerByState(MessageState.CLOSE.getState())
+                .handle("", session, terminalSession);
     }
 
     /**
@@ -99,13 +96,14 @@ public class ServerTerminalController extends SimpleAuthentication {
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;
         String state = getState(message);
         if (StringUtils.isEmpty(this.terminalSession.getUsername())) {
-            if (MessageState.LOGIN.getState().equals(state))       // 鉴权并更新会话信息
+            if (MessageState.LOGIN.getState().equals(state)) {
+                // 鉴权并更新会话信息
                 updateSessionUsername(hasLogin(new GsonBuilder().create().fromJson(message, SimpleLoginMessage.class)));
+            }
         } else {
             SessionUtil.setUsername(this.terminalSession.getUsername());
         }
-        ServerTerminalMessageHandlerFactory
-                .getHandlerByState(state)
+        ServerTerminalMessageHandlerFactory.getHandlerByState(state)
                 .handle(message, session, terminalSession);
     }
 
