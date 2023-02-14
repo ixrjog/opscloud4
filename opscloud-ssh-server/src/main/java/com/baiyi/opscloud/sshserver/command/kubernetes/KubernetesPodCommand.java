@@ -113,7 +113,14 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
             idMapper.put(seq, asset.getId());
             List<String> names = pod.getSpec().getContainers().stream().map(Container::getName).collect(Collectors.toList());
             Map<String, Boolean> podStatusMap = pod.getStatus().getConditions().stream().collect(Collectors.toMap(PodCondition::getType, a -> Boolean.valueOf(a.getStatus()), (k1, k2) -> k1));
-            pt.addRow(seq, datasourceInstance.getInstanceName(), toNamespaceStr(pod.getMetadata().getNamespace()), pod.getMetadata().getName(), StringUtils.isEmpty(pod.getStatus().getPodIP()) ? "N/A" : pod.getStatus().getPodIP(), com.baiyi.opscloud.common.util.TimeUtil.dateToStr(PodAssetConverter.toGmtDate(pod.getStatus().getStartTime())), toPodStatusStr(pod.getStatus().getPhase(), podStatusMap), pod.getStatus().getContainerStatuses().get(0).getRestartCount(), // Restart Count
+            pt.addRow(seq,
+                    datasourceInstance.getInstanceName(),
+                    toNamespaceStr(pod.getMetadata().getNamespace()),
+                    pod.getMetadata().getName(),
+                    StringUtils.isEmpty(pod.getStatus().getPodIP()) ? "N/A" : pod.getStatus().getPodIP(),
+                    com.baiyi.opscloud.common.util.TimeUtil.dateToStr(PodAssetConverter.toGmtDate(pod.getStatus().getStartTime())),
+                    toPodStatusStr(pod.getStatus().getPhase(), podStatusMap),
+                    pod.getStatus().getContainerStatuses().get(0).getRestartCount(), // Restart Count
                     Joiner.on(",").join(names));
             seq++;
         }

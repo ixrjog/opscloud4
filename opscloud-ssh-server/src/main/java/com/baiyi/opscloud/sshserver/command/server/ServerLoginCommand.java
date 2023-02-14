@@ -83,7 +83,10 @@ public class ServerLoginCommand implements InitializingBean {
 
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "登录服务器(开启会话)", key = {"open", "login"})
-    public void login(@ShellOption(help = "ID", defaultValue = "1") int id, @ShellOption(help = "Account", defaultValue = "") String account, @ShellOption(value = {"-R", "--arthas"}, help = "Arthas") boolean arthas, @ShellOption(value = {"-A", "--admin"}, help = "Admin") boolean admin) {
+    public void login(@ShellOption(help = "ID", defaultValue = "1") int id,
+                      @ShellOption(help = "Account", defaultValue = "") String account,
+                      @ShellOption(value = {"-R", "--arthas"}, help = "Arthas") boolean arthas,
+                      @ShellOption(value = {"-A", "--admin"}, help = "Admin") boolean admin) {
         ServerSession serverSession = sshShellHelper.getSshSession();
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
         Terminal terminal = getTerminal();
@@ -98,9 +101,11 @@ public class ServerLoginCommand implements InitializingBean {
             hostSystem.setTerminalSize(sshShellHelper.terminalSize());
             TerminalSessionInstance terminalSessionInstance = TerminalSessionInstanceBuilder.build(sessionId, hostSystem, InstanceSessionTypeEnum.SERVER);
             simpleTerminalSessionFacade.recordTerminalSessionInstance(terminalSessionInstance);
+
             ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
             // 无延迟
             out.setNoDelay(true);
+
             RemoteInvokeHandler.openWithSSHServer(sessionId, hostSystem, out);
             TerminalUtil.rawModeSupportVintr(terminal);
             // 计时
@@ -114,14 +119,14 @@ public class ServerLoginCommand implements InitializingBean {
                         if (ch < 0) break;
                     }
                 } catch (Exception e) {
-                    log.error("执行Arthas错误！");
+                    log.error("exec arthas error: {}", e.getMessage());
                 }
             }
             try {
                 while (true) {
                     if (isClosed(sessionId, instanceId)) {
                         TimeUnit.MILLISECONDS.sleep(150L);
-                        printWithCloseSession("用户正常退出登录: 耗时%s/s", inst1);
+                        printWithCloseSession("退出登录: 耗时%s/s", inst1);
                         break;
                     }
                     doResize(size, terminal, sessionId, instanceId);
@@ -129,12 +134,12 @@ public class ServerLoginCommand implements InitializingBean {
                     printWithSession(sessionId, instanceId, i);
                 }
             } catch (Exception e) {
-                printWithCloseSession("服务端连接已断开: 耗时%s/s", inst1);
+                printWithCloseSession("服务端连接断开: 耗时%s/s", inst1);
             } finally {
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             }
         } catch (SshCommonException e) {
-            String msg = String.format("SSH连接错误: %s", e.getMessage());
+            String msg = String.format("ssh连接错误: %s", e.getMessage());
             log.error(msg);
             sshShellHelper.print(msg, PromptColor.RED);
         }
@@ -203,7 +208,7 @@ public class ServerLoginCommand implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         if (!StringUtils.isEmpty(arthasConfig.getServer())) {
             SERVER_EXECUTE_ARTHAS = arthasConfig.getServer();
-            log.info("从配置文件加载ServerArthas命令: {}", arthasConfig.getServer());
+            log.debug("read server arthas configuration: {}", arthasConfig.getServer());
         }
     }
 
