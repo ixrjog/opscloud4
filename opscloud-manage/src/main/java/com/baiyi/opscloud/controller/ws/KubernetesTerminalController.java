@@ -90,7 +90,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
      *
      * @param message 客户端发送过来的消息
      */
-    @OnMessage(maxMessageSize = 10 * 1024)
+    @OnMessage(maxMessageSize = 20 * 1024)
     public void onMessage(String message, Session session) {
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;
         String state = getState(message);
