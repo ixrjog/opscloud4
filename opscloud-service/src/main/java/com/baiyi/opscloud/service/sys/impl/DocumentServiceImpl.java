@@ -52,6 +52,9 @@ public class DocumentServiceImpl implements DocumentService {
         if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
             criteria.andLike("name", SQLUtil.toLike(pageQuery.getQueryName()));
         }
+        if (StringUtils.isNotBlank(pageQuery.getMountZone())) {
+            criteria.andEqualTo("mountZone", pageQuery.getMountZone());
+        }
         if (pageQuery.getIsActive() != null) {
             criteria.andEqualTo("isActive", pageQuery.getIsActive());
         }
@@ -68,6 +71,11 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public void updateByPrimaryKeySelective(Document document) {
         documentMapper.updateByPrimaryKeySelective(document);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        documentMapper.deleteByPrimaryKey(id);
     }
 
 }

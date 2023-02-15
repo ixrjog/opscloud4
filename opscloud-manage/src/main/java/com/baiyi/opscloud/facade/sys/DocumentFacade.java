@@ -17,6 +17,8 @@ public interface DocumentFacade {
 
     void addDocument(DocumentParam.AddDocument addDocument);
 
+    void deleteDocumentById(int id);
+
     DataTable<DocumentVO.Zone> queryDocumentZonePage(DocumentParam.DocumentZonePageQuery query);
 
     DataTable<DocumentVO.Document> queryDocumentPage(DocumentParam.DocumentPageQuery query);

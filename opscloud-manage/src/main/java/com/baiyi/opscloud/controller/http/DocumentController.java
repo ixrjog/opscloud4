@@ -52,6 +52,13 @@ public class DocumentController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "删除指定的文档")
+    @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteDocumentById(@RequestParam int id) {
+        documentFacade.deleteDocumentById(id);
+        return HttpResult.SUCCESS;
+    }
+
     @ApiOperation(value = "更新文档")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> updateDocument(@RequestBody @Valid DocumentParam.UpdateDocument updateDocument) {

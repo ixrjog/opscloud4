@@ -81,8 +81,8 @@ public class DocumentParam {
     @ApiModel
     public static class DocumentZoneQuery {
 
-        @ApiModelProperty(value = "装载区域")
-        @NotNull(message = "必须指定装载区域")
+        @ApiModelProperty(value = "文档挂载区域")
+        @NotNull(message = "必须指定文档挂载区域")
         private String mountZone;
 
         @ApiModelProperty(value = "词典")
@@ -111,6 +111,10 @@ public class DocumentParam {
 
         @ApiModelProperty(value = "关键字查询")
         private String queryName;
+
+        @ApiModelProperty(value = "文档挂载区域")
+        private String mountZone;
+
         @ApiModelProperty(value = "有效")
         private Boolean isActive;
 

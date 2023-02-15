@@ -18,9 +18,7 @@ import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -50,6 +48,11 @@ public class DocumentFacadeImpl implements DocumentFacade {
     @Override
     public void addDocument(DocumentParam.AddDocument addDocument) {
         documentService.add(BeanCopierUtil.copyProperties(addDocument, Document.class));
+    }
+
+    @Override
+    public void deleteDocumentById(int id) {
+        documentService.deleteById(id);
     }
 
     @Override

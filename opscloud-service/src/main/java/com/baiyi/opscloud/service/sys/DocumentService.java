@@ -23,4 +23,6 @@ public interface DocumentService {
 
     void updateByPrimaryKeySelective(Document document);
 
+    void deleteById(int id);
+
 }
