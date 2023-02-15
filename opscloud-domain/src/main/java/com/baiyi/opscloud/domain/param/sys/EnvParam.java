@@ -30,4 +30,5 @@ public class EnvParam {
         private Boolean isActive;
 
     }
+
 }

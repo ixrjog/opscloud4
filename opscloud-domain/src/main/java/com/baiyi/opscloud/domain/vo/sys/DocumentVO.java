@@ -57,6 +57,28 @@ public class DocumentVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
+    public static class Document implements Serializable {
+
+        private static final long serialVersionUID = -1872814592253368098L;
+
+        private Integer id;
+        private String name;
+        private String mountZone;
+        private String icon;
+        private Integer seq;
+        private String documentKey;
+        private Integer documentType;
+        private Boolean isActive;
+        private String comment;
+        private String content;
+
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
     public static class Zone implements Serializable {
 
         private static final long serialVersionUID = 4925220340334652936L;

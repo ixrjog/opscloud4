@@ -5,6 +5,7 @@ import com.baiyi.opscloud.common.builder.SimpleDictBuilder;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.common.util.TemplateUtil;
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Document;
 import com.baiyi.opscloud.domain.generator.opscloud.DocumentZone;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
@@ -17,7 +18,9 @@ import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,6 +39,35 @@ public class DocumentFacadeImpl implements DocumentFacade {
     private final UserService userService;
 
     private final DocumentZoneService documentZoneService;
+
+    @Override
+    public DataTable<DocumentVO.Document> queryDocumentPage(DocumentParam.DocumentPageQuery query) {
+        DataTable<Document> table = documentService.queryPageByParam(query);
+        List<DocumentVO.Document> data = BeanCopierUtil.copyListProperties(table.getData(), DocumentVO.Document.class);
+        return new DataTable<>(data, table.getTotalNum());
+    }
+
+    @Override
+    public void addDocument(DocumentParam.AddDocument addDocument) {
+        documentService.add(BeanCopierUtil.copyProperties(addDocument, Document.class));
+    }
+
+    @Override
+    public void updateDocument(DocumentParam.UpdateDocument updateDocument) {
+        documentService.updateByPrimaryKeySelective(BeanCopierUtil.copyProperties(updateDocument, Document.class));
+    }
+
+    @Override
+    public void updateDocumentZone(DocumentParam.UpdateDocumentZone updateDocumentZone) {
+        documentZoneService.updateByPrimaryKeySelective(BeanCopierUtil.copyProperties(updateDocumentZone, DocumentZone.class));
+    }
+
+    @Override
+    public DataTable<DocumentVO.Zone> queryDocumentZonePage(DocumentParam.DocumentZonePageQuery query) {
+        DataTable<DocumentZone> table = documentZoneService.queryPageByParam(query);
+        List<DocumentVO.Zone> data = BeanCopierUtil.copyListProperties(table.getData(), DocumentVO.Zone.class);
+        return new DataTable<>(data, table.getTotalNum());
+    }
 
     @Override
     public DocumentVO.DocZone getDocZone(DocumentParam.DocumentZoneQuery query) {

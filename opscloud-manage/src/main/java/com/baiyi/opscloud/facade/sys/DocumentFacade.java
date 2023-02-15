@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.sys;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.sys.DocumentParam;
 import com.baiyi.opscloud.domain.vo.sys.DocumentVO;
 
@@ -9,6 +10,16 @@ import com.baiyi.opscloud.domain.vo.sys.DocumentVO;
  * @Version 1.0
  */
 public interface DocumentFacade {
+
+    void updateDocument(DocumentParam.UpdateDocument updateDocument);
+
+    void updateDocumentZone(DocumentParam.UpdateDocumentZone updateDocumentZone);
+
+    void addDocument(DocumentParam.AddDocument addDocument);
+
+    DataTable<DocumentVO.Zone> queryDocumentZonePage(DocumentParam.DocumentZonePageQuery query);
+
+    DataTable<DocumentVO.Document> queryDocumentPage(DocumentParam.DocumentPageQuery query);
 
     DocumentVO.Doc previewDocument(DocumentParam.DocumentQuery query);
 

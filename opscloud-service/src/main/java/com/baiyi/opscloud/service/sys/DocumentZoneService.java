@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.sys;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DocumentZone;
+import com.baiyi.opscloud.domain.param.sys.DocumentParam;
 
 /**
  * @Author baiyi
@@ -10,5 +12,9 @@ import com.baiyi.opscloud.domain.generator.opscloud.DocumentZone;
 public interface DocumentZoneService {
 
     DocumentZone getByMountZone(String mountZone);
+
+    DataTable<DocumentZone> queryPageByParam(DocumentParam.DocumentZonePageQuery pageQuery);
+
+    void updateByPrimaryKeySelective(DocumentZone documentZone);
 
 }
