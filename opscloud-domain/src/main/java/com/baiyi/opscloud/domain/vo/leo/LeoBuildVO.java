@@ -142,6 +142,7 @@ public class LeoBuildVO {
 
         private String commitId;
         private String commitMessage;
+        private String commitWebUrl;
     }
 
     @Data
@@ -156,7 +157,7 @@ public class LeoBuildVO {
         private String message;
         private String commit;
         private String commitMessage;
-        private String commitUrl;
+        private String commitWebUrl;
 
     }
 

@@ -61,7 +61,7 @@ public class GitLabRepoDelegate {
                     .options(options)
                     .build();
         } catch (GitLabApiException e) {
-            log.warn("查询GitLab branches tags: url={}, projectId={}, err={}", gitlab.getUrl(), projectId, e.getMessage());
+            log.warn("查询GitLab branches tags: url={}, projectId={}, {}", gitlab.getUrl(), projectId, e.getMessage());
             return LeoBuildVO.BranchOptions.EMPTY_OPTIONS;
         }
     }
@@ -71,7 +71,7 @@ public class GitLabRepoDelegate {
             try {
                 GitLabProjectDriver.createBranch(gitlab, projectId, branch, ref);
             } catch (GitLabApiException e) {
-                log.warn("创建GitLab分支错误: url={}, projectId={}, branch={}, ref={}, err={}", gitlab.getUrl(), projectId, branch, ref, e.getMessage());
+                log.warn("创建GitLab分支错误: url={}, projectId={}, branch={}, ref={}, {}", gitlab.getUrl(), projectId, branch, ref, e.getMessage());
             }
         }
         return generatorGitLabBranchOptions(gitlab, projectId, false);

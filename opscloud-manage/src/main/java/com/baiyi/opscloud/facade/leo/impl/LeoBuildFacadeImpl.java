@@ -137,6 +137,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         gitLab.getProject().setCommit(
                 LeoBaseModel.GitLabCommit.builder()
                         .id(commit.getId())
+                        .message(commit.getMessage())
+                        .webUrl(commit.getWebUrl())
                         .build()
         );
 

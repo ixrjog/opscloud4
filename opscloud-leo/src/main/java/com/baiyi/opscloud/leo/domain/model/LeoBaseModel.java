@@ -53,6 +53,8 @@ public class LeoBaseModel {
     @NoArgsConstructor
     public static class GitLabCommit {
         private String id;
+        private String message;
+        private String webUrl;
     }
 
     @Data

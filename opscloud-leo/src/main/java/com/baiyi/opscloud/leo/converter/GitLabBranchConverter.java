@@ -25,12 +25,14 @@ public class GitLabBranchConverter {
     }
 
     private static List<LeoBuildVO.Children> toOptions(List<LeoBuildVO.BranchOrTag> branches) {
+
         return branches.stream().map(e -> LeoBuildVO.Children.builder()
                 .label(e.getName())
                 .value(e.getName())
                 .desc(StringUtils.isNotBlank(e.getCommitMessage()) ? e.getCommitMessage() : e.getCommit())
                 .commitId(e.getCommit())
                 .commitMessage(e.getCommitMessage())
+                .commitWebUrl(e.getCommitWebUrl())
                 .build()).collect(Collectors.toList());
     }
 
@@ -42,6 +44,7 @@ public class GitLabBranchConverter {
                         .name(branch.getName())
                         .commit(branch.getCommit().getId())
                         .commitMessage(branch.getCommit().getMessage())
+                        .commitWebUrl(branch.getCommit().getWebUrl())
                         .build()
         ).collect(Collectors.toList());
     }
