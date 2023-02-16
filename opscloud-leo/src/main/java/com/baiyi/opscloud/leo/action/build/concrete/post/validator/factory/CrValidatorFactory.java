@@ -1,6 +1,6 @@
-package com.baiyi.opscloud.leo.action.build.concrete.post.verify.factory;
+package com.baiyi.opscloud.leo.action.build.concrete.post.validator.factory;
 
-import com.baiyi.opscloud.leo.action.build.concrete.post.verify.base.BaseCrValidator;
+import com.baiyi.opscloud.leo.action.build.concrete.post.validator.base.BaseCrValidator;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;

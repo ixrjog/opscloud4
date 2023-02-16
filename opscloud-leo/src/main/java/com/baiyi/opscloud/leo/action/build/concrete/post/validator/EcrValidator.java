@@ -1,11 +1,11 @@
-package com.baiyi.opscloud.leo.action.build.concrete.post.verify;
+package com.baiyi.opscloud.leo.action.build.concrete.post.validator;
 
 import com.amazonaws.services.ecr.model.Repository;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.datasource.aws.ecr.driver.AmazonEcrRepositoryDirver;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.leo.action.build.concrete.post.verify.base.BaseCrValidator;
-import com.baiyi.opscloud.leo.action.build.concrete.post.verify.delegate.EcrImageDelegate;
+import com.baiyi.opscloud.leo.action.build.concrete.post.validator.base.BaseCrValidator;
+import com.baiyi.opscloud.leo.action.build.concrete.post.validator.delegate.EcrImageDelegate;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.baiyi.opscloud.leo.action.build.concrete.post.verify.base.BaseCrValidator.CrTypes.ECR;
+import static com.baiyi.opscloud.leo.action.build.concrete.post.validator.base.BaseCrValidator.CrTypes.ECR;
 
 /**
  * @Author baiyi

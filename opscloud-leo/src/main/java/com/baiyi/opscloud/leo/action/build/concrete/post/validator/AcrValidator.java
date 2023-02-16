@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.leo.action.build.concrete.post.verify;
+package com.baiyi.opscloud.leo.action.build.concrete.post.validator;
 
 import com.aliyuncs.cr.model.v20181201.GetRepoTagResponse;
 import com.aliyuncs.exceptions.ClientException;
@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.acr.driver.AliyunAcrImageDriver;
 import com.baiyi.opscloud.datasource.aliyun.acr.driver.AliyunAcrRepositoryDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.leo.action.build.concrete.post.verify.base.BaseCrValidator;
+import com.baiyi.opscloud.leo.action.build.concrete.post.validator.base.BaseCrValidator;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;

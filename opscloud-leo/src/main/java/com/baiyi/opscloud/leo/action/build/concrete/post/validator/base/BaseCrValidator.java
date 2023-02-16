@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.leo.action.build.concrete.post.verify.base;
+package com.baiyi.opscloud.leo.action.build.concrete.post.validator.base;
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.core.InstanceHelper;
@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.leo.action.build.concrete.post.verify.factory.CrValidatorFactory;
+import com.baiyi.opscloud.leo.action.build.concrete.post.validator.factory.CrValidatorFactory;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;

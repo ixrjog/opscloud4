@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.leo.action.build.concrete.post.verify.delegate;
+package com.baiyi.opscloud.leo.action.build.concrete.post.validator.delegate;
 
 import com.amazonaws.services.ecr.model.ImageDetail;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
