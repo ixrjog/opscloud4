@@ -45,7 +45,7 @@ public class DeleteHistoricalBuildJobConcreteHandler extends BaseBuildHandler {
     private ApplicationService applicationService;
 
     // 保留数量
-    private static final int RESERVED_SIZE = 2;
+    private static final int RESERVED_SIZE = 1;
 
     /**
      * 构建前删除历史构建任务
