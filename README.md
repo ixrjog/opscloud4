@@ -1,7 +1,7 @@
 Welcome to the opscloud wiki!
 
 
-#### Thanks to JetBrains
+## Thanks to JetBrains
 <a href="https://www.jetbrains.com" target="_blank">
   <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/jetbrains-logos/jetbrains-variant-2.svg"></img>
 </a>
@@ -10,7 +10,7 @@ Welcome to the opscloud wiki!
 
 ![GitHub Stats Card](https://github-readme-stats.vercel.app/api?username=ixrjog&show_icons=true&theme=onedark)
 
-# OpsCloud 4 云上运维
+## OpsCloud4 云上运维
 <img src="https://img.shields.io/badge/version-4.2.0-brightgreen.svg"></img>
 <img src="https://img.shields.io/badge/java-8-brightgreen.svg"></img> 
 <img src="https://img.shields.io/badge/springboot-2.4.13-brightgreen.svg"></img> 
@@ -19,19 +19,19 @@ Welcome to the opscloud wiki!
 
 <img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/login_1.png" width="600"></img>
 
-#### Code repository
+## Code repository
 + Backend
   + [https://github.com/ixrjog/opscloud4](https://github.com/ixrjog/opscloud4)
 + Frontend
   + [https://github.com/ixrjog/opscloud4-web](https://github.com/ixrjog/opscloud4-web)
 
-#### 开发环境
+## 开发环境
 + JDK 8u251
 + MacBook M1 PRO (macOS Ventura 13.1)
 + IntelliJ IDEA 2022.3.1 (Ultimate Edition)
 + WebStorm 2022.3.1
 
-#### 企业级-Leo持续交付模块发布 （4.2.0）
+## Leo持续交付
 + 部署
 
 <img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-0.png" width="830"></img>
@@ -50,7 +50,7 @@ Welcome to the opscloud wiki!
 
 <img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-5.png" width="830"></img>
 
-#### 主要功能
+## 主要功能
 + Leo持续交付（Kubernetes）
   + 多Jenkins实例调度
   + 权限控制/封网策略
@@ -102,14 +102,14 @@ flowchart LR
   + example.com/doc.html
   + API Token
 
-#### 监听端口详情
+## Services & Ports
 
-| 服务 | 协议 | 端口 | 用户自定义端口(Java启动参数)    |
-|---|---|---|----------------------|
-| Web | http | 8080 | --server.port=8080   |
-| SSH-Server | ssh | 2222 | --ssh.shell.port=2222 |
+| service    | protocol | port | startup parameter     |
+|------------|----------|------|-----------------------|
+| web        | http     | 8080 | --server.port=8080    |
+| ssh-server | ssh      | 2222 | --ssh.shell.port=2222 |
 
-#### 功能截图
+## 功能截图
 
 <table>
 <tr>
@@ -173,12 +173,12 @@ flowchart LR
 </tr>
 </table>
 
-#### <span style="color:green">平台演示视频1</span>
+## <span style="color:green">平台演示视频1</span>
 <video src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/video/opscloud4-1.mov" width="400px" height="300px" controls="controls"></video>
 
-#### 帮助文档
+## 帮助文档
 
 <a style="color:#2b669a" href="https://www.kancloud.cn/ixrjog/opscloud4/2361886" target="_blank">传送门:https://www.kancloud.cn/ixrjog/opscloud4/2361886</a>
 
-#### 交流群
+## 交流群
 Q群: 630913972
