@@ -40,6 +40,8 @@ public class JenkinsBuildExecutorHelperImpl implements JenkinsBuildExecutorHelpe
 
     public final static String IDLE = "Idle";
 
+    public final static String OFFLINE = "(Offline)";
+
     private final RedisUtil redisUtil;
 
     private final DsConfigHelper dsConfigHelper;
@@ -67,10 +69,11 @@ public class JenkinsBuildExecutorHelperImpl implements JenkinsBuildExecutorHelpe
                     Computer computer = computerMap.get(k);
                     String name = k;
                     try {
-                        if (computer.details().getOffline())
-                            name += "(Offline)";
+                        if (computer.details().getOffline()) {
+                            name += OFFLINE;
+                        }
                     } catch (IOException e) {
-                        log.error("查询节点状态错误: name={}, err={}", k, e.getMessage());
+                        log.error("查询节点状态错误: name={}, {}", k, e.getMessage());
                     }
                     JenkinsBuildExecutorStatusVO.Children node = JenkinsBuildExecutorStatusVO.Children.builder()
                             .name(name)
@@ -81,7 +84,7 @@ public class JenkinsBuildExecutorHelperImpl implements JenkinsBuildExecutorHelpe
                 }
             });
         } catch (Exception e) {
-            log.error("组装Jenkins引擎工作负载错误: err={}", e.getMessage());
+            log.error("组装Jenkins引擎工作负载错误: {}", e.getMessage());
         }
         return computers;
     }
@@ -106,8 +109,6 @@ public class JenkinsBuildExecutorHelperImpl implements JenkinsBuildExecutorHelpe
     private String acqExecutorName(Executor executor) {
         if (executor.getCurrentExecutable() != null) {
             Job job = executor.getCurrentExecutable();
-            //   JobBuild jobBuild = JobBuildUtils.convert(job.getUrl());
-            //   return jobBuild.getJobName();
             return job.getUrl();
         } else {
             return IDLE;
