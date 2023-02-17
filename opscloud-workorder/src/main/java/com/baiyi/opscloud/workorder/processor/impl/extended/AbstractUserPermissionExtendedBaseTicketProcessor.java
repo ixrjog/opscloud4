@@ -58,11 +58,11 @@ public abstract class AbstractUserPermissionExtendedBaseTicketProcessor<T> exten
         if (!OrderTicketPhaseCodeConstants.NEW.name().equals(ticket.getTicketPhase()))
             throw new TicketProcessException("工单进度不是新建，无法更新配置条目！");
         String role = ticketEntry.getRole();
-        if (!StringUtils.isEmpty(role)) {
-            if (!"admin".equalsIgnoreCase(role)) {
-                return;
-            }
-        }
+//        if (!StringUtils.isEmpty(role)) {
+//            if (!"admin".equalsIgnoreCase(role)) {
+//                return;
+//            }
+//        }
         WorkOrderTicketEntry preTicketEntry = ticketEntryService.getById(ticketEntry.getId());
         preTicketEntry.setRole(role);
         updateTicketEntry(preTicketEntry);
