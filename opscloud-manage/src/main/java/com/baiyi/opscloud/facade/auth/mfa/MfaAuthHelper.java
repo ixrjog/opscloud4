@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.crypto.SecretKey;
 import java.security.InvalidKeyException;
@@ -41,20 +42,27 @@ public class MfaAuthHelper {
      * @param loginParam
      */
     public void verify(User user, LoginParam.Login loginParam) {
-        if (StringUtils.isEmpty(loginParam.getOtp()))
-            throw new AuthenticationException(ErrorEnum.AUTH_USER_LOGIN_OTP_FAILURE); // OTP
+        if (StringUtils.isEmpty(loginParam.getOtp())) {
+            // OTP
+            throw new AuthenticationException(ErrorEnum.AUTH_USER_LOGIN_OTP_FAILURE);
+        }
         List<UserCredential> credentials = userCredentialService.queryByUserIdAndType(user.getId(), UserCredentialTypeEnum.OTP_SK.getType());
+        if (CollectionUtils.isEmpty(credentials)) {
+            log.warn("用户的OTP密钥不存在！");
+            return;
+        }
         try {
             SecretKey key = OtpUtil.toKey(credentials.get(0).getCredential());
             final String otp = OtpUtil.generateOtp(key);
-            if (!otp.equals(loginParam.getOtp()))
-                throw new AuthenticationException(ErrorEnum.AUTH_USER_LOGIN_OTP_FAILURE); // 登录失败
+            if (!otp.equals(loginParam.getOtp())) {
+                throw new AuthenticationException(ErrorEnum.AUTH_USER_LOGIN_OTP_FAILURE);
+            }
         } catch (OtpException.DecodingException e) {
-            throw new AuthenticationException("MFA认证失败: Decoding Exception!");
+            throw new AuthenticationException("MFA authentication failed decoding error!");
         } catch (NoSuchAlgorithmException e2) {
-            throw new AuthenticationException("MFA认证失败: No Such Algorithm Exception!");
+            throw new AuthenticationException("MFA authentication failed no such algorithm error!");
         } catch (InvalidKeyException e3) {
-            throw new AuthenticationException("MFA认证失败: Invalid Key Exception!");
+            throw new AuthenticationException("MFA authentication failed invalid key error!");
         }
     }
 

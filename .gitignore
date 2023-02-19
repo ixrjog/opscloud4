@@ -17,6 +17,7 @@ static/
 JasyptUtilsTest.java
 EncryptorTest.java
 opscloud-manage/src/test/java/com/baiyi/opscloud/encryptor/*
+application-local.yml
 
 ### STS ###
 .apt_generated
