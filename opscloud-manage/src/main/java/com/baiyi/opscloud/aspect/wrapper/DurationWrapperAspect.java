@@ -20,9 +20,9 @@ import java.util.TimeZone;
  * @Date 2022/2/23 1:10 PM
  * @Version 1.0
  */
+@Slf4j
 @Aspect
 @Component
-@Slf4j
 public class DurationWrapperAspect {
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.DurationWrapper)")

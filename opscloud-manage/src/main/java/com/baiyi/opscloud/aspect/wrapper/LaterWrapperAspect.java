@@ -19,9 +19,9 @@ import org.springframework.stereotype.Component;
  * @Date 2022/2/23 11:33 AM
  * @Version 1.0
  */
+@Slf4j
 @Aspect
 @Component
-@Slf4j
 public class LaterWrapperAspect {
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.LaterWrapper)")

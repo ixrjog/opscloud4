@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.workorder.exception;
 
 import lombok.EqualsAndHashCode;
+import org.slf4j.helpers.MessageFormatter;
 
 /**
  * @Author baiyi
@@ -8,10 +9,16 @@ import lombok.EqualsAndHashCode;
  * @Version 1.0
  */
 @EqualsAndHashCode(callSuper = true)
-public class TicketCommonException extends BaseTicketException {
+public class TicketException extends BaseTicketException {
+
     private static final long serialVersionUID = -5608146219860556302L;
 
-    public TicketCommonException(String message) {
+    public TicketException(String message) {
         super(message);
     }
+
+    public TicketException(String message, Object... var2) {
+        super(MessageFormatter.arrayFormat(message, var2).getMessage());
+    }
+
 }

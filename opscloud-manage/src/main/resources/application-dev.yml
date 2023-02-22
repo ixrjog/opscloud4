@@ -19,25 +19,6 @@ opscloud:
   outapi:
     workorder:
       approval: 'http://127.0.0.1:8080/api/out/ticket/approve?ticketId=%s&username=%s&approvalType=%s&token=%s'
-  pwdPolicy:
-    pwdAttribute: userPassword
-    # 记录4次历史密码
-    pwdInHistory: 4
-    pwdMinLength: 8
-    # 失败4次锁定
-    pwdMaxFailure: 4
-    pwdFailureCountInterval: 1800
-    pwdCheckQuality: 2
-    pwdMustChange: TRUE
-    pwdGraceAuthNLimit: 0
-    # 90天过期
-    pwdMaxAge: 7776000
-    pwdExpireWarning: 1209600
-    # 锁定30分钟
-    pwdLockoutDuration: 1800
-    pwdLockout: TRUE
-
-
 
 # auditPath 审计日志目录
 # openAudit :on 开启审计日志 off 关闭审计日志

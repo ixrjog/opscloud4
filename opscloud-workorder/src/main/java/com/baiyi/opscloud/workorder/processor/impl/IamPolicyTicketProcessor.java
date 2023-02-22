@@ -31,7 +31,11 @@ public class IamPolicyTicketProcessor extends AbstractDsAssetPermissionExtendedB
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
         User createUser = queryCreateUser(ticketEntry);
-        preProcess(ticketEntry, createUser);
+        try {
+            preProcess(ticketEntry, createUser);
+        } catch (Exception e) {
+            throw new TicketProcessException(e.getMessage());
+        }
         UserAmParam.Policy policy = UserAmParam.Policy.builder()
                 .policyName(entry.getAssetId())
                 .policyType(entry.getAssetKey())

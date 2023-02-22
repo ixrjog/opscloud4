@@ -10,7 +10,7 @@ import com.baiyi.opscloud.service.workorder.WorkOrderTicketService;
 import com.baiyi.opscloud.workorder.approve.ITicketApprove;
 import com.baiyi.opscloud.workorder.approve.factory.WorkOrderTicketApproveFactory;
 import com.baiyi.opscloud.workorder.constants.ApprovalTypeConstants;
-import com.baiyi.opscloud.workorder.exception.TicketCommonException;
+import com.baiyi.opscloud.workorder.exception.TicketException;
 import com.baiyi.opscloud.workorder.helper.TicketApproverHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -52,7 +52,7 @@ public abstract class AbstractApproveTicket implements ITicketApprove, Initializ
                 .build();
         ticketApproverHelper.wrap(simpleApprover, ticket);
         if (!simpleApprover.getIsApprover()) {
-            throw new TicketCommonException("禁止操作: 非当前审批人!");
+            throw new TicketException("禁止操作: 非当前审批人!");
         }
         if (StringUtils.isEmpty(ticketNode.getUsername())) {
             ticketNode.setUsername(SessionUtil.getUsername()); // 审批人

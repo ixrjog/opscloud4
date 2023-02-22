@@ -2,6 +2,7 @@ logging:
   level:
     # swagger 警告日志忽略
     io.swagger.models.parameters.AbstractSerializableParameter: error
+    org.springframework: warn
 log:
   file:
     path: ${HOME}/logs
@@ -15,12 +16,14 @@ opscloud:
     userGroups:
   outapi:
     workorder:
-      approval: "http://127.0.0.1:8080/api/out/ticket/approve?ticketId=%s&username=%s&approvalType=%s&token=%s";
-# auditPath 审计日志目录
-# openAudit :on 开启审计日志 off 关闭审计日志
+      approval: "http://127.0.0.1:8080/api/out/ticket/approve?ticketId=%s&username=%s&approvalType=%s&token=%s"
+
 terminal:
-  auditPath: ${HOME}/opscloud-data/ssh/audit
-  openAudit: on
+  audit:
+    # on 开启审计日志 off 关闭审计日志
+    open: on
+    # 审计日志目录
+    path: ${HOME}/opscloud-data/ssh/audit
 
 spring:
   config:
@@ -30,7 +33,7 @@ spring:
   redis:
     host: redis.opscloud4.baiyi.com
     port: 6379
-    password: 'v2TBjJP5QZEd3ah1'
+    password:
     jedis:
       pool:
         max-wait: 5000
@@ -40,8 +43,8 @@ spring:
   datasource:
     druid:
       opscloud:
-        url: jdbc:mysql://mysql.opscloud4.baiyi.com:3306/opscloud4-github?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
-        username: opscloud4_github
+        url: jdbc:mysql://mysql.opscloud4.baiyi.com:3306/opscloud4?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+        username: opscloud4
         password: '6Ln7N9uPYOyfNmF1'
         initial-size: 5
         min-idle: 5

@@ -16,4 +16,5 @@ public @interface TagsWrapper {
     boolean extend() default false;
 
     boolean wrapResult() default false;
+
 }

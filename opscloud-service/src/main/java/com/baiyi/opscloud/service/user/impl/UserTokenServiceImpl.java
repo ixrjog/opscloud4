@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.service.user.impl;
 
+import com.baiyi.opscloud.common.annotation.ArkIntercept;
 import com.baiyi.opscloud.domain.generator.opscloud.UserToken;
 import com.baiyi.opscloud.mapper.opscloud.UserTokenMapper;
 import com.baiyi.opscloud.service.user.UserTokenService;
@@ -31,11 +32,13 @@ public class UserTokenServiceImpl implements UserTokenService {
     }
 
     @Override
+    @ArkIntercept
     public int checkUserHasResourceAuthorize(String token, String resourceName) {
         return userTokenMapper.checkUserHasResourceAuthorize(token, resourceName);
     }
 
     @Override
+    @ArkIntercept
     public int checkUserHasRole(String token, String roleName) {
         return userTokenMapper.checkUserHasRole(token, roleName);
     }

@@ -32,4 +32,6 @@ public interface WorkOrderTicketService {
 
     void deleteById(int id);
 
+    List<WorkOrderTicket> queryByParam(int workOrderId, String phase);
+
 }

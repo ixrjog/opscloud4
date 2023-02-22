@@ -13,7 +13,7 @@ import com.baiyi.opscloud.packer.workorder.WorkOrderGroupPacker;
 import com.baiyi.opscloud.packer.workorder.WorkOrderPacker;
 import com.baiyi.opscloud.service.workorder.WorkOrderGroupService;
 import com.baiyi.opscloud.service.workorder.WorkOrderService;
-import com.baiyi.opscloud.workorder.exception.TicketCommonException;
+import com.baiyi.opscloud.workorder.exception.TicketException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -78,7 +78,7 @@ public class WorkOrderFacadeImpl implements WorkOrderFacade {
     @Override
     public void deleteWorkOrderGroup(Integer workOrderGroupId) {
         if (0 != workOrderService.countByWorkOrderGroupId(workOrderGroupId)) {
-            throw new TicketCommonException("工单组下存在工单，无法删除！");
+            throw new TicketException("工单组下存在工单，无法删除！");
         }
         workOrderGroupService.deleteById(workOrderGroupId);
     }

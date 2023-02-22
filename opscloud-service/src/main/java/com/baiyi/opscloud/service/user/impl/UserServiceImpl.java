@@ -1,16 +1,17 @@
 package com.baiyi.opscloud.service.user.impl;
 
+import com.baiyi.opscloud.common.annotation.ArkIntercept;
 import com.baiyi.opscloud.common.annotation.EventPublisher;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.annotation.Encrypt;
-import com.baiyi.opscloud.domain.generator.opscloud.User;
-import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
-import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.constants.EventActionTypeEnum;
+import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
+import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
@@ -56,6 +57,7 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
     }
 
     @Override
+    @ArkIntercept
     public User getById(Integer id) {
         return userMapper.selectByPrimaryKey(id);
     }
@@ -93,6 +95,7 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
     }
 
     @Override
+    @ArkIntercept
     public User getByUsername(String username) {
         Example example = new Example(User.class);
         Example.Criteria criteria = example.createCriteria();

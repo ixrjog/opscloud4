@@ -1,10 +1,12 @@
 package com.baiyi.opscloud.util;
 
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.common.util.TimeUtil;
 import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 
 /**
  * @Author baiyi
@@ -29,8 +31,17 @@ public class URLTest extends BaseUnit {
             print(e.getMessage());
 
         }
+    }
 
-
+    @Test
+    void dateTest() {
+        Date doomsday = TimeUtil.gmtToDate("2023-02-20 22:22:22");
+        print(doomsday.after(new Date()));
+        print(doomsday.before(new Date()));
+        /**
+         * true
+         * false
+         */
     }
 
 }

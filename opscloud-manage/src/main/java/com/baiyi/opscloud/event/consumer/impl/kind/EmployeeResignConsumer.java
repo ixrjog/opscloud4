@@ -61,11 +61,9 @@ public class EmployeeResignConsumer {
                     .build();
             // 用户有钉钉资产绑定关系: 无法确认是否离职
             List<BusinessAssetRelation> relations = bizAssetRelationService.queryBusinessRelations(simpleBiz, DsAssetTypeConstants.DINGTALK_USER.name());
-
             if (!CollectionUtils.isEmpty(relations)) {
                 return;
             }
-
         }
         generateTicket(user);
     }

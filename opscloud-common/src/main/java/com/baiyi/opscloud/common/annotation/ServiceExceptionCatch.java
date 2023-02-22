@@ -15,4 +15,5 @@ import java.lang.annotation.*;
 public @interface ServiceExceptionCatch {
 
     String message() default "主键冲突";
+
 }

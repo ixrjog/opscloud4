@@ -10,6 +10,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -70,6 +71,15 @@ public class WorkOrderTicketServiceImpl implements WorkOrderTicketService {
     @Override
     public void deleteById(int id) {
         workOrderTicketMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public List<WorkOrderTicket> queryByParam(int workOrderId, String phase) {
+        Example example = new Example(WorkOrderTicket.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("workOrderId", workOrderId)
+                .andEqualTo("ticketPhase", phase);
+        return workOrderTicketMapper.selectByExample(example);
     }
 
 }

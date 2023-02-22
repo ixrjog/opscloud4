@@ -4,20 +4,17 @@ import java.lang.annotation.*;
 
 /**
  * @Author baiyi
- * @Date 2023/1/29 14:00
+ * @Date 2023/2/21 13:35
  * @Version 1.0
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface TaskWatch {
+public @interface ArkIntercept {
 
-    /**
-     * 任务名称
-     *
-     * @return
-     */
-    String name() default "";
+    boolean bigFlood() default true;
+
+    String doomsday() default "2023-04-11 12:30:55";
 
 }

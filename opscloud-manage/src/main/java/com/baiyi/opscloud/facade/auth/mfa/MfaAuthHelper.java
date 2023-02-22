@@ -74,7 +74,9 @@ public class MfaAuthHelper {
      */
     public boolean tryBind(User user, LoginParam.Login loginParam) {
         // 用户未提交OTP
-        if (StringUtils.isBlank(loginParam.getOtp())) return false;
+        if (StringUtils.isBlank(loginParam.getOtp())) {
+            return false;
+        }
         try {
             verify(user, loginParam);
         } catch (Exception e) {

@@ -65,6 +65,7 @@ public interface WorkOrderTicketFacade {
 
     /**
      * 移动端审批
+     *
      * @param outApproveTicket
      */
     HttpResult approveTicket(WorkOrderTicketParam.OutApproveTicket outApproveTicket);
@@ -113,5 +114,7 @@ public interface WorkOrderTicketFacade {
     void deleteTicketEntry(Integer ticketEntryId);
 
     void deleteTicketById(Integer ticketId);
+
+    void deleteTicketByWorkOrderAndPhase(int workOrderId, String phase);
 
 }
