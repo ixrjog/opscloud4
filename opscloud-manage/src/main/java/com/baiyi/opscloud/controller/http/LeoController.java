@@ -208,6 +208,12 @@ public class LeoController {
         return new HttpResult<>(deployFacade.queryLeoBuildDeployment(queryDeployDeployment));
     }
 
+//    @ApiOperation(value = "查询部署Deployment版本")
+//    @PostMapping(value = "/deploy/deployment/version/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public HttpResult<List<ApplicationResourceVO.BaseResource>> queryLeoDeployDeploymentVersion(@RequestBody @Valid LeoBuildParam.QueryDeployDeploymentVersion queryDeployDeploymentVersion) {
+//        return new HttpResult<>(deployFacade.queryLeoBuildDeploymentVersion(queryDeployDeployment));
+//    }
+
     @ApiOperation(value = "停止部署(逻辑层)")
     @PutMapping(value = "/deploy/stop", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> stopLeoDeploy(@RequestParam @Valid int deployId) {

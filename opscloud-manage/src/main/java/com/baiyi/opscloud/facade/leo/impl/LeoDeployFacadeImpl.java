@@ -5,9 +5,9 @@ import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.baiyi.opscloud.domain.generator.opscloud.*;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoDeployParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
@@ -18,6 +18,7 @@ import com.baiyi.opscloud.facade.leo.LeoDeployFacade;
 import com.baiyi.opscloud.leo.action.deploy.LeoDeployHandler;
 import com.baiyi.opscloud.leo.annotation.LeoDeployInterceptor;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
+import com.baiyi.opscloud.leo.delegate.LeoBuildDeploymentDelegate;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
@@ -38,7 +39,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -76,6 +76,8 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     private final LeoExecuteJobInterceptorHandler executeJobInterceptorHandler;
 
     private final RedisUtil redisUtil;
+
+    private final LeoBuildDeploymentDelegate buildDeploymentDelegate;
 
     @Override
     @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType")
@@ -155,39 +157,12 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     @Override
     public List<ApplicationResourceVO.BaseResource> queryLeoBuildDeployment(LeoBuildParam.QueryDeployDeployment queryBuildDeployment) {
-        LeoJob leoJob = jobService.getById(queryBuildDeployment.getJobId());
-        Env env = envService.getByEnvType(leoJob.getEnvType());
-        List<ApplicationResource> resources = applicationResourceService.queryByApplication(leoJob.getApplicationId(),
-                DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name(),
-                BusinessTypeEnum.ASSET.getType());
-        if (CollectionUtils.isEmpty(resources))
-            return Collections.emptyList();
-        final String envName = env.getEnvName();
-        List<ApplicationResource> result = resources.stream().filter(e -> {
-            if (e.getName().startsWith(envName + ":")) {
-                return true;
-            }
-            // TODO 环境标准化后以下代码可以删除
-            if (env.getEnvName().equals("dev")) {
-                return e.getName().startsWith("ci:");
-            }
-            if (env.getEnvName().equals("daily")) {
-                return e.getName().startsWith("test:");
-            }
-            if (env.getEnvName().equals("prod")) {
-                if (e.getName().startsWith("gray:")) {
-                    return true;
-                }
-                return e.getName().startsWith("canary:");
-            }
-            return false;
-        }).collect(Collectors.toList());
-        return BeanCopierUtil.copyListProperties(result, ApplicationResourceVO.BaseResource.class);
+        return buildDeploymentDelegate.queryLeoBuildDeployment(queryBuildDeployment.getJobId());
     }
 
     @Override
     public DataTable<LeoDeployVO.Deploy> queryLeoJobDeployPage(LeoJobParam.JobDeployPageQuery pageQuery) {
-        List<LeoJob> leoJobs = jobService.querJobWithApplicationIdAndEnvType(pageQuery.getApplicationId(), pageQuery.getEnvType());
+        List<LeoJob> leoJobs = jobService.queryJobWithApplicationIdAndEnvType(pageQuery.getApplicationId(), pageQuery.getEnvType());
         if (CollectionUtils.isEmpty(leoJobs)) {
             return DataTable.EMPTY;
         }

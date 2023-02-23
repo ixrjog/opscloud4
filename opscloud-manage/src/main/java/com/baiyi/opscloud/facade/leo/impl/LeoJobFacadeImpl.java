@@ -248,7 +248,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
         if (destApplication == null) {
             throw new LeoJobException("复制任务错误: 目标应用不存在！");
         }
-        List<LeoJob> srcJobs = jobService.querJobWithApplicationId(srcApplication.getId());
+        List<LeoJob> srcJobs = jobService.queryJobWithApplicationId(srcApplication.getId());
         if (CollectionUtils.isEmpty(srcJobs)) {
             throw new LeoJobException("复制任务错误: 源应用下任务为空！");
         }
@@ -260,7 +260,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
 
         for (LeoJob srcJob : srcJobs) {
             // 校验任务
-            if (CollectionUtils.isEmpty(jobService.querJobWithApplicationIdAndEnvType(destApplication.getId(), srcJob.getEnvType()))) {
+            if (CollectionUtils.isEmpty(jobService.queryJobWithApplicationIdAndEnvType(destApplication.getId(), srcJob.getEnvType()))) {
                 Env env = envService.getByEnvType(srcJob.getEnvType());
 
                 final String name = Joiner.on("-").join(destApplication.getName(), env.getEnvName());

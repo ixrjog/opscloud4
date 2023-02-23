@@ -34,7 +34,7 @@ public class IamPolicyTicketProcessor extends AbstractDsAssetPermissionExtendedB
         try {
             preProcess(ticketEntry, createUser);
         } catch (Exception e) {
-            throw new TicketProcessException(e.getMessage());
+            throw new TicketProcessException("工单创建IAM账户错误: {}", e.getMessage());
         }
         UserAmParam.Policy policy = UserAmParam.Policy.builder()
                 .policyName(entry.getAssetId())

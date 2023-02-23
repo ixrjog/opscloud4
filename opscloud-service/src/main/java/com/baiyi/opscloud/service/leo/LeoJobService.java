@@ -18,9 +18,9 @@ public interface LeoJobService {
 
     DataTable<LeoJob> queryJobPage(SubscribeLeoJobRequestParam pageQuery);
 
-    List<LeoJob> querJobWithApplicationIdAndEnvType(Integer applicationId, Integer envType);
+    List<LeoJob> queryJobWithApplicationIdAndEnvType(Integer applicationId, Integer envType);
 
-    List<LeoJob> querJobWithApplicationId(Integer applicationId);
+    List<LeoJob> queryJobWithApplicationId(Integer applicationId);
 
     void add(LeoJob leoJob);
 

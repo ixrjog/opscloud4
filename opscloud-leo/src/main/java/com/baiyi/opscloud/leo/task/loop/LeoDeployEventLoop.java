@@ -49,7 +49,7 @@ public class LeoDeployEventLoop implements Runnable {
                         });
                     }
                 }
-                TimeUnit.SECONDS.sleep(3L);
+                TimeUnit.SECONDS.sleep(6L);
             } catch (Exception e) {
                 log.error(e.getMessage());
             }

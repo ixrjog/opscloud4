@@ -32,7 +32,7 @@ import java.util.Optional;
 @Component
 public class ApplicationScaleReplicasTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcessor<ApplicationScaleReplicasEntry.KubernetesDeployment, KubernetesConfig> {
 
-    private final String SCALE_REPLICAS = "scaleReplicas";
+    private static final String SCALE_REPLICAS = "scaleReplicas";
 
     @Override
     protected void processHandle(WorkOrderTicketEntry ticketEntry, ApplicationScaleReplicasEntry.KubernetesDeployment entry) throws TicketProcessException {

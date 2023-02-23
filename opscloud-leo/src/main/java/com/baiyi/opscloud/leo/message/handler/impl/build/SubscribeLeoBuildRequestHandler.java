@@ -46,7 +46,7 @@ public class SubscribeLeoBuildRequestHandler extends BaseLeoContinuousDeliveryRe
     @Override
     public void handleRequest(String sessionId, Session session, String message) {
         SubscribeLeoBuildRequestParam queryParam = toRequestParam(message);
-        List<Integer> jobIds = leoJobService.querJobWithApplicationIdAndEnvType(queryParam.getApplicationId(), queryParam.getEnvType()).stream()
+        List<Integer> jobIds = leoJobService.queryJobWithApplicationIdAndEnvType(queryParam.getApplicationId(), queryParam.getEnvType()).stream()
                 .map(LeoJob::getId).collect(Collectors.toList());
         if (CollectionUtils.isEmpty(jobIds))
             return;

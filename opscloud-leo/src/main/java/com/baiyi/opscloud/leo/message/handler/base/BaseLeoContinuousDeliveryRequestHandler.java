@@ -42,7 +42,7 @@ public abstract class BaseLeoContinuousDeliveryRequestHandler<T> implements ILeo
                         .build();
                 session.getBasicRemote().sendText(response.toString());
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.warn("发送会话消息错误: err={}", e.getMessage());
         }
     }

@@ -3,6 +3,8 @@ package com.baiyi.opscloud.service.leo.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildImage;
 import com.baiyi.opscloud.mapper.opscloud.LeoBuildImageMapper;
 import com.baiyi.opscloud.service.leo.LeoBuildImageService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -35,6 +37,16 @@ public class LeoBuildImageServiceImpl implements LeoBuildImageService {
         Example example = new Example(LeoBuildImage.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("buildId", buildId)
+                .andEqualTo("image", image);
+        return leoBuildImageMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public LeoBuildImage findBuildImage(int jobId, String image) {
+        Page page = PageHelper.startPage(1, 1);
+        Example example = new Example(LeoBuildImage.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("jobId", jobId)
                 .andEqualTo("image", image);
         return leoBuildImageMapper.selectOneByExample(example);
     }

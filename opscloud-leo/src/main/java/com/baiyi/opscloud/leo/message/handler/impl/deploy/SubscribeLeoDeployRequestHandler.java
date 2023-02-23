@@ -46,12 +46,13 @@ public class SubscribeLeoDeployRequestHandler extends BaseLeoContinuousDeliveryR
     @Override
     public void handleRequest(String sessionId, Session session, String message) {
         SubscribeLeoDeployRequestParam queryParam = toRequestParam(message);
-        List<Integer> jobIds = leoJobService.querJobWithApplicationIdAndEnvType(queryParam.getApplicationId(), queryParam.getEnvType())
+        List<Integer> jobIds = leoJobService.queryJobWithApplicationIdAndEnvType(queryParam.getApplicationId(), queryParam.getEnvType())
                 .stream()
                 .map(LeoJob::getId)
                 .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(jobIds))
+        if (CollectionUtils.isEmpty(jobIds)){
             return;
+        }
         queryParam.setJobIds(jobIds);
         DataTable<LeoDeployVO.Deploy> dataTable = queryLeoDeployPage(queryParam);
         sendToSession(session, dataTable);

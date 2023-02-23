@@ -17,6 +17,9 @@ public interface LeoBuildImageService {
 
     LeoBuildImage getByUniqueKey(int buildId, String image);
 
+    LeoBuildImage findBuildImage(int jobId, String image);
+
     List<LeoBuildImage> queryImageWithJobIdAndImage(int jobId, String image);
+
 
 }

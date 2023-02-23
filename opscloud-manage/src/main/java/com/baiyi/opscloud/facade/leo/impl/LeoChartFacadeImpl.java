@@ -54,7 +54,7 @@ public class LeoChartFacadeImpl implements LeoChartFacade {
         List<Application> applications = applicationService.queryAll();
         applications.forEach(a -> {
             int count = 1;
-            List<LeoJob> jobs = leoJobService.querJobWithApplicationId(a.getId());
+            List<LeoJob> jobs = leoJobService.queryJobWithApplicationId(a.getId());
             if (!CollectionUtils.isEmpty(jobs)) {
                 for (LeoJob job : jobs) {
                     count = leoBuildService.countWithJobId(job.getId()) + count;

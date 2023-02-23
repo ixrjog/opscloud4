@@ -36,7 +36,7 @@ public class RamPolicyTicketProcessor extends AbstractDsAssetPermissionExtendedB
         try {
             preProcess(ticketEntry, createUser);
         } catch (Exception e) {
-            throw new TicketProcessException(e.getMessage());
+            throw new TicketProcessException("工单创建RAM账户错误: {}", e.getMessage());
         }
         UserAmParam.Policy policy = UserAmParam.Policy.builder()
                 .policyName(entry.getAssetId())

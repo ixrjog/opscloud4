@@ -84,7 +84,7 @@ public class QueryLeoBuildConsoleStreamRequestHandler extends BaseLeoContinuousD
                 }
             }
         } catch (IOException | URISyntaxException | InterruptedException e) {
-            log.error("Jenkins stream log error: err={}", e.getMessage());
+            log.error("Jenkins stream log error: {}", e.getMessage());
         }
     }
 

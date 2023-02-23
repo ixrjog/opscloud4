@@ -26,8 +26,8 @@ public class KubernetesDeploymentTest extends BaseKubernetesTest {
 
     @Test
     void aTest() {
-        Deployment deployment = KubernetesDeploymentDriver.getDeployment(getConfig().getKubernetes(), "dev", "merchant-rss-dev");
-        KubernetesDeploymentDriver.redeployDeployment(getConfig().getKubernetes(), "dev", "merchant-rss-dev");
+        Deployment deployment = KubernetesDeploymentDriver.getDeployment(getConfigById(KubernetesClusterConfigs.ACK_DEV).getKubernetes(), "dev", "merchant-rss-dev");
+        // KubernetesDeploymentDriver.redeployDeployment(getConfig().getKubernetes(), "dev", "merchant-rss-dev");
         print(deployment);
     }
 
@@ -113,7 +113,7 @@ public class KubernetesDeploymentTest extends BaseKubernetesTest {
                 container.getLifecycle().getPreStop().getExec().setCommand(command);
                 // 更新 Deployment
                 KubernetesDeploymentDriver.createOrReplaceDeployment(kubernetesConfig.getKubernetes(), deployment);
-            }catch (Exception e){
+            } catch (Exception e) {
                 print(e.getMessage());
             }
         }
