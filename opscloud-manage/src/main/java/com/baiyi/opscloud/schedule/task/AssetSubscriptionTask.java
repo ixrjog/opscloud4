@@ -56,7 +56,8 @@ public class AssetSubscriptionTask {
         return topicHelper.receive(TopicHelper.Topics.ASSET_SUBSCRIPTION_TASK);
     }
 
-    @InstanceHealth // 实例健康检查，高优先级
+    // 实例健康检查，高优先级
+    @InstanceHealth
     @Scheduled(initialDelay = 5000, fixedRate = 60 * 1000)
     /**
      * By setting lockAtMostFor we make sure that the lock is released even if the node dies and by setting

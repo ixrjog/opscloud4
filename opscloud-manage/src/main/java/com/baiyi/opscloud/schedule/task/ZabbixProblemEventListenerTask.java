@@ -13,9 +13,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * @Author baiyi
- * @Date 2021/10/12 2:32 下午
- * @Version 1.0
+ * {@code @Author} baiyi
+ * {@code @Date} 2021/10/12 2:32 下午
+ * {@code @Version} 1.0
  */
 @Slf4j
 @Component

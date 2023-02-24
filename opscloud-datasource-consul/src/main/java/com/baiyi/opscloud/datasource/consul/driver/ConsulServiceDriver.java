@@ -26,7 +26,7 @@ public class ConsulServiceDriver {
 
     private ConsulServiceV1Feign buildFeign(ConsulConfig.Consul config) {
         return Feign.builder()
-                .retryer(new Retryer.Default(3000, 3000, 3))
+                .retryer(new Retryer.Default(3000, 3000, 2))
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
                 .target(ConsulServiceV1Feign.class, config.getUrl());

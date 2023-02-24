@@ -115,32 +115,41 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
             if (asset == null) {
                 return LeoJobVersionVO.DeploymentVersion.EMPTY;
             }
-            KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
-            Deployment deployment = KubernetesDeploymentDriver.getDeployment(kubernetesConfig.getKubernetes(),
-                    // namespace
-                    asset.getAssetKey2(),
-                    // deploymentName
-                    asset.getAssetKey());
-            if (deployment == null) {
-                return LeoJobVersionVO.DeploymentVersion.EMPTY;
-            }
+            try {
+                KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
+                Deployment deployment = KubernetesDeploymentDriver.getDeployment(
+                        kubernetesConfig.getKubernetes(),
+                        // namespace
+                        asset.getAssetKey2(),
+                        // deploymentName
+                        asset.getAssetKey());
+                if (deployment == null) {
+                    return LeoJobVersionVO.DeploymentVersion.EMPTY;
+                }
+                Optional<Container> optionalContainer = deployment.getSpec().getTemplate().getSpec().getContainers()
+                        .stream()
+                        .filter(c -> c.getName().startsWith(application.getName()))
+                        .findFirst();
 
-            Optional<Container> optionalContainer = deployment.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith(application.getName())).findFirst();
-            if (optionalContainer.isPresent()) {
-                final String image = optionalContainer.get().getImage();
-                LeoBuildImage buildImage = buildImageService.findBuildImage(jobId, image);
-                return LeoJobVersionVO.DeploymentVersion.builder()
-                        .name(deploymentResource.getName())
-                        .image(image)
-                        .replicas(deployment.getSpec().getReplicas())
-                        .versionName(buildImage != null ? buildImage.getVersionName() : LeoDeployModel.DeployVersion.UNKNOWN.getVersionName())
-                        .versionDesc(buildImage != null ? buildImage.getVersionDesc() : LeoDeployModel.DeployVersion.UNKNOWN.getVersionDesc())
-                        .build();
-            } else {
-                return LeoJobVersionVO.DeploymentVersion.builder()
-                        .name(deploymentResource.getName())
-                        .replicas(deployment.getSpec().getReplicas())
-                        .build();
+                if (optionalContainer.isPresent()) {
+                    final String image = optionalContainer.get().getImage();
+                    LeoBuildImage buildImage = buildImageService.findBuildImage(jobId, image);
+                    return LeoJobVersionVO.DeploymentVersion.builder()
+                            .name(deploymentResource.getName())
+                            .buildId(buildImage != null ? buildImage.getBuildId() : -1)
+                            .image(image)
+                            .replicas(deployment.getSpec().getReplicas())
+                            .versionName(buildImage != null ? buildImage.getVersionName() : LeoDeployModel.DeployVersion.UNKNOWN.getVersionName())
+                            .versionDesc(buildImage != null ? buildImage.getVersionDesc() : LeoDeployModel.DeployVersion.UNKNOWN.getVersionDesc())
+                            .build();
+                } else {
+                    return LeoJobVersionVO.DeploymentVersion.builder()
+                            .name(deploymentResource.getName())
+                            .replicas(deployment.getSpec().getReplicas())
+                            .build();
+                }
+            } catch (Exception e) {
+                return LeoJobVersionVO.DeploymentVersion.EMPTY;
             }
         }).collect(Collectors.toList());
     }

@@ -18,4 +18,5 @@ public interface IAssetConverter extends IAssetType {
     List<BusinessTypeEnum> getBusinessTypes();
 
     Map<BusinessTypeEnum, BusinessAssetRelationVO.IBusinessAssetRelation> toBusinessTypes(DsAssetVO.Asset asset);
+
 }

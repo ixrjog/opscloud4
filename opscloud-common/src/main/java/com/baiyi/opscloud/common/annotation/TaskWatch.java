@@ -18,6 +18,6 @@ public @interface TaskWatch {
      *
      * @return
      */
-    String name() default "";
+    String name() default "Not specified";
 
 }

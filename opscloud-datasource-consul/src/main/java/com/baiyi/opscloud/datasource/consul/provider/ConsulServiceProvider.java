@@ -54,24 +54,23 @@ public class ConsulServiceProvider extends BaseAssetProvider<ConsulService.Servi
     protected List<ConsulService.Service> listEntities(DsInstanceContext dsInstanceContext) {
         List<ConsulService.Service> services = Lists.newArrayList();
         ConsulConfig.Consul consul = buildConfig(dsInstanceContext.getDsConfig());
-        try {
-            consul.getDcs().forEach(dc ->
-                    services.addAll(
-                            consulServiceDriver.listServices(buildConfig(dsInstanceContext.getDsConfig()), dc)
-                                    .stream()
-                                    .peek(e -> e.setDc(dc))
-                                    .collect(Collectors.toList())
-                    )
-            );
-            return services;
-        } catch (Exception e) {
-            log.error(e.getMessage());
+        for (String dc : consul.getDcs()) {
+            try {
+                List<ConsulService.Service> ss = consulServiceDriver.listServices(buildConfig(dsInstanceContext.getDsConfig()), dc)
+                        .stream()
+                        .peek(e -> e.setDc(dc))
+                        .collect(Collectors.toList());
+
+                services.addAll(ss);
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
         }
-        throw new RuntimeException("查询条目失败");
+        return services;
     }
 
     @Override
-    @SingleTask(name = SingleTaskConstants.PULL_CONSUL_SERVICE, lockTime = "1m")
+    @SingleTask(name = SingleTaskConstants.PULL_CONSUL_SERVICE, lockTime = "2m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

@@ -53,7 +53,7 @@ public class LeoReportFacadeImpl implements LeoReportFacade {
     private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.JENKINS};
 
     @Override
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10S, key = "'opscloud.v4.report#statLeoReport'")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1H, key = "'opscloud.v4.report#statLeoReport'")
     public LeoReportVO.LeoReport statLeoReport() {
         ReportVO.MonthlyReport monthlyReport = ReportVO.MonthlyReport.builder()
                 .dateCat(buildService.queryMonth().stream().map(ReportVO.Report::getCName).collect(Collectors.toList()))

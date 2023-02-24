@@ -50,6 +50,12 @@ public class LeoJobVersionVO {
         @Builder.Default
         private String name = "-";
         private Integer replicas = 0;
+
+        /**
+         * 用于计算版本顺序
+         */
+        private Integer buildId = -1;
+
         @Builder.Default
         private String image = "-";
         @Builder.Default

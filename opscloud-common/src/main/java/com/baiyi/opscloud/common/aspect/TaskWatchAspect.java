@@ -3,7 +3,6 @@ package com.baiyi.opscloud.common.aspect;
 import com.baiyi.opscloud.common.annotation.TaskWatch;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -23,7 +22,7 @@ import org.springframework.util.StopWatch;
 @Aspect
 @Component
 @RequiredArgsConstructor
-@Order
+@Order(-1)
 public class TaskWatchAspect {
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.TaskWatch)")
@@ -36,15 +35,14 @@ public class TaskWatchAspect {
 
     @Around("@annotation(taskWatch)")
     public Object around(ProceedingJoinPoint joinPoint, TaskWatch taskWatch) throws Throwable {
-        final String taskName = StringUtils.isBlank(taskWatch.name()) ? "unknow" : taskWatch.name();
+        final String taskName = taskWatch.name();
         StopWatch stopWatch = new StopWatch();
         stopWatch.start(taskName);
-        log.info("Task start: taskName={}", taskName);
+        log.info("Task start: {}", taskName);
         Object result = joinPoint.proceed();
         stopWatch.stop();
-        log.info("Task end: taskName={}, runtime={}/s", taskName, stopWatch.getTotalTimeSeconds());
+        log.info("Task end: {}, runtime={}/s", taskName, stopWatch.getTotalTimeSeconds());
         return result;
     }
-
 
 }
