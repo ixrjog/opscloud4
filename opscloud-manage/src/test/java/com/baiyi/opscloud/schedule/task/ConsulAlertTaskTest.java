@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * @Author baiyi
  * @Date 2023/2/24 15:13

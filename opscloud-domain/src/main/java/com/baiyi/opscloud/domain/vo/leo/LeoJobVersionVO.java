@@ -17,6 +17,27 @@ import java.util.List;
  */
 public class LeoJobVersionVO {
 
+    /**
+     * # 灰色（副本0）
+     * background-color: #9d9fa3
+     * <p>
+     * # 蓝
+     * background-color: #128ca8
+     * <p>
+     * # 绿
+     * background-color: #2bbe32
+     * <p>
+     * # 其他版本
+     * background-color: #e56c0d
+     */
+    public interface VersionColors {
+        String BLUE = "#128ca8";
+        String GREEN = "#2bbe32";
+        String OTHER = "#e56c0d";
+        String OFFLINE = "#9d9fa3";
+    }
+
+
     @Data
     @Builder
     @NoArgsConstructor
@@ -55,6 +76,11 @@ public class LeoJobVersionVO {
          * 用于计算版本顺序
          */
         private Integer buildId = -1;
+
+        /**
+         * background-color
+         */
+        private String versionColor = VersionColors.OTHER;
 
         @Builder.Default
         private String image = "-";

@@ -36,12 +36,12 @@ public class SwaggerConfiguration {
 
     private ApiInfo generatepApiInfo() {
         return new ApiInfoBuilder()
-                .title("OPSCLOUD 4.2.0")
+                .title("OPSCLOUD 4.2.1")
                 .description("OPSCLOUD OPENAPI接口文档")
                 .version("4.2.0-RELEASE")
                 .license("APACHE LICENSE, VERSION 2.0")
                 .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
-                .contact(new Contact("白衣", "https://github.com/ixrjog/opscloud", "ixrjog@qq.com"))
+                .contact(new Contact("白衣", "https://github.com/ixrjog/opscloud4", "ixrjog@qq.com"))
                 .build();
     }
 

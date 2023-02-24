@@ -26,14 +26,13 @@ import com.baiyi.opscloud.service.leo.LeoJobService;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import lombok.extern.slf4j.Slf4j;
+import org.glassfish.jersey.internal.guava.Sets;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import javax.websocket.Session;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -110,7 +109,7 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
 
     private List<LeoJobVersionVO.DeploymentVersion> generateDeploymentVersions(Application application, int jobId) {
         List<ApplicationResourceVO.BaseResource> deploymentResources = buildDeploymentDelegate.queryLeoBuildDeployment(jobId);
-        return deploymentResources.stream().map(deploymentResource -> {
+        List<LeoJobVersionVO.DeploymentVersion> deploymentVersions = deploymentResources.stream().map(deploymentResource -> {
             DatasourceInstanceAsset asset = assetService.getById(deploymentResource.getBusinessId());
             if (asset == null) {
                 return LeoJobVersionVO.DeploymentVersion.EMPTY;
@@ -134,6 +133,7 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
                 if (optionalContainer.isPresent()) {
                     final String image = optionalContainer.get().getImage();
                     LeoBuildImage buildImage = buildImageService.findBuildImage(jobId, image);
+                    final int replicas = deployment.getSpec().getReplicas();
                     return LeoJobVersionVO.DeploymentVersion.builder()
                             .name(deploymentResource.getName())
                             .buildId(buildImage != null ? buildImage.getBuildId() : -1)
@@ -152,6 +152,56 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
                 return LeoJobVersionVO.DeploymentVersion.EMPTY;
             }
         }).collect(Collectors.toList());
+        renderVersion(deploymentVersions);
+        return deploymentVersions;
+    }
+
+    /**
+     * 渲染版本
+     *
+     * @param deploymentVersions
+     */
+    private void renderVersion(List<LeoJobVersionVO.DeploymentVersion> deploymentVersions) {
+        if (CollectionUtils.isEmpty(deploymentVersions)) {
+            return;
+        }
+
+        Set<Integer> idSet = Sets.newHashSet();
+
+        for (LeoJobVersionVO.DeploymentVersion deploymentVersion : deploymentVersions) {
+            if (deploymentVersion.getBuildId() == -1) {
+                if (deploymentVersion.getReplicas() == 0) {
+                    deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.OFFLINE);
+                } else {
+                    // 无法比较版本号
+                    deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.OTHER);
+                }
+            } else {
+                idSet.add(deploymentVersion.getBuildId());
+            }
+        }
+        if (idSet.isEmpty()) {
+            return;
+        }
+        List<Integer> ids = idSet.stream().sorted(Collections.reverseOrder()).collect(Collectors.toList());
+        for (int i = 0; i < ids.size(); i++) {
+            int buildId = ids.get(i);
+            for (LeoJobVersionVO.DeploymentVersion deploymentVersion : deploymentVersions) {
+                if (deploymentVersion.getBuildId() == buildId) {
+                    if (deploymentVersion.getReplicas() == 0) {
+                        deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.OFFLINE);
+                        continue;
+                    }
+                    if (i == 0) {
+                        deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.BLUE);
+                    } else if (i == 1) {
+                        deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.GREEN);
+                    } else {
+                        deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.OTHER);
+                    }
+                }
+            }
+        }
     }
 
     private SubscribeLeoDeploymentVersionDetailsRequestParam toRequestParam(String message) {
