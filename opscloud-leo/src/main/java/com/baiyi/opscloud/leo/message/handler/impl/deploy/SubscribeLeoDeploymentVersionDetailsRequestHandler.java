@@ -165,9 +165,7 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
         if (CollectionUtils.isEmpty(deploymentVersions)) {
             return;
         }
-
         Set<Integer> idSet = Sets.newHashSet();
-
         for (LeoJobVersionVO.DeploymentVersion deploymentVersion : deploymentVersions) {
             if (deploymentVersion.getBuildId() == -1) {
                 if (deploymentVersion.getReplicas() == 0) {

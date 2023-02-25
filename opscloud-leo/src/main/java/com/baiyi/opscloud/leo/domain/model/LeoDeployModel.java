@@ -91,7 +91,7 @@ public class LeoDeployModel {
         private Integer buildId = 0;
         // 版本名称
         @Builder.Default
-        private String versionName = "unknown version";
+        private String versionName = "unknown";
 
         @Builder.Default
         private String versionDesc = "";

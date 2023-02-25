@@ -25,7 +25,7 @@ import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
 @Aspect
 @Component
 @RequiredArgsConstructor
-@Order(1)
+@Order(-65535)
 public class InstanceHealthAspect {
 
     @Value("${spring.profiles.active}")

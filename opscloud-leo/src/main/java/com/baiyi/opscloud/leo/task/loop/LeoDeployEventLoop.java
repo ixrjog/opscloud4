@@ -7,11 +7,13 @@ import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.Session;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
  * 用户部署事件循环
+ *
  * @Author baiyi
  * @Date 2022/12/6 18:09
  * @Version 1.0
@@ -33,10 +35,20 @@ public class LeoDeployEventLoop implements Runnable {
         while (true) {
             try {
                 if (!this.session.isOpen()) {
-                    log.info("Leo deploy event loop end: sessionId={}", this.sessionId);
+                    log.warn("Leo deploy event loop end: sessionId={}", this.sessionId);
                     LeoDeployQuerySessionMap.removeSessionQueryMap(this.sessionId);
                     break;
                 }
+            } catch (Exception e) {
+                try {
+                    this.session.close();
+                } catch (IOException ioException) {
+                    log.warn("Leo deploy event loop session closed: sessionId={}", this.sessionId);
+                    LeoDeployQuerySessionMap.removeSessionQueryMap(this.sessionId);
+                    break;
+                }
+            }
+            try {
                 if (LeoDeployQuerySessionMap.sessionQueryMapContainsKey(this.sessionId)) {
                     // 深copy
                     Map<String, String> queryMap = Maps.newHashMap(LeoDeployQuerySessionMap.getSessionQueryMap(this.sessionId));

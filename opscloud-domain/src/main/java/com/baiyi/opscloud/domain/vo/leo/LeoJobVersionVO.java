@@ -77,6 +77,8 @@ public class LeoJobVersionVO {
          */
         private Integer buildId = -1;
 
+        private String versionTypeDesc;
+
         /**
          * background-color
          */
