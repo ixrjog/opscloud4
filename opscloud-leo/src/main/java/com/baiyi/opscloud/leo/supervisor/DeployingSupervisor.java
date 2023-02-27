@@ -83,17 +83,22 @@ public class DeployingSupervisor implements ISupervisor {
         // 循环
         while (true) {
             setHeartbeat();
+            // 延迟执行
+            try {
+                TimeUnit.SECONDS.sleep(SLEEP_SECONDS);
+            } catch (InterruptedException ignored) {
+            }
             // tryStop
             DeployStop deployStop = heartbeatHelper.tryDeployStop(leoDeploy.getId());
             if (deployStop.getIsStop()) {
-                logHelper.warn(this.leoDeploy, "用户手动停止: username={}", deployStop.getUsername());
+                logHelper.warn(this.leoDeploy, "用户{}手动停止任务", deployStop.getUsername());
                 LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                         .id(leoDeploy.getId())
                         .deployResult(BaseDeployHandler.RESULT_ERROR)
                         .endTime(new Date())
                         .isFinish(true)
                         .isActive(false)
-                        .deployStatus(String.format("用户手动停止: username=%s", deployStop.getUsername()))
+                        .deployStatus(String.format("用户%s手动停止任务", deployStop.getUsername()))
                         .build();
                 deployService.updateByPrimaryKeySelective(saveLeoDeploy);
                 break;
@@ -108,11 +113,6 @@ public class DeployingSupervisor implements ISupervisor {
             } catch (Exception e) {
                 logHelper.warn(this.leoDeploy, e.getMessage());
                 log.warn(e.getMessage());
-            }
-            // 延迟执行
-            try {
-                TimeUnit.SECONDS.sleep(SLEEP_SECONDS);
-            } catch (InterruptedException ignored) {
             }
         }
     }

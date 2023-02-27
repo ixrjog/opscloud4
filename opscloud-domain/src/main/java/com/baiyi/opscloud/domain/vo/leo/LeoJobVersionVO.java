@@ -91,6 +91,8 @@ public class LeoJobVersionVO {
         @Builder.Default
         private String versionDesc = "";
 
+        private String versionType;
+
     }
 
 }

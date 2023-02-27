@@ -37,7 +37,7 @@ public class LeoDeployEventLoop implements Runnable {
                 if (!this.session.isOpen()) {
                     log.warn("Leo deploy event loop end: sessionId={}", this.sessionId);
                     LeoDeployQuerySessionMap.removeSessionQueryMap(this.sessionId);
-                    break;
+                    return;
                 }
             } catch (Exception e) {
                 try {
@@ -45,8 +45,12 @@ public class LeoDeployEventLoop implements Runnable {
                 } catch (IOException ioException) {
                     log.warn("Leo deploy event loop session closed: sessionId={}", this.sessionId);
                     LeoDeployQuerySessionMap.removeSessionQueryMap(this.sessionId);
-                    break;
+                    return;
                 }
+            }
+            try {
+                TimeUnit.SECONDS.sleep(5L);
+            } catch (InterruptedException ignored) {
             }
             try {
                 if (LeoDeployQuerySessionMap.sessionQueryMapContainsKey(this.sessionId)) {
@@ -61,9 +65,13 @@ public class LeoDeployEventLoop implements Runnable {
                         });
                     }
                 }
-                TimeUnit.SECONDS.sleep(6L);
             } catch (Exception e) {
-                log.error(e.getMessage());
+                if (e instanceof NullPointerException) {
+                    log.error("Leo deploy event loop: NullPointerException");
+                    e.printStackTrace();
+                } else {
+                    log.error(e.getMessage());
+                }
             }
         }
     }

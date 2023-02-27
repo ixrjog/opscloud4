@@ -16,6 +16,7 @@ import com.baiyi.opscloud.leo.delegate.LeoBuildDeploymentDelegate;
 import com.baiyi.opscloud.leo.delegate.LeoJobVersionDelegate;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.message.handler.base.BaseLeoContinuousDeliveryRequestHandler;
+import com.baiyi.opscloud.leo.message.util.VersionRenderer;
 import com.baiyi.opscloud.leo.packer.LeoDeployResponsePacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
@@ -26,13 +27,14 @@ import com.baiyi.opscloud.service.leo.LeoJobService;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import lombok.extern.slf4j.Slf4j;
-import org.glassfish.jersey.internal.guava.Sets;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import javax.websocket.Session;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -127,7 +129,7 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
                 }
                 Optional<Container> optionalContainer = deployment.getSpec().getTemplate().getSpec().getContainers()
                         .stream()
-                        .filter(c -> c.getName().startsWith(application.getName()))
+                        .filter(c -> c.getName().startsWith(application.getName()) || c.getName().contains(application.getName()))
                         .findFirst();
 
                 if (optionalContainer.isPresent()) {
@@ -152,54 +154,8 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
                 return LeoJobVersionVO.DeploymentVersion.EMPTY;
             }
         }).collect(Collectors.toList());
-        renderVersion(deploymentVersions);
+        VersionRenderer.render(deploymentVersions);
         return deploymentVersions;
-    }
-
-    /**
-     * 渲染版本
-     *
-     * @param deploymentVersions
-     */
-    private void renderVersion(List<LeoJobVersionVO.DeploymentVersion> deploymentVersions) {
-        if (CollectionUtils.isEmpty(deploymentVersions)) {
-            return;
-        }
-        Set<Integer> idSet = Sets.newHashSet();
-        for (LeoJobVersionVO.DeploymentVersion deploymentVersion : deploymentVersions) {
-            if (deploymentVersion.getBuildId() == -1) {
-                if (deploymentVersion.getReplicas() == 0) {
-                    deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.OFFLINE);
-                } else {
-                    // 无法比较版本号
-                    deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.OTHER);
-                }
-            } else {
-                idSet.add(deploymentVersion.getBuildId());
-            }
-        }
-        if (idSet.isEmpty()) {
-            return;
-        }
-        List<Integer> ids = idSet.stream().sorted(Collections.reverseOrder()).collect(Collectors.toList());
-        for (int i = 0; i < ids.size(); i++) {
-            int buildId = ids.get(i);
-            for (LeoJobVersionVO.DeploymentVersion deploymentVersion : deploymentVersions) {
-                if (deploymentVersion.getBuildId() == buildId) {
-                    if (deploymentVersion.getReplicas() == 0) {
-                        deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.OFFLINE);
-                        continue;
-                    }
-                    if (i == 0) {
-                        deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.BLUE);
-                    } else if (i == 1) {
-                        deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.GREEN);
-                    } else {
-                        deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.OTHER);
-                    }
-                }
-            }
-        }
     }
 
     private SubscribeLeoDeploymentVersionDetailsRequestParam toRequestParam(String message) {
