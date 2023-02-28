@@ -14,6 +14,7 @@ import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.service.message.MessageTemplateService;
 import com.baiyi.opscloud.service.user.UserService;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -60,6 +61,8 @@ public abstract class BaseNotificationStrategy extends BaseDeployStrategy {
         messageMap.putAll(contentMap);
         messageMap.put("nowDate", TimeUtil.nowDate());
         messageMap.put("users", Lists.newArrayList(user));
+        LeoBaseModel.Deployment deployment = deployConfig.getDeploy().getKubernetes().getDeployment();
+        messageMap.put("envGroup", Joiner.on(":").join(deployment.getNamespace(), deployment.getName()));
 
         final String msg = renderTemplate(messageTemplate, messageMap);
         leoRobotHelper.send(dsInstance, msg);
