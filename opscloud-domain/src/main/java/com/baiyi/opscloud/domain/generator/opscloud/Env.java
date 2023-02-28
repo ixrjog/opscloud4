@@ -38,6 +38,11 @@ public class Env implements Serializable {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    /**
+     * 顺序
+     */
+    private Integer seq;
+
     private String comment;
 
     @Column(name = "create_time", insertable = false, updatable = false)

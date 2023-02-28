@@ -56,7 +56,7 @@ public class EnvServiceImpl implements EnvService {
         if (pageQuery.getIsActive() != null) {
             criteria.andEqualTo("isActive", pageQuery.getIsActive());
         }
-        example.setOrderByClause("create_time");
+        example.setOrderByClause("seq");
         List<Env> data = envMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }

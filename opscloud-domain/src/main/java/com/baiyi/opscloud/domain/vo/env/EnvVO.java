@@ -19,6 +19,7 @@ public class EnvVO {
 
     public interface IEnv {
         void setEnv(Env env);
+
         Integer getEnvType();
     }
 
@@ -47,6 +48,9 @@ public class EnvVO {
 
         @ApiModelProperty(value = "有效", example = "true")
         private Boolean isActive;
+
+        @ApiModelProperty(value = "顺序")
+        private Integer seq;
 
         @ApiModelProperty(value = "描述")
         private String comment;
