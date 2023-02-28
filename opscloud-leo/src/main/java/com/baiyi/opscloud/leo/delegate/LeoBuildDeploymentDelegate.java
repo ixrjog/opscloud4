@@ -60,9 +60,9 @@ public class LeoBuildDeploymentDelegate {
                 return e.getName().startsWith("test:");
             }
             if (env.getEnvName().equals("prod")) {
-                if (e.getName().startsWith("gray:")) {
-                    return true;
-                }
+//                if (e.getName().startsWith("gray:")) {
+//                    return true;
+//                }
                 return e.getName().startsWith("canary:");
             }
             return false;
