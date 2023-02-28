@@ -1,10 +1,13 @@
 package com.baiyi.opscloud.controller.ws;
 
+import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
+import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
 import com.baiyi.opscloud.common.leo.session.LeoBuildQuerySessionMap;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.param.leo.request.LoginLeoRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.SimpleLeoRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
 import com.baiyi.opscloud.leo.task.loop.LeoBuildEventLoop;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
 import java.util.UUID;
 
 import static com.baiyi.opscloud.controller.ws.ServerTerminalController.WEBSOCKET_TIMEOUT;
@@ -76,7 +80,15 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
         // 处理登录状态
         if (StringUtils.isEmpty(this.username)) {
             // 鉴权
-            hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));
+            try {
+                hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));
+            } catch (AuthenticationException e) {
+                LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
+                        .messageType(LeoRequestType.AUTHENTICATION_FAILURE.name())
+                        .build();
+                sendToSession(session, response);
+                return;
+            }
         } else {
             SessionUtil.setUsername(this.username);
         }
@@ -86,6 +98,16 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
     protected String getLeoMessageType(String message) {
         SimpleLeoRequestParam requestParam = new GsonBuilder().create().fromJson(message, SimpleLeoRequestParam.class);
         return requestParam.getMessageType();
+    }
+
+    protected void sendToSession(Session session, LeoContinuousDeliveryResponse response) {
+        try {
+            if (session.isOpen()) {
+                session.getBasicRemote().sendText(response.toString());
+            }
+        } catch (IOException e) {
+            log.warn(e.getMessage());
+        }
     }
 
     /**
