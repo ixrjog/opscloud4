@@ -51,6 +51,7 @@ public class LeoDeployCompensationTask {
             if (!heartbeatHelper.isLive(LeoHeartbeatHelper.HeartbeatTypes.DEPLOY, leoDeploy.getId())) {
                 LeoDeployModel.DeployConfig deployConfig = LeoDeployModel.load(leoDeploy);
                 LeoBaseModel.DsInstance dsInstance = deployConfig.getDeploy().getKubernetes().getInstance();
+                // TODO 空指针异常
                 final String instanceUuid = dsInstance.getUuid();
                 KubernetesConfig kubernetesConfig = getKubernetesConfigWithUuid(instanceUuid);
                 DeployingSupervisor deployingSupervisor = new DeployingSupervisor(

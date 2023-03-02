@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.schedule.task;
 
-import com.baiyi.opscloud.common.annotation.TaskWatch;
 import com.baiyi.opscloud.config.condition.EnvCondition;
 import com.baiyi.opscloud.facade.task.ConsulAlertFacade;
 import lombok.AllArgsConstructor;
@@ -25,9 +24,10 @@ public class ConsulAlertTask  {
 
     @Scheduled(cron = "10 */1 * * * ?")
     @SchedulerLock(name = "consul_alert_rule_evaluate_task", lockAtMostFor = "30s", lockAtLeastFor = "30s")
-    @TaskWatch(name = "Consul alert")
     public void ruleEvaluate() {
+        log.info("Consul alert task start");
         consulAlertFacade.ruleEvaluate();
+        log.info("Consul alert task end");
     }
 
 }

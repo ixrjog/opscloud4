@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -44,6 +45,7 @@ public class ApplicationParam {
     public static class GetApplicationKubernetes implements IExtend {
 
         @ApiModelProperty(value = "应用ID")
+        @Min(value = 0, message = "应用ID不能为空")
         private Integer applicationId;
 
         @Builder.Default
