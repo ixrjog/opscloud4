@@ -1,11 +1,13 @@
 package com.baiyi.opscloud.service.leo.impl;
 
+import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildImage;
 import com.baiyi.opscloud.mapper.opscloud.LeoBuildImageMapper;
 import com.baiyi.opscloud.service.leo.LeoBuildImageService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -38,6 +40,15 @@ public class LeoBuildImageServiceImpl implements LeoBuildImageService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("buildId", buildId)
                 .andEqualTo("image", image);
+        return leoBuildImageMapper.selectOneByExample(example);
+    }
+
+    @Override
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, unless = "#result == null")
+    public LeoBuildImage getByImage(String image) {
+        Example example = new Example(LeoBuildImage.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("image", image);
         return leoBuildImageMapper.selectOneByExample(example);
     }
 

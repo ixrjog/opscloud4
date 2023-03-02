@@ -64,6 +64,7 @@ public class ApplicationResourceServiceImpl implements ApplicationResourceServic
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("applicationId", applicationId)
                 .andEqualTo("resourceType", resourceType);
+        // 分组排序
         example.orderBy("name");
         return applicationResourceMapper.selectByExample(example);
     }

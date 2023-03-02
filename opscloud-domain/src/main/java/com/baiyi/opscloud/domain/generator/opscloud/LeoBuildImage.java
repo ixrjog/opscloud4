@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
@@ -13,7 +14,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "leo_build_image")
-public class LeoBuildImage {
+public class LeoBuildImage implements Serializable {
+    private static final long serialVersionUID = 2382124079136021231L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

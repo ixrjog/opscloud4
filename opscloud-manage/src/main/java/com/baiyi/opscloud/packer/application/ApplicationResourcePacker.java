@@ -5,10 +5,7 @@ import com.baiyi.opscloud.datasource.kubernetes.provider.KubernetesPodProvider;
 import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
@@ -18,6 +15,7 @@ import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
+import com.baiyi.opscloud.service.leo.LeoBuildImageService;
 import com.baiyi.opscloud.service.tag.BusinessTagService;
 import com.baiyi.opscloud.service.tag.TagService;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
@@ -56,6 +54,8 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
 
     private final BusinessTagService businessTagService;
 
+    private final LeoBuildImageService leoBuildImageService;
+
     /**
      * Deployment Pod
      *
@@ -71,7 +71,20 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
         try {
             DatasourceInstance dsInstance = dsInstanceService.getByUuid(asset.getInstanceUuid());
             if (dsInstance != null) {
-                List<AssetContainer> assetContainers = kubernetesPodProvider.queryAssetsByDeployment(dsInstance.getId(), namespace, deployment);
+                List<AssetContainer> assetContainers = kubernetesPodProvider.queryAssetsByDeployment(dsInstance.getId(), namespace, deployment).stream()
+                        .peek(c -> {
+                            // 插入版本信息
+                            if (c.getProperties().containsKey("image")) {
+                                String image = c.getProperties().get("image");
+                                LeoBuildImage buildImage = leoBuildImageService.getByImage(image);
+                                if (buildImage != null) {
+                                    c.getProperties().put("versionName", buildImage.getVersionName());
+                                    c.getProperties().put("versionDesc", buildImage.getVersionDesc());
+                                } else {
+                                    c.getProperties().put("versionName", "unknown");
+                                }
+                            }
+                        }).collect(Collectors.toList());
                 resource.setAssetContainers(assetContainers);
                 resource.setTags(null);
             }
