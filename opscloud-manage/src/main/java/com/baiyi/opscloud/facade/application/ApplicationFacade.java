@@ -20,6 +20,8 @@ public interface ApplicationFacade {
 
     DataTable<ApplicationVO.Application> queryApplicationKubernetesPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery);
 
+    ApplicationVO.Application getApplicationKubernetes(ApplicationParam.GetApplicationKubernetes getApplicationKubernete);
+
     DataTable<ApplicationResourceVO.Resource> previewApplicationResourcePage(ApplicationResourceParam.ResourcePageQuery pageQuery);
 
     ApplicationVO.Application getApplicationById(Integer id);

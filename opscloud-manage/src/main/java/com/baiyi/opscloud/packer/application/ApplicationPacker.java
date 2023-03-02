@@ -5,12 +5,14 @@ import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
+import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.packer.business.BusinessPermissionUserPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
+import com.baiyi.opscloud.service.sys.EnvService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +36,8 @@ public class ApplicationPacker implements IWrapper<ApplicationVO.Application> {
     private final ApplicationResourcePacker resourcePacker;
 
     private final ApplicationResourceDsInstancePacker applicationResourceInstancePacker;
+
+    private final EnvService envService;
 
     @Override
     @TagsWrapper
@@ -61,6 +65,33 @@ public class ApplicationPacker implements IWrapper<ApplicationVO.Application> {
     @BizDocWrapper(extend = true)
     public void wrap(ApplicationVO.Application application) {
         List<ApplicationResource> resources = applicationResourceService.queryByApplication(application.getId(), DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name());
+        List<ApplicationResourceVO.Resource> data = BeanCopierUtil.copyListProperties(resources, ApplicationResourceVO.Resource.class).stream()
+                .peek(resourcePacker::wrap).collect(Collectors.toList());
+        application.setResources(data);
+    }
+
+    @TagsWrapper(extend = true)
+    @BizDocWrapper(extend = true)
+    public void wrap(ApplicationVO.Application application, int envType) {
+        Env env = envService.getByEnvType(envType);
+        List<ApplicationResource> resources = applicationResourceService.queryByApplication(application.getId(), DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name())
+                .stream().filter(e -> {
+                    if (e.getName().startsWith(env.getEnvName() + ":")) {
+                        return true;
+                    }
+                    // TODO 环境标准化后以下代码可以删除
+                    if (env.getEnvName().equals("dev")) {
+                        return e.getName().startsWith("ci:");
+                    }
+                    if (env.getEnvName().equals("daily")) {
+                        return e.getName().startsWith("test:");
+                    }
+                    if (env.getEnvName().equals("prod")) {
+                        return e.getName().startsWith("canary:");
+                    }
+                    return false;
+                }).collect(Collectors.toList());
+
         List<ApplicationResourceVO.Resource> data = BeanCopierUtil.copyListProperties(resources, ApplicationResourceVO.Resource.class).stream()
                 .peek(resourcePacker::wrap).collect(Collectors.toList());
         application.setResources(data);

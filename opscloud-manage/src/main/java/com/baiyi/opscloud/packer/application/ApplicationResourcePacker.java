@@ -5,14 +5,15 @@ import com.baiyi.opscloud.datasource.kubernetes.provider.KubernetesPodProvider;
 import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.generator.opscloud.*;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
 import com.baiyi.opscloud.domain.param.IExtend;
-import com.baiyi.opscloud.domain.vo.application.ApplicationResourceOperationLogVO;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.packer.IWrapper;
-import com.baiyi.opscloud.service.application.ApplicationResourceOperationLogService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
@@ -55,10 +56,6 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
 
     private final BusinessTagService businessTagService;
 
-    private final ApplicationResourceOperationLogService operationLogService;
-
-    private final ApplicationResourceOperationLogPacker operationLogPacker;
-
     /**
      * Deployment Pod
      *
@@ -81,13 +78,12 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
         } catch (NullPointerException ignored) {
         }
         wrapTags(resource, asset);
-        wrapOperationLogs(resource);
         applicationResourceInstancePacker.wrap(resource);
     }
 
     public void wrapProperties(ApplicationResourceVO.Resource resource) {
         if (resource.getBusinessType() != BusinessTypeEnum.ASSET.getType()) return;
-        DsAssetVO.Asset asset = BeanCopierUtil.copyProperties(assetService.getById(resource.getBusinessId()),DsAssetVO.Asset.class);
+        DsAssetVO.Asset asset = BeanCopierUtil.copyProperties(assetService.getById(resource.getBusinessId()), DsAssetVO.Asset.class);
         Map<String, String> properties = propertyService.queryByAssetId(asset.getId())
                 .stream().collect(Collectors.toMap(DatasourceInstanceAssetProperty::getName, DatasourceInstanceAssetProperty::getValue, (k1, k2) -> k1));
         asset.setProperties(properties);
@@ -110,16 +106,6 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
         return tagIdSet.stream().map(tagId ->
                 BeanCopierUtil.copyProperties(tagService.getById(tagId), TagVO.Tag.class)
         ).collect(Collectors.toList());
-    }
-
-    private void wrapOperationLogs(ApplicationResourceVO.Resource resource) {
-        List<ApplicationResourceOperationLog> logs = operationLogService.queryByResourceId(resource.getId(), 5);
-        if (CollectionUtils.isEmpty(logs)) return;
-        resource.setOperationLogs(BeanCopierUtil.copyListProperties(logs, ApplicationResourceOperationLogVO.OperationLog.class)
-                .stream()
-                .peek(operationLogPacker::wrap)
-                .collect(Collectors.toList())
-        );
     }
 
 }

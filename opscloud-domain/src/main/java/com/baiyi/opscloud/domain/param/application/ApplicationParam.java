@@ -36,6 +36,24 @@ public class ApplicationParam {
 
     }
 
+    @SuperBuilder(toBuilder = true)
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
+    public static class GetApplicationKubernetes implements IExtend {
+
+        @ApiModelProperty(value = "应用ID")
+        private Integer applicationId;
+
+        @Builder.Default
+        private Boolean extend = false;
+
+        @ApiModelProperty(value = "环境类型")
+        private Integer envType;
+
+    }
+
     @Builder
     @Data
     @EqualsAndHashCode(callSuper = true)

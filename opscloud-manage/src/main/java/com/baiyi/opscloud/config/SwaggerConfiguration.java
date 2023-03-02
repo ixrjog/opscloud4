@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -15,9 +17,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SuppressWarnings("ALL")
 @Configuration
 @EnableSwagger2
+@Component
 public class SwaggerConfiguration {
 
-    private final ApiInfo apiInfo = generatepApiInfo();
+    // private final ApiInfo apiInfo = generatepApiInfo();
+
+    @Value("${spring.application.version}")
+    private String version;
 
     /**
      * https://doc.xiaominfo.com/knife4j/documentation/
@@ -31,14 +37,14 @@ public class SwaggerConfiguration {
                 .apis(RequestHandlerSelectors.basePackage("com.baiyi.opscloud.controller"))
                 .paths(PathSelectors.any())
                 .build()
-                .apiInfo(apiInfo);
+                .apiInfo(generatepApiInfo());
     }
 
     private ApiInfo generatepApiInfo() {
         return new ApiInfoBuilder()
-                .title("OPSCLOUD 4.2.1")
+                .title("OPSCLOUD " + version)
                 .description("OPSCLOUD OPENAPI接口文档")
-                .version("4.2.0-RELEASE")
+                .version(version + "-RELEASE")
                 .license("APACHE LICENSE, VERSION 2.0")
                 .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
                 .contact(new Contact("白衣", "https://github.com/ixrjog/opscloud4", "ixrjog@qq.com"))

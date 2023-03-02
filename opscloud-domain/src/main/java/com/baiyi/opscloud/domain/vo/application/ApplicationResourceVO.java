@@ -30,8 +30,6 @@ public class ApplicationResourceVO {
 
         private List<TagVO.Tag> tags;
 
-        private List<ApplicationResourceOperationLogVO.OperationLog> operationLogs;
-
         private DsInstanceVO.Instance instance;
 
         private DsAssetVO.Asset asset;
@@ -71,7 +69,6 @@ public class ApplicationResourceVO {
 
     }
 
-
     @EqualsAndHashCode(callSuper = true)
     @Builder
     @Data
@@ -106,6 +103,5 @@ public class ApplicationResourceVO {
         private String comment;
 
     }
-
 
 }

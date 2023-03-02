@@ -127,6 +127,26 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
         return new DataTable<>(data, table.getTotalNum());
     }
 
+    @Override
+    public ApplicationVO.Application getApplicationKubernetes(ApplicationParam.GetApplicationKubernetes getApplicationKubernete) {
+        // 鉴权
+        if (!isAdmin(SessionUtil.getUsername())) {
+            int userId = userService.getByUsername(SessionUtil.getUsername()).getId();
+            UserPermission query = UserPermission.builder()
+                    .businessType(BusinessTypeEnum.APPLICATION.getType())
+                    .businessId(getApplicationKubernete.getApplicationId())
+                    .userId(userId)
+                    .build();
+            if (userPermissionService.getByUniqueKey(query) == null) {
+                throw new AuthenticationException(ErrorEnum.AUTHENTICATION_FAILURE);
+            }
+        }
+        Application application = applicationService.getById(getApplicationKubernete.getApplicationId());
+        ApplicationVO.Application vo = BeanCopierUtil.copyProperties(application, ApplicationVO.Application.class);
+        applicationPacker.wrap(vo, getApplicationKubernete.getEnvType());
+        return vo;
+    }
+
     /**
      * OPS角色以上即认定为系统管理员
      *

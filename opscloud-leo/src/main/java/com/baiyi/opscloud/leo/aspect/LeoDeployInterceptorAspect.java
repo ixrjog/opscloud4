@@ -77,7 +77,6 @@ public class LeoDeployInterceptorAspect {
             } else {
                 // 权限校验
                 executeJobInterceptorHandler.verifyAuthorization(jobId);
-
                 // deployType Expression 解析表达式并获取SpEL的值
                 Expression deployTypeExpression = expressionParser.parseExpression(leoDeployInterceptor.deployTypeSpEL());
                 Object deployTypeParam = deployTypeExpression.getValue(context);

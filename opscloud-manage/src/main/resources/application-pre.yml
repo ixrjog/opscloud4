@@ -7,7 +7,6 @@ log:
     path: ${HOME}/logs
 
 opscloud:
-  version: 4.2.1
   dataPath: ${HOME}/opscloud-data
   createUser:
     roles:
