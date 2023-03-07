@@ -1,12 +1,14 @@
 package com.baiyi.opscloud.datasource.kubernetes.driver;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
+import com.baiyi.opscloud.datasource.kubernetes.client.KuberClient;
+import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesException;
 import com.baiyi.opscloud.datasource.kubernetes.util.KubernetesUtil;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.ServiceList;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -17,23 +19,32 @@ import java.util.List;
  * @Date 2021/6/25 3:55 下午
  * @Version 1.0
  */
+@Slf4j
 public class KubernetesServiceDriver {
 
     public static List<Service> listService(KubernetesConfig.Kubernetes kubernetes) {
-        ServiceList serviceList = KubeClient.build(kubernetes)
-                .services()
-                .list();
-        return serviceList.getItems();
+        try (KubernetesClient kc = KuberClient.build(kubernetes)) {
+            ServiceList serviceList = kc.services()
+                    .list();
+            return serviceList.getItems();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
     }
 
     public static List<Service> listService(KubernetesConfig.Kubernetes kubernetes, String namespace) {
-        ServiceList serviceList = KubeClient.build(kubernetes)
-                .services()
-                .inNamespace(namespace)
-                .list();
-        if (CollectionUtils.isEmpty(serviceList.getItems()))
-            return Collections.emptyList();
-        return serviceList.getItems();
+        try (KubernetesClient kc = KuberClient.build(kubernetes)) {
+            ServiceList serviceList = kc.services()
+                    .inNamespace(namespace)
+                    .list();
+            if (CollectionUtils.isEmpty(serviceList.getItems()))
+                return Collections.emptyList();
+            return serviceList.getItems();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -43,24 +54,36 @@ public class KubernetesServiceDriver {
      * @return
      */
     public static Service getService(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
-        return KubeClient.build(kubernetes)
-                .services()
-                .inNamespace(namespace)
-                .withName(name)
-                .get();
+        try (KubernetesClient kc = KuberClient.build(kubernetes)) {
+            return kc.services()
+                    .inNamespace(namespace)
+                    .withName(name)
+                    .get();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
     }
 
     public static Service createOrReplaceService(KubernetesConfig.Kubernetes kubernetes, Service service) {
-        return KubeClient.build(kubernetes)
-                .services()
-                .inNamespace(service.getMetadata().getNamespace())
-                .createOrReplace(service);
+        try (KubernetesClient kc = KuberClient.build(kubernetes)) {
+            return kc.services()
+                    .inNamespace(service.getMetadata().getNamespace())
+                    .createOrReplace(service);
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
     }
 
     public static Service createOrReplaceService(KubernetesConfig.Kubernetes kubernetes, String content) {
-        KubernetesClient kuberClient = KubeClient.build(kubernetes);
-        Service service = toService(kuberClient, content);
-        return createOrReplaceService(kubernetes, service);
+        try (KubernetesClient kc = KuberClient.build(kubernetes)) {
+            Service service = toService(kc, content);
+            return createOrReplaceService(kubernetes, service);
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -71,11 +94,11 @@ public class KubernetesServiceDriver {
      * @return
      * @throws RuntimeException
      */
-    public static Service toService(KubernetesClient kuberClient, String content) throws RuntimeException {
-        HasMetadata resource =  KubernetesUtil.toResource(kuberClient,content);
+    public static Service toService(KubernetesClient kuberClient, String content) throws KubernetesException {
+        HasMetadata resource = KubernetesUtil.toResource(kuberClient, content);
         if (resource instanceof Service)
             return (Service) resource;
-        throw new RuntimeException("类型不匹配");
+        throw new KubernetesException("类型不匹配");
     }
 
 }

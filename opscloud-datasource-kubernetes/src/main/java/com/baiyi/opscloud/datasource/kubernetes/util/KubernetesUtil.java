@@ -17,7 +17,7 @@ public class KubernetesUtil {
 
     private KubernetesUtil(){}
 
-    public static HasMetadata toResource(KubernetesClient kuberClient, String content) throws RuntimeException {
+    public static HasMetadata toResource(KubernetesClient kuberClient, String content) throws KubernetesException {
         InputStream is = new ByteArrayInputStream(content.getBytes());
         List<HasMetadata> resources = kuberClient.load(is).get();
         if (resources.isEmpty()) // 配置文件为空

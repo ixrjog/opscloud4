@@ -23,27 +23,20 @@ public abstract class BaseLeoContinuousDeliveryRequestHandler<T> implements ILeo
         return new GsonBuilder().create().fromJson(message, targetClass);
     }
 
-    protected void sendToSession(Session session, LeoContinuousDeliveryResponse response) {
-        try {
-            if (session.isOpen()) {
-                session.getBasicRemote().sendText(response.toString());
-            }
-        } catch (IOException e) {
-            log.warn(e.getMessage());
+    protected void sendToSession(Session session, LeoContinuousDeliveryResponse response) throws IOException {
+        if (session.isOpen()) {
+            session.getBasicRemote().sendText(response.toString());
         }
     }
 
-    protected void sendToSession(Session session, DataTable body) {
-        try {
-            if (session.isOpen()) {
-                LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
-                        .body(body)
-                        .messageType(getMessageType())
-                        .build();
-                session.getBasicRemote().sendText(response.toString());
-            }
-        } catch (Exception e) {
-            log.warn("发送会话消息错误: err={}", e.getMessage());
+    protected void sendToSession(Session session, DataTable body) throws IOException {
+
+        if (session.isOpen()) {
+            LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
+                    .body(body)
+                    .messageType(getMessageType())
+                    .build();
+            session.getBasicRemote().sendText(response.toString());
         }
     }
 

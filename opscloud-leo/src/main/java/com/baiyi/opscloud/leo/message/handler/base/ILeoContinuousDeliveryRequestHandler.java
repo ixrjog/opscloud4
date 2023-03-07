@@ -3,6 +3,7 @@ package com.baiyi.opscloud.leo.message.handler.base;
 import com.baiyi.opscloud.domain.param.leo.request.ILeoRequestParam;
 
 import javax.websocket.Session;
+import java.io.IOException;
 
 
 /**
@@ -12,6 +13,6 @@ import javax.websocket.Session;
  */
 public interface ILeoContinuousDeliveryRequestHandler extends ILeoRequestParam {
 
-    void handleRequest(String sessionId, Session session, String message);
+    void handleRequest(String sessionId, Session session, String message) throws IOException;
 
 }

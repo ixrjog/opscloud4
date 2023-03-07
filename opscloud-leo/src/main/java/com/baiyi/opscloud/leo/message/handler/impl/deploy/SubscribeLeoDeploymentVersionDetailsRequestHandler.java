@@ -32,6 +32,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import javax.websocket.Session;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -85,7 +86,7 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
     }
 
     @Override
-    public void handleRequest(String sessionId, Session session, String message) {
+    public void handleRequest(String sessionId, Session session, String message) throws IOException {
         SubscribeLeoDeploymentVersionDetailsRequestParam queryParam = toRequestParam(message);
         List<LeoJob> jobs = jobService.queryJobWithApplicationIdAndEnvType(queryParam.getApplicationId(), queryParam.getEnvType());
         Application application = applicationService.getById(queryParam.getApplicationId());

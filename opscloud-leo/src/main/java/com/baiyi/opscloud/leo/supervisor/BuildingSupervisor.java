@@ -68,6 +68,7 @@ public class BuildingSupervisor implements ISupervisor {
 
     @Override
     public void run() {
+        setHeartbeat();
         JobWithDetails jobWithDetails;
         try {
             jobWithDetails = JenkinsServerDriver.getJob(jenkins, leoBuild.getBuildJobName());
@@ -81,7 +82,7 @@ public class BuildingSupervisor implements ISupervisor {
                     .buildStatus("监视任务阶段: 错误")
                     .build();
             save(saveLeoBuild);
-            logHelper.error(leoBuild, "异常错误任务结束: err={}", e.getMessage());
+            logHelper.error(leoBuild, "异常错误任务结束: {}", e.getMessage());
             return;
         }
         while (true) {
@@ -99,7 +100,7 @@ public class BuildingSupervisor implements ISupervisor {
                                 .endTime(new Date())
                                 .isFinish(true)
                                 .buildResult(BuildResult.CANCELLED.name())
-                                .buildStatus("用户取消任务")
+                                .buildStatus("用户取消任务！")
                                 .build();
                         save(saveLeoBuild, "用户取消任务！");
                         break;

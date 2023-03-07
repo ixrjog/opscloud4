@@ -17,6 +17,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import javax.websocket.Session;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +45,7 @@ public class SubscribeLeoBuildRequestHandler extends BaseLeoContinuousDeliveryRe
     }
 
     @Override
-    public void handleRequest(String sessionId, Session session, String message) {
+    public void handleRequest(String sessionId, Session session, String message) throws IOException {
         SubscribeLeoBuildRequestParam queryParam = toRequestParam(message);
         List<Integer> jobIds = leoJobService.queryJobWithApplicationIdAndEnvType(queryParam.getApplicationId(), queryParam.getEnvType()).stream()
                 .map(LeoJob::getId).collect(Collectors.toList());

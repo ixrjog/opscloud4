@@ -52,12 +52,12 @@ public class QueryLeoBuildConsoleStreamRequestHandler extends BaseLeoContinuousD
     }
 
     @Override
-    public void handleRequest(String sessionId, Session session, String message) {
+    public void handleRequest(String sessionId, Session session, String message) throws IOException {
         QueryLeoBuildConsoleStreamRequestParam queryParam = toRequestParam(message);
         LeoBuild leoBuild = leoBuildService.getById(queryParam.getBuildId());
         if (leoBuild == null) {
-           sendErrorMsgAndCloseSession(queryParam.getBuildId(),"构建信息不存在！",session);
-           return;
+            sendErrorMsgAndCloseSession(queryParam.getBuildId(), "构建信息不存在！", session);
+            return;
         }
         LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.load(leoBuild);
         final String jenkinsUuid = Optional.ofNullable(buildConfig)

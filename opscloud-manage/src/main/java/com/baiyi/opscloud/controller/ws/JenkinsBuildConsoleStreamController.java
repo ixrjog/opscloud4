@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
 import java.util.UUID;
 
 import static com.baiyi.opscloud.controller.ws.ServerTerminalController.WEBSOCKET_TIMEOUT;
@@ -67,7 +68,10 @@ public class JenkinsBuildConsoleStreamController extends SimpleAuthentication {
         hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));
         ILeoContinuousDeliveryRequestHandler handler = LeoContinuousDeliveryMessageHandlerFactory.getHandlerByMessageType(QUERY_LEO_BUILD_CONSOLE_STREAM.name());
         if (handler != null) {
-            handler.handleRequest(this.sessionId, session, message);
+            try {
+                handler.handleRequest(this.sessionId, session, message);
+            } catch (IOException e) {
+            }
         }
     }
 
@@ -79,7 +83,7 @@ public class JenkinsBuildConsoleStreamController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.info("会话错误: err={}", error.getMessage());
+        log.info("会话错误: {}", error.getMessage());
     }
 
 }

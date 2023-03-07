@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.kubernetes.driver;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
+import com.baiyi.opscloud.datasource.kubernetes.client.KuberClient;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.dsl.ExecWatch;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
@@ -22,7 +22,7 @@ public class KubernetesTestDriver {
     public static Pod getPod(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, String cmd) {
         String containerName ="";
         Pod pod = KubernetesPodDriver.getPod(kubernetes, namespace, name);
-        ExecWatch watch = KubeClient.build(kubernetes).pods()
+        ExecWatch watch = KuberClient.build(kubernetes).pods()
                 .inNamespace(namespace)
                 .withName(name)
                // .inContainer(containerName) // 如果Pod中只有一个容器，不需要指定
@@ -36,7 +36,7 @@ public class KubernetesTestDriver {
     // LogWatch handle = client.load('/workspace/pod.yml').watchLog(System.out);
 
     public static LogWatch getPodLogWatch(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
-        return KubeClient.build(kubernetes).pods()
+        return KuberClient.build(kubernetes).pods()
                 .inNamespace(namespace)
                 .withName(name).watchLog(System.out);
     }

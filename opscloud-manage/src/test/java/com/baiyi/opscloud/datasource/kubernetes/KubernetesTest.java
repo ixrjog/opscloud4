@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
-import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
+import com.baiyi.opscloud.datasource.kubernetes.client.KuberClient;
 import com.baiyi.opscloud.datasource.kubernetes.event.KubernetesPodWatch;
 import com.baiyi.opscloud.datasource.kubernetes.event.KubernetesWatchEvent;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesNamespaceDriver;
@@ -78,7 +78,7 @@ public class KubernetesTest extends BaseUnit {
     @Test
     void podTest() {
         KubernetesConfig kubernetesDsInstanceConfig = (KubernetesConfig) getConfig();
-        KubernetesClient kubernetesClient = KubeClient.build(kubernetesDsInstanceConfig.getKubernetes());
+        KubernetesClient kubernetesClient = KuberClient.build(kubernetesDsInstanceConfig.getKubernetes());
         PodList podList = kubernetesClient.pods().inNamespace("dev").list();
 
         List<Pod> pods = podList.getItems().stream().filter(e -> e.getStatus().getPhase().equals("Running")).collect(Collectors.toList());

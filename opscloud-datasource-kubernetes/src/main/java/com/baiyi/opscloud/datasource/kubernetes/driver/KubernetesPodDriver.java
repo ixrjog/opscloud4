@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.kubernetes.driver;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
+import com.baiyi.opscloud.datasource.kubernetes.client.KuberClient;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.client.KubernetesClient;
@@ -10,6 +10,7 @@ import io.fabric8.kubernetes.client.dsl.ExecWatch;
 import io.fabric8.kubernetes.client.dsl.Listable;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
 import java.io.OutputStream;
@@ -23,51 +24,68 @@ import java.util.Optional;
  * @Date 2021/6/24 11:16 下午
  * @Version 1.0
  */
+@Slf4j
 public class KubernetesPodDriver {
 
     public static List<Pod> listPod(KubernetesConfig.Kubernetes kubernetes) {
-        PodList podList = KubeClient.build(kubernetes)
-                .pods()
-                .list();
-        return podList.getItems();
+        try (KubernetesClient kc = KuberClient.build(kubernetes)) {
+            PodList podList = kc.pods()
+                    .list();
+            return podList.getItems();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
     }
 
     public static List<Pod> listPod(KubernetesConfig.Kubernetes kubernetes, String namespace) {
-        PodList podList = KubeClient.build(kubernetes)
-                .pods()
-                .inNamespace(namespace)
-                .list();
-        if (CollectionUtils.isEmpty(podList.getItems()))
-            return Collections.emptyList();
-        return podList.getItems();
+        try (KubernetesClient kc = KuberClient.build(kubernetes)) {
+            PodList podList = kc.pods()
+                    .inNamespace(namespace)
+                    .list();
+            if (CollectionUtils.isEmpty(podList.getItems()))
+                return Collections.emptyList();
+            return podList.getItems();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
     }
 
     public static List<Pod> listPod(KubernetesConfig.Kubernetes kubernetes, String namespace, String deploymentName) {
-        KubernetesClient client = KubeClient.build(kubernetes);
-        Map<String, String> matchLabels = client.apps()
-                .deployments()
-                .inNamespace(namespace)
-                .withName(deploymentName)
-                .get()
-                .getSpec()
-                .getSelector()
-                .getMatchLabels();
-        if (matchLabels.isEmpty()) return Collections.emptyList();
-        return Optional.of(client.pods().inNamespace(namespace).withLabels(matchLabels))
-                .map(Listable::list)
-                .map(PodList::getItems)
-                .orElse(Collections.emptyList());
+        try (KubernetesClient kc = KuberClient.build(kubernetes)) {
+            Map<String, String> matchLabels = kc.apps()
+                    .deployments()
+                    .inNamespace(namespace)
+                    .withName(deploymentName)
+                    .get()
+                    .getSpec()
+                    .getSelector()
+                    .getMatchLabels();
+            if (matchLabels.isEmpty()) return Collections.emptyList();
+            return Optional.of(kc.pods().inNamespace(namespace).withLabels(matchLabels))
+                    .map(Listable::list)
+                    .map(PodList::getItems)
+                    .orElse(Collections.emptyList());
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
     }
 
     public static List<Pod> listPod(KubernetesConfig.Kubernetes kubernetes, String namespace, Map<String, String> labels) {
-        PodList podList = KubeClient.build(kubernetes)
-                .pods()
-                .inNamespace(namespace)
-                .withLabels(labels)
-                .list();
-        if (CollectionUtils.isEmpty(podList.getItems()))
-            return Collections.emptyList();
-        return podList.getItems();
+        try (KubernetesClient kc = KuberClient.build(kubernetes)) {
+            PodList podList = kc.pods()
+                    .inNamespace(namespace)
+                    .withLabels(labels)
+                    .list();
+            if (CollectionUtils.isEmpty(podList.getItems()))
+                return Collections.emptyList();
+            return podList.getItems();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -77,31 +95,39 @@ public class KubernetesPodDriver {
      * @return
      */
     public static Pod getPod(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
-        return KubeClient.build(kubernetes)
-                .pods()
-                .inNamespace(namespace)
-                .withName(name)
-                .get();
+        try (KubernetesClient kc = KuberClient.build(kubernetes)) {
+            return kc.pods()
+                    .inNamespace(namespace)
+                    .withName(name)
+                    .get();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
     }
 
     public static String getPodLog(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, String container) {
-        return KubeClient.build(kubernetes)
-                .pods()
-                .inNamespace(namespace)
-                .withName(name)
-                .inContainer(container)
-                .getLog();
+        try (KubernetesClient kc = KuberClient.build(kubernetes)) {
+            return kc.pods()
+                    .inNamespace(namespace)
+                    .withName(name)
+                    .inContainer(container)
+                    .getLog();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
     }
 
     public static LogWatch getPodLogWatch(KubernetesConfig.Kubernetes kubernetes, String namespace, String podName) {
-        return KubeClient.build(kubernetes).pods()
+        return KuberClient.build(kubernetes).pods()
                 .inNamespace(namespace)
                 .withName(podName)
                 .watchLog();
     }
 
     public static LogWatch getPodLogWatch(KubernetesConfig.Kubernetes kubernetes, String namespace, String podName, String containerName, Integer lines, OutputStream outputStream) {
-        return KubeClient.build(kubernetes)
+        return KuberClient.build(kubernetes)
                 .pods()
                 .inNamespace(namespace)
                 .withName(podName)
@@ -111,7 +137,7 @@ public class KubernetesPodDriver {
     }
 
     public static LogWatch getPodLogWatch2(KubernetesConfig.Kubernetes kubernetes, String namespace, String podName, String containerName, Integer lines, OutputStream outputStream) {
-        return KubeClient.build(kubernetes)
+        return KuberClient.build(kubernetes)
                 .pods()
                 .inNamespace(namespace)
                 .withName(podName)
@@ -133,7 +159,7 @@ public class KubernetesPodDriver {
                                               SimpleListener listener,
                                               OutputStream out
     ) {
-        return KubeClient.build(kubernetes).pods()
+        return KuberClient.build(kubernetes).pods()
                 .inNamespace(namespace)
                 .withName(podName)
                 .inContainer(containerName) // 如果Pod中只有一个容器，不需要指定

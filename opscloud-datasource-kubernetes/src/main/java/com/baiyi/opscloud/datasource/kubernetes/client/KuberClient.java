@@ -17,7 +17,7 @@ import java.net.URISyntaxException;
  * @Version 1.0
  */
 @Slf4j
-public class KubeClient {
+public class KuberClient {
 
     public interface Config {
         int CONNECTION_TIMEOUT = 30 * 1000;
@@ -43,7 +43,7 @@ public class KubeClient {
             try {
                 return AmazonEksProvider.buildWithProviderClient(kubernetes);
             } catch (URISyntaxException e) {
-                throw new KubernetesException("KubernetesClient错误: err={}", e.getMessage());
+                throw new KubernetesException("KubernetesClient error: {}", e.getMessage());
             }
         }
         throw new KubernetesException("Kubernetes无效的供应商配置: provider={}", kubernetes.getProvider());

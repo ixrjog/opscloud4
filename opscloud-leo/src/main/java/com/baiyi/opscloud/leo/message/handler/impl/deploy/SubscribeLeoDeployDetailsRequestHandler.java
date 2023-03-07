@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.websocket.Session;
+import java.io.IOException;
 
 /**
  * @Author baiyi
@@ -30,7 +31,7 @@ public class SubscribeLeoDeployDetailsRequestHandler extends BaseLeoContinuousDe
     }
 
     @Override
-    public void handleRequest(String sessionId, Session session, String message) {
+    public void handleRequest(String sessionId, Session session, String message) throws IOException {
         SubscribeLeoDeployDetailsRequestParam param = toRequestParam(message);
         LeoContinuousDeliveryResponse response;
         if (snapshotStash.isExist(param.getDeployId())) {

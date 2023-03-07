@@ -91,17 +91,17 @@ public class DeployingSupervisor implements ISupervisor {
             // tryStop
             DeployStop deployStop = heartbeatHelper.tryDeployStop(leoDeploy.getId());
             if (deployStop.getIsStop()) {
-                logHelper.warn(this.leoDeploy, "用户{}手动停止任务", deployStop.getUsername());
+                logHelper.warn(this.leoDeploy, "{}手动停止任务", deployStop.getUsername());
                 LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                         .id(leoDeploy.getId())
                         .deployResult(BaseDeployHandler.RESULT_ERROR)
                         .endTime(new Date())
                         .isFinish(true)
                         .isActive(false)
-                        .deployStatus(String.format("用户%s手动停止任务", deployStop.getUsername()))
+                        .deployStatus(String.format("%s手动停止任务", deployStop.getUsername()))
                         .build();
                 deployService.updateByPrimaryKeySelective(saveLeoDeploy);
-                break;
+                return;
             }
             try {
                 deployingStrategy.handle(leoDeploy, deployConfig, kubernetes, deploy, deployment);

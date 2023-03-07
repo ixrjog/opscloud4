@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.kubernetes;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
-import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
+import com.baiyi.opscloud.datasource.kubernetes.client.KuberClient;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
 import io.fabric8.kubernetes.api.model.ContainerStatus;
 import io.fabric8.kubernetes.api.model.Pod;
@@ -43,7 +43,7 @@ public class KubernetesPodTest extends BaseKubernetesTest {
         try {
             KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.ACK_DEV);
 
-            KubernetesClient kc = KubeClient.build(kubernetesConfig.getKubernetes());
+            KubernetesClient kc = KuberClient.build(kubernetesConfig.getKubernetes());
             kc.pods()
                     .inNamespace("dev")
                     .withName("merchant-rss-dev-766874c898-654hr")
@@ -60,7 +60,7 @@ public class KubernetesPodTest extends BaseKubernetesTest {
     @Test
     void getLogTest4() {
         try {
-            KubernetesClient kubernetesClient = KubeClient.build(getConfigById(KubernetesClusterConfigs.ACK_DEV).getKubernetes());
+            KubernetesClient kubernetesClient = KuberClient.build(getConfigById(KubernetesClusterConfigs.ACK_DEV).getKubernetes());
 
             LogWatch logWatch = kubernetesClient.pods().inNamespace("dev").withName("merchant-rss-dev-645c8964db-l4vk7").inContainer("merchant-rss-dev").withPrettyOutput().watchLog(System.out);
             InputStream is = logWatch.getOutput();

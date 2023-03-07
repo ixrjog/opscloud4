@@ -45,6 +45,7 @@ public class ApplicationParam {
     public static class GetApplicationKubernetes implements IExtend {
 
         @ApiModelProperty(value = "应用ID")
+        @NotNull(message = "必须指定应用ID")
         @Min(value = 0, message = "应用ID不能为空")
         private Integer applicationId;
 

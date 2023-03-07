@@ -8,7 +8,6 @@ import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.Session;
-import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -36,47 +35,37 @@ public class LeoBuildEventLoop implements Runnable {
     @Override
     public void run() {
         while (true) {
-            try {
-                if (!this.session.isOpen()) {
-                    log.warn("Leo build event loop end: sessionId={}", this.sessionId);
-                    LeoDeployQuerySessionMap.removeSessionQueryMap(this.sessionId);
-                    return;
-                }
-            } catch (Exception e) {
-                try {
-                    this.session.close();
-                } catch (IOException ioException) {
-                    log.warn("Leo build event loop session closed: sessionId={}", this.sessionId);
-                    LeoDeployQuerySessionMap.removeSessionQueryMap(this.sessionId);
-                    return;
-                }
-            }
-            try {
-                TimeUnit.SECONDS.sleep(5L);
-            } catch (InterruptedException ignored) {
+            if (!this.session.isOpen()) {
+                log.debug("Leo build event loop end: sessionId={}", this.sessionId);
+                LeoDeployQuerySessionMap.removeSessionQueryMap(this.sessionId);
+                return;
             }
             try {
                 if (LeoBuildQuerySessionMap.sessionQueryMapContainsKey(this.sessionId)) {
                     // 深copy
                     Map<String, String> queryMap = Maps.newHashMap(LeoBuildQuerySessionMap.getSessionQueryMap(this.sessionId));
-                    queryMap.keySet().forEach(messageType -> {
+                    for (String messageType : queryMap.keySet()) {
                         if (messageType.equals(QUERY_LEO_BUILD_CONSOLE_STREAM.name())) {
                             // 不处理控制台日志流
-                            return;
+                            continue;
                         }
                         ILeoContinuousDeliveryRequestHandler handler = LeoContinuousDeliveryMessageHandlerFactory.getHandlerByMessageType(messageType);
                         if (handler != null) {
                             handler.handleRequest(this.sessionId, session, queryMap.get(messageType));
                         }
-                    });
+                    }
                 }
             } catch (Exception e) {
                 if (e instanceof NullPointerException) {
-                    log.error("Leo build event loop: NullPointerException");
+                    log.warn("Leo build event loop: NullPointerException");
                     e.printStackTrace();
                 } else {
-                    log.error(e.getMessage());
+                    log.warn(e.getMessage());
                 }
+            }
+            try {
+                TimeUnit.SECONDS.sleep(5L);
+            } catch (InterruptedException ignored) {
             }
         }
     }

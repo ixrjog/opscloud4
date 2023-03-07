@@ -91,6 +91,12 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
         return new DataTable<>(data, table.getTotalNum());
     }
 
+    /**
+     * 后期会删除，跨地域查询多应用性能太差
+     * @param pageQuery
+     * @return
+     */
+    @Deprecated
     @Override
     public DataTable<ApplicationVO.Application> queryApplicationKubernetesPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
         pageQuery.setBusinessType(getBusinessType());

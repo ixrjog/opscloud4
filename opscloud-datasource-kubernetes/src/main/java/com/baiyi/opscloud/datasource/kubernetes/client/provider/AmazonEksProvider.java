@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.kubernetes.client.provider;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
+import com.baiyi.opscloud.datasource.kubernetes.client.KuberClient;
 import com.baiyi.opscloud.datasource.kubernetes.client.provider.eks.AmazonEksHelper;
 import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
@@ -62,9 +62,9 @@ public class AmazonEksProvider {
      * @param kubernetes
      */
     private static void initConfig(KubernetesConfig.Kubernetes kubernetes) {
-        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_REQUEST_TIMEOUT_SYSTEM_PROPERTY, String.valueOf(KubeClient.Config.REQUEST_TIMEOUT));
-        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_WEBSOCKET_TIMEOUT_SYSTEM_PROPERTY, String.valueOf(KubeClient.Config.WEBSOCKET_TIMEOUT));
-        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_CONNECTION_TIMEOUT_SYSTEM_PROPERTY, String.valueOf(KubeClient.Config.CONNECTION_TIMEOUT));
+        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_REQUEST_TIMEOUT_SYSTEM_PROPERTY, String.valueOf(KuberClient.Config.REQUEST_TIMEOUT));
+        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_WEBSOCKET_TIMEOUT_SYSTEM_PROPERTY, String.valueOf(KuberClient.Config.WEBSOCKET_TIMEOUT));
+        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_CONNECTION_TIMEOUT_SYSTEM_PROPERTY, String.valueOf(KuberClient.Config.CONNECTION_TIMEOUT));
     }
 
 }

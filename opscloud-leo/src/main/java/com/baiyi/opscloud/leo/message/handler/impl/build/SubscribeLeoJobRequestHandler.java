@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.websocket.Session;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,7 @@ public class SubscribeLeoJobRequestHandler extends BaseLeoContinuousDeliveryRequ
     }
 
     @Override
-    public void handleRequest(String sessionId, Session session, String message) {
+    public void handleRequest(String sessionId, Session session, String message) throws IOException {
         SubscribeLeoJobRequestParam queryParam = toRequestParam(message);
         DataTable<LeoJobVO.Job> dataTable = queryLeoJobPage(queryParam);
         LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
