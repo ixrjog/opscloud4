@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-// 非生产环境不执行
 @Conditional(EnvCondition.class)
 public class LeoDeployTask {
 
@@ -26,7 +25,7 @@ public class LeoDeployTask {
 
     private static final boolean enable = false;
 
-    @InstanceHealth // 实例健康检查，高优先级
+    @InstanceHealth
     @Scheduled(initialDelay = 15000, fixedRate = 120 * 1000)
     @TaskWatch(name = "Leo deploy compensate")
     public void run() {

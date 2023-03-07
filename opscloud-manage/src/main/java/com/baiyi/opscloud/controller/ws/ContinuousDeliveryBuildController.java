@@ -75,7 +75,9 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
     @OnMessage(maxMessageSize = 1024)
     public void onMessage(String message, Session session) {
         // log.info("message={}", message);
-        if (!session.isOpen() || StringUtils.isEmpty(message)) return;
+        if (!session.isOpen() || StringUtils.isEmpty(message)) {
+            return;
+        }
         String messageType = getLeoMessageType(message);
         // 处理登录状态
         if (StringUtils.isEmpty(this.username)) {

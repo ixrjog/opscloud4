@@ -3,7 +3,6 @@ package com.baiyi.opscloud.schedule.task;
 import com.baiyi.opscloud.common.annotation.TaskWatch;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.helper.TopicHelper;
-import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.config.condition.EnvCondition;
 import com.baiyi.opscloud.datasource.ansible.provider.AnsibleHostsProvider;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
@@ -48,15 +47,12 @@ public class AssetSubscriptionTask {
 
     private final DsInstanceAssetSubscriptionFacade dsInstanceAssetSubscriptionFacade;
 
-    private final RedisUtil redisUtil;
-
     private final TopicHelper topicHelper;
 
     protected Object receive() {
         return topicHelper.receive(TopicHelper.Topics.ASSET_SUBSCRIPTION_TASK);
     }
 
-    // 实例健康检查，高优先级
     @InstanceHealth
     @Scheduled(initialDelay = 5000, fixedRate = 60 * 1000)
     /**
@@ -77,10 +73,14 @@ public class AssetSubscriptionTask {
 
     private void task() {
         List<DatasourceInstance> instances = dsInstanceService.listByInstanceType(DsTypeEnum.ANSIBLE.name());
-        if (CollectionUtils.isEmpty(instances)) return;
+        if (CollectionUtils.isEmpty(instances)) {
+            return;
+        }
         instances.forEach(i -> {
             List<DatasourceInstanceAsset> assets = dsInstanceAssetService.listByInstanceAssetType(i.getUuid(), DsAssetTypeConstants.ANSIBLE_HOSTS.name());
-            if (CollectionUtils.isEmpty(assets)) return;
+            if (CollectionUtils.isEmpty(assets)) {
+                return;
+            }
             log.info("构建Ansible主机清单文件: instanceId={}", i.getId());
             ansibleHostsProvider.pullAsset(i.getId());
             assets.forEach(this::publish);
@@ -94,7 +94,9 @@ public class AssetSubscriptionTask {
      */
     private void publish(DatasourceInstanceAsset asset) {
         List<DatasourceInstanceAssetSubscription> assetSubscriptions = dsInstanceAssetSubscriptionService.queryByAssetId(asset.getId());
-        if (CollectionUtils.isEmpty(assetSubscriptions)) return;
+        if (CollectionUtils.isEmpty(assetSubscriptions)) {
+            return;
+        }
         assetSubscriptions.forEach(e -> {
                     log.info("发布订阅配置: assetSubscriptionId={}", e.getId());
                     dsInstanceAssetSubscriptionFacade.publishAssetSubscription(e);

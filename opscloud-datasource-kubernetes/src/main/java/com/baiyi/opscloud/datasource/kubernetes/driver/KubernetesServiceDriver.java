@@ -89,13 +89,13 @@ public class KubernetesServiceDriver {
     /**
      * 配置文件转换为服务资源
      *
-     * @param kuberClient
+     * @param kubernetesClient
      * @param content     YAML
      * @return
      * @throws RuntimeException
      */
-    public static Service toService(KubernetesClient kuberClient, String content) throws KubernetesException {
-        HasMetadata resource = KubernetesUtil.toResource(kuberClient, content);
+    public static Service toService(KubernetesClient kubernetesClient, String content) throws KubernetesException {
+        HasMetadata resource = KubernetesUtil.toResource(kubernetesClient, content);
         if (resource instanceof Service)
             return (Service) resource;
         throw new KubernetesException("类型不匹配");

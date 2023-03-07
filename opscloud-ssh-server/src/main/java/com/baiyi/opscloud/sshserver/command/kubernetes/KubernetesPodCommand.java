@@ -2,6 +2,7 @@ package com.baiyi.opscloud.sshserver.command.kubernetes;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.datasource.kubernetes.client.KuberClient;
 import com.baiyi.opscloud.datasource.kubernetes.converter.PodAssetConverter;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
 import com.baiyi.opscloud.domain.DataTable;
@@ -42,6 +43,7 @@ import com.google.common.collect.Maps;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodCondition;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.ExecWatch;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
 import lombok.RequiredArgsConstructor;
@@ -120,7 +122,8 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                     StringUtils.isEmpty(pod.getStatus().getPodIP()) ? "N/A" : pod.getStatus().getPodIP(),
                     com.baiyi.opscloud.common.util.TimeUtil.dateToStr(PodAssetConverter.toGmtDate(pod.getStatus().getStartTime())),
                     toPodStatusStr(pod.getStatus().getPhase(), podStatusMap),
-                    pod.getStatus().getContainerStatuses().get(0).getRestartCount(), // Restart Count
+                    // Restart Count
+                    pod.getStatus().getContainerStatuses().get(0).getRestartCount(),
                     Joiner.on(",").join(names));
             seq++;
         }
@@ -131,12 +134,16 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
 
     private String toNamespaceStr(String namespace) {
         Env env = envService.getByEnvName(namespace);
-        if (env == null) return namespace;
+        if (env == null) {
+            return namespace;
+        }
         return ServerUtil.toDisplayEnv(env);
     }
 
     private String toPodStatusStr(String phase, Map<String, Boolean> podStatusMap) {
-        if (StringUtils.isEmpty(phase)) return sshShellHelper.getColored("N/A", PromptColor.YELLOW);
+        if (StringUtils.isEmpty(phase)) {
+            return sshShellHelper.getColored("N/A", PromptColor.YELLOW);
+        }
         Optional<String> r = podStatusMap.keySet().stream().filter(k -> !podStatusMap.get(k)).findFirst();
         if (r.isPresent()) {
             return sshShellHelper.getColored(phase, PromptColor.YELLOW);
@@ -148,7 +155,14 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
     private void listPodByDeploymentName(String deploymentName) {
         Size size = terminal.getSize();
         final int maxSize = size.getRows() - 5;
-        DsAssetParam.UserPermissionAssetPageQuery pageQuery = DsAssetParam.UserPermissionAssetPageQuery.builder().assetType(DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name()).queryName(deploymentName).businessType(BusinessTypeEnum.APPLICATION.getType()).userId(userService.getByUsername(SessionUtil.getUsername()).getId()).page(1).length(terminal.getSize().getRows() - PAGE_FOOTER_SIZE).build();
+        DsAssetParam.UserPermissionAssetPageQuery pageQuery = DsAssetParam.UserPermissionAssetPageQuery.builder()
+                .assetType(DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name())
+                .queryName(deploymentName)
+                .businessType(BusinessTypeEnum.APPLICATION.getType())
+                .userId(userService.getByUsername(SessionUtil.getUsername()).getId())
+                .page(1)
+                .length(terminal.getSize().getRows() - PAGE_FOOTER_SIZE)
+                .build();
         DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
 
         Map<String, KubernetesDsInstance> kubernetesDsInstanceMap = Maps.newHashMap();
@@ -174,24 +188,32 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                     Set<String> names = pod.getSpec().getContainers().stream().map(Container::getName).collect(Collectors.toList()).stream().filter(n -> tryIgnoreName(kubernetesDsInstanceMap.get(instanceUuid).getKubernetesDsInstanceConfig().getKubernetes(), n)).collect(Collectors.toSet());
                     PodContext podContext = PodContext.builder().podName(podName).instanceUuid(instanceUuid).namespace(pod.getMetadata().getNamespace()).podIp(pod.getStatus().getPodIP()).containerNames(names).build();
                     podMapper.put(seq, podContext);
-                    pt.addRow(seq, kubernetesDsInstanceMap.get(instanceUuid).getDsInstance().getInstanceName(), toNamespaceStr(pod.getMetadata().getNamespace()), podName, StringUtils.isEmpty(pod.getStatus().getPodIP()) ? "N/A" : pod.getStatus().getPodIP(), com.baiyi.opscloud.common.util.TimeUtil.dateToStr(PodAssetConverter.toGmtDate(pod.getStatus().getStartTime())), toPodStatusStr(pod.getStatus().getPhase(), podStatusMap), pod.getStatus().getContainerStatuses().get(0).getRestartCount(), // Restart Count
+                    // Restart Count
+                    pt.addRow(seq, kubernetesDsInstanceMap.get(instanceUuid).getDsInstance().getInstanceName(), toNamespaceStr(pod.getMetadata().getNamespace()), podName, StringUtils.isEmpty(pod.getStatus().getPodIP()) ? "N/A" : pod.getStatus().getPodIP(), com.baiyi.opscloud.common.util.TimeUtil.dateToStr(PodAssetConverter.toGmtDate(pod.getStatus().getStartTime())), toPodStatusStr(pod.getStatus().getPhase(), podStatusMap), pod.getStatus().getContainerStatuses().get(0).getRestartCount(),
                             Joiner.on(",").join(names));
                     seq++;
-                    if (seq >= maxSize) break;
+                    if (seq >= maxSize) {
+                        break;
+                    }
                 }
             } catch (Exception ignored) {
             }
-            if (seq >= maxSize) break;
+            if (seq >= maxSize) {
+                break;
+            }
         }
         SessionCommandContext.setPodMapper(podMapper);
         sshShellHelper.print(pt.toString());
     }
 
     private static boolean tryIgnoreName(KubernetesConfig.Kubernetes kubernetes, String containerName) {
-        if (kubernetes.getContainer() == null || org.springframework.util.CollectionUtils.isEmpty(kubernetes.getContainer().getIgnore()))
+        if (kubernetes.getContainer() == null || org.springframework.util.CollectionUtils.isEmpty(kubernetes.getContainer().getIgnore())) {
             return true;
+        }
         for (String name : kubernetes.getContainer().getIgnore()) {
-            if (containerName.startsWith(name)) return false;
+            if (containerName.startsWith(name)) {
+                return false;
+            }
         }
         return true;
     }
@@ -235,35 +257,58 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         TerminalSessionInstance terminalSessionInstance = TerminalSessionInstanceBuilder.build(sessionId, podContext.getPodIp(), instanceId, InstanceSessionTypeEnum.CONTAINER_TERMINAL);
         simpleTerminalSessionFacade.recordTerminalSessionInstance(terminalSessionInstance);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ExecWatch execWatch = KubernetesPodDriver.loginPodContainer(kubernetesDsInstanceConfig.getKubernetes(), podContext.getNamespace(), podContext.getPodName(), name, listener, baos);
-        Size size = terminal.getSize();
-        execWatch.resize(size.getColumns(), size.getRows());
-        TerminalUtil.rawModeSupportVintr(terminal); // 行模式
-        SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
+        try (KubernetesClient kc = KuberClient.build(kubernetesDsInstanceConfig.getKubernetes());
+             ExecWatch execWatch = kc.pods()
+                     .inNamespace(podContext.getNamespace())
+                     .withName(podContext.getPodName())
+                     // 如果Pod中只有一个容器，不需要指定
+                     .inContainer(name)
+                     .redirectingInput()
+                     //.redirectingOutput()
+                     //.redirectingError()
+                     //.redirectingErrorChannel()
+                     .writingOutput(baos)
+                     .writingError(baos)
+                     .withTTY()
+                     .usingListener(listener)
+                     .exec("env", "TERM=xterm", "sh");
+        ) {
+            Size size = terminal.getSize();
+            execWatch.resize(size.getColumns(), size.getRows());
+            // 行模式
+            TerminalUtil.rawModeSupportVintr(terminal);
+            SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
 
-        SshContext sshContext = getSshContext();
-        ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
-        out.setNoDelay(true);
-        WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, out);
-        Thread thread = new Thread(run);
-        thread.start();
-        try {
-            if (!listener.isClosed()) {
-                // 清除输入缓冲区数据
-                while (!listener.isClosed()) {
-                    int ch = terminal.reader().read(1L);
-                    if (ch < 0) break;
+            SshContext sshContext = getSshContext();
+            ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
+            out.setNoDelay(true);
+            WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, out);
+            Thread thread = new Thread(run);
+            thread.start();
+            try {
+                if (!listener.isClosed()) {
+                    // 清除输入缓冲区数据
+                    while (!listener.isClosed()) {
+                        int ch = terminal.reader().read(1L);
+                        if (ch < 0) {
+                            break;
+                        }
+                    }
                 }
+                if (arthas) {
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(200L);
+                    } catch (InterruptedException ie) {
+                    }
+                    execWatch.getInput().write(KUBERNETES_EXECUTE_ARTHAS);
+                    try {
+                        TimeUnit.SECONDS.sleep(1L);
+                    } catch (InterruptedException ie) {
+                    }
+                }
+            } catch (IOException ioException) {
+                log.warn("执行Arthas错误: {}", ioException.getMessage());
             }
-            if (arthas) {
-                TimeUnit.MILLISECONDS.sleep(200L);
-                execWatch.getInput().write(KUBERNETES_EXECUTE_ARTHAS);
-                TimeUnit.SECONDS.sleep(1L);
-            }
-        } catch (IOException | InterruptedException ie) {
-            log.warn("执行Arthas错误: err={}", ie.getMessage());
-        }
-        try {
             while (!listener.isClosed()) {
                 int ch = terminal.reader().read(25L);
                 if (ch >= 0) {
@@ -271,18 +316,20 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                     execWatch.getInput().flush();
                     if (ch == EOF) {
                         // 等待退出，避免sh残留
-                        TimeUnit.MILLISECONDS.sleep(200L);
+                        try {
+                            TimeUnit.MILLISECONDS.sleep(200L);
+                        } catch (InterruptedException ie) {
+                        }
                         break;
                     }
                 }
                 tryResize(size, terminal, execWatch);
             }
-        } catch (IOException | InterruptedException e) {
-            log.warn("用户关闭SSH-Server: err={}", e.getMessage());
+        } catch (Exception e) {
+            log.warn(e.getMessage());
         } finally {
             simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             podCommandAudit.asyncRecordCommand(sessionId, instanceId);
-            execWatch.close();
             sshShellHelper.print("\n用户退出容器！", PromptColor.GREEN);
         }
     }
@@ -294,7 +341,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         Map<Integer, PodContext> podMapper = SessionCommandContext.getPodMapper();
         PodContext podContext = podMapper.get(id);
         KubernetesConfig kubernetesDsInstanceConfig = buildConfig(podContext.getInstanceUuid());
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         if (StringUtils.isEmpty(name)) {
             List<String> names = podContext.getContainerNames().stream().filter(n -> tryIgnoreName(kubernetesDsInstanceConfig.getKubernetes(), n)).collect(Collectors.toList());
             if (CollectionUtils.isEmpty(names)) {
@@ -302,29 +349,33 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                 return;
             }
             if (names.size() > 1) {
-                sshShellHelper.print("多容器必须指定容器名称: --name ${containerName}", PromptColor.RED);
+                sshShellHelper.print("Pod中有多个容器必须指定容器名称: --name ${containerName}", PromptColor.RED);
                 return;
             }
             name = names.get(0);
         }
+        try (KubernetesClient kc = KuberClient.build(kubernetesDsInstanceConfig.getKubernetes());
+             LogWatch logWatch = kc.pods()
+                     .inNamespace(podContext.getNamespace())
+                     .withName(podContext.getPodName())
+                     .inContainer(name)
+                     .tailingLines(lines)
+                     .watchLog(byteArrayOutputStream);
+        ) {
+            TerminalUtil.rawModeSupportVintr(terminal);
+            ServerSession serverSession = sshShellHelper.getSshSession();
+            String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
+            String instanceId = TerminalSessionUtil.toInstanceId(podContext.getPodName(), name);
+            SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
+            // 高速输出日志流
+            SshContext sshContext = getSshContext();
+            WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, byteArrayOutputStream, sshContext.getSshShellRunnable().getOs());
 
-        LogWatch logWatch = KubernetesPodDriver.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(), podContext.getNamespace(), podContext.getPodName(), name, lines, baos);
-
-        TerminalUtil.rawModeSupportVintr(terminal);
-        ServerSession serverSession = sshShellHelper.getSshSession();
-        String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
-        String instanceId = TerminalSessionUtil.toInstanceId(podContext.getPodName(), name);
-        SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
-        // 高速输出日志流
-        SshContext sshContext = getSshContext();
-        WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getSshShellRunnable().getOs());
-
-        // 低性能输出日志，为了能实现日志换行
-        //  WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, terminal.writer());
-        Thread thread = new Thread(run);
-        thread.start();
-        while (true) {
-            try {
+            // 低性能输出日志，为了能实现日志换行
+            // WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, terminal.writer());
+            Thread thread = new Thread(run);
+            thread.start();
+            while (true) {
                 int ch = terminal.reader().read(25L);
                 if (ch != -2) {
                     if (ch == QUIT) {
@@ -336,12 +387,13 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                         TimeUnit.MILLISECONDS.sleep(200L);
                     }
                 }
-                TimeUnit.MILLISECONDS.sleep(25L);
-            } catch (Exception e) {
-                log.error(e.getMessage());
-            } finally {
-                logWatch.close();
+                try {
+                    TimeUnit.MILLISECONDS.sleep(25L);
+                } catch (InterruptedException ie) {
+                }
             }
+        } catch (Exception e) {
+            log.warn(e.getMessage());
         }
     }
 
@@ -355,7 +407,9 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
     }
 
     private void tryResize(Size size, Terminal terminal, ExecWatch execWatch) {
-        if (terminal.getSize().equals(size)) return;
+        if (terminal.getSize().equals(size)) {
+            return;
+        }
         size = terminal.getSize();
         execWatch.resize(size.getColumns(), size.getRows());
     }

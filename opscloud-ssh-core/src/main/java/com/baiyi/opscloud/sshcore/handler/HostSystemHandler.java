@@ -70,8 +70,9 @@ public class HostSystemHandler {
                     .businessId(server.getServerGroupId())
                     .build();
             UserPermission userPermission = userPermissionService.getByUserPermission(query);
-            if (userPermission == null)
+            if (userPermission == null) {
                 throw new SshCommonException(ErrorEnum.SSH_SERVER_AUTHENTICATION_FAILURE);
+            }
             isAdmin = "admin".equalsIgnoreCase(userPermission.getPermissionRole());
         }
         return isAdmin;
@@ -90,22 +91,27 @@ public class HostSystemHandler {
                 sshCredential = getSshCredential(server, LoginType.HIGH_AUTHORITY);
             } else {
                 sshCredential = getSshCredential(server, LoginType.LOW_AUTHORITY);
-                if (sshCredential == null && isAdmin)
+                if (sshCredential == null && isAdmin) {
                     sshCredential = getSshCredential(server, LoginType.HIGH_AUTHORITY);
+                }
             }
         } else { // 指定账户
             ServerAccount serverAccount = serverAccountService.getPermissionServerAccountByUsernameAndProtocol(server.getId(), account, ProtocolEnum.SSH.getType());
-            if (serverAccount == null)
+            if (serverAccount == null) {
                 throw new SshCommonException(ErrorEnum.SSH_SERVER_ACCOUNT_NOT_EXIST);
-            if (serverAccount.getAccountType() == LoginType.HIGH_AUTHORITY && !isAdmin)
+            }
+            if (serverAccount.getAccountType() == LoginType.HIGH_AUTHORITY && !isAdmin) {
                 throw new SshCommonException(ErrorEnum.SSH_SERVER_AUTHENTICATION_FAILURE);
+            }
             sshCredential = buildSshCredential(serverAccount);
         }
-        if (sshCredential == null)
+        if (sshCredential == null) {
             throw new SshCommonException(ErrorEnum.SSH_SERVER_NO_ACCOUNTS_AVAILABLE);
+        }
         ServerProperty.Server serverProperty = bizPropertyHelper.getBusinessProperty(server);
         return HostSystem.builder()
-                .host(HostParamUtil.getManageIp(server,  serverProperty)) // 避免绕过未授权服务器
+                // 避免绕过未授权服务器
+                .host(HostParamUtil.getManageIp(server,  serverProperty))
                 .port(HostParamUtil.getSshPort(serverProperty))
                 .sshCredential(sshCredential)
                 .build();
@@ -117,7 +123,8 @@ public class HostSystemHandler {
         SshCredential sshCredential = buildSshCredential(message, server);
         ServerProperty.Server serverProperty = bizPropertyHelper.getBusinessProperty(server);
         return HostSystem.builder()
-                .host(HostParamUtil.getManageIp(server, serverProperty)) // 避免绕过未授权服务器
+                // 避免绕过未授权服务器
+                .host(HostParamUtil.getManageIp(server, serverProperty))
                 .port(HostParamUtil.getSshPort(serverProperty))
                 .sshCredential(sshCredential)
                 .loginMessage(message)
@@ -140,10 +147,13 @@ public class HostSystemHandler {
      * @return
      */
     private SshCredential getSshCredential(Server server, int loginType) {
-        if (SessionUtil.getIsAdmin())
+        if (SessionUtil.getIsAdmin()) {
             return getSshCredentialByAdmin(server.getId(), loginType);
+        }
         List<ServerAccount> accounts = serverAccountService.getPermissionServerAccountByTypeAndProtocol(server.getId(), loginType, ProtocolEnum.SSH.getType());
-        if (CollectionUtils.isEmpty(accounts)) return null;
+        if (CollectionUtils.isEmpty(accounts)) {
+            return null;
+        }
         Map<Integer, List<ServerAccount>> accountCatMap = ServerAccountUtil.catByType(accounts);
         if (accountCatMap.containsKey(loginType)) {
             return buildSshCredential(accountCatMap.get(loginType).get(0));
@@ -151,10 +161,17 @@ public class HostSystemHandler {
         return null;
     }
 
-    // 管理员
+    /**
+     * 管理员
+     * @param serverId
+     * @param loginType
+     * @return
+     */
     private SshCredential getSshCredentialByAdmin(Integer serverId, int loginType) {
         Map<Integer, List<ServerAccount>> accountCatMap = sshAccountHelper.getServerAccountCatMap(serverId);
-        if (accountCatMap == null) return null;
+        if (accountCatMap == null) {
+            return null;
+        }
         if (accountCatMap.containsKey(loginType)) {
             return buildSshCredential(accountCatMap.get(loginType).get(0));
         }
@@ -163,12 +180,14 @@ public class HostSystemHandler {
                 return buildSshCredential(accountCatMap.get(LoginType.HIGH_AUTHORITY).get(0));
             }
         }
-        return null; // 未找到凭据
+        // 未找到凭据
+        return null;
     }
 
     private SshCredential buildSshCredential(ServerAccount serverAccount) {
         Credential credential = credentialService.getById(serverAccount.getCredentialId());
-        credentialUtil.decrypt(credential);       // 解密
+        // 解密
+        credentialUtil.decrypt(credential);
         return SshCredential.builder()
                 .serverAccount(serverAccount)
                 .credential(credential)

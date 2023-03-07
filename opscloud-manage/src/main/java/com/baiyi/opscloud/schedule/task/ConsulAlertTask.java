@@ -2,7 +2,7 @@ package com.baiyi.opscloud.schedule.task;
 
 import com.baiyi.opscloud.config.condition.EnvCondition;
 import com.baiyi.opscloud.facade.task.ConsulAlertFacade;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.context.annotation.Conditional;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @Conditional(EnvCondition.class)
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ConsulAlertTask  {
 
     private final ConsulAlertFacade consulAlertFacade;

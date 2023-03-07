@@ -43,8 +43,9 @@ public class KubernetesPodDriver {
             PodList podList = kc.pods()
                     .inNamespace(namespace)
                     .list();
-            if (CollectionUtils.isEmpty(podList.getItems()))
+            if (CollectionUtils.isEmpty(podList.getItems())) {
                 return Collections.emptyList();
+            }
             return podList.getItems();
         } catch (Exception e) {
             log.warn(e.getMessage());
@@ -62,7 +63,9 @@ public class KubernetesPodDriver {
                     .getSpec()
                     .getSelector()
                     .getMatchLabels();
-            if (matchLabels.isEmpty()) return Collections.emptyList();
+            if (matchLabels.isEmpty()) {
+                return Collections.emptyList();
+            }
             return Optional.of(kc.pods().inNamespace(namespace).withLabels(matchLabels))
                     .map(Listable::list)
                     .map(PodList::getItems)
@@ -79,8 +82,9 @@ public class KubernetesPodDriver {
                     .inNamespace(namespace)
                     .withLabels(labels)
                     .list();
-            if (CollectionUtils.isEmpty(podList.getItems()))
+            if (CollectionUtils.isEmpty(podList.getItems())) {
                 return Collections.emptyList();
+            }
             return podList.getItems();
         } catch (Exception e) {
             log.warn(e.getMessage());
@@ -126,6 +130,7 @@ public class KubernetesPodDriver {
                 .watchLog();
     }
 
+    @Deprecated
     public static LogWatch getPodLogWatch(KubernetesConfig.Kubernetes kubernetes, String namespace, String podName, String containerName, Integer lines, OutputStream outputStream) {
         return KuberClient.build(kubernetes)
                 .pods()
@@ -136,6 +141,7 @@ public class KubernetesPodDriver {
                 .watchLog(outputStream);
     }
 
+    @Deprecated
     public static LogWatch getPodLogWatch2(KubernetesConfig.Kubernetes kubernetes, String namespace, String podName, String containerName, Integer lines, OutputStream outputStream) {
         return KuberClient.build(kubernetes)
                 .pods()
@@ -152,6 +158,7 @@ public class KubernetesPodDriver {
      * @param namespace
      * @return
      */
+    @Deprecated
     public static ExecWatch loginPodContainer(KubernetesConfig.Kubernetes kubernetes,
                                               String namespace,
                                               String podName,
@@ -162,7 +169,8 @@ public class KubernetesPodDriver {
         return KuberClient.build(kubernetes).pods()
                 .inNamespace(namespace)
                 .withName(podName)
-                .inContainer(containerName) // 如果Pod中只有一个容器，不需要指定
+                // 如果Pod中只有一个容器，不需要指定
+                .inContainer(containerName)
                 .redirectingInput()
                 //.redirectingOutput()
                 //.redirectingError()
@@ -173,7 +181,6 @@ public class KubernetesPodDriver {
                 .usingListener(listener)
                 .exec("env", "TERM=xterm", "sh");
     }
-
 
     @Data
     public static class SimpleListener implements ExecListener {

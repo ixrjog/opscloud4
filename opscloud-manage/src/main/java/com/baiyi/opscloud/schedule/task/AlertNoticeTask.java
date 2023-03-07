@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-// 非生产环境不执行
 @Conditional(EnvCondition.class)
 public class AlertNoticeTask {
 

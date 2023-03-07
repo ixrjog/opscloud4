@@ -19,11 +19,10 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-// 非生产环境不执行
 @Conditional(EnvCondition.class)
 public class ZabbixProblemEventListenerTask {
 
-    @InstanceHealth // 实例健康检查，高优先级
+    @InstanceHealth
     @Scheduled(initialDelay = 8000, fixedRate = 120 * 1000)
     @SchedulerLock(name = "zabbix_problem_event_listener_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
     @TaskWatch(name = "Listen for zabbix problems")

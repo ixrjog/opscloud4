@@ -20,6 +20,9 @@ import io.fabric8.kubernetes.client.dsl.LogWatch;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.jline.terminal.Size;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Component;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -32,11 +35,19 @@ import java.util.UUID;
  * @Version 1.0
  */
 @Slf4j
+@Component
 public class RemoteInvokeHandler {
 
     private static final int SSH_PORT = 22;
 
     private static final String appId = UUID.randomUUID().toString();
+
+    private static ThreadPoolTaskExecutor coreExecutor;
+
+    @Autowired
+    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor coreExecutor) {
+        RemoteInvokeHandler.coreExecutor = coreExecutor;
+    }
 
     /**
      * 按类型注入凭据
@@ -76,11 +87,14 @@ public class RemoteInvokeHandler {
         hostSystem.setInstanceId(instanceId);
         // TODO
         try {
-            if (hostSystem.getSshCredential() == null) return;
+            if (hostSystem.getSshCredential() == null) {
+                return;
+            }
             Session session = jsch.getSession(hostSystem.getSshCredential().getServerAccount().getUsername(), hostSystem.getHost(),
                     hostSystem.getPort() == null ? SSH_PORT : hostSystem.getPort());
             invokeSshCredential(hostSystem, jsch, session);
-            SessionConfigUtil.setDefault(session); // 默认设置
+            // 默认设置
+            SessionConfigUtil.setDefault(session);
             ChannelShell channel = (ChannelShell) session.openChannel("shell");
             ChannelShellUtil.setDefault(channel);
 
@@ -90,8 +104,7 @@ public class RemoteInvokeHandler {
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
             // 启动线程处理会话
             Runnable run = new WatchServerTerminalOutputTask(sessionOutput, channel.getInputStream());
-            Thread thread = new Thread(run);
-            thread.start();
+            coreExecutor.execute(run);
 
             OutputStream inputToChannel = channel.getOutputStream();
 
@@ -108,7 +121,7 @@ public class RemoteInvokeHandler {
 
             channel.connect();
         } catch (Exception e) {
-            log.info(e.toString(), e);
+            log.info(e.getMessage());
             if (e.getMessage().toLowerCase().contains("userauth fail")) {
                 hostSystem.setStatusCd(HostSystem.PUBLIC_KEY_FAIL_STATUS);
             } else if (e.getMessage().toLowerCase().contains("auth fail") || e.getMessage().toLowerCase().contains("auth cancel")) {
@@ -132,11 +145,14 @@ public class RemoteInvokeHandler {
         JSch jsch = new JSch();
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
         try {
-            if (hostSystem.getSshCredential() == null) return;
+            if (hostSystem.getSshCredential() == null) {
+                return;
+            }
             Session session = jsch.getSession(hostSystem.getSshCredential().getServerAccount().getUsername(), hostSystem.getHost(),
                     hostSystem.getPort() == null ? SSH_PORT : hostSystem.getPort());
             invokeSshCredential(hostSystem, jsch, session);
-            SessionConfigUtil.setDefault(session); // 默认设置
+            // 默认设置
+            SessionConfigUtil.setDefault(session);
             ChannelShell channel = (ChannelShell) session.openChannel("shell");
             ChannelShellUtil.setDefault(channel);
             setChannelPtySize(channel, hostSystem.getTerminalSize());
@@ -144,8 +160,7 @@ public class RemoteInvokeHandler {
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
             // 启动线程处理会话
             Runnable run = new WatchSshServerOutputTask(sessionOutput, channel.getInputStream(), out);
-            Thread thread = new Thread(run);
-            thread.start();
+            coreExecutor.execute(run);
             /////////////////////
             OutputStream inputToChannel = channel.getOutputStream();
 
@@ -161,7 +176,7 @@ public class RemoteInvokeHandler {
             JSchSessionContainer.addSession(jSchSession);
             channel.connect();
         } catch (Exception e) {
-            log.info(e.toString(), e);
+            log.info(e.getMessage());
             if (e.getMessage().toLowerCase().contains("userauth fail")) {
                 hostSystem.setStatusCd(HostSystem.PUBLIC_KEY_FAIL_STATUS);
             } else if (e.getMessage().toLowerCase().contains("auth fail") || e.getMessage().toLowerCase().contains("auth cancel")) {
@@ -187,8 +202,7 @@ public class RemoteInvokeHandler {
         SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
         // 启动线程处理会话
         WatchKubernetesTerminalOutputTask run = new WatchKubernetesTerminalOutputTask(sessionOutput, out);
-        Thread thread = new Thread(run);
-        thread.start();
+        coreExecutor.execute(run);
 
         KubernetesSession kubernetesSession = KubernetesSession.builder()
                 .sessionId(sessionId)
@@ -214,8 +228,7 @@ public class RemoteInvokeHandler {
         SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
         // 启动线程处理会话
         WatchKubernetesTerminalOutputTask run = new WatchKubernetesTerminalOutputTask(sessionOutput, out);
-        Thread thread = new Thread(run);
-        thread.start();
+        coreExecutor.execute(run);
         KubernetesSession kubernetesSession = KubernetesSession.builder()
                 .sessionId(sessionId)
                 .instanceId(instanceId)
@@ -227,12 +240,16 @@ public class RemoteInvokeHandler {
     }
 
     public static void setChannelPtySize(ChannelShell channel, ServerMessage.BaseMessage message) {
-        if (channel == null || channel.isClosed()) return;
+        if (channel == null || channel.isClosed()) {
+            return;
+        }
         channel.setPtySize(message.getCols(), message.getRows(), message.getWidth(), message.getHeight());
     }
 
     public static void setChannelPtySize(ChannelShell channel, Size size) {
-        if (channel == null || channel.isClosed()) return;
+        if (channel == null || channel.isClosed()) {
+            return;
+        }
         channel.setPtySize(size.getColumns(), size.getRows(), size.getColumns() * 7, (int) Math.floor(size.getRows() / 14.4166));
     }
 
