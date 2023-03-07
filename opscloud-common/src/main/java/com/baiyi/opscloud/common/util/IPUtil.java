@@ -23,8 +23,9 @@ public class IPUtil {
      * @return
      */
     public static boolean includeMask(String network, String mask) {
-        if ("0.0.0.0/0".equals(mask) || "0.0.0.0".equals(mask))
+        if ("0.0.0.0/0".equals(mask) || "0.0.0.0".equals(mask)) {
             return true;
+        }
         String[] networkips = network.split("\\.");
         int ipAddr = (Integer.parseInt(networkips[0]) << 24)
                 | (Integer.parseInt(networkips[1]) << 16)

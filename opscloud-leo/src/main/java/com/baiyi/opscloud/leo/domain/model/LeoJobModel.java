@@ -32,8 +32,9 @@ public class LeoJobModel {
      * @return
      */
     public static JobConfig load(String config) {
-        if (StringUtils.isEmpty(config))
+        if (StringUtils.isEmpty(config)) {
             return JobConfig.EMPTY_JOB;
+        }
         try {
             Representer representer = new Representer(new DumperOptions());
             representer.getPropertyUtils().setSkipMissingProperties(true);

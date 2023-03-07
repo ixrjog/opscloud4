@@ -19,12 +19,15 @@ public class CredentialUtil {
 
     public void decrypt(Credential credential) {
         // 解密
-        if (!StringUtils.isEmpty(credential.getCredential()))
+        if (!StringUtils.isEmpty(credential.getCredential())) {
             credential.setCredential(stringEncryptor.decrypt(credential.getCredential()));
-        if (!StringUtils.isEmpty(credential.getCredential2()))
+        }
+        if (!StringUtils.isEmpty(credential.getCredential2())) {
             credential.setCredential2(stringEncryptor.decrypt(credential.getCredential2()));
-        if (!StringUtils.isEmpty(credential.getPassphrase()))
+        }
+        if (!StringUtils.isEmpty(credential.getPassphrase())) {
             credential.setPassphrase(stringEncryptor.decrypt(credential.getPassphrase()));
+        }
     }
 
 }

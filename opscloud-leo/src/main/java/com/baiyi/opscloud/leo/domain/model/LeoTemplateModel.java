@@ -30,8 +30,9 @@ public class LeoTemplateModel {
      * @return
      */
     public static TemplateConfig load(String config) {
-        if (StringUtils.isEmpty(config))
+        if (StringUtils.isEmpty(config)) {
             return TemplateConfig.EMPTY_TEMPLATE;
+        }
         try {
             Representer representer = new Representer(new DumperOptions());
             representer.getPropertyUtils().setSkipMissingProperties(true);

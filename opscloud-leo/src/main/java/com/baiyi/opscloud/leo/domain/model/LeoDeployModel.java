@@ -33,8 +33,9 @@ public class LeoDeployModel {
      * @return
      */
     public static DeployConfig load(String config) {
-        if (StringUtils.isEmpty(config))
+        if (StringUtils.isEmpty(config)) {
             return DeployConfig.EMPTY_DEPLOY;
+        }
         try {
             Representer representer = new Representer(new DumperOptions());
             representer.getPropertyUtils().setSkipMissingProperties(true);

@@ -100,7 +100,8 @@ public class IOUtil {
         mkdir(getPath(path));
         File file = new File(path);
         try (FileWriter fw = new FileWriter(file)) {
-            fw.write(body);//将字符串写入到指定的路径下的文件中
+            //将字符串写入到指定的路径下的文件中
+            fw.write(body);
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new RuntimeException(e);
@@ -114,7 +115,7 @@ public class IOUtil {
             }
             File file = new File(path);
             return file.length();
-        }catch (Exception e){
+        } catch (Exception e) {
             return 0L;
         }
     }
@@ -147,7 +148,7 @@ public class IOUtil {
     public static String readFile(String path) {
         try (
                 FileReader reader = new FileReader(path);
-                BufferedReader bufferedReader = new BufferedReader(reader);
+                BufferedReader bufferedReader = new BufferedReader(reader)
         ) {
             StringBuffer buffer = new StringBuffer();
             String tmp;
@@ -163,7 +164,9 @@ public class IOUtil {
     }
 
     public static String getPath(String path) {
-        if (path == null || path.equals("")) return "";
+        if (path == null || path.equals("")) {
+            return "";
+        }
         String[] a = path.split("/");
         path = path.replace(a[a.length - 1], "");
         return path;

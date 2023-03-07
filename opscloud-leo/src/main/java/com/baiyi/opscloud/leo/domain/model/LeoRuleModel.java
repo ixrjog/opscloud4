@@ -44,8 +44,9 @@ public class LeoRuleModel {
      * @return
      */
     public static LeoRuleModel.RuleConfig load(String config) {
-        if (StringUtils.isEmpty(config))
+        if (StringUtils.isEmpty(config)) {
             return EMPTY_RULE;
+        }
         try {
             Representer representer = new Representer(new DumperOptions());
             representer.getPropertyUtils().setSkipMissingProperties(true);

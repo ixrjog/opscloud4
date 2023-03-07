@@ -33,8 +33,9 @@ public class LeoBuildModel {
      * @return
      */
     public static BuildConfig load(String config) {
-        if (StringUtils.isEmpty(config))
+        if (StringUtils.isEmpty(config)) {
             return BuildConfig.EMPTY_BUILD;
+        }
         try {
             Representer representer = new Representer(new DumperOptions());
             representer.getPropertyUtils().setSkipMissingProperties(true);

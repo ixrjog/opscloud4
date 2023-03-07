@@ -49,8 +49,9 @@ public class AmazonEc2Driver {
             response.getReservations().forEach(e -> e.getInstances().forEach(i -> {
                 // 获取不到IP
                 // 销毁状态 i.getState().getCode() == 48
-                if (StringUtils.isEmpty(i.getPrivateIpAddress()))
+                if (StringUtils.isEmpty(i.getPrivateIpAddress())) {
                     return;
+                }
                 final Gson builder = new GsonBuilder()
                         .registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (jsonElement, type, context) -> new Date(jsonElement.getAsJsonPrimitive().getAsLong())).create();
                 Ec2Instance.Instance instance = builder.fromJson(JSONUtil.writeValueAsString(i), Ec2Instance.Instance.class);
@@ -61,7 +62,9 @@ public class AmazonEc2Driver {
                 instanceList.add(instance);
             }));
             request.setNextToken(response.getNextToken());
-            if (response.getNextToken() == null) return instanceList;
+            if (response.getNextToken() == null) {
+                return instanceList;
+            }
         }
     }
 

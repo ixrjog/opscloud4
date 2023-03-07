@@ -13,7 +13,9 @@ public class ExtendUtil {
     }
 
     public static boolean isExtend(IExtend iExtend) {
-        if (iExtend.getExtend() == null) return false;
+        if (iExtend.getExtend() == null) {
+            return false;
+        }
         return iExtend.getExtend();
     }
 

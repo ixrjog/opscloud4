@@ -34,8 +34,8 @@ public class BusinessPropertyUtil {
      * @return targetBean, 合并后的对象
      */
     public static ServerProperty.Server combineServerProperty(ServerProperty.Server sourceBean, ServerProperty.Server targetBean) {
-        Class sourceBeanClass = sourceBean.getClass();
-        Class targetBeanClass = targetBean.getClass();
+        Class<? extends ServerProperty.Server> sourceBeanClass = sourceBean.getClass();
+        Class<? extends ServerProperty.Server> targetBeanClass = targetBean.getClass();
 
         Field[] sourceFields = sourceBeanClass.getDeclaredFields();
         Field[] targetFields = targetBeanClass.getDeclaredFields();
@@ -51,7 +51,7 @@ public class BusinessPropertyUtil {
             sourceField.setAccessible(true);
             targetField.setAccessible(true);
             try {
-                if (!(sourceField.get(sourceBean) == null) && !"serialVersionUID".equals(sourceField.getName())) {
+                if (sourceField.get(sourceBean) != null && !"serialVersionUID".equals(sourceField.getName())) {
                     targetField.set(targetBean, sourceField.get(sourceBean));
                 }
             } catch (IllegalArgumentException | IllegalAccessException e) {

@@ -16,8 +16,9 @@ public class EmailUtil {
     }
 
     public static String toUsername(String email) {
-        if (StringUtils.isEmpty(email))
+        if (StringUtils.isEmpty(email)) {
             return "";
+        }
         if (!email.contains("@") || email.startsWith("@") || email.endsWith("@")) {
             return email;
         } else {
@@ -33,8 +34,9 @@ public class EmailUtil {
      * @return
      */
     private static String convert(String emailUsername) {
-        if (!emailUsername.contains("."))
+        if (!emailUsername.contains(".")) {
             return emailUsername;
+        }
         List<String> names = Splitter.on(".").splitToList(emailUsername);
         if (names.size() == 2) {
             return names.get(1) + names.get(0);

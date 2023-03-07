@@ -15,9 +15,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import java.time.Duration;
-import java.time.Instant;
-
 /**
  *
  * 代码已经完成，吾辈继续努力
@@ -44,12 +41,12 @@ public class ManageApplication {
     private static final Logger log = LoggerFactory.getLogger(ManageApplication.class);
 
     public static void main(String[] args) {
-        Instant inst = Instant.now();
+        // Instant inst = Instant.now();
         SpringApplication.run(ManageApplication.class, args);
         log.info("Opscloud 4 <Spring Boot {}>", SpringBootVersion.getVersion());
-        log.info("启动成功! 耗时:{}/s", Duration.between(inst, Instant.now()).getSeconds());
+        // log.info("启动成功! 耗时:{}/s", Duration.between(inst, Instant.now()).getSeconds());
         System.setProperty("druid.mysql.usePingMethod","false");
-        log.info("修改参数: druid.mysql.usePingMethod=false");
+        // log.info("修改参数: druid.mysql.usePingMethod=false");
     }
 
 }

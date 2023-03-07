@@ -13,7 +13,7 @@ public class SessionUtil {
 
     public static String buildSessionId(IoSession ioSession) {
         String str = Joiner.on("-").join(ioSession.getId(), ioSession.getLocalAddress(), ioSession.getRemoteAddress());
-        return HashUtil.MD5(str);
+        return HashUtil.md5(str);
     }
 
 }

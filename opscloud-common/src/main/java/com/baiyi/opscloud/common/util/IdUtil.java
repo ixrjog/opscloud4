@@ -42,7 +42,9 @@ public class IdUtil {
      * @return 10c0efa8-a0fa-41a8-9f63-87c363e3d0e5
      */
     public static String toUUID(String uuid) {
-        if (uuid.length() != 32) return uuid;
+        if (uuid.length() != 32) {
+            return uuid;
+        }
         return Joiner.on("-").join(uuid.substring(0, 8), uuid.substring(8, 12), uuid.substring(12, 16), uuid.substring(16, 20), uuid.substring(20, 32));
     }
 }

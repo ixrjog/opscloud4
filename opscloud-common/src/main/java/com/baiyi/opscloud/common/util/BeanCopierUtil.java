@@ -19,7 +19,7 @@ public class BeanCopierUtil {
     private BeanCopierUtil() {
     }
 
-    private static final Map<String, BeanCopier> beanCopierMap = new MapMaker().initialCapacity(32).concurrencyLevel(32).makeMap();
+    private static final Map<String, BeanCopier> BEAN_COPIER_MAP = new MapMaker().initialCapacity(32).concurrencyLevel(32).makeMap();
 
     /**
      * bean 对象copy
@@ -34,11 +34,11 @@ public class BeanCopierUtil {
 
         String beanKey = generateKey(source.getClass(), targetClass);
         BeanCopier copier;
-        if (!beanCopierMap.containsKey(beanKey)) {
+        if (!BEAN_COPIER_MAP.containsKey(beanKey)) {
             copier = BeanCopier.create(source.getClass(), targetClass, false);
-            beanCopierMap.put(beanKey, copier);
+            BEAN_COPIER_MAP.put(beanKey, copier);
         } else {
-            copier = beanCopierMap.get(beanKey);
+            copier = BEAN_COPIER_MAP.get(beanKey);
         }
 
         T targetObject;
@@ -94,11 +94,11 @@ public class BeanCopierUtil {
         }
         String beanKey = generateKey(source.getClass(), target.getClass());
         BeanCopier copier;
-        if (!beanCopierMap.containsKey(beanKey)) {
+        if (!BEAN_COPIER_MAP.containsKey(beanKey)) {
             copier = BeanCopier.create(source.getClass(), target.getClass(), false);
-            beanCopierMap.put(beanKey, copier);
+            BEAN_COPIER_MAP.put(beanKey, copier);
         } else {
-            copier = beanCopierMap.get(beanKey);
+            copier = BEAN_COPIER_MAP.get(beanKey);
         }
         copier.copy(source, target, null);
 
