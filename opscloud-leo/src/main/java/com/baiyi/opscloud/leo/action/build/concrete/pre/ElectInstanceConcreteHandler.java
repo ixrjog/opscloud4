@@ -51,8 +51,9 @@ public class ElectInstanceConcreteHandler extends BaseBuildHandler {
             JenkinsConfig jenkinsConfig = getJenkinsConfigWithUuid(instance.getUuid());
             try {
                 JenkinsVersion jenkinsVersion = JenkinsServerDriver.getVersion(jenkinsConfig.getJenkins());
-                if (jenkinsVersion != null && StringUtils.isNotBlank(jenkinsVersion.getLiteralVersion()))
+                if (jenkinsVersion != null && StringUtils.isNotBlank(jenkinsVersion.getLiteralVersion())) {
                     activeInstances.add(instance);
+                }
             } catch (URISyntaxException | IOException e) {
                 log.warn("查询Jenkins实例状态错误: err={}", e.getMessage());
             }
@@ -92,8 +93,9 @@ public class ElectInstanceConcreteHandler extends BaseBuildHandler {
 
     private List<DatasourceInstance> electLeoJenkinsInstances(List<String> tags) {
         List<DatasourceInstance> instances = leoJenkinsInstanceHelper.queryAvailableInstancesWithTags(tags);
-        if (CollectionUtils.isEmpty(instances))
+        if (CollectionUtils.isEmpty(instances)) {
             throw new LeoBuildException("无可用的Jenkins实例: tags={}", JSONUtil.writeValueAsString(tags));
+        }
         return instances;
     }
 

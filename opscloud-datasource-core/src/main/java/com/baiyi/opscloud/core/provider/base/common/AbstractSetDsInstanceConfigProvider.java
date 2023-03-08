@@ -28,8 +28,17 @@ public abstract class AbstractSetDsInstanceConfigProvider<T> extends SimpleDsIns
         doSet(buildDsInstanceContext(dsInstanceId));
     }
 
+    /**
+     * 设置配置
+     * @param dsInstanceContext
+     */
     protected abstract void doSet(DsInstanceContext dsInstanceContext);
 
+    /**
+     * 构建配置
+     * @param dsConfig
+     * @return
+     */
     protected abstract T buildConfig(DatasourceConfig dsConfig);
 
     @Override

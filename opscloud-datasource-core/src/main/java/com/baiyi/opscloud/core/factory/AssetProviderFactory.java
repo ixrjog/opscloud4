@@ -27,14 +27,16 @@ public class AssetProviderFactory {
     private static final Map<String, ArrayListMultimap<String, SimpleAssetProvider>> context = new ConcurrentHashMap<>();
 
     public static <T extends SimpleAssetProvider> T getProvider(String instanceType, String assetType) {
-        if (context.containsKey(instanceType))
+        if (context.containsKey(instanceType)) {
             return CastUtils.cast(context.get(instanceType).get(assetType).get(0));
+        }
         return null;
     }
 
     public static <T extends SimpleAssetProvider> List<T> getProviders(String instanceType, String assetType) {
-        if (context.containsKey(instanceType))
+        if (context.containsKey(instanceType)) {
             return CastUtils.cast(context.get(instanceType).get(assetType));
+        }
         return null;
     }
 
@@ -42,9 +44,9 @@ public class AssetProviderFactory {
         if (context.containsKey(bean.getInstanceType())) {
             context.get(bean.getInstanceType()).put(bean.getAssetType(), bean);
         } else {
-            ArrayListMultimap<String, SimpleAssetProvider> multimap = ArrayListMultimap.create();
-            multimap.put(bean.getAssetType(), bean);
-            context.put(bean.getInstanceType(), multimap);
+            ArrayListMultimap<String, SimpleAssetProvider> map = ArrayListMultimap.create();
+            map.put(bean.getAssetType(), bean);
+            context.put(bean.getInstanceType(), map);
         }
         log.info("AssetProviderFactory Registered: beanName={}, instanceType={}, assetType={}", bean.getClass().getSimpleName(), bean.getInstanceType(), bean.getAssetType());
     }

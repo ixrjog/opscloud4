@@ -35,10 +35,13 @@ public class PodAssetConverter {
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, KubernetesConfig.Kubernetes kubernetes, Pod entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entity.getMetadata().getUid()) // 资产id
+                // 资产id
+                .assetId(entity.getMetadata().getUid())
                 .name(entity.getMetadata().getName())
-                .assetKey(entity.getStatus().getPodIP())    // podIp
-                .assetKey2(entity.getMetadata().getNamespace()) // namespace
+                // podIp
+                .assetKey(entity.getStatus().getPodIP())
+                // namespace
+                .assetKey2(entity.getMetadata().getNamespace())
                 .kind(entity.getKind()).assetType(DsAssetTypeConstants.KUBERNETES_POD.name())
                 .createdTime(toGmtDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
@@ -91,7 +94,9 @@ public class PodAssetConverter {
 
     private static List<AssetContainer> toChildren(KubernetesConfig.Kubernetes kubernetes, Pod pod) {
         List<Container> containers = pod.getSpec().getContainers();
-        if (CollectionUtils.isEmpty(containers)) return null;
+        if (CollectionUtils.isEmpty(containers)) {
+            return null;
+        }
         return containers.stream().filter(c -> tryIgnoreName(kubernetes, c.getName())).collect(Collectors.toList())
                 .stream().map(c -> {
                     DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
@@ -104,10 +109,13 @@ public class PodAssetConverter {
     }
 
     private static boolean tryIgnoreName(KubernetesConfig.Kubernetes kubernetes, String containerName) {
-        if (kubernetes.getContainer() == null || CollectionUtils.isEmpty(kubernetes.getContainer().getIgnore()))
+        if (kubernetes.getContainer() == null || CollectionUtils.isEmpty(kubernetes.getContainer().getIgnore())) {
             return true;
+        }
         for (String name : kubernetes.getContainer().getIgnore()) {
-            if (containerName.startsWith(name)) return false;
+            if (containerName.startsWith(name)) {
+                return false;
+            }
         }
         return true;
     }

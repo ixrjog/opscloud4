@@ -74,7 +74,7 @@ public class DeployingSupervisor implements ISupervisor {
                 .map(LeoDeployModel.Deploy::getKubernetes)
                 .map(LeoBaseModel.Kubernetes::getDeployment)
                 .orElseThrow(() -> new LeoDeployException("Kubernetes配置不存在！"));
-        final String containerName = deployment.getContainer().getName();
+        // final String containerName = deployment.getContainer().getName();
         SupervisingStrategy deployingStrategy = SupervisingStrategyFactroy.getStrategyByDeployType(deploy.getDeployType());
         if (deployingStrategy == null) {
             logHelper.error(this.leoDeploy, "未找到对应的部署策略: deployType={}", deploy.getDeployType());
@@ -83,11 +83,6 @@ public class DeployingSupervisor implements ISupervisor {
         // 循环
         while (true) {
             setHeartbeat();
-            // 延迟执行
-            try {
-                TimeUnit.SECONDS.sleep(SLEEP_SECONDS);
-            } catch (InterruptedException ignored) {
-            }
             // tryStop
             DeployStop deployStop = heartbeatHelper.tryDeployStop(leoDeploy.getId());
             if (deployStop.getIsStop()) {
@@ -113,6 +108,11 @@ public class DeployingSupervisor implements ISupervisor {
             } catch (Exception e) {
                 logHelper.warn(this.leoDeploy, e.getMessage());
                 log.warn(e.getMessage());
+            }
+            // 延迟执行
+            try {
+                TimeUnit.SECONDS.sleep(SLEEP_SECONDS);
+            } catch (InterruptedException ignored) {
             }
         }
     }

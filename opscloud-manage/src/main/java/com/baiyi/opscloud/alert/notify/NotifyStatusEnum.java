@@ -7,18 +7,16 @@ import lombok.Getter;
  * @Date 2022/7/29 7:21 PM
  * @Since 1.0
  */
-
-
 @Getter
 public enum NotifyStatusEnum {
 
     CALL_OK("用户接听"),
-    CALL_ERR("用户未接听")
-    ;
+    CALL_ERR("用户未接听");
 
     private final String name;
 
     NotifyStatusEnum(String name) {
         this.name = name;
     }
+
 }

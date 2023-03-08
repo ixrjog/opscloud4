@@ -25,7 +25,8 @@ public class NamespaceAssetConverter {
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Namespace entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entity.getMetadata().getUid()) // 资产id
+                // 资产id
+                .assetId(entity.getMetadata().getUid())
                 .name(entity.getMetadata().getName())
                 .assetKey(entity.getMetadata().getName())
                 .kind(entity.getKind())

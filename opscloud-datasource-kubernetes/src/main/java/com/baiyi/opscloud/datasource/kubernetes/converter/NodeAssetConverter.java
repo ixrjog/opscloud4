@@ -31,7 +31,8 @@ public class NodeAssetConverter {
 
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entity.getMetadata().getUid()) // 资产id
+                // 资产id
+                .assetId(entity.getMetadata().getUid())
                 .name(entity.getMetadata().getName())
                 .assetKey(addressMap.containsKey("InternalIP") ? addressMap.get("InternalIP").getAddress() : entity.getMetadata().getName())
                 .assetKey2(addressMap.containsKey("Hostname") ? addressMap.get("Hostname").getAddress() : null)

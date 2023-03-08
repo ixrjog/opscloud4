@@ -66,7 +66,9 @@ public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAsset
     @Override
     public void scan(DsAssetVO.Asset asset) {
         IAssetConverter iAssetConvert = AssetConverterFactory.getIAssetConvertByAssetType(getAssetType());
-        if (iAssetConvert == null) return;
+        if (iAssetConvert == null) {
+            return;
+        }
         // 获取可转换的业务对象
         List<BusinessTypeEnum> businessTypeEnums = iAssetConvert.getBusinessTypes();
         businessTypeEnums.forEach(t -> bind(t, asset));
@@ -86,7 +88,9 @@ public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAsset
     }
 
     private void bind(DsAssetVO.Asset asset, BusinessAssetRelationVO.IBusinessAssetRelation iBusinessAssetRelation) {
-        if (iBusinessAssetRelation == null) return;
+        if (iBusinessAssetRelation == null) {
+            return;
+        }
         iBusinessAssetRelation.setAssetId(asset.getId());
         BusinessAssetRelationVO.Relation relation = iBusinessAssetRelation.toBusinessAssetRelation();
         if (businessAssetRelationService.getByUniqueKey(relation) == null) {

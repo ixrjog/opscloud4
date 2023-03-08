@@ -2,7 +2,6 @@ package com.baiyi.opscloud.datasource.jenkins.engine.impl;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
-import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
 import com.baiyi.opscloud.datasource.jenkins.engine.JenkinsBuildExecutorHelper;
@@ -10,9 +9,9 @@ import com.baiyi.opscloud.datasource.jenkins.model.Computer;
 import com.baiyi.opscloud.datasource.jenkins.model.ComputerWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.model.Executor;
 import com.baiyi.opscloud.datasource.jenkins.model.Job;
+import com.baiyi.opscloud.datasource.jenkins.status.JenkinsBuildExecutorStatusVO;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.datasource.jenkins.status.JenkinsBuildExecutorStatusVO;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,8 +40,6 @@ public class JenkinsBuildExecutorHelperImpl implements JenkinsBuildExecutorHelpe
     public final static String IDLE = "Idle";
 
     public final static String OFFLINE = "(Offline)";
-
-    private final RedisUtil redisUtil;
 
     private final DsConfigHelper dsConfigHelper;
 

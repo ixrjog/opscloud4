@@ -76,8 +76,9 @@ public class GitLabSshKeyProvider extends AbstractAssetRelationProvider<SshKey, 
         try {
 
             List<User> users = GitLabUserDriver.getUsers(gitlab);
-            if (CollectionUtils.isEmpty(users))
+            if (CollectionUtils.isEmpty(users)) {
                 return Collections.emptyList();
+            }
             List<SshKey> sshKeys = Lists.newArrayList();
             for (User user : users) {
                 List<SshKey> keys = GitLabSshKeyDriver.getSshKeysWithUserId(gitlab, user.getId());
@@ -115,14 +116,18 @@ public class GitLabSshKeyProvider extends AbstractAssetRelationProvider<SshKey, 
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey()))
+        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
+        }
+        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        }
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
+        }
+        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
             return false;
+        }
         return true;
     }
 

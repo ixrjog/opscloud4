@@ -19,4 +19,5 @@ public class NotifyFactory {
     public static void register(INotify bean) {
         context.put(bean.getKey(), bean);
     }
+
 }

@@ -17,7 +17,7 @@ import java.net.URISyntaxException;
  * @Version 1.0
  */
 @Slf4j
-public class KuberClient {
+public class KubernetesClientBuilder {
 
     public interface Config {
         int CONNECTION_TIMEOUT = 30 * 1000;
@@ -46,7 +46,7 @@ public class KuberClient {
                 throw new KubernetesException("KubernetesClient error: {}", e.getMessage());
             }
         }
-        throw new KubernetesException("Kubernetes无效的供应商配置: provider={}", kubernetes.getProvider());
+        throw new KubernetesException("无效的供应商: provider={}", kubernetes.getProvider());
     }
 
 }

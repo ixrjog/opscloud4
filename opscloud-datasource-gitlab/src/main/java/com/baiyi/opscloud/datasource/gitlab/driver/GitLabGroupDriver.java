@@ -2,6 +2,7 @@ package com.baiyi.opscloud.datasource.gitlab.driver;
 
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.datasource.gitlab.factory.GitLabApiFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.Pager;
@@ -17,6 +18,7 @@ import java.util.List;
  * @Date 2022/10/27 14:39
  * @Version 1.0
  */
+@Slf4j
 public class GitLabGroupDriver {
 
     public static final int ITEMS_PER_PAGE = 20;
@@ -30,8 +32,13 @@ public class GitLabGroupDriver {
      * @throws GitLabApiException
      */
     public static List<Member> getMembersWithGroupId(GitLabConfig.Gitlab gitlab, Long groupId) throws GitLabApiException {
-        Pager<Member> memberPager = buildAPI(gitlab).getGroupApi().getMembers(groupId, ITEMS_PER_PAGE);
-        return memberPager.all();
+        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+            Pager<Member> memberPager = gitLabApi.getGroupApi().getMembers(groupId, ITEMS_PER_PAGE);
+            return memberPager.all();
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -42,12 +49,18 @@ public class GitLabGroupDriver {
      * @throws GitLabApiException
      */
     public static List<Project> getProjectsWithGroupId(GitLabConfig.Gitlab gitlab, Long groupId) throws GitLabApiException {
-        Pager<Project> projectPager = buildAPI(gitlab).getGroupApi().getProjects(groupId, ITEMS_PER_PAGE);
-        return projectPager.all();
+        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+            Pager<Project> projectPager = gitLabApi.getGroupApi().getProjects(groupId, ITEMS_PER_PAGE);
+            return projectPager.all();
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     /**
      * 修改群组成员
+     *
      * @param gitlab
      * @param groupId
      * @param userId
@@ -55,11 +68,17 @@ public class GitLabGroupDriver {
      * @throws GitLabApiException
      */
     public static void updateMember(GitLabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
-        buildAPI(gitlab).getGroupApi().updateMember(groupId, userId, accessLevel);
+        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+            gitLabApi.getGroupApi().updateMember(groupId, userId, accessLevel);
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     /**
      * 新增群组成员
+     *
      * @param gitlab
      * @param groupId
      * @param userId
@@ -67,7 +86,12 @@ public class GitLabGroupDriver {
      * @throws GitLabApiException
      */
     public static void addMember(GitLabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
-        buildAPI(gitlab).getGroupApi().addMember(groupId, userId, accessLevel);
+        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+            gitLabApi.getGroupApi().addMember(groupId, userId, accessLevel);
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -78,7 +102,12 @@ public class GitLabGroupDriver {
      * @throws GitLabApiException
      */
     public static List<Group> getGroups(GitLabConfig.Gitlab gitlab) throws GitLabApiException {
-        return buildAPI(gitlab).getGroupApi().getGroups();
+        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+            return gitLabApi.getGroupApi().getGroups();
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     private static GitLabApi buildAPI(GitLabConfig.Gitlab gitlab) {

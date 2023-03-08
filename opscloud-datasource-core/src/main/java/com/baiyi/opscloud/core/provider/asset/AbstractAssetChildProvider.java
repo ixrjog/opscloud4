@@ -34,10 +34,10 @@ public abstract class AbstractAssetChildProvider<C> extends BaseAssetProvider<C>
 
     /**
      * 父资产查询子条目
-     *
      * @param dsInstanceContext
      * @param parentAsset
      * @return
+     * @throws ListEntitiesException
      */
     protected abstract List<C> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset parentAsset) throws ListEntitiesException;
 

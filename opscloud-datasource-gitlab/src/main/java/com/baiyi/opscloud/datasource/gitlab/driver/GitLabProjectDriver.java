@@ -33,8 +33,13 @@ public class GitLabProjectDriver {
      * @throws GitLabApiException
      */
     public static List<Member> getMembersWithProjectId(GitLabConfig.Gitlab gitlab, Long projectId, int itemsPerPage) throws GitLabApiException {
-        Pager<Member> memberPager = buildAPI(gitlab).getProjectApi().getMembers(projectId, itemsPerPage);
-        return memberPager.all();
+        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+            Pager<Member> memberPager = gitLabApi.getProjectApi().getMembers(projectId, itemsPerPage);
+            return memberPager.all();
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -46,8 +51,13 @@ public class GitLabProjectDriver {
      * @throws GitLabApiException
      */
     public static List<Member> getMembersWithProjectId(GitLabConfig.Gitlab gitlab, Long projectId) throws GitLabApiException {
-        Pager<Member> memberPager = buildAPI(gitlab).getProjectApi().getMembers(projectId, ITEMS_PER_PAGE);
-        return memberPager.all();
+        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+            Pager<Member> memberPager = gitLabApi.getProjectApi().getMembers(projectId, ITEMS_PER_PAGE);
+            return memberPager.all();
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -60,7 +70,12 @@ public class GitLabProjectDriver {
      * @throws GitLabApiException
      */
     public static void updateMember(GitLabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
-        buildAPI(gitlab).getProjectApi().updateMember(projectId, userId, accessLevel);
+        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+            gitLabApi.getProjectApi().updateMember(projectId, userId, accessLevel);
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -73,7 +88,12 @@ public class GitLabProjectDriver {
      * @throws GitLabApiException
      */
     public static void addMember(GitLabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
-        buildAPI(gitlab).getProjectApi().addMember(projectId, userId, accessLevel);
+        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+            gitLabApi.getProjectApi().addMember(projectId, userId, accessLevel);
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -84,27 +104,57 @@ public class GitLabProjectDriver {
      * @throws GitLabApiException
      */
     public static List<Project> getProjects(GitLabConfig.Gitlab gitlab) throws GitLabApiException {
-        return buildAPI(gitlab).getProjectApi().getProjects();
+        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+            return gitLabApi.getProjectApi().getProjects();
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     public static List<Tag> getTagsWithProjectId(GitLabConfig.Gitlab gitlab, Long projectId) throws GitLabApiException {
-        return buildAPI(gitlab).getTagsApi().getTags(projectId);
+        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+            return gitLabApi.getTagsApi().getTags(projectId);
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     public static Optional<Tag> getTagWithProjectIdAndTagName(GitLabConfig.Gitlab gitlab, Long projectId, String tagName) throws GitLabApiException {
-        return buildAPI(gitlab).getTagsApi().getOptionalTag(projectId, tagName);
+        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+            return gitLabApi.getTagsApi().getOptionalTag(projectId, tagName);
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     public static List<Branch> getBranchesWithProjectId(GitLabConfig.Gitlab gitlab, Long projectId) throws GitLabApiException {
-        return buildAPI(gitlab).getRepositoryApi().getBranches(projectId);
+        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+            return gitLabApi.getRepositoryApi().getBranches(projectId);
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     public static Optional<Branch> getBranchWithProjectIdAndBranchName(GitLabConfig.Gitlab gitlab, Long projectId, String branchName) throws GitLabApiException {
-        return buildAPI(gitlab).getRepositoryApi().getOptionalBranch(projectId, branchName);
+        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+            return gitLabApi.getRepositoryApi().getOptionalBranch(projectId, branchName);
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     public static Branch createBranch(GitLabConfig.Gitlab gitlab, Long projectId, String branchName, String ref) throws GitLabApiException {
-        return buildAPI(gitlab).getRepositoryApi().createBranch(projectId, branchName, ref);
+        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+            return gitLabApi.getRepositoryApi().createBranch(projectId, branchName, ref);
+        } catch (GitLabApiException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     private static GitLabApi buildAPI(GitLabConfig.Gitlab gitlab) {

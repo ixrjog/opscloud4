@@ -87,9 +87,15 @@ public class GitLabUserProvider extends AbstractAssetRelationProvider<User, SshK
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) return false;
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) return false;
-        if (preAsset.getIsActive() != asset.getIsActive()) return false;
+        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
+            return false;
+        }
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
+            return false;
+        }
+        if (!preAsset.getIsActive().equals(asset.getIsActive())) {
+            return false;
+        }
         return true;
     }
 

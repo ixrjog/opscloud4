@@ -11,10 +11,25 @@ import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
  */
 public interface IBusinessService<T> extends BaseBusiness.IBusinessType {
 
+    /**
+     * 按id查询
+     * @param id
+     * @return
+     */
     T getById(Integer id);
 
+    /**
+     * 按key查询
+     * @param key
+     * @return
+     */
     T getByKey(String key);
 
+    /**
+     * 转换
+     * @param asset
+     * @return
+     */
     BusinessAssetRelationVO.IBusinessAssetRelation toBusinessAssetRelation(DsAssetVO.Asset asset);
 
 }

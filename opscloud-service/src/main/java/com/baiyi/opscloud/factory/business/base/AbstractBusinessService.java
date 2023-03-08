@@ -19,7 +19,7 @@ public abstract class AbstractBusinessService<T> implements IBusinessService<T>,
             BusinessType annotation = this.getClass().getAnnotation(BusinessType.class);
             return annotation.value().getType();
         }
-        throw new OCException("未找到@BusinessType注解,无法指定业务类型!");
+        throw new OCException("未找到@BusinessType注解, 无法指定业务类型!");
     }
 
     @Override

@@ -88,8 +88,9 @@ public class GitLabAssetConvert {
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, SshKey entity) {
         String name = "";
-        if(entity instanceof GitLabSshKey)
+        if(entity instanceof GitLabSshKey) {
             name = ((GitLabSshKey) entity).getUsername();
+        }
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(String.valueOf(entity.getId()))

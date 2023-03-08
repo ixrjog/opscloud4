@@ -48,14 +48,18 @@ public class KubernetesDeploymentProvider extends AbstractAssetRelationProvider<
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey()))
+        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
+        }
+        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        }
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
-        if (preAsset.getIsActive() != asset.getIsActive())
+        }
+        if (!preAsset.getIsActive().equals(asset.getIsActive())) {
             return false;
+        }
         return true;
     }
 

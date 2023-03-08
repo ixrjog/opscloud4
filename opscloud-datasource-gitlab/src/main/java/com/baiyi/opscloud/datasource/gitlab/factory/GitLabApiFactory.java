@@ -28,7 +28,6 @@ public class GitLabApiFactory {
         } else {
             gitLabApi = new GitLabApi(GitLabApi.ApiVersion.V4, gitlab.getUrl(), gitlab.getToken());
         }
-
         int connectTimeout = Optional.of(gitlab)
                 .map(GitLabConfig.Gitlab::getApi)
                 .map(GitLabConfig.Api::getConnectTimeout)

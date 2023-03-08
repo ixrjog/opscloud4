@@ -218,7 +218,7 @@ public class RemoteInvokeHandler {
                                               KubernetesResource.Pod pod, KubernetesResource.Container container) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         KubernetesPodDriver.SimpleListener listener = new KubernetesPodDriver.SimpleListener();
-        ExecWatch execWatch = KubernetesPodDriver.loginPodContainer(
+        ExecWatch execWatch = KubernetesPodDriver.loginPod(
                 kubernetes,
                 pod.getNamespace(),
                 pod.getName(),

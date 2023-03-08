@@ -52,6 +52,11 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
         return Model.SYNC;
     }
 
+    /**
+     * 查询【资产】实体
+     * @param dsInstanceContext
+     * @return
+     */
     protected abstract List<T> listEntities(DsInstanceContext dsInstanceContext);
 
     private void enterAssets(DsInstanceContext dsInstanceContext, List<T> entities) {
@@ -119,7 +124,6 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
             }
         } else {
             preAsset.setId(asset.getId());
-//            preAsset.setIsActive(asset.getIsActive());
             if (!equals(asset, preAsset)) {
                 dsInstanceAssetService.update(preAsset);
             }

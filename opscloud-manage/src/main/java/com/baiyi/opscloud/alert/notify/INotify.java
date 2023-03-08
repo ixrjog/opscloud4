@@ -13,4 +13,5 @@ public interface INotify {
     void doNotify(AlertNotifyMedia media, AlertContext context);
 
     String getKey();
+
 }

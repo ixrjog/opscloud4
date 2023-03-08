@@ -27,11 +27,17 @@ public abstract class BaseAuthProvider extends SimpleDsInstanceProvider implemen
         return auth(dsInstanceContext, credential);
     }
 
+    /**
+     * 认证
+     * @param dsInstanceContext
+     * @param credential
+     * @return
+     */
     protected abstract boolean auth(DsInstanceContext dsInstanceContext, Authorization.Credential credential);
 
     @Override
     public void afterPropertiesSet() {
-        AuthProviderFactory.register(this); // 工厂中注册
+        AuthProviderFactory.register(this);
     }
 
 }

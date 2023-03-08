@@ -134,7 +134,7 @@ public class BuildingSupervisor implements ISupervisor {
                         .buildStatus("监视任务阶段: 异常")
                         .build();
                 save(saveLeoBuild);
-                logHelper.error(leoBuild, "异常错误任务结束: err={}", e.getMessage());
+                logHelper.error(leoBuild, "异常错误任务结束: {}", e.getMessage());
             }
         }
 

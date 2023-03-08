@@ -5,6 +5,7 @@ import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
 import com.baiyi.opscloud.datasource.jenkins.helper.JenkinsVersion;
 import com.baiyi.opscloud.datasource.jenkins.model.*;
 import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -15,42 +16,70 @@ import java.util.Map;
  * @Date 2021/7/2 9:55 上午
  * @Version 1.0
  */
+@Slf4j
 public class JenkinsServerDriver {
 
     public static Map<String, Computer> getComputers(JenkinsConfig.Jenkins jenkins) throws URISyntaxException, IOException {
-        JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
-        return jenkinsServer.getComputers();
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
+            return jenkinsServer.getComputers();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     public static Map<String, Job> getJobs(JenkinsConfig.Jenkins jenkins) throws URISyntaxException, IOException {
-        JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
-        return jenkinsServer.getJobs();
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
+            return jenkinsServer.getJobs();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     public static Map<String, Job> getJobs(JenkinsConfig.Jenkins jenkins, FolderJob folder) throws URISyntaxException, IOException {
-        JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
-        return jenkinsServer.getJobs(folder);
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
+            return jenkinsServer.getJobs(folder);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     public static JobWithDetails getJob(JenkinsConfig.Jenkins jenkins, String jobName) throws URISyntaxException, IOException {
-        JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
-        return jenkinsServer.getJob(jobName);
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
+            return jenkinsServer.getJob(jobName);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     public static String getJobXml(JenkinsConfig.Jenkins jenkins, FolderJob folder, String jobName) throws URISyntaxException, IOException {
-        JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
-        return jenkinsServer.getJobXml(folder, jobName);
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
+            return jenkinsServer.getJobXml(folder, jobName);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     public static String getJobXml(JenkinsConfig.Jenkins jenkins, String jobName) throws URISyntaxException, IOException {
-        JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
-        return jenkinsServer.getJobXml(jobName);
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
+            return jenkinsServer.getJobXml(jobName);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
-    //    @Retryable(value = Exception.class, maxAttempts = 5, backoff = @Backoff(delay = 1000))
     public static JenkinsVersion getVersion(JenkinsConfig.Jenkins jenkins) throws URISyntaxException, IOException {
-        JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
-        return jenkinsServer.getVersion();
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
+            return jenkinsServer.getVersion();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
 }

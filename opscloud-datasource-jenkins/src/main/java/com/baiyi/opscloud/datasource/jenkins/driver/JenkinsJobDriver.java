@@ -46,9 +46,13 @@ public class JenkinsJobDriver {
                 .map(JenkinsConfig.Jenkins::getSecurity)
                 .map(JenkinsConfig.Security::getCrumbFlag)
                 .orElse(false);
-        JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
-        JobWithDetails job = jenkinsServer.getJob(jobName);
-        return job.build(params, crumbFlag);
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
+            JobWithDetails job = jenkinsServer.getJob(jobName);
+            return job.build(params, crumbFlag);
+        } catch (URISyntaxException | IOException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -62,23 +66,30 @@ public class JenkinsJobDriver {
      * @throws IOException
      */
     @Retryable(value = IOException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000))
-    public JenkinsServer createJob(JenkinsConfig.Jenkins jenkins, String jobName, String jobXml) throws URISyntaxException, IOException {
+    public void createJob(JenkinsConfig.Jenkins jenkins, String jobName, String jobXml) throws URISyntaxException, IOException {
         boolean crumbFlag = Optional.of(jenkins)
                 .map(JenkinsConfig.Jenkins::getSecurity)
                 .map(JenkinsConfig.Security::getCrumbFlag)
                 .orElse(false);
-        JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
-        return jenkinsServer.createJob(jobName, jobXml, crumbFlag);
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
+            jenkinsServer.createJob(jobName, jobXml, crumbFlag);
+        } catch (URISyntaxException | IOException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
-
 
     public void deleteJob(JenkinsConfig.Jenkins jenkins, String jobName) throws URISyntaxException, IOException {
         boolean crumbFlag = Optional.of(jenkins)
                 .map(JenkinsConfig.Jenkins::getSecurity)
                 .map(JenkinsConfig.Security::getCrumbFlag)
                 .orElse(false);
-        JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
-        jenkinsServer.deleteJob(jobName, crumbFlag);
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
+            jenkinsServer.deleteJob(jobName, crumbFlag);
+        } catch (URISyntaxException | IOException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
     /**
@@ -90,21 +101,26 @@ public class JenkinsJobDriver {
      * @throws URISyntaxException
      * @throws IOException
      */
+    @Deprecated
     public void stopJobBuild(JenkinsConfig.Jenkins jenkins, String jobName, Integer buildNumber) throws URISyntaxException, IOException {
         assert jenkins != null;
         boolean crumbFlag = Optional.of(jenkins)
                 .map(JenkinsConfig.Jenkins::getSecurity)
                 .map(JenkinsConfig.Security::getCrumbFlag)
                 .orElse(false);
-        JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
-        JobWithDetails jobWithDetails = jenkinsServer.getJob(jobName);
-        Optional<Build> optionalBuild = jobWithDetails.getBuildByNumber(buildNumber);
-        if (optionalBuild.isPresent()) {
-            BuildWithDetails buildWithDetails = optionalBuild.get().details();
-            if (buildWithDetails.isBuilding()) {
-                log.info("停止正在执行的构建: url={}, jobName={}, buildNumber={}", jenkins.getUrl(), jobName, buildNumber);
-                buildWithDetails.Stop(crumbFlag);
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
+            JobWithDetails jobWithDetails = jenkinsServer.getJob(jobName);
+            Optional<Build> optionalBuild = jobWithDetails.getBuildByNumber(buildNumber);
+            if (optionalBuild.isPresent()) {
+                BuildWithDetails buildWithDetails = optionalBuild.get().details();
+                if (buildWithDetails.isBuilding()) {
+                    log.info("停止正在执行的构建: url={}, jobName={}, buildNumber={}", jenkins.getUrl(), jobName, buildNumber);
+                    buildWithDetails.Stop(crumbFlag);
+                }
             }
+        } catch (URISyntaxException | IOException e) {
+            log.error(e.getMessage());
+            throw e;
         }
     }
 

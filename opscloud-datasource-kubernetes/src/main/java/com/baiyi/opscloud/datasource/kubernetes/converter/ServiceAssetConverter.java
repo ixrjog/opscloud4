@@ -29,7 +29,8 @@ public class ServiceAssetConverter {
                 .assetId(assetId)
                 .name(name)
                 .assetKey(name)
-                .assetKey2(namespace) // namespace
+                // namespace
+                .assetKey2(namespace)
                 .kind(entity.getKind())
                 .assetType(DsAssetTypeConstants.KUBERNETES_SERVICE.name())
                 .createdTime(DeploymentAssetConverter.toGmtDate(entity.getMetadata().getCreationTimestamp()))

@@ -58,8 +58,9 @@ public class JenkinsComputerProvider extends BaseAssetProvider<ComputerWithDetai
         try {
             Map<String, Computer> computerMap = JenkinsServerDriver.getComputers(buildConfig(dsInstanceContext.getDsConfig()));
             List<ComputerWithDetails> computerWithDetails = Lists.newArrayList();
-            for (String k : computerMap.keySet())
+            for (String k : computerMap.keySet()) {
                 computerWithDetails.add(computerMap.get(k).details());
+            }
             return computerWithDetails;
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -75,10 +76,12 @@ public class JenkinsComputerProvider extends BaseAssetProvider<ComputerWithDetai
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
-        if (preAsset.getIsActive() != asset.getIsActive())
+        }
+        if (!preAsset.getIsActive().equals(asset.getIsActive())) {
             return false;
+        }
         return true;
     }
 

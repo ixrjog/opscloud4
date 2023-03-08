@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.kubernetes.event;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.datasource.kubernetes.client.KuberClient;
+import com.baiyi.opscloud.datasource.kubernetes.client.KubernetesClientBuilder;
 import io.fabric8.kubernetes.api.builder.Visitor;
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.ConfigMapBuilder;
@@ -24,10 +24,9 @@ public class KubernetesWatchEvent {
 
     public static void watch(KubernetesConfig.Kubernetes kubernetes, String namespace) {
         try (
-                KubernetesClient client = KuberClient.build(kubernetes);
+                KubernetesClient client = KubernetesClientBuilder.build(kubernetes);
                 Watch ignored = newConfigMapWatch(client)
         ) {
-            //  final String namespace = Optional.ofNullable(client.getNamespace()).orElse("default");
             final String name = "watch-config-map-test-" + UUID.randomUUID().toString();
             final ConfigMap cm = client.configMaps().inNamespace(namespace).createOrReplace(new ConfigMapBuilder()
                     .withNewMetadata().withName(name).endMetadata()
@@ -35,7 +34,7 @@ public class KubernetesWatchEvent {
             );
             client.configMaps().inNamespace(namespace).withName(name)
                     .patch(new ConfigMapBuilder().withNewMetadata().withName(name).endMetadata().addToData("key", "value").build());
-            //noinspection Convert2Lambda
+            // noinspection Convert2Lambda
             client.configMaps().inNamespace(namespace).withName(name).edit(new Visitor<ObjectMetaBuilder>() {
                 @Override
                 public void visit(ObjectMetaBuilder omb) {
@@ -49,6 +48,7 @@ public class KubernetesWatchEvent {
     }
 
     private static Watch newConfigMapWatch(KubernetesClient client) {
+
         return client.configMaps().watch(new Watcher<ConfigMap>() {
             @Override
             public void eventReceived(Action action, ConfigMap resource) {
@@ -66,6 +66,5 @@ public class KubernetesWatchEvent {
             }
         });
     }
-
 
 }
