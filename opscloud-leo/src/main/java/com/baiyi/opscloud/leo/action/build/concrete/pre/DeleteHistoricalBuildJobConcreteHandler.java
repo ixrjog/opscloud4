@@ -1,16 +1,16 @@
 package com.baiyi.opscloud.leo.action.build.concrete.pre;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
+import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsJobDriver;
-import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
 import com.baiyi.opscloud.datasource.jenkins.model.JobWithDetails;
+import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.leo.action.build.BaseBuildHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
-import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,10 +41,9 @@ public class DeleteHistoricalBuildJobConcreteHandler extends BaseBuildHandler {
     @Resource
     private JenkinsJobDriver jenkinsJobDriver;
 
-    @Resource
-    private ApplicationService applicationService;
-
-    // 保留数量
+    /**
+     * 保留数量
+     */
     private static final int RESERVED_SIZE = 1;
 
     /**
@@ -58,8 +57,9 @@ public class DeleteHistoricalBuildJobConcreteHandler extends BaseBuildHandler {
         LeoJob leoJob = leoJobService.getById(leoBuild.getJobId());
         List<LeoBuild> leoBuilds = leoBuildService.queryTheHistoricalBuildToBeDeleted(leoJob.getId());
         // 少于保留数量则退出
-        if (CollectionUtils.isEmpty(leoBuilds) || leoBuilds.size() <= RESERVED_SIZE)
+        if (CollectionUtils.isEmpty(leoBuilds) || leoBuilds.size() <= RESERVED_SIZE) {
             return;
+        }
         List<LeoBuild> subLeoBuilds = leoBuilds.subList(RESERVED_SIZE, leoBuilds.size());
 
         subLeoBuilds.forEach(e -> {
@@ -89,8 +89,8 @@ public class DeleteHistoricalBuildJobConcreteHandler extends BaseBuildHandler {
     }
 
     private void deleteJob(LeoBuild leoBuild, JenkinsConfig jenkinsConfig, String uuid, String jobName) {
-        try {
-            JobWithDetails jobWithDetails = JenkinsServerDriver.getJob(jenkinsConfig.getJenkins(), jobName);
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkinsConfig.getJenkins())) {
+            JobWithDetails jobWithDetails = jenkinsServer.getJob(jobName);
             if (jobWithDetails != null) {
                 jenkinsJobDriver.deleteJob(jenkinsConfig.getJenkins(), jobName);
             }

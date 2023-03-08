@@ -1,11 +1,12 @@
 package com.baiyi.opscloud.leo.supervisor;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
-import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
+import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
 import com.baiyi.opscloud.datasource.jenkins.model.Build;
 import com.baiyi.opscloud.datasource.jenkins.model.BuildResult;
 import com.baiyi.opscloud.datasource.jenkins.model.BuildWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.model.JobWithDetails;
+import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.action.build.LeoPostBuildHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
@@ -69,29 +70,19 @@ public class BuildingSupervisor implements ISupervisor {
     @Override
     public void run() {
         setHeartbeat();
-        JobWithDetails jobWithDetails;
-        try {
-            jobWithDetails = JenkinsServerDriver.getJob(jenkins, leoBuild.getBuildJobName());
-        } catch (URISyntaxException | IOException e) {
-            LeoBuild saveLeoBuild = LeoBuild.builder()
-                    .id(leoBuild.getId())
-                    .endTime(new Date())
-                    .isFinish(true)
-                    .isActive(false)
-                    .buildResult(RESULT_ERROR)
-                    .buildStatus("监视任务阶段: 错误")
-                    .build();
-            save(saveLeoBuild);
-            logHelper.error(leoBuild, "异常错误任务结束: {}", e.getMessage());
-            return;
-        }
-        while (true) {
-            setHeartbeat();
-            try {
+
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
+            JobWithDetails jobWithDetails = jenkinsServer.getJob(leoBuild.getBuildJobName());
+            while (true) {
+                setHeartbeat();
+
                 if (this.build == null) {
                     Build build = jobWithDetails.details().getLastBuild();
                     if (build.equals(Build.BUILD_HAS_NEVER_RUN)) {
-                        TimeUnit.SECONDS.sleep(SLEEP_SECONDS);
+                        try {
+                            TimeUnit.SECONDS.sleep(SLEEP_SECONDS);
+                        } catch (InterruptedException ie) {
+                        }
                         continue;
                     }
                     if (build.equals(Build.BUILD_HAS_BEEN_CANCELLED)) {
@@ -110,7 +101,10 @@ public class BuildingSupervisor implements ISupervisor {
                 // 查询构建结果
                 BuildWithDetails buildWithDetails = this.build.details();
                 if (buildWithDetails.isBuilding()) {
-                    TimeUnit.SECONDS.sleep(SLEEP_SECONDS);
+                    try {
+                        TimeUnit.SECONDS.sleep(SLEEP_SECONDS);
+                    } catch (InterruptedException ie) {
+                    }
                 } else {
                     // 任务正常完成
                     LeoBuild saveLeoBuild = LeoBuild.builder()
@@ -124,20 +118,19 @@ public class BuildingSupervisor implements ISupervisor {
                     postBuildHandle();
                     return;
                 }
-            } catch (Exception e) {
-                // 任务异常完成
-                LeoBuild saveLeoBuild = LeoBuild.builder()
-                        .id(leoBuild.getId())
-                        .endTime(new Date())
-                        .isFinish(true)
-                        .buildResult(RESULT_ERROR)
-                        .buildStatus("监视任务阶段: 异常")
-                        .build();
-                save(saveLeoBuild);
-                logHelper.error(leoBuild, "异常错误任务结束: {}", e.getMessage());
             }
+        } catch (URISyntaxException | IOException e) {
+            LeoBuild saveLeoBuild = LeoBuild.builder()
+                    .id(leoBuild.getId())
+                    .endTime(new Date())
+                    .isFinish(true)
+                    .isActive(false)
+                    .buildResult(RESULT_ERROR)
+                    .buildStatus("监视任务阶段: 错误")
+                    .build();
+            save(saveLeoBuild);
+            logHelper.error(leoBuild, "异常错误任务结束: {}", e.getMessage());
         }
-
     }
 
     private void setHeartbeat() {

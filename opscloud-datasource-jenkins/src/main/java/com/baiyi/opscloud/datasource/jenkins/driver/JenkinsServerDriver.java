@@ -46,7 +46,7 @@ public class JenkinsServerDriver {
         }
     }
 
-    public static JobWithDetails getJob(JenkinsConfig.Jenkins jenkins, String jobName) throws URISyntaxException, IOException {
+    private static JobWithDetails getJob(JenkinsConfig.Jenkins jenkins, String jobName) throws URISyntaxException, IOException {
         try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
             return jenkinsServer.getJob(jobName);
         } catch (Exception e) {
