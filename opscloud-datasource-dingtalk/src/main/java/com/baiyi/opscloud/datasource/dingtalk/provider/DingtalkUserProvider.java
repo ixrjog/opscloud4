@@ -142,14 +142,18 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
-        if (!Objects.equals(preAsset.getIsActive(), asset.getIsActive()))
+        }
+        if (!Objects.equals(preAsset.getIsActive(), asset.getIsActive())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
+        }
+        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
+        }
+        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
             return false;
+        }
         return true;
     }
 

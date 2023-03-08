@@ -53,8 +53,9 @@ public class DingtalkDepartmentProvider extends AbstractDingtalkAssetProvider<Di
                         .deptId(deptId)
                         .build();
                 DingtalkDepartment.GetDepartmentResponse getDepartmentResponse = dingtalkDepartmentDriver.get(dingtalk, getDepartment);
-                if (getDepartmentResponse.getResult() != null)
+                if (getDepartmentResponse.getResult() != null) {
                     entities.add(getDepartmentResponse.getResult());
+                }
             });
             return entities;
         } catch (Exception e) {
@@ -71,10 +72,12 @@ public class DingtalkDepartmentProvider extends AbstractDingtalkAssetProvider<Di
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
-        if (preAsset.getIsActive() != asset.getIsActive())
+        }
+        if (!preAsset.getIsActive().equals(asset.getIsActive())) {
             return false;
+        }
         return true;
     }
 

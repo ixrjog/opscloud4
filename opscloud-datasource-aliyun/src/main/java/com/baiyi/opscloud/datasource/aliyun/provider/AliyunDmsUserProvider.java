@@ -80,8 +80,9 @@ public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
+        }
         return true;
     }
 
@@ -95,7 +96,7 @@ public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
                     .orElse(AliyunDmsTenantDriver.getTenant(aliyun).getTid());
             return AliyunDmsUserDriver.listUser(aliyun, tid);
         } catch (Exception e) {
-            log.error("获取条目错误: err={}", e.getMessage());
+            log.error("获取条目错误: {}", e.getMessage());
         }
         return Collections.emptyList();
     }

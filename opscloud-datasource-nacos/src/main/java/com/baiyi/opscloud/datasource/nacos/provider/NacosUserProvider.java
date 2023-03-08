@@ -61,8 +61,9 @@ public class NacosUserProvider extends BaseAssetProvider<NacosRole.Role> {
             while (true) {
                 NacosRole.RolesResponse rolesResponse = nacosAuthDriver.listRoles(buildConfig(dsInstanceContext.getDsConfig()), pageQuery);
                 entities.addAll(rolesResponse.getPageItems());
-                if (rolesResponse.getPagesAvailable() >= rolesResponse.getPageNumber())
+                if (rolesResponse.getPagesAvailable() >= rolesResponse.getPageNumber()) {
                     break;
+                }
                 pageQuery.setPageNo(pageQuery.getPageNo() + 1);
             }
             return entities;
@@ -80,10 +81,12 @@ public class NacosUserProvider extends BaseAssetProvider<NacosRole.Role> {
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
+        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
             return false;
-        if (preAsset.getIsActive() != asset.getIsActive())
+        }
+        if (!preAsset.getIsActive().equals(asset.getIsActive())) {
             return false;
+        }
         return true;
     }
 

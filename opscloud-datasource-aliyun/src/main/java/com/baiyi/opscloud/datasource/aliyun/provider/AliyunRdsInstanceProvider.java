@@ -51,16 +51,18 @@ public class AliyunRdsInstanceProvider extends BaseAssetProvider<AliyunRds.DBIns
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
+        }
         return true;
     }
 
     @Override
     protected List<AliyunRds.DBInstanceAttribute> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
+        if (CollectionUtils.isEmpty(aliyun.getRegionIds())) {
             return Collections.emptyList();
+        }
         List<AliyunRds.DBInstanceAttribute> entities = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId -> {
             try {

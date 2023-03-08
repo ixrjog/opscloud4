@@ -28,7 +28,6 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
  * @Date 2021/6/23 2:00 下午
  * @Since 1.0
  */
-
 @Component
 @ChildProvider(parentType = DsAssetTypeConstants.VPC)
 public class AliyunVSwitchProvider extends AbstractAssetChildProvider<DescribeVSwitchesResponse.VSwitch> {
@@ -56,8 +55,9 @@ public class AliyunVSwitchProvider extends AbstractAssetChildProvider<DescribeVS
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
+        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
             return false;
+        }
         return true;
     }
 

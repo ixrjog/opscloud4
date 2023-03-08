@@ -56,8 +56,9 @@ public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<Acces
     @Override
     protected List<AccessKey.Key> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
+        if (CollectionUtils.isEmpty(aliyun.getRegionIds())) {
             return Collections.emptyList();
+        }
         List<AccessKey.Key> entities = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId -> entities.addAll(aliyunRamAccessKeyDriver.listAccessKeys(regionId, aliyun, asset.getAssetKey())));
         return entities;

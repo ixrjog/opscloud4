@@ -56,20 +56,24 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<RamPo
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getAssetId(), asset.getAssetId()))
+        if (!AssetUtil.equals(preAsset.getAssetId(), asset.getAssetId())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey()))
+        }
+        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
+        }
+        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
             return false;
+        }
         return true;
     }
 
     @Override
     protected List<RamPolicy.Policy> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
+        if (CollectionUtils.isEmpty(aliyun.getRegionIds())) {
             return Collections.emptyList();
+        }
         List<RamPolicy.Policy> entities = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId -> {
             try {

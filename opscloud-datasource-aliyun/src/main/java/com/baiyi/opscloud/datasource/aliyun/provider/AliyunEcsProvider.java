@@ -56,24 +56,30 @@ public class AliyunEcsProvider extends AbstractAssetBusinessRelationProvider<Des
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
+        }
+        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
+        }
+        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
+        }
+        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getExpiredTime(), asset.getExpiredTime()))
+        }
+        if (!AssetUtil.equals(preAsset.getExpiredTime(), asset.getExpiredTime())) {
             return false;
+        }
         return true;
     }
 
     @Override
     protected List<DescribeInstancesResponse.Instance> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
+        if (CollectionUtils.isEmpty(aliyun.getRegionIds())) {
             return Collections.emptyList();
+        }
         List<DescribeInstancesResponse.Instance> instanceList = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId ->
                 instanceList.addAll(aliyunEcsDriver.listInstances(regionId, aliyun))

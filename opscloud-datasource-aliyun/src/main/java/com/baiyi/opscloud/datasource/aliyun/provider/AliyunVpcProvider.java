@@ -58,16 +58,18 @@ public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vp
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
+        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
             return false;
+        }
         return true;
     }
 
     @Override
     protected List<DescribeVpcsResponse.Vpc> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
+        if (CollectionUtils.isEmpty(aliyun.getRegionIds())) {
             return Collections.emptyList();
+        }
         List<DescribeVpcsResponse.Vpc> vpcList = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId -> vpcList.addAll(aliyunVpcDriver.listVpcs(regionId, aliyun)));
         return vpcList;

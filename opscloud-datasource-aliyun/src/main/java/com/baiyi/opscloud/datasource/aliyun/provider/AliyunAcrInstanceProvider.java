@@ -53,10 +53,12 @@ public class AliyunAcrInstanceProvider extends BaseAssetProvider<AliyunAcr.Insta
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
+        }
+        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
             return false;
+        }
         return true;
     }
 

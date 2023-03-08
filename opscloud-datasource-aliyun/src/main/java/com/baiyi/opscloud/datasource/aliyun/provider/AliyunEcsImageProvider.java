@@ -57,20 +57,24 @@ public class AliyunEcsImageProvider extends BaseAssetProvider<DescribeImagesResp
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
+        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
+        }
+        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getExpiredTime(), asset.getExpiredTime()))
+        }
+        if (!AssetUtil.equals(preAsset.getExpiredTime(), asset.getExpiredTime())) {
             return false;
+        }
         return true;
     }
 
     @Override
     protected List<DescribeImagesResponse.Image> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
+        if (CollectionUtils.isEmpty(aliyun.getRegionIds())) {
             return Collections.emptyList();
+        }
         List<DescribeImagesResponse.Image> imageList = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId -> imageList.addAll(aliyunEcsDriver.listImages(regionId, aliyun)));
         return imageList;

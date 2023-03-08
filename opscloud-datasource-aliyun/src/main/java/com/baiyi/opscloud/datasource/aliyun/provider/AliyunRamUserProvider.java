@@ -55,20 +55,24 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<RamUser
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
+        }
+        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
+        }
+        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
             return false;
+        }
         return true;
     }
 
     @Override
     protected List<RamUser.User> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
+        if (CollectionUtils.isEmpty(aliyun.getRegionIds())) {
             return Collections.emptyList();
+        }
         List<RamUser.User> entities = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId -> entities.addAll(aliyunRamUserDriver.listUsers(regionId, aliyun)));
         return entities;
@@ -94,7 +98,6 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<RamUser
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         return aliyunRamUserDriver.listUsersForPolicy(aliyun.getRegionId(), aliyun, target.getPolicyType(), target.getPolicyName());
     }
-
 
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance entity) {
         return ComputeAssetConverter.toAssetContainer(dsInstance, entity);

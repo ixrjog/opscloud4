@@ -35,7 +35,7 @@ public class AliyunRedisInstanceProvider extends BaseAssetProvider<AliyunRedis.K
     private AliyunRedisInstanceDriver aliyunRedisInstanceDriver;
 
     @Resource
-    private AliyunRedisInstanceProvider aliunRedisInstanceProvider;
+    private AliyunRedisInstanceProvider aliyunRedisInstanceProvider;
 
     @Override
     @SingleTask(name = PULL_ALIYUN_REDIS_INSTANCE, lockTime = "2m")
@@ -49,16 +49,18 @@ public class AliyunRedisInstanceProvider extends BaseAssetProvider<AliyunRedis.K
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
+        }
         return true;
     }
 
     @Override
     protected List<AliyunRedis.KVStoreInstance> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
+        if (CollectionUtils.isEmpty(aliyun.getRegionIds())) {
             return Collections.emptyList();
+        }
         List<AliyunRedis.KVStoreInstance> entities = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId -> {
             try {
@@ -81,7 +83,7 @@ public class AliyunRedisInstanceProvider extends BaseAssetProvider<AliyunRedis.K
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(aliunRedisInstanceProvider);
+        AssetProviderFactory.register(aliyunRedisInstanceProvider);
     }
 
 }

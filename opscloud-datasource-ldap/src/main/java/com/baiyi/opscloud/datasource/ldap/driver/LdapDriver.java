@@ -92,7 +92,9 @@ public class LdapDriver {
      * @return
      */
     public boolean verifyLogin(LdapConfig.Ldap ldapConfig, Authorization.Credential credential) {
-        if (credential.isEmpty()) return false;
+        if (credential.isEmpty()) {
+            return false;
+        }
         final String username = credential.getUsername();
         final String password = credential.getPassword();
         log.info("Verify login content username={}", username);
@@ -138,12 +140,14 @@ public class LdapDriver {
             ocattr.add("top");
             ocattr.add("person");
             ocattr.add("organizationalPerson");
-            if (!userObjectClass.equalsIgnoreCase("person") && !userObjectClass.equalsIgnoreCase("organizationalPerson"))
+            if (!userObjectClass.equalsIgnoreCase("person") && !userObjectClass.equalsIgnoreCase("organizationalPerson")) {
                 ocattr.add(userObjectClass);
+            }
             // 用户属性
             Attributes attrs = new BasicAttributes();
             attrs.put(ocattr);
-            attrs.put(userId, person.getUsername()); // cn={username}
+            // cn={username}
+            attrs.put(userId, person.getUsername());
             attrs.put("sn", person.getUsername());
             attrs.put("displayName", person.getDisplayName());
             attrs.put("mail", person.getEmail());
@@ -189,16 +193,22 @@ public class LdapDriver {
     public void updatePerson(LdapConfig.Ldap ldapConfig, LdapPerson.Person person) {
         String dn = LdapUtil.toUserDN(ldapConfig, person);
         LdapPerson.Person checkPerson = getPersonWithDN(ldapConfig, dn);
-        if (checkPerson == null) return;
+        if (checkPerson == null) {
+            return;
+        }
         try {
-            if (!StringUtils.isEmpty(person.getDisplayName()) && !person.getDisplayName().equals(checkPerson.getDisplayName()))
+            if (!StringUtils.isEmpty(person.getDisplayName()) && !person.getDisplayName().equals(checkPerson.getDisplayName())) {
                 modifyAttributes(ldapConfig, dn, "displayName", person.getDisplayName());
-            if (!StringUtils.isEmpty(person.getEmail()) && !person.getEmail().equals(checkPerson.getEmail()))
+            }
+            if (!StringUtils.isEmpty(person.getEmail()) && !person.getEmail().equals(checkPerson.getEmail())) {
                 modifyAttributes(ldapConfig, dn, "mail", person.getEmail());
-            if (!StringUtils.isEmpty(person.getMobile()) && !person.getMobile().equals(checkPerson.getMobile()))
+            }
+            if (!StringUtils.isEmpty(person.getMobile()) && !person.getMobile().equals(checkPerson.getMobile())) {
                 modifyAttributes(ldapConfig, dn, "mobile", person.getMobile());
-            if (!StringUtils.isEmpty(person.getUserPassword()))
+            }
+            if (!StringUtils.isEmpty(person.getUserPassword())) {
                 modifyAttributes(ldapConfig, dn, "userpassword", person.getUserPassword());
+            }
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -221,8 +231,9 @@ public class LdapDriver {
             List<String> usernameList = Lists.newArrayList();
             for (String member : members) {
                 String[] m = member.split("[=,]");
-                if (m.length > 2 && !m[1].equals("admin"))
+                if (m.length > 2 && !m[1].equals("admin")) {
                     usernameList.add(m[1]);
+                }
             }
             return usernameList;
         } catch (Exception e) {
@@ -267,7 +278,9 @@ public class LdapDriver {
         try {
             DirContextAdapter adapter = (DirContextAdapter) buildLdapTemplate(ldapConfig).lookup(userDn);
             String cn = adapter.getStringAttribute(ldapConfig.getUser().getId());
-            if (username.equalsIgnoreCase(cn)) return true;
+            if (username.equalsIgnoreCase(cn)) {
+                return true;
+            }
         } catch (Exception e) {
             log.error(e.getMessage());
         }

@@ -49,8 +49,9 @@ public class AliyunRdsDatabaseProvider extends AbstractAssetChildProvider<Aliyun
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
+        }
         return true;
     }
 
