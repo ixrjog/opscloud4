@@ -37,13 +37,16 @@ public class ZabbixV5HostTagDriver extends SimpleZabbixV5HostDriver {
                 .putParam("selectTags", new String[]{"tag", "value"})
                 .build();
         ZabbixHost.QueryHostResponse response = queryHandle(config, request);
-        if (CollectionUtils.isEmpty(response.getResult()))
+        if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
+        }
         return response.getResult().get(0);
     }
 
     public void updateHostTags(ZabbixConfig.Zabbix config, ZabbixHost.Host host, List<ZabbixHostParam.Tag> tags) {
-        if (CollectionUtils.isEmpty(tags)) return;
+        if (CollectionUtils.isEmpty(tags)) {
+            return;
+        }
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("hostid", host.getHostid())
                 .putParam("tags", tags)

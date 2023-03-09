@@ -8,7 +8,6 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementPolicyDriver;
 import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementUserDriver;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamPolicy;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamUser;
@@ -31,9 +30,6 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_AWS_I
 public class AwsIamUserProvider extends AbstractAssetRelationProvider<IamUser.User, IamPolicy.Policy> {
 
     @Resource
-    private AmazonIdentityManagementPolicyDriver amazonIMPolicyDriver;
-
-    @Resource
     private AmazonIdentityManagementUserDriver amazonIMUserDriver;
 
     @Resource
@@ -52,12 +48,15 @@ public class AwsIamUserProvider extends AbstractAssetRelationProvider<IamUser.Us
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getAssetId(), asset.getAssetId()))
+        if (!AssetUtil.equals(preAsset.getAssetId(), asset.getAssetId())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey()))
+        }
+        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
+        }
+        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
             return false;
+        }
         return true;
     }
 

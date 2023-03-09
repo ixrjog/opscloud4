@@ -76,11 +76,11 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
     @Override
     public DataTable<AliyunLogMemberVO.LogMember> queryLogMemberPage(AliyunLogMemberParam.LogMemberPageQuery pageQuery) {
         DataTable<AliyunLogMember> table = aliyunLogMemberService.queryAliyunLogMemberByParam(pageQuery);
-
         List<AliyunLogMemberVO.LogMember> data = Lists.newArrayList();
-
         if (!CollectionUtils.isEmpty(table.getData())) {
-            data = BeanCopierUtil.copyListProperties(table.getData(), AliyunLogMemberVO.LogMember.class).stream().peek(e -> aliyunLogMemberPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+            data = BeanCopierUtil.copyListProperties(table.getData(), AliyunLogMemberVO.LogMember.class).stream()
+                    .peek(e -> aliyunLogMemberPacker.wrap(e, pageQuery))
+                    .collect(Collectors.toList());
         }
         return new DataTable<>(data, table.getTotalNum());
     }
@@ -97,8 +97,9 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
 
     @Override
     public void deleteLogById(Integer id) {
-        if (aliyunLogMemberService.countByAliyunLogId(id) > 0)
+        if (aliyunLogMemberService.countByAliyunLogId(id) > 0) {
             throw new OCException("日志服务成员未删除！");
+        }
         aliyunLogService.deleteById(id);
     }
 
@@ -124,22 +125,28 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
     @Override
     public void pushLogMemberByServerGroupId(Integer id) {
         List<AliyunLogMember> aliyunLogMembers = aliyunLogMemberService.queryByServerGroupId(id);
-        if (CollectionUtils.isEmpty(aliyunLogMembers)) return;
+        if (CollectionUtils.isEmpty(aliyunLogMembers)) {
+            return;
+        }
         aliyunLogMembers.forEach(e -> pushLogMemberById(e.getId()));
     }
 
     @Override
     public void pushLogMemberById(Integer id) {
         AliyunLogMember aliyunLogMember = aliyunLogMemberService.getById(id);
-        if (aliyunLogMember == null) return;
+        if (aliyunLogMember == null) {
+            return;
+        }
         AliyunLogMemberVO.LogMember logMember = BeanCopierUtil.copyProperties(aliyunLogMember, AliyunLogMemberVO.LogMember.class);
         aliyunLogMemberPacker.wrap(logMember, SimpleExtend.EXTEND);
         AliyunConfig aliyunDsInstanceConfig = (AliyunConfig) getConfig(logMember.getLog().getDatasourceInstanceId());
         MachineGroup machineGroup = aliyunLogMachineGroupHandler.getMachineGroup(aliyunDsInstanceConfig.getAliyun(), logMember.getLog().getProject(), logMember.getServerGroupName());
         if (machineGroup == null) {
-            aliyunLogMachineGroupHandler.createMachineGroup(aliyunDsInstanceConfig.getAliyun(), logMember); // 创建
+            // 创建
+            aliyunLogMachineGroupHandler.createMachineGroup(aliyunDsInstanceConfig.getAliyun(), logMember);
         } else {
-            aliyunLogMachineGroupHandler.updateMachineGroup(aliyunDsInstanceConfig.getAliyun(), logMember); // 更新
+            // 更新
+            aliyunLogMachineGroupHandler.updateMachineGroup(aliyunDsInstanceConfig.getAliyun(), logMember);
         }
         updateAliyunLogMemberLastPushTime(aliyunLogMember);
     }
@@ -152,14 +159,18 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
     @Override
     public void pushLogById(Integer id) {
         List<AliyunLogMember> aliyunLogMembers = aliyunLogMemberService.queryByAliyunLogId(id);
-        if (CollectionUtils.isEmpty(aliyunLogMembers)) return;
+        if (CollectionUtils.isEmpty(aliyunLogMembers)) {
+            return;
+        }
         aliyunLogMembers.forEach(e -> pushLogMemberById(e.getId()));
     }
 
     @Override
     public void addLogMember(AliyunLogMemberVO.LogMember logMember) {
         ServerGroup serverGroup = serverGroupService.getById(logMember.getServerGroupId());
-        if (serverGroup == null) return;
+        if (serverGroup == null) {
+            return;
+        }
         AliyunLogMember pre = BeanCopierUtil.copyProperties(logMember, AliyunLogMember.class);
         pre.setServerGroupName(serverGroup.getName());
         aliyunLogMemberService.add(pre);
@@ -181,15 +192,6 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
         DatasourceConfig datasourceConfig = dsConfigService.getById(dsInstance.getConfigId());
         return dsFactory.build(datasourceConfig, AliyunConfig.class);
     }
-
-
-//    @Override
-//    public BusinessWrapper<List<OcServerGroup>> queryLogMemberServerGroupPage(ServerGroupParam.LogMemberServerGroupQuery pageQuery) {
-//        pageQuery.setPage(1);
-//        pageQuery.setLength(20);
-//        return new BusinessWrapper<>(ocServerGroupService.queryLogMemberOcServerGroupByParam(pageQuery));
-//    }
-
 
 }
 

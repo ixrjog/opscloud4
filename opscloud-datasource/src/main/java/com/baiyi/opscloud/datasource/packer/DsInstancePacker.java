@@ -31,9 +31,13 @@ public class DsInstancePacker {
     private final QuartzService quartzService;
 
     public void wrap(DsInstanceVO.IDsInstance iDsInstance) {
-        if (StringUtils.isEmpty(iDsInstance.getInstanceUuid())) return;
+        if (StringUtils.isEmpty(iDsInstance.getInstanceUuid())) {
+            return;
+        }
         DatasourceInstance datasourceInstance = dsInstanceService.getByUuid(iDsInstance.getInstanceUuid());
-        if (datasourceInstance == null) return;
+        if (datasourceInstance == null) {
+            return;
+        }
         iDsInstance.setInstance(BeanCopierUtil.copyProperties(datasourceInstance, DsInstanceVO.Instance.class));
     }
 

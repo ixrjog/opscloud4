@@ -80,7 +80,8 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
         }
         decrypt(user);
         instances.forEach(e -> AccountHandlerFactory.getIAccountByInstanceType(e.getInstanceType()).update(e, user));
-        if (!StringUtils.isEmpty(user.getPassword())) { // 非修改密码不发通知
+        // 非修改密码不发通知
+        if (!StringUtils.isEmpty(user.getPassword())) {
             noticeManager.sendMessage(user, NoticeManager.MsgKeys.UPDATE_USER_PASSWORD);
         }
     }

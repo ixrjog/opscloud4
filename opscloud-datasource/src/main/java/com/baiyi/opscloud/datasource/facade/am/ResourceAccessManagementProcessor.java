@@ -59,10 +59,13 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
         AliyunConfig.Aliyun aliyun = buildConfig(grantPolicy.getInstanceUuid());
         try {
             RamUser.User ramUser = aliyunRamUserDriver.getUser(aliyun.getRegionId(), aliyun, grantPolicy.getUsername());
-            if (ramUser == null) ramUser = createUser(aliyun, grantPolicy.getInstanceUuid(), user);
+            if (ramUser == null) {
+                ramUser = createUser(aliyun, grantPolicy.getInstanceUuid(), user);
+            }
             RamPolicy.Policy ramPolicy = BeanCopierUtil.copyProperties(grantPolicy.getPolicy(), RamPolicy.Policy.class);
-            if (aliyunRamUserDriver.listUsersForPolicy(aliyun.getRegionId(), aliyun, ramPolicy.getPolicyType(), ramPolicy.getPolicyName()).stream().anyMatch(e -> e.getUserName().equals(grantPolicy.getUsername())))
+            if (aliyunRamUserDriver.listUsersForPolicy(aliyun.getRegionId(), aliyun, ramPolicy.getPolicyType(), ramPolicy.getPolicyName()).stream().anyMatch(e -> e.getUserName().equals(grantPolicy.getUsername()))) {
                 throw new OCException("RAM用户授权策略错误: 重复授权！");
+            }
             aliyunRamPolicyDriver.attachPolicyToUser(aliyun.getRegionId(), aliyun, ramUser.getUserName(), ramPolicy);
             RamPolicy.Policy policy = aliyunRamPolicyDriver.getPolicy(aliyun.getRegionId(), aliyun, ramPolicy);
             // 同步资产 RAM_USER
@@ -86,14 +89,18 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
                 .assetType(DsAssetTypeConstants.RAM_POLICY.name())
                 .build();
         DatasourceInstanceAsset policyAsset = dsInstanceAssetService.getByUniqueKey(query);
-        if (policyAsset == null) return;
+        if (policyAsset == null) {
+            return;
+        }
         BusinessTag businessTag = BusinessTag.builder()
                 .businessType(BusinessTypeEnum.ASSET.getType())
                 .businessId(policyAsset.getId())
                 .tagId(1)
                 .build();
         // 没有DMS标签
-        if (bizTagService.countByBusinessTag(businessTag) == 0) return;
+        if (bizTagService.countByBusinessTag(businessTag) == 0) {
+            return;
+        }
         DatasourceInstance dsInstance = instanceHelper.getInstanceByUuid(instanceUuid);
         DsAssetParam.PushAsset pushAsset = DsAssetParam.PushAsset.builder().assetType(DsAssetTypeConstants.DMS_USER.name()).instanceId(dsInstance.getId()).build();
         // 异步执行
@@ -127,7 +134,9 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
         RamUser.User ramUser;
         try {
             ramUser = aliyunRamUserDriver.getUser(aliyun.getRegionId(), aliyun, user.getUsername());
-            if (ramUser != null) return ramUser;
+            if (ramUser != null) {
+                return ramUser;
+            }
         } catch (ClientException ignore) {
         }
         ramUser = aliyunRamUserDriver.createUser(aliyun.getRegionId(), aliyun, user, CREATE_LOGIN_PROFILE, enableMFA(instanceUuid));

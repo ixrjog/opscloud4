@@ -79,7 +79,9 @@ public abstract class AbstractEventHandler<E extends IRecover> extends SimpleDsI
     @Override
     public void listener() {
         List<DatasourceInstance> instances = listInstance();
-        if (CollectionUtils.isEmpty(instances)) return;
+        if (CollectionUtils.isEmpty(instances)) {
+            return;
+        }
         instances.forEach(i -> {
             List<E> events = listeningEvents(i);
             recordEvents(i, events);
@@ -109,7 +111,10 @@ public abstract class AbstractEventHandler<E extends IRecover> extends SimpleDsI
      * @param activeEvents
      */
     protected void retrospectiveEvents(Map<String, Event> newEventMap, List<Event> activeEvents) {
-        if (CollectionUtils.isEmpty(activeEvents)) return; // 无活跃事件
+        if (CollectionUtils.isEmpty(activeEvents)) {
+            // 无活跃事件
+            return;
+        }
         activeEvents.forEach(event -> {
             if (!newEventMap.containsKey(event.getEventId())) {
                 try {
@@ -203,4 +208,5 @@ public abstract class AbstractEventHandler<E extends IRecover> extends SimpleDsI
     public void afterPropertiesSet() {
         EventFactory.register(this);
     }
+
 }

@@ -91,8 +91,9 @@ public class ZabbixV5HostDriver extends SimpleZabbixV5HostDriver {
                         .build())
                 .build();
         ZabbixHost.QueryHostResponse response = queryHandle(config, request);
-        if (CollectionUtils.isEmpty(response.getResult()))
+        if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
+        }
         return response.getResult().get(0);
     }
 

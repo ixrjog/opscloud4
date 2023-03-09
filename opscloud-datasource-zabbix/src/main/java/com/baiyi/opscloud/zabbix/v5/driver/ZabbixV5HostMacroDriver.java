@@ -24,8 +24,9 @@ public class ZabbixV5HostMacroDriver extends SimpleZabbixV5HostDriver {
 
     public void updateHostMacro(ZabbixConfig.Zabbix config, ZabbixHost.Host host, ServerProperty.Zabbix zabbix) {
         List<ServerProperty.Macro> macros = zabbix.toMacros();
-        if (CollectionUtils.isEmpty(macros)) return;
-
+        if (CollectionUtils.isEmpty(macros)) {
+            return;
+        }
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("hostid", host.getHostid())
                 .putParam("macros", macros)

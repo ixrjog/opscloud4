@@ -37,7 +37,8 @@ public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_user_name_' + #username", unless = "#result == null")
     public ZabbixUser.User getByUsername(ZabbixConfig.Zabbix config, String username) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
-                .putParam("selectMedias", "extend")   // 在medias 属性返回用户使用的媒体。
+                // 在medias 属性返回用户使用的媒体。
+                .putParam("selectMedias", "extend")
                 .filter(ZabbixFilterBuilder.builder()
                         .putEntry("alias", username)
                         .build())
@@ -113,7 +114,9 @@ public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
 
     public void delete(ZabbixConfig.Zabbix config, String username) {
         ZabbixUser.User user = getByUsername(config, username);
-        if (user == null) return;
+        if (user == null) {
+            return;
+        }
         // 数组形参数 https://www.zabbix.com/documentation/2.2/manual/api/reference/user/delete
         ZabbixRequest.DeleteRequest request = ZabbixRequest.DeleteRequest.builder()
                 .params(new String[]{user.getUserid()})
@@ -136,8 +139,9 @@ public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
                 .putParam("userids", userid)
                 .build();
         ZabbixUser.QueryUserResponse response = queryHandle(config, request);
-        if (CollectionUtils.isEmpty(response.getResult()))
+        if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
+        }
         return response.getResult().get(0);
     }
 

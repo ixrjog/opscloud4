@@ -57,9 +57,13 @@ public class ZabbixInstanceManager extends BaseManager {
     }
 
     public void updateServerMonitorStatus(List<Server> servers) {
-        if (CollectionUtils.isEmpty(servers)) return;
+        if (CollectionUtils.isEmpty(servers)) {
+            return;
+        }
         List<DatasourceInstance> instances = listInstance();
-        if (CollectionUtils.isEmpty(instances)) return;
+        if (CollectionUtils.isEmpty(instances)) {
+            return;
+        }
         List<ZabbixConfig> zabbixConfigs = instances.stream().map(i -> {
             DatasourceConfig datasourceConfig = dsConfigService.getById(i.getConfigId());
             return dsConfigHelper.build(datasourceConfig, ZabbixConfig.class);
@@ -69,10 +73,16 @@ public class ZabbixInstanceManager extends BaseManager {
 
     private void updateServerMonitorStatus(Server server, List<ZabbixConfig> zabbixConfigs) {
         // 只遍历有效服务器
-        if (!server.getIsActive()) return;
-        Optional<ZabbixConfig> optionalZabbixConfig = zabbixConfigs.stream().filter(c -> IPUtil.includeMasks(server.getPrivateIp(), c.getZabbix().getRegions())).findFirst();
+        if (!server.getIsActive()) {
+            return;
+        }
+        Optional<ZabbixConfig> optionalZabbixConfig = zabbixConfigs.stream()
+                .filter(c -> IPUtil.includeMasks(server.getPrivateIp(), c.getZabbix().getRegions()))
+                .findFirst();
         // 未匹配路由规则
-        if (!optionalZabbixConfig.isPresent()) return;
+        if (!optionalZabbixConfig.isPresent()) {
+            return;
+        }
         ZabbixConfig zabbixConfig = optionalZabbixConfig.get();
         ZabbixHost.Host host = zabbixV5HostDriver.getByIp(zabbixConfig.getZabbix(), server.getPrivateIp());
         if (host == null) {

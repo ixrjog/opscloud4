@@ -44,7 +44,8 @@ public class SimpleZabbixAuth {
     }
 
     private void cacheAuth(String key, String auth) {
-        redisUtil.set(key, auth, TimeUtil.minuteTime * 14 / 1000); // 缓存14分钟
+        // 缓存14分钟
+        redisUtil.set(key, auth, TimeUtil.minuteTime * 14 / 1000);
     }
 
     private ZabbixLogin.LoginAuth login(ZabbixConfig.Zabbix config) {

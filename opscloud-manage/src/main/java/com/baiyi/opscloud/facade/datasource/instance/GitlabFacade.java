@@ -4,7 +4,6 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.common.util.GitlabTokenUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
-import com.baiyi.opscloud.datasource.InstanceConfigHelper;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -41,8 +40,6 @@ public class GitlabFacade extends BaseManager {
      */
     private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.GITLAB};
 
-    private final InstanceConfigHelper instanceConfigHelper;
-
     public void consumeEventV4(GitLabNotifyParam.SystemHook systemHook) {
         if (StringUtils.isBlank(systemHook.getEvent_name())) {
             // 未知的事件名称
@@ -65,7 +62,9 @@ public class GitlabFacade extends BaseManager {
 
     private Optional<DatasourceInstance> filterInstance() {
         List<DatasourceInstance> instances = super.listInstance();
-        if (CollectionUtils.isEmpty(instances)) return Optional.empty();
+        if (CollectionUtils.isEmpty(instances)) {
+            return Optional.empty();
+        }
         return instances.stream().filter(i -> {
             DatasourceConfig datasourceConfig = dsConfigService.getById(i.getConfigId());
             GitLabConfig gitlabDsInstanceConfig = dsConfigHelper.build(datasourceConfig, GitLabConfig.class);

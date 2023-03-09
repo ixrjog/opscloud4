@@ -44,10 +44,12 @@ public class AwsDomainProvider extends BaseAssetProvider<AmazonDomain.Domain> {
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getExpiredTime(), asset.getExpiredTime()))
+        }
+        if (!AssetUtil.equals(preAsset.getExpiredTime(), asset.getExpiredTime())) {
             return false;
+        }
         return true;
     }
 

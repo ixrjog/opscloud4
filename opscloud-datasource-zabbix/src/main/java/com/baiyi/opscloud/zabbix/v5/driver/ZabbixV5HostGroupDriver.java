@@ -82,8 +82,9 @@ public class ZabbixV5HostGroupDriver {
                 .putParam("groupids", groupid)
                 .build();
         ZabbixHostGroup.QueryHostGroupResponse response = queryHandle(config, request);
-        if (CollectionUtils.isEmpty(response.getResult()))
+        if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
+        }
         return response.getResult().get(0);
     }
 
@@ -100,8 +101,9 @@ public class ZabbixV5HostGroupDriver {
                         .build())
                 .build();
         ZabbixHostGroup.QueryHostGroupResponse response = queryHandle(config, request);
-        if (CollectionUtils.isEmpty(response.getResult()))
+        if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
+        }
         return response.getResult().get(0);
     }
 

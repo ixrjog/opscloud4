@@ -103,36 +103,4 @@ public class JenkinsTest extends BaseJenkinsTest {
         }
     }
 
-
-    @Test
-    void getJob2222Test() {
-        // 18 60
-        JenkinsConfig config = getConfigById(18);
-        try {
-            JobWithDetails jobWithDetails = JenkinsServerDriver.getJob(config.getJenkins(), "ACCOUNT-MANAGEMENT_account-management-prod");
-
-            Build build= jobWithDetails.details().getLastBuild();
-            build.details();
-
-        } catch (Exception e) {
-            print(e.getMessage());
-        }
-    }
-
-    @Test
-    void getJob2223Test() {
-        // 18 60
-        JenkinsConfig config = getConfigById(60);
-        try {
-            JobWithDetails jobWithDetails = JenkinsServerDriver.getJob(config.getJenkins(), "MERCHANT-RSS_MERCHANT-RSS-DEV_23");
-
-            Build build= jobWithDetails.details().getLastBuild();
-            BuildWithDetails buildWithDetails = build.details();
-            print(buildWithDetails.isBuilding());
-
-        } catch (Exception e) {
-            print(e.getMessage());
-        }
-    }
-
 }

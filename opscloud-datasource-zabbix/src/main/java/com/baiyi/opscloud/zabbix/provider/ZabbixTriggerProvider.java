@@ -74,14 +74,18 @@ public class ZabbixTriggerProvider extends AbstractAssetRelationProvider<ZabbixT
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
+        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        }
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
-        if (preAsset.getIsActive() != asset.getIsActive())
+        }
+        if (!preAsset.getIsActive().equals(asset.getIsActive())) {
             return false;
-        if (preAsset.getCreatedTime() != asset.getCreatedTime())
+        }
+        if (preAsset.getCreatedTime() != asset.getCreatedTime()) {
             return false;
+        }
         return true;
     }
 

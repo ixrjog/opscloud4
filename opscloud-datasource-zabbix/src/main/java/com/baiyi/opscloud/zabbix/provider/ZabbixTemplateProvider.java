@@ -74,10 +74,12 @@ public class ZabbixTemplateProvider extends AbstractAssetRelationProvider<Zabbix
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
+        }
+        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind())) {
             return false;
+        }
         return true;
     }
 

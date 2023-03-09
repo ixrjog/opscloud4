@@ -81,8 +81,9 @@ public class ZabbixV5ProblemDriver {
                 .putParam("eventids", eventId)
                 .build();
         ZabbixProblem.QueryProblemResponse response = queryHandle(config, request);
-        if (CollectionUtils.isEmpty(response.getResult()))
+        if (CollectionUtils.isEmpty(response.getResult())) {
             throw new RuntimeException("ZabbixProblem不存在");
+        }
         return response.getResult().get(0);
     }
 
@@ -95,8 +96,9 @@ public class ZabbixV5ProblemDriver {
                 .putParam("sortorder", "DESC")
                 .build();
         ZabbixProblem.QueryProblemResponse response = queryHandle(config, request);
-        if (CollectionUtils.isEmpty(response.getResult()))
+        if (CollectionUtils.isEmpty(response.getResult())) {
             throw new RuntimeException("ZabbixProblem不存在");
+        }
         return response.getResult().get(0);
     }
 }

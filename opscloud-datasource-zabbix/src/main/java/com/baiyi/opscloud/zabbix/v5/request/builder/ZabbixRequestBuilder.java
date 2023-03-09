@@ -50,8 +50,9 @@ public class ZabbixRequestBuilder {
     public ZabbixRequestBuilder putParamSkipEmpty(String key, Object value) {
         if (value != null && !org.springframework.util.ObjectUtils.isEmpty(value) && !StringUtils.isEmpty(key)) {
             String str = JSONUtil.writeValueAsString(value);
-            if (str.equals("{}") || str.equals("[]") || str.equals("\"\""))
+            if (str.equals("{}") || str.equals("[]") || str.equals("\"\"")) {
                 return this;
+            }
             request.putParam(key, value);
         }
         return this;

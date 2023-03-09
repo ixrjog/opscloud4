@@ -54,24 +54,21 @@ public class AwsSnsTopicProvider extends AbstractAssetBusinessRelationProvider<S
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
-//        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
-//            return false;
-        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
+        }
+        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind())) {
             return false;
-//        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
-//            return false;
-//        if (!AssetUtil.equals(preAsset.getCreatedTime(), asset.getCreatedTime()))
-//            return false;
+        }
         return true;
     }
 
     @Override
     protected List<SimpleNotificationService.Topic> listEntities(DsInstanceContext dsInstanceContext) {
         AwsConfig.Aws aws = buildConfig(dsInstanceContext.getDsConfig());
-        if (CollectionUtils.isEmpty(aws.getRegionIds()))
+        if (CollectionUtils.isEmpty(aws.getRegionIds())) {
             return Collections.emptyList();
+        }
         List<SimpleNotificationService.Topic> entities = Lists.newArrayList();
         aws.getRegionIds().forEach(regionId -> {
                     List<Topic> topics = amazonSNSDriver.listTopics(aws, regionId);

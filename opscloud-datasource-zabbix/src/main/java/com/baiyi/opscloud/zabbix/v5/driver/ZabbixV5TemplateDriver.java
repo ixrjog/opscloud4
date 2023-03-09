@@ -89,8 +89,9 @@ public class ZabbixV5TemplateDriver {
                 .putParam("templateids", templateId)
                 .build();
         ZabbixTemplate.QueryTemplateResponse response = queryHandle(config, request);
-        if (CollectionUtils.isEmpty(response.getResult()))
+        if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
+        }
         return response.getResult().get(0);
     }
 
@@ -112,8 +113,9 @@ public class ZabbixV5TemplateDriver {
                         .build())
                 .build();
         ZabbixTemplate.QueryTemplateResponse response = queryHandle(config, request);
-        if (CollectionUtils.isEmpty(response.getResult()))
+        if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
+        }
         return response.getResult().get(0);
     }
 }

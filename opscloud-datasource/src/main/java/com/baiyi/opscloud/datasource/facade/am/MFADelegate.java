@@ -51,12 +51,12 @@ public class MFADelegate {
      * 首次执行延迟3秒！
      */
     private void setFlag() {
-        try {
-            if (firstExecution.get() == null) {
-                firstExecution.set(Boolean.FALSE);
+        if (firstExecution.get() == null) {
+            firstExecution.set(Boolean.FALSE);
+            try {
                 TimeUnit.SECONDS.sleep(3L);
+            } catch (InterruptedException ignored) {
             }
-        } catch (InterruptedException ignored) {
         }
     }
 

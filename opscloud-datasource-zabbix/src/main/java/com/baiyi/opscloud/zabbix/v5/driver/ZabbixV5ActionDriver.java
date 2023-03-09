@@ -51,8 +51,9 @@ public class ZabbixV5ActionDriver extends AbstractZabbixV5ActionDriver {
                         .build())
                 .build();
         ZabbixAction.QueryActionResponse response = queryHandle(config, request);
-        if (CollectionUtils.isEmpty(response.getResult()))
+        if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
+        }
         return response.getResult().get(0);
     }
 
@@ -63,7 +64,8 @@ public class ZabbixV5ActionDriver extends AbstractZabbixV5ActionDriver {
                 .putParam("eventsource", 0)
                 .putParam("status", 0)
                 .putParam("esc_period", "10m")
-                .putParam("operations", buildOperations(config, usergrpName)) // 操作
+                // 操作
+                .putParam("operations", buildOperations(config, usergrpName))
                 .filter(ZabbixFilterBuilder.builder()
                         .putEntry("evaltype", 1)
                         .putEntry("conditions", ConditionsBuilder.build(hostGroup.getGroupid()))
@@ -96,7 +98,9 @@ public class ZabbixV5ActionDriver extends AbstractZabbixV5ActionDriver {
     }
 
     public void delete(ZabbixConfig.Zabbix config, ZabbixAction.Action action) {
-        if (action == null) return;
+        if (action == null) {
+            return;
+        }
         ZabbixRequest.DeleteRequest request = ZabbixRequest.DeleteRequest.builder()
                 .params(new String[]{action.getActionid()})
                 .build();

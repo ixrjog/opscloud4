@@ -118,7 +118,9 @@ public class AlertHandler extends SimpleDsInstanceProvider {
 
     private String renderTemplate(String host, List<Event> events, Map<String, String> hostMap) {
         Optional<Event> max = events.stream().max(Comparator.comparing(Event::getPriority));
-        if (!max.isPresent()) return null;
+        if (!max.isPresent()) {
+            return null;
+        }
         Map<String, Object> contentMap = Maps.newHashMap();
         contentMap.put("host", host);
         contentMap.put("ip", hostMap.getOrDefault(host, "-"));
@@ -135,8 +137,12 @@ public class AlertHandler extends SimpleDsInstanceProvider {
     }
 
     private void insertHostMap(Map<String, String> hostMap, String key, EventBusiness eventBusiness) {
-        if (hostMap.containsKey(key)) return;
-        if (eventBusiness.getBusinessType() != BusinessTypeEnum.SERVER.getType()) return;
+        if (hostMap.containsKey(key)) {
+            return;
+        }
+        if (eventBusiness.getBusinessType() != BusinessTypeEnum.SERVER.getType()) {
+            return;
+        }
         Server server = serverService.getById(eventBusiness.getBusinessId());
         if (server != null) {
             hostMap.put(key, server.getPrivateIp());

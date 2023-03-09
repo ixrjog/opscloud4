@@ -48,8 +48,9 @@ public class ZabbixV5UserGroupDriver extends AbstractZabbixV5UserGroupDriver {
                 .putParam("usrgrpids", usrgrpid)
                 .build();
         ZabbixUserGroup.QueryUserGroupResponse response = queryHandle(config, request);
-        if (CollectionUtils.isEmpty(response.getResult()))
+        if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
+        }
         return response.getResult().get(0);
     }
 
@@ -62,8 +63,9 @@ public class ZabbixV5UserGroupDriver extends AbstractZabbixV5UserGroupDriver {
                         .build())
                 .build();
         ZabbixUserGroup.QueryUserGroupResponse response = queryHandle(config, request);
-        if (CollectionUtils.isEmpty(response.getResult()))
+        if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
+        }
         return response.getResult().get(0);
     }
 

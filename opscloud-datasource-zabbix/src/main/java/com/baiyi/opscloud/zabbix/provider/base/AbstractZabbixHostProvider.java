@@ -59,16 +59,21 @@ public abstract class AbstractZabbixHostProvider<T> extends AbstractAssetRelatio
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey()))
+        }
+        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
+        }
+        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind())) {
             return false;
-        if (!preAsset.getIsActive().equals(asset.getIsActive()))
+        }
+        if (!preAsset.getIsActive().equals(asset.getIsActive())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
+        }
+        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
             return false;
+        }
         return true;
     }
 

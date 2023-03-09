@@ -83,15 +83,24 @@ public class ZabbixV5TriggerDriver {
                 .filter(ZabbixFilterBuilder.builder()
                         .putEntry("value", PROBLEM)
                         .build())
-                .putParam("active", 1) // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
-                .putParam("sortfield", "priority") // 排序
-                .putParam("sortorder", "DESC") // 正排还是倒排
-                .putParam("min_severity", severityType.getType()) // 大于等于给定的触发器级别，这里是大于等于严重
-                .putParam("skipDependent", 1) // 跳过依赖于其他触发器的问题状态中的触发器。请注意，如果禁用了其他触发器，则会禁用其他触发器，禁用项目或禁用项目主机。
-                .putParam("selectHosts", "hosts") // 在结果中返回关联的主机信息（意思就是显示出那台主机告警的）
-                .putParam("monitored", 1) // 属于受监控主机的已启用触发器，并仅包含已启用的项目
-                .putParam("only_true", 1) // 只返回最近处于问题状态的触发器（处于告警状态的主机）
-                .putParam("expandDescription", 1) // 在触发器描述中展开宏（Expand macros in the name of the trigger.）
+                // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
+                .putParam("active", 1)
+                // 排序
+                .putParam("sortfield", "priority")
+                // 正排还是倒排
+                .putParam("sortorder", "DESC")
+                // 大于等于给定的触发器级别，这里是大于等于严重
+                .putParam("min_severity", severityType.getType())
+                // 跳过依赖于其他触发器的问题状态中的触发器。请注意，如果禁用了其他触发器，则会禁用其他触发器，禁用项目或禁用项目主机。
+                .putParam("skipDependent", 1)
+                // 在结果中返回关联的主机信息（意思就是显示出那台主机告警的）
+                .putParam("selectHosts", "hosts")
+                // 属于受监控主机的已启用触发器，并仅包含已启用的项目
+                .putParam("monitored", 1)
+                // 只返回最近处于问题状态的触发器（处于告警状态的主机）
+                .putParam("only_true", 1)
+                // 在触发器描述中展开宏（Expand macros in the name of the trigger.）
+                .putParam("expandDescription", 1)
                 .build();
         ZabbixTrigger.QueryTriggerResponse response = queryHandle(config, request);
         return response.getResult();
@@ -142,14 +151,16 @@ public class ZabbixV5TriggerDriver {
                 .putParam("monitored", 1)
                 // 只返回最近处于问题状态的触发器（处于告警状态的主机）
                 .putParam("only_true", 1)
-                .putParam("selectHosts", "hosts") // 在结果中返回关联的主机信息（意思就是显示出那台主机告警的）
+                // 在结果中返回关联的主机信息（意思就是显示出那台主机告警的）
+                .putParam("selectHosts", "hosts")
                 // 在触发器描述中展开宏（Expand macros in the name of the trigger.）
                 .putParam("expandDescription", 1)
                 .putParam("triggerids", triggerId)
                 .build();
         ZabbixTrigger.QueryTriggerResponse response = queryHandle(config, request);
-        if (CollectionUtils.isEmpty(response.getResult()))
+        if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
+        }
         return response.getResult().get(0);
     }
 

@@ -17,7 +17,6 @@ import java.util.List;
  */
 public class ZabbixAction {
 
-
     @EqualsAndHashCode(callSuper = true)
     @Data
     public static class QueryActionResponse extends ZabbixResponse.Response {

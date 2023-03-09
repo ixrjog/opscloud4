@@ -101,8 +101,9 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
         IamUser.User iamUser;
         try {
             iamUser = amazonIMUserDriver.getUser(config, user.getUsername());
-            if (iamUser != null)
+            if (iamUser != null) {
                 return iamUser;
+            }
         } catch (Exception ignore) {
         }
         iamUser = amazonIMUserDriver.createUser(config, user, CREATE_LOGIN_PROFILE);

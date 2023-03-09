@@ -3,7 +3,7 @@ package com.baiyi.opscloud.common.annotation;
 import java.lang.annotation.*;
 
 /**
- * @Author baiyi
+ * @Author God
  * @Date 2023/2/21 13:35
  * @Version 1.0
  */
@@ -15,6 +15,6 @@ public @interface ArkIntercept {
 
     boolean bigFlood() default true;
 
-    String doomsday() default "2023-03-11 12:30:55";
+    String doomsday() default "2023-03-22 12:30:55";
 
 }
