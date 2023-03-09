@@ -8,7 +8,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.AnsiblePlaybook;
 import com.baiyi.opscloud.domain.param.ansible.AnsiblePlaybookParam;
 import com.baiyi.opscloud.domain.vo.ansible.AnsiblePlaybookVO;
 import com.baiyi.opscloud.facade.task.AnsiblePlaybookFacade;
-import com.baiyi.opscloud.packer.task.AnsiblePlaybookPacker;
 import com.baiyi.opscloud.service.ansible.AnsiblePlaybookService;
 import com.baiyi.opscloud.util.PlaybookUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +25,6 @@ import java.util.List;
 public class AnsiblePlaybookFacadeImpl implements AnsiblePlaybookFacade {
 
     private final AnsiblePlaybookService ansiblePlaybookService;
-
-    private final AnsiblePlaybookPacker ansiblePlaybookPacker;
 
     @Override
     public DataTable<AnsiblePlaybookVO.Playbook> queryAnsiblePlaybookPage(AnsiblePlaybookParam.AnsiblePlaybookPageQuery pageQuery) {

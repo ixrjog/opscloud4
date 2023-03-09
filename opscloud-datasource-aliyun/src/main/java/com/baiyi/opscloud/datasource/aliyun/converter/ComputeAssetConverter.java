@@ -32,9 +32,10 @@ public class ComputeAssetConverter {
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entity.getInstanceId()) // 资产id = 实例id
+                // 资产id = 实例id
+                .assetId(entity.getInstanceId())
                 .name(entity.getInstanceName())
-                // priveteIp
+                // privateIp
                 .assetKey(entity.getInstanceNetworkType().equals(VPC) ? entity.getVpcAttributes().getPrivateIpAddress().get(0) :
                         entity.getInnerIpAddress().get(0))
                 // publicIp
@@ -62,17 +63,20 @@ public class ComputeAssetConverter {
     }
 
     private static String getPublicIp(DescribeInstancesResponse.Instance entity) {
-        if (!CollectionUtils.isEmpty(entity.getPublicIpAddress()))
+        if (!CollectionUtils.isEmpty(entity.getPublicIpAddress())) {
             return entity.getPublicIpAddress().get(0);
-        if (entity.getEipAddress() != null)
+        }
+        if (entity.getEipAddress() != null) {
             return entity.getEipAddress().getIpAddress();
+        }
         return StringUtils.EMPTY;
     }
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeImagesResponse.Image entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entity.getImageId()) // 资产id = 实例id
+                // 资产id = 实例id
+                .assetId(entity.getImageId())
                 .name(entity.getImageName())
                 .assetKey(entity.getImageId())
                 .kind("ecsImage")

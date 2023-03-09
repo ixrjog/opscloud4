@@ -21,7 +21,6 @@ import com.baiyi.opscloud.facade.auth.AuthFacade;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.packer.auth.AuthGroupPacker;
 import com.baiyi.opscloud.packer.auth.AuthResourcePacker;
-import com.baiyi.opscloud.packer.auth.AuthRolePacker;
 import com.baiyi.opscloud.service.auth.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,8 +44,6 @@ import java.util.stream.Collectors;
 public class AuthFacadeImpl implements AuthFacade {
 
     private final AuthRoleService authRoleService;
-
-    private final AuthRolePacker authRolePacker;
 
     private final AuthGroupService authGroupService;
 
@@ -81,8 +78,9 @@ public class AuthFacadeImpl implements AuthFacade {
 
     @Override
     public void deleteRoleById(int id) {
-        if (authRoleResourceService.countByRoleId(id) != 0)
+        if (authRoleResourceService.countByRoleId(id) != 0) {
             throw new AuthenticationException(ErrorEnum.AUTH_ROLE_HAS_USED);
+        }
         authRoleService.deleteById(id);
     }
 
@@ -106,8 +104,9 @@ public class AuthFacadeImpl implements AuthFacade {
 
     @Override
     public void deleteGroupById(int id) {
-        if (authResourceService.countByGroupId(id) != 0)
+        if (authResourceService.countByGroupId(id) != 0) {
             throw new AuthenticationException(ErrorEnum.AUTH_GROUP_HAS_USED);
+        }
         authGroupService.deleteById(id);
     }
 
@@ -167,7 +166,9 @@ public class AuthFacadeImpl implements AuthFacade {
         // 获取当前操作用户的操作权限
         int accessLevel = userPermissionFacade.getUserAccessLevel(SessionUtil.getUsername());
         // 至少需要OPS角色才能操作
-        if (accessLevel < AccessLevel.OPS.getLevel()) return;
+        if (accessLevel < AccessLevel.OPS.getLevel()) {
+            return;
+        }
         List<AuthUserRole> roles = authUserRoleService.queryByUsername(updateUserRole.getUsername());
         updateUserRole.getRoleIds().forEach(id -> {
             AuthRole authRole = authRoleService.getById(id);

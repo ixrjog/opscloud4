@@ -64,7 +64,9 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
     @Override
     public void wrap(ApplicationResourceVO.Resource resource, IExtend iExtend) {
         DatasourceInstanceAsset asset = assetService.getById(resource.getBusinessId());
-        if (asset == null) return;
+        if (asset == null) {
+            return;
+        }
         String namespace = asset.getAssetKey2();
         String deployment = asset.getAssetKey();
         resource.setAsset(BeanCopierUtil.copyProperties(asset, DsAssetVO.Asset.class));
@@ -95,7 +97,9 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
     }
 
     public void wrapProperties(ApplicationResourceVO.Resource resource) {
-        if (resource.getBusinessType() != BusinessTypeEnum.ASSET.getType()) return;
+        if (resource.getBusinessType() != BusinessTypeEnum.ASSET.getType()) {
+            return;
+        }
         DsAssetVO.Asset asset = BeanCopierUtil.copyProperties(assetService.getById(resource.getBusinessId()), DsAssetVO.Asset.class);
         Map<String, String> properties = propertyService.queryByAssetId(asset.getId())
                 .stream().collect(Collectors.toMap(DatasourceInstanceAssetProperty::getName, DatasourceInstanceAssetProperty::getValue, (k1, k2) -> k1));
@@ -109,7 +113,9 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
 
     public List<TagVO.Tag> acqTags(DatasourceInstanceAsset asset) {
         List<DatasourceInstanceAssetRelation> assetRelations = assetRelationService.queryTargetAsset(asset.getInstanceUuid(), asset.getId());
-        if (CollectionUtils.isEmpty(assetRelations)) return Lists.newArrayList();
+        if (CollectionUtils.isEmpty(assetRelations)) {
+            return Lists.newArrayList();
+        }
         Set<Integer> tagIdSet = Sets.newHashSet();
         assetRelations.stream().map(e ->
                 assetService.getById(e.getTargetAssetId())).map(targetAsset -> businessTagService.queryByBusiness(SimpleBusiness.builder()

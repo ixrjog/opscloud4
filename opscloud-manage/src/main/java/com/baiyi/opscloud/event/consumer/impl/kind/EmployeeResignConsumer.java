@@ -43,10 +43,13 @@ public class EmployeeResignConsumer {
 
     private final WorkOrderTicketFacade workOrderTicketFacade;
 
-    @SetSessionUser // 设置会话用户为我（userId = 1）
+    // 设置会话用户为我（userId = 1）
+    @SetSessionUser
     public void consume(BusinessAssetRelation eventData) {
         User user = userService.getById(eventData.getBusinessId());
-        if (!user.getIsActive()) return;
+        if (!user.getIsActive()) {
+            return;
+        }
         // 判断资产对象是否还存在
         DatasourceInstanceAsset asset = assetService.getById(eventData.getDatasourceInstanceAssetId());
         if (asset != null) {
@@ -82,8 +85,9 @@ public class EmployeeResignConsumer {
         List<WorkOrderTicketVO.Entry> entries = workOrderTicketFacade.queryTicketEntry(entryQuery);
         // 找出匹配的用户
         Optional<WorkOrderTicketVO.Entry> optionalEntry = entries.stream().filter(e -> e.getEntryKey().equals(user.getUsername())).findFirst();
-        if (!optionalEntry.isPresent()) return;
-
+        if (!optionalEntry.isPresent()) {
+            return;
+        }
         WorkOrderTicketEntryParam.TicketEntry entry = BeanCopierUtil.copyProperties(optionalEntry.get(), WorkOrderTicketEntryParam.TicketEntry.class);
         workOrderTicketFacade.addTicketEntry(entry);
         // 提交工单

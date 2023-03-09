@@ -59,7 +59,9 @@ public class DesensitizeAspect {
     private String setNewValueForField(String value, SensitiveTypeEnum type) {
         switch (type) {
             case MOBILE_PHONE:
-                if (StringUtils.isEmpty(value)) return value;
+                if (StringUtils.isEmpty(value)) {
+                    return value;
+                }
                 if (ValidationUtil.isPhone(value)) {
                     StringBuilder sb = new StringBuilder(value);
                     return sb.replace(3, 7, getSymbol(4)).toString();

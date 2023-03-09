@@ -91,7 +91,7 @@ public abstract class SupervisingStrategy implements IDeployStrategy, Initializi
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        SupervisingStrategyFactroy.register(this);
+        SupervisingStrategyFactory.register(this);
     }
 
 }

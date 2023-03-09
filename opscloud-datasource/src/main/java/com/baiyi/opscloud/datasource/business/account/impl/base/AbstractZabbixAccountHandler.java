@@ -42,8 +42,9 @@ public abstract class AbstractZabbixAccountHandler extends AbstractAccountHandle
 
     protected List<Map<String, String>> getUsrgrps(ZabbixConfig.Zabbix zabbix, User user) {
         List<Map<String, String>> userGroups = toUsrgrps(zabbix, queryUserPermission(user, BusinessTypeEnum.SERVERGROUP.getType()));
-        if (CollectionUtils.isEmpty(userGroups))
+        if (CollectionUtils.isEmpty(userGroups)) {
             userGroups.add(buildUsrgrp(zabbixFacade.getOrCreateUserGroup(zabbix, ZabbixAccountHandler.ZABBIX_DEFAULT_USERGROUP).getUsrgrpid()));
+        }
         return userGroups;
     }
 

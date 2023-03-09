@@ -66,12 +66,13 @@ public class LeoJenkinsInstanceHelper {
      */
     public List<DatasourceInstance> queryAvailableInstancesWithTags(List<String> tags) {
         List<DatasourceInstance> instances = listInstance();
-        if (CollectionUtils.isEmpty(instances))
+        if (CollectionUtils.isEmpty(instances)) {
             throw new LeoBuildException("无可用的Jenkins实例: 实例无效或没有Leo标签！");
+        }
         // tags为空，返回所有实例
-        if (CollectionUtils.isEmpty(tags))
+        if (CollectionUtils.isEmpty(tags)) {
             return instances;
-
+        }
         return instances.stream().filter(instance -> {
             List<String> instanceTags = getInstanceTags(instance.getId());
             return instanceTags.containsAll(tags);

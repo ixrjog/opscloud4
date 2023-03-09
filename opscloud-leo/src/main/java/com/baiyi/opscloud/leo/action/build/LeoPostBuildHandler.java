@@ -2,8 +2,8 @@ package com.baiyi.opscloud.leo.action.build;
 
 import com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.leo.action.build.concrete.post.RecordBuildPipelineConcreteHandler;
 import com.baiyi.opscloud.leo.action.build.concrete.post.EndBuildNotificationConcreteHandler;
+import com.baiyi.opscloud.leo.action.build.concrete.post.RecordBuildPipelineConcreteHandler;
 import com.baiyi.opscloud.leo.action.build.concrete.post.VerifyKubernetesImageConcreteHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +22,19 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LeoPostBuildHandler implements InitializingBean {
 
-    // 验证 Kubernetes Image
+    /**
+     * 验证 Kubernetes Image
+     */
     private final VerifyKubernetesImageConcreteHandler verifyKubernetesImageConcreteHandler;
 
-    // 构建结束通知
+    /**
+     * 构建结束通知
+     */
     private final EndBuildNotificationConcreteHandler endBuildNotificationConcreteHandler;
 
-    // 记录流水线日志
+    /**
+     * 记录流水线日志
+     */
     private final RecordBuildPipelineConcreteHandler recordBuildPipelineConcreteHandler;
 
     @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)

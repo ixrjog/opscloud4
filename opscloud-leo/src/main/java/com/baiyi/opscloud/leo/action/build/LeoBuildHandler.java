@@ -20,22 +20,34 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LeoBuildHandler implements InitializingBean {
 
-    // 构建前删除历史构建任务
+    /**
+     * 构建前删除历史构建任务
+     */
     private final DeleteHistoricalBuildJobConcreteHandler deleteHistoricalBuildJobConcreteHandler;
 
-    // 选举Jenkins执行实例
+    /**
+     * 选举Jenkins执行实例
+     */
     private final ElectInstanceConcreteHandler electInstanceConcreteHandler;
 
-    // 在Jenkins实例中创建BuildJob
+    /**
+     * 在Jenkins实例中创建BuildJob
+     */
     private final CreateJobConcreteHandler createJobConcreteHandler;
 
-    // 执行BuildJob
+    /**
+     * 执行BuildJob
+     */
     private final DoBuildConcreteHandler doBuildConcreteHandler;
 
-    // 执行构建通知
+    /**
+     * 执行构建通知
+     */
     private final StartBuildNotificationConcreteHandler startBuildNotificationConcreteHandler;
 
-    // 启动监视器
+    /**
+     * 启动监视器
+     */
     private final BuildingSupervisorConcreteHandler buildingSupervisorConcreteHandler;
 
     @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)

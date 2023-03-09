@@ -43,7 +43,9 @@ public class ServerAccountPacker implements IWrapper<ServerAccountVO.Account> {
 
     @Override
     public void wrap(ServerAccountVO.Account account, IExtend iExtend) {
-        if (account == null) return;
+        if (account == null) {
+            return;
+        }
         String displayName = Joiner.on("").skipNulls().join( "[", account.getProtocol(), "|",account.getUsername(),"]",account.getComment());
         account.setDisplayName(displayName);
                 credentialPacker.wrap(account);

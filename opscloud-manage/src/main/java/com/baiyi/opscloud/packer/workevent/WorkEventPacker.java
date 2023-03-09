@@ -45,7 +45,9 @@ public class WorkEventPacker implements IWrapper<WorkEventVO.WorkEvent> {
     @AgoWrapper(extend = true)
     @TagsWrapper
     public void wrap(WorkEventVO.WorkEvent vo, IExtend iExtend) {
-        if (!iExtend.getExtend()) return;
+        if (!iExtend.getExtend()) {
+            return;
+        }
         vo.setWorkItem(workItemService.getById(vo.getWorkItemId()));
         List<WorkItem> workItemList = Lists.newArrayList();
         WorkItem workItem = workItemService.getById(vo.getWorkItemId());

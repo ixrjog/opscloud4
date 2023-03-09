@@ -42,8 +42,10 @@ public class EventPublisherAspect {
         Object result = joinPoint.proceed();
         // 后处理事件
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-        String[] params = methodSignature.getParameterNames();// 获取参数名称
-        Object[] args = joinPoint.getArgs();// 获取参数值
+        // 获取参数名称
+        String[] params = methodSignature.getParameterNames();
+        // 获取参数值
+        Object[] args = joinPoint.getArgs();
 
         if (params != null && params.length != 0) {
             if (eventPublisher.value() == BusinessTypeEnum.COMMON) {
@@ -78,7 +80,9 @@ public class EventPublisherAspect {
         if (message instanceof BaseBusiness.IBusiness) {
             BaseBusiness.IBusiness ib = (BaseBusiness.IBusiness) message;
             Object body = getBody(ib);
-            if (body == null) return;
+            if (body == null) {
+                return;
+            }
             SimpleEvent simpleEvent = SimpleEvent.builder()
                     .eventType(Objects.requireNonNull(BusinessTypeEnum.getByType(ib.getBusinessType())).name())
                     .action(action)
@@ -90,7 +94,9 @@ public class EventPublisherAspect {
 
     private Object getBody(BaseBusiness.IBusiness ib) {
         IBusinessService iBusinessService = BusinessServiceFactory.getIBusinessServiceByBusinessType(ib.getBusinessType());
-        if (iBusinessService == null) return null;
+        if (iBusinessService == null) {
+            return null;
+        }
         return iBusinessService.getById(ib.getBusinessId());
     }
 

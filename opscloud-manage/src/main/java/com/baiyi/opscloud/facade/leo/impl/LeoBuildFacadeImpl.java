@@ -7,7 +7,6 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
-import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsJobDriver;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -75,8 +74,6 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     private final ApplicationService applicationService;
 
-    private final JenkinsJobDriver jenkinsJobDriver;
-
     private final GitLabRepoDelegate gitLabRepoDelegate;
 
     private final ApplicationResourceService applicationResourceService;
@@ -99,12 +96,14 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
     @LeoBuildInterceptor(jobIdSpEL = "#doBuild.jobId")
     public void doBuild(LeoBuildParam.DoBuild doBuild) {
         LeoJob leoJob = jobService.getById(doBuild.getJobId());
-        if (leoJob == null)
+        if (leoJob == null) {
             throw new LeoBuildException("任务不存在: jobId={}", doBuild.getJobId());
+        }
 
         Application application = applicationService.getById(leoJob.getApplicationId());
-        if (application == null)
+        if (application == null) {
             throw new LeoBuildException("应用不存在: jobId={}, applicationId={}", doBuild.getJobId(), leoJob.getApplicationId());
+        }
 
         final LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob.getJobConfig());
 
@@ -205,7 +204,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
             JenkinsPipeline.Step step = blueRestDriver.stopPipeline(jenkinsConfig.getJenkins(), leoBuild.getBuildJobName(), String.valueOf(1));
             logHelper.info(leoBuild, "用户停止构建任务: {}", JSONUtil.writeValueAsString(step));
         } catch (Exception e) {
-            logHelper.error(leoBuild, "停止构建任务失败: err={}", e.getMessage());
+            logHelper.error(leoBuild, "停止构建任务失败: {}", e.getMessage());
         }
     }
 

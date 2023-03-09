@@ -30,8 +30,9 @@ public class TicketNodePacker {
     private final UserService userService;
 
     public void wrap(WorkOrderTicketVO.TicketView ticketView) {
-        if (OrderTicketPhaseCodeConstants.NEW.name().equals(ticketView.getTicket().getTicketPhase()))
+        if (OrderTicketPhaseCodeConstants.NEW.name().equals(ticketView.getTicket().getTicketPhase())) {
             return; // 新建工单不需要展示审批视图
+        }
         int parentId = 0;
         List<WorkOrderNodeVO.Stage> stages = Lists.newArrayList();
         int id = 1;

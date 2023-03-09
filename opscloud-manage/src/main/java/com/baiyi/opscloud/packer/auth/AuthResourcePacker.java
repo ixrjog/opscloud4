@@ -20,8 +20,9 @@ public class AuthResourcePacker implements IWrapper<AuthResourceVO.Resource> {
 
     @Override
     public void wrap(AuthResourceVO.Resource resource, IExtend iExtend) {
-        if (ExtendUtil.isExtend(iExtend))
+        if (ExtendUtil.isExtend(iExtend)) {
             authGroupPacker.wrap(resource);
+        }
     }
 
 }

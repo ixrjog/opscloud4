@@ -31,10 +31,14 @@ public class LeoBuildVersionPacker implements IWrapper<LeoBuildVO.Build> {
         if (iExtend.getExtend()) {
             LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.load(build.getBuildConfig());
             Map<String, String> dict = buildConfig.getBuild().getDict();
-            if (!dict.containsKey(BuildDictConstants.IMAGE.getKey())) return;
+            if (!dict.containsKey(BuildDictConstants.IMAGE.getKey())) {
+                return;
+            }
             final String imageName = dict.get(BuildDictConstants.IMAGE.getKey());
             LeoBuildImage leoBuildImage = leoBuildImageService.getByUniqueKey(build.getId(), imageName);
-            if (leoBuildImage == null) return;
+            if (leoBuildImage == null) {
+                return;
+            }
             LeoBuildVO.Image image = BeanCopierUtil.copyProperties(leoBuildImage, LeoBuildVO.Image.class);
             build.setImage(image);
         }

@@ -31,8 +31,9 @@ public abstract class BaseTicketEntryQuery<T> implements ITicketEntryQuery, Init
      * @param entryQuery
      */
     private void preHandle(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
-        if (entryQuery.getLength() == 0 || entryQuery.getLength() > 20)
+        if (entryQuery.getLength() == 0 || entryQuery.getLength() > 20) {
             entryQuery.setLength(20);
+        }
     }
 
     abstract protected List<T> queryEntries(WorkOrderTicketEntryParam.EntryQuery entryQuery);

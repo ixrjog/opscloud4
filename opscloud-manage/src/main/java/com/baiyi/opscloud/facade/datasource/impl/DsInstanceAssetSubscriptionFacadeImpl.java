@@ -116,7 +116,9 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
     }
 
     private void saveSubscriptionPlaybookFile(DatasourceInstanceAssetSubscription subscription) {
-        if (StringUtils.isEmpty(subscription.getPlaybook())) return;
+        if (StringUtils.isEmpty(subscription.getPlaybook())) {
+            return;
+        }
         String file = toSubscriptionPlaybookFile(subscription);
         IOUtil.writeFile(subscription.getPlaybook(), file);
     }

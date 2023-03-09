@@ -7,6 +7,6 @@ package com.baiyi.opscloud.leo.action.deploy.base;
  */
 public interface IDeployStrategy extends IDeployStep {
 
-    public String getDeployType();
+    String getDeployType();
 
 }

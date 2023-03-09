@@ -40,7 +40,9 @@ public class UserPacker implements IWrapper<UserVO.User> {
     }
 
     public void wrap(UserVO.IUser iUser) {
-        if (StringUtils.isEmpty(iUser.getUsername())) return;
+        if (StringUtils.isEmpty(iUser.getUsername())) {
+            return;
+        }
         User user = userService.getByUsername(iUser.getUsername());
         if (user != null) {
             UserVO.User userVO = BeanCopierUtil.copyProperties(user, UserVO.User.class);

@@ -54,7 +54,9 @@ public class SimpleTerminalSessionFacadeImpl implements SimpleTerminalSessionFac
             log.error("实例未完成初始化用户就退出了: sessionId={}, instanceId={}", terminalSession.getSessionId(), instanceId);
             throw new RetryException("实例未完成初始化用户就退出了: sessionId=" + terminalSession.getSessionId());
         }
-        if (terminalSessionInstance.getInstanceClosed()) return;
+        if (terminalSessionInstance.getInstanceClosed()) {
+            return;
+        }
         closeTerminalSessionInstance(terminalSessionInstance);
     }
 
@@ -84,7 +86,9 @@ public class SimpleTerminalSessionFacadeImpl implements SimpleTerminalSessionFac
     //@Transactional(rollbackFor = {Exception.class})
     public void closeTerminalSessionById(int id) {
         TerminalSession terminalSession = terminalSessionService.getById(id);
-        if (terminalSession.getSessionClosed()) return;
+        if (terminalSession.getSessionClosed()) {
+            return;
+        }
         List<TerminalSessionInstance> instances = terminalSessionInstanceService.queryBySessionId(terminalSession.getSessionId());
         if (!CollectionUtils.isEmpty(instances)) {
             for (TerminalSessionInstance instance : instances) {

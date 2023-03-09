@@ -32,15 +32,17 @@ public class DecryptAspect {
     public Object doAround(ProceedingJoinPoint pjp) throws Throwable {
         for (Object requestObj : pjp.getArgs()) {
             // 判断对象是否有 @Decrypt 注解
-            if (requestObj.getClass().isAnnotationPresent(Decrypt.class))
+            if (requestObj.getClass().isAnnotationPresent(Decrypt.class)) {
                 handleDecrypt(requestObj);
+            }
         }
         return pjp.proceed();
     }
 
     private void handleDecrypt(Object requestObj) throws IllegalAccessException {
-        if (Objects.isNull(requestObj))
+        if (Objects.isNull(requestObj)) {
             return;
+        }
         Field[] fields = requestObj.getClass().getDeclaredFields();
         for (Field field : fields) {
             // 判断对象属性是否有 @Decrypt 注解

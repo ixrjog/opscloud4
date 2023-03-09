@@ -39,7 +39,9 @@ public class AliyunLogMemberPacker implements IWrapper<AliyunLogMemberVO.LogMemb
     @EnvWrapper
     @AgoWrapper
     public void wrap(AliyunLogMemberVO.LogMember logMember, IExtend iExtend) {
-        if (!iExtend.getExtend()) return;
+        if (!iExtend.getExtend()) {
+            return;
+        }
         ServerGroup serverGroup = serverGroupService.getById(logMember.getServerGroupId());
         logMember.setServerGroup(serverGroup);
         List<Server> servers = acqMemberServers(logMember);

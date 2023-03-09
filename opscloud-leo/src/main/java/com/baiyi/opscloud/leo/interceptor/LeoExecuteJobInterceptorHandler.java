@@ -11,7 +11,6 @@ import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.leo.exception.LeoInterceptorException;
 import com.baiyi.opscloud.leo.interceptor.rule.RuleHelper;
-import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
@@ -54,8 +53,6 @@ public class LeoExecuteJobInterceptorHandler {
     private final UserService userService;
 
     private final EnvService envService;
-
-    private final ApplicationService applicationService;
 
     private final RuleHelper ruleHelper;
 

@@ -20,7 +20,9 @@ public class AnsiblePlaybookPacker {
 
     public void wrap(AnsiblePlaybookVO.IPlaybook iPlaybook) {
         AnsiblePlaybook ansiblePlaybook = ansiblePlaybookService.getById(iPlaybook.getAnsiblePlaybookId());
-        if (ansiblePlaybook == null) return;
+        if (ansiblePlaybook == null) {
+            return;
+        }
         iPlaybook.setPlaybook(BeanCopierUtil.copyProperties(ansiblePlaybook, AnsiblePlaybookVO.Playbook.class));
         iPlaybook.setTaskName(ansiblePlaybook.getName());
     }

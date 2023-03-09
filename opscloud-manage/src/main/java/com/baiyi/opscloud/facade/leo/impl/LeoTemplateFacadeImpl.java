@@ -158,25 +158,30 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
     }
 
     private String getUuidWithJenkinsInstance(LeoBaseModel.DsInstance instance) {
-        if (StringUtils.isNotBlank(instance.getUuid()))
+        if (StringUtils.isNotBlank(instance.getUuid())) {
             return instance.getUuid();
-        if (!StringUtils.isNotBlank(instance.getName()))
+        }
+        if (!StringUtils.isNotBlank(instance.getName())) {
             throw new LeoTemplateException("模板配置缺少Jenkins实例配置项: 未指定实例名称！");
+        }
         Optional<DatasourceInstance> optionalDsInstance = dsInstanceService.listByInstanceType(DsTypeEnum.JENKINS.getName()).stream()
                 .filter(i -> i.getInstanceName().equals(instance.getName()))
                 .findFirst();
-        if (!optionalDsInstance.isPresent())
+        if (!optionalDsInstance.isPresent()) {
             throw new LeoTemplateException("模板配置缺少Jenkins实例配置项: 实例名称无效！");
+        }
         return optionalDsInstance.get().getUuid();
     }
 
     @Override
     public void deleteLeoTemplateById(int templateId) {
         LeoTemplate leoTemplate = templateService.getById(templateId);
-        if (leoTemplate == null)
+        if (leoTemplate == null) {
             throw new LeoTemplateException("删除模板错误，模板不存在！");
-        if (jobService.countWithTemplateId(templateId) > 0)
+        }
+        if (jobService.countWithTemplateId(templateId) > 0) {
             throw new LeoTemplateException("删除模板错误，关联任务未删除！");
+        }
         templateService.deleteById(templateId);
     }
 

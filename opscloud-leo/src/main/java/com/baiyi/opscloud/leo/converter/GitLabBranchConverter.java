@@ -37,8 +37,9 @@ public class GitLabBranchConverter {
     }
 
     public static List<LeoBuildVO.BranchOrTag> toBranches(List<Branch> branches) {
-        if (CollectionUtils.isEmpty(branches))
+        if (CollectionUtils.isEmpty(branches)) {
             return Lists.newArrayList();
+        }
         return branches.stream().map(branch ->
                 LeoBuildVO.BranchOrTag.builder()
                         .name(branch.getName())
@@ -50,8 +51,9 @@ public class GitLabBranchConverter {
     }
 
     public static List<LeoBuildVO.BranchOrTag> toTags(List<Tag> tags) {
-        if (CollectionUtils.isEmpty(tags))
+        if (CollectionUtils.isEmpty(tags)) {
             return Lists.newArrayList();
+        }
         return tags.stream().map(e ->
                 LeoBuildVO.BranchOrTag.builder()
                         .name(e.getName())

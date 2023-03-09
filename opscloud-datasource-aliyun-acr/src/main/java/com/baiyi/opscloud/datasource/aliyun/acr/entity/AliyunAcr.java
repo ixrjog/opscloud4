@@ -28,6 +28,9 @@ public class AliyunAcr {
 
     @Getter
     public enum InstanceSpecification {
+        /**
+         * 基础实例、标准版实例、高级版实例
+         */
         BASIC("Basic", "基础实例"),
         STANDARD("Standard", "标准版实例"),
         ADVANCED("Advanced", "高级版实例");
@@ -210,6 +213,5 @@ public class AliyunAcr {
         }
 
     }
-
 
 }

@@ -43,7 +43,9 @@ public class ApplicationPacker implements IWrapper<ApplicationVO.Application> {
     @TagsWrapper
     @BizDocWrapper
     public void wrap(ApplicationVO.Application application, IExtend iExtend) {
-        if (!iExtend.getExtend()) return;
+        if (!iExtend.getExtend()) {
+            return;
+        }
         List<ApplicationResource> applicationResourceList = applicationResourceService.queryByApplication(application.getId());
         List<ApplicationResourceVO.Resource> resources = BeanCopierUtil.copyListProperties(applicationResourceList, ApplicationResourceVO.Resource.class).stream()
                 .peek(resourcePacker::wrapProperties)

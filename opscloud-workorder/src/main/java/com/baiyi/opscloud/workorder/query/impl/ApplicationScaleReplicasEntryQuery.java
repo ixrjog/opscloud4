@@ -57,8 +57,9 @@ public class ApplicationScaleReplicasEntryQuery extends BaseTicketEntryQuery<App
                     .filter(p -> p.getName().equals("replicas"))
                     .findFirst();
             int replicas = 0;
-            if (optionalProperty.isPresent())
+            if (optionalProperty.isPresent()) {
                 replicas = Integer.parseInt(optionalProperty.get().getValue());
+            }
             return ApplicationScaleReplicasEntry.KubernetesDeployment.builder()
                     .id(e.getId())
                     .instanceUuid(entryQuery.getInstanceUuid())

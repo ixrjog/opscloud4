@@ -30,7 +30,9 @@ public class BusinessDocumentPacker implements IWrapper<BusinessDocumentVO.Docum
 
     @Override
     public void wrap(BusinessDocumentVO.Document document, IExtend iExtend) {
-        if (document == null) return;
+        if (document == null) {
+            return;
+        }
         if (BusinessTypeEnum.SERVER.getType() == document.getBusinessType()) {
             Server server = serverService.getById(document.getBusinessId());
             document.setDisplayName(server.getDisplayName());

@@ -53,7 +53,9 @@ public class ZabbixAccountHandler extends AbstractZabbixAccountHandler {
     @Override
     protected void doDelete(User user) {
         com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser.User zabbixUser = zabbixV5UserDriver.getByUsername(configContext.get(), user.getUsername());
-        if (zabbixUser == null) return;
+        if (zabbixUser == null) {
+            return;
+        }
         zabbixV5UserDriver.delete(configContext.get(), user.getUsername());
         // 清除缓存
         postCacheEvict(zabbixUser,user);

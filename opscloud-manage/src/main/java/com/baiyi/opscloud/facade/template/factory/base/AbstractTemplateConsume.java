@@ -77,7 +77,8 @@ public abstract class AbstractTemplateConsume<T> implements ITemplateConsume, In
             throw new OCException("创建资产错误: 无法从生产者获取资产对象!");
         }
         bizTemplate.setBusinessId(assets.get(0).getId());
-        businessTemplateService.update(bizTemplate); // 更新关联资产
+        // 更新关联资产
+        businessTemplateService.update(bizTemplate);
 
         BusinessTemplateVO.BusinessTemplate businessTemplateVO = BeanCopierUtil.copyProperties(bizTemplate, BusinessTemplateVO.BusinessTemplate.class);
         businessTemplatePacker.wrap(businessTemplateVO, SimpleExtend.EXTEND);
@@ -93,8 +94,8 @@ public abstract class AbstractTemplateConsume<T> implements ITemplateConsume, In
         return vars;
     }
 
-
     public void afterPropertiesSet() throws Exception {
         TemplateFactory.register(this);
     }
+
 }

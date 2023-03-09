@@ -1,9 +1,5 @@
 package com.baiyi.opscloud.leo.action.build.concrete.post;
 
-import com.baiyi.opscloud.core.InstanceHelper;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
-import com.baiyi.opscloud.datasource.aliyun.acr.driver.AliyunAcrImageDriver;
-import com.baiyi.opscloud.datasource.aliyun.acr.driver.AliyunAcrRepositoryDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildImage;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
@@ -16,7 +12,6 @@ import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.service.leo.LeoBuildImageService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
-import com.baiyi.opscloud.service.sys.EnvService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -35,21 +30,6 @@ public class VerifyKubernetesImageConcreteHandler extends BaseBuildHandler {
 
     @Resource
     private LeoJobService leoJobService;
-
-    @Resource
-    private EnvService envService;
-
-    @Resource
-    private InstanceHelper instanceHelper;
-
-    @Resource
-    private DsConfigHelper dsConfigHelper;
-
-    @Resource
-    private AliyunAcrRepositoryDriver aliyunAcrRepositoryDriver;
-
-    @Resource
-    private AliyunAcrImageDriver aliyunAcrImageDriver;
 
     @Resource
     private LeoBuildImageService leoBuildImageService;

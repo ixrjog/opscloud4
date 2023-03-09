@@ -26,8 +26,9 @@ public class InstanceCommandBuilder {
     }
 
     public InstanceCommandBuilder addOutput(String output) {
-        if (outputs.size() < 10)
+        if (outputs.size() < 10) {
             outputs.add(output);
+        }
         return this;
     }
 

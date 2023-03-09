@@ -15,13 +15,13 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class GitlabGroupEntryQuery extends DatasourceAssetExtendedTicketEntryQuery {
+public class GitLabProjectEntryQuery extends DatasourceAssetExtendedTicketEntryQuery {
 
     @Override
     protected DsAssetParam.AssetPageQuery getAssetQueryParam(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
         return DsAssetParam.AssetPageQuery.builder()
                 .instanceUuid(entryQuery.getInstanceUuid())
-                .assetType(DsAssetTypeConstants.GITLAB_GROUP.name())
+                .assetType(DsAssetTypeConstants.GITLAB_PROJECT.name())
                 .queryName(entryQuery.getQueryName())
                 .isActive(true)
                 .page(1)
@@ -32,6 +32,7 @@ public class GitlabGroupEntryQuery extends DatasourceAssetExtendedTicketEntryQue
     @Override
     protected WorkOrderTicketVO.Entry toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, DatasourceInstanceAsset entry) {
         WorkOrderTicketVO.Entry ticketEntry = super.toEntry(entryQuery, entry);
+        ticketEntry.setName(entry.getAssetKey());
         ticketEntry.setRole("DEVELOPER");
         ticketEntry.setComment(entry.getDescription());
         return ticketEntry;
@@ -39,7 +40,7 @@ public class GitlabGroupEntryQuery extends DatasourceAssetExtendedTicketEntryQue
 
     @Override
     public String getKey() {
-        return WorkOrderKeyConstants.GITLAB_GROUP.name();
+        return WorkOrderKeyConstants.GITLAB_PROJECT.name();
     }
 
 }

@@ -30,8 +30,10 @@ public class ServerTaskPacker implements IWrapper<ServerTaskVO.ServerTask> {
     public void wrap(ServerTaskVO.ServerTask serverTask, IExtend iExtend) {
         if (iExtend.getExtend()) {
             serverTaskMemberPacker.wrap(serverTask);
-            ansiblePlaybookPacker.wrap(serverTask); // playbook
-            userPacker.wrap(serverTask); // user
+            // playbook
+            ansiblePlaybookPacker.wrap(serverTask);
+            // user
+            userPacker.wrap(serverTask);
         }
     }
 

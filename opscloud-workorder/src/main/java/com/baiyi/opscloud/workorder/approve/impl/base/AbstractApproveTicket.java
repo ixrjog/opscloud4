@@ -11,7 +11,7 @@ import com.baiyi.opscloud.workorder.approve.ITicketApprove;
 import com.baiyi.opscloud.workorder.approve.factory.WorkOrderTicketApproveFactory;
 import com.baiyi.opscloud.workorder.constants.ApprovalTypeConstants;
 import com.baiyi.opscloud.workorder.exception.TicketException;
-import com.baiyi.opscloud.workorder.helper.TicketApproverHelper;
+import com.baiyi.opscloud.workorder.helper.TicketApproveHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.annotation.Async;
@@ -36,7 +36,7 @@ public abstract class AbstractApproveTicket implements ITicketApprove, Initializ
     protected WorkOrderTicketNodeService ticketNodeService;
 
     @Resource
-    private TicketApproverHelper ticketApproverHelper;
+    private TicketApproveHelper ticketApproverHelper;
 
     @Override
     @Async(value = CORE)

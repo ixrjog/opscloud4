@@ -19,7 +19,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.notice.message.CreateIamUserMessage;
 import com.baiyi.opscloud.domain.param.user.UserAmParam;
 import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
-import com.baiyi.opscloud.facade.UserCredentialFacade;
+import com.baiyi.opscloud.facade.user.UserCredentialFacade;
 import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

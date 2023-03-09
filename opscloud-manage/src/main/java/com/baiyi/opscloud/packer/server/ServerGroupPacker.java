@@ -34,7 +34,8 @@ public final class ServerGroupPacker implements IWrapper<ServerGroupVO.ServerGro
 
     @Override
     public void wrap(ServerGroupVO.ServerGroup serverGroup, IExtend iExtend) {
-        serverGroupPackerDelegate.wrap(serverGroup, SimpleExtend.EXTEND); // 代理
+        // 代理
+        serverGroupPackerDelegate.wrap(serverGroup, SimpleExtend.EXTEND);
         serverGroupTypePacker.wrap(serverGroup);
         businessPropertyPacker.wrap(serverGroup);
         serverGroup.setServerSize(serverService.countByServerGroupId(serverGroup.getId()));

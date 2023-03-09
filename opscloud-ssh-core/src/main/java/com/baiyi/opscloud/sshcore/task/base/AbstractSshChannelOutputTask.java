@@ -27,7 +27,8 @@ public abstract class AbstractSshChannelOutputTask implements IOutputTask {
 
     private boolean isClosed = false;
 
-    private static final int BUFF_SIZE = 1024; // 1KB
+    // 1KB
+    private static final int BUFF_SIZE = 1024;
 
     public void close() {
         this.isClosed = true;

@@ -102,8 +102,12 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
         String username = SessionUtil.getUsername();
         int accessLevel = userPermissionFacade.getUserAccessLevel(username);
         // ADMIN角色可以操作所有
-        if (accessLevel >= AccessLevel.ADMIN.getLevel()) return;
-        if (SessionUtil.equalsUsername(workEvent.getUsername())) return;
+        if (accessLevel >= AccessLevel.ADMIN.getLevel()) {
+            return;
+        }
+        if (SessionUtil.equalsUsername(workEvent.getUsername())) {
+            return;
+        }
         throw new OCException("只能变更自己创建的工作事件");
     }
 
@@ -133,7 +137,9 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
     @Transactional(rollbackFor = {Exception.class})
     public void deleteWorkEvent(Integer id) {
         WorkEvent workEvent = workEventService.getById(id);
-        if (ObjectUtils.isEmpty(workEvent)) return;
+        if (ObjectUtils.isEmpty(workEvent)) {
+            return;
+        }
         validAccess(workEvent);
         workEventPropertyService.deleteByWorkEventId(id);
         workEventService.deleteById(id);
@@ -147,7 +153,9 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
     @Override
     public List<WorkRole> queryMyWorkRole() {
         User user = userService.getByUsername(SessionUtil.getUsername());
-        if (ObjectUtils.isEmpty(user)) throw new AuthenticationException(ErrorEnum.AUTHENTICATION_FAILURE);
+        if (ObjectUtils.isEmpty(user)) {
+            throw new AuthenticationException(ErrorEnum.AUTHENTICATION_FAILURE);
+        }
         List<Tag> tags = businessTagService.queryByBusiness(
                         SimpleBusiness.builder()
                                 .businessType(BusinessTypeEnum.USER.getType())
@@ -160,8 +168,9 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
         if (!CollectionUtils.isEmpty(tags)) {
             tags.forEach(tag -> {
                 WorkRole workRole = workRoleService.getByTag(tag.getTagKey());
-                if (!ObjectUtils.isEmpty(workRole))
+                if (!ObjectUtils.isEmpty(workRole)) {
                     workRoles.add(workRole);
+                }
             });
         }
         return CollectionUtils.isEmpty(workRoles) ? workRoleService.queryAll() : workRoles;
@@ -201,12 +210,16 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
 
     private List<TreeVO.Tree> getChildTree(Integer workRoleId, Integer parentId) {
         List<WorkItem> workItemList = workItemService.listByWorkRoleIdAndParentId(workRoleId, parentId);
-        if (CollectionUtils.isEmpty(workItemList)) return Collections.emptyList();
+        if (CollectionUtils.isEmpty(workItemList)) {
+            return Collections.emptyList();
+        }
         List<TreeVO.Tree> childDeptTreeList = Lists.newArrayListWithCapacity(workItemList.size());
         workItemList.forEach(child -> {
             List<TreeVO.Tree> list = getChildTree(child.getWorkRoleId(), child.getId());
             TreeVO.Tree childDeptTree = TreeVO.Tree.builder().label(child.getWorkItemName()).value(child.getId()).build();
-            if (!CollectionUtils.isEmpty(list)) childDeptTree.setChildren(list);
+            if (!CollectionUtils.isEmpty(list)) {
+                childDeptTree.setChildren(list);
+            }
             childDeptTreeList.add(childDeptTree);
         });
         return childDeptTreeList;

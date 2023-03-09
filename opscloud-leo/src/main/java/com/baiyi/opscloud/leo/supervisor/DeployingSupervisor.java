@@ -12,7 +12,7 @@ import com.baiyi.opscloud.leo.helper.DeployingLogHelper;
 import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
 import com.baiyi.opscloud.leo.supervisor.base.ISupervisor;
 import com.baiyi.opscloud.leo.supervisor.strategy.base.SupervisingStrategy;
-import com.baiyi.opscloud.leo.supervisor.strategy.base.SupervisingStrategyFactroy;
+import com.baiyi.opscloud.leo.supervisor.strategy.base.SupervisingStrategyFactory;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -75,7 +75,7 @@ public class DeployingSupervisor implements ISupervisor {
                 .map(LeoBaseModel.Kubernetes::getDeployment)
                 .orElseThrow(() -> new LeoDeployException("Kubernetes配置不存在！"));
         // final String containerName = deployment.getContainer().getName();
-        SupervisingStrategy deployingStrategy = SupervisingStrategyFactroy.getStrategyByDeployType(deploy.getDeployType());
+        SupervisingStrategy deployingStrategy = SupervisingStrategyFactory.getStrategyByDeployType(deploy.getDeployType());
         if (deployingStrategy == null) {
             logHelper.error(this.leoDeploy, "未找到对应的部署策略: deployType={}", deploy.getDeployType());
             throw new LeoDeployException("未找到对应的部署策略: deployType={}", deploy.getDeployType());

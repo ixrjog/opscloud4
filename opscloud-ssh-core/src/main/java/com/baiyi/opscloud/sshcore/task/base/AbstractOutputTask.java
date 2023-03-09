@@ -23,7 +23,8 @@ public abstract class AbstractOutputTask implements IOutputTask {
     private InputStream outFromChannel;
     private SessionOutput sessionOutput;
 
-    private static final int BUFF_SIZE = 1024 * 8; // 8KB
+    // 8KB
+    private static final int BUFF_SIZE = 1024 * 8;
 
     public AbstractOutputTask(SessionOutput sessionOutput, InputStream outFromChannel) {
         setSessionOutput(sessionOutput);

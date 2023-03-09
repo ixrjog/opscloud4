@@ -5,7 +5,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserToken;
 import com.baiyi.opscloud.domain.vo.auth.LogVO;
 import com.baiyi.opscloud.facade.auth.UserTokenFacade;
-import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.user.UserTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +21,6 @@ import org.springframework.stereotype.Service;
 public class UserTokenFacadeImpl implements UserTokenFacade {
 
     private final UserTokenService userTokenService;
-
-    private final UserService userService;
 
     @Override
     public LogVO.Login userLogin(User user) {

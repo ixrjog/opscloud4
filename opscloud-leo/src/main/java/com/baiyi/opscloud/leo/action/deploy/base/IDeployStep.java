@@ -7,6 +7,6 @@ package com.baiyi.opscloud.leo.action.deploy.base;
  */
 public interface IDeployStep {
 
-    public String getStep();
+    String getStep();
 
 }

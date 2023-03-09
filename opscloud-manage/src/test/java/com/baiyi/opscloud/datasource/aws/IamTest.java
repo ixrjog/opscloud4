@@ -12,7 +12,7 @@ import com.baiyi.opscloud.datasource.aws.iam.entity.IamPolicy;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamUser;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
-import com.baiyi.opscloud.facade.UserCredentialFacade;
+import com.baiyi.opscloud.facade.user.UserCredentialFacade;
 import com.baiyi.opscloud.otp.OtpUtil;
 import com.baiyi.opscloud.otp.model.OTPAccessCode;
 import lombok.extern.slf4j.Slf4j;

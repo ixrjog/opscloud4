@@ -24,7 +24,9 @@ public class DsAssetSubscriptionPacker implements IWrapper<DsAssetSubscriptionVO
     @Override
     @AgoWrapper
     public void wrap(DsAssetSubscriptionVO.AssetSubscription assetSubscription, IExtend iExtend) {
-        if (!iExtend.getExtend()) return;
+        if (!iExtend.getExtend()) {
+            return;
+        }
         dsInstancePacker.wrap(assetSubscription);
         dsAssetPacker.wrap(assetSubscription);
     }

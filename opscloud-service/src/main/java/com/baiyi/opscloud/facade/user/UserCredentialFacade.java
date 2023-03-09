@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.facade;
+package com.baiyi.opscloud.facade.user;
 
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;

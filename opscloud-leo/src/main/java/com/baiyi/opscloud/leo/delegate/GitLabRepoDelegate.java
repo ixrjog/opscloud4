@@ -80,12 +80,14 @@ public class GitLabRepoDelegate {
     public Commit getBranchOrTagCommit(GitLabConfig.Gitlab gitlab, Long projectId, String branchNameOrTagName) {
         try {
             Optional<Branch> optionalBranch = GitLabProjectDriver.getBranchWithProjectIdAndBranchName(gitlab, projectId, branchNameOrTagName);
-            if (optionalBranch.isPresent())
+            if (optionalBranch.isPresent()) {
                 return optionalBranch.get().getCommit();
+            }
 
             Optional<Tag> optionalTag = GitLabProjectDriver.getTagWithProjectIdAndTagName(gitlab, projectId, branchNameOrTagName);
-            if (optionalTag.isPresent())
+            if (optionalTag.isPresent()) {
                 return optionalTag.get().getCommit();
+            }
         } catch (GitLabApiException e) {
             log.error(e.getMessage());
         }

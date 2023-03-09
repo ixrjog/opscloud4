@@ -30,12 +30,6 @@ public class LeoDeployCompensationTask {
 
     private final DeployingLogHelper logHelper;
 
-    //private final DsConfigHelper dsConfigHelper;
-
-    //private final LeoPostDeployHandler postDeployHandler;
-
-    //private final ThreadPoolTaskExecutor leoExecutor;
-
     public void handleTask() {
         List<LeoDeploy> leoDeploys = deployService.queryNotFinishDeployWithOcInstance(OcInstance.ocInstance);
         if (CollectionUtils.isEmpty(leoDeploys)) {
@@ -43,22 +37,6 @@ public class LeoDeployCompensationTask {
         }
         leoDeploys.forEach(leoDeploy -> {
             if (!heartbeatHelper.isLive(LeoHeartbeatHelper.HeartbeatTypes.DEPLOY, leoDeploy.getId())) {
-//                LeoDeployModel.DeployConfig deployConfig = LeoDeployModel.load(leoDeploy);
-//                LeoBaseModel.DsInstance dsInstance = deployConfig.getDeploy().getKubernetes().getInstance();
-//                // TODO 空指针异常
-//                final String instanceUuid = dsInstance.getUuid();
-//                KubernetesConfig kubernetesConfig = getKubernetesConfigWithUuid(instanceUuid);
-//                DeployingSupervisor deployingSupervisor = new DeployingSupervisor(
-//                        this.heartbeatHelper,
-//                        leoDeploy,
-//                        deployService,
-//                        logHelper,
-//                        deployConfig,
-//                        kubernetesConfig.getKubernetes(),
-//                        postDeployHandler
-//                );
-//                log.info("执行补偿任务: deployId={}", leoDeploy.getId());
-//                leoExecutor.execute(new Thread(deployingSupervisor));
                 LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                         .id(leoDeploy.getId())
                         .deployResult(BaseDeployHandler.RESULT_ERROR)
@@ -72,10 +50,5 @@ public class LeoDeployCompensationTask {
             }
         });
     }
-
-//    private KubernetesConfig getKubernetesConfigWithUuid(String uuid) {
-//        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(uuid);
-//        return dsConfigHelper.build(dsConfig, KubernetesConfig.class);
-//    }
 
 }

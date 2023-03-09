@@ -39,8 +39,10 @@ public class BusinessObjectClearAspect {
     @Around("@annotation(businessObjectClear)")
     public Object around(ProceedingJoinPoint joinPoint, BusinessObjectClear businessObjectClear) throws OCException {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-        String[] params = methodSignature.getParameterNames();// 获取参数名称
-        Object[] args = joinPoint.getArgs();// 获取参数值
+        // 获取参数名称
+        String[] params = methodSignature.getParameterNames();
+        // 获取参数值
+        Object[] args = joinPoint.getArgs();
         if (params != null && params.length != 0) {
             Integer businessId = Integer.valueOf(args[0].toString());
             if (businessObjectClear.value() == BusinessTypeEnum.COMMON) {

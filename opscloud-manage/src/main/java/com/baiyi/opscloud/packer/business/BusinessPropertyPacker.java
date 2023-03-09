@@ -21,7 +21,9 @@ public class BusinessPropertyPacker {
 
     public void wrap(BusinessPropertyVO.IBusinessProperty iBusinessProperty) {
         BusinessProperty businessProperty = businessPropertyService.getByUniqueKey(iBusinessProperty);
-        if (businessProperty == null) return;
+        if (businessProperty == null) {
+            return;
+        }
         iBusinessProperty.setBusinessProperty(BeanCopierUtil.copyProperties(businessProperty, BusinessPropertyVO.Property.class));
     }
 

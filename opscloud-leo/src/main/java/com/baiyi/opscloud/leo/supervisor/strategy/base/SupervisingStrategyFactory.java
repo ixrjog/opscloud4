@@ -11,9 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Version 1.0
  */
 @Slf4j
-public class SupervisingStrategyFactroy {
+public class SupervisingStrategyFactory {
 
-    private SupervisingStrategyFactroy() {
+    private SupervisingStrategyFactory() {
     }
 
     static Map<String, SupervisingStrategy> context = new ConcurrentHashMap<>();
@@ -24,7 +24,7 @@ public class SupervisingStrategyFactroy {
 
     public static void register(SupervisingStrategy bean) {
         context.put(bean.getDeployType(), bean);
-        log.info("DeployingStrategyFactroy Registered: deployType={}", bean.getDeployType());
+        log.info("DeployingStrategyFactory Registered: deployType={}", bean.getDeployType());
     }
 
 }

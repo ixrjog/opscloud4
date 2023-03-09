@@ -67,18 +67,22 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     @Override
     public void verifyUserHasResourcePermissionWithToken(String token, String resourceName) {
         AuthResource authResource = authResourceService.queryByName(resourceName);
-        if (authResource == null)
+        if (authResource == null) {
             throw new AuthenticationException(ErrorEnum.AUTHENTICATION_RESOURCE_NOT_EXIST);
+        }
 
-        if (!authResource.getNeedAuth())
+        if (!authResource.getNeedAuth()) {
             return; // 此接口不需要鉴权
+        }
 
-        if (StringUtils.isEmpty(token))
+        if (StringUtils.isEmpty(token)) {
             throw new AuthenticationException(ErrorEnum.AUTHENTICATION_REQUEST_NO_TOKEN);
+        }
 
         UserToken userToken = userTokenService.getByVaildToken(token);
-        if (userToken == null)
+        if (userToken == null) {
             throw new AuthenticationException(ErrorEnum.AUTHENTICATION_TOKEN_INVALID);
+        }
         // 设置会话用户
         SessionUtil.setUserToken(userToken);
         // 校验用户是否可以访问资源路径
@@ -94,15 +98,19 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     @Override
     public void verifyUserHasResourcePermissionWithAccessToken(String accessToken, String resourceName) {
         AuthResource authResource = authResourceService.queryByName(resourceName);
-        if (authResource == null)
+        if (authResource == null) {
             throw new AuthenticationException(ErrorEnum.AUTHENTICATION_RESOURCE_NOT_EXIST);
-        if (!authResource.getNeedAuth())
+        }
+        if (!authResource.getNeedAuth()) {
             return; // 此接口不需要鉴权
-        if (StringUtils.isEmpty(accessToken))
+        }
+        if (StringUtils.isEmpty(accessToken)) {
             throw new AuthenticationException(ErrorEnum.AUTHENTICATION_REQUEST_NO_TOKEN);
+        }
         AccessToken token = accessTokenService.getByToken(accessToken);
-        if (token == null)
+        if (token == null) {
             throw new AuthenticationException(ErrorEnum.AUTHENTICATION_TOKEN_INVALID);
+        }
         // 设置会话用户
         SessionUtil.setUsername(token.getUsername());
         // 校验用户是否可以访问资源路径
@@ -114,7 +122,9 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     // 授权资源到SA角色
     private void grantRoleResource(AuthResource authResource) {
         AuthRole authRole = authRoleService.getByRoleName(SUPER_ADMIN);
-        if (authRole == null) return;
+        if (authRole == null) {
+            return;
+        }
 
         AuthRoleResourceVO.RoleResource roleResource = AuthRoleResourceVO.RoleResource.builder()
                 .resourceId(authResource.getId())
@@ -124,7 +134,8 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     }
 
     @Override
-    @PermitEmptyPasswords // 允许空密码登录
+    // 允许空密码登录
+    @PermitEmptyPasswords
     public LogVO.Login login(LoginParam.Login loginParam) {
         User user = userService.getByUsername(loginParam.getUsername());
         // 尝试使用Provider认证

@@ -43,8 +43,9 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
         try {
             String name = amazonSqsDriver.createQueue(config, entry.getRegionId(), entry.getQueueName(), entry.getAttributes());
             log.info("工单创建数据源实例资产: instanceUuid={}, entry={}", ticketEntry.getInstanceUuid(), entry);
-            if (StringUtils.isBlank(name))
+            if (StringUtils.isBlank(name)) {
                 throw new TicketProcessException("工单创建数据源实例资产失败！");
+            }
         } catch (Exception e) {
             throw new TicketProcessException("工单创建数据源实例资产失败: {}", e.getMessage());
         }
@@ -53,38 +54,47 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
     @Override
     public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         SimpleQueueService.Queue entry = this.toEntry(ticketEntry.getContent());
-        if (StringUtils.isEmpty(entry.getQueueName()))
+        if (StringUtils.isEmpty(entry.getQueueName())) {
             throw new TicketVerifyException("校验工单条目失败: 未指定SQS名称！");
-        if (!entry.getQueueName().matches("[0-9a-z_]{7,80}"))
+        }
+        if (!entry.getQueueName().matches("[0-9a-z_]{7,80}")) {
             throw new TicketVerifyException("校验工单条目失败: SQS名称不合规！");
+        }
 
-        if (!entry.getQueueName().startsWith("transsnet_"))
+        if (!entry.getQueueName().startsWith("transsnet_")) {
             throw new TicketVerifyException("校验工单条目失败: SQS名称必须以 transsnet_ 开始！");
+        }
 
         switch (entry.getEnvName()) {
             case "dev":
-                if (!entry.getQueueName().endsWith("_dev_queue"))
+                if (!entry.getQueueName().endsWith("_dev_queue")) {
                     throw new TicketVerifyException("校验工单条目失败: 开发环境SQS名称必须以 _dev_queue 结尾！");
+                }
                 break;
             case "daily":
-                if (!entry.getQueueName().endsWith("_test_queue"))
+                if (!entry.getQueueName().endsWith("_test_queue")) {
                     throw new TicketVerifyException("校验工单条目失败: 日常环境SQS名称必须以 _test_queue 结尾！");
+                }
                 break;
             case "frankfurt-daily":
-                if (!entry.getQueueName().endsWith("_daily_queue"))
+                if (!entry.getQueueName().endsWith("_daily_queue")) {
                     throw new TicketVerifyException("校验工单条目失败: 日常环境SQS名称必须以 _daily_queue 结尾！");
+                }
                 break;
             case "gray":
-                if (!entry.getQueueName().endsWith("_canary_queue"))
+                if (!entry.getQueueName().endsWith("_canary_queue")) {
                     throw new TicketVerifyException("校验工单条目失败: 灰度环境SQS名称必须以 _canary_queue 结尾！");
+                }
                 break;
             case "pre":
-                if (!entry.getQueueName().endsWith("_pre_queue"))
+                if (!entry.getQueueName().endsWith("_pre_queue")) {
                     throw new TicketVerifyException("校验工单条目失败: 预发环境SQS名称必须以 _pre_queue 结尾！");
+                }
                 break;
             case "prod":
-                if (!entry.getQueueName().endsWith("_prod_queue"))
+                if (!entry.getQueueName().endsWith("_prod_queue")) {
                     throw new TicketVerifyException("校验工单条目失败: 生产环境SQS名称必须以 _prod_queue 结尾！");
+                }
                 break;
             default:
                 throw new TicketVerifyException("校验工单条目失败: 该环境不支持新建SQS！");
@@ -125,8 +135,9 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
         AwsConfig.Aws config = getDsConfig(ticketEntry, AwsConfig.class).getAws();
         try {
             String queueUrl = amazonSqsDriver.getQueue(config, entry.getRegionId(), entry.getQueueName());
-            if (StringUtils.isBlank(queueUrl))
+            if (StringUtils.isBlank(queueUrl)) {
                 throw new TicketProcessException("SQS创建失败: 工单创建数据源实例资产失败！");
+            }
             Map<String, String> attributes = amazonSqsDriver.getQueueAttributes(config, entry.getRegionId(), entry.getQueueName());
             SimpleQueueService.Queue queue = SimpleQueueService.Queue.builder()
                     .queueUrl(queueUrl)

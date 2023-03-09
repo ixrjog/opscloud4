@@ -54,12 +54,15 @@ public class OnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
     @Override
     public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         OnsRocketMqTopic.Topic entry = this.toEntry(ticketEntry.getContent());
-        if (StringUtils.isEmpty(entry.getTopic()))
+        if (StringUtils.isEmpty(entry.getTopic())) {
             throw new TicketVerifyException("校验工单条目失败: 未指定Topic名称！");
-        if (!entry.getTopic().startsWith("TOPIC_"))
+        }
+        if (!entry.getTopic().startsWith("TOPIC_")) {
             throw new TicketVerifyException("校验工单条目失败: Topic名称必须以TOPIC_开头！");
-        if (!entry.getTopic().matches("[0-9A-Z_]{9,64}"))
+        }
+        if (!entry.getTopic().matches("[0-9A-Z_]{9,64}")) {
             throw new TicketVerifyException("校验工单条目失败: Topic名称不合规！");
+        }
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .assetType(getAssetType())
                 .instanceUuid(ticketEntry.getInstanceUuid())

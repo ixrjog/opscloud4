@@ -34,7 +34,9 @@ public class UserPermissionPacker implements IWrapper<UserVO.User> {
 
     @Override
     public void wrap(UserVO.User user, IExtend iExtend) {
-        if (!ExtendUtil.isExtend(iExtend)) return;
+        if (!ExtendUtil.isExtend(iExtend)) {
+            return;
+        }
         Map<Integer, IUserBusinessPermissionPageQuery> context = UserBusinessPermissionFactory.getContext();
         UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery = UserBusinessPermissionParam.UserBusinessPermissionPageQuery
                 .builder()
@@ -60,8 +62,9 @@ public class UserPermissionPacker implements IWrapper<UserVO.User> {
                 .businessType(iUserPermission.getBusinessType())
                 .build();
         UserPermission userPermission = permissionService.getByUserPermission(query);
-        if (userPermission != null)
+        if (userPermission != null) {
             iUserPermission.setUserPermission(BeanCopierUtil.copyProperties(userPermission, UserPermissionVO.UserPermission.class));
+        }
     }
 
 }

@@ -119,6 +119,11 @@ public abstract class BaseCrValidator<T extends BaseDsConfig> implements Initial
      */
     protected abstract void handleCreateRepository(LeoJob leoJob, LeoJobModel.CR cr, T dsConfig);
 
+    /**
+     * 获取配置
+     * @param uuid
+     * @return
+     */
     protected abstract T getDsConfigByUuid(String uuid);
 
     protected T getDsConfigByUuid(String uuid, Class<T> targetClass) {
@@ -145,11 +150,16 @@ public abstract class BaseCrValidator<T extends BaseDsConfig> implements Initial
                 .map(LeoJobModel.Cloud::getName)
                 .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job.cr.cloud.name"));
         DatasourceInstance dsInstance = instanceHelper.getInstanceByName(name);
-        if (dsInstance == null)
+        if (dsInstance == null) {
             throw new LeoBuildException("任务CR数据源实例不存在无法验证镜像是否推送成功！");
+        }
         return dsInstance.getUuid();
     }
 
+    /**
+     * 取容器注册表类型
+     * @return
+     */
     public abstract String getCrType();
 
     /**

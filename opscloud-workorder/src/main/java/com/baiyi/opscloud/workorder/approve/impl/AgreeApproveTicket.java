@@ -48,7 +48,7 @@ public class AgreeApproveTicket extends AbstractApproveTicket {
             log.info("执行工单: ticketId={}, createUser={}", ticket.getId(), ticket.getUsername());
             ticket.setTicketPhase(OrderTicketPhaseCodeConstants.PROCESSING.name());
             updateTicket(ticket, false);
-            processing(ticket); // 开始执行
+            processing(ticket);
             statisticalResults(ticket);
         } else {
             // 移动审批节点指针
@@ -76,7 +76,8 @@ public class AgreeApproveTicket extends AbstractApproveTicket {
         WorkOrder workOrder = workOrderService.getById(ticket.getWorkOrderId());
         ITicketProcessor iTicketProcessor = WorkOrderTicketProcessorFactory.getByKey(workOrder.getWorkOrderKey());
         List<WorkOrderTicketEntry> entries = queryTicketEntries(ticket);
-        entries.forEach(iTicketProcessor::process); // 执行所有工单条目
+        // 执行所有工单条目
+        entries.forEach(iTicketProcessor::process);
     }
 
     private List<WorkOrderTicketEntry> queryTicketEntries(WorkOrderTicket ticket) {

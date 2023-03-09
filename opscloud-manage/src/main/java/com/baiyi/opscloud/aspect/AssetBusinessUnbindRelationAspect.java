@@ -36,8 +36,10 @@ public class AssetBusinessUnbindRelationAspect {
     @Around("@annotation(assetBusinessUnbindRelation)")
     public Object around(ProceedingJoinPoint joinPoint, AssetBusinessUnbindRelation assetBusinessUnbindRelation) throws OCException {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-        String[] params = methodSignature.getParameterNames();// 获取参数名称
-        Object[] args = joinPoint.getArgs();// 获取参数值
+        // 获取参数名称
+        String[] params = methodSignature.getParameterNames();
+        // 获取参数值
+        Object[] args = joinPoint.getArgs();
         if (params != null && params.length != 0) {
             SimpleBusiness simpleBusiness = SimpleBusiness.builder()
                     .businessType(assetBusinessUnbindRelation.type().getType())

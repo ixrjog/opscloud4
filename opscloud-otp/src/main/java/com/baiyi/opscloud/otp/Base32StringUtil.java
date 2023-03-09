@@ -14,7 +14,8 @@ import java.util.Locale;
 public class Base32StringUtil {
     // singleton
 
-    private static final Base32StringUtil INSTANCE = new Base32StringUtil("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"); // RFC 4648/3548
+    // RFC 4648/3548
+    private static final Base32StringUtil INSTANCE = new Base32StringUtil("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567");
 
     static Base32StringUtil getInstance() {
         return INSTANCE;

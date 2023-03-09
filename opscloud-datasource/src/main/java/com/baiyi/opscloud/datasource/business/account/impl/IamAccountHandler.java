@@ -2,7 +2,6 @@ package com.baiyi.opscloud.datasource.business.account.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
-import com.baiyi.opscloud.datasource.aliyun.ram.driver.AliyunRamAccessKeyDriver;
 import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementUserDriver;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamUser;
 import com.baiyi.opscloud.datasource.business.account.impl.base.AbstractAccountHandler;
@@ -25,8 +24,6 @@ import org.springframework.stereotype.Component;
 public class IamAccountHandler extends AbstractAccountHandler {
 
     private final AmazonIdentityManagementUserDriver amazonIMUserDriver;
-
-    private final AliyunRamAccessKeyDriver aliyunRamAccessKeyDriver;
 
     protected static ThreadLocal<AwsConfig.Aws> configContext = new ThreadLocal<>();
 

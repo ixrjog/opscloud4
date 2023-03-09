@@ -25,7 +25,10 @@ public class SshAccountHelper {
 
     public Map<Integer, List<ServerAccount>> getServerAccountCatMap(Integer serverId) {
         List<ServerAccount> accounts = serverAccountService.getPermissionServerAccountByTypeAndProtocol(serverId, null, ProtocolEnum.SSH.getType());
-        if (CollectionUtils.isEmpty(accounts)) return Maps.newHashMap();
+        if (CollectionUtils.isEmpty(accounts)) {
+            return Maps.newHashMap();
+        }
         return ServerAccountUtil.catByType(accounts);
     }
+
 }

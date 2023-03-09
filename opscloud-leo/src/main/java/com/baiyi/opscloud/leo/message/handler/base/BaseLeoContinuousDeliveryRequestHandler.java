@@ -30,7 +30,6 @@ public abstract class BaseLeoContinuousDeliveryRequestHandler<T> implements ILeo
     }
 
     protected void sendToSession(Session session, DataTable body) throws IOException {
-
         if (session.isOpen()) {
             LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
                     .body(body)

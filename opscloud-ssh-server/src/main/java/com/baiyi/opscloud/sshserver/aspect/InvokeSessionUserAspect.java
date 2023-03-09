@@ -65,8 +65,9 @@ public class InvokeSessionUserAspect {
             }
             com.baiyi.opscloud.common.util.SessionUtil.setUserId(user.getId());
             com.baiyi.opscloud.common.util.SessionUtil.setUsername(user.getUsername());
-            if (invokeSessionUser.invokeAdmin())
-                com.baiyi.opscloud.common.util.SessionUtil.setIsAdmin(isAdmin(user.getUsername()));
+            if (invokeSessionUser.invokeAdmin()) {
+                SessionUtil.setIsAdmin(isAdmin(user.getUsername()));
+            }
         }
         if (invokeSessionUser.source() == SessionSource.TOKEN) {
             if (invokeSessionUser.invokeAdmin()) {

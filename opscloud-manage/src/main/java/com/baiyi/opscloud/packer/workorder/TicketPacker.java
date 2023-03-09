@@ -11,7 +11,7 @@ import com.baiyi.opscloud.domain.vo.workorder.WorkOrderVO;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.packer.user.UserAvatarPacker;
 import com.baiyi.opscloud.service.user.UserService;
-import com.baiyi.opscloud.workorder.helper.TicketApproverHelper;
+import com.baiyi.opscloud.workorder.helper.TicketApproveHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -36,12 +36,14 @@ public class TicketPacker implements IWrapper<WorkOrderTicketVO.Ticket> {
 
     private final UserAvatarPacker userAvatarPacker;
 
-    private final TicketApproverHelper ticketApproverHelper;
+    private final TicketApproveHelper ticketApproverHelper;
 
     @Override
     @AgoWrapper
     public void wrap(WorkOrderTicketVO.Ticket ticket, IExtend iExtend) {
-        if (!iExtend.getExtend()) return;
+        if (!iExtend.getExtend()) {
+            return;
+        }
         workOrderPacker.wrap(ticket);
         User user = userService.getByUsername(ticket.getUsername());
         ticket.setCreateUser(toCreateUser(ticket.getUsername()));
@@ -95,7 +97,8 @@ public class TicketPacker implements IWrapper<WorkOrderTicketVO.Ticket> {
                 .build();
         workOrderPacker.wrap(ticketView);
         ticketEntryPacker.wrap(ticketView);
-        workOrderWorkflowPacker.wrap(ticketView); // 工作流节点
+        // 工作流节点
+        workOrderWorkflowPacker.wrap(ticketView);
         nodePacker.wrap(ticketView);
         return ticketView;
     }

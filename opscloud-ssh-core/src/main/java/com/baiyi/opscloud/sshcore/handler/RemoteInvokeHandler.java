@@ -61,13 +61,16 @@ public class RemoteInvokeHandler {
         Credential credential = hostSystem.getSshCredential().getCredential();
         // 按凭证类型
         switch (hostSystem.getSshCredential().getCredential().getKind()) {
-            case 1: // password
+            // password
+            case 1:
                 session.setPassword(credential.getCredential());
                 break;
-            case 2: // prvKey
+            // prvKey
+            case 2:
                 jsch.addIdentity(credential.getCredential(), credential.getPassphrase().getBytes());
                 break;
-            case 3: // prvKey + pubKey
+            // prvKey + pubKey
+            case 3:
                 jsch.addIdentity(appId, credential.getCredential().trim().getBytes(), credential.getCredential2().getBytes(), credential.getPassphrase().getBytes());
                 break;
         }

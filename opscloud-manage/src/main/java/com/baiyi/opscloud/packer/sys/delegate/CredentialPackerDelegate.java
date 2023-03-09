@@ -21,7 +21,9 @@ public class CredentialPackerDelegate implements IWrapper<CredentialVO.Credentia
     @Override
     @DesensitizedMethod
     public void wrap(CredentialVO.Credential credential, IExtend iExtend) {
-        if (!ExtendUtil.isExtend(iExtend)) return;
+        if (!ExtendUtil.isExtend(iExtend)) {
+            return;
+        }
         credential.setQuantityUsed(CredentialCustomerFactory.countByCredentialId(credential.getId()));
     }
 

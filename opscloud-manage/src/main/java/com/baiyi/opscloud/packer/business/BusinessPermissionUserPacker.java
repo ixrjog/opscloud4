@@ -48,4 +48,5 @@ public class BusinessPermissionUserPacker {
                         .collect(Collectors.toList())
         );
     }
+
 }

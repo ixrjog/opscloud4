@@ -3,7 +3,6 @@ package com.baiyi.opscloud.datasource.business.account.impl;
 import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
-import com.baiyi.opscloud.datasource.aliyun.ram.driver.AliyunRamAccessKeyDriver;
 import com.baiyi.opscloud.datasource.aliyun.ram.driver.AliyunRamUserDriver;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamUser;
 import com.baiyi.opscloud.datasource.business.account.impl.base.AbstractAccountHandler;
@@ -34,8 +33,6 @@ import java.util.List;
 public class RamAccountHandler extends AbstractAccountHandler {
 
     private final AliyunRamUserDriver aliyunRamUserDriver;
-
-    private final AliyunRamAccessKeyDriver aliyunRamAccessKeyDriver;
 
     private final DsInstanceAssetService assetService;
 
@@ -70,7 +67,9 @@ public class RamAccountHandler extends AbstractAccountHandler {
         ramAssets.forEach(ramAsset -> {
             try {
                 RamUser.User ramUser = aliyunRamUserDriver.getUser(aliyun.getRegionId(), aliyun, user.getUsername());
-                if (ramUser == null) return;
+                if (ramUser == null) {
+                    return;
+                }
                 RamUser.User preRamUser = RamUser.User.builder()
                         .userName(user.getUsername())
                         .displayName(user.getDisplayName().equals(ramUser.getDisplayName()) ? null : user.getDisplayName())
@@ -91,7 +90,9 @@ public class RamAccountHandler extends AbstractAccountHandler {
         AliyunConfig.Aliyun aliyun = configContext.get();
         try {
             RamUser.User ramUser = aliyunRamUserDriver.getUser(aliyun.getRegionId(), aliyun, user.getUsername());
-            if (ramUser == null) return;
+            if (ramUser == null) {
+                return;
+            }
 //            Optional<AccessKey.Key> optionalKey = aliyunRamAccessKeyDriver.listAccessKeys(aliyun.getRegionId(), aliyun, user.getUsername()).stream()
 //                    .filter(k -> "Active".equals(k.getStatus())).findFirst();
 //            if (optionalKey.isPresent()) {

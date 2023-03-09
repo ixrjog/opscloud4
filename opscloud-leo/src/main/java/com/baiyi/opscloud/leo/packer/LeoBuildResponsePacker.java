@@ -39,7 +39,6 @@ public class LeoBuildResponsePacker {
 
     private final LeoBuildImageService leoBuildImageService;
 
-    //  @EnvWrapper(extend = true)
     @AgoWrapper(extend = true)
     @RuntimeWrapper(extend = true)
     public void wrap(LeoBuildVO.Build build) {
@@ -63,7 +62,6 @@ public class LeoBuildResponsePacker {
             try {
                 return new GsonBuilder().create().fromJson(build.getPipelineContent(), LeoBuildVO.Pipeline.class);
             } catch (Exception e) {
-                // log.error(e.getMessage());
                 return LeoBuildVO.Pipeline.builder()
                         .nodes(Lists.newArrayList(LeoBuildVO.Node.INVALID))
                         .build();
@@ -77,7 +75,6 @@ public class LeoBuildResponsePacker {
                         .nodes(JenkinsPipelineConverter.toLeoBuildNodes(nodes))
                         .build();
             } catch (Exception e) {
-                // log.error(e.getMessage());
                 return LeoBuildVO.Pipeline.builder()
                         .nodes(Lists.newArrayList(LeoBuildVO.Node.QUEUE))
                         .build();

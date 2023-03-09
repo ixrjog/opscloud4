@@ -40,8 +40,9 @@ public class DsInstanceScheduleFacadeImpl implements DsInstanceScheduleFacade {
     @Override
     public List<ScheduleVO.Job> queryJob(int instanceId) {
         DatasourceInstance instance = instanceService.getById(instanceId);
-        if (instance == null)
+        if (instance == null) {
             throw new OCException("数据源实例不存在！");
+        }
         try {
             return quartzService.queryJob(instance.getUuid());
         } catch (SchedulerException e) {
@@ -52,13 +53,16 @@ public class DsInstanceScheduleFacadeImpl implements DsInstanceScheduleFacade {
 
     @Override
     public void addJob(DsInstanceScheduleParam.AddJob param) {
-        if (!jobClassMap.containsKey(param.getJobType()))
+        if (!jobClassMap.containsKey(param.getJobType())) {
             throw new OCException("任务类型不存在！");
+        }
         DatasourceInstance instance = instanceService.getById(param.getInstanceId());
-        if (instance == null)
+        if (instance == null) {
             throw new OCException("数据源实例不存在！");
-        if (quartzService.checkJobExist(instance.getUuid(), param.getAssetType()))
+        }
+        if (quartzService.checkJobExist(instance.getUuid(), param.getAssetType())) {
             throw new OCException("任务已存在！");
+        }
         addJob(instance, param);
     }
 

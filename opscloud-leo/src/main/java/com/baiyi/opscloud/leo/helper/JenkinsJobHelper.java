@@ -41,14 +41,14 @@ public class JenkinsJobHelper {
                 URL url = new URL(templateConfig.getTemplate().getUrl());
                 String folderUrl = Joiner.on("").skipNulls().join(url.getProtocol(), "://", url.getHost(), url.getPort() == -1 ? null : ":" + url.getPort(), "/job/", folder, "/");
                 FolderJob folderJob = new FolderJob(folder, folderUrl);
-                log.info("查询JobXml: jenkinsUrl={}, folerJobUrl={}, templateName={}", jenkinsConfig.getJenkins().getUrl(), folderJob.getUrl(), templateConfig.getTemplate().getName());
+                log.info("查询JobXml: jenkinsUrl={}, folderJobUrl={}, templateName={}", jenkinsConfig.getJenkins().getUrl(), folderJob.getUrl(), templateConfig.getTemplate().getName());
                 return JenkinsServerDriver.getJobXml(jenkinsConfig.getJenkins(), folderJob, templateConfig.getTemplate().getName());
             } else {
                 log.info("查询JobXml: jenkinsUrl={}, templateName={}", jenkinsConfig.getJenkins().getUrl(), templateConfig.getTemplate().getName());
                 return JenkinsServerDriver.getJobXml(jenkinsConfig.getJenkins(), templateConfig.getTemplate().getName());
             }
         } catch (URISyntaxException | IOException e) {
-            throw new LeoTemplateException("查询Jenkins任务模板错误: err={}", e.getMessage());
+            throw new LeoTemplateException("查询Jenkins任务模板错误: {}", e.getMessage());
         }
     }
 }

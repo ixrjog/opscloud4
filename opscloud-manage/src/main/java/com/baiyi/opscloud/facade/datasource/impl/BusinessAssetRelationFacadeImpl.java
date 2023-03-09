@@ -30,9 +30,13 @@ public class BusinessAssetRelationFacadeImpl implements BusinessAssetRelationFac
     @Override
     public void bindAsset(BusinessAssetRelationVO.IBusinessAssetRelation iBusinessAssetRelation) {
         BusinessAssetRelationVO.Relation relation = iBusinessAssetRelation.toBusinessAssetRelation();
-        if (bizAssetRelationService.getByUniqueKey(relation) != null) return;
+        if (bizAssetRelationService.getByUniqueKey(relation) != null) {
+            return;
+        }
         DatasourceInstanceAsset asset = dsInstanceAssetService.getById(iBusinessAssetRelation.getAssetId());
-        if (asset == null) return;
+        if (asset == null) {
+            return;
+        }
         relation.setAssetType(asset.getAssetType());
         bizAssetRelationService.add(BeanCopierUtil.copyProperties(relation, BusinessAssetRelation.class));
     }
@@ -40,7 +44,9 @@ public class BusinessAssetRelationFacadeImpl implements BusinessAssetRelationFac
     @Override
     public void unbindAsset(BaseBusiness.IBusiness iBusiness) {
         List<BusinessAssetRelation> businessAssetRelations = bizAssetRelationService.queryBusinessRelations(iBusiness);
-        if (CollectionUtils.isEmpty(businessAssetRelations)) return;
+        if (CollectionUtils.isEmpty(businessAssetRelations)) {
+            return;
+        }
         businessAssetRelations.forEach(bizAssetRelationService::delete);
     }
 

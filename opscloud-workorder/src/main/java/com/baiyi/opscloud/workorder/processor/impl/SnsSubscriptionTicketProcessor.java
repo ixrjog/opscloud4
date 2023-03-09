@@ -38,8 +38,9 @@ public class SnsSubscriptionTicketProcessor extends AbstractDsAssetExtendedBaseT
         try {
             String subscriptionArn = amazonSnsDriver.subscribe(config, entry.getRegionId(), entry.getTopicArn(), entry.getProtocol(), entry.getEndpoint(), entry.getQueueName());
             log.info("工单创建数据源实例资产: instanceUuid={}, entry={}", ticketEntry.getInstanceUuid(), entry);
-            if (StringUtils.isBlank(subscriptionArn))
+            if (StringUtils.isBlank(subscriptionArn)) {
                 throw new TicketProcessException("工单创建数据源实例资产失败！");
+            }
             SimpleNotificationService.Subscription subscription = SimpleNotificationService.Subscription.builder()
                     .subscriptionArn(subscriptionArn)
                     .topicArn(entry.getTopicArn())

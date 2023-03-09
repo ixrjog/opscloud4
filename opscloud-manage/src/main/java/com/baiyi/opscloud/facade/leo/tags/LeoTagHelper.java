@@ -34,8 +34,9 @@ public class LeoTagHelper {
      * @param tags
      */
     public void updateTagsWithLeoBusiness(BaseBusiness.IBusiness leoBusiness, List<String> tags) {
-        if (CollectionUtils.isEmpty(tags))
+        if (CollectionUtils.isEmpty(tags)) {
             return;
+        }
         Set<Integer> tagIds = Sets.newHashSet();
         tags.stream().map(tagService::getByTagKey).filter(Objects::nonNull).map(Tag::getId).forEachOrdered(tagIds::add);
         BusinessTagParam.UpdateBusinessTags updateBusinessTags = BusinessTagParam.UpdateBusinessTags.builder()

@@ -43,9 +43,13 @@ public class DsAssetPacker implements IWrapperRelation<DsAssetVO.Asset> {
     private final DsInstanceAssetRelationService dsInstanceAssetRelationService;
 
     public void wrap(DsAssetVO.IDsAsset iDsAsset) {
-        if (iDsAsset.getAssetId() == 0) return;
+        if (iDsAsset.getAssetId() == 0) {
+            return;
+        }
         DatasourceInstanceAsset asset = dsInstanceAssetService.getById(iDsAsset.getAssetId());
-        if (asset == null) return;
+        if (asset == null) {
+            return;
+        }
         iDsAsset.setAsset(BeanCopierUtil.copyProperties(asset, DsAssetVO.Asset.class));
     }
 
@@ -58,7 +62,9 @@ public class DsAssetPacker implements IWrapperRelation<DsAssetVO.Asset> {
     @Override
     @TagsWrapper
     public void wrap(DsAssetVO.Asset asset, IExtend iExtend, IRelation iRelation) {
-        if (!ExtendUtil.isExtend(iExtend)) return;
+        if (!ExtendUtil.isExtend(iExtend)) {
+            return;
+        }
         // asset properties
         Map<String, String> properties = dsInstanceAssetPropertyService.queryByAssetId(asset.getId())
                 .stream().collect(Collectors.toMap(DatasourceInstanceAssetProperty::getName, DatasourceInstanceAssetProperty::getValue, (k1, k2) -> k1));
@@ -74,7 +80,9 @@ public class DsAssetPacker implements IWrapperRelation<DsAssetVO.Asset> {
     }
 
     private void wrap(DsAssetVO.Asset asset, IRelation iRelation) {
-        if (!iRelation.isRelation()) return;
+        if (!iRelation.isRelation()) {
+            return;
+        }
         Map<String, List<DsAssetVO.Asset>> children = Maps.newHashMap();
         List<DatasourceInstanceAssetRelation> relations = dsInstanceAssetRelationService.queryTargetAsset(asset.getInstanceUuid(), asset.getId());
         relations.forEach(e -> {
@@ -90,8 +98,9 @@ public class DsAssetPacker implements IWrapperRelation<DsAssetVO.Asset> {
 
     private Map<String, List<DsAssetVO.Asset>> wrapTree(DsAssetVO.Asset asset) {
         List<DatasourceInstanceAsset> assetList = dsInstanceAssetService.listByParentId(asset.getId());
-        if (CollectionUtils.isEmpty(assetList))
+        if (CollectionUtils.isEmpty(assetList)) {
             return Collections.emptyMap();
+        }
         List<DsAssetVO.Asset> assetVOList = BeanCopierUtil.copyListProperties(assetList, DsAssetVO.Asset.class);
         assetVOList.forEach(a -> a.setChildren(wrapTree(a)));
         return assetVOList.stream().collect(Collectors.groupingBy(DsAssetVO.Asset::getAssetType));

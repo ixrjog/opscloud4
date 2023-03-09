@@ -55,14 +55,17 @@ public class ZabbixServerGroupHandler extends AbstractServerGroupHandler {
                 .map(ServerProperty.Server::getZabbix)
                 .map(ServerProperty.Zabbix::getEnabled)
                 .orElse(false);
-        if (!enable) return;
+        if (!enable) {
+            return;
+        }
         zabbixGroupHelper.getOrCreateHostGroup(configContext.get(), serverGroup.getName());
         String usergroupName = ZabbixUtil.toUsergrpName(serverGroup.getName());
         zabbixGroupHelper.getOrCreateUserGroup(configContext.get(), usergroupName);
         // 创建动作
         String actionName = zabbixV5ActionDriver.buildActionName(usergroupName);
-        if (zabbixV5ActionDriver.getActionByName(configContext.get(), actionName) == null)
+        if (zabbixV5ActionDriver.getActionByName(configContext.get(), actionName) == null) {
             zabbixV5ActionDriver.create(configContext.get(), actionName, usergroupName);
+        }
     }
 
     @Override

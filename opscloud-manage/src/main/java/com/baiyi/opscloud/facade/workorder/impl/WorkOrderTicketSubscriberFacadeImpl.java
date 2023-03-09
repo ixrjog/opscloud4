@@ -42,7 +42,6 @@ public class WorkOrderTicketSubscriberFacadeImpl implements WorkOrderTicketSubsc
      * @param user
      */
     @Override
-    //@Async(value = CORE)
     public void publish(WorkOrderTicket ticket, User user) {
         createSubscriber(ticket, user, SubscribeStatusConstants.CREATE);
     }
@@ -53,7 +52,6 @@ public class WorkOrderTicketSubscriberFacadeImpl implements WorkOrderTicketSubsc
      * @param ticket
      */
     @Override
-//    @Async(value = CORE)
     public void publish(WorkOrderTicket ticket) {
         WorkOrder workOrder = workOrderService.getById(ticket.getWorkOrderId());
         Map<String, WorkflowVO.Node> nodeMap = WorkflowUtil.toNodeMap(workOrder.getWorkflow());

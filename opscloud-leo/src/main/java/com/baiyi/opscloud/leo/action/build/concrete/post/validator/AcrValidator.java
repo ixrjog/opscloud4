@@ -66,12 +66,6 @@ public class AcrValidator extends BaseCrValidator<AliyunConfig> {
                 .map(LeoJobModel.Repo::getId)
                 .orElseGet(() -> getCrRepoId(cr, leoJob, crRegionId, crInstanceId, crRepoName, dsConfig, envName));
         try {
-            /*
-              List<ListRepoTagResponse.ImagesItem> imagesItems = aliyunAcrImageDriver.listImage(crRegionId, dsConfig.getAliyun(), crInstanceId, crRepoId, QUERY_IMAGES_SIZE);
-              imagesItems.stream().filter(image -> image.getTag().equals(imageTag))
-                          .findFirst()
-                          .orElseThrow(() -> new LeoBuildException("阿里云ACR中未找到构建镜像: repoId={}, imageTag={}", crRepoId, imageTag));
-            */
             Optional.of(aliyunAcrImageDriver.getImage(crRegionId, dsConfig.getAliyun(), crInstanceId, crRepoId, imageTag))
                     .map(GetRepoTagResponse::getImageId)
                     .orElseThrow(() -> new LeoBuildException("阿里云ACR中未找到构建镜像: instanceId={}, repoId={}, imageTag={}", crInstanceId, crRepoId, imageTag));

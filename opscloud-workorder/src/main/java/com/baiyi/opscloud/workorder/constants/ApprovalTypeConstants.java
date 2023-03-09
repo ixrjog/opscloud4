@@ -25,6 +25,7 @@ public enum ApprovalTypeConstants {
     private final String desc;
 
     public static String getDesc(String name) {
-        return Arrays.stream(ApprovalTypeConstants.values()).filter(typeEnum -> typeEnum.name().equals(name) ).findFirst().map(ApprovalTypeConstants::getDesc).orElse("undefined");
+        return Arrays.stream(ApprovalTypeConstants.values()).filter(typeEnum -> typeEnum.name().equals(name)).findFirst().map(ApprovalTypeConstants::getDesc).orElse("undefined");
     }
+
 }

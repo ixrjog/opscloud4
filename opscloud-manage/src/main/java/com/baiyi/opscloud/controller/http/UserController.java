@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.*;
-import com.baiyi.opscloud.facade.UserCredentialFacade;
+import com.baiyi.opscloud.facade.user.UserCredentialFacade;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.facade.user.*;
 import io.swagger.annotations.Api;

@@ -48,12 +48,17 @@ public class ApplicationScaleReplicasTicketProcessor extends AbstractDsAssetExte
     @Override
     public void update(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
         WorkOrderTicket ticket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
-        if (!OrderTicketPhaseCodeConstants.NEW.name().equals(ticket.getTicketPhase()))
+        if (!OrderTicketPhaseCodeConstants.NEW.name().equals(ticket.getTicketPhase())) {
             throw new TicketProcessException("工单进度不是新建，无法更新配置条目！");
+        }
         WorkOrderTicketEntry preTicketEntry = ticketEntryService.getById(ticketEntry.getId());
         Map<String, String> properties = ticketEntry.getProperties();
-        if (properties == null) return;
-        if (!properties.containsKey(SCALE_REPLICAS)) return;
+        if (properties == null) {
+            return;
+        }
+        if (!properties.containsKey(SCALE_REPLICAS)) {
+            return;
+        }
         ApplicationScaleReplicasEntry.KubernetesDeployment deployment = toEntry(preTicketEntry.getContent());
         deployment.setScaleReplicas(Integer.parseInt(properties.get(SCALE_REPLICAS)));
         preTicketEntry.setContent(deployment.toString());
@@ -65,19 +70,23 @@ public class ApplicationScaleReplicasTicketProcessor extends AbstractDsAssetExte
     public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         ApplicationScaleReplicasEntry.KubernetesDeployment entry = this.toEntry(ticketEntry.getContent());
         KubernetesConfig.Kubernetes config = getDsConfig(ticketEntry, KubernetesConfig.class).getKubernetes();
-        if (StringUtils.isEmpty(entry.getNamespace()))
+        if (StringUtils.isEmpty(entry.getNamespace())) {
             throw new TicketVerifyException("校验工单条目失败: 未指定Namespace命名空间！");
-        if (StringUtils.isEmpty(entry.getDeploymentName()))
+        }
+        if (StringUtils.isEmpty(entry.getDeploymentName())) {
             throw new TicketVerifyException("校验工单条目失败: 未指定Deployment(无状态)名称！");
-        if (entry.getScaleReplicas() == null)
+        }
+        if (entry.getScaleReplicas() == null) {
             throw new TicketVerifyException("校验工单条目失败: 未指定扩容后副本数！");
+        }
 
         int replicas = Optional.ofNullable(KubernetesDeploymentDriver.getDeployment(config, entry.getNamespace(), entry.getDeploymentName()))
                 .map(Deployment::getSpec)
                 .map(DeploymentSpec::getReplicas)
                 .orElseThrow(() -> new TicketVerifyException("校验工单条目失败: 无法获取当前副本数！"));
-        if (entry.getScaleReplicas() <= replicas)
+        if (entry.getScaleReplicas() <= replicas) {
             throw new TicketVerifyException("校验工单条目失败: 扩容后副本数小于当前副本数！");
+        }
     }
 
     @Override

@@ -13,9 +13,9 @@ import java.lang.annotation.*;
 @Documented
 public @interface LeoDeployInterceptor {
 
-    public static final boolean OFF = false;
+    boolean OFF = false;
 
-    public static final boolean ON = true;
+    boolean ON = true;
 
     /**
      * 任务ID （SpEL语法）

@@ -141,7 +141,8 @@ public class SessionOutputUtil {
         String outputStr = sessionOutput.getOutput().toString();
         String auditLog;
 
-        if (sessionOutput.getOutput().length() > 1024) { // 输出太多截断
+        // 输出太多截断
+        if (sessionOutput.getOutput().length() > 1024) {
             auditLog = sessionOutput.getOutput().substring(0, subOutputLine(outputStr)) + "\r\n";
         } else {
             auditLog = sessionOutput.getOutput().toString();
@@ -164,7 +165,9 @@ public class SessionOutputUtil {
         int index = 0;
         int line = 1;
         while (true) {
-            if (line > maxLine) break;
+            if (line > maxLine) {
+                break;
+            }
             int find = auditContent.indexOf("\r\n", index) + 2;
             if (find != 0) {
                 index = find;

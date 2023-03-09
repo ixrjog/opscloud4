@@ -47,8 +47,9 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
     @Override
     public List<TagVO.Tag> queryTagByBusiness(BaseBusiness.IBusiness iBusiness) {
         List<BusinessTag> businessTags = businessTagService.queryByBusiness(iBusiness);
-        if (CollectionUtils.isEmpty(businessTags))
+        if (CollectionUtils.isEmpty(businessTags)) {
             return Collections.emptyList();
+        }
         List<Tag> tags = businessTags.stream().map(e -> tagService.getById(e.getTagId())).collect(Collectors.toList());
         return BeanCopierUtil.copyListProperties(tags, TagVO.Tag.class).stream().peek(tagPacker::wrap).collect(Collectors.toList());
     }
@@ -56,8 +57,9 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
     @Override
     public List<TagVO.Tag> queryTagByBusinessType(Integer businessType) {
         List<Tag> tags = tagService.queryTagByBusinessType(businessType);
-        if (CollectionUtils.isEmpty(tags))
+        if (CollectionUtils.isEmpty(tags)) {
             return Collections.emptyList();
+        }
         return BeanCopierUtil.copyListProperties(tags, TagVO.Tag.class).stream().peek(tagPacker::wrap).collect(Collectors.toList());
     }
 
@@ -65,8 +67,9 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
     public DataTable<TagVO.Tag> queryTagPage(TagParam.TagPageQuery pageQuery) {
         DataTable<Tag> table = tagService.queryPageByParam(pageQuery);
         List<TagVO.Tag> data = Lists.newArrayList();
-        if (!CollectionUtils.isEmpty(table.getData()))
+        if (!CollectionUtils.isEmpty(table.getData())) {
             data = BeanCopierUtil.copyListProperties(table.getData(), TagVO.Tag.class).stream().peek(tagPacker::wrap).collect(Collectors.toList());
+        }
         return new DataTable<>(data, table.getTotalNum());
     }
 
@@ -119,7 +122,9 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
         Tag tag = tagService.getById(bizTag.getTagId());
         if (tag != null && TagConstants.SUPER_ADMIN.getTag().equals(tag.getTagKey())) {
             int accessLevel = userPermissionFacade.getUserAccessLevel(SessionUtil.getUsername());
-            if (accessLevel < 100) return;
+            if (accessLevel < 100) {
+                return;
+            }
         }
         businessTagService.deleteById(bizTag.getId());
     }
@@ -138,8 +143,9 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
 
     @Override
     public void deleteTagById(int id) {
-        if (businessTagService.countByTagId(id) > 0)
+        if (businessTagService.countByTagId(id) > 0) {
             throw new OCException("标签使用中！");
+        }
         tagService.deleteById(id);
     }
 }

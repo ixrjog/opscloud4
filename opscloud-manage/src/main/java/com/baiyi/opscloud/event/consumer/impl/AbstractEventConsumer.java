@@ -26,10 +26,12 @@ public abstract class AbstractEventConsumer<T> implements IEventConsumer, Initia
     @Override
     @Async(value = CORE)
     public void onMessage(NoticeEvent noticeEvent) {
-        preHandle(noticeEvent); // 预处理
+        // 预处理
+        preHandle(noticeEvent);
         String action = noticeEvent.getMessage().getAction();
         messageRoute(noticeEvent, action);
-        postHandle(noticeEvent); // 后处理
+        // 后处理
+        postHandle(noticeEvent);
     }
 
     private void messageRoute(NoticeEvent noticeEvent, String action) {

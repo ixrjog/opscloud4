@@ -22,14 +22,16 @@ public class JenkinsBuildParamBuilder {
     }
 
     public JenkinsBuildParamBuilder paramEntry(String paramName, Boolean value) {
-        if (value != null)
+        if (value != null) {
             paramMap.putParam(paramName, Boolean.toString(value));
+        }
         return this;
     }
 
     public JenkinsBuildParamBuilder paramEntry(String paramName, String value) {
-        if (!StringUtils.isEmpty(value))
+        if (!StringUtils.isEmpty(value)) {
             paramMap.putParam(paramName, value);
+        }
         return this;
     }
 

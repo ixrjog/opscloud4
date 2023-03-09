@@ -38,7 +38,9 @@ public class WorkOrderWorkflowPacker {
 
     public void wrap(WorkOrderTicketVO.TicketView ticketView) {
         WorkOrderVO.WorkOrder workOrder = ticketView.getWorkOrder();
-        if (workOrder == null) return;
+        if (workOrder == null) {
+            return;
+        }
         WorkflowVO.Workflow workflowVO = WorkflowUtil.toView(workOrder.getWorkflow());
         List<WorkflowVO.NodeView> nodes = workflowVO.getNodes().stream().map(e -> {
             WorkflowVO.NodeView nodeView = BeanCopierUtil.copyProperties(e, WorkflowVO.NodeView.class);
@@ -53,12 +55,13 @@ public class WorkOrderWorkflowPacker {
                 // 设置用户选择审批人
                 if (NodeTypeConstants.USER_LIST.getCode() == nodeView.getType()) {
                     WorkOrderTicketNode workOrderTicketNode = workOrderTicketNodeService.getByUniqueKey(ticketView.getTicketId(), nodeView.getName());
-                    if (!StringUtils.isEmpty(workOrderTicketNode.getUsername()))
+                    if (!StringUtils.isEmpty(workOrderTicketNode.getUsername())) {
                         nodeView.setAuditUser(nodeView.getAuditUsers()
                                 .stream()
                                 .filter(n -> n.getUsername().equals(workOrderTicketNode.getUsername()))
                                 .findFirst()
                                 .get());
+                    }
                 }
             } catch (Exception ignore) {
             }

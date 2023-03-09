@@ -40,8 +40,9 @@ public class JobUtil {
 
     public static String generateVersionName(LeoBuildParam.DoBuild doBuild, LeoJobModel.JobConfig jobConfig, LeoBaseModel.GitLab gitLab, Application application, Env env, int buildNumber) {
         // 用户输入版本号, 优先级最高
-        if (StringUtils.isNotBlank(doBuild.getVersionName()))
+        if (StringUtils.isNotBlank(doBuild.getVersionName())) {
             return doBuild.getVersionName();
+        }
         // ${version.prefix}-${project}-${version.suffix}
         // 中间注入变量 ${env} + ${buildNumber}
         final String prefix = ofNullable(jobConfig)

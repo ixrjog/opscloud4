@@ -27,13 +27,9 @@ import com.baiyi.opscloud.leo.interceptor.LeoExecuteJobInterceptorHandler;
 import com.baiyi.opscloud.leo.packer.LeoDeployResponsePacker;
 import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
 import com.baiyi.opscloud.packer.leo.LeoBuildVersionPacker;
-import com.baiyi.opscloud.service.application.ApplicationResourceService;
-import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
-import com.baiyi.opscloud.service.sys.EnvService;
-import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -55,12 +51,6 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     private final LeoJobService jobService;
 
-    private final EnvService envService;
-
-    private final ApplicationResourceService applicationResourceService;
-
-    private final ApplicationService applicationService;
-
     private final LeoBuildService buildService;
 
     private final LeoBuildVersionPacker buildVersionPacker;
@@ -68,8 +58,6 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     private final LeoDeployService deployService;
 
     private final LeoDeployHandler deployHandler;
-
-    private final UserService userService;
 
     private final LeoDeployResponsePacker deployResponsePacker;
 

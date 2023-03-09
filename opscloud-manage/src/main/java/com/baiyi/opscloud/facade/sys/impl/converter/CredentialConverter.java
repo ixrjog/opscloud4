@@ -27,15 +27,17 @@ public class CredentialConverter {
         credential.setCredential2(encrypt(vo.getCredential2()));
         credential.setPassphrase(encrypt(vo.getPassphrase()));
         if (vo.getKind().equals(CredentialKindEnum.SSH_USERNAME_WITH_KEY_PAIR.getKind()) || vo.getKind().equals(CredentialKindEnum.SSH_USERNAME_WITH_PRIVATE_KEY.getKind())) {
-            if (!StringUtils.isEmpty(vo.getCredential2()))
+            if (!StringUtils.isEmpty(vo.getCredential2())) {
                 credential.setFingerprint(SSHUtil.getFingerprint(vo.getCredential2()));
+            }
         }
         return credential;
     }
 
     private String encrypt(String s) {
-        if (StringUtils.isEmpty(s))
+        if (StringUtils.isEmpty(s)) {
             return s;
+        }
         return stringEncryptor.encrypt(s);
     }
 

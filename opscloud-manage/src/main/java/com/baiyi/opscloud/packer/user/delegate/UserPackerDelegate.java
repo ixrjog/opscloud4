@@ -41,7 +41,9 @@ public class UserPackerDelegate {
 
     @TagsWrapper
     public void wrap(UserVO.User user, IExtend iExtend) {
-        if (!ExtendUtil.isExtend(iExtend)) return;
+        if (!ExtendUtil.isExtend(iExtend)) {
+            return;
+        }
         authRolePacker.wrap(user);
         userCredentialPacker.wrap(user);
         wrap(user);

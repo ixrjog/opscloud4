@@ -24,8 +24,9 @@ public class DsConfigPacker implements IWrapper<DsConfigVO.DsConfig> {
 
     @Override
     public void wrap(DsConfigVO.DsConfig dsConfig, IExtend iExtend) {
-        if (!ExtendUtil.isExtend(iExtend))
+        if (!ExtendUtil.isExtend(iExtend)) {
             return;
+        }
         credentialPacker.wrap(dsConfig);
         dsConfig.setIsRegistered(dsInstanceService.countByConfigId(dsConfig.getId()) > 0);
     }

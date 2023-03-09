@@ -41,8 +41,10 @@ public class AssetBusinessRelationAspect {
             throw new OCException(e.getMessage());
         }
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-        String[] params = methodSignature.getParameterNames();// 获取参数名称
-        Object[] args = joinPoint.getArgs();// 获取参数值
+        // 获取参数名称
+        String[] params = methodSignature.getParameterNames();
+        // 获取参数值
+        Object[] args = joinPoint.getArgs();
         if (params != null && params.length != 0) {
             Object obj = args[0];
             if (obj instanceof BusinessAssetRelationVO.IBusinessAssetRelation) {

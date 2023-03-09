@@ -27,14 +27,20 @@ public class AuthGroupPacker implements IWrapper<AuthGroupVO.Group> {
 
     @Override
     public void wrap(AuthGroupVO.Group group, IExtend iExtend) {
-        if (!ExtendUtil.isExtend(iExtend)) return;
+        if (!ExtendUtil.isExtend(iExtend)) {
+            return;
+        }
         group.setResourceSize(authResourceService.countByGroupId(group.getId()));
     }
 
     public void wrap(AuthGroupVO.IAuthGroup iAuthGroup) {
-        if (IdUtil.isEmpty(iAuthGroup.getGroupId())) return;
+        if (IdUtil.isEmpty(iAuthGroup.getGroupId())) {
+            return;
+        }
         AuthGroup authGroup = authGroupService.getById(iAuthGroup.getGroupId());
-        if (authGroup == null) return;
+        if (authGroup == null) {
+            return;
+        }
         iAuthGroup.setGroup(BeanCopierUtil.copyProperties(authGroup, AuthGroupVO.Group.class));
     }
 

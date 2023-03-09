@@ -61,7 +61,9 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
     @Override
     public void setRegisteredInstanceActive(int id) {
         Instance instance = instanceService.getById(id);
-        if (instance == null) return;
+        if (instance == null) {
+            return;
+        }
         if (instance.getIsActive()) {
             List<Instance> instanceList = instanceService.listActiveInstance();
             if (instanceList.size() <= 1) {
@@ -89,11 +91,13 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
 
     @Override
     public InstanceVO.Health checkHealth() {
-        if (InstanceFacadeImpl.inetAddress == null)
+        if (InstanceFacadeImpl.inetAddress == null) {
             return buildHealthWithStatus(HealthStatus.ERROR);
+        }
         Instance instance = instanceService.getByHostIp(InstanceFacadeImpl.inetAddress.getHostAddress());
-        if (instance == null)
+        if (instance == null) {
             return buildHealthWithStatus(HealthStatus.ERROR);
+        }
         if (instance.getIsActive()) {
             return buildHealthWithStatus(HealthStatus.OK);
         } else {
@@ -112,10 +116,14 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
      * 注册Opscloud实例
      */
     private void register() throws UnknownHostException {
-        if (!ENV_PROD.equals(env)) return;
+        if (!ENV_PROD.equals(env)) {
+            return;
+        }
         InetAddress inetAddress = HostUtil.getInetAddress();
         // 已存在
-        if (instanceService.getByHostIp(inetAddress.getHostAddress()) != null) return;
+        if (instanceService.getByHostIp(inetAddress.getHostAddress()) != null) {
+            return;
+        }
         Instance instance = Instance.builder()
                 .hostIp(inetAddress.getHostAddress())
                 .hostname(inetAddress.getHostName())

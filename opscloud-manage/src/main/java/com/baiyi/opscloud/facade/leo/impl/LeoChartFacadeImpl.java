@@ -43,9 +43,7 @@ public class LeoChartFacadeImpl implements LeoChartFacade {
     private Map<String, Integer> test(){
         Map<String, Integer> keywords = Maps.newHashMap();
         List<Application> applications = applicationService.queryAll();
-        applications.forEach(a -> {
-            keywords.put(a.getName(), 10000);
-        });
+        applications.forEach(a -> keywords.put(a.getName(), 10000));
         return keywords;
     }
 

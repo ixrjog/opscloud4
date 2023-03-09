@@ -46,12 +46,15 @@ public class OnsGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
     @Override
     public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         OnsRocketMqGroup.Group entry = this.toEntry(ticketEntry.getContent());
-        if (StringUtils.isEmpty(entry.getGroupId()))
+        if (StringUtils.isEmpty(entry.getGroupId())) {
             throw new TicketVerifyException("校验工单条目失败: 未指定GID名称!");
-        if (!entry.getGroupId().startsWith("GID_"))
+        }
+        if (!entry.getGroupId().startsWith("GID_")) {
             throw new TicketVerifyException("校验工单条目失败: GID名称必须以 GID_ 开头！");
-        if (!entry.getGroupId().matches("[0-9A-Z_]{7,64}"))
+        }
+        if (!entry.getGroupId().matches("[0-9A-Z_]{7,64}")) {
             throw new TicketVerifyException("校验工单条目失败: GID名称不合规！");
+        }
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .assetType(getAssetType())
                 .instanceUuid(ticketEntry.getInstanceUuid())

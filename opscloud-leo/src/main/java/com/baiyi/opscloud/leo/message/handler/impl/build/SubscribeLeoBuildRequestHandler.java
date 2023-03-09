@@ -49,8 +49,9 @@ public class SubscribeLeoBuildRequestHandler extends BaseLeoContinuousDeliveryRe
         SubscribeLeoBuildRequestParam queryParam = toRequestParam(message);
         List<Integer> jobIds = leoJobService.queryJobWithApplicationIdAndEnvType(queryParam.getApplicationId(), queryParam.getEnvType()).stream()
                 .map(LeoJob::getId).collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(jobIds))
+        if (CollectionUtils.isEmpty(jobIds)) {
             return;
+        }
         queryParam.setJobIds(jobIds);
         DataTable<LeoBuildVO.Build> dataTable = queryLeoBuildPage(queryParam);
         sendToSession(session, dataTable);

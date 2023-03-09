@@ -58,13 +58,15 @@ public class CheckTerminalSizeAspect {
         String message = null;
         Size size = terminal.getSize();
         if (checkTerminalSize.cols() != 0) {
-            if (checkTerminalSize.cols() > size.getColumns())
+            if (checkTerminalSize.cols() > size.getColumns()) {
                 message = String.format("列不能小于 %s", checkTerminalSize.cols());
+            }
         }
 
         if (checkTerminalSize.rows() != 0) {
-            if (checkTerminalSize.rows() > size.getRows())
+            if (checkTerminalSize.rows() > size.getRows()) {
                 message = Joiner.on(",").skipNulls().join(message, String.format("行不能小于 %s", checkTerminalSize.rows()));
+            }
         }
         if (!StringUtils.isEmpty(message)) {
             helper.print(String.format("请调整终端让其符合最佳显示尺寸: %s", message), PromptColor.RED);

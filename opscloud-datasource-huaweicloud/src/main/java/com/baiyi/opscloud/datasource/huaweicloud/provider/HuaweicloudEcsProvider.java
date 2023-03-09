@@ -45,24 +45,30 @@ public class HuaweicloudEcsProvider extends AbstractAssetBusinessRelationProvide
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
+        }
+        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
+        }
+        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
+        }
+        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getExpiredTime(), asset.getExpiredTime()))
+        }
+        if (!AssetUtil.equals(preAsset.getExpiredTime(), asset.getExpiredTime())) {
             return false;
+        }
         return true;
     }
 
     @Override
     protected List<HuaweicloudEcs.Ecs> listEntities(DsInstanceContext dsInstanceContext) {
         HuaweicloudConfig.Huaweicloud huaweicloud = buildConfig(dsInstanceContext.getDsConfig());
-        if (CollectionUtils.isEmpty(huaweicloud.getRegionIds()))
+        if (CollectionUtils.isEmpty(huaweicloud.getRegionIds())) {
             return Collections.emptyList();
+        }
         List<HuaweicloudEcs.Ecs> ecsList = Lists.newArrayList();
         huaweicloud.getRegionIds().forEach(regionId ->
                 ecsList .addAll(HuaweicloudEcsDriver.listServers(regionId, huaweicloud))

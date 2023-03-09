@@ -23,8 +23,9 @@ public class WorkflowUtil {
     }
 
     public static WorkflowVO.Workflow toView(String workflow) {
-        if (StringUtils.isEmpty(workflow))
+        if (StringUtils.isEmpty(workflow)) {
             return WorkflowVO.Workflow.EMPTY_WORKFLOW;
+        }
         try {
             Representer representer = new Representer();
             representer.getPropertyUtils().setSkipMissingProperties(true);

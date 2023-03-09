@@ -29,7 +29,7 @@ import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.domain.vo.user.mfa.MfaVO;
-import com.baiyi.opscloud.facade.UserCredentialFacade;
+import com.baiyi.opscloud.facade.user.UserCredentialFacade;
 import com.baiyi.opscloud.facade.auth.mfa.MfaAuthHelper;
 import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
@@ -148,7 +148,9 @@ public class UserFacadeImpl implements UserFacade {
 
     private void userPermissionUserGroup(User user, String userGroupName) {
         UserGroup userGroup = userGroupService.getByName(userGroupName);
-        if (userGroup == null) return;
+        if (userGroup == null) {
+            return;
+        }
 
         UserPermission userPermission = UserPermission.builder()
                 .userId(user.getId())
@@ -205,12 +207,15 @@ public class UserFacadeImpl implements UserFacade {
         }
     }
 
-    @RevokeUserPermission // 撤销用户的所有授权信息
+    // 撤销用户的所有授权信息
+    @RevokeUserPermission
     @TagClear
     @Override
     public void deleteUser(Integer id) {
         User user = userService.getById(id);
-        if (user == null) return;
+        if (user == null) {
+            return;
+        }
         if (user.getIsActive()) {
             throw new OCException("当前用户为活跃状态不能删除！");
         }
@@ -227,8 +232,9 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public DataTable<UserVO.IUserPermission> queryUserBusinessPermissionPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
         IUserBusinessPermissionPageQuery iQuery = UserBusinessPermissionFactory.getByBusinessType(pageQuery.getBusinessType());
-        if (iQuery != null)
+        if (iQuery != null) {
             return iQuery.queryUserBusinessPermissionPage(pageQuery);
+        }
         throw new OCException(ErrorEnum.USER_BUSINESS_TYPE_ERROR);
     }
 
@@ -255,7 +261,9 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public void revokeUserAccessToken(String tokenId) {
         AccessToken at = accessTokenService.getByTokenId(tokenId);
-        if (at == null) return;
+        if (at == null) {
+            return;
+        }
         at.setValid(false);
         accessTokenService.update(at);
     }
@@ -317,8 +325,9 @@ public class UserFacadeImpl implements UserFacade {
     public UserVO.UserMFA bindUserMFA(String otp) {
         String username = SessionUtil.getUsername();
         User user = userService.getByUsername(username);
-        if (user.getMfa())
+        if (user.getMfa()) {
             throw new OCException("MFA无法绑定: 重复操作!");
+        }
         mfaAuthHelper.verify(user, LoginParam.Login.builder().otp(otp).build());
         user.setMfa(true);
         userService.updateMfa(user);
@@ -372,7 +381,8 @@ public class UserFacadeImpl implements UserFacade {
         return UserVO.UserMFA.builder()
                 .id(user.getId())
                 .username(user.getUsername())
-                .mfa(user.getMfa()) // 是否启用MFA
+                // 是否启用MFA
+                .mfa(user.getMfa())
                 .forceMfa(user.getForceMfa())
                 .userMfa(mfa)
                 .build();

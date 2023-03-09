@@ -7,7 +7,6 @@ import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoJobRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 import com.baiyi.opscloud.leo.message.handler.base.BaseLeoContinuousDeliveryRequestHandler;
-import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
 import com.baiyi.opscloud.leo.packer.LeoJobResponsePacker;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import lombok.extern.slf4j.Slf4j;
@@ -43,11 +42,7 @@ public class SubscribeLeoJobRequestHandler extends BaseLeoContinuousDeliveryRequ
     public void handleRequest(String sessionId, Session session, String message) throws IOException {
         SubscribeLeoJobRequestParam queryParam = toRequestParam(message);
         DataTable<LeoJobVO.Job> dataTable = queryLeoJobPage(queryParam);
-        LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
-                .body(dataTable)
-                .messageType(getMessageType())
-                .build();
-        sendToSession(session,dataTable );
+        sendToSession(session, dataTable);
     }
 
     public DataTable<LeoJobVO.Job> queryLeoJobPage(SubscribeLeoJobRequestParam pageQuery) {

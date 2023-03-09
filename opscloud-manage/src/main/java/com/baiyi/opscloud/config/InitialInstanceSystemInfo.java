@@ -31,7 +31,9 @@ public class InitialInstanceSystemInfo {
     public void init() {
         try {
             Instance instance = instanceFacade.getInstance();
-            if (instance == null) return;
+            if (instance == null) {
+                return;
+            }
             redisUtil.set(SystemInfoUtil.buildKey(instance), SystemInfoUtil.buildInfo(), TimeUtil.dayTime / 1000 * 365);
             log.info("初始化实例系统信息！");
         } catch (UnknownHostException ignored) {

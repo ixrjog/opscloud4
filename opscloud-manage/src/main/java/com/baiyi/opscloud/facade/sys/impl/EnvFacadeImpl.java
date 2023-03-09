@@ -48,8 +48,9 @@ public class EnvFacadeImpl implements EnvFacade {
     public DataTable<EnvVO.Env> queryEnvPage(EnvParam.EnvPageQuery pageQuery) {
         DataTable<Env> table = envService.queryPageByParam(pageQuery);
         List<EnvVO.Env> data = Lists.newArrayList();
-        if (!CollectionUtils.isEmpty(table.getData()))
+        if (!CollectionUtils.isEmpty(table.getData())) {
             data = table.getData().stream().map(e -> BeanCopierUtil.copyProperties(e, EnvVO.Env.class)).collect(Collectors.toList());
+        }
         return new DataTable<>(data, table.getTotalNum());
     }
 

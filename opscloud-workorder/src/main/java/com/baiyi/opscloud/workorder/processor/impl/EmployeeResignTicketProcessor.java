@@ -28,7 +28,9 @@ public class EmployeeResignTicketProcessor extends BaseTicketProcessor<User> {
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, User entry) throws TicketProcessException {
         User user = userService.getById(ticketEntry.getBusinessId());
-        if (user == null || !user.getIsActive()) return;
+        if (user == null || !user.getIsActive()) {
+            return;
+        }
         userService.setInactive(user);
     }
 

@@ -46,4 +46,5 @@ public class ScreenClearAspect {
         joinPoint.proceed();
         return joinPoint;
     }
+
 }

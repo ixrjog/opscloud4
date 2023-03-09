@@ -26,23 +26,33 @@ import javax.annotation.Resource;
 @RequiredArgsConstructor
 public class LeoDeployHandler implements InitializingBean {
 
-    // 启动
+    /**
+     * 启动
+     */
     @Resource
     private BootDeployConcreteHandler bootHandler;
 
-    // 前置检查
+    /**
+     * 前置检查
+     */
     @Resource
     private PreInspectionConcreteHandler preInspectionConcreteHandler;
 
-    // 执行部署
+    /**
+     * 执行部署
+     */
     @Resource
     private DoDeployConcreteHandler doDeployConcreteHandler;
 
-    // 启动部署通知
+    /**
+     * 启动部署通知
+     */
     @Resource
     private StartDeployNotificationConcreteHandler startDeployNotificationConcreteHandler;
 
-    // 启动部署监视器
+    /**
+     * 启动部署监视器
+     */
     @Resource
     private DeployingSupervisorConcreteHandler deployingSupervisorConcreteHandler;
 

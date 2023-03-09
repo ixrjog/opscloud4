@@ -31,7 +31,9 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
     @Override
     public void revokeByUserId(int userId) {
         List<UserPermission> permissions = permissionService.queryByUserId(userId);
-        if (CollectionUtils.isEmpty(permissions)) return;
+        if (CollectionUtils.isEmpty(permissions)) {
+            return;
+        }
         permissions.forEach(permissionService::delete);
     }
 
@@ -47,7 +49,9 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
                 .businessId(businessId)
                 .build();
         List<UserPermission> permissions = permissionService.queryByBusiness(userPermission);
-        if (CollectionUtils.isEmpty(permissions)) return;
+        if (CollectionUtils.isEmpty(permissions)) {
+            return;
+        }
         permissions.forEach(e -> permissionService.deleteById(e.getId()));
     }
 
@@ -65,8 +69,9 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
 
     @Override
     public int getUserAccessLevel(String username) {
-        if (StringUtils.isEmpty(username))
+        if (StringUtils.isEmpty(username)) {
             return AccessLevel.ADMIN.getLevel();
+        }
         return Optional.of(authRoleService.getRoleAccessLevelByUsername(username))
                 .orElse(AccessLevel.DEF.getLevel());
     }

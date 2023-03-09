@@ -30,16 +30,20 @@ public class AuthPlatformHelperImpl implements PlatformAuthHelper {
     @Override
     public AuthPlatform verify(IAuthPlatform iAuthPlatform) {
         AuthPlatform authPlatform = authPlatformService.getByName(iAuthPlatform.getPlatform());
-        if (authPlatform == null)
+        if (authPlatform == null) {
             throw new AuthenticationException("平台认证错误: 无效的平台名称！");
+        }
         Credential credential = credentialService.getById(authPlatform.getCredentialId());
-        if (credential == null)
+        if (credential == null) {
             throw new AuthenticationException("平台认证错误: 凭据不存在！");
+        }
         String token = stringEncryptor.decrypt(credential.getCredential());
-        if (StringUtils.isBlank(token))
+        if (StringUtils.isBlank(token)) {
             throw new AuthenticationException("平台认证错误: 凭据不存在！");
-        if (!token.equals(iAuthPlatform.getPlatformToken()))
+        }
+        if (!token.equals(iAuthPlatform.getPlatformToken())) {
             throw new AuthenticationException("平台认证错误: Token错误！");
+        }
         return authPlatform;
     }
 

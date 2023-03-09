@@ -52,21 +52,24 @@ public class AliyunDmsUserPushHelper {
      */
     public List<DmsUser.User> getPushAssets(DsInstanceContext dsInstanceContext) {
         List<DatasourceInstanceAsset> ramUsers = queryVaildRamUsers(dsInstanceContext.getDsInstance().getUuid());
-        if (CollectionUtils.isEmpty(ramUsers))
+        if (CollectionUtils.isEmpty(ramUsers)) {
             return Collections.emptyList();
+        }
         List<DatasourceInstanceAsset> dmsUsers = queryDmsUsers(dsInstanceContext.getDsInstance().getUuid());
         Map<String, DatasourceInstanceAsset> dmsUserMap = dmsUsers.stream().collect(Collectors.toMap(DatasourceInstanceAsset::getAssetKey, a -> a, (k1, k2) -> k1));
         List<DmsUser.User> dmsUserList = Lists.newArrayList();
         ramUsers.forEach(ramUser -> {
             // assetId = RAM_USER_ID
-            if (dmsUserMap.containsKey(ramUser.getAssetId()))
+            if (dmsUserMap.containsKey(ramUser.getAssetId())) {
                 return; // 账户已存在
+            }
             // 查询用户手机号
             Optional<DatasourceInstanceAssetProperty> optionalProperty
                     = dsInstanceAssetPropertyService.queryByAssetId(ramUser.getId()).stream().filter(e -> "mobilePhone".equals(e.getName())).findFirst();
-            if (optionalProperty.isPresent())
+            if (optionalProperty.isPresent()) {
                 dmsUserList.add(DmsAssetConverter.toDmsUser(ramUser,
                         optionalProperty.map(DatasourceInstanceAssetProperty::getValue).orElse(null)));
+            }
         });
         return dmsUserList;
     }
@@ -87,7 +90,9 @@ public class AliyunDmsUserPushHelper {
         DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
         Tag tag = tagService.getByTagKey(TagConstants.SYSTEM.name());
         return table.getData().stream().filter(e -> {
-            if (tag == null) return true;
+            if (tag == null) {
+                return true;
+            }
             BusinessTag businessTag = BusinessTag.builder()
                     .businessId(e.getId())
                     .businessType(BusinessTypeEnum.ASSET.getType())

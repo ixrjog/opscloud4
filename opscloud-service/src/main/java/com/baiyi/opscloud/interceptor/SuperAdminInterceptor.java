@@ -7,7 +7,6 @@ import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
 import com.baiyi.opscloud.domain.generator.opscloud.Tag;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
-import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.service.tag.BusinessTagService;
 import com.baiyi.opscloud.service.tag.TagService;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +24,6 @@ import org.springframework.stereotype.Component;
 public class SuperAdminInterceptor {
 
     private final UserPermissionFacade userPermissionFacade;
-
-    private final ServerService serverService;
 
     private final BusinessTagService bizTagService;
 

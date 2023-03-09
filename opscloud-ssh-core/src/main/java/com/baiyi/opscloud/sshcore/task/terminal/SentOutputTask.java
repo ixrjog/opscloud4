@@ -39,6 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * class to send output to web socket client
+ * @author liangjian
  */
 @Slf4j
 public class SentOutputTask implements Runnable {
@@ -53,7 +54,6 @@ public class SentOutputTask implements Runnable {
 
     @Override
     public void run() {
-        log.info("SentOutputTask 启动 sessionId={}", sessionId);
         try {
             while (session.isOpen()) {
                 List<SessionOutput> outputList = SessionOutputUtil.getOutput(sessionId);
@@ -63,7 +63,6 @@ public class SentOutputTask implements Runnable {
                 }
                 TimeUnit.MILLISECONDS.sleep(25L);
             }
-            log.info("SentOutputTask 结束 sessionId={}", sessionId);
         } catch (Exception ex) {
             log.error(ex.toString(), ex);
         }

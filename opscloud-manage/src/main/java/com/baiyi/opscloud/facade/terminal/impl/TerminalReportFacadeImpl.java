@@ -67,12 +67,4 @@ public class TerminalReportFacadeImpl implements TerminalReportFacade {
         return monthlyReport;
     }
 
-//    private void assembleMonthlyReport(TerminalReportVO.MonthlyReport monthlyReport, String name, List<ReportVO.Report> reports) {
-//        if (CollectionUtils.isEmpty(reports)) return;
-//        Map<String, ReportVO.Report> reportMap = reports.stream().collect(Collectors.toMap(ReportVO.Report::getCName, a -> a, (k1, k2) -> k1));
-//        List<Integer> values = Lists.newArrayList();
-//        monthlyReport.getDateCat().forEach(s -> values.add(reportMap.containsKey(s) ? reportMap.get(s).getValue() : Integer.valueOf(0)));
-//        monthlyReport.getValueMap().put(name, values);
-//    }
-
 }

@@ -118,7 +118,8 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     public WorkOrderTicketVO.TicketView submitTicket(WorkOrderTicketParam.SubmitTicket submitTicket) {
         WorkOrderTicket ticket = ticketService.getById(submitTicket.getTicketId());
         preSaveHandle(ticket, submitTicket);
-        verifyTicket(ticket);  // 验证工单完整性
+        // 验证工单完整性
+        verifyTicket(ticket);
         // 提交工单 变更工单进度
         ticket.setTicketPhase(OrderTicketPhaseCodeConstants.TOAUDIT.name());
         // 设置工单开始时间
@@ -186,21 +187,25 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
 
     // 验证工单完整性
     private void verifyTicket(WorkOrderTicket workOrderTicket) {
-        if (ticketEntryService.countByWorkOrderTicketId(workOrderTicket.getId()) == 0)
+        if (ticketEntryService.countByWorkOrderTicketId(workOrderTicket.getId()) == 0) {
             throw new TicketException("工单选项(条目)未配置");
+        }
         WorkOrder workOrder = workOrderService.getById(workOrderTicket.getWorkOrderId());
         // 验证工作流节审批配置
         ticketNodeFacade.verifyWorkflowNodes(workOrder, workOrderTicket);
     }
 
     private void preSaveHandle(WorkOrderTicket workOrderTicket, WorkOrderTicketParam.SubmitTicket saveTicket) {
-        if (workOrderTicket == null)
+        if (workOrderTicket == null) {
             throw new TicketException("工单不存在！");
+        }
         final String username = SessionUtil.getUsername();
-        if (!workOrderTicket.getUsername().equals(username))
+        if (!workOrderTicket.getUsername().equals(username)) {
             throw new TicketException("只有本人才能保存工单！");
-        if (!OrderTicketPhaseCodeConstants.NEW.name().equals(workOrderTicket.getTicketPhase()))
+        }
+        if (!OrderTicketPhaseCodeConstants.NEW.name().equals(workOrderTicket.getTicketPhase())) {
             throw new TicketException("工单状态不允许变更！");
+        }
         saveTicketComment(workOrderTicket, saveTicket);
         WorkOrder workOrder = workOrderService.getById(workOrderTicket.getWorkOrderId());
         Map<String, WorkflowVO.Node> originalWorkflowNodeMap = WorkflowUtil.toNodeMap(workOrder.getWorkflow());
@@ -214,11 +219,13 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
 
     private void saveTicketComment(WorkOrderTicket workOrderTicket, WorkOrderTicketParam.SubmitTicket saveTicket) {
         if (StringUtils.isEmpty(saveTicket.getComment())) {
-            if (StringUtils.isEmpty(workOrderTicket.getComment()))
+            if (StringUtils.isEmpty(workOrderTicket.getComment())) {
                 return;
+            }
         } else {
-            if (saveTicket.getComment().equals(workOrderTicket.getComment()))
+            if (saveTicket.getComment().equals(workOrderTicket.getComment())) {
                 return;
+            }
         }
         workOrderTicket.setComment(saveTicket.getComment());
         ticketService.update(workOrderTicket);
@@ -259,8 +266,9 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     @Override
     public List<WorkOrderTicketVO.Entry> queryTicketEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
         WorkOrderTicket ticket = ticketService.getById(entryQuery.getWorkOrderTicketId());
-        if (ticket == null)
+        if (ticket == null) {
             throw new TicketException("工单票据不存在！");
+        }
         WorkOrder workOrder = workOrderService.getById(ticket.getWorkOrderId());
         return WorkOrderTicketEntryQueryFactory.getByKey(workOrder.getWorkOrderKey()).query(entryQuery);
     }
@@ -270,8 +278,9 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         WorkOrderTicket workOrderTicket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
         WorkOrder workOrder = workOrderService.getById(workOrderTicket.getWorkOrderId());
         ITicketProcessor iTicketProcessor = WorkOrderTicketProcessorFactory.getByKey(workOrder.getWorkOrderKey());
-        if (iTicketProcessor == null)
+        if (iTicketProcessor == null) {
             throw new TicketException("工单类型不正确！");
+        }
         iTicketProcessor.update(ticketEntry);
         return toTicketView(workOrderTicket);
     }
@@ -279,26 +288,33 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     @Override
     public void addTicketEntry(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
         WorkOrderTicket workOrderTicket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
-        if (!SessionUtil.equalsUsername(workOrderTicket.getUsername()))
+        if (!SessionUtil.equalsUsername(workOrderTicket.getUsername())) {
             throw new TicketException("不合法的请求: 只有工单创建人才能新增条目！");
+        }
         WorkOrder workOrder = workOrderService.getById(workOrderTicket.getWorkOrderId());
         ITicketProcessor iTicketProcessor = WorkOrderTicketProcessorFactory.getByKey(workOrder.getWorkOrderKey());
-        if (iTicketProcessor == null)
+        if (iTicketProcessor == null) {
             throw new TicketException("工单类型不正确！");
-        iTicketProcessor.verify(ticketEntry); // 验证
-        ticketEntryService.add(ticketEntry); // 新增
+        }
+        // 验证
+        iTicketProcessor.verify(ticketEntry);
+        // 新增
+        ticketEntryService.add(ticketEntry);
     }
 
     @Override
     public void deleteTicketEntry(Integer ticketEntryId) {
         WorkOrderTicketEntry ticketEntry = ticketEntryService.getById(ticketEntryId);
-        if (ticketEntry == null)
+        if (ticketEntry == null) {
             throw new TicketException("工单条目不存在！");
+        }
         WorkOrderTicket workOrderTicket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
-        if (!OrderTicketPhaseCodeConstants.NEW.name().equals(workOrderTicket.getTicketPhase()))
+        if (!OrderTicketPhaseCodeConstants.NEW.name().equals(workOrderTicket.getTicketPhase())) {
             throw new TicketException("只有新建工单才能修改或删除条目！");
-        if (!SessionUtil.equalsUsername(workOrderTicket.getUsername()))
+        }
+        if (!SessionUtil.equalsUsername(workOrderTicket.getUsername())) {
             throw new TicketException("不合法的请求: 只有工单创建人才能新增条目！");
+        }
         ticketEntryService.deleteById(ticketEntryId);
     }
 
@@ -306,7 +322,9 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     @Transactional(rollbackFor = {Exception.class})
     public void deleteTicketById(Integer ticketId) {
         WorkOrderTicket ticket = ticketService.getById(ticketId);
-        if (ticket == null) return;
+        if (ticket == null) {
+            return;
+        }
         // 删除所有条目
         List<WorkOrderTicketEntry> entries = ticketEntryService.queryByWorkOrderTicketId(ticketId);
         if (!CollectionUtils.isEmpty(entries)) {

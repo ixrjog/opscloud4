@@ -17,12 +17,9 @@ import com.baiyi.opscloud.leo.delegate.LeoJobVersionDelegate;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.message.handler.base.BaseLeoContinuousDeliveryRequestHandler;
 import com.baiyi.opscloud.leo.message.util.VersionRenderer;
-import com.baiyi.opscloud.leo.packer.LeoDeployResponsePacker;
-import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.leo.LeoBuildImageService;
-import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
@@ -51,19 +48,10 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
         extends BaseLeoContinuousDeliveryRequestHandler<SubscribeLeoDeploymentVersionDetailsRequestParam> {
 
     @Resource
-    private LeoDeployService deployService;
-
-    @Resource
     private LeoJobService jobService;
 
     @Resource
-    private LeoDeployResponsePacker deployResponsePacker;
-
-    @Resource
     private ApplicationService applicationService;
-
-    @Resource
-    private ApplicationResourceService applicationResourceService;
 
     @Resource
     private DsInstanceAssetService assetService;

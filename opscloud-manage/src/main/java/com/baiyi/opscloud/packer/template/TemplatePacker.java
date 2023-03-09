@@ -32,9 +32,11 @@ public class TemplatePacker implements IWrapper<TemplateVO.Template> {
 
     public void wrap(TemplateVO.ITemplate iTemplate) {
         Template template = templateService.getById(iTemplate.getTemplateId());
-        if (template == null) return;
+        if (template == null) {
+            return;
+        }
         TemplateVO.Template vo = BeanCopierUtil.copyProperties(template, TemplateVO.Template.class);
-        //envPacker.wrap(vo);
+        // envPacker.wrap(vo);
         iTemplate.setTemplate(vo);
     }
 

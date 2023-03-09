@@ -34,7 +34,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
-public class GitlabGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcessor<DatasourceInstanceAsset, GitLabConfig> {
+public class GitLabGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcessor<DatasourceInstanceAsset, GitLabConfig> {
 
     @Resource
     private GitlabGroupDelegate gitlabGroupDelegate;
@@ -109,8 +109,9 @@ public class GitlabGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicke
      */
     private void updateHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
         WorkOrderTicket ticket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
-        if (!OrderTicketPhaseCodeConstants.NEW.name().equals(ticket.getTicketPhase()))
+        if (!OrderTicketPhaseCodeConstants.NEW.name().equals(ticket.getTicketPhase())) {
             throw new TicketProcessException("工单进度不是新建，无法更新配置条目！");
+        }
         String role = ticketEntry.getRole();
         if (Arrays.stream(GitLabAccessLevelConstants.values()).noneMatch(e -> e.getRole().equalsIgnoreCase(role))) {
             throw new TicketProcessException("修改角色错误，不支持该名称！");

@@ -26,10 +26,12 @@ public class UserConverter {
         } else {
             user.setPassword(PasswordUtil.generatorPassword(20, true));
         }
-        if (!ValidationUtil.isPhone(createUser.getPhone()))
+        if (!ValidationUtil.isPhone(createUser.getPhone())) {
             user.setPhone(StringUtils.EMPTY);
-        if (StringUtils.isEmpty(createUser.getUuid()))
+        }
+        if (StringUtils.isEmpty(createUser.getUuid())) {
             user.setUuid(IdUtil.buildUUID());
+        }
         user.setMfa(false);
         user.setForceMfa(false);
         return user;
@@ -37,10 +39,12 @@ public class UserConverter {
 
     public static User toDO(UserParam.UpdateUser updateUser) {
         User pre = BeanCopierUtil.copyProperties(updateUser, User.class);
-        if (!StringUtils.isEmpty(pre.getPassword()))
+        if (!StringUtils.isEmpty(pre.getPassword())) {
             ValidationUtil.checkPasswordRule(pre.getPassword());
-        if (!ValidationUtil.isPhone(updateUser.getPhone()))
+        }
+        if (!ValidationUtil.isPhone(updateUser.getPhone())) {
             pre.setPhone(StringUtils.EMPTY);
+        }
         if (StringUtils.isEmpty(updateUser.getUuid())) {
             pre.setUuid(IdUtil.buildUUID());
         }

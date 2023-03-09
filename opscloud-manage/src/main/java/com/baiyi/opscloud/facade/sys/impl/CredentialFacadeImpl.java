@@ -59,7 +59,9 @@ public class CredentialFacadeImpl implements CredentialFacade {
     @Override
     public void deleteCredentialById(Integer id) {
         com.baiyi.opscloud.domain.generator.opscloud.Credential credential = credentialService.getById(id);
-        if (credential == null) return;
+        if (credential == null) {
+            return;
+        }
         Map<String, ICredentialCustomer> context = CredentialCustomerFactory.getContext();
         context.keySet().stream().map(context::get).filter(iCredentialCustomer -> iCredentialCustomer.hasUsedCredential(id)).forEachOrdered(iCredentialCustomer -> {
             throw new OCException("该凭据正在使用中！");

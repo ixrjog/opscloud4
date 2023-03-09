@@ -25,7 +25,9 @@ public class LeoPostDeployHandler implements InitializingBean {
 
     protected final LeoDeployService leoDeployService;
 
-    // 结束部署通知
+    /**
+     * 结束部署通知
+     */
     @Resource
     private EndDeployNotificationConcreteHandler endDeployNotificationConcreteHandler;
 

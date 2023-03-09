@@ -55,6 +55,8 @@ import org.apache.sshd.server.session.ServerSession;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -90,6 +92,9 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
     private final UserService userService;
 
     private final PodCommandAudit podCommandAudit;
+
+    @Autowired
+    private ThreadPoolTaskExecutor coreExecutor;
 
     // ^C
     private static final int QUIT = 3;
@@ -283,8 +288,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
             ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
             out.setNoDelay(true);
             WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, out);
-            Thread thread = new Thread(run);
-            thread.start();
+            coreExecutor.execute(run);
             try {
                 if (!listener.isClosed()) {
                     // 清除输入缓冲区数据
@@ -373,8 +377,8 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
 
             // 低性能输出日志，为了能实现日志换行
             // WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, terminal.writer());
-            Thread thread = new Thread(run);
-            thread.start();
+            coreExecutor.execute(run);
+
             while (true) {
                 int ch = terminal.reader().read(25L);
                 if (ch != -2) {

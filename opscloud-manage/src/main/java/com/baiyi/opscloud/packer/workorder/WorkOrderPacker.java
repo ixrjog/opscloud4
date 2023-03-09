@@ -59,5 +59,4 @@ public class WorkOrderPacker implements IWrapper<WorkOrderVO.WorkOrder> {
         iWorkOrder.setWorkOrder(workOrderVO);
     }
 
-
 }

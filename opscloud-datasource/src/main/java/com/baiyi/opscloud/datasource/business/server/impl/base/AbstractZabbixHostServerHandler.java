@@ -48,9 +48,6 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
     protected ZabbixV5HostDriver zabbixV5HostDriver;
 
     @Resource
-    protected ZabbixV5HostMacroDriver zabbixV5HostMacroDriver;
-
-    @Resource
     protected ZabbixV5HostTagDriver zabbixV5HostTagDriver;
 
     @Resource
@@ -78,7 +75,9 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
     }
 
     protected void doCreate(Server server, ServerProperty.Server property) {
-        if (!property.enabledZabbix()) return;
+        if (!property.enabledZabbix()) {
+            return;
+        }
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .method(SimpleZabbixV5HostDriver.HostAPIMethod.CREATE)
                 .putParam("host", server.getDisplayName())
@@ -122,7 +121,9 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
 
     public void putMacroUpdateParam(ZabbixHost.Host host, ServerProperty.Server property, ZabbixRequestBuilder requestBuilder) {
         List<ServerProperty.Macro> macros = property.getZabbix().toMacros();
-        if (CollectionUtils.isEmpty(macros)) return;
+        if (CollectionUtils.isEmpty(macros)) {
+            return;
+        }
         requestBuilder.putParam("macros", macros);
     }
 
@@ -140,7 +141,8 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
                 .value(env.getEnvName())
                 .build();
         requestBuilder.putParam("tags", Lists.newArrayList(tag));
-        zabbixV5HostTagDriver.evictHostTag(configContext.get(), host);  //清理缓存
+        // 清理缓存
+        zabbixV5HostTagDriver.evictHostTag(configContext.get(), host);
     }
 
     /**
@@ -151,7 +153,10 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
      */
     private void putTemplateUpdateParam(ServerProperty.Server property, ZabbixHost.Host host, ZabbixRequestBuilder requestBuilder) {
         List<ZabbixTemplate.Template> zabbixTemplates = zabbixV5TemplateDriver.getByHost(configContext.get(), host);
-        if (ZabbixTemplateUtil.hostTemplateEquals(zabbixTemplates, property)) return; // 判断主机模板与配置是否相同，相同则跳过更新
+        // 判断主机模板与配置是否相同，相同则跳过更新
+        if (ZabbixTemplateUtil.hostTemplateEquals(zabbixTemplates, property)) {
+            return;
+        }
         Set<String> templateNamSet = Sets.newHashSet();
         zabbixTemplates.forEach(t -> templateNamSet.add(t.getName()));
         property.getZabbix().getTemplates().forEach(n -> {
@@ -167,10 +172,12 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
         requestBuilder.putParamSkipEmpty("templates", HostParamUtil.toTemplateParam(zabbixTemplates));
         // 主机模板与配置保持一致，清理多余模板
         if (property.getZabbix().getTemplateUniformity() != null && property.getZabbix().getTemplateUniformity()) {
-            clearTemplates(zabbixTemplates, property); // 清理模板
+            // 清理模板
+            clearTemplates(zabbixTemplates, property);
             requestBuilder.putParamSkipEmpty("templates_clear", HostParamUtil.toTemplateParam(zabbixTemplates));
         }
-        zabbixV5TemplateDriver.evictHostTemplate(configContext.get(), host); //清理缓存
+        //清理缓存
+        zabbixV5TemplateDriver.evictHostTemplate(configContext.get(), host);
     }
 
     private void clearTemplates(List<ZabbixTemplate.Template> templates, ServerProperty.Server property) {
@@ -194,7 +201,8 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
             if (host.getProxyHostid().equals(proxyHostid)) {
                 return;
             } else {
-                proxyHostid = "0"; // 删除代理
+                // 删除代理
+                proxyHostid = "0";
             }
         }
         requestBuilder.putParam("proxy_hostid", proxyHostid);
@@ -209,8 +217,9 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
         String proxyName = Optional.ofNullable(property)
                 .map(ServerProperty.Server::getZabbix)
                 .map(ServerProperty.Zabbix::getProxyName).orElse(null);
-        if (StringUtils.isEmpty(proxyName))
+        if (StringUtils.isEmpty(proxyName)) {
             return null;
+        }
         return zabbixV5ProxyDriver.getProxy(configContext.get(), proxyName);
     }
 

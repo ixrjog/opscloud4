@@ -45,8 +45,9 @@ public class LeoBuildDeploymentDelegate {
                 leoJob.getApplicationId(),
                 DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name(),
                 BusinessTypeEnum.ASSET.getType());
-        if (CollectionUtils.isEmpty(resources))
+        if (CollectionUtils.isEmpty(resources)) {
             return Collections.emptyList();
+        }
         final String envName = env.getEnvName();
         List<ApplicationResource> result = resources.stream().filter(e -> {
             if (e.getName().startsWith(envName + ":")) {
@@ -60,9 +61,6 @@ public class LeoBuildDeploymentDelegate {
                 return e.getName().startsWith("test:");
             }
             if (env.getEnvName().equals("prod")) {
-//                if (e.getName().startsWith("gray:")) {
-//                    return true;
-//                }
                 return e.getName().startsWith("canary:");
             }
             return false;

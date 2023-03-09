@@ -39,7 +39,9 @@ public class UserHandler {
     private final UserGroupService userGroupService;
 
     public void postCreateUserHandle(User newUser) {
-        if (opscloudConfiguration.getCreateUser() == null) return;
+        if (opscloudConfiguration.getCreateUser() == null) {
+            return;
+        }
         final OpscloudConfigurationProperties.CreateUser createUser = opscloudConfiguration.getCreateUser();
         if (!CollectionUtils.isEmpty(createUser.getRoles())) {
             initializeUserRoles(newUser.getUsername(), createUser.getRoles());
@@ -70,7 +72,9 @@ public class UserHandler {
         try {
             groups.forEach(g -> {
                 UserGroup userGroup = userGroupService.getByName(g);
-                if (userGroup == null) return;
+                if (userGroup == null) {
+                    return;
+                }
                 userBizPermission.setBusinessId(userGroup.getId());
                 permissionFacade.grantUserBusinessPermission(userBizPermission);
             });

@@ -14,8 +14,6 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public abstract class AbstractAppResQuery implements IAppResQuery, InitializingBean {
 
-   //  protected abstract DataTable<ApplicationResourceVO.Resource> queryResourcePage(ApplicationResourceParam.ResourcePageQuery pageQuery);
-
     @Override
     public String getAppResType() {
         if (this.getClass().isAnnotationPresent(ApplicationResType.class)) {

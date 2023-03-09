@@ -99,8 +99,9 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
      * @param servers
      */
     private List<ServerTaskMember> record(ServerTask serverTask, List<ServerVO.Server> servers) {
-        if (CollectionUtils.isEmpty(servers))
+        if (CollectionUtils.isEmpty(servers)) {
             throw new OCException("服务器列表为空！");
+        }
         List<ServerTaskMember> members = Lists.newArrayList();
         servers.forEach(server -> {
             ServerTaskMember member = ServerTaskMemberBuilder.newBuilder(serverTask, server);
@@ -142,7 +143,8 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                             commandLine,
                             serverTaskMemberService,
                             taskLogStorehouse);
-                    fixedThreadPool.execute(ansibleServerTask); // 执行任务
+                    // 执行任务
+                    fixedThreadPool.execute(ansibleServerTask);
                 }
                 TimeUnit.SECONDS.sleep(5L);
             }

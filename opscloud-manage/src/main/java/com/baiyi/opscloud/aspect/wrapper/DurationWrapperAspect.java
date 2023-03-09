@@ -40,8 +40,10 @@ public class DurationWrapperAspect {
         boolean extend = durationWrapper.extend();
         ReadableTime.IDuration targetDuration = null;
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-        String[] params = methodSignature.getParameterNames();// 获取参数名称
-        Object[] args = joinPoint.getArgs();// 获取参数值
+        // 获取参数名称
+        String[] params = methodSignature.getParameterNames();
+        // 获取参数值
+        Object[] args = joinPoint.getArgs();
         if (params != null && params.length != 0) {
             for (Object arg : args) {
                 if (!extend) {
@@ -64,7 +66,9 @@ public class DurationWrapperAspect {
     }
 
     private void wrap(ReadableTime.IDuration iDuration) {
-        if (iDuration.getStartTime() == null || iDuration.getEndTime() == null) return;
+        if (iDuration.getStartTime() == null || iDuration.getEndTime() == null) {
+            return;
+        }
         long diffTime = iDuration.getEndTime().getTime() - iDuration.getStartTime().getTime();
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT+0:00"));

@@ -31,10 +31,13 @@ public class GitlabKeyEventConsumer extends AbstractGitlabEventConsumer {
         if (eventContext.get().getSystemHook().getEvent_name().equals(GitlabEventNameEnum.KEY_DESTROY.name())) {
             AssetContainer assetContainer = toAssetContainer();
             DatasourceInstanceAsset asset = dsInstanceAssetService.getByUniqueKey(assetContainer.getAsset());
-            if (asset != null) // 删除资产
+            // 删除资产
+            if (asset != null) {
                 simpleDsAssetFacade.deleteAssetById(asset.getId());
+            }
         } else {
-            super.proceed(); // 用户创建新Key
+            // 用户创建新Key
+            super.proceed();
         }
     }
 

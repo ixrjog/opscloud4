@@ -29,7 +29,8 @@ public class ServerPacker implements IWrapper<ServerVO.Server> {
 
     @Override
     public void wrap(ServerVO.Server server, IExtend iExtend) {
-        serverPackerDelegate.wrap(server, SimpleExtend.EXTEND); // 代理
+        // 代理
+        serverPackerDelegate.wrap(server, SimpleExtend.EXTEND);
         accountPacker.wrap(server);
         serverGroupPacker.wrap(server);
         businessPropertyPacker.wrap(server);

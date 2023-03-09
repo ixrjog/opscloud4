@@ -29,7 +29,7 @@ import java.util.Optional;
  */
 @Component
 @RequiredArgsConstructor
-public class TicketApproverHelper {
+public class TicketApproveHelper {
 
     private final WorkOrderService workOrderService;
 
@@ -40,14 +40,19 @@ public class TicketApproverHelper {
     private final UserService userService;
 
     public void wrap(WorkOrderTicketVO.IApprover iApprover) {
-        if (iApprover.getTicketId() == null) return;
+        if (iApprover.getTicketId() == null) {
+            return;
+        }
         WorkOrderTicket workOrderTicket = ticketService.getById(iApprover.getTicketId());
         wrap(iApprover, workOrderTicket);
     }
 
     public void wrap(WorkOrderTicketVO.IApprover iApprover, WorkOrderTicket workOrderTicket) {
-        if (workOrderTicket == null) return;
-        iApprover.setIsApprover(false); // 设置默认值
+        if (workOrderTicket == null) {
+            return;
+        }
+        // 设置默认值
+        iApprover.setIsApprover(false); 
         // 不在审批中
         if (!OrderTicketPhaseCodeConstants.TOAUDIT.name().equals(workOrderTicket.getTicketPhase())) {
             return;

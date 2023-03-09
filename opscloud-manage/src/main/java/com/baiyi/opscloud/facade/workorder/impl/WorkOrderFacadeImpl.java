@@ -68,7 +68,9 @@ public class WorkOrderFacadeImpl implements WorkOrderFacade {
     public void saveWorkOrderGroup(WorkOrderVO.Group group) {
         WorkOrderGroup newWorkOrderGroup = BeanCopierUtil.copyProperties(group, WorkOrderGroup.class);
         if (group.getId() == null) {
-            if (group.getSeq() == null) newWorkOrderGroup.setSeq(workOrderGroupService.count() + 1);
+            if (group.getSeq() == null) {
+                newWorkOrderGroup.setSeq(workOrderGroupService.count() + 1);
+            }
             workOrderGroupService.add(newWorkOrderGroup);
         } else {
             workOrderGroupService.update(newWorkOrderGroup);

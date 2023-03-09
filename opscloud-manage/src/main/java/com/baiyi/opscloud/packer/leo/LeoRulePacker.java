@@ -22,7 +22,9 @@ public class LeoRulePacker implements IWrapper<LeoRuleVO.Rule> {
     public void wrap(LeoRuleVO.Rule rule, IExtend iExtend) {
         LeoRuleModel.RuleConfig ruleConfig = LeoRuleModel.load(rule);
         IRuleExpression ruleExpression = LeoRuleExpressionFactory.getExpressionByType(ruleConfig.getRule().getExpression().getType());
-        if (ruleExpression == null) return;
+        if (ruleExpression == null) {
+            return;
+        }
         rule.setDisplayName(ruleExpression.toDisplayName(ruleConfig.getRule().getExpression()));
     }
 

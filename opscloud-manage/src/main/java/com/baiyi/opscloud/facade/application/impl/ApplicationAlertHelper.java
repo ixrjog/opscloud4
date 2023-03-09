@@ -37,8 +37,9 @@ public class ApplicationAlertHelper {
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'application_alert_name' + #name", unless = "#result == null")
     public List<User> queryByApplicationName(String name) {
         Application application = applicationService.getByName(name);
-        if (application == null)
+        if (application == null) {
             return Collections.emptyList();
+        }
         UserPermission userPermission = UserPermission.builder()
                 .businessId(application.getId())
                 .businessType(BusinessTypeEnum.APPLICATION.getType())

@@ -12,15 +12,18 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class TerminalSessionUtil {
 
-    private static final String DEFAULT_CONTAINER = "DEFAULT_CONTAINER"; // 默认容器
+    // 默认容器
+    private static final String DEFAULT_CONTAINER = "DEFAULT_CONTAINER";
 
     public static String toInstanceId(KubernetesResource.Pod pod, KubernetesResource.Container container) {
         return toInstanceId(pod.getName(), container.getName());
     }
 
     public static String toInstanceId(String podName, String containerName) {
-        if (StringUtils.isEmpty(containerName))
+        if (StringUtils.isEmpty(containerName)) {
             containerName = DEFAULT_CONTAINER;
+        }
         return Joiner.on("#").join(podName, containerName, IdUtil.buildUUID());
     }
+
 }

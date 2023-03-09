@@ -23,7 +23,8 @@ public class VpcAssetConverter {
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeVpcsResponse.Vpc entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entity.getVpcId()) // 资产id = 实例id
+                // 资产id = 实例id
+                .assetId(entity.getVpcId())
                 .name(entity.getVpcName())
                 .assetKey(entity.getVpcId())
                 // cidrBlock
@@ -45,7 +46,8 @@ public class VpcAssetConverter {
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeSecurityGroupsResponse.SecurityGroup entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entity.getSecurityGroupId()) // 资产id = 实例id
+                // 资产id = 实例id
+                .assetId(entity.getSecurityGroupId())
                 .name(entity.getSecurityGroupName())
                 .assetKey(entity.getSecurityGroupId())
                 .kind("aliyunSecurityGroup")
@@ -63,7 +65,8 @@ public class VpcAssetConverter {
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeVSwitchesResponse.VSwitch entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entity.getVSwitchId()) // 资产id = 实例id
+                // 资产id = 实例id
+                .assetId(entity.getVSwitchId())
                 .name(entity.getVSwitchName())
                 .assetKey(entity.getVSwitchId())
                 // cidrBlock

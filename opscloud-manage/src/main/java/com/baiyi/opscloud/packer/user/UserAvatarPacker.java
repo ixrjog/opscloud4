@@ -38,13 +38,17 @@ public class UserAvatarPacker implements IWrapper<UserVO.User> {
      */
     @Override
     public void wrap(UserVO.User user, IExtend iExtend) {
-        if (!ExtendUtil.isExtend(iExtend)) return;
+        if (!ExtendUtil.isExtend(iExtend)) {
+            return;
+        }
         BaseBusiness.IBusiness iBusiness = SimpleBusiness.builder()
                 .businessType(BusinessTypeEnum.USER.getType())
                 .businessId(user.getId())
                 .build();
         List<BusinessAssetRelation> relations = bizAssetRelationService.queryBusinessRelations(iBusiness, DsAssetTypeConstants.DINGTALK_USER.name());
-        if (CollectionUtils.isEmpty(relations)) return;
+        if (CollectionUtils.isEmpty(relations)) {
+            return;
+        }
         for (BusinessAssetRelation relation : relations) {
             DatasourceInstanceAssetProperty property =
                     dsInstanceAssetPropertyService.queryByAssetId(relation.getDatasourceInstanceAssetId()).stream().filter(p -> p.getName().equals("avatar")).findFirst().orElse(null);

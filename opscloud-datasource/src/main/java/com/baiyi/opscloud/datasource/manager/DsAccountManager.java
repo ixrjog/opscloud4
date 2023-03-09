@@ -56,7 +56,9 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
      * @return
      */
     private void decrypt(User user) {
-        if (!StringUtils.isEmpty(user.getPassword())) user.setPassword(stringEncryptor.decrypt(user.getPassword()));
+        if (!StringUtils.isEmpty(user.getPassword())) {
+            user.setPassword(stringEncryptor.decrypt(user.getPassword()));
+        }
     }
 
     @Override

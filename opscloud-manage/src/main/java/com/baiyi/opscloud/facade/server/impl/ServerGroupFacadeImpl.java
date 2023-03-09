@@ -116,25 +116,28 @@ public class ServerGroupFacadeImpl extends AbstractAppResQuery implements Server
                 .stream()
                 .peek(e -> serverGroupPacker.wrap(e, pageQuery))
                 .collect(Collectors.toList());
-        if (pageQuery.getAuthorized())
+        if (pageQuery.getAuthorized()) {
             data.forEach(e -> {
                 e.setUserId(pageQuery.getUserId());
                 userPermissionPacker.wrap(e);
             });
+        }
         return new DataTable<>(Lists.newArrayList(data), table.getTotalNum());
     }
 
     @Override
     public void addServerGroup(ServerGroupVO.ServerGroup serverGroup) {
-        if (serverGroupService.getByName(serverGroup.getName()) != null)
+        if (serverGroupService.getByName(serverGroup.getName()) != null) {
             throw new OCException(ErrorEnum.SERVERGROUP_NAME_ALREADY_EXIST);
+        }
         serverGroupService.add(toDO(serverGroup));
     }
 
     @Override
     public void updateServerGroup(ServerGroupVO.ServerGroup serverGroup) {
         ServerGroup group = serverGroupService.getById(serverGroup.getId());
-        serverGroup.setName(group.getName()); // 不允许修改名称
+        // 不允许修改名称
+        serverGroup.setName(group.getName());
         serverGroupService.update(toDO(serverGroup));
     }
 
@@ -144,9 +147,12 @@ public class ServerGroupFacadeImpl extends AbstractAppResQuery implements Server
     @Override
     public void deleteServerGroupById(int id) {
         ServerGroup serverGroup = serverGroupService.getById(id);
-        if (serverGroup == null) return;
-        if (serverService.countByServerGroupId(id) > 0)
+        if (serverGroup == null) {
+            return;
+        }
+        if (serverService.countByServerGroupId(id) > 0) {
             throw new OCException("服务器组不为空：必须删除组内服务器成员！");
+        }
         serverGroupService.delete(serverGroup);
     }
 
@@ -179,8 +185,9 @@ public class ServerGroupFacadeImpl extends AbstractAppResQuery implements Server
 
     @Override
     public void deleteServerGroupTypeById(int id) {
-        if (serverGroupService.countByServerGroupTypeId(id) > 0)
+        if (serverGroupService.countByServerGroupTypeId(id) > 0) {
             throw new OCException(ErrorEnum.SERVERGROUP_TYPE_HAS_USED);
+        }
         serverGroupTypeService.deleteById(id);
     }
 

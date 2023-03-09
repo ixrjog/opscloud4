@@ -36,11 +36,11 @@ public class WorkOrderReportFacadeImpl implements WorkOrderReportFacade {
                 .stream().map(WorkOrderReportVO.Report::getCName).collect(Collectors.toList());
         return WorkOrderReportVO.MonthReport.builder()
                 .dateCat(dateCatList)
-                .nameCat(queryWorkorderNameStatistics())
+                .nameCat(queryWorkOrderNameStatistics())
                 .build();
     }
 
-    private Map<String, WorkOrderReportVO.MonthStatistics> queryWorkorderNameStatistics() {
+    private Map<String, WorkOrderReportVO.MonthStatistics> queryWorkOrderNameStatistics() {
         List<WorkOrder> workorderList = workOrderService.queryAll();
         return workorderList.stream().collect(
                 Collectors.toMap(WorkOrder::getName,

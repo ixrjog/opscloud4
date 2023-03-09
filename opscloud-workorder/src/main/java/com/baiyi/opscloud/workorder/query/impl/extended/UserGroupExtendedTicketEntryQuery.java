@@ -31,13 +31,15 @@ public abstract class UserGroupExtendedTicketEntryQuery extends BaseTicketEntryQ
     protected List<UserGroup> queryEntries(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
         List<UserGroup> entries = Lists.newArrayList();
         ITicketProcessor ticketProcessor = WorkOrderTicketProcessorFactory.getByKey(getKey());
-        if (ticketProcessor == null)
+        if (ticketProcessor == null) {
             return entries;
+        }
         if (ticketProcessor instanceof AbstractUserGroupPermissionExtendedAbstractUserPermission) {
             Set<String> groupNames = ((AbstractUserGroupPermissionExtendedAbstractUserPermission) ticketProcessor).getGroupNames();
             entries.addAll(groupNames.stream()
                     .map(this::getEntryByName)
-                    .filter(UserGroup::getAllowOrder) // 过滤不允许工单申请的用户组（角色）
+                    // 过滤不允许工单申请的用户组（角色）
+                    .filter(UserGroup::getAllowOrder)
                     .collect(Collectors.toList())
             );
         }

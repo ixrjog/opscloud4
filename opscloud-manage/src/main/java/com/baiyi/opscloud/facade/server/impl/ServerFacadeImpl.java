@@ -106,8 +106,12 @@ public class ServerFacadeImpl extends AbstractAppResQuery implements ServerFacad
             Server maxSerialNumberServer = serverService.getMaxSerialNumberServer(pre.getServerGroupId(), pre.getEnvType());
             pre.setSerialNumber(null == maxSerialNumberServer ? 1 : maxSerialNumberServer.getSerialNumber() + 1);
         }
-        if (pre.getMonitorStatus() == null) pre.setMonitorStatus(-1);
-        if (pre.getServerStatus() == null) pre.setServerStatus(1);
+        if (pre.getMonitorStatus() == null) {
+            pre.setMonitorStatus(-1);
+        }
+        if (pre.getServerStatus() == null) {
+            pre.setServerStatus(1);
+        }
         return pre;
     }
 
@@ -116,7 +120,9 @@ public class ServerFacadeImpl extends AbstractAppResQuery implements ServerFacad
     @Override
     public void deleteServerById(Integer id) {
         Server server = serverService.getById(id);
-        if (server == null) return;
+        if (server == null) {
+            return;
+        }
         serverService.delete(server);
     }
 

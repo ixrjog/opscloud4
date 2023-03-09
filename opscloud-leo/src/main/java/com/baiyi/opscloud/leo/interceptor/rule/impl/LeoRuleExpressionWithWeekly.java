@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.leo.interceptor.rule.impl;
 
-import com.baiyi.opscloud.leo.constants.RuleExpressionCononstants;
+import com.baiyi.opscloud.leo.constants.RuleExpressionConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoRuleModel;
 import com.baiyi.opscloud.leo.interceptor.rule.BaseLeoRuleExpression;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.util.List;
 public class LeoRuleExpressionWithWeekly extends BaseLeoRuleExpression {
 
     public String getType() {
-        return RuleExpressionCononstants.WEEKLY.name();
+        return RuleExpressionConstants.WEEKLY.name();
     }
 
     /**

@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Conditional(EnvCondition.class)
 public class LeoDeployTask {
 
-    private final LeoDeployCompensationTask leoDeployCompensationTask;
+    private final LeoDeployCompensationTask deployCompensationTask;
 
     private static final boolean enable = false;
 
@@ -29,7 +29,7 @@ public class LeoDeployTask {
     @Scheduled(initialDelay = 15000, fixedRate = 120 * 1000)
     @TaskWatch(name = "Leo deploy compensate")
     public void run() {
-        leoDeployCompensationTask.handleTask();
+        deployCompensationTask.handleTask();
     }
 
 }

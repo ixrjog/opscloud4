@@ -9,7 +9,6 @@ import com.baiyi.opscloud.packer.secret.SecretPacker;
 import com.baiyi.opscloud.packer.sys.delegate.CredentialPackerDelegate;
 import com.baiyi.opscloud.service.sys.CredentialService;
 import lombok.RequiredArgsConstructor;
-import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,8 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class CredentialPacker implements IWrapper<CredentialVO.Credential> {
-
-    private final StringEncryptor stringEncryptor;
 
     private final SecretPacker secretPacker;
 
@@ -35,9 +32,13 @@ public class CredentialPacker implements IWrapper<CredentialVO.Credential> {
     }
 
     public void wrap(CredentialVO.ICredential iCredential) {
-        if (IdUtil.isEmpty(iCredential.getCredentialId())) return;
+        if (IdUtil.isEmpty(iCredential.getCredentialId())) {
+            return;
+        }
         com.baiyi.opscloud.domain.generator.opscloud.Credential credential = credentialService.getById(iCredential.getCredentialId());
-        if (credential == null) return;
+        if (credential == null) {
+            return;
+        }
         CredentialVO.Credential credentialVO = BeanCopierUtil.copyProperties(credential, CredentialVO.Credential.class);
         secretPacker.wrap(credentialVO);
         iCredential.setCredential(credentialVO);

@@ -9,6 +9,8 @@ import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
 import com.baiyi.opscloud.leo.supervisor.BuildingSupervisor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -27,6 +29,9 @@ public class BuildingSupervisorConcreteHandler extends BaseBuildHandler {
 
     @Resource
     private LeoHeartbeatHelper heartbeatHelper;
+
+    @Autowired
+    private ThreadPoolTaskExecutor coreExecutor;
 
     /**
      * 启动监视器
@@ -47,8 +52,7 @@ public class BuildingSupervisorConcreteHandler extends BaseBuildHandler {
                 buildConfig,
                 leoPostBuildHandler
         );
-        Thread thread = new Thread(buildingSupervisor);
-        thread.start();
+        coreExecutor.execute(buildingSupervisor);
         LeoBuild saveLeoBuild = LeoBuild.builder()
                 .id(leoBuild.getId())
                 .buildStatus("启动构建Supervisor阶段: 成功")

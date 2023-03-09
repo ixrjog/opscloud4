@@ -26,7 +26,9 @@ public class AuthRolePacker {
     private final AuthRoleService authRoleService;
 
     public void wrap(AuthRoleVO.IRoles iRoles) {
-        if (StringUtils.isEmpty(iRoles.getUsername())) return;
+        if (StringUtils.isEmpty(iRoles.getUsername())) {
+            return;
+        }
         List<AuthUserRole> roles = authUserRoleService.queryByUsername(iRoles.getUsername());
         iRoles.setRoles(roles.stream().map(e ->
                 BeanCopierUtil.copyProperties(authRoleService.getById(e.getRoleId()), AuthRoleVO.Role.class)

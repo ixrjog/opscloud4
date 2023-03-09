@@ -53,8 +53,9 @@ public class JenkinsPipelineConverter {
     }
 
     private static String toState(JenkinsPipeline.Node node) {
-        if (StringUtils.isEmpty(node.getState()))
+        if (StringUtils.isEmpty(node.getState())) {
             return "not_built";
+        }
         switch (node.getState()) {
             case States.FINISHED:
                 return node.getResult();
