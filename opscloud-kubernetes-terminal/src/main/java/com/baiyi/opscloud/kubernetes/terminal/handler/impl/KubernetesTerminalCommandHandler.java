@@ -38,8 +38,9 @@ public class KubernetesTerminalCommandHandler extends AbstractKubernetesTerminal
     @Override
     public void handle(String message, Session session, TerminalSession terminalSession) {
         KubernetesMessage.Command commandMessage = toMessage(message);
-        if (StringUtils.isEmpty(commandMessage.getCommand()))
+        if (StringUtils.isEmpty(commandMessage.getCommand())) {
             return;
+        }
         if (!hasBatchFlag(terminalSession)) {
             sendCommand(terminalSession.getSessionId(), commandMessage.getInstanceId(), commandMessage.getCommand());
         } else {
@@ -50,7 +51,9 @@ public class KubernetesTerminalCommandHandler extends AbstractKubernetesTerminal
 
     private void sendCommand(String sessionId, String instanceId, String cmd) {
         KubernetesSession kubernetesSession = KubernetesSessionContainer.getBySessionId(sessionId, instanceId);
-        if (kubernetesSession == null) return;
+        if (kubernetesSession == null) {
+            return;
+        }
         try {
             OutputStream out =   kubernetesSession.getExecWatch().getInput();
             out.write(cmd.getBytes());

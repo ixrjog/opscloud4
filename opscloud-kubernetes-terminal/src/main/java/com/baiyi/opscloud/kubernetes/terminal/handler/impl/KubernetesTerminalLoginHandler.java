@@ -14,11 +14,11 @@ import com.baiyi.opscloud.sshcore.model.KubernetesResource;
 import com.google.common.base.Joiner;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.Session;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @Author baiyi
@@ -34,6 +34,9 @@ public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMe
         String CONTAINER_TERMINAL = "CONTAINER_TERMINAL";
     }
 
+    @Autowired
+    private ThreadPoolTaskExecutor coreExecutor;
+
     /**
      * 登录
      *
@@ -46,33 +49,28 @@ public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMe
 
     @Override
     public void handle(String message, Session session, TerminalSession terminalSession) {
-        ExecutorService executor = Executors.newFixedThreadPool(4);
         try {
             KubernetesMessage.Login loginMessage = toMessage(message);
             heartbeat(terminalSession.getSessionId());
             KubernetesResource kubernetesResource = loginMessage.getData();
             kubernetesResource.getPods().forEach(pod ->
-                    pod.getContainers().forEach(container -> {
-                        executor.submit(() -> {
-                            log.info("初始化容器终端: sessionType={}, container={}", loginMessage.getSessionType(), container.getName());
-                            KubernetesConfig kubernetesDsInstanceConfig = buildConfig(kubernetesResource);
-                            if (loginMessage.getSessionType().equals(SessionType.CONTAINER_LOG)) {
-                                processLog(kubernetesDsInstanceConfig.getKubernetes(), terminalSession, kubernetesResource, pod, container);
-                                return;
-                            }
-                            if (loginMessage.getSessionType().equals(SessionType.CONTAINER_TERMINAL)) {
-                                processTerminal(kubernetesDsInstanceConfig.getKubernetes(), terminalSession, pod, container);
-                                return;
-                            }
-                            // 会话类型不正确,直接关闭
-                            KubernetesTerminalMessageHandlerFactory.getHandlerByState(MessageState.CLOSE.getState()).handle(message, session, terminalSession);
-                        });
-                    })
+                    pod.getContainers().forEach(container -> coreExecutor.submit(() -> {
+                        log.info("初始化容器终端: sessionType={}, container={}", loginMessage.getSessionType(), container.getName());
+                        KubernetesConfig kubernetesDsInstanceConfig = buildConfig(kubernetesResource);
+                        if (loginMessage.getSessionType().equals(SessionType.CONTAINER_LOG)) {
+                            processLog(kubernetesDsInstanceConfig.getKubernetes(), terminalSession, kubernetesResource, pod, container);
+                            return;
+                        }
+                        if (loginMessage.getSessionType().equals(SessionType.CONTAINER_TERMINAL)) {
+                            processTerminal(kubernetesDsInstanceConfig.getKubernetes(), terminalSession, pod, container);
+                            return;
+                        }
+                        // 会话类型不正确,直接关闭
+                        KubernetesTerminalMessageHandlerFactory.getHandlerByState(MessageState.CLOSE.getState()).handle(message, session, terminalSession);
+                    }))
             );
         } catch (Exception e) {
             log.error(e.getMessage());
-        } finally {
-            executor.shutdown();
         }
     }
 

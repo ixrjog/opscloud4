@@ -27,7 +27,8 @@ public class LdapGroupAssetToUserGroup extends AbstractAssetToBO {
     protected BusinessAssetRelationVO.IBusinessAssetRelation toBO(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum) {
         return UserGroupVO.UserGroup.builder()
                 .name(asset.getAssetKey())
-                .allowOrder(true) // 允许工单申请
+                // 允许工单申请
+                .allowOrder(true)
                 .source("LDAP")
                 .build();
     }

@@ -55,8 +55,9 @@ public class DsConfigHelper {
         String propsYml = datasourceConfig.getPropsYml();
         if (!IdUtil.isEmpty(datasourceConfig.getCredentialId())) {
             Credential credential = credentialService.getById(datasourceConfig.getCredentialId());
-            if (credential != null)
+            if (credential != null) {
                 propsYml = templateUtil.renderTemplate(propsYml, credential);
+            }
         }
         return DsUtil.toDsConfig(propsYml, targetClass);
     }

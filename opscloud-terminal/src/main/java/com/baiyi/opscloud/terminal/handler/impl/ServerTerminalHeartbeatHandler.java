@@ -26,7 +26,6 @@ public class ServerTerminalHeartbeatHandler extends AbstractServerTerminalHandle
 
     @Override
     public void handle(String message, Session session, TerminalSession terminalSession) {
-        //  log.info("收到前端心跳");
         heartbeat(terminalSession.getSessionId());
     }
 

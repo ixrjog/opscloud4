@@ -30,7 +30,8 @@ public class EcsAssetToServer extends AbstractAssetToBO {
                 .privateIp(asset.getAssetKey())
                 .publicIp(asset.getAssetKey2())
                 .envType(getDefaultEnvType())
-                .osType(captureName(asset.getProperties().get("osType"))) //首字大写
+                // 首字大写
+                .osType(captureName(asset.getProperties().get("osType")))
                 .area(asset.getZone())
                 .build();
     }

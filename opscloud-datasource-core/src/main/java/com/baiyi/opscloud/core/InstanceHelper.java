@@ -66,7 +66,9 @@ public class InstanceHelper {
      */
     public boolean hasTagInInstance(String uuid, String tag) {
         DatasourceInstance instance = getInstanceByUuid(uuid);
-        if (instance == null) return false;
+        if (instance == null) {
+            return false;
+        }
         return simpleTagService.hasBusinessTag(tag, DATASOURCE_INSTANCE_TYPE, instance.getId());
     }
 

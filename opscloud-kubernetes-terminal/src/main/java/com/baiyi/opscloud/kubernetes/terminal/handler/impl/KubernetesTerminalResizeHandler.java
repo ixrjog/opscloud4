@@ -35,7 +35,9 @@ public class KubernetesTerminalResizeHandler extends AbstractKubernetesTerminalM
         KubernetesMessage.Resize resizeMessage = toMessage(message);
         try {
             KubernetesSession kubernetesSession = KubernetesSessionContainer.getBySessionId(terminalSession.getSessionId(), resizeMessage.getInstanceId());
-            if (kubernetesSession == null) return;
+            if (kubernetesSession == null) {
+                return;
+            }
             kubernetesSession.resize(resizeMessage);
         } catch (Exception ignored) {
         }

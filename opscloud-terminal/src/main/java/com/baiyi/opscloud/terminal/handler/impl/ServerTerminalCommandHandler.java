@@ -35,8 +35,9 @@ public class ServerTerminalCommandHandler extends AbstractServerTerminalHandler<
     @Override
     public void handle(String message, Session session, TerminalSession terminalSession) {
         ServerMessage.Command commandMessage = toMessage(message);
-        if (StringUtils.isEmpty(commandMessage.getData()))
+        if (StringUtils.isEmpty(commandMessage.getData())) {
             return;
+        }
         if (!hasBatchFlag(terminalSession)) {
             sendCommand(terminalSession.getSessionId(), commandMessage.getInstanceId(), commandMessage.getData());
         } else {
@@ -52,7 +53,9 @@ public class ServerTerminalCommandHandler extends AbstractServerTerminalHandler<
 
     private void sendCommand(String sessionId, String instanceId, String cmd) {
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
-        if (jSchSession == null) return;
+        if (jSchSession == null) {
+            return;
+        }
         jSchSession.getCommander().print(cmd);
     }
 

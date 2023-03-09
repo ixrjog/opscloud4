@@ -33,6 +33,11 @@ public abstract class AbstractServerTerminalHandler<T extends ServerMessage.Base
     @Resource
     protected SimpleTerminalSessionFacade simpleTerminalSessionFacade;
 
+    /**
+     * 转换消息
+     * @param message
+     * @return
+     */
     abstract protected T toMessage(String message);
 
     protected void heartbeat(String sessionId) {

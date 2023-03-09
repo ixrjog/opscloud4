@@ -62,7 +62,9 @@ public abstract class AbstractAssetToBO implements IAssetConverter, Initializing
      * @return
      */
     protected String captureName(String str) {
-        if (StringUtils.isEmpty(str)) return str;
+        if (StringUtils.isEmpty(str)) {
+            return str;
+        }
         char[] cs = str.toCharArray();
         cs[0] -= 32;
         return String.valueOf(cs);

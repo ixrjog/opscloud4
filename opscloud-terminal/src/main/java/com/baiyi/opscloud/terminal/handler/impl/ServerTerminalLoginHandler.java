@@ -14,12 +14,12 @@ import com.baiyi.opscloud.sshcore.model.ServerNode;
 import com.baiyi.opscloud.terminal.handler.AbstractServerTerminalHandler;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.websocket.Session;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * 登录
@@ -38,6 +38,9 @@ public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<Se
     @Resource
     private ServerService serverService;
 
+    @Autowired
+    private ThreadPoolTaskExecutor coreExecutor;
+
     @Override
     public String getState() {
         return MessageState.LOGIN.getState();
@@ -45,12 +48,11 @@ public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<Se
 
     @Override
     public void handle(String message, Session session, TerminalSession terminalSession) {
-        ExecutorService executor = Executors.newFixedThreadPool(4);
         try {
             ServerMessage.Login loginMessage = toMessage(message);
             heartbeat(terminalSession.getSessionId());
             for (ServerNode serverNode : loginMessage.getServerNodes()) {
-                executor.submit(() -> {
+                coreExecutor.submit(() -> {
                     log.info("登录服务器节点: instanceId={}", serverNode.getInstanceId());
                     sAInterceptor.interceptLoginServer(serverNode.getId());
                     HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverNode, loginMessage);

@@ -32,12 +32,15 @@ public class ServerTerminalCloseHandler extends AbstractServerTerminalHandler<Se
     @Override
     public void handle(String message, Session session, TerminalSession terminalSession) {
         Map<String, JSchSession> sessionMap = JSchSessionContainer.getBySessionId(terminalSession.getSessionId());
-        if (sessionMap == null) return;
-        for (String instanceId : sessionMap.keySet())
+        if (sessionMap == null) {
+            return;
+        }
+        for (String instanceId : sessionMap.keySet()) {
             try {
                 JSchSession jSchSession = sessionMap.get(instanceId);
-                if (jSchSession.getChannel() != null)
+                if (jSchSession.getChannel() != null) {
                     jSchSession.getChannel().disconnect();
+                }
                 jSchSession.setChannel(null);
                 jSchSession.setInputToChannel(null);
                 jSchSession.setCommander(null);
@@ -46,13 +49,14 @@ public class ServerTerminalCloseHandler extends AbstractServerTerminalHandler<Se
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, instanceId);
                 serverCommandAudit.asyncRecordCommand(terminalSession.getSessionId(), instanceId);
             } catch (Exception e) {
-                log.warn("关闭JSchSession错误: instanceId={}, err={}", instanceId, e.getMessage());
+                log.warn("关闭JSchSession错误: instanceId={}, {}", instanceId, e.getMessage());
             }
+        }
         try {
             sessionMap.clear();
             session.close();
         } catch (IOException e) {
-            log.warn("关闭会话错误: err={}", e.getMessage());
+            log.warn("关闭会话错误: {}", e.getMessage());
         }
         simpleTerminalSessionFacade.closeTerminalSession(terminalSession);
         terminalSession = null;

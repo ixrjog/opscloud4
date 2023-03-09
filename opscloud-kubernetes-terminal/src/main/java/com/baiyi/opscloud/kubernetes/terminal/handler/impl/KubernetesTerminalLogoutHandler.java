@@ -37,7 +37,8 @@ public class KubernetesTerminalLogoutHandler extends AbstractKubernetesTerminalM
     @Override
     public void handle(String message, Session session, TerminalSession terminalSession) {
         KubernetesMessage.Logout baseMessage = toMessage(message);
-        simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, baseMessage.getInstanceId());  // 设置关闭会话
+        // 设置关闭会话
+        simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, baseMessage.getInstanceId());
         KubernetesSessionContainer.closeSession(terminalSession.getSessionId(), baseMessage.getInstanceId());
         podCommandAudit.asyncRecordCommand(terminalSession.getSessionId(), baseMessage.getInstanceId());
     }
@@ -46,4 +47,5 @@ public class KubernetesTerminalLogoutHandler extends AbstractKubernetesTerminalM
     protected KubernetesMessage.Logout toMessage(String message) {
         return new GsonBuilder().create().fromJson(message, KubernetesMessage.Logout.class);
     }
+
 }

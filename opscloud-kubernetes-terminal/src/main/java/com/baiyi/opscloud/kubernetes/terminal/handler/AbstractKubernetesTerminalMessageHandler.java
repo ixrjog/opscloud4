@@ -38,6 +38,11 @@ public abstract class AbstractKubernetesTerminalMessageHandler<T extends Kuberne
     @Resource
     private DsConfigHelper dsConfigHelper;
 
+    /**
+     * 转换消息
+     * @param message
+     * @return
+     */
     abstract protected T toMessage(String message);
 
     protected KubernetesConfig buildConfig(KubernetesResource kubernetesResource) {
@@ -52,8 +57,9 @@ public abstract class AbstractKubernetesTerminalMessageHandler<T extends Kuberne
     private DatasourceInstanceAsset getAssetByResource(KubernetesResource kubernetesResource) {
         if (kubernetesResource.getBusinessType() == BusinessTypeEnum.ASSET.getType()) {
             DatasourceInstanceAsset asset = dsInstanceAssetService.getById(kubernetesResource.getBusinessId());
-            if (DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name().equals(asset.getAssetType()))
+            if (DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name().equals(asset.getAssetType())) {
                 return asset;
+            }
         }
         throw new OCException("类型不符合");
     }

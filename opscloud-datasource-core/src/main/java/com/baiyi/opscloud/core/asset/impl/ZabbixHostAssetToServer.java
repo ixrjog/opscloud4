@@ -32,7 +32,8 @@ public class ZabbixHostAssetToServer extends AbstractAssetToBO {
                 .envType(getDefaultEnvType())
                 //.osType(captureName(asset.getProperties().get("osType"))) //首字大写
                 //.area(asset.getZone())
-                .assetId(asset.getId()) // 资产id
+                // 资产ID
+                .assetId(asset.getId())
                 .build();
     }
 

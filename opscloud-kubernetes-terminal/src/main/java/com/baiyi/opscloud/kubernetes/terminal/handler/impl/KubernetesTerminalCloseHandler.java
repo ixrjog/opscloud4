@@ -36,16 +36,20 @@ public class KubernetesTerminalCloseHandler extends AbstractKubernetesTerminalMe
     @Override
     public void handle(String message, Session session, TerminalSession terminalSession) {
         Map<String, KubernetesSession> sessionMap = KubernetesSessionContainer.getBySessionId(terminalSession.getSessionId());
-        if (sessionMap == null) return;
-        for (String instanceId : sessionMap.keySet())
+        if (sessionMap == null) {
+            return;
+        }
+        for (String instanceId : sessionMap.keySet()) {
             try {
                 KubernetesSession kubernetesSession = sessionMap.get(instanceId);
-                simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, instanceId);  // 设置关闭会话
+                // 设置关闭会话
+                simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, instanceId);
                 KubernetesSessionContainer.closeSession(terminalSession.getSessionId(), instanceId);
                 podCommandAudit.asyncRecordCommand(terminalSession.getSessionId(), instanceId);
             } catch (Exception e) {
                 log.error(e.getMessage());
             }
+        }
         try {
             sessionMap.clear();
             session.close();

@@ -13,15 +13,19 @@ public class AssetUtil {
     private AssetUtil(){}
 
     public static boolean equals(String var1, String var2) {
-        if (StringUtils.isEmpty(var1))
+        if (StringUtils.isEmpty(var1)) {
             return StringUtils.isEmpty(var2);
-        if (StringUtils.isEmpty(var2)) return false;
+        }
+        if (StringUtils.isEmpty(var2)) {
+            return false;
+        }
         return var1.equals(var2);
     }
 
     public static boolean equals(Date date1, Date data2) {
-        if (date1 == null)
+        if (date1 == null) {
             return data2 == null;
+        }
         return date1.equals(data2);
     }
 
