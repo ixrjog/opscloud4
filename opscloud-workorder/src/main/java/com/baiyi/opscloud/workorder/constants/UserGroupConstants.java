@@ -19,7 +19,7 @@ public enum UserGroupConstants {
     GRAFANA_ADMIN("grafana-admin"),
     GRAFANA_EDITOR_USERS("grafana-editor-users"),
     GRAFANA_USERS("grafana-users"),
-    APOLLO_USERS("apollo_users");
+    APOLLO_USERS("apollo-users");
 
     UserGroupConstants(String role) {
         this.role = role;
