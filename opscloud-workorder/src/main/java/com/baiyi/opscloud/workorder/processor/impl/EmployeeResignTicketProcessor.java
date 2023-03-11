@@ -40,7 +40,7 @@ public class EmployeeResignTicketProcessor extends BaseTicketProcessor<User> {
     }
 
     @Override
-    protected void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
+    protected void handleVerify(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         // 判断是否有效用户
         User entry = this.toEntry(ticketEntry.getContent());
         User originalUser = userService.getById(ticketEntry.getBusinessId());

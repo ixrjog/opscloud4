@@ -126,10 +126,13 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
                     LeoBuildImage buildImage = buildImageService.findBuildImage(jobId, image);
                     final int replicas = deployment.getSpec().getReplicas();
                     return LeoJobVersionVO.DeploymentVersion.builder()
+                            .jobId(jobId)
+                            .assetId(asset.getId())
                             .name(deploymentResource.getName())
+                            .deploymentName(asset.getName())
                             .buildId(buildImage != null ? buildImage.getBuildId() : -1)
                             .image(image)
-                            .replicas(deployment.getSpec().getReplicas())
+                            .replicas(replicas)
                             .versionName(buildImage != null ? buildImage.getVersionName() : LeoDeployModel.DeployVersion.UNKNOWN.getVersionName())
                             .versionDesc(buildImage != null ? buildImage.getVersionDesc() : LeoDeployModel.DeployVersion.UNKNOWN.getVersionDesc())
                             .build();

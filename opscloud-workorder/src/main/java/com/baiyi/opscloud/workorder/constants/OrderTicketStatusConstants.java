@@ -10,7 +10,9 @@ import lombok.Getter;
 @Getter
 public enum OrderTicketStatusConstants {
 
-    // 工单状态 0 正常  1 结束（成功） 2结束（失败）
+    /**
+     * 工单状态 0 正常  1 结束（成功） 2结束（失败）
+     */
     NORMAL(0),
     SUCCESS(1),
     FAILED(2);

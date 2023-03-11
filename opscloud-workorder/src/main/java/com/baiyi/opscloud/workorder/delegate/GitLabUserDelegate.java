@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Component
 @RequiredArgsConstructor
-public class GitlabUserDelegate {
+public class GitLabUserDelegate {
 
     private final UserService userService;
 

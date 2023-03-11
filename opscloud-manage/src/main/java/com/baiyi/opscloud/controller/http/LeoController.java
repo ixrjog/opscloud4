@@ -198,21 +198,22 @@ public class LeoController {
 
     @ApiOperation(value = "查询部署版本")
     @PostMapping(value = "/deploy/version/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<LeoBuildVO.Build>> queryLeoDeployVersion(@RequestBody @Valid LeoBuildParam.QueryDeployVersion queryBuildVersion) {
+    public HttpResult<List<LeoBuildVO.Build>> queryLeoDeployVersion(@RequestBody @Valid LeoDeployParam.QueryDeployVersion queryBuildVersion) {
         return new HttpResult<>(deployFacade.queryLeoDeployVersion(queryBuildVersion));
     }
 
-    @ApiOperation(value = "查询部署Deployment")
+    @ApiOperation(value = "查询部署无状态")
     @PostMapping(value = "/deploy/deployment/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<ApplicationResourceVO.BaseResource>> queryLeoDeployDeployment(@RequestBody @Valid LeoBuildParam.QueryDeployDeployment queryDeployDeployment) {
+    public HttpResult<List<ApplicationResourceVO.BaseResource>> queryLeoDeployDeployment(@RequestBody @Valid LeoDeployParam.QueryDeployDeployment queryDeployDeployment) {
         return new HttpResult<>(deployFacade.queryLeoBuildDeployment(queryDeployDeployment));
     }
 
-//    @ApiOperation(value = "查询部署Deployment版本")
-//    @PostMapping(value = "/deploy/deployment/version/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public HttpResult<List<ApplicationResourceVO.BaseResource>> queryLeoDeployDeploymentVersion(@RequestBody @Valid LeoBuildParam.QueryDeployDeploymentVersion queryDeployDeploymentVersion) {
-//        return new HttpResult<>(deployFacade.queryLeoBuildDeploymentVersion(queryDeployDeployment));
-//    }
+    @ApiOperation(value = "克隆部署无状态")
+    @PostMapping(value = "/deploy/deployment/clone", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> cloneLeoDeployDeployment(@RequestBody @Valid LeoDeployParam.CloneDeployDeployment cloneDeployDeployment) {
+        deployFacade.cloneDeployDeployment(cloneDeployDeployment);
+        return HttpResult.SUCCESS;
+    }
 
     @ApiOperation(value = "停止部署(逻辑层)")
     @PutMapping(value = "/deploy/stop", produces = MediaType.APPLICATION_JSON_VALUE)

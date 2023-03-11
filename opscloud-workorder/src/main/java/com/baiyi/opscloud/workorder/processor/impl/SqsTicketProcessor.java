@@ -52,7 +52,7 @@ public class SqsTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcess
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
+    public void handleVerify(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         SimpleQueueService.Queue entry = this.toEntry(ticketEntry.getContent());
         if (StringUtils.isEmpty(entry.getQueueName())) {
             throw new TicketVerifyException("校验工单条目失败: 未指定SQS名称！");

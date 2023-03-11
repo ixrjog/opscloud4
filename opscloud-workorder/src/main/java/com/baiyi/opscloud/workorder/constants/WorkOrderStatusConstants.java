@@ -10,11 +10,23 @@ import lombok.Getter;
 @Getter
 public enum WorkOrderStatusConstants {
 
-    NORMAL(0), // 正常
-    DEVELOPING(1), // 开发中
-    SYS(2), // 系统工单
-    INACTIVE(3) //停用
-    ;
+    /**
+     * 正常
+     */
+    NORMAL(0),
+    /**
+     * 开发中
+     */
+    DEVELOPING(1),
+    /**
+     * 系统工单
+     */
+    SYS(2),
+    /**
+     * 停用
+     */
+    INACTIVE(3);
+
 
     WorkOrderStatusConstants(int status) {
         this.status = status;

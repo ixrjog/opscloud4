@@ -37,7 +37,8 @@ public abstract class AbstractUserPermissionExtendedBaseTicketProcessor<T> exten
         // 查询是否重复授权
         UserPermission userPermission = userPermissionService.getByUniqueKey(prePermission);
         if (userPermission == null) {
-            userPermissionService.add(prePermission); // 授权
+            // 授权
+            userPermissionService.add(prePermission);
         } else {
             final String role = StringUtils.isEmpty(prePermission.getPermissionRole()) ? "" : prePermission.getPermissionRole();
             // 更新授权角色
@@ -55,14 +56,10 @@ public abstract class AbstractUserPermissionExtendedBaseTicketProcessor<T> exten
      */
     protected void updateHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
         WorkOrderTicket ticket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
-        if (!OrderTicketPhaseCodeConstants.NEW.name().equals(ticket.getTicketPhase()))
+        if (!OrderTicketPhaseCodeConstants.NEW.name().equals(ticket.getTicketPhase())) {
             throw new TicketProcessException("工单进度不是新建，无法更新配置条目！");
+        }
         String role = ticketEntry.getRole();
-//        if (!StringUtils.isEmpty(role)) {
-//            if (!"admin".equalsIgnoreCase(role)) {
-//                return;
-//            }
-//        }
         WorkOrderTicketEntry preTicketEntry = ticketEntryService.getById(ticketEntry.getId());
         preTicketEntry.setRole(role);
         updateTicketEntry(preTicketEntry);

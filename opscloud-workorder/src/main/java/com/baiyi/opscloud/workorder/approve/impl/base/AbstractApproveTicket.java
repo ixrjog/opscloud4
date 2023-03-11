@@ -36,7 +36,7 @@ public abstract class AbstractApproveTicket implements ITicketApprove, Initializ
     protected WorkOrderTicketNodeService ticketNodeService;
 
     @Resource
-    private TicketApproveHelper ticketApproverHelper;
+    private TicketApproveHelper ticketApproveHelper;
 
     @Override
     @Async(value = CORE)
@@ -50,19 +50,28 @@ public abstract class AbstractApproveTicket implements ITicketApprove, Initializ
         SimpleApprover simpleApprover = SimpleApprover.builder()
                 .ticketId(ticket.getId())
                 .build();
-        ticketApproverHelper.wrap(simpleApprover, ticket);
+        ticketApproveHelper.wrap(simpleApprover, ticket);
         if (!simpleApprover.getIsApprover()) {
             throw new TicketException("禁止操作: 非当前审批人!");
         }
         if (StringUtils.isEmpty(ticketNode.getUsername())) {
-            ticketNode.setUsername(SessionUtil.getUsername()); // 审批人
+            // 审批人
+            ticketNode.setUsername(SessionUtil.getUsername());
         }
-        ticketNode.setApprovalStatus(approveTicket.getApprovalType()); // 审批状态
-        ticketNode.setComment(approveTicket.getApprovalComment()); // 审批意见
-        ticketNodeService.update(ticketNode); // 保存当前审批节点数据
+        // 审批状态
+        ticketNode.setApprovalStatus(approveTicket.getApprovalType());
+        // 审批意见
+        ticketNode.setComment(approveTicket.getApprovalComment());
+        // 保存当前审批节点数据
+        ticketNodeService.update(ticketNode);
         postHandle(ticket, ticketNode);
     }
 
+    /**
+     * 后处理
+     * @param ticket
+     * @param ticketNode
+     */
     abstract protected void postHandle(WorkOrderTicket ticket, WorkOrderTicketNode ticketNode);
 
     protected void updateTicket(WorkOrderTicket ticket, boolean isFinished) {

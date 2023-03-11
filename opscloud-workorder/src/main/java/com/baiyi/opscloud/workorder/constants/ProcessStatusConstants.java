@@ -10,6 +10,9 @@ import lombok.Getter;
  */
 public enum ProcessStatusConstants {
 
+    /**
+     * 处理状态
+     */
     DEFAULT(0),
     // 执行成功
     SUCCESSFUL(1),

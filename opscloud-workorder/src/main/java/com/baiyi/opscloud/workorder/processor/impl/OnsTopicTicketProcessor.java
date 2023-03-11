@@ -52,7 +52,7 @@ public class OnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
+    public void handleVerify(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         OnsRocketMqTopic.Topic entry = this.toEntry(ticketEntry.getContent());
         if (StringUtils.isEmpty(entry.getTopic())) {
             throw new TicketVerifyException("校验工单条目失败: 未指定Topic名称！");

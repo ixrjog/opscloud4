@@ -32,7 +32,9 @@ public class SendEndNotice extends AbstractSendNotice {
     }
 
     protected void send(Integer ticketId, List<User> users, String msgKey, INoticeMessage noticeMessage) {
-        if (CollectionUtils.isEmpty(users)) return;
+        if (CollectionUtils.isEmpty(users)) {
+            return;
+        }
         users.forEach(user ->
             noticeManager.sendMessage(user, msgKey, noticeMessage)
         );

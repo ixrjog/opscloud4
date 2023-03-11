@@ -46,8 +46,9 @@ public abstract class AbstractDsAssetExtendedBaseTicketProcessor<T, C extends Ba
     protected DatasourceInstanceAsset getAsset(DatasourceInstanceAsset queryParam) throws TicketVerifyException {
         try {
             DatasourceInstanceAsset asset = dsInstanceAssetService.getByUniqueKey(queryParam);
-            if (asset == null)
+            if (asset == null) {
                 throw new TicketVerifyException("校验工单条目失败: 授权资产不存在！");
+            }
             return asset;
         } catch (Exception e) {
             throw new TicketVerifyException("查询授权资产错误: {}", e.getMessage());
@@ -58,8 +59,10 @@ public abstract class AbstractDsAssetExtendedBaseTicketProcessor<T, C extends Ba
 
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, T entry) throws TicketProcessException {
-        processHandle(ticketEntry, entry); // 处理
-        pullAsset(ticketEntry, entry); // 同步资产
+        // 处理
+        processHandle(ticketEntry, entry);
+        // 同步资产
+        pullAsset(ticketEntry, entry);
     }
 
     /**

@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.vo.leo;
 
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,27 +17,6 @@ import java.util.List;
  * @Version 1.0
  */
 public class LeoJobVersionVO {
-
-    /**
-     * # 灰色（副本0）
-     * background-color: #9d9fa3
-     * <p>
-     * # 蓝
-     * background-color: #128ca8
-     * <p>
-     * # 绿
-     * background-color: #2bbe32
-     * <p>
-     * # 其他版本
-     * background-color: #e56c0d
-     */
-    public interface VersionColors {
-        String BLUE = "#128ca8";
-        String GREEN = "#2bbe32";
-        String OTHER = "#e56c0d";
-        String OFFLINE = "#9d9fa3";
-    }
-
 
     @Data
     @Builder
@@ -65,11 +45,18 @@ public class LeoJobVersionVO {
 
         public static final DeploymentVersion EMPTY = DeploymentVersion.builder().build();
 
+        private DoDeployVersion doDeployVersion;
+
+        private Integer jobId;
+
         /**
          * env:deploymentName
          */
         @Builder.Default
         private String name = "-";
+
+        private String deploymentName;
+
         private Integer replicas = 0;
 
         /**
@@ -80,9 +67,9 @@ public class LeoJobVersionVO {
         private String versionTypeDesc;
 
         /**
-         * background-color
+         * 资产ID
          */
-        private String versionColor = VersionColors.OTHER;
+        private Integer assetId;
 
         @Builder.Default
         private String image = "-";
@@ -92,6 +79,39 @@ public class LeoJobVersionVO {
         private String versionDesc = "";
 
         private String versionType;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ApiModel
+    public static class DoDeployVersion implements Serializable {
+
+        private static final long serialVersionUID = -5057578961795862955L;
+
+        public static final DoDeployVersion INVALID = DoDeployVersion.builder()
+                .isActive(false)
+                .build();
+
+        @ApiModelProperty(value = "有效")
+        @Builder.Default
+        private boolean isActive = true;
+
+//        @Min(value = 0, message = "关联任务ID不能为空")
+//        @ApiModelProperty(value = "关联任务ID")
+//        private Integer jobId;
+
+        @ApiModelProperty(value = "构建ID")
+        private Integer buildId;
+
+//        @Min(value = 0, message = "Deployment资产ID不能为空")
+//        @ApiModelProperty(value = "Deployment资产ID")
+//        private Integer assetId;
+//
+//        @ApiModelProperty(value = "部署类型")
+//        private String deployType;
 
     }
 

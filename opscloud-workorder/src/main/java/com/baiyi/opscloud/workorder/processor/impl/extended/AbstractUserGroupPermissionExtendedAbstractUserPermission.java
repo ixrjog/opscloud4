@@ -23,14 +23,15 @@ public abstract class AbstractUserGroupPermissionExtendedAbstractUserPermission 
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
+    public void handleVerify(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
         UserGroup entry = this.toEntry(ticketEntry.getContent());
         checkName(entry);
     }
 
     private void checkName(UserGroup entry) {
-        if (getGroupNames().stream().noneMatch(groupName -> groupName.equals(entry.getName())))
+        if (getGroupNames().stream().noneMatch(groupName -> groupName.equals(entry.getName()))) {
             throw new TicketProcessException("授权条目不合规！");
+        }
     }
 
     /**

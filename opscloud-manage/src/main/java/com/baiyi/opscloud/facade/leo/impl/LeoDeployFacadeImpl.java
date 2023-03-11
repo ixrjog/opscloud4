@@ -1,19 +1,27 @@
 package com.baiyi.opscloud.facade.leo.impl;
 
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoDeployParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployVO;
+import com.baiyi.opscloud.facade.application.ApplicationFacade;
 import com.baiyi.opscloud.facade.leo.LeoDeployFacade;
 import com.baiyi.opscloud.leo.action.deploy.LeoDeployHandler;
 import com.baiyi.opscloud.leo.annotation.LeoDeployInterceptor;
@@ -27,9 +35,11 @@ import com.baiyi.opscloud.leo.interceptor.LeoExecuteJobInterceptorHandler;
 import com.baiyi.opscloud.leo.packer.LeoDeployResponsePacker;
 import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
 import com.baiyi.opscloud.packer.leo.LeoBuildVersionPacker;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -49,6 +59,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
+    public static final String WORKLOAD_SELECTOR_NAME = "workload.user.cattle.io/workloadselector";
+
     private final LeoJobService jobService;
 
     private final LeoBuildService buildService;
@@ -66,6 +78,14 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     private final RedisUtil redisUtil;
 
     private final LeoBuildDeploymentDelegate buildDeploymentDelegate;
+
+    private final DsInstanceAssetService assetService;
+
+    private final DsConfigHelper dsConfigHelper;
+
+    private final DsInstanceFacade<Deployment> dsInstanceFacade;
+
+    private final ApplicationFacade applicationFacade;
 
     @Override
     @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType")
@@ -136,7 +156,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     }
 
     @Override
-    public List<LeoBuildVO.Build> queryLeoDeployVersion(LeoBuildParam.QueryDeployVersion queryBuildVersion) {
+    public List<LeoBuildVO.Build> queryLeoDeployVersion(LeoDeployParam.QueryDeployVersion queryBuildVersion) {
         List<LeoBuild> builds = buildService.queryBuildVersion(queryBuildVersion);
         return BeanCopierUtil.copyListProperties(builds, LeoBuildVO.Build.class).stream()
                 .peek(e -> buildVersionPacker.wrap(e, queryBuildVersion))
@@ -144,7 +164,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     }
 
     @Override
-    public List<ApplicationResourceVO.BaseResource> queryLeoBuildDeployment(LeoBuildParam.QueryDeployDeployment queryBuildDeployment) {
+    public List<ApplicationResourceVO.BaseResource> queryLeoBuildDeployment(LeoDeployParam.QueryDeployDeployment queryBuildDeployment) {
         return buildDeploymentDelegate.queryLeoBuildDeployment(queryBuildDeployment.getJobId());
     }
 
@@ -179,6 +199,61 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         }
         // 设置信号量
         redisUtil.set(String.format(DeployingSupervisor.STOP_SIGNAL, deployId), username, 100L);
+    }
+
+    @Override
+    public void cloneDeployDeployment(LeoDeployParam.CloneDeployDeployment cloneDeployDeployment) {
+        LeoBuild leoBuild = buildService.getById(cloneDeployDeployment.getBuildId());
+        DatasourceInstanceAsset asset = assetService.getById(cloneDeployDeployment.getAssetId());
+        KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
+        // 查询原无状态
+        final String namespace = asset.getAssetKey2();
+        final String deploymentName = asset.getAssetKey();
+        if (deploymentName.equals(cloneDeployDeployment.getDeploymentName())) {
+            throw new LeoDeployException("原无状态与克隆的无状态名称相同!");
+        }
+        Deployment deployment = KubernetesDeploymentDriver.getDeployment(
+                kubernetesConfig.getKubernetes(),
+                namespace,
+                deploymentName);
+        if (deployment == null) {
+            throw new LeoDeployException("无状态 {} 不存在!", cloneDeployDeployment.getDeploymentName());
+        }
+        // 创建无状态
+        deployment.getMetadata().setName(cloneDeployDeployment.getDeploymentName());
+        deployment.getSpec().setReplicas(cloneDeployDeployment.getReplicas());
+
+        final String workloadSelector = deployment.getMetadata()
+                .getLabels()
+                .get(WORKLOAD_SELECTOR_NAME)
+                .replace(deploymentName, cloneDeployDeployment.getDeploymentName());
+
+        deployment.getMetadata().getLabels().put(WORKLOAD_SELECTOR_NAME, workloadSelector);
+        deployment.getSpec().getSelector().getMatchLabels().put(WORKLOAD_SELECTOR_NAME, workloadSelector);
+        deployment.getSpec().getTemplate().getMetadata().getLabels().put(WORKLOAD_SELECTOR_NAME, workloadSelector);
+
+        try {
+            KubernetesDeploymentDriver.createOrReplaceDeployment(kubernetesConfig.getKubernetes(), namespace, deployment);
+        } catch (Exception e) {
+            throw new LeoDeployException("克隆无状态错误: {}", e.getMessage());
+        }
+
+        // 录入资产
+        List<DatasourceInstanceAsset> assets = dsInstanceFacade.pullAsset(asset.getInstanceUuid(), DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name(), deployment);
+        // 绑定资产到应用
+        assets.forEach(a -> {
+            ApplicationResourceVO.Resource resource = ApplicationResourceVO.Resource.builder()
+                    .applicationId(leoBuild.getApplicationId())
+                    .businessId(a.getId())
+                    .businessType(BusinessTypeEnum.ASSET.getType())
+                    .checked(false)
+                    .comment(a.getAssetId())
+                    .name(a.getAssetId())
+                    .resourceType(ApplicationResTypeEnum.KUBERNETES_DEPLOYMENT.name())
+                    .virtualResource(false)
+                    .build();
+            applicationFacade.bindApplicationResource(resource);
+        });
     }
 
 }

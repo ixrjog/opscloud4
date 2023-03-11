@@ -62,7 +62,7 @@ public class SnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
+    public void handleVerify(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         SimpleNotificationService.Topic entry = this.toEntry(ticketEntry.getContent());
         String topic = entry.getTopic();
         if (StringUtils.isEmpty(topic)) {

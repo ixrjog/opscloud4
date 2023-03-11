@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class GitlabGroupDelegate {
+public class GitLabGroupDelegate {
 
     @Retryable(value = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
     public void addMember(GitLabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws TicketProcessException {

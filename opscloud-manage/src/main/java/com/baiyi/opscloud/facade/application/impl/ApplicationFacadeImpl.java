@@ -195,7 +195,9 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     @Override
     public void updateApplication(ApplicationVO.Application application) {
         Application app = applicationService.getByKey(application.getApplicationKey());
-        if (app == null) throw new OCException(ErrorEnum.APPLICATION_ALREADY_EXIST);
+        if (app == null) {
+            throw new OCException(ErrorEnum.APPLICATION_ALREADY_EXIST);
+        }
         app.setComment(application.getComment());
         app.setName(application.getName());
         applicationService.update(app);
@@ -204,8 +206,9 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     @Override
     @TagClear
     public void deleteApplication(Integer id) {
-        if (!CollectionUtils.isEmpty(applicationResourceService.queryByApplication(id)))
+        if (!CollectionUtils.isEmpty(applicationResourceService.queryByApplication(id))) {
             throw new OCException(ErrorEnum.APPLICATION_RES_IS_NOT_EMPTY);
+        }
         applicationService.deleteById(id);
     }
 

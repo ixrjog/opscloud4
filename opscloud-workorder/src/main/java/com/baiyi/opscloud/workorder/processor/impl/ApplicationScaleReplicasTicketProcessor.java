@@ -67,7 +67,7 @@ public class ApplicationScaleReplicasTicketProcessor extends AbstractDsAssetExte
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
+    public void handleVerify(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         ApplicationScaleReplicasEntry.KubernetesDeployment entry = this.toEntry(ticketEntry.getContent());
         KubernetesConfig.Kubernetes config = getDsConfig(ticketEntry, KubernetesConfig.class).getKubernetes();
         if (StringUtils.isEmpty(entry.getNamespace())) {

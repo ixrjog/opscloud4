@@ -14,6 +14,9 @@ import java.util.Arrays;
 @Getter
 public enum OrderTicketPhaseCodeConstants {
 
+    /**
+     * 工单状态码
+     */
     NEW("NEW", "新建"),
     TOAUDIT("TOAUDIT", "工单申请中！"),
     APPROVED("APPROVED", "工单审批通过！"),

@@ -2,13 +2,16 @@ package com.baiyi.opscloud.leo.message.util;
 
 import com.baiyi.opscloud.domain.constants.VersionTypeConstants;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVersionVO;
+import com.google.common.collect.Maps;
 import org.glassfish.jersey.internal.guava.Sets;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @Author baiyi
@@ -30,46 +33,64 @@ public class VersionRenderer {
             return;
         }
         Set<Integer> idSet = Sets.newHashSet();
-        for (LeoJobVersionVO.DeploymentVersion deploymentVersion : deploymentVersions) {
-            if (deploymentVersion.getBuildId() == -1) {
-                if (deploymentVersion.getReplicas() == 0) {
-                    deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.OFFLINE);
-                } else {
-                    // 无法比较版本号
-                    deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.OTHER);
-                }
-            } else {
-                idSet.add(deploymentVersion.getBuildId());
-            }
-        }
+        deploymentVersions.stream().map(LeoJobVersionVO.DeploymentVersion::getBuildId).filter(buildId -> buildId != -1).forEach(idSet::add);
         if (idSet.isEmpty()) {
             return;
         }
+        Map<String, Integer> versionTypeMap = Maps.newHashMap();
         List<Integer> ids = idSet.stream().sorted(Collections.reverseOrder()).collect(Collectors.toList());
-        for (int i = 0; i < ids.size(); i++) {
+        int bound = ids.size();
+        IntStream.range(0, bound).forEach(i -> {
             int buildId = ids.get(i);
             for (LeoJobVersionVO.DeploymentVersion deploymentVersion : deploymentVersions) {
-                if (deploymentVersion.getBuildId() == buildId) {
-                    if (deploymentVersion.getReplicas() == 0) {
-                        deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.OFFLINE);
-                        deploymentVersion.setVersionType(VersionTypeConstants.OFFLINE.name());
-                        continue;
-                    }
-                    switch (i) {
-                        case 0:
-                            deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.BLUE);
-                            deploymentVersion.setVersionType(VersionTypeConstants.BLUE.name());
-                            break;
-                        case 1:
-                            deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.GREEN);
-                            deploymentVersion.setVersionType(VersionTypeConstants.GREEN.name());
-                            break;
-                        default:
-                            deploymentVersion.setVersionColor(LeoJobVersionVO.VersionColors.OTHER);
-                            deploymentVersion.setVersionType(VersionTypeConstants.OTHER.name());
-                    }
+                if (deploymentVersion.getBuildId() != buildId) {
+                    continue;
+                }
+                if (deploymentVersion.getReplicas() == 0) {
+                    deploymentVersion.setVersionType(VersionTypeConstants.OFFLINE.name());
+                    continue;
+                }
+                switch (i) {
+                    case 0:
+                        versionTypeMap.put(VersionTypeConstants.BLUE.name(), deploymentVersion.getBuildId());
+                        deploymentVersion.setVersionType(VersionTypeConstants.BLUE.name());
+                        break;
+                    case 1:
+                        versionTypeMap.put(VersionTypeConstants.GREEN.name(), deploymentVersion.getBuildId());
+                        deploymentVersion.setVersionType(VersionTypeConstants.GREEN.name());
+                        break;
+                    default:
+                        deploymentVersion.setVersionType(VersionTypeConstants.OTHER.name());
                 }
             }
-        }
+        });
+        render(deploymentVersions, versionTypeMap);
     }
+
+    private static void render(List<LeoJobVersionVO.DeploymentVersion> deploymentVersions, Map<String, Integer> versionTypeMap) {
+        deploymentVersions.forEach(d -> {
+            if (VersionTypeConstants.OTHER.name().equals(d.getVersionType()) || VersionTypeConstants.GREEN.name().equals(d.getVersionType())) {
+                if (versionTypeMap.containsKey(VersionTypeConstants.BLUE.name())) {
+                    LeoJobVersionVO.DoDeployVersion doDeployVersion = LeoJobVersionVO.DoDeployVersion.builder()
+                            .buildId(versionTypeMap.get(VersionTypeConstants.BLUE.name()))
+                            .build();
+                    d.setDoDeployVersion(doDeployVersion);
+                } else {
+                    d.setDoDeployVersion(LeoJobVersionVO.DoDeployVersion.INVALID);
+                }
+                return;
+            }
+            if (VersionTypeConstants.BLUE.name().equals(d.getVersionType())) {
+                if (versionTypeMap.containsKey(VersionTypeConstants.GREEN.name())) {
+                    LeoJobVersionVO.DoDeployVersion doDeployVersion = LeoJobVersionVO.DoDeployVersion.builder()
+                            .buildId(versionTypeMap.get(VersionTypeConstants.GREEN.name()))
+                            .build();
+                    d.setDoDeployVersion(doDeployVersion);
+                } else {
+                    d.setDoDeployVersion(LeoJobVersionVO.DoDeployVersion.INVALID);
+                }
+            }
+        });
+    }
+
 }

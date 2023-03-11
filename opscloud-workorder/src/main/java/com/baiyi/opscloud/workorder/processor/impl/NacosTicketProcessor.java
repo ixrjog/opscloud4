@@ -91,7 +91,7 @@ public class NacosTicketProcessor extends AbstractDsAssetExtendedBaseTicketProce
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
+    public void handleVerify(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         DatasourceInstanceAsset entry = this.toEntry(ticketEntry.getContent());
         DatasourceInstanceAsset asset = getAsset(entry);
         verifyEntry(asset);

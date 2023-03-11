@@ -7,6 +7,9 @@ package com.baiyi.opscloud.workorder.constants;
  */
 public enum WorkOrderKeyConstants {
 
+    /**
+     * 工单KEY
+     */
     RAM_POLICY,
     IAM_POLICY,
     ONS_ROCKETMQ_TOPIC,
@@ -21,6 +24,7 @@ public enum WorkOrderKeyConstants {
     VPN,
     NEXUS,
     GRAFANA,
+    APOLLO,
     CONFLUENCE,
     NACOS,
     GITLAB_PROJECT,

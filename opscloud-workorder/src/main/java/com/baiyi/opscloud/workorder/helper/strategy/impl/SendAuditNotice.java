@@ -79,7 +79,9 @@ public class SendAuditNotice extends AbstractSendNotice {
     }
 
     protected void send(Integer ticketId, List<User> users, String msgKey, INoticeMessage noticeMessage) {
-        if (CollectionUtils.isEmpty(users)) return;
+        if (CollectionUtils.isEmpty(users)) {
+            return;
+        }
         TicketNoticeModel.ApproveNoticeMessage approveNoticeMessage = (TicketNoticeModel.ApproveNoticeMessage) noticeMessage;
         users.forEach(user -> {
             if (NoticeManager.MsgKeys.TICKET_APPROVE.equals(msgKey)) {

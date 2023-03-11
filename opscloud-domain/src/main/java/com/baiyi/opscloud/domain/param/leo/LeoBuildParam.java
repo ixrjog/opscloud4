@@ -1,8 +1,10 @@
 package com.baiyi.opscloud.domain.param.leo;
 
-import com.baiyi.opscloud.domain.param.IExtend;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -39,47 +41,6 @@ public class LeoBuildParam {
 
         @ApiModelProperty(value = "版本说明")
         private String versionDesc;
-
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class QueryDeployVersion implements IExtend {
-
-        @Min(value = 0, message = "任务ID不能为空")
-        @ApiModelProperty(value = "任务ID")
-        private Integer jobId;
-
-        @ApiModelProperty(value = "名称")
-        private String queryName;
-
-        private Boolean extend;
-
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class QueryDeployDeployment {
-
-        @Min(value = 0, message = "任务ID不能为空")
-        @ApiModelProperty(value = "任务ID")
-        private Integer jobId;
-
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class QueryDeployDeploymentVersion  {
-
-        @Min(value = 0, message = "任务ID不能为空")
-        @ApiModelProperty(value = "任务ID")
-        private Integer jobId;
 
     }
 

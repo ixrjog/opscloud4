@@ -2,7 +2,7 @@ package com.baiyi.opscloud.service.leo.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
+import com.baiyi.opscloud.domain.param.leo.LeoDeployParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
@@ -112,7 +112,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
     }
 
     @Override
-    public List<LeoBuild> queryBuildVersion(LeoBuildParam.QueryDeployVersion queryBuildVersion) {
+    public List<LeoBuild> queryBuildVersion(LeoDeployParam.QueryDeployVersion queryBuildVersion) {
         Page page = PageHelper.startPage(1, 10);
         Example example = new Example(LeoBuild.class);
         Example.Criteria criteria = example.createCriteria();

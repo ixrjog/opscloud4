@@ -9,13 +9,17 @@ import lombok.Getter;
  */
 public enum UserGroupConstants {
 
+    /**
+     * LDAP用户组
+     */
     VPN_USERS("vpn-users"),
     NEXUS_USERS("nexus-users"),
     NEXUS_DEVELOPER("nexus-developer"),
     CONFLUENCE_USERS("confluence-users"),
     GRAFANA_ADMIN("grafana-admin"),
     GRAFANA_EDITOR_USERS("grafana-editor-users"),
-    GRAFANA_USERS("grafana-users");
+    GRAFANA_USERS("grafana-users"),
+    APOLLO_USERS("apollo_users");
 
     UserGroupConstants(String role) {
         this.role = role;

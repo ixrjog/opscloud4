@@ -30,7 +30,7 @@ public class ServerGroupTicketProcessor extends AbstractUserPermissionExtendedBa
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
+    public void handleVerify(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         ServerGroup entry = this.toEntry(ticketEntry.getContent());
         if (StringUtils.isEmpty(entry.getName())) {
             throw new TicketVerifyException("校验工单条目失败: 未指定服务器组名称！");

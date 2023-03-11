@@ -13,6 +13,9 @@ import java.util.Arrays;
  */
 public enum ApprovalTypeConstants {
 
+    /**
+     * 动作
+     */
     AGREE("同意"),
     CANCEL("取消"),
     REJECT("拒绝");

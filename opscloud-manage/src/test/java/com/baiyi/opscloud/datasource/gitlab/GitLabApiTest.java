@@ -4,7 +4,7 @@ import com.baiyi.opscloud.datasource.gitlab.base.BaseGitLabApiUnit;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabProjectDriver;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabSshKeyDriver;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabUserDriver;
-import com.baiyi.opscloud.workorder.delegate.GitlabUserDelegate;
+import com.baiyi.opscloud.workorder.delegate.GitLabUserDelegate;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.*;
@@ -25,7 +25,7 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
     private static final Long KEY_ID = 10L;
 
     @Resource
-    private GitlabUserDelegate gitlabUserDelegate;
+    private GitLabUserDelegate gitlabUserDelegate;
 
     /**
      * 模糊查询用户

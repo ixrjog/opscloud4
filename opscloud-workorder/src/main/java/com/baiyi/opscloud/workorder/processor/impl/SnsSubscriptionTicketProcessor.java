@@ -58,7 +58,7 @@ public class SnsSubscriptionTicketProcessor extends AbstractDsAssetExtendedBaseT
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
+    public void handleVerify(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         SimpleNotificationService.Subscription entry = this.toEntry(ticketEntry.getContent());
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .assetType(getAssetType())

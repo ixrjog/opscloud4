@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
-import com.baiyi.opscloud.workorder.delegate.GitlabUserDelegate;
+import com.baiyi.opscloud.workorder.delegate.GitLabUserDelegate;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
@@ -25,7 +25,7 @@ public class GitlabTest extends BaseUnit {
     private DsConfigHelper dsFactory;
 
     @Resource
-    private GitlabUserDelegate gitlabUserDelegate;
+    private GitLabUserDelegate gitlabUserDelegate;
 
     @Test
     BaseDsConfig getConfig() {

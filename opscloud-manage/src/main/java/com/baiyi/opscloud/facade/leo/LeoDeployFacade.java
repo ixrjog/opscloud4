@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.facade.leo;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoDeployParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
@@ -19,12 +18,22 @@ public interface LeoDeployFacade {
 
     void doDeploy(LeoDeployParam.DoDeploy doDeploy);
 
-    List<ApplicationResourceVO.BaseResource> queryLeoBuildDeployment(LeoBuildParam.QueryDeployDeployment queryBuildDeployment);
+    List<ApplicationResourceVO.BaseResource> queryLeoBuildDeployment(LeoDeployParam.QueryDeployDeployment queryDeployDeployment);
 
-    List<LeoBuildVO.Build> queryLeoDeployVersion(LeoBuildParam.QueryDeployVersion queryBuildVersion);
+    List<LeoBuildVO.Build> queryLeoDeployVersion(LeoDeployParam.QueryDeployVersion queryBuildVersion);
 
     DataTable<LeoDeployVO.Deploy> queryLeoJobDeployPage(LeoJobParam.JobDeployPageQuery pageQuery);
 
+    /**
+     * 停止部署(逻辑层)
+     * @param deployId
+     */
     void stopDeploy(int deployId);
+
+    /**
+     * 克隆部署无状态
+     * @param cloneDeployDeployment
+     */
+    void cloneDeployDeployment(LeoDeployParam.CloneDeployDeployment cloneDeployDeployment);
 
 }

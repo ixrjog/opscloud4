@@ -18,7 +18,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-public class GitlabProjectDelegate {
+public class GitLabProjectDelegate {
 
     @Retryable(value = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
     public void addProjectMember(GitLabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws TicketProcessException {

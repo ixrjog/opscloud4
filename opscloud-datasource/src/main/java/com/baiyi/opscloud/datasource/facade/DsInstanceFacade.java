@@ -24,6 +24,13 @@ public interface DsInstanceFacade<T> {
      */
     void pushAsset(DsAssetParam.PushAsset pushAsset);
 
+    /**
+     * 拉取资产
+     * @param instanceUuid
+     * @param assetType
+     * @param entity
+     * @return
+     */
     List<DatasourceInstanceAsset> pullAsset(String instanceUuid, String assetType, T entity);
 
     void setDsInstanceConfig(DsAssetParam.SetDsInstanceConfig setDsInstanceConfig);

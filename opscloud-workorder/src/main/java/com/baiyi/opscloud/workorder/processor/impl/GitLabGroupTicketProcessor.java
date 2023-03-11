@@ -11,8 +11,8 @@ import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.workorder.constants.OrderTicketPhaseCodeConstants;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
-import com.baiyi.opscloud.workorder.delegate.GitlabGroupDelegate;
-import com.baiyi.opscloud.workorder.delegate.GitlabUserDelegate;
+import com.baiyi.opscloud.workorder.delegate.GitLabGroupDelegate;
+import com.baiyi.opscloud.workorder.delegate.GitLabUserDelegate;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExtendedBaseTicketProcessor;
@@ -37,10 +37,10 @@ import java.util.Optional;
 public class GitLabGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicketProcessor<DatasourceInstanceAsset, GitLabConfig> {
 
     @Resource
-    private GitlabGroupDelegate gitlabGroupDelegate;
+    private GitLabGroupDelegate gitlabGroupDelegate;
 
     @Resource
-    private GitlabUserDelegate gitlabUserDelegate;
+    private GitLabUserDelegate gitlabUserDelegate;
 
     @Resource
     private InstanceHelper instanceHelper;
@@ -91,7 +91,7 @@ public class GitLabGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicke
     }
 
     @Override
-    public void verifyHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
+    public void handleVerify(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
         DatasourceInstanceAsset entry = this.toEntry(ticketEntry.getContent());
         DatasourceInstanceAsset asset = getAsset(entry);
         verifyEntry(asset);
