@@ -6,12 +6,14 @@ import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDrive
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import io.fabric8.kubernetes.api.model.Container;
+import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -26,8 +28,20 @@ public class KubernetesDeploymentTest extends BaseKubernetesTest {
 
     @Test
     void aTest() {
-        Deployment deployment = KubernetesDeploymentDriver.getDeployment(getConfigById(KubernetesClusterConfigs.ACK_DEV).getKubernetes(), "dev", "merchant-rss-dev");
+        Deployment deployment = KubernetesDeploymentDriver.getDeployment(getConfigById(KubernetesClusterConfigs.EKS_TEST).getKubernetes(), "ci", "account");
         // KubernetesDeploymentDriver.redeployDeployment(getConfig().getKubernetes(), "dev", "merchant-rss-dev");
+        Map<String, Quantity> limits = deployment.getSpec().getTemplate().getSpec().getContainers().get(1).getResources().getLimits();
+        print(limits.get("cpu").getAmount());
+        print(limits.get("cpu").getFormat());
+        print(limits.get("memory").getAmount());
+        print(limits.get("memory").getFormat());
+        print(limits.get("memory").toString());
+        print(deployment);
+    }
+
+    @Test
+    void fTest() {
+        Deployment deployment = KubernetesDeploymentDriver.getDeployment(getConfigById(KubernetesClusterConfigs.EKS_PROD).getKubernetes(), "prod", "leo-demo-1");
         print(deployment);
     }
 

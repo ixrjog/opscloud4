@@ -61,8 +61,9 @@ public class KubernetesPodDriver {
                     .withName(deploymentName)
                     .get()
                     .getSpec()
-                    .getSelector()
-                    .getMatchLabels();
+                    .getTemplate()
+                    .getMetadata()
+                    .getLabels();
             if (matchLabels.isEmpty()) {
                 return Collections.emptyList();
             }

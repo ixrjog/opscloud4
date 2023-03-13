@@ -39,13 +39,19 @@ import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
+import com.google.common.collect.Maps;
+import io.fabric8.kubernetes.api.model.LabelSelector;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.PodTemplateSpec;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
+import io.fabric8.kubernetes.api.model.apps.DeploymentSpec;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -219,19 +225,9 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         if (deployment == null) {
             throw new LeoDeployException("无状态 {} 不存在!", cloneDeployDeployment.getDeploymentName());
         }
+
+        preUpdateDeployment(deployment, deploymentName, cloneDeployDeployment.getDeploymentName(), cloneDeployDeployment.getReplicas());
         // 创建无状态
-        deployment.getMetadata().setName(cloneDeployDeployment.getDeploymentName());
-        deployment.getSpec().setReplicas(cloneDeployDeployment.getReplicas());
-
-        final String workloadSelector = deployment.getMetadata()
-                .getLabels()
-                .get(WORKLOAD_SELECTOR_NAME)
-                .replace(deploymentName, cloneDeployDeployment.getDeploymentName());
-
-        deployment.getMetadata().getLabels().put(WORKLOAD_SELECTOR_NAME, workloadSelector);
-        deployment.getSpec().getSelector().getMatchLabels().put(WORKLOAD_SELECTOR_NAME, workloadSelector);
-        deployment.getSpec().getTemplate().getMetadata().getLabels().put(WORKLOAD_SELECTOR_NAME, workloadSelector);
-
         try {
             KubernetesDeploymentDriver.createOrReplaceDeployment(kubernetesConfig.getKubernetes(), namespace, deployment);
         } catch (Exception e) {
@@ -254,6 +250,56 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                     .build();
             applicationFacade.bindApplicationResource(resource);
         });
+    }
+
+    private void preUpdateDeployment(Deployment deployment, String oldName, String newName, Integer replicas) {
+        deployment.getMetadata().setName(newName);
+        deployment.getSpec().setReplicas(replicas);
+        // Pod分组标签
+        deployment.getSpec()
+                .getTemplate()
+                .getMetadata()
+                .getLabels()
+                .put("group", newName);
+
+        // updateLabels
+        Map<String, String> labels = Optional.of(deployment)
+                .map(Deployment::getMetadata)
+                .map(ObjectMeta::getLabels)
+                .orElse(Maps.newHashMap());
+
+        if (labels.containsKey(WORKLOAD_SELECTOR_NAME)) {
+            final String workloadSelector = labels.get(WORKLOAD_SELECTOR_NAME).replace(oldName, newName);
+            try {
+
+                if (Optional.of(deployment)
+                        .map(Deployment::getMetadata)
+                        .map(ObjectMeta::getLabels)
+                        .orElse(Maps.newHashMap())
+                        .containsKey(WORKLOAD_SELECTOR_NAME)) {
+                    deployment.getMetadata().getLabels().put(WORKLOAD_SELECTOR_NAME, workloadSelector);
+                }
+
+                if (Optional.of(deployment)
+                        .map(Deployment::getSpec)
+                        .map(DeploymentSpec::getSelector)
+                        .map(LabelSelector::getMatchLabels)
+                        .orElse(Maps.newHashMap()).containsKey(WORKLOAD_SELECTOR_NAME)) {
+                    deployment.getSpec().getSelector().getMatchLabels().put(WORKLOAD_SELECTOR_NAME, workloadSelector);
+                }
+
+                if (Optional.of(deployment)
+                        .map(Deployment::getSpec)
+                        .map(DeploymentSpec::getTemplate)
+                        .map(PodTemplateSpec::getMetadata)
+                        .map(ObjectMeta::getLabels)
+                        .orElse(Maps.newHashMap()).containsKey(WORKLOAD_SELECTOR_NAME)) {
+                    deployment.getSpec().getTemplate().getMetadata().getLabels().put(WORKLOAD_SELECTOR_NAME, workloadSelector);
+                }
+            } catch (Exception e) {
+                throw new LeoDeployException("清理标签错误: {}", e.getMessage());
+            }
+        }
     }
 
 }

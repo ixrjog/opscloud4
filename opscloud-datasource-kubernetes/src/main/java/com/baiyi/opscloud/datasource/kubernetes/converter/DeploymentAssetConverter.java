@@ -8,9 +8,14 @@ import com.baiyi.opscloud.core.util.TimeUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.base.Joiner;
+import io.fabric8.kubernetes.api.model.Container;
+import io.fabric8.kubernetes.api.model.Quantity;
+import io.fabric8.kubernetes.api.model.ResourceRequirements;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * @Author baiyi
@@ -44,10 +49,39 @@ public class DeploymentAssetConverter {
                 .createdTime(toGmtDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
 
+        /**
+         *         resources:
+         *           limits:
+         *             cpu: "4"
+         *             memory: 8Gi
+         *           requests:
+         *             cpu: "2"
+         *             memory: 6Gi
+         */
+        Optional<Map<String, Quantity>> optionalLimits = entity.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith(name)).findFirst()
+                .map(Container::getResources)
+                .map(ResourceRequirements::getLimits);
+
+        String cpu = "n/a";
+        String memory = "n/a";
+
+        if (optionalLimits.isPresent()) {
+            Map<String, Quantity> limits = optionalLimits.get();
+            if (limits.containsKey(cpu)) {
+                cpu = limits.get("cpu").toString();
+            }
+            if (limits.containsKey(memory)) {
+                memory = limits.get("memory").toString();
+            }
+        }
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
                 .paramProperty("replicas", entity.getSpec().getReplicas())
                 .paramProperty("uid", entity.getMetadata().getUid())
+                .paramProperty("resources.limits.cpu", cpu)
+                .paramProperty("resources.limits.memory", memory)
                 .build();
     }
+
+
 }
