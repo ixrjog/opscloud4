@@ -51,8 +51,9 @@ public abstract class AbstractCommandAudit {
     public void asyncRecordCommand(String sessionId, String instanceId) {
         TerminalSessionInstance terminalSessionInstance = terminalSessionInstanceService.getByUniqueKey(sessionId, instanceId);
         // 跳过日志审计
-        if (InstanceSessionTypeEnum.CONTAINER_LOG.getType().equals(terminalSessionInstance.getInstanceSessionType()))
+        if (InstanceSessionTypeEnum.CONTAINER_LOG.getType().equals(terminalSessionInstance.getInstanceSessionType())) {
             return;
+        }
         String commanderLogPath = terminalConfig.buildAuditLogPath(sessionId, instanceId);
         String str;
         InstanceCommandBuilder builder = null;
@@ -82,7 +83,7 @@ public abstract class AbstractCommandAudit {
                     }
                 }
             } catch (IOException e) {
-                log.error("记录审计命令错误: error={}", e.getMessage());
+                log.error("记录审计命令错误: {}", e.getMessage());
             }
         } else {
             log.info("审计文件不存在: path={}", commanderLogPath);
@@ -105,15 +106,18 @@ public abstract class AbstractCommandAudit {
     private ImmutablePair<Integer, Integer> getIndex(String inputStr) {
         int index1 = inputStr.indexOf("$");
         int index2 = inputStr.indexOf("#");
-        if (index1 >= index2)
+        if (index1 >= index2) {
             return ImmutablePair.of(index2, index1);
+        }
         return ImmutablePair.of(index1, index2);
     }
 
     public InstanceCommandBuilder builder(Integer terminalSessionInstanceId, String inputStr) {
         ImmutablePair<Integer, Integer> ip = getIndex(inputStr);
         int index = ip.getLeft() != -1 ? ip.getLeft() : ip.getRight();
-        if (index == -1) return null;
+        if (index == -1) {
+            return null;
+        }
         TerminalSessionInstanceCommand command = TerminalSessionInstanceCommand.builder()
                 .terminalSessionInstanceId(terminalSessionInstanceId)
                 .prompt(inputStr.substring(0, index + 1))

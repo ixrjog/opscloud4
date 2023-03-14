@@ -32,11 +32,6 @@ public abstract class BaseCrValidator<T extends BaseDsConfig> implements Initial
         String ECR = "ECR";
     }
 
-    /**
-     * 查询镜像条数(任务并发会创建多个镜像)
-     */
-    protected static final int QUERY_IMAGES_SIZE = 5;
-
     @Resource
     protected EnvService envService;
 

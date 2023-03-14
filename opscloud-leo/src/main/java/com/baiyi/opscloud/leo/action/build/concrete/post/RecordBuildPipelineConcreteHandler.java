@@ -58,7 +58,7 @@ public class RecordBuildPipelineConcreteHandler extends BaseBuildHandler {
                     .buildStatus("结束构建记录流水线成功失败")
                     .build();
             leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
-            throw new LeoBuildException("结束构建记录流水线成功失败: err={}", e.getMessage());
+            throw new LeoBuildException("结束构建记录流水线成功失败: {}", e.getMessage());
         }
     }
 

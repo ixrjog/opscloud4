@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.stream.IntStream;
 
 /**
  * @Author baiyi
@@ -14,7 +15,9 @@ import java.util.Locale;
 public class Base32StringUtil {
     // singleton
 
-    // RFC 4648/3548
+    /**
+     * RFC 4648/3548
+     */
     private static final Base32StringUtil INSTANCE = new Base32StringUtil("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567");
 
     static Base32StringUtil getInstance() {
@@ -29,14 +32,14 @@ public class Base32StringUtil {
     private static final String SEPARATOR = "-";
 
     protected Base32StringUtil(String alphabet) {
-        // 32 alpha-numeric characters.
+        /**
+         * 32 alpha-numeric characters.
+         */
         DIGITS = alphabet.toCharArray();
         MASK = DIGITS.length - 1;
         SHIFT = Integer.numberOfTrailingZeros(DIGITS.length);
         CHAR_MAP = Maps.newHashMap();
-        for (int i = 0; i < DIGITS.length; i++) {
-            CHAR_MAP.put(DIGITS[i], i);
-        }
+        IntStream.range(0, DIGITS.length).forEach(i -> CHAR_MAP.put(DIGITS[i], i));
     }
 
     public static byte[] decode(String encoded) throws OtpException.DecodingException {
@@ -125,8 +128,13 @@ public class Base32StringUtil {
         return result.toString();
     }
 
+    /**
+     * enforce that this class is a singleton
+     *
+     * @return
+     * @throws CloneNotSupportedException
+     */
     @Override
-    // enforce that this class is a singleton
     public Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }

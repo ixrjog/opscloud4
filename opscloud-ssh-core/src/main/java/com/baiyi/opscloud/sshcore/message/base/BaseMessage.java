@@ -16,4 +16,5 @@ public class BaseMessage {
         private Integer width;
         private Integer height;
     }
+
 }

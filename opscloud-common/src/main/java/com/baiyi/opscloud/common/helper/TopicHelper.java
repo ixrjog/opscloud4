@@ -47,7 +47,9 @@ public class TopicHelper {
      */
     public Object receive(String topic) {
         String topicName = buildTopic(topic);
-        if (!redisUtil.hasKey(topicName)) return null;
+        if (!redisUtil.hasKey(topicName)) {
+            return null;
+        }
         log.info("接收消息: topic={}", topicName);
         Object message = redisUtil.get(topicName);
         redisUtil.del(topicName);

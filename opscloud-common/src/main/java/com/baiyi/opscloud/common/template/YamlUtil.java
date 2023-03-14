@@ -19,8 +19,9 @@ public class YamlUtil {
      * @return
      */
     public static YamlVars.Vars toVars(String vars) {
-        if (StringUtils.isEmpty(vars))
+        if (StringUtils.isEmpty(vars)) {
             return YamlVars.Vars.EMPTY;
+        }
         try {
             Representer representer = new Representer();
             representer.getPropertyUtils().setSkipMissingProperties(true);

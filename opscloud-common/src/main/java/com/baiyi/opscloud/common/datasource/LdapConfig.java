@@ -73,4 +73,5 @@ public class LdapConfig extends BaseDsConfig {
         private String dn;
         private String objectClass;
     }
+
 }

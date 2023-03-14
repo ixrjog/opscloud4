@@ -7,12 +7,8 @@ import com.baiyi.opscloud.leo.action.deploy.base.DeployStrategyFactory;
 import com.baiyi.opscloud.leo.action.deploy.base.IDeployStep;
 import com.baiyi.opscloud.leo.constants.DeployStepConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
-import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
-import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -22,12 +18,6 @@ import javax.annotation.Resource;
 @Slf4j
 @Component
 public class DoDeployConcreteHandler extends BaseDeployHandler implements IDeployStep {
-
-    @Resource
-    private DsInstanceAssetService assetService;
-
-    @Resource
-    private DsInstanceService instanceService;
 
     /**
      * 执行部署

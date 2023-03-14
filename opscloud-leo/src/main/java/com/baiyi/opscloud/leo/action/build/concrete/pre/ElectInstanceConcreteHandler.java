@@ -55,7 +55,7 @@ public class ElectInstanceConcreteHandler extends BaseBuildHandler {
                     activeInstances.add(instance);
                 }
             } catch (URISyntaxException | IOException e) {
-                log.warn("查询Jenkins实例状态错误: err={}", e.getMessage());
+                log.warn("查询Jenkins实例状态错误: {}", e.getMessage());
             }
         });
 
@@ -106,8 +106,9 @@ public class ElectInstanceConcreteHandler extends BaseBuildHandler {
      * @return
      */
     private DatasourceInstance getOneInstance(List<DatasourceInstance> activeInstances) {
-        if (activeInstances.size() == 1)
+        if (activeInstances.size() == 1) {
             return activeInstances.get(0);
+        }
         Random random = new Random();
         int n = random.nextInt(activeInstances.size());
         return activeInstances.get(n);

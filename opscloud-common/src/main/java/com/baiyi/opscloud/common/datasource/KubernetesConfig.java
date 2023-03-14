@@ -98,4 +98,5 @@ public class KubernetesConfig extends BaseDsConfig {
         private String prefix;
         private String suffix;
     }
+
 }

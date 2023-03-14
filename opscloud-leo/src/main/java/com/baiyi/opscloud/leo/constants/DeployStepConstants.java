@@ -7,6 +7,9 @@ package com.baiyi.opscloud.leo.constants;
  */
 public enum DeployStepConstants {
 
+    /**
+     * 部署阶段
+     */
     BOOT,
     PRE_INSPECTION,
     DO_DEPLOY,

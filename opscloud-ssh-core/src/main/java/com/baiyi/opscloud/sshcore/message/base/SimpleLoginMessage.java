@@ -14,4 +14,5 @@ import lombok.Data;
 public class SimpleLoginMessage implements ILoginMessage {
 
     private String token;
+
 }

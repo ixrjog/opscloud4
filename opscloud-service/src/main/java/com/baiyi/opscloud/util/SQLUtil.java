@@ -15,4 +15,5 @@ public class SQLUtil {
     public static String toLike(String queryName) {
         return Joiner.on("").join("%", queryName, "%");
     }
+
 }

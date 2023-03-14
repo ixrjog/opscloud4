@@ -93,5 +93,4 @@ public abstract class BaseAlgorithm {
         return Joiner.on(" ").join("#", Global.CREATED_BY, "on", fastDateFormat.format(new Date()), "\n\n");
     }
 
-
 }

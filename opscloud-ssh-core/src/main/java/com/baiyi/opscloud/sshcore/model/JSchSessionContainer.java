@@ -56,8 +56,9 @@ public class JSchSessionContainer {
     public static void closeSession(String sessionId, String instanceId) {
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         if (jSchSession != null) {
-            if (jSchSession.getChannel() != null)
+            if (jSchSession.getChannel() != null) {
                 jSchSession.getChannel().disconnect();
+            }
             jSchSession.setCommander(null);
             jSchSession.setChannel(null);
             jSchSession.setInputToChannel(null);

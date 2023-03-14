@@ -3,6 +3,7 @@ package com.baiyi.opscloud.common.builder;
 import com.baiyi.opscloud.common.base.IToString;
 import com.google.common.collect.Maps;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import java.util.Map;
  * @Date 2021/5/18 2:41 下午
  * @Version 1.0
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class SimpleDict extends IToString {
 

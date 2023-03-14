@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 public class DoBuildConcreteHandler extends BaseBuildHandler {
 
     @Resource
-    private LeoJobService leoJobService;
+    private LeoJobService jobService;
 
     @Resource
     private ApplicationService applicationService;
@@ -69,7 +69,7 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
         LeoBaseModel.DsInstance dsInstance = buildConfig.getBuild().getJenkins().getInstance();
         JenkinsConfig jenkinsConfig = getJenkinsConfigWithUuid(dsInstance.getUuid());
         try {
-            LeoJob leoJob = leoJobService.getById(leoBuild.getJobId());
+            LeoJob leoJob = jobService.getById(leoBuild.getJobId());
             // 先构建字典，再构建参数
             Map<String, String> dict = generateBuildDict(leoBuild, buildConfig, leoJob);
             buildConfig.getBuild().setDict(dict);
@@ -209,9 +209,15 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
         dict.put(BuildDictConstants.PROJECT.getKey(), project);
 
         final String registryUrl = dict.get(BuildDictConstants.REGISTRY_URL.getKey());
-        // example: 460e7585-19
+        /**
+         * example:
+         * 460e7585-19
+         */
         final String imageTag = Joiner.on("-").join(commitId, buildNumber);
-        // example: aliyun-cr-uk.chuanyinet.com/daily/merchant-rss:460e7585-19
+        /**
+         * example:
+         * aliyun-cr-uk.example.com/daily/merchant-rss:460e7585-19
+         */
         dict.put(BuildDictConstants.IMAGE.getKey(), String.format("%s/%s/%s:%s", registryUrl, envName, project, imageTag));
         dict.put(BuildDictConstants.IMAGE_TAG.getKey(), imageTag);
         return dict;

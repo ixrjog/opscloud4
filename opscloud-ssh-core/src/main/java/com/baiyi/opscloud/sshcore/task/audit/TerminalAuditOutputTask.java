@@ -40,9 +40,8 @@ public class TerminalAuditOutputTask implements Runnable {
                 TimeUnit.MILLISECONDS.sleep(25L);
             }
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
         }
-        log.info("outputTask线程结束! sessionId={} , instanceId={}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
+        log.debug("outputTask线程结束: sessionId={}, instanceId={}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
     }
 
     private void send(String auditLog) throws IOException {

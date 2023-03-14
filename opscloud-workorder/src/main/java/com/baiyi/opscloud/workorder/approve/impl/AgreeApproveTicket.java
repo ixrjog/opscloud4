@@ -84,5 +84,4 @@ public class AgreeApproveTicket extends AbstractApproveTicket {
         return ticketEntryService.queryByWorkOrderTicketId(ticket.getId());
     }
 
-
 }

@@ -7,6 +7,9 @@ package com.baiyi.opscloud.leo.constants;
  */
 public enum BuildStatusConstants {
 
+    /**
+     * 构建状态
+     */
     ERROR,
     SUCCESS,
     ABORTED,

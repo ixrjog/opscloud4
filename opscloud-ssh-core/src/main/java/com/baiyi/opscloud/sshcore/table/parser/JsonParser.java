@@ -12,6 +12,7 @@ import java.util.Map;
 
 /**
  * JsonParser class.
+ * @author liangjian
  */
 public final class JsonParser implements Parser {
 

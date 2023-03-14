@@ -52,8 +52,9 @@ public abstract class BaseNotificationStrategy extends BaseDeployStrategy {
 
         DatasourceInstance dsInstance = leoRobotHelper.getRobotInstance(dingtalkRobot);
         MessageTemplate messageTemplate = msgTemplateService.getByUniqueKey(messageKey, "DINGTALK_ROBOT", "markdown");
-        if (messageTemplate == null)
+        if (messageTemplate == null) {
             throw new LeoBuildException("发送消息失败: 消息模板未配置！");
+        }
 
         User user = userService.getByUsername(leoDeploy.getUsername());
 
@@ -72,7 +73,7 @@ public abstract class BaseNotificationStrategy extends BaseDeployStrategy {
         try {
             return BeetlUtil.renderTemplate(messageTemplate.getMsgTemplate(), contentMap);
         } catch (IOException e) {
-            throw new LeoDeployException("渲染Dingtalk模板错误: err={}", e.getMessage());
+            throw new LeoDeployException("渲染Dingtalk模板错误: {}", e.getMessage());
         }
     }
 

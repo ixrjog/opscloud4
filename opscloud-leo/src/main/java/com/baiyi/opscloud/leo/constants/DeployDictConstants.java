@@ -9,6 +9,9 @@ import lombok.Getter;
  */
 public enum DeployDictConstants {
 
+    /**
+     * 部署字典
+     */
     DEPLOY_NUMBER("deployNumber"),
     DEPLOY_TYPE("deployType"),
     DEPLOY_TYPE_DESC("deployTypeDesc"),

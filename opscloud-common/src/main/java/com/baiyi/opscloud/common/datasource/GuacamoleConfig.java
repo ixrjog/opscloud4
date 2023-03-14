@@ -31,8 +31,9 @@ public class GuacamoleConfig extends BaseDsConfig {
         private List<String> protocolSupport;
 
         public Integer getPort() {
-            if (this.port == null || this.port <= 0)
+            if (this.port == null || this.port <= 0) {
                 return DEF_PORT;
+            }
             return this.port;
         }
     }

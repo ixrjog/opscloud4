@@ -33,10 +33,10 @@ import java.util.Optional;
 public class DeleteHistoricalBuildJobConcreteHandler extends BaseBuildHandler {
 
     @Resource
-    private LeoJobService leoJobService;
+    private LeoJobService jobService;
 
     @Resource
-    private LeoBuildService leoBuildService;
+    private LeoBuildService buildService;
 
     @Resource
     private JenkinsJobDriver jenkinsJobDriver;
@@ -44,7 +44,7 @@ public class DeleteHistoricalBuildJobConcreteHandler extends BaseBuildHandler {
     /**
      * 保留数量
      */
-    private static final int RESERVED_SIZE = 1;
+    private static final int RESERVED_SIZE = 0;
 
     /**
      * 构建前删除历史构建任务
@@ -54,25 +54,24 @@ public class DeleteHistoricalBuildJobConcreteHandler extends BaseBuildHandler {
      */
     @Override
     protected void handle(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
-        LeoJob leoJob = leoJobService.getById(leoBuild.getJobId());
-        List<LeoBuild> leoBuilds = leoBuildService.queryTheHistoricalBuildToBeDeleted(leoJob.getId());
+        LeoJob leoJob = jobService.getById(leoBuild.getJobId());
+        List<LeoBuild> leoBuilds = buildService.queryTheHistoricalBuildToBeDeleted(leoJob.getId());
         // 少于保留数量则退出
         if (CollectionUtils.isEmpty(leoBuilds) || leoBuilds.size() <= RESERVED_SIZE) {
             return;
         }
         List<LeoBuild> subLeoBuilds = leoBuilds.subList(RESERVED_SIZE, leoBuilds.size());
-
-        subLeoBuilds.forEach(e -> {
+        subLeoBuilds.forEach(build -> {
             try {
-                deleteJob(e);
-            } catch (Exception ex) {
-                log.error(ex.getMessage());
+                deleteJob(build);
+            } catch (Exception e) {
+                log.warn("清理任务错误: buildId={}, {}", build.getId(), e.getMessage());
             }
             LeoBuild saveLeoBuild = LeoBuild.builder()
-                    .id(e.getId())
+                    .id(build.getId())
                     .isDeletedBuildJob(true)
                     .build();
-            leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
+            buildService.updateByPrimaryKeySelective(saveLeoBuild);
         });
     }
 
@@ -93,11 +92,11 @@ public class DeleteHistoricalBuildJobConcreteHandler extends BaseBuildHandler {
             JobWithDetails jobWithDetails = jenkinsServer.getJob(jobName);
             if (jobWithDetails != null) {
                 jenkinsJobDriver.deleteJob(jenkinsConfig.getJenkins(), jobName);
+                logHelper.info(leoBuild, "删除历史构建任务成功: instanceUuid={}, jobName={}", uuid, jobName);
             }
         } catch (URISyntaxException | IOException e) {
-            logHelper.warn(leoBuild, "删除Jenkins历史构建任务失败: instanceUuid={}, jobName={}", uuid, jobName);
+            logHelper.warn(leoBuild, "删除历史构建任务失败: instanceUuid={}, jobName={}", uuid, jobName);
         }
-        logHelper.info(leoBuild, "删除Jenkins历史构建任务成功: instanceUuid={}, jobName={}", uuid, jobName);
     }
 
 }

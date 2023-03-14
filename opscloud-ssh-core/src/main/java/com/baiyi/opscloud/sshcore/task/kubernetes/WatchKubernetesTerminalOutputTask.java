@@ -23,4 +23,5 @@ public class WatchKubernetesTerminalOutputTask extends AbstractSshChannelOutputT
     public void write(char[] buf, int off, int len) {
         SessionOutputUtil.addToOutput(getSessionOutput().getSessionId(), getSessionOutput().getInstanceId(), buf, off, len);
     }
+
 }

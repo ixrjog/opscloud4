@@ -85,7 +85,7 @@ public class SimpleDsAssetFacadeImpl implements SimpleDsAssetFacade {
                 businessTemplateService.update(e);
             }
         }
-        log.info("删除资产: asseteId={}", id);
+        log.info("删除资产: assetId={}", id);
         dsInstanceAssetService.deleteById(id);
     }
 

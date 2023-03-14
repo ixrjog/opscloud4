@@ -12,6 +12,9 @@ import java.util.Arrays;
 @Getter
 public enum MessageState {
 
+    /**
+     * 消息状态
+     */
     LOGIN("LOGIN", "会话初始建立"),
     HEARTBEAT("HEARTBEAT","心跳，保持会话"),
     COMMAND("COMMAND", "交互命令"),

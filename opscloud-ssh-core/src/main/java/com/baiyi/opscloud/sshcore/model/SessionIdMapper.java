@@ -30,5 +30,4 @@ public class SessionIdMapper {
         mapper.remove(ioSession.getId());
     }
 
-
 }

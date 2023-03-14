@@ -9,6 +9,9 @@ import lombok.Getter;
  */
 public enum BuildDictConstants {
 
+    /**
+     * 构建字典
+     */
     ENV("env"),
     APPLICATION_NAME("applicationName"),
     APPLICATION_TAGS("applicationTags"),
@@ -27,11 +30,11 @@ public enum BuildDictConstants {
     REGISTRY_URL("registryUrl")
     ;
 
-
     @Getter
     private final String key;
 
     BuildDictConstants(String key) {
         this.key = key;
     }
+
 }

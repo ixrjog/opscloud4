@@ -185,7 +185,6 @@ public abstract class ConsoleConverter implements Converter, Bordered {
         return valueLength;
     }
 
-
     private ConsoleConverter topBorderLine(final int[] maxWidth) {
         ab(border ? line(maxWidth) + "\n" : "");
         return this;

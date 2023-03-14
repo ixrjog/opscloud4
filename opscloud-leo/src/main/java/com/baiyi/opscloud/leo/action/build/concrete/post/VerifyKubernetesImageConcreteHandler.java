@@ -51,7 +51,9 @@ public class VerifyKubernetesImageConcreteHandler extends BaseBuildHandler {
                 .map(LeoJobModel.Job::getBuild)
                 .map(LeoJobModel.Build::getType)
                 .orElse(KUBERNETES_IMAGE);
-        if (!KUBERNETES_IMAGE.equalsIgnoreCase(buildType)) return;
+        if (!KUBERNETES_IMAGE.equalsIgnoreCase(buildType)) {
+            return;
+        }
 
         final LeoJobModel.CR cr = Optional.ofNullable(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)

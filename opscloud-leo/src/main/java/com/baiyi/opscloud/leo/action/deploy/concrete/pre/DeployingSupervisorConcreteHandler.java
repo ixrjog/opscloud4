@@ -9,6 +9,8 @@ import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
 import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -27,6 +29,9 @@ public class DeployingSupervisorConcreteHandler extends BaseDeployHandler {
 
     @Resource
     private LeoHeartbeatHelper leoDeployHelper;
+
+    @Autowired
+    private ThreadPoolTaskExecutor coreExecutor;
 
 
     /**
@@ -49,8 +54,7 @@ public class DeployingSupervisorConcreteHandler extends BaseDeployHandler {
                 kubernetesConfig.getKubernetes(),
                 leoPostDeployHandler
         );
-        Thread thread = new Thread(deployingSupervisor);
-        thread.start();
+        coreExecutor.execute(deployingSupervisor);
         LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                 .id(leoDeploy.getId())
                 .deployStatus("启动部署Supervisor阶段: 成功")

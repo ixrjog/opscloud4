@@ -12,7 +12,9 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class TerminalSessionUtil {
 
-    // 默认容器
+    /**
+     * 默认容器
+     */
     private static final String DEFAULT_CONTAINER = "DEFAULT_CONTAINER";
 
     public static String toInstanceId(KubernetesResource.Pod pod, KubernetesResource.Container container) {

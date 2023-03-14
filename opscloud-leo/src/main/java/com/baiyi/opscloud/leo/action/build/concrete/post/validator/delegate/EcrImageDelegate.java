@@ -2,7 +2,6 @@ package com.baiyi.opscloud.leo.action.build.concrete.post.validator.delegate;
 
 import com.amazonaws.services.ecr.model.ImageDetail;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
-import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.datasource.aws.ecr.driver.AmazonEcrImageDriver;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +58,6 @@ public class EcrImageDelegate {
         if (CollectionUtils.isEmpty(imageDetail.getImageTags())) {
             return false;
         }
-        log.info("Imaget tags={}", JSONUtil.writeValueAsString(imageDetail.getImageTags()));
         return imageDetail.getImageTags().stream().anyMatch(t -> t.equals(imageTag));
     }
 

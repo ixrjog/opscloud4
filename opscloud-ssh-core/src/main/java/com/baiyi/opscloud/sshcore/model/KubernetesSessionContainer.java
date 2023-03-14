@@ -49,8 +49,9 @@ public class KubernetesSessionContainer {
 
     public static void removeSession(String sessionId, String instanceId) {
         Map<String, KubernetesSession> sessionMap = kubernetesSessionMap.get(sessionId);
-        if (sessionMap != null)
+        if (sessionMap != null) {
             sessionMap.remove(instanceId);
+        }
     }
 
     /**
@@ -63,10 +64,12 @@ public class KubernetesSessionContainer {
         KubernetesSession kubernetesSession = KubernetesSessionContainer.getBySessionId(sessionId, instanceId);
         if (kubernetesSession != null) {
             kubernetesSession.getWatchKubernetesTerminalOutputTask().close();
-            if (kubernetesSession.getLogWatch() != null)
+            if (kubernetesSession.getLogWatch() != null) {
                 kubernetesSession.getLogWatch().close();
-            if (kubernetesSession.getExecWatch() != null)
+            }
+            if (kubernetesSession.getExecWatch() != null) {
                 kubernetesSession.getExecWatch().close();
+            }
             kubernetesSession.setInputToChannel(null);
             kubernetesSession.setSessionOutput(null);
             kubernetesSession.setInstanceId(null);

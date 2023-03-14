@@ -7,6 +7,9 @@ package com.baiyi.opscloud.leo.constants;
  */
 public enum LogTypeConstants {
 
+    /**
+     * 日志类型
+     */
     DEF,
     HEARTBEAT
 

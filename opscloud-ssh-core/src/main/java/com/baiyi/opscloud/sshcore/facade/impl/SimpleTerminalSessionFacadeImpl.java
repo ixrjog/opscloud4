@@ -83,7 +83,6 @@ public class SimpleTerminalSessionFacadeImpl implements SimpleTerminalSessionFac
     }
 
     @Override
-    //@Transactional(rollbackFor = {Exception.class})
     public void closeTerminalSessionById(int id) {
         TerminalSession terminalSession = terminalSessionService.getById(id);
         if (terminalSession.getSessionClosed()) {

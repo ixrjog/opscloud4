@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class DeployingSupervisor implements ISupervisor {
 
-    private static final int SLEEP_SECONDS = 10;
+    private static final int SLEEP_SECONDS = 4;
 
     private final LeoHeartbeatHelper heartbeatHelper;
 

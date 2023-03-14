@@ -33,7 +33,7 @@ import static com.baiyi.opscloud.leo.action.build.BaseBuildHandler.RESULT_ERROR;
 @Slf4j
 public class BuildingSupervisor implements ISupervisor {
 
-    private static final int SLEEP_SECONDS = 8;
+    private static final int SLEEP_SECONDS = 4;
 
     private final LeoBuildService leoBuildService;
 

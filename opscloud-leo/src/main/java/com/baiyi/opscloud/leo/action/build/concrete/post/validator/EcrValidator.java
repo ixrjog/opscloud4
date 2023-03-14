@@ -64,7 +64,7 @@ public class EcrValidator extends BaseCrValidator<AwsConfig> {
             final String imageTag = dict.get(BuildDictConstants.IMAGE_TAG.getKey());
             ecrImageDelegate.verify(crRegionId, dsConfig, crRegistryId, repositoryName, imageTag);
         } catch (Exception e) {
-            throw new LeoBuildException("查询AWS-ECR镜像错误: err={}", e.getMessage());
+            throw new LeoBuildException("查询AWS-ECR镜像错误: {}", e.getMessage());
         }
     }
 
@@ -81,7 +81,7 @@ public class EcrValidator extends BaseCrValidator<AwsConfig> {
         try {
             Repository repository = amazonEcrRepositoryDirver.createRepository(crRegionId, dsConfig.getAws(), repositoryName);
         } catch (Exception e) {
-            throw new LeoBuildException("创建ECR仓库错误: err={}", e.getMessage());
+            throw new LeoBuildException("创建ECR仓库错误: {}", e.getMessage());
         }
     }
 
@@ -103,7 +103,7 @@ public class EcrValidator extends BaseCrValidator<AwsConfig> {
                     .map(Repository::getRegistryId)
                     .orElseThrow(() -> new LeoBuildException("AWS-ECR RegistryId查询失败: regionId={}, repositoryName={}", crRegionId, repositoryName));
         } catch (Exception e) {
-            throw new LeoBuildException("AWS-ECR RegistryId查询错误: regionId={}, repositoryName={}, err={}", crRegionId, repositoryName, e.getMessage());
+            throw new LeoBuildException("AWS-ECR RegistryId查询错误: regionId={}, repositoryName={}, {}", crRegionId, repositoryName, e.getMessage());
         }
     }
 

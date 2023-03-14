@@ -46,4 +46,5 @@ public class AlertNotifyEventServiceImpl implements AlertNotifyEventService {
         criteria.andEqualTo("service", service);
         return alertNotifyEventMapper.selectByExample(example);
     }
+
 }

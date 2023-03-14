@@ -17,4 +17,5 @@ public class SimpleEvent<T> implements IEvent<T> {
     private String action;
 
     private T body;
+
 }

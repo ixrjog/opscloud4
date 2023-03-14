@@ -22,4 +22,5 @@ public class YamlVars {
         @Builder.Default
         private Map<String, String> vars = Maps.newHashMap();
     }
+
 }
