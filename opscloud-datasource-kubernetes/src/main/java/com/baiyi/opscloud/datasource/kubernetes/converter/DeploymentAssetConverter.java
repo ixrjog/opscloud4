@@ -1,10 +1,10 @@
 package com.baiyi.opscloud.datasource.kubernetes.converter;
 
+import com.baiyi.opscloud.core.util.TimeUtil;
 import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
-import com.baiyi.opscloud.core.util.TimeUtil;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.base.Joiner;
@@ -27,6 +27,10 @@ public class DeploymentAssetConverter {
     public static Date toGmtDate(String time) {
         return TimeUtil.toDate(time, TimeZoneEnum.UTC);
     }
+
+    private static final String CPU = "cpu";
+
+    private static final String MEMORY = "memory";
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Deployment entity) {
         String namespace = entity.getMetadata().getNamespace();
@@ -58,7 +62,18 @@ public class DeploymentAssetConverter {
          *             cpu: "2"
          *             memory: 6Gi
          */
-        Optional<Map<String, Quantity>> optionalLimits = entity.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith(name)).findFirst()
+        Optional<Map<String, Quantity>> optionalLimits = entity
+                .getSpec()
+                .getTemplate()
+                .getSpec()
+                .getContainers()
+                .stream()
+                /**
+                 * 无状态名称 account-1
+                 * 容器名称 account
+                 */
+                .filter(c -> name.startsWith(c.getName()))
+                .findFirst()
                 .map(Container::getResources)
                 .map(ResourceRequirements::getLimits);
 
@@ -67,11 +82,11 @@ public class DeploymentAssetConverter {
 
         if (optionalLimits.isPresent()) {
             Map<String, Quantity> limits = optionalLimits.get();
-            if (limits.containsKey(cpu)) {
-                cpu = limits.get("cpu").toString();
+            if (limits.containsKey(CPU)) {
+                cpu = limits.get(CPU).toString();
             }
-            if (limits.containsKey(memory)) {
-                memory = limits.get("memory").toString();
+            if (limits.containsKey(MEMORY)) {
+                memory = limits.get(MEMORY).toString();
             }
         }
         return AssetContainerBuilder.newBuilder()
@@ -82,6 +97,5 @@ public class DeploymentAssetConverter {
                 .paramProperty("resources.limits.memory", memory)
                 .build();
     }
-
 
 }

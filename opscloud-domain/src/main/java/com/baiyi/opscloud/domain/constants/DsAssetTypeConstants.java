@@ -10,6 +10,9 @@ import lombok.Getter;
 @Getter
 public enum DsAssetTypeConstants {
 
+    /**
+     * 资产类型
+     */
     GROUP,
     USER,
 

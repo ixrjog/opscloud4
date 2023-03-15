@@ -5,6 +5,7 @@ import com.baiyi.opscloud.datasource.kubernetes.provider.KubernetesPodProvider;
 import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
@@ -56,6 +57,8 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
 
     private final LeoBuildImageService leoBuildImageService;
 
+    private final static String IMAGE = "image";
+
     /**
      * Deployment Pod
      *
@@ -63,21 +66,28 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
      */
     @Override
     public void wrap(ApplicationResourceVO.Resource resource, IExtend iExtend) {
-        DatasourceInstanceAsset asset = assetService.getById(resource.getBusinessId());
-        if (asset == null) {
+        DatasourceInstanceAsset datasourceInstanceAsset = assetService.getById(resource.getBusinessId());
+        if (datasourceInstanceAsset == null) {
             return;
         }
-        String namespace = asset.getAssetKey2();
-        String deployment = asset.getAssetKey();
-        resource.setAsset(BeanCopierUtil.copyProperties(asset, DsAssetVO.Asset.class));
+        String namespace = datasourceInstanceAsset.getAssetKey2();
+        String deployment = datasourceInstanceAsset.getAssetKey();
+
+        DsAssetVO.Asset asset = BeanCopierUtil.copyProperties(datasourceInstanceAsset, DsAssetVO.Asset.class);
+        if (DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name().equals(asset.getAssetType())) {
+            Map<String, String> properties = propertyService.queryByAssetId(asset.getId())
+                    .stream().collect(Collectors.toMap(DatasourceInstanceAssetProperty::getName, DatasourceInstanceAssetProperty::getValue, (k1, k2) -> k1));
+            asset.setProperties(properties);
+        }
+        resource.setAsset(asset);
         try {
-            DatasourceInstance dsInstance = dsInstanceService.getByUuid(asset.getInstanceUuid());
+            DatasourceInstance dsInstance = dsInstanceService.getByUuid(datasourceInstanceAsset.getInstanceUuid());
             if (dsInstance != null) {
                 List<AssetContainer> assetContainers = kubernetesPodProvider.queryAssetsByDeployment(dsInstance.getId(), namespace, deployment).stream()
                         .peek(c -> {
                             // 插入版本信息
-                            if (c.getProperties().containsKey("image")) {
-                                String image = c.getProperties().get("image");
+                            if (c.getProperties().containsKey(IMAGE)) {
+                                String image = c.getProperties().get(IMAGE);
                                 LeoBuildImage buildImage = leoBuildImageService.getByImage(image);
                                 if (buildImage != null) {
                                     c.getProperties().put("versionName", buildImage.getVersionName());
@@ -92,7 +102,7 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
             }
         } catch (NullPointerException ignored) {
         }
-        wrapTags(resource, asset);
+        wrapTags(resource, datasourceInstanceAsset);
         applicationResourceInstancePacker.wrap(resource);
     }
 
