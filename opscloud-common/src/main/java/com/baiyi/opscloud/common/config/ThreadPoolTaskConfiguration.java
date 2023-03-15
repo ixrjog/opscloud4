@@ -17,8 +17,10 @@ import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskP
 @Configuration
 public class ThreadPoolTaskConfiguration {
 
-    // https://blog.csdn.net/CJ_66/article/details/82503665
-    // https://blog.csdn.net/xie19900123/article/details/81771793
+    /**
+     * https://blog.csdn.net/CJ_66/article/details/82503665
+     * https://blog.csdn.net/xie19900123/article/details/81771793
+     */
 
     public interface TaskPools {
         String CORE = "coreExecutor";
@@ -30,11 +32,11 @@ public class ThreadPoolTaskConfiguration {
     /**
      * 允许线程空闲时间（单位：默认为秒）
      */
-    private static final int keepAliveTime = 60;
+    private static final int KEEP_ALIVE_TIME = 60;
     /**
      * 缓冲队列大小
      */
-    private static final int queueCapacity = 500;
+    private static final int QUEUE_CAPACITY = 500;
     /**
      * 线程池名前缀
      */
@@ -53,10 +55,12 @@ public class ThreadPoolTaskConfiguration {
          *
          * 所以通过上面的描述可知corePoolSize<=maximumPoolSize，poolSize<=maximumPoolSize；而poolSize和corePoolSize无法比较，poolSize是有可能比corePoolSize大的。
          */
-        executor.setCorePoolSize(20); // 核心线程数（默认线程数）
-        executor.setMaxPoolSize(200); // 最大线程数
-        executor.setQueueCapacity(queueCapacity);
-        executor.setKeepAliveSeconds(keepAliveTime);
+        // 核心线程数（默认线程数）
+        executor.setCorePoolSize(20);
+        // 最大线程数
+        executor.setMaxPoolSize(200);
+        executor.setQueueCapacity(QUEUE_CAPACITY);
+        executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix(THREAD_NAME_PREFIX);
         // 而在一些场景下，若需要在关闭线程池时等待当前调度任务完成后才开始关闭，可以通过简单的配置，进行优雅的停机策略配置。关键就是通过
         executor.setWaitForTasksToCompleteOnShutdown(true);
@@ -82,10 +86,12 @@ public class ThreadPoolTaskConfiguration {
          *
          * 所以通过上面的描述可知corePoolSize<=maximumPoolSize，poolSize<=maximumPoolSize；而poolSize和corePoolSize无法比较，poolSize是有可能比corePoolSize大的。
          */
-        executor.setCorePoolSize(50); // 核心线程数（默认线程数）
-        executor.setMaxPoolSize(200); // 最大线程数
-        executor.setQueueCapacity(queueCapacity);
-        executor.setKeepAliveSeconds(keepAliveTime);
+        // 核心线程数（默认线程数）
+        executor.setCorePoolSize(50);
+        // 最大线程数
+        executor.setMaxPoolSize(200);
+        executor.setQueueCapacity(QUEUE_CAPACITY);
+        executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix(THREAD_NAME_PREFIX);
         // 而在一些场景下，若需要在关闭线程池时等待当前调度任务完成后才开始关闭，可以通过简单的配置，进行优雅的停机策略配置。关键就是通过
         executor.setWaitForTasksToCompleteOnShutdown(true);
@@ -101,10 +107,12 @@ public class ThreadPoolTaskConfiguration {
     @Bean(name = SERVER_TERMINAL)
     public ThreadPoolTaskExecutor serverTerminalExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10); // 核心线程数（默认线程数）
-        executor.setMaxPoolSize(200); // 最大线程数
+        // 核心线程数（默认线程数）
+        executor.setCorePoolSize(10);
+        // 最大线程数
+        executor.setMaxPoolSize(200);
         executor.setQueueCapacity(0);
-        executor.setKeepAliveSeconds(keepAliveTime);
+        executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix("st-exec-");
         // 而在一些场景下，若需要在关闭线程池时等待当前调度任务完成后才开始关闭，可以通过简单的配置，进行优雅的停机策略配置。关键就是通过
         executor.setWaitForTasksToCompleteOnShutdown(true);
@@ -120,10 +128,12 @@ public class ThreadPoolTaskConfiguration {
     @Bean(name = KUBERNETES_TERMINAL)
     public ThreadPoolTaskExecutor kubernetesTerminalExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10); // 核心线程数（默认线程数）
-        executor.setMaxPoolSize(200); // 最大线程数
+        // 核心线程数（默认线程数）
+        executor.setCorePoolSize(10);
+        // 最大线程数
+        executor.setMaxPoolSize(200);
         executor.setQueueCapacity(0);
-        executor.setKeepAliveSeconds(keepAliveTime);
+        executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix("kt-exec-");
         // 而在一些场景下，若需要在关闭线程池时等待当前调度任务完成后才开始关闭，可以通过简单的配置，进行优雅的停机策略配置。关键就是通过
         executor.setWaitForTasksToCompleteOnShutdown(true);

@@ -13,18 +13,18 @@ public class AccountHandlerFactory {
     private AccountHandlerFactory() {
     }
 
-    private static final Map<String, IAccount> context = new ConcurrentHashMap<>();
+    private static final Map<String, IAccount> CONTEXT = new ConcurrentHashMap<>();
 
     public static IAccount getIAccountByInstanceType(String instanceType) {
-        return context.get(instanceType);
+        return CONTEXT.get(instanceType);
     }
 
     public static void register(IAccount bean) {
-        context.put(bean.getInstanceType(), bean);
+        CONTEXT.put(bean.getInstanceType(), bean);
     }
 
     public static Map<String, IAccount> getIAccountContainer() {
-        return context;
+        return CONTEXT;
     }
 
 }

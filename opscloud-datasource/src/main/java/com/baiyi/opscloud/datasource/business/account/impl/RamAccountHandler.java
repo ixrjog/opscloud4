@@ -62,7 +62,9 @@ public class RamAccountHandler extends AbstractAccountHandler {
                 .instanceUuid(instance.getUuid())
                 .build();
         List<DatasourceInstanceAsset> ramAssets = assetService.queryAssetByAssetParam(query);
-        if (CollectionUtils.isEmpty(ramAssets)) return;
+        if (CollectionUtils.isEmpty(ramAssets)) {
+            return;
+        }
         AliyunConfig.Aliyun aliyun = configContext.get();
         ramAssets.forEach(ramAsset -> {
             try {
