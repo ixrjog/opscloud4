@@ -34,4 +34,5 @@ public class AuthorizationException extends BaseException {
         super(errorEnum.getMessage());
         this.code = errorEnum.getCode();
     }
+
 }

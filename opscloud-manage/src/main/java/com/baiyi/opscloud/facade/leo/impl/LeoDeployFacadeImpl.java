@@ -209,7 +209,11 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     @Override
     public void cloneDeployDeployment(LeoDeployParam.CloneDeployDeployment cloneDeployDeployment) {
-        LeoBuild leoBuild = buildService.getById(cloneDeployDeployment.getBuildId());
+        LeoJob leoJob = jobService.getById(cloneDeployDeployment.getJobId());
+        if (leoJob == null) {
+            throw new LeoDeployException("任务不存在: jobId={}", cloneDeployDeployment.getJobId());
+        }
+
         DatasourceInstanceAsset asset = assetService.getById(cloneDeployDeployment.getAssetId());
         KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
         // 查询原无状态
@@ -239,7 +243,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         // 绑定资产到应用
         assets.forEach(a -> {
             ApplicationResourceVO.Resource resource = ApplicationResourceVO.Resource.builder()
-                    .applicationId(leoBuild.getApplicationId())
+                    .applicationId(leoJob.getApplicationId())
                     .businessId(a.getId())
                     .businessType(BusinessTypeEnum.ASSET.getType())
                     .checked(false)

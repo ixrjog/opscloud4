@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.util;
 
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.core.util.TimeUtil;
 import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
@@ -44,7 +45,7 @@ public class AssetUtilTest extends BaseUnit {
 
         Date date = TimeUtil.toDate(time, TimeZoneEnum.UTC);
 
-        String d = com.baiyi.opscloud.common.util.TimeUtil.dateToStr(date);
+        String d = NewTimeUtil.parse(date);
         System.err.println(d);
     }
 

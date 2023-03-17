@@ -29,4 +29,5 @@ public class CreateUserException extends BaseException {
     public CreateUserException(String message, Throwable cause) {
         super(message, cause);
     }
+
 }

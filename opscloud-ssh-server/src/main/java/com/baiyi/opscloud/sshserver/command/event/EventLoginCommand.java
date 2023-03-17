@@ -149,9 +149,13 @@ public class EventLoginCommand extends BaseServerCommand {
     }
 
     private void printJSchSession(String sessionId, String instanceId, int ch) throws Exception {
-        if (ch < 0) return;
+        if (ch < 0) {
+            return;
+        }
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
-        if (jSchSession == null) throw new Exception();
+        if (jSchSession == null) {
+            throw new Exception();
+        }
         jSchSession.getCommander().print((char) ch);
     }
 

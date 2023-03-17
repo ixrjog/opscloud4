@@ -2,7 +2,7 @@ package com.baiyi.opscloud.zabbix.v5.driver.base;
 
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.common.util.TimeUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixLogin;
 import com.baiyi.opscloud.zabbix.v5.feign.ZabbixLoginFeign;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
@@ -45,7 +45,7 @@ public class SimpleZabbixAuth {
 
     private void cacheAuth(String key, String auth) {
         // 缓存14分钟
-        redisUtil.set(key, auth, TimeUtil.minuteTime * 14 / 1000);
+        redisUtil.set(key, auth, NewTimeUtil.MINUTE_TIME * 14 / 1000);
     }
 
     private ZabbixLogin.LoginAuth login(ZabbixConfig.Zabbix config) {

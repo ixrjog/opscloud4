@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.leo.domain.model;
 
 import com.baiyi.opscloud.common.util.JSONUtil;
-import com.baiyi.opscloud.common.util.TimeUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoRule;
 import com.baiyi.opscloud.domain.vo.leo.LeoRuleVO;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
@@ -114,8 +114,42 @@ public class LeoRuleModel {
 
         public static DateExpression build(Expression expression) {
             return DateExpression.builder()
-                    .beginDate(TimeUtil.gmtToDate(expression.getBegin()))
-                    .endDate(TimeUtil.gmtToDate(expression.getEnd()))
+                    .beginDate(NewTimeUtil.parse(expression.getBegin()))
+                    .endDate(NewTimeUtil.parse(expression.getEnd()))
+                    .build();
+        }
+
+        public boolean parse() {
+            boolean hitBegin = this.nowDate.after(this.beginDate);
+            log.info("开始时间: hitBeginTime={}", hitBegin);
+            boolean hitEnd = this.nowDate.before(this.endDate);
+            log.info("结束时间: hitEndTime={}", hitEnd);
+            return hitBegin && hitEnd;
+        }
+
+        @Override
+        public String toString() {
+            return JSONUtil.writeValueAsString(this);
+        }
+
+    }
+
+    @Slf4j
+    @Builder
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DailyExpression {
+
+        private Date beginDate;
+        private Date endDate;
+        @Builder.Default
+        private Date nowDate = new Date();
+
+        public static DateExpression build(Expression expression) {
+            return DateExpression.builder()
+                    .beginDate(NewTimeUtil.parse(expression.getBegin()))
+                    .endDate(NewTimeUtil.parse(expression.getEnd()))
                     .build();
         }
 

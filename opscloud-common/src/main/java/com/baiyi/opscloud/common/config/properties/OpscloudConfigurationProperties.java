@@ -52,7 +52,11 @@ public class OpscloudConfigurationProperties {
     }
 
     private String version;
-    private String dataPath; // Opscloud数据目录
+
+    /**
+     * Opscloud数据目录
+     */
+    private String dataPath;
     private CreateUser createUser;
     private Outapi outapi;
 

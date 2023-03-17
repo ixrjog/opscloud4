@@ -69,8 +69,8 @@ public class DeploymentAssetConverter {
                 .getContainers()
                 .stream()
                 /**
-                 * 无状态名称 account-1
-                 * 容器名称 account
+                 * 无状态名称 name: account-1
+                 * 容器名称 c: account
                  */
                 .filter(c -> name.startsWith(c.getName()))
                 .findFirst()

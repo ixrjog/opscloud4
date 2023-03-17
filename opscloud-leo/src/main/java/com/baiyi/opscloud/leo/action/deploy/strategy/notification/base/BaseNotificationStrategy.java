@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.leo.action.deploy.strategy.notification.base;
 
 import com.baiyi.opscloud.common.util.BeetlUtil;
-import com.baiyi.opscloud.common.util.TimeUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.generator.opscloud.MessageTemplate;
@@ -60,7 +60,7 @@ public abstract class BaseNotificationStrategy extends BaseDeployStrategy {
 
         Map<String, Object> messageMap = Maps.newHashMap(deployConfig.getDeploy().getDict());
         messageMap.putAll(contentMap);
-        messageMap.put("nowDate", TimeUtil.nowDate());
+        messageMap.put("nowDate", NewTimeUtil.nowDate());
         messageMap.put("users", Lists.newArrayList(user));
         LeoBaseModel.Deployment deployment = deployConfig.getDeploy().getKubernetes().getDeployment();
         messageMap.put("envGroup", Joiner.on(":").join(deployment.getNamespace(), deployment.getName()));

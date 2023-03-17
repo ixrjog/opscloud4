@@ -44,7 +44,7 @@ public class LaterUtil {
     }
 
     public static String format(Date date) {
-        long delta = date.getTime() - new Date().getTime();
+        long delta = date.getTime() - System.currentTimeMillis();
         if (delta < ONE_MINUTE) {
             long seconds = toSeconds(delta);
             return (seconds <= 0 ? 1 : seconds) + ONE_SECOND_LATER;

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.InitializingBean;
 
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,17 @@ public abstract class BaseLeoRuleExpression implements IRuleExpression, Initiali
 
     protected List<String> getExpressionArgs(String str) {
         return Arrays.stream(str.split(" ")).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+    }
+
+    /**
+     * the value for the given calendar field.
+     *
+     * @param field
+     * @return
+     */
+    protected int calendarValueGet(int field) {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(field);
     }
 
     public void afterPropertiesSet() throws Exception {

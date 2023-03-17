@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeetlUtil;
-import com.baiyi.opscloud.common.util.TimeUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.datasource.message.notice.DingtalkSendHelper;
@@ -113,7 +113,7 @@ public class AlertHandler extends SimpleDsInstanceProvider {
             return; // 静默
         }
         dingtalkSendHelper.send(zabbixConfig.getZabbix(), msg);
-        redisUtil.set(cacheKey, true, TimeUtil.minuteTime * 10 / 1000);
+        redisUtil.set(cacheKey, true, NewTimeUtil.MINUTE_TIME * 10 / 1000);
     }
 
     private String renderTemplate(String host, List<Event> events, Map<String, String> hostMap) {

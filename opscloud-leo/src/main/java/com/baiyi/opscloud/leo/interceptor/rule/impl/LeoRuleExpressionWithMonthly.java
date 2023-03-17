@@ -32,10 +32,8 @@ public class LeoRuleExpressionWithMonthly extends BaseLeoRuleExpression {
      * @return 命中
      */
     public boolean parse(LeoRuleModel.Expression expression) {
-        Calendar calendar = Calendar.getInstance();
         // 本月第几天
-        final int nowDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
+        final int nowDayOfMonth = calendarValueGet(Calendar.DAY_OF_MONTH);
         List<String> beginArgs = getExpressionArgs(expression.getBegin());
         List<String> endArgs = getExpressionArgs(expression.getEnd());
         int beginDayOfMonth = Integer.parseInt(beginArgs.get(0));
@@ -55,7 +53,9 @@ public class LeoRuleExpressionWithMonthly extends BaseLeoRuleExpression {
                 hitBegin = true;
             }
         }
-        log.info("开始时间: hitBeginTime={}", hitBegin);
+
+        log.debug("开始时间: hitBeginTime={}", hitBegin);
+
         if (!hitBegin) {
             return false;
         }
@@ -70,11 +70,11 @@ public class LeoRuleExpressionWithMonthly extends BaseLeoRuleExpression {
             }
         }
 
-        log.info("结束时间: hitEndTime={}", hitEnd);
+        log.debug("结束时间: hitEndTime={}", hitEnd);
         return hitEnd;
     }
 
-    private static final String displayName = "每月封网(开始时间: 第%s天 %s, 结束时间: 第%s天 %s)";
+    private static final String DISPLAY_NAME = "每月封网(开始时间: 第%s天 %s, 结束时间: 第%s天 %s)";
 
     /**
      * @param expression
@@ -83,7 +83,7 @@ public class LeoRuleExpressionWithMonthly extends BaseLeoRuleExpression {
     public String toDisplayName(LeoRuleModel.Expression expression) {
         List<String> beginArgs = getExpressionArgs(expression.getBegin());
         List<String> endArgs = getExpressionArgs(expression.getEnd());
-        return String.format(displayName, beginArgs.get(0), beginArgs.get(1), endArgs.get(0), endArgs.get(1));
+        return String.format(DISPLAY_NAME, beginArgs.get(0), beginArgs.get(1), endArgs.get(0), endArgs.get(1));
     }
 
 }

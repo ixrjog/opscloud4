@@ -27,8 +27,9 @@ public class DsUtil {
      * @param <T>
      */
     public static <T> T toDsConfig(String propsYml, Class<T> targetClass) {
-        if (StringUtils.isEmpty(propsYml))
+        if (StringUtils.isEmpty(propsYml)) {
             throw new DatasourceRuntimeException(ErrorEnum.DATASOURCE_PROPS_EMPTY);
+        }
         try {
             Representer representer = new Representer(new DumperOptions());
             representer.getPropertyUtils().setSkipMissingProperties(true);

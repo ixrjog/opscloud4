@@ -2,8 +2,7 @@ package com.baiyi.opscloud.workorder.helper.strategy.impl;
 
 import com.baiyi.opscloud.common.config.properties.OpscloudConfigurationProperties;
 import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.common.util.TimeUtil;
-import com.baiyi.opscloud.workorder.util.WorkflowUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.datasource.manager.base.NoticeManager;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.notice.INoticeMessage;
@@ -14,6 +13,7 @@ import com.baiyi.opscloud.workorder.constants.NodeTypeConstants;
 import com.baiyi.opscloud.workorder.constants.OrderTicketPhaseCodeConstants;
 import com.baiyi.opscloud.workorder.helper.strategy.base.AbstractSendNotice;
 import com.baiyi.opscloud.workorder.model.TicketNoticeModel;
+import com.baiyi.opscloud.workorder.util.WorkflowUtil;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -94,7 +94,7 @@ public class SendAuditNotice extends AbstractSendNotice {
                             .build();
                     WorkOrderTicketSubscriber subscriber = ticketSubscriberService.getByUniqueKey(queryParam);
                     if (subscriber != null && !"-".equals(subscriber.getToken())) {
-                        redisUtil.set(buildKey(ticketId, user.getUsername()), subscriber.getToken(), TimeUtil.dayTime / 1000);
+                        redisUtil.set(buildKey(ticketId, user.getUsername()), subscriber.getToken(), NewTimeUtil.DAY_TIME / 1000);
                         String api = opscloudConfigurationProperties.getOutapi().getWorkorder().getApproval();
                         String apiAgree = String.format(api, ticketId, user.getUsername(), ApprovalTypeConstants.AGREE.name(), subscriber.getToken());
                         String apiReject = String.format(api, ticketId, user.getUsername(), ApprovalTypeConstants.REJECT.name(), subscriber.getToken());

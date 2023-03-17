@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.datasource.instance;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.util.GitlabTokenUtil;
+import com.baiyi.opscloud.common.util.GitLabTokenUtil;
 import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
 import com.baiyi.opscloud.factory.gitlab.GitlabEventNameEnum;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class GitlabFacadeTest extends BaseUnit implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        GitlabTokenUtil.setToken(token);
+        GitLabTokenUtil.setToken(token);
     }
 
 }

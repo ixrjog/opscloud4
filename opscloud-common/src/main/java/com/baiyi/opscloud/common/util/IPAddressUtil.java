@@ -10,6 +10,7 @@ import java.util.Arrays;
  */
 
 public class IPAddressUtil {
+
     private static final int INADDR4SZ = 4;
     private static final int INADDR16SZ = 16;
     private static final int INT16SZ = 2;
@@ -41,14 +42,14 @@ public class IPAddressUtil {
         boolean var5 = true;
         int var6 = var0.length();
         if (var6 != 0 && var6 <= 15) {
-            for(int var7 = 0; var7 < var6; ++var7) {
+            for (int var7 = 0; var7 < var6; ++var7) {
                 char var8 = var0.charAt(var7);
                 if (var8 == '.') {
                     if (var5 || var2 < 0L || var2 > 255L || var4 == 3) {
                         return null;
                     }
 
-                    var1[var4++] = (byte)((int)(var2 & 255L));
+                    var1[var4++] = (byte) ((int) (var2 & 255L));
                     var2 = 0L;
                     var5 = true;
                 } else {
@@ -58,21 +59,21 @@ public class IPAddressUtil {
                     }
 
                     var2 *= 10L;
-                    var2 += (long)var9;
+                    var2 += (long) var9;
                     var5 = false;
                 }
             }
 
             if (!var5 && var2 >= 0L && var2 < 1L << (4 - var4) * 8) {
-                switch(var4) {
+                switch (var4) {
                     case 0:
-                        var1[0] = (byte)((int)(var2 >> 24 & 255L));
+                        var1[0] = (byte) ((int) (var2 >> 24 & 255L));
                     case 1:
-                        var1[1] = (byte)((int)(var2 >> 16 & 255L));
+                        var1[1] = (byte) ((int) (var2 >> 16 & 255L));
                     case 2:
-                        var1[2] = (byte)((int)(var2 >> 8 & 255L));
+                        var1[2] = (byte) ((int) (var2 >> 8 & 255L));
                     case 3:
-                        var1[3] = (byte)((int)(var2 >> 0 & 255L));
+                        var1[3] = (byte) ((int) (var2 >> 0 & 255L));
                     default:
                         return var1;
                 }
@@ -113,9 +114,9 @@ public class IPAddressUtil {
                 boolean var3 = false;
                 int var4 = 0;
 
-                while(true) {
+                while (true) {
                     int var12;
-                    while(var9 < var7) {
+                    while (var9 < var7) {
                         char var2 = var5[var9++];
                         var12 = Character.digit(var2, 16);
                         if (var12 != -1) {
@@ -132,7 +133,7 @@ public class IPAddressUtil {
                                     String var13 = var0.substring(var11, var7);
                                     int var14 = 0;
 
-                                    for(int var15 = 0; (var15 = var13.indexOf(46, var15)) != -1; ++var15) {
+                                    for (int var15 = 0; (var15 = var13.indexOf(46, var15)) != -1; ++var15) {
                                         ++var14;
                                     }
 
@@ -145,7 +146,7 @@ public class IPAddressUtil {
                                         return null;
                                     }
 
-                                    for(int var17 = 0; var17 < 4; ++var17) {
+                                    for (int var17 = 0; var17 < 4; ++var17) {
                                         var6[var10++] = var16[var17];
                                     }
 
@@ -172,8 +173,8 @@ public class IPAddressUtil {
                                     return null;
                                 }
 
-                                var6[var10++] = (byte)(var4 >> 8 & 255);
-                                var6[var10++] = (byte)(var4 & 255);
+                                var6[var10++] = (byte) (var4 >> 8 & 255);
+                                var6[var10++] = (byte) (var4 & 255);
                                 var3 = false;
                                 var4 = 0;
                             }
@@ -185,8 +186,8 @@ public class IPAddressUtil {
                             return null;
                         }
 
-                        var6[var10++] = (byte)(var4 >> 8 & 255);
-                        var6[var10++] = (byte)(var4 & 255);
+                        var6[var10++] = (byte) (var4 >> 8 & 255);
+                        var6[var10++] = (byte) (var4 & 255);
                     }
 
                     if (var1 != -1) {
@@ -195,7 +196,7 @@ public class IPAddressUtil {
                             return null;
                         }
 
-                        for(var9 = 1; var9 <= var12; ++var9) {
+                        for (var9 = 1; var9 <= var12; ++var9) {
                             var6[16 - var9] = var6[var1 + var12 - var9];
                             var6[var1 + var12 - var9] = 0;
                         }
@@ -262,7 +263,7 @@ public class IPAddressUtil {
 
             do {
                 ++var5;
-            } while(var5 < var6 && !(var7 = match(var0.charAt(var5), var1, var3)));
+            } while (var5 < var6 && !(var7 = match(var0.charAt(var5), var1, var3)));
 
             return var7 ? var5 : -1;
         } else {
@@ -277,7 +278,7 @@ public class IPAddressUtil {
             boolean var8 = false;
             char var10 = var5[0];
 
-            while(true) {
+            while (true) {
                 ++var6;
                 char var9;
                 if (var6 >= var7 || (var8 = match(var9 = var0.charAt(var6), var1, var3))) {

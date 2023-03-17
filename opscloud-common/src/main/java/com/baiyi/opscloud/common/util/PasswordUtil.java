@@ -15,10 +15,10 @@ import java.util.Random;
 public class PasswordUtil {
 
     private static final String PW_STR = "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final String NUM_CHAR = "23456789"; // 8
-    private static final String UPPER_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";  // 26
+    private static final String NUM_CHAR = "23456789";
+    private static final String UPPER_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LOWER_CHAR = "abcdefghijklmnopqrstuvwxyz";
-    private static final String SYBL_CHAR = "!@#$%^&*()_+-="; //14
+    private static final String SYBL_CHAR = "!@#$%^&*()_+-=";
 
 
     /**
@@ -42,7 +42,9 @@ public class PasswordUtil {
      * @return
      */
     public static String generatorPW(int length) {
-        if (length == 0) length = 20;
+        if (length == 0) {
+            length = 20;
+        }
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {
@@ -59,7 +61,9 @@ public class PasswordUtil {
      * @return
      */
     private static String generatorSafePW(int length) {
-        if (length < 8) length = 8;
+        if (length < 8) {
+            length = 8;
+        }
         String pwStr = getChar(NUM_CHAR, 1) +
                 getChar(UPPER_CHAR, 1) +
                 getChar(LOWER_CHAR, 1) +
@@ -71,7 +75,9 @@ public class PasswordUtil {
     private static String shuffleForSortingString(String s) {
         char[] c = s.toCharArray();
         List<Character> lst = Lists.newArrayList();
-        for (char value : c) lst.add(value);
+        for (char value : c) {
+            lst.add(value);
+        }
         Collections.shuffle(lst);
         return Joiner.on("").join(lst);
     }

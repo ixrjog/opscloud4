@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.common.helper;
 
 import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.common.util.TimeUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TopicHelper {
 
-    private static final long TOPIC_CACHE_MAX_TIME = TimeUtil.dayTime / 1000;
+    private static final long TOPIC_CACHE_MAX_TIME = NewTimeUtil.DAY_TIME / 1000;
 
     private static final String TOPIC_PREFIX = "TOPIC_";
 

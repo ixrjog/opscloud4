@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.sshserver.command.kubernetes;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubernetesClientBuilder;
 import com.baiyi.opscloud.datasource.kubernetes.converter.PodAssetConverter;
@@ -125,7 +126,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                     toNamespaceStr(pod.getMetadata().getNamespace()),
                     pod.getMetadata().getName(),
                     StringUtils.isEmpty(pod.getStatus().getPodIP()) ? "N/A" : pod.getStatus().getPodIP(),
-                    com.baiyi.opscloud.common.util.TimeUtil.dateToStr(PodAssetConverter.toGmtDate(pod.getStatus().getStartTime())),
+                    NewTimeUtil.parse(PodAssetConverter.toGmtDate(pod.getStatus().getStartTime())),
                     toPodStatusStr(pod.getStatus().getPhase(), podStatusMap),
                     // Restart Count
                     pod.getStatus().getContainerStatuses().get(0).getRestartCount(),
@@ -194,7 +195,15 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                     PodContext podContext = PodContext.builder().podName(podName).instanceUuid(instanceUuid).namespace(pod.getMetadata().getNamespace()).podIp(pod.getStatus().getPodIP()).containerNames(names).build();
                     podMapper.put(seq, podContext);
                     // Restart Count
-                    pt.addRow(seq, kubernetesDsInstanceMap.get(instanceUuid).getDsInstance().getInstanceName(), toNamespaceStr(pod.getMetadata().getNamespace()), podName, StringUtils.isEmpty(pod.getStatus().getPodIP()) ? "N/A" : pod.getStatus().getPodIP(), com.baiyi.opscloud.common.util.TimeUtil.dateToStr(PodAssetConverter.toGmtDate(pod.getStatus().getStartTime())), toPodStatusStr(pod.getStatus().getPhase(), podStatusMap), pod.getStatus().getContainerStatuses().get(0).getRestartCount(),
+                    pt.addRow(seq,
+                            kubernetesDsInstanceMap.get(instanceUuid).getDsInstance().getInstanceName(),
+                            toNamespaceStr(pod.getMetadata().getNamespace()),
+                            podName,
+                            StringUtils.isEmpty(pod.getStatus().getPodIP()) ? "N/A" : pod.getStatus().getPodIP(),
+                            NewTimeUtil.parse(PodAssetConverter.toGmtDate(pod.getStatus().getStartTime())),
+                            toPodStatusStr(pod.getStatus().getPhase(),
+                                    podStatusMap),
+                            pod.getStatus().getContainerStatuses().get(0).getRestartCount(),
                             Joiner.on(",").join(names));
                     seq++;
                     if (seq >= maxSize) {

@@ -66,7 +66,7 @@ public class AssetPullJob extends QuartzJobBean {
             assert providers != null;
             providers.forEach(x -> x.pullAsset(pullAsset.getInstanceId()));
         } catch (Exception e) {
-            log.error("QuartzTask[拉取资产]错误: assetType={}, instanceId={}, trigger={}, err={}", assetType, instanceId, jobExecutionContext.getTrigger(), e.getMessage());
+            log.error("QuartzTask[拉取资产]错误: assetType={}, instanceId={}, trigger={}, {}", assetType, instanceId, jobExecutionContext.getTrigger(), e.getMessage());
             throw new JobExecutionException(e.getMessage());
         }
     }

@@ -33,5 +33,6 @@ public class AuthenticationException extends BaseException {
         super(errorEnum.getMessage());
         this.code = errorEnum.getCode();
     }
+
 }
 

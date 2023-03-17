@@ -2,7 +2,7 @@ package com.baiyi.opscloud.filter;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
-import com.baiyi.opscloud.common.util.GitlabTokenUtil;
+import com.baiyi.opscloud.common.util.GitLabTokenUtil;
 import com.baiyi.opscloud.config.properties.WhiteConfigurationProperties;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import lombok.NonNull;
@@ -65,7 +65,7 @@ public class AuthFilter extends OncePerRequestFilter {
             try {
                 String gitlabToken = request.getHeader(GITLAB_TOKEN);
                 if (!StringUtils.isEmpty(gitlabToken))
-                    GitlabTokenUtil.setToken(gitlabToken);
+                    GitLabTokenUtil.setToken(gitlabToken);
             } catch (Exception ignored) {
             }
             try {

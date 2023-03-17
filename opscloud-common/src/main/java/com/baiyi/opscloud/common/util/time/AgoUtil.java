@@ -39,6 +39,7 @@ public class AgoUtil {
 
     /**
      * 废弃:改用@AgoWrapper
+     *
      * @param iAgo
      */
     @Deprecated
@@ -48,7 +49,7 @@ public class AgoUtil {
     }
 
     public static String format(Date date) {
-        long delta = new Date().getTime() - date.getTime();
+        long delta = System.currentTimeMillis() - date.getTime();
         if (delta < ONE_MINUTE) {
             long seconds = toSeconds(delta);
             return (seconds <= 0 ? 1 : seconds) + ONE_SECOND_AGO;

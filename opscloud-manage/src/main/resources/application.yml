@@ -1,7 +1,7 @@
 spring:
   application:
     name: opscloud
-    version: 4.2.2
+    version: 4.2.3
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss

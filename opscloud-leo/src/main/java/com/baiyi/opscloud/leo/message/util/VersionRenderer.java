@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * @Author baiyi
@@ -34,20 +33,25 @@ public class VersionRenderer {
         }
         Set<Integer> idSet = Sets.newHashSet();
         deploymentVersions.stream().map(LeoJobVersionVO.DeploymentVersion::getBuildId).filter(buildId -> buildId != -1).forEach(idSet::add);
+        // 未知版本, 只设置OFFLINE
+        deploymentVersions.forEach(d -> {
+            if (d.getReplicas() == 0) {
+                d.setVersionType(VersionTypeConstants.OFFLINE.name());
+            }
+        });
         if (idSet.isEmpty()) {
             return;
         }
         Map<String, Integer> versionTypeMap = Maps.newHashMap();
         List<Integer> ids = idSet.stream().sorted(Collections.reverseOrder()).collect(Collectors.toList());
         int bound = ids.size();
-        IntStream.range(0, bound).forEach(i -> {
+        for (int i = 0; i < bound; i++) {
             int buildId = ids.get(i);
             for (LeoJobVersionVO.DeploymentVersion deploymentVersion : deploymentVersions) {
                 if (deploymentVersion.getBuildId() != buildId) {
                     continue;
                 }
                 if (deploymentVersion.getReplicas() == 0) {
-                    deploymentVersion.setVersionType(VersionTypeConstants.OFFLINE.name());
                     continue;
                 }
                 switch (i) {
@@ -63,7 +67,7 @@ public class VersionRenderer {
                         deploymentVersion.setVersionType(VersionTypeConstants.OTHER.name());
                 }
             }
-        });
+        }
         render(deploymentVersions, versionTypeMap);
     }
 

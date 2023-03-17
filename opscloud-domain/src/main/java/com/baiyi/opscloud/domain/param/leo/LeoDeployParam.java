@@ -95,6 +95,8 @@ public class LeoDeployParam {
         @ApiModelProperty(value = "构建ID")
         private Integer buildId;
 
+        private Integer jobId;
+
         private String name;
 
         @ApiModelProperty(value = "无状态名称")

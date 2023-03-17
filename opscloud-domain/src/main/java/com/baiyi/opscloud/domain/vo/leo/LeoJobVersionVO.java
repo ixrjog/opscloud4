@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.domain.vo.leo;
 
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
+import com.google.common.collect.Maps;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -79,6 +81,8 @@ public class LeoJobVersionVO {
         private String versionDesc = "";
 
         private String versionType;
+
+        private Map<String, String> properties = Maps.newHashMap();
 
     }
 

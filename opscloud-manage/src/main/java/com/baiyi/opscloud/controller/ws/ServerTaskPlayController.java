@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.controller.ws;
 
-import com.baiyi.opscloud.common.util.TimeUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.datasource.ansible.play.ITaskPlayProcessor;
 import com.baiyi.opscloud.datasource.ansible.play.ServerTaskPlayFactory;
@@ -21,8 +21,10 @@ import javax.websocket.server.ServerEndpoint;
 @Component
 public class ServerTaskPlayController extends SimpleAuthentication {
 
-    // 超时时间1H
-    public static final Long WEBSOCKET_TIMEOUT = TimeUtil.hourTime;
+    /**
+     * 超时时间1H
+     */
+    public static final long WEBSOCKET_TIMEOUT = NewTimeUtil.HOUR_TIME;
 
     /**
      * 连接建立成功调用的方法

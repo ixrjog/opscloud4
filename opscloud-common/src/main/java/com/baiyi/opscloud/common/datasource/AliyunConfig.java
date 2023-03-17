@@ -21,7 +21,7 @@ import java.util.Set;
 public class AliyunConfig extends BaseDsConfig {
 
     // signin.aliyun.com
-    //  private static final String RAM_LOGIN_URL = "https://signin.${VERSION}.com/${COMPANY}.onaliyun.com/login.htm";
+    // private static final String RAM_LOGIN_URL = "https://signin.${VERSION}.com/${COMPANY}.onaliyun.com/login.htm";
 
     private static final String RAM_LOGIN_URL = "https://signin.%s.com/%s.onaliyun.com/login.htm";
 

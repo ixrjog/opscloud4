@@ -2,7 +2,7 @@ package com.baiyi.opscloud.leo.action.build;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.util.BeetlUtil;
-import com.baiyi.opscloud.common.util.TimeUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.leo.action.build.helper.LeoRobotHelper;
@@ -115,7 +115,7 @@ public abstract class BaseBuildHandler {
         User user = userService.getByUsername(leoBuild.getUsername());
 
         contentMap.putAll(buildConfig.getBuild().getDict());
-        contentMap.put("nowDate", TimeUtil.nowDate());
+        contentMap.put("nowDate", NewTimeUtil.nowDate());
         contentMap.put("users", Lists.newArrayList(user));
         final String msg = renderTemplate(messageTemplate, contentMap);
         leoRobotHelper.send(dsInstance, msg);

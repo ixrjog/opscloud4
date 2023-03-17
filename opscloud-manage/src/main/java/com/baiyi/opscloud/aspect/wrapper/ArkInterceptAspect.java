@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.aspect.wrapper;
 
 import com.baiyi.opscloud.common.annotation.ArkIntercept;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.common.util.RandomUtil;
-import com.baiyi.opscloud.common.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -31,7 +31,7 @@ public class ArkInterceptAspect {
     @Around("@annotation(arkIntercept)")
     public Object around(ProceedingJoinPoint joinPoint, ArkIntercept arkIntercept) throws Throwable {
         if (arkIntercept.bigFlood()) {
-            Date doomsday = TimeUtil.gmtToDate(arkIntercept.doomsday());
+            Date doomsday = NewTimeUtil.parse(arkIntercept.doomsday());
             if (doomsday.before(new Date())) {
                 int r = RandomUtil.random(100);
                 if (r == 1 || r == 10) {

@@ -13,6 +13,13 @@ import java.io.IOException;
  */
 public interface ILeoContinuousDeliveryRequestHandler extends ILeoRequestParam {
 
+    /**
+     * 请求接口
+     * @param sessionId
+     * @param session
+     * @param message
+     * @throws IOException
+     */
     void handleRequest(String sessionId, Session session, String message) throws IOException;
 
 }

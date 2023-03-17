@@ -5,7 +5,7 @@ package com.baiyi.opscloud.common.util;
  * @Date 2020/12/21 4:51 下午
  * @Version 1.0
  */
-public class GitlabTokenUtil {
+public class GitLabTokenUtil {
 
     private static final ThreadLocal<String> token = new ThreadLocal<>();
 

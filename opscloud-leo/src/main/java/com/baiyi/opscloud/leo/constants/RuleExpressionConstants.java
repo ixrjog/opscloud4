@@ -8,10 +8,20 @@ package com.baiyi.opscloud.leo.constants;
 public enum RuleExpressionConstants {
 
     /**
-     * 规则解析器
+     * 日期范围
      */
     DATE,
+    /**
+     * 每月
+     */
     MONTHLY,
-    WEEKLY
+    /**
+     * 每周
+     */
+    WEEKLY,
+    /**
+     * 每天
+     */
+    DAILY
 
 }

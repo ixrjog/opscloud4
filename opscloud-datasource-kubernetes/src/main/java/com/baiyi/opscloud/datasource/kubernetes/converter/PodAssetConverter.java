@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.datasource.kubernetes.converter;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.common.util.time.AgoUtil;
 import com.baiyi.opscloud.core.util.TimeUtil;
 import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
@@ -10,7 +11,10 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import io.fabric8.kubernetes.api.model.*;
+import io.fabric8.kubernetes.api.model.Container;
+import io.fabric8.kubernetes.api.model.ContainerStatus;
+import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.PodCondition;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
@@ -56,11 +60,13 @@ public class PodAssetConverter {
                 .findFirst();
         ContainerStatus containerStatus = buildContainerStatus(kubernetes, entity);
 
+
+
         AssetContainer assetContainer = AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
                 .paramChildren(toChildren(kubernetes, entity))
                 .paramProperty("phase", entity.getStatus().getPhase())
-                .paramProperty("startTime", com.baiyi.opscloud.common.util.TimeUtil.dateToStr(startTime))
+                .paramProperty("startTime", NewTimeUtil.parse(startTime))
                 .paramProperty("nodeName", entity.getSpec().getNodeName())
                 .paramProperty("restartCount", containerStatus.getRestartCount())
                 .paramProperty("hostIp", entity.getStatus().getHostIP())

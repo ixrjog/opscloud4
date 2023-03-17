@@ -44,12 +44,14 @@ public class IPUtil {
 
     public static boolean includeMasks(String network, List<String> masks) {
         // 不配置Regions则默认包含
-        if (CollectionUtils.isEmpty(masks))
+        if (CollectionUtils.isEmpty(masks)) {
             return true;
+        }
         for (String mask : masks) {
             try {
-                if (IPUtil.includeMask(network, mask))
+                if (IPUtil.includeMask(network, mask)) {
                     return true;
+                }
             } catch (Exception e) {
                 // 格式错误
                 log.error(e.getMessage());

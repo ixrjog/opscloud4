@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.datasource.instance;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
-import com.baiyi.opscloud.common.util.GitlabTokenUtil;
+import com.baiyi.opscloud.common.util.GitLabTokenUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.domain.constants.TagConstants;
@@ -45,7 +45,7 @@ public class GitlabFacade extends BaseManager {
             // 未知的事件名称
             return;
         }
-        if (StringUtils.isEmpty(GitlabTokenUtil.getToken())) {
+        if (StringUtils.isEmpty(GitLabTokenUtil.getToken())) {
             log.warn("未配置Gitlab SystemHooks SecretToken 无法路由消息!");
             return;
         }
@@ -71,7 +71,7 @@ public class GitlabFacade extends BaseManager {
             Optional<String> tokenOptional = Optional.ofNullable(gitlabDsInstanceConfig.getGitlab())
                     .map(GitLabConfig.Gitlab::getSystemHooks)
                     .map(GitLabConfig.SystemHooks::getToken);
-            return tokenOptional.filter(s -> GitlabTokenUtil.getToken().equals(s))
+            return tokenOptional.filter(s -> GitLabTokenUtil.getToken().equals(s))
                     .isPresent();
         }).findFirst();
     }

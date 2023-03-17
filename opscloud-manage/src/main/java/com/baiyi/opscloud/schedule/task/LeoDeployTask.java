@@ -23,8 +23,6 @@ public class LeoDeployTask {
 
     private final LeoDeployCompensationTask deployCompensationTask;
 
-    private static final boolean enable = false;
-
     @InstanceHealth
     @Scheduled(initialDelay = 15000, fixedRate = 120 * 1000)
     @TaskWatch(name = "Leo deploy compensate")

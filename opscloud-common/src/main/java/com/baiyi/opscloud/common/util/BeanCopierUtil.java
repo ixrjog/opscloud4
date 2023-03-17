@@ -108,5 +108,4 @@ public class BeanCopierUtil {
         return class1.toString() + class2.toString();
     }
 
-
 }

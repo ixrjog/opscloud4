@@ -4,10 +4,7 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
-import com.baiyi.opscloud.domain.generator.opscloud.Application;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildImage;
-import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeploymentVersionDetailsRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
@@ -18,6 +15,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.message.handler.base.BaseLeoContinuousDeliveryRequestHandler;
 import com.baiyi.opscloud.leo.message.util.VersionRenderer;
 import com.baiyi.opscloud.service.application.ApplicationService;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.leo.LeoBuildImageService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
@@ -32,6 +30,7 @@ import javax.websocket.Session;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -67,6 +66,9 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
 
     @Resource
     private LeoJobVersionDelegate jobVersionDelegate;
+
+    @Resource
+    private DsInstanceAssetPropertyService propertyService;
 
     @Override
     public String getMessageType() {
@@ -125,6 +127,11 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
                     final String image = optionalContainer.get().getImage();
                     LeoBuildImage buildImage = buildImageService.findBuildImage(jobId, image);
                     final int replicas = deployment.getSpec().getReplicas();
+
+                    Map<String, String> properties = propertyService.queryByAssetId(asset.getId())
+                            .stream()
+                            .collect(Collectors.toMap(DatasourceInstanceAssetProperty::getName, DatasourceInstanceAssetProperty::getValue, (k1, k2) -> k1));
+
                     return LeoJobVersionVO.DeploymentVersion.builder()
                             .jobId(jobId)
                             .assetId(asset.getId())
@@ -135,6 +142,7 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
                             .replicas(replicas)
                             .versionName(buildImage != null ? buildImage.getVersionName() : LeoDeployModel.DeployVersion.UNKNOWN.getVersionName())
                             .versionDesc(buildImage != null ? buildImage.getVersionDesc() : LeoDeployModel.DeployVersion.UNKNOWN.getVersionDesc())
+                            .properties(properties)
                             .build();
                 } else {
                     return LeoJobVersionVO.DeploymentVersion.builder()

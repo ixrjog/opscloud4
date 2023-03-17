@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.leo.util;
 
 import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.common.util.TimeUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ public class SnapshotStash {
 
     private final RedisUtil redisUtil;
 
-    private static final long STASH_TIME = TimeUtil.dayTime / 1000 * 7;
+    private static final long STASH_TIME = NewTimeUtil.DAY_TIME * 7 / 1000;
 
     public void save(Integer deployId, LeoDeployingVO.Deploying deploying) {
         redisUtil.set(getKey(deployId), deploying, STASH_TIME);

@@ -27,15 +27,15 @@ public class BeetlUtil {
      * @throws IOException
      */
     public static String renderTemplate(String template, Map<String, Object> contentMap) throws IOException {
-        //初始化代码
+        // 初始化代码
         StringTemplateResourceLoader resourceLoader = new StringTemplateResourceLoader();
         Configuration cfg = Configuration.defaultConfiguration();
         GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
-        //获取模板
+        // 获取模板
         Template t = gt.getTemplate(template);
         contentMap.keySet().forEach(k -> t.binding(k, contentMap.get(k)));
         // t.binding("name", "beetl");
-        //渲染结果
+        // 渲染结果
         return t.render();
     }
 
@@ -56,4 +56,5 @@ public class BeetlUtil {
         vars.getVars().keySet().forEach(k -> t.binding(k, vars.getVars().get(k)));
         return t.render();
     }
+
 }

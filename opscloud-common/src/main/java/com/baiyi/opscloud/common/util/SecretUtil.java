@@ -17,10 +17,10 @@ public class SecretUtil {
     }
 
     private static final String PW_STR = "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final String NUM_CHAR = "23456789"; // 8
-    private static final String UPPER_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";  // 26
+    private static final String NUM_CHAR = "23456789";
+    private static final String UPPER_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LOWER_CHAR = "abcdefghijklmnopqrstuvwxyz";
-    private static final String SYBL_CHAR = "!@#$%^&*()_+-="; //14
+    private static final String SYBL_CHAR = "!@#$%^&*()_+-=";
 
     /**
      * 生成随机字符串
@@ -29,7 +29,9 @@ public class SecretUtil {
      * @return
      */
     public static String getSecretStr(int length) {
-        if (length == 0) length = 20;
+        if (length == 0) {
+            length = 20;
+        }
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {
@@ -46,7 +48,9 @@ public class SecretUtil {
      * @return
      */
     public static String getRandomPassword(int length) {
-        if (length < 8) length = 8;
+        if (length < 8) {
+            length = 8;
+        }
         String p = getChar(NUM_CHAR, 1);
         p += getChar(UPPER_CHAR, 1);
         p += getChar(LOWER_CHAR, 1);
@@ -58,10 +62,14 @@ public class SecretUtil {
     private static String shuffleForSortingString(String s) {
         char[] c = s.toCharArray();
         List<Character> lst = Lists.newArrayList();
-        for (char value : c) lst.add(value);
+        for (char value : c) {
+            lst.add(value);
+        }
         Collections.shuffle(lst);
         StringBuilder resultStr = new StringBuilder();
-        for (Character character : lst) resultStr.append(character);
+        for (Character character : lst) {
+            resultStr.append(character);
+        }
         return resultStr.toString();
     }
 

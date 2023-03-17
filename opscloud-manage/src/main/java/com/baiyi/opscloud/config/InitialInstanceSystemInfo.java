@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.config;
 
 import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.common.util.TimeUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Instance;
 import com.baiyi.opscloud.facade.sys.InstanceFacade;
 import com.baiyi.opscloud.util.SystemInfoUtil;
@@ -34,7 +34,7 @@ public class InitialInstanceSystemInfo {
             if (instance == null) {
                 return;
             }
-            redisUtil.set(SystemInfoUtil.buildKey(instance), SystemInfoUtil.buildInfo(), TimeUtil.dayTime / 1000 * 365);
+            redisUtil.set(SystemInfoUtil.buildKey(instance), SystemInfoUtil.buildInfo(), NewTimeUtil.DAY_TIME / 1000 * 365);
             log.info("初始化实例系统信息！");
         } catch (UnknownHostException ignored) {
             log.error("查询实例信息错误！");

@@ -29,5 +29,6 @@ public class ListEntitiesException extends BaseException {
     public ListEntitiesException(String message, Throwable cause) {
         super(message, cause);
     }
+
 }
 

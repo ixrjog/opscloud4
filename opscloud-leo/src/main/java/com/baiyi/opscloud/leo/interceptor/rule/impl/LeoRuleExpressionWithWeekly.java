@@ -32,10 +32,8 @@ public class LeoRuleExpressionWithWeekly extends BaseLeoRuleExpression {
      * @return 命中
      */
     public boolean parse(LeoRuleModel.Expression expression) {
-        Calendar calendar = Calendar.getInstance();
         // 今天星期几
-        final int nowDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-
+        final int nowDayOfWeek = calendarValueGet(Calendar.DAY_OF_WEEK) - 1;
         List<String> beginArgs = getExpressionArgs(expression.getBegin());
         List<String> endArgs = getExpressionArgs(expression.getEnd());
         int beginDayOfWeek = Integer.parseInt(beginArgs.get(0));
@@ -55,7 +53,7 @@ public class LeoRuleExpressionWithWeekly extends BaseLeoRuleExpression {
                 hitBegin = true;
             }
         }
-        log.info("开始时间: hitBeginTime={}", hitBegin);
+        log.debug("开始时间: hitBeginTime={}", hitBegin);
         if (!hitBegin) {
             return false;
         }
@@ -70,11 +68,11 @@ public class LeoRuleExpressionWithWeekly extends BaseLeoRuleExpression {
             }
         }
 
-        log.info("结束时间: hitEndTime={}", hitEnd);
+        log.debug("结束时间: hitEndTime={}", hitEnd);
         return hitEnd;
     }
 
-    private static final String displayName = "每周封网(开始时间: 星期%s %s, 结束时间: 星期%s %s)";
+    private static final String DISPLAY_NAME = "每周封网(开始时间: 星期%s %s, 结束时间: 星期%s %s)";
 
     /**
      * @param expression
@@ -83,7 +81,7 @@ public class LeoRuleExpressionWithWeekly extends BaseLeoRuleExpression {
     public String toDisplayName(LeoRuleModel.Expression expression) {
         List<String> beginArgs = getExpressionArgs(expression.getBegin());
         List<String> endArgs = getExpressionArgs(expression.getEnd());
-        return String.format(displayName, beginArgs.get(0), beginArgs.get(1), endArgs.get(0), endArgs.get(1));
+        return String.format(DISPLAY_NAME, beginArgs.get(0), beginArgs.get(1), endArgs.get(0), endArgs.get(1));
     }
 
 }

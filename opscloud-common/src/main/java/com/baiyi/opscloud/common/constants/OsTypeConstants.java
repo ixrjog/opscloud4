@@ -9,6 +9,9 @@ import lombok.Getter;
  */
 public enum OsTypeConstants {
 
+    /**
+     * 系统类型
+     */
     LINUX("Linux"),
     WINDOWS("Windows"),
     MACOS("MacOS");

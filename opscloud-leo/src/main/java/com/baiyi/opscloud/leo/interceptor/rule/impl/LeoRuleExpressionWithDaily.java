@@ -7,21 +7,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
- * 按具体时间范围来匹配
+ * 按每天时间范围来匹配
  *
  * @Author baiyi
- * @Date 2023/1/10 10:32
+ * @Date 2023/3/16 10:08
  * @Version 1.0
  */
 @Slf4j
 @Component
-public class LeoRuleExpressionWithDate extends BaseLeoRuleExpression {
+public class LeoRuleExpressionWithDaily extends BaseLeoRuleExpression {
 
     public String getType() {
-        return RuleExpressionConstants.DATE.name();
+        return RuleExpressionConstants.DAILY.name();
     }
 
-    private static final String DISPLAY_NAME = "按时间封网(开始时间: %s, 结束时间: %s)";
+    private static final String DISPLAY_NAME = "每天封网(开始时间: %s, 结束时间: %s)";
 
     public boolean parse(LeoRuleModel.Expression expression) {
         return LeoRuleModel.DateExpression
@@ -31,7 +31,7 @@ public class LeoRuleExpressionWithDate extends BaseLeoRuleExpression {
 
     /**
      * @param expression
-     * @return 封网开始时间: 2023-01-16 00:00:00, 封网结束时间 2023-01-29 09:00:00
+     * @return 封网开始时间: 11:40:00, 封网结束时间 13:20:00
      */
     public String toDisplayName(LeoRuleModel.Expression expression) {
         return String.format(DISPLAY_NAME, expression.getBegin(), expression.getEnd());

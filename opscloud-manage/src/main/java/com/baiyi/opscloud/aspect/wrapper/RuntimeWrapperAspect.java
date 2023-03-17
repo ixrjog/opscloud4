@@ -2,7 +2,7 @@ package com.baiyi.opscloud.aspect.wrapper;
 
 import com.baiyi.opscloud.common.annotation.RuntimeWrapper;
 import com.baiyi.opscloud.common.exception.common.OCException;
-import com.baiyi.opscloud.common.util.TimeUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +13,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 /**
  * 注入runtime字段
@@ -79,9 +77,9 @@ public class RuntimeWrapperAspect {
         if (iRuntime.getEndTime() != null) {
             runtime = iRuntime.getEndTime().getTime() - iRuntime.getStartTime().getTime();
         } else {
-            runtime = new Date().getTime() - iRuntime.getStartTime().getTime();
+            runtime = System.currentTimeMillis() - iRuntime.getStartTime().getTime();
         }
-        iRuntime.setRuntime(TimeUtil.acqBuildTime(runtime));
+        iRuntime.setRuntime(NewTimeUtil.toRuntime(runtime));
     }
 
 }

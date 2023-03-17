@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.sshserver.command.event;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.TimeUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.domain.generator.opscloud.EventBusiness;
@@ -112,7 +112,7 @@ public class EventCommand extends BaseServerCommand {
                     eventContext.getEventName(),
                     serverVO.getDisplayName(),
                     ServerUtil.toDisplayIp(serverVO),
-                    TimeUtil.toGmtDate(eventContext.getLastchangeTime()),
+                    NewTimeUtil.parse(eventContext.getLastchangeTime()),
                     toAccountField(serverVO, com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin())
             );
             id++;

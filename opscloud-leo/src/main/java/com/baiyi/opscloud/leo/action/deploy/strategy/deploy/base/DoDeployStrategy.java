@@ -2,19 +2,16 @@ package com.baiyi.opscloud.leo.action.deploy.strategy.deploy.base;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
+import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.leo.action.deploy.base.BaseDeployStrategy;
 import com.baiyi.opscloud.leo.constants.DeployDictConstants;
 import com.baiyi.opscloud.leo.constants.DeployStepConstants;
-import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
-import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
-import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 
-import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Optional;
 
@@ -24,12 +21,6 @@ import java.util.Optional;
  * @Version 1.0
  */
 public abstract class DoDeployStrategy extends BaseDeployStrategy {
-
-    @Resource
-    protected DsInstanceAssetService assetService;
-
-    @Resource
-    protected DsInstanceService instanceService;
 
     /**
      * 执行部署

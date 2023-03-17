@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Slf4j
 public class ThreadPoolTaskExecutorPrint {
 
-    public static void print(ThreadPoolTaskExecutor threadPoolTaskExecutor,String name) {
+    public static void print(ThreadPoolTaskExecutor threadPoolTaskExecutor, String name) {
         ThreadPoolExecutor threadPoolExecutor = threadPoolTaskExecutor.getThreadPoolExecutor();
         log.info("{} threadPoolExecutor: taskCount={}, completedTaskCount={}, poolSize={}, activeCount={}",
                 name,
