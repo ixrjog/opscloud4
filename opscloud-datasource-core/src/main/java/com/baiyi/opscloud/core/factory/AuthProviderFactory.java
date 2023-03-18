@@ -25,7 +25,7 @@ public class AuthProviderFactory {
 
     public static void register(BaseAuthProvider bean) {
         context.put(bean.getInstanceType(), bean);
-        log.info("AuthProviderFactory Registered: beanName={}, instanceType={}", bean.getClass().getSimpleName(), bean.getInstanceType());
+        log.debug("AuthProviderFactory Registered: beanName={}, instanceType={}", bean.getClass().getSimpleName(), bean.getInstanceType());
     }
 
 }

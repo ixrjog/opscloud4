@@ -25,7 +25,7 @@ public class BusinessServiceFactory {
 
     public static void register(IBusinessService bean) {
         context.put(bean.getBusinessType(), bean);
-        log.info("BusinessServiceFactory Registered: beanName={}, businessType={}", bean.getClass().getSimpleName(), bean.getBusinessType());
+        log.debug("BusinessServiceFactory Registered: beanName={}, businessType={}", bean.getClass().getSimpleName(), bean.getBusinessType());
     }
 
 }

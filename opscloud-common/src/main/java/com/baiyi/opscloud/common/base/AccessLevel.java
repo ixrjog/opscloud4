@@ -9,6 +9,9 @@ import lombok.Getter;
  */
 public enum AccessLevel {
 
+    /**
+     * 访问级别
+     */
     ADMIN(100),
     OPS(50),
     DEV(40),

@@ -25,7 +25,7 @@ public class CrValidatorFactory {
 
     public static void register(BaseCrValidator bean) {
         context.put(bean.getCrType(), bean);
-        log.info("CrValidatorFactory Registered: crType={}", bean.getCrType());
+        log.debug("CrValidatorFactory Registered: crType={}", bean.getCrType());
     }
 
 }

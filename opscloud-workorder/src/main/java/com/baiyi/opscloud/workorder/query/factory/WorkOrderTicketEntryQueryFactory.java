@@ -22,6 +22,7 @@ public class WorkOrderTicketEntryQueryFactory {
 
     public static void register(ITicketEntryQuery bean) {
         context.put(bean.getKey(), bean);
-        log.info("WorkOrderTicketEntryQueryFactory Registered: key={}, beanName={}", bean.getKey(), bean.getClass().getSimpleName());
+        log.debug("WorkOrderTicketEntryQueryFactory Registered: key={}, beanName={}", bean.getKey(), bean.getClass().getSimpleName());
     }
+
 }

@@ -25,7 +25,7 @@ public class CredentialCustomerFactory {
 
     public static void register(ICredentialCustomer bean) {
         context.put(bean.getBeanName(), bean);
-        log.info("CredentialCustomerFactory Registered: beanName={}", bean.getBeanName());
+        log.debug("CredentialCustomerFactory Registered: beanName={}", bean.getBeanName());
     }
 
     public static int countByCredentialId(int credentialId) {

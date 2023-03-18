@@ -28,10 +28,12 @@ public class InitialRedisConfiguration implements ApplicationContextAware {
         try {
             RedisTemplate<String, Object> redisTemplate = applicationContext.getBean("redisTemplate", RedisTemplate.class);
             redisTemplate.hasKey("initCheck");
-            log.info("校验Redis连接成功!");
+            log.info("Start verification Redis connection succeeded");
         } catch (Exception e) {
-            log.error("初始化Redis连接失败: {}", e.getMessage());
-            // 当检测redis连接失败时, 停止项目启动
+            log.error("Start verification Redis unable to connect: {}", e.getMessage());
+            /**
+             * 停止项目启动
+             */
             configurableApplicationContext.close();
         }
     }

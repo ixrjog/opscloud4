@@ -24,7 +24,7 @@ public class SupervisingStrategyFactory {
 
     public static void register(SupervisingStrategy bean) {
         context.put(bean.getDeployType(), bean);
-        log.info("DeployingStrategyFactory Registered: deployType={}", bean.getDeployType());
+        log.debug("DeployingStrategyFactory Registered: deployType={}", bean.getDeployType());
     }
 
 }

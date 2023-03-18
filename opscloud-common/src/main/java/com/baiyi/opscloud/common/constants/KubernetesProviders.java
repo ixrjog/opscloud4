@@ -9,6 +9,9 @@ import lombok.Getter;
  */
 public enum KubernetesProviders {
 
+    /**
+     * 供应商
+     */
     AMAZON_EKS("AmazonEKS");
 
     @Getter

@@ -28,7 +28,7 @@ public class UserAmFacade {
 
     public static void register(IAccessManagementProcessor bean) {
         context.put(bean.getDsType(), bean);
-        log.info("AM Processor Registered: dsType={}, beanName={}", bean.getDsType(), bean.getClass().getSimpleName());
+        log.debug("AM Processor Registered: dsType={}, beanName={}", bean.getDsType(), bean.getClass().getSimpleName());
     }
 
     /**

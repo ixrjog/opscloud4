@@ -24,6 +24,6 @@ public class ServerTaskPlayFactory {
 
     public static void register(ITaskPlayProcessor bean) {
         context.put(bean.getState(), bean);
-        log.info("TemplateFactory Registered: state={}", bean.getState());
+        log.debug("TemplateFactory Registered: state={}", bean.getState());
     }
 }

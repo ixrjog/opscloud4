@@ -64,7 +64,7 @@ public class LeoBuildEventLoop implements Runnable {
                 }
             }
             try {
-                TimeUnit.SECONDS.sleep(5L);
+                TimeUnit.SECONDS.sleep(3L);
             } catch (InterruptedException ignored) {
             }
         }

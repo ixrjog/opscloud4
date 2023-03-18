@@ -29,10 +29,12 @@ public class InitialDataSourceConfiguration implements ApplicationContextAware {
         try {
             DataSource dataSource = applicationContext.getBean("opscloudDataSource", DataSource.class);
             dataSource.getConnection().close();
-            log.info("校验DataSource[Mysql]连接成功!");
+            log.info("Start verification MySQL connection succeeded");
         } catch (Exception e) {
-            log.error("校验DataSource[Mysql]连接失败: {}", e.getMessage());
-            // 当检测数据库连接失败时, 停止项目启动
+            log.error("Start verification MySQL unable to connect: {}", e.getMessage());
+            /**
+             * 停止项目启动
+             */
             configurableApplicationContext.close();
         }
     }

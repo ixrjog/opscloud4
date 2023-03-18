@@ -12,6 +12,9 @@ import java.util.Arrays;
 @Getter
 public enum AnsibleResult {
 
+    /**
+     * 结果
+     */
     SUCCESSFUL(0, "SUCCESSFUL"),
     FAILED(1, "FAILED");
 

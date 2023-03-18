@@ -35,9 +35,9 @@ public class InitialInstanceSystemInfo {
                 return;
             }
             redisUtil.set(SystemInfoUtil.buildKey(instance), SystemInfoUtil.buildInfo(), NewTimeUtil.DAY_TIME / 1000 * 365);
-            log.info("初始化实例系统信息！");
+            log.info("Initialize instance system information");
         } catch (UnknownHostException ignored) {
-            log.error("查询实例信息错误！");
+            log.warn("Error querying instance information");
         }
     }
 

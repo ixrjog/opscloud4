@@ -12,11 +12,13 @@ import java.util.Arrays;
 @Getter
 public enum UserProfileKeyEnum {
 
+    /**
+     * 终端主题
+     */
     TERMINAL_THEME_FOREGROUND("terminal.theme.foreground", "#090909"),
     TERMINAL_THEME_BACKGROUND("terminal.theme.background", "#FFFFFF"),
     TERMINAL_THEME_CURSOR("terminal.theme.cursor", "#090909"),
-    TERMINAL_ROWS("terminal.rows", "30"),
-
+    TERMINAL_ROWS("terminal.rows", "30")
     ;
 
     private final String key;

@@ -37,11 +37,18 @@ public class AliyunConfig extends BaseDsConfig {
         private String version;
         private Account account;
         private String regionId;
-        private Set<String> regionIds; // 可用区
+        /**
+         * 可用区
+         */
+        private Set<String> regionIds;
         private Ons ons;
-        // 数据库管理
+        /**
+         * 数据库管理
+         */
         private Dms dms;
-        // 云监控
+        /**
+         * 云监控
+         */
         private Cms cms;
 
         private Acr arc;

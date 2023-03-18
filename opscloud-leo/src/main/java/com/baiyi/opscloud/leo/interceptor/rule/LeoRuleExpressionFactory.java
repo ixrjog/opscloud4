@@ -24,7 +24,7 @@ public class LeoRuleExpressionFactory {
 
     public static void register(IRuleExpression bean) {
         context.put(bean.getType(), bean);
-        log.info("LeoRuleExpressionFactory Registered: beanName={}, type={}", bean.getClass().getSimpleName(), bean.getType());
+        log.debug("LeoRuleExpressionFactory Registered: beanName={}, type={}", bean.getClass().getSimpleName(), bean.getType());
     }
 
 }

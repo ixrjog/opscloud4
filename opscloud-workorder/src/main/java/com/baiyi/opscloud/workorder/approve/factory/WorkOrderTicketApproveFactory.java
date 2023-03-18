@@ -22,7 +22,7 @@ public class WorkOrderTicketApproveFactory {
 
     public static void register(ITicketApprove bean) {
         context.put(bean.getApprovalType(), bean);
-        log.info("WorkOrderTicketApproveFactory Register: approvalType={}, beanName={}", bean.getApprovalType(), bean.getClass().getSimpleName());
+        log.debug("WorkOrderTicketApproveFactory Register: approvalType={}, beanName={}", bean.getApprovalType(), bean.getClass().getSimpleName());
     }
 
 }

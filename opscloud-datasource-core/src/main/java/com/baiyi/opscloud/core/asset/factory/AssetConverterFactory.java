@@ -27,7 +27,7 @@ public class AssetConverterFactory {
 
     public static void register(IAssetConverter bean) {
         context.put(bean.getAssetType(), bean);
-        log.info("AssetConvertFactory Registered: beanName={}", bean.getClass().getSimpleName());
+        log.debug("AssetConvertFactory Registered: beanName={}", bean.getClass().getSimpleName());
     }
 
 }

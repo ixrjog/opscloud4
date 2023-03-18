@@ -27,7 +27,7 @@ public class SetDsInstanceConfigFactory {
 
     public static void register(AbstractSetDsInstanceConfigProvider bean) {
         context.put(bean.getInstanceType(), bean);
-        log.info("SetDsInstanceConfigFactory Registered: instanceType={}", bean.getInstanceType());
+        log.debug("SetDsInstanceConfigFactory Registered: instanceType={}", bean.getInstanceType());
     }
 
 }

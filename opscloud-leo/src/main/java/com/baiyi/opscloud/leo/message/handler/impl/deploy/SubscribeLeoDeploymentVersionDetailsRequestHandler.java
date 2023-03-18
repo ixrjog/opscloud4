@@ -87,6 +87,7 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
         for (LeoJob job : jobs) {
             LeoJobVersionVO.JobVersion jobVersion = LeoJobVersionVO.JobVersion.builder()
                     .jobName(job.getName())
+                    .applicationId(queryParam.getApplicationId())
                     .envType(job.getEnvType())
                     .deploymentVersions(generateDeploymentVersions(application, job.getId()))
                     .build();

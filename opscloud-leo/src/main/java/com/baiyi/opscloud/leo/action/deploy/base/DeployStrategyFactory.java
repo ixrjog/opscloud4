@@ -35,7 +35,7 @@ public class DeployStrategyFactory {
             strategyMap.put(bean.getDeployType(), bean);
             context.put(bean.getStep(), strategyMap);
         }
-        log.info("DeployStrategyFactory Registered: step={}. deployType={}", bean.getStep(), bean.getDeployType());
+        log.debug("DeployStrategyFactory Registered: step={}. deployType={}", bean.getStep(), bean.getDeployType());
     }
 
 }

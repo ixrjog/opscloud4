@@ -48,6 +48,6 @@ public class AssetProviderFactory {
             map.put(bean.getAssetType(), bean);
             context.put(bean.getInstanceType(), map);
         }
-        log.info("AssetProviderFactory Registered: beanName={}, instanceType={}, assetType={}", bean.getClass().getSimpleName(), bean.getInstanceType(), bean.getAssetType());
+        log.debug("AssetProviderFactory Registered: beanName={}, instanceType={}, assetType={}", bean.getClass().getSimpleName(), bean.getInstanceType(), bean.getAssetType());
     }
 }

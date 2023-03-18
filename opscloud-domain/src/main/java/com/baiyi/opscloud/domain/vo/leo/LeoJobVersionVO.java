@@ -30,8 +30,9 @@ public class LeoJobVersionVO {
         private static final long serialVersionUID = -2925847833549310319L;
 
         private String jobName;
-        private EnvVO.Env env;
+        private Integer applicationId;
         private Integer envType;
+        private EnvVO.Env env;
         private List<DeploymentVersion> deploymentVersions;
 
     }

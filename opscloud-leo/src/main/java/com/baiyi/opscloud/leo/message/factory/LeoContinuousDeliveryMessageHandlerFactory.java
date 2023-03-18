@@ -21,7 +21,7 @@ public class LeoContinuousDeliveryMessageHandlerFactory {
     }
 
     public static void register(ILeoContinuousDeliveryRequestHandler bean) {
-        log.info("LeoContinuousDeliveryMessageHandlerFactory Registered: messageType={}", bean.getMessageType());
+        log.debug("LeoContinuousDeliveryMessageHandlerFactory Registered: messageType={}", bean.getMessageType());
         context.put(bean.getMessageType(), bean);
     }
 

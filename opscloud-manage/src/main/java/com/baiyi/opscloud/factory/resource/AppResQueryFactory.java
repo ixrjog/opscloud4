@@ -27,7 +27,7 @@ public class AppResQueryFactory {
     public static void register(IAppResQuery bean) {
         ImmutablePair<String, Integer> key = ImmutablePair.of(bean.getAppResType(), bean.getBusinessType());
         context.put(key, bean);
-        log.info("AppResQueryFactory Registered: beanName={}, resourceType={}, businessType={}",
+        log.debug("AppResQueryFactory Registered: beanName={}, resourceType={}, businessType={}",
                 bean.getClass().getSimpleName(), bean.getAppResType(), bean.getBusinessType());
     }
 

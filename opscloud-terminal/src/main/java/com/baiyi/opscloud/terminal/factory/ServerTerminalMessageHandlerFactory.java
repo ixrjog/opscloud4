@@ -21,7 +21,7 @@ public class ServerTerminalMessageHandlerFactory {
     }
 
     public static void register(ITerminalMessageHandler bean) {
-        log.info("ServerTerminalMessageHandlerFactory Registered: state={}", bean.getState());
+        log.debug("ServerTerminalMessageHandlerFactory Registered: state={}", bean.getState());
         context.put(bean.getState(), bean);
     }
 }

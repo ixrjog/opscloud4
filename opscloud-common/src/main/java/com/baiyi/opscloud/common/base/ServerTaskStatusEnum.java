@@ -7,8 +7,17 @@ package com.baiyi.opscloud.common.base;
  */
 public enum ServerTaskStatusEnum {
 
-    QUEUE, // 队列中
-    EXECUTING,  // 执行中
-    FINALIZED // 完成
+    /**
+     * 队列中
+     */
+    QUEUE,
+    /**
+     * 执行中
+     */
+    EXECUTING,
+    /**
+     * 完成
+     */
+    FINALIZED
 
 }
