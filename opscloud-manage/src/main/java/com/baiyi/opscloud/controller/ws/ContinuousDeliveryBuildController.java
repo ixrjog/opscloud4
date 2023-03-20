@@ -33,7 +33,9 @@ import static com.baiyi.opscloud.controller.ws.ServerTerminalController.WEBSOCKE
 @Component
 public class ContinuousDeliveryBuildController extends SimpleAuthentication {
 
-    // 当前会话ID
+    /**
+     * 当前会话UUID
+     */
     private final String sessionId = UUID.randomUUID().toString();
 
     private String username;
@@ -74,7 +76,6 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
      */
     @OnMessage(maxMessageSize = 1024)
     public void onMessage(String message, Session session) {
-        // log.info("message={}", message);
         if (!session.isOpen() || StringUtils.isEmpty(message)) {
             return;
         }

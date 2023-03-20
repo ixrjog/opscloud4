@@ -91,6 +91,11 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    public void updateByPrimaryKeySelective(Application application) {
+        applicationMapper.updateByPrimaryKeySelective(application);
+    }
+
+    @Override
     public void deleteById(Integer id) {
         applicationMapper.deleteByPrimaryKey(id);
     }

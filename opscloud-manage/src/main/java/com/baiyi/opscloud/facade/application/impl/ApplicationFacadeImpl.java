@@ -36,6 +36,7 @@ import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
@@ -69,10 +70,7 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     @Override
     public DataTable<ApplicationVO.Application> queryApplicationPage(ApplicationParam.ApplicationPageQuery pageQuery) {
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
-        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class)
-                .stream()
-                .peek(e -> applicationPacker.wrap(e, pageQuery))
-                .collect(Collectors.toList());
+        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class).stream().peek(e -> applicationPacker.wrap(e, pageQuery)).collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
@@ -85,14 +83,13 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
             pageQuery.setUserId(userService.getByUsername(SessionUtil.getUsername()).getId());
         }
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
-        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class)
-                .stream()
-                .peek(e -> applicationPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class).stream().peek(e -> applicationPacker.wrap(e, pageQuery)).collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
     /**
      * 后期会删除，跨地域查询多应用性能太差
+     *
      * @param pageQuery
      * @return
      */
@@ -110,26 +107,20 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
             table = applicationService.queryPageByParam(pageQuery);
         } else {
             if (!pageQuery.getAdmin()) {
-                UserPermission query = UserPermission.builder()
-                        .businessType(BusinessTypeEnum.APPLICATION.getType())
-                        .businessId(pageQuery.getApplicationId())
-                        .userId(pageQuery.getUserId())
-                        .build();
+                UserPermission query = UserPermission.builder().businessType(BusinessTypeEnum.APPLICATION.getType()).businessId(pageQuery.getApplicationId()).userId(pageQuery.getUserId()).build();
                 if (userPermissionService.getByUniqueKey(query) == null) {
                     throw new AuthenticationException(ErrorEnum.AUTHENTICATION_FAILURE);
                 }
             }
             table = new DataTable<>(Lists.newArrayList(applicationService.getById(pageQuery.getApplicationId())), 1);
         }
-        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class)
-                .stream()
-                .peek(e -> {
-                    if (IdUtil.isEmpty(pageQuery.getApplicationId())) {
-                        applicationPacker.wrap(e, pageQuery);
-                    } else {
-                        applicationPacker.wrap(e);
-                    }
-                }).collect(Collectors.toList());
+        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class).stream().peek(e -> {
+            if (IdUtil.isEmpty(pageQuery.getApplicationId())) {
+                applicationPacker.wrap(e, pageQuery);
+            } else {
+                applicationPacker.wrap(e);
+            }
+        }).collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
@@ -138,11 +129,7 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
         // 鉴权
         if (!isAdmin(SessionUtil.getUsername())) {
             int userId = userService.getByUsername(SessionUtil.getUsername()).getId();
-            UserPermission query = UserPermission.builder()
-                    .businessType(BusinessTypeEnum.APPLICATION.getType())
-                    .businessId(getApplicationKubernete.getApplicationId())
-                    .userId(userId)
-                    .build();
+            UserPermission query = UserPermission.builder().businessType(BusinessTypeEnum.APPLICATION.getType()).businessId(getApplicationKubernete.getApplicationId()).userId(userId).build();
             if (userPermissionService.getByUniqueKey(query) == null) {
                 throw new AuthenticationException(ErrorEnum.AUTHENTICATION_FAILURE);
             }
@@ -188,19 +175,23 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
         if (applicationService.getByKey(application.getApplicationKey()) != null) {
             throw new OCException(ErrorEnum.APPLICATION_ALREADY_EXIST);
         }
-        Application app = BeanCopierUtil.copyProperties(application, Application.class);
-        applicationService.add(app);
+        Application newApplication = BeanCopierUtil.copyProperties(application, Application.class);
+        if (StringUtils.isNotBlank(application.getApplicationKey())) {
+            newApplication.setApplicationKey(application.getApplicationKey().replaceAll(" ", "").toUpperCase());
+        }
+        applicationService.add(newApplication);
     }
 
     @Override
     public void updateApplication(ApplicationVO.Application application) {
-        Application app = applicationService.getByKey(application.getApplicationKey());
-        if (app == null) {
+        if (applicationService.getById(application.getId()) == null) {
             throw new OCException(ErrorEnum.APPLICATION_ALREADY_EXIST);
         }
-        app.setComment(application.getComment());
-        app.setName(application.getName());
-        applicationService.update(app);
+        Application saveApplication = BeanCopierUtil.copyProperties(application, Application.class);
+        if (StringUtils.isNotBlank(application.getApplicationKey())) {
+            saveApplication.setApplicationKey(application.getApplicationKey().replaceAll(" ", "").toUpperCase());
+        }
+        applicationService.update(BeanCopierUtil.copyProperties(application, Application.class));
     }
 
     @Override

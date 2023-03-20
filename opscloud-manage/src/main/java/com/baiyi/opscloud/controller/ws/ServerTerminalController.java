@@ -34,13 +34,17 @@ import java.util.UUID;
 @Component
 public class ServerTerminalController extends SimpleAuthentication {
 
-    // 当前会话 uuid
+    /**
+     * 当前会话UUID
+     */
     private final String sessionId = UUID.randomUUID().toString();
 
-    // 超时时间5分钟
+    /**
+     * 超时时间5分钟
+     */
     public static final Long WEBSOCKET_TIMEOUT = NewTimeUtil.MINUTE_TIME * 5;
 
-    private static final HostInfo serverInfo = HostInfo.build();
+    private static final HostInfo SERVER_INFO = HostInfo.build();
 
     private static TerminalSessionService terminalSessionService;
 
@@ -64,8 +68,8 @@ public class ServerTerminalController extends SimpleAuthentication {
     @OnOpen
     public void onOpen(Session session) {
         try {
-            log.info("Server terminal session try to connect: instanceIP={}, sessionId={}", serverInfo.getHostAddress(), sessionId);
-            TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.WEB_TERMINAL);
+            log.info("Server terminal session try to connect: instanceIP={}, sessionId={}", SERVER_INFO.getHostAddress(), sessionId);
+            TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, SERVER_INFO, SessionTypeEnum.WEB_TERMINAL);
             terminalSessionService.add(terminalSession);
             this.terminalSession = terminalSession;
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
@@ -93,7 +97,9 @@ public class ServerTerminalController extends SimpleAuthentication {
      */
     @OnMessage(maxMessageSize = 20 * 1024)
     public void onMessage(String message, Session session) {
-        if (!session.isOpen() || StringUtils.isEmpty(message)) return;
+        if (!session.isOpen() || StringUtils.isEmpty(message)) {
+            return;
+        }
         String state = getState(message);
         if (StringUtils.isEmpty(this.terminalSession.getUsername())) {
             if (MessageState.LOGIN.getState().equals(state)) {

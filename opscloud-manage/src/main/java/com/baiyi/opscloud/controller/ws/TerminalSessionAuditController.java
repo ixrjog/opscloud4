@@ -43,10 +43,14 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
      */
     @OnMessage(maxMessageSize = 10 * 1024)
     public void onMessage(String message, Session session) {
-        if (!session.isOpen() || StringUtils.isEmpty(message)) return;
+        if (!session.isOpen() || StringUtils.isEmpty(message)) {
+            return;
+        }
         String state = getState(message);
-        ITerminalAuditHandler iTerminalAuditProcess = TerminalAuditHandlerFactory.getHandlerByKey(state);
-        if (iTerminalAuditProcess != null) iTerminalAuditProcess.handle(message, session);
+        ITerminalAuditHandler terminalAuditHandler = TerminalAuditHandlerFactory.getHandlerByKey(state);
+        if (terminalAuditHandler != null) {
+            terminalAuditHandler.handle(message, session);
+        }
     }
 
     /**

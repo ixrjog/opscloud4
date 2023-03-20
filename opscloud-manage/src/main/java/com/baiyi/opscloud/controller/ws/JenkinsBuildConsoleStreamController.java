@@ -30,7 +30,9 @@ import static com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType.QU
 @Component
 public class JenkinsBuildConsoleStreamController extends SimpleAuthentication {
 
-    // 当前会话ID
+    /**
+     * 当前会话UUID
+     */
     private final String sessionId = UUID.randomUUID().toString();
 
     private String username;
@@ -62,7 +64,9 @@ public class JenkinsBuildConsoleStreamController extends SimpleAuthentication {
      */
     @OnMessage(maxMessageSize = 10 * 1024)
     public void onMessage(String message, Session session) {
-        if (!session.isOpen() || StringUtils.isEmpty(message)) return;
+        if (!session.isOpen() || StringUtils.isEmpty(message)) {
+            return;
+        }
         QueryLeoBuildConsoleStreamRequestParam requestParam = new GsonBuilder().create().fromJson(message, QueryLeoBuildConsoleStreamRequestParam.class);
         // 处理登录状态
         hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));

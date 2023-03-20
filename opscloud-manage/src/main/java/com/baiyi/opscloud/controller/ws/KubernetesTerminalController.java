@@ -34,13 +34,17 @@ import java.util.UUID;
 @Component
 public class KubernetesTerminalController extends SimpleAuthentication {
 
-    // 当前会话 uuid
+    /**
+     * 当前会话 UUID
+     */
     private final String sessionId = UUID.randomUUID().toString();
 
-    // 超时时间1H
+    /**
+     * 超时时间1H
+     */
     public static final Long WEBSOCKET_TIMEOUT = NewTimeUtil.MINUTE_TIME * 15;
 
-    private static final HostInfo serverInfo = HostInfo.build();
+    private static final HostInfo SERVER_INFO = HostInfo.build();
 
     private TerminalSession terminalSession;
 
@@ -64,8 +68,8 @@ public class KubernetesTerminalController extends SimpleAuthentication {
     @OnOpen
     public void onOpen(Session session) {
         try {
-            log.info("Kubernetes terminal session try to connect: instanceIP={}, sessionId={}", serverInfo.getHostAddress(), sessionId);
-            TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.KUBERNETES_TERMINAL);
+            log.info("Kubernetes terminal session try to connect: instanceIP={}, sessionId={}", SERVER_INFO.getHostAddress(), sessionId);
+            TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, SERVER_INFO, SessionTypeEnum.KUBERNETES_TERMINAL);
             this.terminalSession = terminalSession;
             terminalSessionService.add(terminalSession);
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
@@ -92,11 +96,15 @@ public class KubernetesTerminalController extends SimpleAuthentication {
      */
     @OnMessage(maxMessageSize = 20 * 1024)
     public void onMessage(String message, Session session) {
-        if (!session.isOpen() || StringUtils.isEmpty(message)) return;
+        if (!session.isOpen() || StringUtils.isEmpty(message)) {
+            return;
+        }
         String state = getState(message);
         if (StringUtils.isEmpty(this.terminalSession.getUsername())) {
-            if (MessageState.LOGIN.getState().equals(state))       // 鉴权并更新会话信息
+            // 鉴权并更新会话信息
+            if (MessageState.LOGIN.getState().equals(state)) {
                 updateSessionUsername(hasLogin(new GsonBuilder().create().fromJson(message, SimpleLoginMessage.class)));
+            }
         } else {
             SessionUtil.setUsername(this.terminalSession.getUsername());
         }

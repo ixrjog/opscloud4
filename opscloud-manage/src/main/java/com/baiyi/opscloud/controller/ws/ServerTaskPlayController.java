@@ -50,10 +50,14 @@ public class ServerTaskPlayController extends SimpleAuthentication {
      */
     @OnMessage(maxMessageSize = 1024)
     public void onMessage(String message, Session session) {
-        if (!session.isOpen() || StringUtils.isEmpty(message)) return;
+        if (!session.isOpen() || StringUtils.isEmpty(message)) {
+            return;
+        }
         String state = getState(message);
         ITaskPlayProcessor iTaskPlayProcess = ServerTaskPlayFactory.getProcessByKey(state);
-        if (iTaskPlayProcess != null) iTaskPlayProcess.process(message, session);
+        if (iTaskPlayProcess != null) {
+            iTaskPlayProcess.process(message, session);
+        }
     }
 
     /**

@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.OnClose;
@@ -36,6 +37,13 @@ public class JenkinsBuildExecutorController {
 
     private static DsInstanceService dsInstanceService;
 
+    private static ThreadPoolTaskExecutor leoExecutor;
+
+    @Autowired
+    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor leoExecutor) {
+        JenkinsBuildExecutorController.leoExecutor = leoExecutor;
+    }
+
     @Autowired
     public void setBeans(JenkinsBuildExecutorHelper jenkinsBuildExecutorHelper, DsInstanceService dsInstanceService) {
         JenkinsBuildExecutorController.jenkinsBuildExecutorHelper = jenkinsBuildExecutorHelper;
@@ -60,13 +68,15 @@ public class JenkinsBuildExecutorController {
         if (simpleMessage.getInstanceId() != null) {
             instance = dsInstanceService.getById(simpleMessage.getInstanceId());
         } else {
-            if (StringUtils.isNotBlank(simpleMessage.getInstanceUuid()))
+            if (StringUtils.isNotBlank(simpleMessage.getInstanceUuid())) {
                 instance = dsInstanceService.getByUuid(simpleMessage.getInstanceUuid());
+            }
         }
-        if (instance == null) return;
+        if (instance == null) {
+            return;
+        }
         Runnable run = new WatchJenkinsBuildExecutorTask(sessionId, session, instance, jenkinsBuildExecutorHelper);
-        Thread thread = new Thread(run);
-        thread.start();
+        leoExecutor.execute(run);
     }
 
     protected SimpleMessage toMessage(String message) {

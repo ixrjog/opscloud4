@@ -30,6 +30,8 @@ public interface ApplicationService {
 
     void update(Application application);
 
+    void updateByPrimaryKeySelective(Application application);
+
     void deleteById(Integer id);
 
     int countWithReport();
