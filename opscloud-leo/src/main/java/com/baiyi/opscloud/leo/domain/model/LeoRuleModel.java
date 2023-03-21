@@ -36,7 +36,6 @@ public class LeoRuleModel {
         return load(rule.getRuleConfig());
     }
 
-
     /**
      * 从配置加载
      *
@@ -69,7 +68,6 @@ public class LeoRuleModel {
         private Rule rule;
 
     }
-
 
     @Builder
     @Data
@@ -144,12 +142,12 @@ public class LeoRuleModel {
         private Date beginDate;
         private Date endDate;
         @Builder.Default
-        private Date nowDate = new Date();
+        private Date nowDate = NewTimeUtil.parse(NewTimeUtil.parse(new Date(), NewTimeUtil.TIME), NewTimeUtil.TIME);
 
-        public static DateExpression build(Expression expression) {
-            return DateExpression.builder()
-                    .beginDate(NewTimeUtil.parse(expression.getBegin()))
-                    .endDate(NewTimeUtil.parse(expression.getEnd()))
+        public static DailyExpression build(Expression expression) {
+            return DailyExpression.builder()
+                    .beginDate(NewTimeUtil.parse(expression.getBegin(), NewTimeUtil.TIME))
+                    .endDate(NewTimeUtil.parse(expression.getEnd(), NewTimeUtil.TIME))
                     .build();
         }
 

@@ -87,12 +87,12 @@ public class ThreadPoolTaskConfiguration {
          * 所以通过上面的描述可知corePoolSize<=maximumPoolSize，poolSize<=maximumPoolSize；而poolSize和corePoolSize无法比较，poolSize是有可能比corePoolSize大的。
          */
         // 核心线程数（默认线程数）
-        executor.setCorePoolSize(50);
+        executor.setCorePoolSize(30);
         // 最大线程数
-        executor.setMaxPoolSize(200);
+        executor.setMaxPoolSize(300);
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
-        executor.setThreadNamePrefix(THREAD_NAME_PREFIX);
+        executor.setThreadNamePrefix("leo-exec-");
         // 而在一些场景下，若需要在关闭线程池时等待当前调度任务完成后才开始关闭，可以通过简单的配置，进行优雅的停机策略配置。关键就是通过
         executor.setWaitForTasksToCompleteOnShutdown(true);
         // 线程池对拒绝任务的处理策略

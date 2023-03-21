@@ -55,7 +55,7 @@ public class AssetPullJob extends QuartzJobBean {
         // 任务
         String assetType = jobDataMap.getString(ASSET_TYPE);
         Integer instanceId = jobDataMap.getInt(INSTANCE_ID);
-        log.info("QuartzTask[拉取资产]: assetType={}, instanceId={}, trigger={}", assetType, instanceId, jobExecutionContext.getTrigger());
+        log.info("Pull asset task: assetType={}, instanceId={}, trigger={}", assetType, instanceId, jobExecutionContext.getTrigger());
         // 任务开始时间
         DsAssetParam.PullAsset pullAsset = DsAssetParam.PullAsset.builder()
                 .assetType(assetType)
@@ -66,7 +66,7 @@ public class AssetPullJob extends QuartzJobBean {
             assert providers != null;
             providers.forEach(x -> x.pullAsset(pullAsset.getInstanceId()));
         } catch (Exception e) {
-            log.error("QuartzTask[拉取资产]错误: assetType={}, instanceId={}, trigger={}, {}", assetType, instanceId, jobExecutionContext.getTrigger(), e.getMessage());
+            log.error("Pull asset task error: assetType={}, instanceId={}, trigger={}, {}", assetType, instanceId, jobExecutionContext.getTrigger(), e.getMessage());
             throw new JobExecutionException(e.getMessage());
         }
     }

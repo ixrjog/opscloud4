@@ -85,4 +85,6 @@ public interface SingleTaskConstants {
 
     String PULL_CONSUL_SERVICE = "PULL_CONSUL_SERVICE";
 
+    String CONSUL_ALERT_TASK = "CONSUL_ALERT_TASK";
+
 }

@@ -34,9 +34,12 @@ public class LeoRuleServiceImpl implements LeoRuleService {
 
     @Override
     public List<LeoRule> queryAllTest() {
-        Example example = new Example(LeoRule.class);
-        Example.Criteria criteria = example.createCriteria();
-        return leoRuleMapper.selectByExample(example);
+        return leoRuleMapper.selectAll();
+    }
+
+    @Override
+    public LeoRule getById(int id){
+        return leoRuleMapper.selectByPrimaryKey(id);
     }
 
     @Override

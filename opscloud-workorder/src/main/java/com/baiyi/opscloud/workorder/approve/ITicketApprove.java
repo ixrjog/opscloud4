@@ -10,6 +10,10 @@ import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam;
  */
 public interface ITicketApprove {
 
+    /**
+     *
+     * @return
+     */
     String getApprovalType();
 
     /**

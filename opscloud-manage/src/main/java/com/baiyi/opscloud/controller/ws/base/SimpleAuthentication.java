@@ -38,13 +38,15 @@ public class SimpleAuthentication {
     }
 
     public String hasLogin(ILoginMessage loginMessage) {
-        if (StringUtils.isBlank(loginMessage.getToken()))
+        if (StringUtils.isBlank(loginMessage.getToken())) {
             throw new AuthenticationException("鉴权失败: Token为Null!");
+        }
         UserToken userToken = userTokenService.getByVaildToken(loginMessage.getToken());
         if (userToken == null) {
             throw new AuthenticationException("鉴权失败: 无效的Token!");
         }
-        SessionUtil.setUsername(userToken.getUsername()); // 设置当前会话用户身份
+        // 设置当前会话用户身份
+        SessionUtil.setUsername(userToken.getUsername());
         User user = userService.getByUsername(userToken.getUsername());
         if (user == null) {
             throw new AuthenticationException("鉴权失败: 无效的用户!");

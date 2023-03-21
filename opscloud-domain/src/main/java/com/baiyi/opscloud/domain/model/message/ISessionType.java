@@ -7,5 +7,9 @@ package com.baiyi.opscloud.domain.model.message;
  */
 public interface ISessionType {
 
+    /**
+     * 会话类型
+     * @return
+     */
     String getSessionType();
 }

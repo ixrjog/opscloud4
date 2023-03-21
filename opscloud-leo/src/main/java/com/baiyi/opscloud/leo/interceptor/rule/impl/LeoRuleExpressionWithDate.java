@@ -24,9 +24,9 @@ public class LeoRuleExpressionWithDate extends BaseLeoRuleExpression {
     private static final String DISPLAY_NAME = "按时间封网(开始时间: %s, 结束时间: %s)";
 
     public boolean parse(LeoRuleModel.Expression expression) {
-        return LeoRuleModel.DateExpression
-                .build(expression)
-                .parse();
+        LeoRuleModel.DateExpression expr = LeoRuleModel.DateExpression
+                .build(expression);
+        return expr.parse();
     }
 
     /**

@@ -8,7 +8,7 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-public class SimpleLeoRequestParam implements ILeoRequestParam{
+public class SimpleLeoRequestParam implements ILeoRequestParam {
 
     private String messageType;
 

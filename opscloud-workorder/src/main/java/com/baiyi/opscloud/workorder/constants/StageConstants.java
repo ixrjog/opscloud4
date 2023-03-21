@@ -7,6 +7,9 @@ package com.baiyi.opscloud.workorder.constants;
  */
 public enum StageConstants {
 
+    /**
+     *
+     */
     FINISHED,
     RUNNING,
     SUCCESS,

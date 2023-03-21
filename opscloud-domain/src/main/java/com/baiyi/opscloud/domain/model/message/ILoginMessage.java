@@ -7,5 +7,10 @@ package com.baiyi.opscloud.domain.model.message;
  */
 public interface ILoginMessage {
 
+    /**
+     * Token
+     * @return
+     */
     String getToken();
+
 }

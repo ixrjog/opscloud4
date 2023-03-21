@@ -521,8 +521,9 @@
         </dependencies>
     </dependencyManagement>
 
-    <repositories><!-- 代码库 -->
+    <repositories>
 
+        <!-- 代码库 -->
         <repository>
             <id>maven repo</id>
             <url>https://mvnrepository.com/artifact/</url>

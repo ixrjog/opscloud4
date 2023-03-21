@@ -76,10 +76,9 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
      */
     @OnMessage(maxMessageSize = 1024)
     public void onMessage(String message, Session session) {
-        if (!session.isOpen() || StringUtils.isEmpty(message)) {
+        if (StringUtils.isEmpty(message)) {
             return;
         }
-        String messageType = getLeoMessageType(message);
         // 处理登录状态
         if (StringUtils.isEmpty(this.username)) {
             // 鉴权
@@ -95,7 +94,7 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
         } else {
             SessionUtil.setUsername(this.username);
         }
-        LeoBuildQuerySessionMap.addSessionQueryMap(this.sessionId, messageType, message);
+        LeoBuildQuerySessionMap.addSessionQueryMap(this.sessionId, getLeoMessageType(message), message);
     }
 
     protected String getLeoMessageType(String message) {

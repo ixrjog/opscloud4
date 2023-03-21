@@ -7,6 +7,10 @@ package com.baiyi.opscloud.domain.param.leo.request;
  */
 public interface ILeoRequestParam {
 
+    /**
+     * 消息类型
+     * @return
+     */
     String getMessageType();
 
 }

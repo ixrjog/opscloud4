@@ -121,7 +121,6 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        // log.info("会话错误: err={}", error.getMessage());
     }
 
 }

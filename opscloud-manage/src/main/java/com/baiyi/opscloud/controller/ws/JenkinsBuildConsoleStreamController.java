@@ -2,7 +2,6 @@ package com.baiyi.opscloud.controller.ws;
 
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.param.leo.request.LoginLeoRequestParam;
-import com.baiyi.opscloud.domain.param.leo.request.QueryLeoBuildConsoleStreamRequestParam;
 import com.baiyi.opscloud.leo.message.factory.LeoContinuousDeliveryMessageHandlerFactory;
 import com.baiyi.opscloud.leo.message.handler.base.ILeoContinuousDeliveryRequestHandler;
 import com.google.gson.GsonBuilder;
@@ -67,7 +66,7 @@ public class JenkinsBuildConsoleStreamController extends SimpleAuthentication {
         if (!session.isOpen() || StringUtils.isEmpty(message)) {
             return;
         }
-        QueryLeoBuildConsoleStreamRequestParam requestParam = new GsonBuilder().create().fromJson(message, QueryLeoBuildConsoleStreamRequestParam.class);
+        //  QueryLeoBuildConsoleStreamRequestParam requestParam = new GsonBuilder().create().fromJson(message, QueryLeoBuildConsoleStreamRequestParam.class);
         // 处理登录状态
         hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));
         ILeoContinuousDeliveryRequestHandler handler = LeoContinuousDeliveryMessageHandlerFactory.getHandlerByMessageType(QUERY_LEO_BUILD_CONSOLE_STREAM.name());

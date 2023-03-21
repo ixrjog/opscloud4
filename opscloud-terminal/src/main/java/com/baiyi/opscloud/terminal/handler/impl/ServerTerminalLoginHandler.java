@@ -53,7 +53,7 @@ public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<Se
             heartbeat(terminalSession.getSessionId());
             for (ServerNode serverNode : loginMessage.getServerNodes()) {
                 coreExecutor.submit(() -> {
-                    log.info("登录服务器节点: instanceId={}", serverNode.getInstanceId());
+                    log.info("Login server: instanceId={}", serverNode.getInstanceId());
                     sAInterceptor.interceptLoginServer(serverNode.getId());
                     HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverNode, loginMessage);
                     Server server = serverService.getById(serverNode.getId());
@@ -62,7 +62,7 @@ public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<Se
                 });
             }
         } catch (Exception e) {
-            log.error("批量登录服务器错误: {}", e.getMessage());
+            log.error("Login server error: {}", e.getMessage());
         }
     }
 

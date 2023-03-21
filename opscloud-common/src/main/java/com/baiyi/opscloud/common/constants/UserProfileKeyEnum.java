@@ -18,8 +18,7 @@ public enum UserProfileKeyEnum {
     TERMINAL_THEME_FOREGROUND("terminal.theme.foreground", "#090909"),
     TERMINAL_THEME_BACKGROUND("terminal.theme.background", "#FFFFFF"),
     TERMINAL_THEME_CURSOR("terminal.theme.cursor", "#090909"),
-    TERMINAL_ROWS("terminal.rows", "30")
-    ;
+    TERMINAL_ROWS("terminal.rows", "30");
 
     private final String key;
     private final String value;

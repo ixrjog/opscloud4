@@ -39,6 +39,8 @@ public class NewTimeUtil {
 
     public static final String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+    public static final String TIME = "HH:mm:ss";
+
     public static Date parse(String str, String fmt) {
         try {
             SimpleDateFormat format = new SimpleDateFormat(fmt);
@@ -73,7 +75,6 @@ public class NewTimeUtil {
         formatter = new SimpleDateFormat(TIME_FORMAT);
         return formatter.format(new Date());
     }
-
 
     /**
      * 判断是否超时

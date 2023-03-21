@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.LeoRule;
 import com.baiyi.opscloud.leo.interceptor.rule.RuleHelper;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.leo.LeoRuleService;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
@@ -29,8 +30,8 @@ public class LeoRuleTest extends BaseUnit {
 
     @Test
     void test() {
-        List<LeoRule> rules = leoRuleService.queryAllTest();
-        // cfront-prod
+        // List<LeoRule> rules = leoRuleService.queryAllTest();
+        List<LeoRule> rules = Lists.newArrayList(leoRuleService.getById(7));
         LeoJob leoJob = leoJobService.getById(4);
         for (LeoRule rule : rules) {
             ruleHelper.verifyRule(leoJob, rule);

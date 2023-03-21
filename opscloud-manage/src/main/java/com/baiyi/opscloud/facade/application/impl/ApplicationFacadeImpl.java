@@ -125,18 +125,18 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     }
 
     @Override
-    public ApplicationVO.Application getApplicationKubernetes(ApplicationParam.GetApplicationKubernetes getApplicationKubernete) {
+    public ApplicationVO.Application getApplicationKubernetes(ApplicationParam.GetApplicationKubernetes getApplicationKubernetes) {
         // 鉴权
         if (!isAdmin(SessionUtil.getUsername())) {
             int userId = userService.getByUsername(SessionUtil.getUsername()).getId();
-            UserPermission query = UserPermission.builder().businessType(BusinessTypeEnum.APPLICATION.getType()).businessId(getApplicationKubernete.getApplicationId()).userId(userId).build();
+            UserPermission query = UserPermission.builder().businessType(BusinessTypeEnum.APPLICATION.getType()).businessId(getApplicationKubernetes.getApplicationId()).userId(userId).build();
             if (userPermissionService.getByUniqueKey(query) == null) {
                 throw new AuthenticationException(ErrorEnum.AUTHENTICATION_FAILURE);
             }
         }
-        Application application = applicationService.getById(getApplicationKubernete.getApplicationId());
+        Application application = applicationService.getById(getApplicationKubernetes.getApplicationId());
         ApplicationVO.Application vo = BeanCopierUtil.copyProperties(application, ApplicationVO.Application.class);
-        applicationPacker.wrap(vo, getApplicationKubernete.getEnvType());
+        applicationPacker.wrap(vo, getApplicationKubernetes.getEnvType());
         return vo;
     }
 
