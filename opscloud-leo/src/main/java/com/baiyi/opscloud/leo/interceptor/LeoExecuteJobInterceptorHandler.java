@@ -84,11 +84,12 @@ public class LeoExecuteJobInterceptorHandler {
      * @param jobId
      */
     public void verifyAuthorization(int jobId) {
-        // 权限校验
         LeoJob leoJob = leoJobService.getById(jobId);
         String username = SessionUtil.getUsername();
 
-        // 用户是平台管理员则通过
+        /**
+         * 用户是平台管理员则通过
+         */
         if (isAdmin(username)) {
             return;
         }
@@ -98,14 +99,18 @@ public class LeoExecuteJobInterceptorHandler {
             throw new AuthenticationException(42100, "用户不存在或无效！");
         }
 
-        // 任务级授权
-        if (hasJobPermission(user, jobId)) {
-            // 用户有任务授权
-            return;
+        if (countJobPermission(jobId) > 0) {
+            // 任务级授权
+            if (hasJobPermission(user, jobId)) {
+                // 用户有任务授权
+                return;
+            }
+            throw new AuthenticationException(42100, "非授权用户禁止操作！");
         }
 
         // 应用级授权，判断用户是否授权
         verifyApplicationPermission(user, leoJob);
+
     }
 
     private void verifyApplicationPermission(User user, LeoJob leoJob) {
@@ -135,6 +140,17 @@ public class LeoExecuteJobInterceptorHandler {
                 .build();
         UserPermission userPermission = userPermissionService.getByUniqueKey(queryParam);
         return userPermission != null;
+    }
+
+    private int countJobPermission(int jobId) {
+        // 任务级授权
+        UserPermission queryParam = UserPermission.builder()
+                .businessType(BusinessTypeEnum.LEO_JOB.getType())
+                .businessId(jobId)
+                .build();
+        return userPermissionService.countByBusiness(queryParam);
+
+
     }
 
     public void verifyRule(int jobId) {

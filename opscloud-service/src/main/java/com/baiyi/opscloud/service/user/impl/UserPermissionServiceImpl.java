@@ -72,8 +72,9 @@ public class UserPermissionServiceImpl implements UserPermissionService {
     public int countByBusiness(UserPermission userPermission) {
         Example example = new Example(UserPermission.class);
         Example.Criteria criteria = example.createCriteria();
-        if (IdUtil.isNotEmpty(userPermission.getUserId()))
+        if (IdUtil.isNotEmpty(userPermission.getUserId())) {
             criteria.andEqualTo("userId", userPermission.getUserId());
+        }
         criteria.andEqualTo("businessType", userPermission.getBusinessType())
                 .andEqualTo("businessId", userPermission.getBusinessId());
         return permissionMapper.selectCountByExample(example);
