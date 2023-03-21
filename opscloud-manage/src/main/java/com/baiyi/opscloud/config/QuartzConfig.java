@@ -2,7 +2,6 @@ package com.baiyi.opscloud.config;
 
 import com.baiyi.opscloud.config.condition.EnvCondition;
 import org.quartz.Scheduler;
-import org.quartz.ee.servlet.QuartzInitializerListener;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
@@ -30,11 +29,6 @@ public class QuartzConfig {
     @Resource
     private DataSource dataSource;
 
-    @Bean
-    public QuartzInitializerListener executorListener() {
-        return new QuartzInitializerListener();
-    }
-
     private Properties quartzProperties() throws IOException {
         PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
         propertiesFactoryBean.setLocation(new ClassPathResource("/quartz.properties"));
@@ -45,10 +39,10 @@ public class QuartzConfig {
     @Bean
     public SchedulerFactoryBean schedulerFactoryBean() throws IOException {
         SchedulerFactoryBean factory = new SchedulerFactoryBean();
-        factory.setQuartzProperties(quartzProperties());
         factory.setOverwriteExistingJobs(true);
         factory.setDataSource(dataSource);
         factory.setStartupDelay(10);
+        factory.setQuartzProperties(quartzProperties());
         factory.setAutoStartup(true);
         return factory;
     }
