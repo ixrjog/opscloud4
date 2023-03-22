@@ -17,7 +17,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlayOutputMessage {
 
-    private String instanceId; // serverName
+    /**
+     * serverName
+     */
+    private String instanceId;
     private Integer serverTaskId;
     private Integer serverTaskMemberId;
     private String output;

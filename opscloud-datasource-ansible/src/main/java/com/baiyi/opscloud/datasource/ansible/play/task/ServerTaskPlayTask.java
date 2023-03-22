@@ -42,7 +42,7 @@ public class ServerTaskPlayTask implements Runnable {
                 TimeUnit.MILLISECONDS.sleep(100L);
             }
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            log.warn(e.getMessage());
         }
         log.info("ServerTaskPlayTask线程结束: serverTaskId={}, serverTaskMemberId={}", serverTaskMember.getServerTaskId(), serverTaskMember.getId());
     }

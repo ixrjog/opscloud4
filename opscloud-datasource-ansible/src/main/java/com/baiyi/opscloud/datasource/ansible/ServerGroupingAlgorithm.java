@@ -37,15 +37,17 @@ public class ServerGroupingAlgorithm extends BaseAlgorithm {
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'server_intactgrouping_algorithm_servergroupid_' + #serverGroup.id + 'is_subgroup_' + #isSubgroup", unless = "#result == null")
     public Map<String, List<ServerPack>> intactGrouping(ServerGroup serverGroup, boolean isSubgroup) {
         Map<String, List<ServerPack>> serverMap = groupingByEnv(serverGroup);
-        if (isSubgroup)
+        if (isSubgroup) {
             groupingSubgroup(serverMap, getSubgroup(serverGroup));
+        }
         return serverMap;
     }
 
     public Map<String, List<ServerPack>> groupingByEnv(ServerGroup serverGroup, boolean isSubgroup, int envType) {
         Map<String, List<ServerPack>> serverMap = groupingByEnv(serverGroup, envType);
-        if (isSubgroup)
+        if (isSubgroup) {
             groupingSubgroup(serverMap, getSubgroup(serverGroup));
+        }
         return serverMap;
     }
 
@@ -58,12 +60,15 @@ public class ServerGroupingAlgorithm extends BaseAlgorithm {
     }
 
     private void groupingSubgroup(Map<String, List<ServerPack>> serverMap, int subgroup) {
-        if (serverMap.isEmpty()) return;
+        if (serverMap.isEmpty()) {
+            return;
+        }
         Set<String> keySet = Sets.newHashSet(serverMap.keySet());
         keySet.forEach(k -> {
             List<ServerPack> servers = serverMap.get(k);
-            if (servers.size() >= 2)
+            if (servers.size() >= 2) {
                 groupingSubgroup(serverMap, servers, k, subgroup);
+            }
         });
     }
 
@@ -80,8 +85,11 @@ public class ServerGroupingAlgorithm extends BaseAlgorithm {
     public Map<String, List<ServerPack>> grouping(ServerGroup serverGroup) {
         log.info("服务器分组: serverGroupName={}", serverGroup.getName());
         Map<String, List<ServerPack>> serverMap = groupingByEnv(serverGroup);
-        if (serverMap.isEmpty()) return serverMap;
-        int subgroup = getSubgroup(serverGroup); // 分2组
+        if (serverMap.isEmpty()) {
+            return serverMap;
+        }
+        // 分2组
+        int subgroup = getSubgroup(serverGroup);
         Set<String> keSet = Sets.newHashSet(serverMap.keySet());
         for (String k : keSet) {
             List<ServerPack> servers = serverMap.get(k);
@@ -100,8 +108,9 @@ public class ServerGroupingAlgorithm extends BaseAlgorithm {
     private void groupingSubgroup(Map<String, List<ServerPack>> serverMap, List<ServerPack> servers, String groupingName, int subgroup) {
         List<ServerPack> preServerList = Lists.newArrayList(servers);
         // 服务器数量少于分组数量也只分2组
-        if (subgroup > preServerList.size())
+        if (subgroup > preServerList.size()) {
             subgroup = 2;
+        }
         // 每组平均服务器数量
         int size = preServerList.size() / subgroup;
         int compensate = preServerList.size() % subgroup;

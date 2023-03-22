@@ -9,6 +9,9 @@ import lombok.Getter;
  */
 public enum TaskMessageState {
 
+    /**
+     *
+     */
     LOGIN("会话初始建立"),
     PLAY("播放");
 

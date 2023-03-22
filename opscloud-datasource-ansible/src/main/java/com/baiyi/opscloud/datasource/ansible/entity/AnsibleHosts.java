@@ -101,7 +101,9 @@ public class AnsibleHosts {
         }
 
         private String link(String k, String v) {
-            if (StringUtils.isEmpty(v)) return null;
+            if (StringUtils.isEmpty(v)) {
+                return null;
+            }
             return Joiner.on("=").join(k, v);
         }
     }

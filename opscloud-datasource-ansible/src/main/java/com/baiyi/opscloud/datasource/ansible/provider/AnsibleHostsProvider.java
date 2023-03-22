@@ -83,7 +83,8 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
         for (ServerGroup e : table.getData()) {
             int serverSize = serverService.countByServerGroupId(e.getId());
             if (serverSize > 0) {
-                Map<String, List<ServerPack>> serverSubgroup = serverGroupingAlgorithm.intactGrouping(e, true); // 包含环境整组
+                // 包含环境整组
+                Map<String, List<ServerPack>> serverSubgroup = serverGroupingAlgorithm.intactGrouping(e, true);
                 AnsibleHosts.Group group = AnsibleHosts.Group.builder()
                         .serverGroup(e)
                         .serverMap(serverSubgroup)
@@ -106,16 +107,21 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey()))
+        }
+        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
+        }
+        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
             return false;
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
+        }
+        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
             return false;
-        if (preAsset.getIsActive() != asset.getIsActive())
+        }
+        if (!preAsset.getIsActive().equals(asset.getIsActive())) {
             return false;
+        }
         return true;
     }
 

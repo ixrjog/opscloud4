@@ -29,8 +29,9 @@ public class AnsibleExecutor {
      * @return
      */
     public static AnsibleExecuteResult execute(CommandLine commandLine, long timeout) {
-        if (timeout == 0)
+        if (timeout == 0) {
             timeout = MAX_TIMEOUT;
+        }
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ByteArrayOutputStream errorStream = new ByteArrayOutputStream();

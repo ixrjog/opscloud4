@@ -83,8 +83,9 @@ public class AnsibleSetConfigProvider extends AbstractSetDsInstanceConfigProvide
     }
 
     private String getPrivateKey(DsInstanceContext dsInstanceContext) {
-        if (dsInstanceContext.getDsConfig().getCredentialId() == null)
+        if (dsInstanceContext.getDsConfig().getCredentialId() == null) {
             throw new OCException("凭据没有配置！");
+        }
         //   CredentialKindEnum.SSH_USERNAME_WITH_KEY_PAIR.getKind();
         Credential credential = getCredential(dsInstanceContext.getDsConfig().getCredentialId());
         if (credential == null) {

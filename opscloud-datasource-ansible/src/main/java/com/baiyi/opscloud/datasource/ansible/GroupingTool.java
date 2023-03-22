@@ -57,8 +57,9 @@ public class GroupingTool {
      */
     public Map<String, List<Server>> grouping(ServerGroup serverGroup, boolean isSubgroup) {
         Map<String, List<Server>> serverMap = groupingByEnv(serverGroup);
-        if (isSubgroup)
+        if (isSubgroup) {
             groupingSubgroup(serverMap, getSubgroup(serverGroup));
+        }
         return serverMap;
     }
 
@@ -67,20 +68,24 @@ public class GroupingTool {
     }
 
     private void groupingSubgroup(Map<String, List<Server>> serverMap, int subgroup) {
-        if (serverMap.isEmpty()) return;
+        if (serverMap.isEmpty()) {
+            return;
+        }
         Set<String> keySet = Sets.newHashSet(serverMap.keySet());
         keySet.forEach(k -> {
             List<Server> servers = serverMap.get(k);
-            if (servers.size() >= 2)
+            if (servers.size() >= 2) {
                 groupingSubgroup(serverMap, servers, k, subgroup);
+            }
         });
     }
 
     private void groupingSubgroup(Map<String, List<Server>> serverMap, List<Server> servers, String groupingName, int subgroup) {
         List<Server> preServers = Lists.newArrayList(servers);
         // 服务器数量少于分组数量也只分2组
-        if (subgroup > preServers.size())
+        if (subgroup > preServers.size()) {
             subgroup = 2;
+        }
         // 每组平均服务器数量
         int size = preServers.size() / subgroup;
         int compensate = preServers.size() % subgroup;
@@ -124,7 +129,9 @@ public class GroupingTool {
 
     protected Map<String, List<Server>> groupingByEnv(ServerGroup ocServerGroup, List<Server> servers) {
         Map<String, List<Server>> map = Maps.newHashMap();
-        if (CollectionUtils.isEmpty(servers)) return map;
+        if (CollectionUtils.isEmpty(servers)) {
+            return map;
+        }
         servers.forEach(e -> {
             String groupingName = toSubgroupName(ocServerGroup, e.getEnvType());
             if (map.containsKey(groupingName)) {

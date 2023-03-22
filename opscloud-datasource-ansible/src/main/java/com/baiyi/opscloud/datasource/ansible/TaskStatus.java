@@ -16,8 +16,9 @@ public class TaskStatus {
     @Builder.Default
     private Boolean finalized = true;
     private Integer stopType;
+    // 错误
     @Builder.Default
-    private Integer exitValue = 1; // 错误
+    private Integer exitValue = 1;
     @Builder.Default
     private String taskStatus = ServerTaskStatusEnum.FINALIZED.name();
 

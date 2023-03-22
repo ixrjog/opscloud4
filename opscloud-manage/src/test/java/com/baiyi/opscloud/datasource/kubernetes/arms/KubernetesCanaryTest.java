@@ -3,14 +3,12 @@ package com.baiyi.opscloud.datasource.kubernetes.arms;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
-import com.baiyi.opscloud.service.application.ApplicationService;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,17 +19,13 @@ import java.util.Optional;
  */
 public class KubernetesCanaryTest extends BaseKubernetesTest {
 
-    @Resource
-    private ApplicationService applicationService;
+//    @Resource
+//    private ApplicationService applicationService;
 
     @Test
     void bTest() {
         List<String> apps = Lists.newArrayList(
-                "tz-channel",
-                "out-transfer",
-                "ng-mtn-channel",
-                "ng-postpay-channel",
-                "ng-uba-channel"
+                "sms"
         );
         for (String app : apps) {
             oneTest(app);
@@ -49,7 +43,9 @@ public class KubernetesCanaryTest extends BaseKubernetesTest {
 
         Deployment deployment = KubernetesDeploymentDriver.getDeployment(kubernetesConfig.getKubernetes(), namespace, deploymentName);
         if (deployment == null) return;
-
+        /**
+         * 移除X-Ray容器
+         */
         for (int i = 0; i < deployment.getSpec().getTemplate().getSpec().getContainers().size(); i++) {
             if (deployment.getSpec().getTemplate().getSpec().getContainers().get(i).getName().equals("adot-collector")) {
                 deployment.getSpec().getTemplate().getSpec().getContainers().remove(i);
