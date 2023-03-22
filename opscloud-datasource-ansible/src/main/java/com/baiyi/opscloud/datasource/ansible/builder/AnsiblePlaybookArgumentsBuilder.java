@@ -2,7 +2,8 @@ package com.baiyi.opscloud.datasource.ansible.builder;
 
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.util.JSONUtil;
-import com.baiyi.opscloud.datasource.ansible.builder.args.AnsibleArgs;
+import com.baiyi.opscloud.datasource.ansible.builder.args.AnsibleCommandArgs;
+import com.baiyi.opscloud.datasource.ansible.builder.args.AnsiblePlaybookArgs;
 import com.google.common.base.Joiner;
 import com.google.gson.Gson;
 import org.apache.commons.exec.CommandLine;
@@ -23,14 +24,16 @@ public class AnsiblePlaybookArgumentsBuilder {
      * @param args
      * @return
      */
-    public static CommandLine build(AnsibleConfig.Ansible ansible, AnsibleArgs.Playbook args) {
-        CommandLine commandLine = AnsibleArgumentsBuilder.buildPlaybook(ansible, new Gson().fromJson(JSONUtil.writeValueAsString(args), AnsibleArgs.Command.class));
-        if (args.isVersion())
+    public static CommandLine build(AnsibleConfig.Ansible ansible, AnsiblePlaybookArgs args) {
+        CommandLine commandLine = AnsibleArgumentsBuilder.buildPlaybook(ansible, new Gson().fromJson(JSONUtil.writeValueAsString(args), AnsibleCommandArgs.class));
+        if (args.isVersion()) {
             return commandLine;
+        }
         // 外部变量
         Map<String, String> extraVars = args.getExtraVars();
-        if (!StringUtils.isEmpty(args.getHosts()))
+        if (!StringUtils.isEmpty(args.getHosts())) {
             extraVars.put("hosts", args.getHosts());
+        }
 
         commandLine.addArgument("-e");
         commandLine.addArgument(toExtraVars(extraVars), false);

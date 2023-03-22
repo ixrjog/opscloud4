@@ -105,12 +105,11 @@ public class LeoExecuteJobInterceptorHandler {
                 // 用户有任务授权
                 return;
             }
-            throw new AuthenticationException(42100, "非授权用户禁止操作！");
+            throw new AuthenticationException(42100, "非任务授权用户禁止操作！");
         }
 
         // 应用级授权，判断用户是否授权
         verifyApplicationPermission(user, leoJob);
-
     }
 
     private void verifyApplicationPermission(User user, LeoJob leoJob) {

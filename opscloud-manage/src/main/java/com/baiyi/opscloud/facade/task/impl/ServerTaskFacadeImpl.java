@@ -10,7 +10,7 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.core.util.SystemEnvUtil;
 import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgumentsBuilder;
-import com.baiyi.opscloud.datasource.ansible.builder.args.AnsibleArgs;
+import com.baiyi.opscloud.datasource.ansible.builder.args.AnsiblePlaybookArgs;
 import com.baiyi.opscloud.datasource.ansible.recorder.TaskLogStorehouse;
 import com.baiyi.opscloud.datasource.ansible.task.AnsibleServerTask;
 import com.baiyi.opscloud.domain.DataTable;
@@ -120,7 +120,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                 dsConfigHelper.build(instanceContext.getDsConfig(), AnsibleConfig.class).getAnsible();
         AnsiblePlaybook ansiblePlaybook = ansiblePlaybookService.getById(serverTask.getAnsiblePlaybookId());
 
-        AnsibleArgs.Playbook args = AnsibleArgs.Playbook.builder()
+        AnsiblePlaybookArgs args = AnsiblePlaybookArgs.builder()
                 .extraVars(YamlUtil.toVars(serverTask.getVars()).getVars())
                 .keyFile(SystemEnvUtil.renderEnvHome(ansible.getPrivateKey()))
                 .playbook(PlaybookUtil.toPath(ansiblePlaybook))

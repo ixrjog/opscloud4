@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.ansible.builder;
 
-import com.baiyi.opscloud.datasource.ansible.builder.args.AnsibleArgs;
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
+import com.baiyi.opscloud.datasource.ansible.builder.args.AnsibleCommandArgs;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,11 +17,12 @@ public class AnsibleCommandArgsBuilder {
      * @param args
      * @return
      */
-    public static CommandLine build(AnsibleConfig.Ansible ansible, AnsibleArgs.Command args) {
+    public static CommandLine build(AnsibleConfig.Ansible ansible, AnsibleCommandArgs args) {
         CommandLine commandLine = AnsibleArgumentsBuilder.build(ansible, args);
 
-        if (args.isVersion())
+        if (args.isVersion()) {
             return commandLine;
+        }
 
         commandLine.addArgument("-m");
         if (!StringUtils.isEmpty(args.getModuleName())) {

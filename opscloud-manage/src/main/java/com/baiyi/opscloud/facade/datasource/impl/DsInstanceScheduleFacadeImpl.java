@@ -47,7 +47,7 @@ public class DsInstanceScheduleFacadeImpl implements DsInstanceScheduleFacade {
             return quartzService.queryJob(instance.getUuid());
         } catch (SchedulerException e) {
             log.error(e.getMessage());
-            throw new OCException("查询数据源实例任务错误: err={}", e.getMessage());
+            throw new OCException("查询数据源实例任务错误: {}", e.getMessage());
         }
     }
 

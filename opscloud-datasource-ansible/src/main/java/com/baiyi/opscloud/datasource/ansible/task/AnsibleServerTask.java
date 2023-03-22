@@ -34,7 +34,10 @@ public class AnsibleServerTask implements Runnable {
 
     private final CommandLine commandLine;
 
-    private final String taskUuid; // 任务uuid
+    /**
+     * 任务UUID
+     */
+    private final String taskUuid;
 
     private final ServerTaskMemberService serverTaskMemberService;
 
@@ -138,8 +141,9 @@ public class AnsibleServerTask implements Runnable {
         serverTaskMember.setStopType(taskStatus.getStopType());
         serverTaskMember.setTaskStatus(taskStatus.getTaskStatus());
         serverTaskMember.setEndTime(new Date());
-        if (!StringUtils.isEmpty(taskStatus.getTaskResult()))
+        if (!StringUtils.isEmpty(taskStatus.getTaskResult())) {
             serverTaskMember.setTaskResult(taskStatus.getTaskResult());
+        }
         serverTaskMemberService.update(serverTaskMember);
     }
 

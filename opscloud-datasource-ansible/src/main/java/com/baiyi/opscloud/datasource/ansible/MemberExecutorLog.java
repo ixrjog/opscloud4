@@ -18,4 +18,5 @@ public class MemberExecutorLog implements Serializable {
     private int memberId;
     private String outputMsg;
     private String errorMsg;
+
 }

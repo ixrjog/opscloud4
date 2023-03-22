@@ -11,7 +11,7 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.core.util.SystemEnvUtil;
 import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgumentsBuilder;
-import com.baiyi.opscloud.datasource.ansible.builder.args.AnsibleArgs;
+import com.baiyi.opscloud.datasource.ansible.builder.args.AnsiblePlaybookArgs;
 import com.baiyi.opscloud.datasource.ansible.entity.AnsibleExecuteResult;
 import com.baiyi.opscloud.datasource.ansible.executor.AnsibleExecutor;
 import com.baiyi.opscloud.domain.DataTable;
@@ -88,7 +88,7 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
     public void publishAssetSubscription(DatasourceInstanceAssetSubscription datasourceInstanceAssetSubscription) {
         DsInstanceContext instanceContext = buildDsInstanceContext(datasourceInstanceAssetSubscription.getInstanceUuid());
         AnsibleConfig.Ansible ansible = dsConfigHelper.build(instanceContext.getDsConfig(), AnsibleConfig.class).getAnsible();
-        AnsibleArgs.Playbook args = AnsibleArgs.Playbook.builder()
+        AnsiblePlaybookArgs args = AnsiblePlaybookArgs.builder()
                 .extraVars(YamlUtil.toVars(datasourceInstanceAssetSubscription.getVars()).getVars())
                 .keyFile(SystemEnvUtil.renderEnvHome(ansible.getPrivateKey()))
                 .playbook(toSubscriptionPlaybookFile(ansible, datasourceInstanceAssetSubscription))
