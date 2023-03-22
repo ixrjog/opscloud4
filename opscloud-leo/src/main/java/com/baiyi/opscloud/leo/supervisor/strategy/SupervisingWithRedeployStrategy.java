@@ -64,14 +64,14 @@ public class SupervisingWithRedeployStrategy extends SupervisingStrategy {
                 .orElseThrow(() -> new LeoDeployException("原Pod信息不存在"));
 
         /**
-         * Map<String podIP, LeoDeployingVO.PodDetails podDetails>
+         * Map<String podName, LeoDeployingVO.PodDetails podDetails>
          */
         Map<String, LeoDeployingVO.PodDetails> originalPodMap = podDetailsList
                 .stream()
-                .collect(Collectors.toMap(LeoDeployingVO.PodDetails::getPodIP, a -> a, (k1, k2) -> k1));
+                .collect(Collectors.toMap(LeoDeployingVO.PodDetails::getName, a -> a, (k1, k2) -> k1));
         pods.forEach(pod -> {
             LeoDeployingVO.PodDetails podDetails = podDetailsHelper.toPodDetails(pod, containerName);
-            if (originalPodMap.containsKey(pod.getStatus().getPodIP())) {
+            if (originalPodMap.containsKey(podDetails.getName())) {
                 // 重启前
                 beforeRedeployVersion.putPod(podDetails);
             } else {
