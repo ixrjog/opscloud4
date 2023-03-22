@@ -33,4 +33,5 @@ public class EventBusConfiguration {
         ThreadPoolTaskExecutor executor = applicationContext.getBean(CORE, ThreadPoolTaskExecutor.class);
         return new AsyncEventBus(executor);
     }
+
 }

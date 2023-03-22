@@ -3,8 +3,16 @@ package com.baiyi.opscloud.domain;
 import lombok.Getter;
 
 
+/**
+ * @author liangjian
+ */
+
 @Getter
 public enum ErrorEnum {
+
+    /**
+     * 错误
+     */
     OK(0, "成功"),
     // ----------------------- RBAC -----------------------
     AUTH_GROUP_HAS_USED(11005, "资源组正在使用！"),
@@ -99,8 +107,8 @@ public enum ErrorEnum {
     SERVER_NAME_NON_COMPLIANCE_WITH_RULES(12002, "服务器名称不合规！"),
     SERVER_GROUP_NOT_SELECTED(12003, "服务器组未选择！"),
     SERVER_GROUP_QUERY_FAILED(12003, "服务器组查询失败！"),
-    SERVER_PRIVATE_IP_IS_NAME(12002, "服务器私有Ip不能为空！"),
-    SERVER_PRIVATE_IP_CONFLICT(12002, "服务器私有Ip冲突！"),
+    SERVER_PRIVATE_IP_IS_NAME(12002, "服务器私有IP不能为空！"),
+    SERVER_PRIVATE_IP_CONFLICT(12002, "服务器私有IP冲突！"),
     SERVER_NOT_EXIST(12002, "服务器不存在"),
 
     // server task
@@ -109,7 +117,7 @@ public enum ErrorEnum {
     SERVER_TASK_MEMBER_NOT_EXIST(11007, "服务器子任务不存在！"),
     SERVER_TASK_HAS_FINALIIZED_AND_CANNOT_BE_MODIFIED(11007, "任务已经结束！"),
     SERVER_TASK_TIMEOUT(11007, "任务超时！"),
-    // serverGrooup
+    // serverGroup
     SERVERGROUP_NAME_ALREADY_EXIST(12001, "服务器组名称已存在！"),
     SERVERGROUP_NAME_NON_COMPLIANCE_WITH_RULES(12002, "服务器组名称不合规！"),
     SERVERGROUP_NOT_EXIST(12003, "服务器组不存在！"),
@@ -142,7 +150,7 @@ public enum ErrorEnum {
     // cloudDB
     CLOUD_DB_NOT_EXIST(30002, "云数据库实例不存在！"),
 
-    // cloudDBDatbase
+    // cloudDBDatabase
     CLOUD_DB_DATABASE_NOT_EXIST(30002, "云数据库不存在！"),
 
     // cloudImage
@@ -164,10 +172,6 @@ public enum ErrorEnum {
     ALIYUN_RDS_MYSQL_REVOKE_ACCOUNT_PRIVILEGE_ERROR(30002, "云数据库账户撤销授权错误！"),
     ALIYUN_RDS_MYSQL_DELETE_ACCOUNT_ERROR(30002, "云数据库账户删除错误！"),
 
-    // jumpserver
-    JUMPSERVER_ASSETS_NODE_ROOT_NOT_EXIST(40002, "资产根节点不存在(表：assets_node,字段：key = 1)！"),
-    JUMPSERVER_ADMINISTRATOR_AUTHORIZATION_CANNOT_BE_REVOKED(40002, "不能撤销Administrator账户管理员授权"),
-
     // Executor
     EXECUTOR_PARAM_TYPE_ERROR(50001, "执行参数类型错误"),
 
@@ -188,15 +192,15 @@ public enum ErrorEnum {
     ORG_DEPARTMENT_USER_NOT_IN_THE_DEPT(0, "你未加入部门"),
     ORG_DEPARTMENT_USER_NO_APPROVAL_REATIONSHIP_FOUND(60001, "用户没有建立上级审批关系"),
 
-    // Workorder
+    // WorkOrder
     WORKORDER_TICKET_PHASE_ERROR(70001, "工单阶段不正确"),
     WORKORDER_TICKET_NOT_THE_CURRENT_APPROVER(70001, "不是当前审批人"),
     WORKORDER_TICKET_ENTRIES_EXISTS(70001, "工单条目未填写"),
-    WORKORDER_INVALID_TOKEN(70001,"Work order approval failed: invalid token!"),
+    WORKORDER_INVALID_TOKEN(70001, "Work order approval failed: invalid token!"),
 
-    KEYBOX_PUBLIC_KEY_IS_EMPTY(60001, "公钥不能为空！"),
-    KEYBOX_PRIVATE_KEY_IS_EMPTY(60001, "私钥不能为空！"),
-    KEYBOX_PASSPHRASE_IS_EMPTY(60001, "密码不能为空！"),
+//    KEYBOX_PUBLIC_KEY_IS_EMPTY(60001, "公钥不能为空！"),
+//    KEYBOX_PRIVATE_KEY_IS_EMPTY(60001, "私钥不能为空！"),
+//    KEYBOX_PASSPHRASE_IS_EMPTY(60001, "密码不能为空！"),
 
     SERVER_CHANGE_TASK_RUNNING(60001, "当前服务器变更任务执行中！"),
     SERVER_CHANGE_TASK_RESUBMISSION(60001, "当前服务器变更任务重复提交！"),

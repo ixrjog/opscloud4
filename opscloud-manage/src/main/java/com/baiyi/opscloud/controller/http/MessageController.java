@@ -40,4 +40,5 @@ public class MessageController {
                                                                            @RequestBody MessageParam.GrafanaMessage param) {
         return new HttpResult<>(messageFacade.sendMessage(media, mobiles, platform, platformToken, param));
     }
+
 }

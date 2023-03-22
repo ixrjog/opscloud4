@@ -99,4 +99,5 @@ public class MenuController {
     public HttpResult<List<MenuVO.Menu>> queryMyMenu() {
         return new HttpResult<>(menuFacade.queryMyMenu());
     }
+
 }

@@ -18,4 +18,5 @@ import java.util.List;
 public class WhiteConfigurationProperties {
 
      private List<String> urls;
+
 }

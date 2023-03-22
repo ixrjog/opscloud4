@@ -14,18 +14,21 @@ import java.util.Optional;
 
 /**
  * @Author baiyi
- * @Date 2023/3/17 11:43
+ * @Date 2023/3/22 15:00
  * @Version 1.0
  */
-public class KubernetesCanaryTest extends BaseKubernetesTest {
+public class KubernetesProdTest extends BaseKubernetesTest {
 
-//    @Resource
-//    private ApplicationService applicationService;
+    private final static String NAMESPACE = "prod";
+
+    /**
+     *  nibss, pay-route, ng-channel
+     */
 
     @Test
     void bTest() {
         List<String> apps = Lists.newArrayList(
-                "sms"
+                "nibss","pay-route"
         );
         for (String app : apps) {
             oneTest(app);
@@ -38,10 +41,14 @@ public class KubernetesCanaryTest extends BaseKubernetesTest {
 
     private void oneTest(String appName) {
         KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_PROD);
-        final String namespace = "prod";
-        final String deploymentName = appName + "-canary";
 
-        Deployment deployment = KubernetesDeploymentDriver.getDeployment(kubernetesConfig.getKubernetes(), namespace, deploymentName);
+        final String deploymentName = appName + "-1";
+        /**
+         * ARMS中应用的名称
+         */
+        final String armsAppName = appName + "-prod";
+
+        Deployment deployment = KubernetesDeploymentDriver.getDeployment(kubernetesConfig.getKubernetes(), NAMESPACE, deploymentName);
         if (deployment == null) return;
         /**
          * 移除X-Ray容器
@@ -68,7 +75,7 @@ public class KubernetesCanaryTest extends BaseKubernetesTest {
         /**
          * 设置环境变量 $APP_NAME
          */
-        EnvVar appNameEnvVar = new EnvVar("APP_NAME", deploymentName, null);
+        EnvVar appNameEnvVar = new EnvVar("APP_NAME", armsAppName, null);
         newEnvVars.add(appNameEnvVar);
 
         for (EnvVar srcEnvVar : srcEnvVars) {
@@ -112,7 +119,7 @@ public class KubernetesCanaryTest extends BaseKubernetesTest {
         /**
          * 更新 Deployment
          */
-        KubernetesDeploymentDriver.createOrReplaceDeployment(kubernetesConfig.getKubernetes(), namespace, deployment);
+        KubernetesDeploymentDriver.createOrReplaceDeployment(kubernetesConfig.getKubernetes(), NAMESPACE, deployment);
         print("---------------------------------------------------------------------------");
         print("应用名称: " + appName);
         print("---------------------------------------------------------------------------");

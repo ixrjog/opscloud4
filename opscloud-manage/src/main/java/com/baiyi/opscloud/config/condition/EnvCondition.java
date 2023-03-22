@@ -18,4 +18,5 @@ public class EnvCondition implements Condition {
         String env = context.getEnvironment().getActiveProfiles()[0];
         return ENV_PROD.equals(env);
     }
+
 }

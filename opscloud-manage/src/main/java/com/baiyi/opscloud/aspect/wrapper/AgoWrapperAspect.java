@@ -65,7 +65,9 @@ public class AgoWrapperAspect {
     }
 
     public void wrap(ReadableTime.IAgo iAgo) {
-        if (iAgo.getAgoTime() == null) return;
+        if (iAgo.getAgoTime() == null) {
+            return;
+        }
         iAgo.setAgo(AgoUtil.format(iAgo.getAgoTime()));
     }
 

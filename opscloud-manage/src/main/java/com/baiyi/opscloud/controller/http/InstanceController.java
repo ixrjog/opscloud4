@@ -49,10 +49,12 @@ public class InstanceController {
         throw new ResourceInactiveException();
     }
 
+    /**
+     * 服务不可用 HTTP 503 Service Unavailable
+     */
     @ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
     public static class ResourceInactiveException extends RuntimeException {
         private static final long serialVersionUID = 5764195967750671243L;
-        // 服务不可用 HTTP 503 Service Unavailable
     }
 
 }

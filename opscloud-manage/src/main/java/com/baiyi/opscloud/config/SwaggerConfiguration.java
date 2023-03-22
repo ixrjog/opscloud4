@@ -20,8 +20,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Component
 public class SwaggerConfiguration {
 
-
-
     @Value("${spring.application.version}")
     private String version;
 
@@ -42,9 +40,9 @@ public class SwaggerConfiguration {
 
     private ApiInfo generatepApiInfo() {
         return new ApiInfoBuilder()
-                .title("OPSCLOUD " + version)
+                .title(String.format("OPSCLOUD %s", version))
                 .description("OPSCLOUD OPEN-API接口文档")
-                .version(version + "-RELEASE")
+                .version(String.format("%s-RELEASE", version))
                 .license("APACHE LICENSE, VERSION 2.0")
                 .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
                 .contact(new Contact("白衣", "https://github.com/ixrjog/opscloud4", "ixrjog@qq.com"))

@@ -27,7 +27,7 @@ public class ReceiveEventController {
 
     private final GitlabFacade gitlabFacade;
 
-    @ApiOperation(value = "Gitlab(API:v4)通知接口")
+    @ApiOperation(value = "GitLab API v4 hooks接口")
     @PostMapping(value = "/gitlab/v4/system/hooks",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> receiveGitlabV4SystemHooks(@RequestBody @Valid GitLabNotifyParam.SystemHook systemHook) {
         gitlabFacade.consumeEventV4(systemHook);

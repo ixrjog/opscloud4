@@ -26,7 +26,6 @@ public class DocumentController {
 
     private final DocumentFacade documentFacade;
 
-
     @ApiOperation(value = "查阅文档")
     @PostMapping(value = "/preview", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DocumentVO.Doc> previewDocument(@RequestBody @Valid DocumentParam.DocumentQuery query) {

@@ -33,11 +33,6 @@ public abstract class AbstractNotifyActivity implements INotify, InitializingBea
                 .build();
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        NotifyFactory.register(this);
-    }
-
     protected void saveAlertNotify(AlertContext context, List<AlertNotifyHistory> historyList) {
         AlertNotifyEvent event = alertNotifyEventService.getByUuid(context.getEventUuid());
         alertNotifyHistoryService.addList(
@@ -45,6 +40,11 @@ public abstract class AbstractNotifyActivity implements INotify, InitializingBea
                         .peek(history -> history.setAlertNotifyEventId(event.getId()))
                         .collect(Collectors.toList())
         );
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        NotifyFactory.register(this);
     }
 
 }

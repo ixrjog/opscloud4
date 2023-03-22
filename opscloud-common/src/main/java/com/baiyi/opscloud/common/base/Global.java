@@ -11,16 +11,12 @@ public class Global {
 
     public static final String CREATED_BY = "Created by opscloud4";
 
-    // extend
     public static final int EXTEND = 1;
     public static final int NOT_EXTEND = 0;
-
-
 
     // 高权限账户
     // public static final String HIGH_AUTHORITY_ACCOUNT = "admin";
 
     public static final String ENV_PROD = "prod";
-
 
 }
