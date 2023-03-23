@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @Author baiyi
@@ -45,7 +46,7 @@ public class VersionRenderer {
         Map<String, Integer> versionTypeMap = Maps.newHashMap();
         List<Integer> ids = idSet.stream().sorted(Collections.reverseOrder()).collect(Collectors.toList());
         int bound = ids.size();
-        for (int i = 0; i < bound; i++) {
+        IntStream.range(0, bound).forEach(i -> {
             int buildId = ids.get(i);
             for (LeoJobVersionVO.DeploymentVersion deploymentVersion : deploymentVersions) {
                 if (deploymentVersion.getBuildId() != buildId) {
@@ -67,7 +68,7 @@ public class VersionRenderer {
                         deploymentVersion.setVersionType(VersionTypeConstants.OTHER.name());
                 }
             }
-        }
+        });
         render(deploymentVersions, versionTypeMap);
     }
 

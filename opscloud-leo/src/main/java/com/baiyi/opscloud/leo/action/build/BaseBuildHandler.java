@@ -125,7 +125,7 @@ public abstract class BaseBuildHandler {
         try {
             return BeetlUtil.renderTemplate(messageTemplate.getMsgTemplate(), contentMap);
         } catch (IOException e) {
-            throw new LeoBuildException("渲染Dingtalk模板错误: err={}", e.getMessage());
+            throw new LeoBuildException("渲染Dingtalk模板错误: {}", e.getMessage());
         }
     }
 

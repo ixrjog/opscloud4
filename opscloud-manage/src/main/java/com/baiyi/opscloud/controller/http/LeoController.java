@@ -84,6 +84,13 @@ public class LeoController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "关联的任务模板升级")
+    @PutMapping(value = "/template/job/upgrade", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> upgradeLeoJobTemplate(@RequestBody @Valid LeoTemplateParam.UpgradeJobTemplate upgradeJobTemplate) {
+        templateFacade.upgradeLeoJobTemplate(upgradeJobTemplate.getTemplateId());
+        return HttpResult.SUCCESS;
+    }
+
     // Job
 
     @ApiOperation(value = "分页查询任务列表")

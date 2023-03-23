@@ -52,7 +52,7 @@ public class LeoRuleModel {
             Yaml yaml = new Yaml(new Constructor(LeoRuleModel.RuleConfig.class), representer);
             return yaml.loadAs(config, LeoRuleModel.RuleConfig.class);
         } catch (Exception e) {
-            throw new LeoJobException("转换配置文件错误: err={}", e.getMessage());
+            throw new LeoJobException("转换配置文件错误: {}", e.getMessage());
         }
     }
 

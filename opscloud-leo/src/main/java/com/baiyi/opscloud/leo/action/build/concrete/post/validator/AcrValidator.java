@@ -70,7 +70,7 @@ public class AcrValidator extends BaseCrValidator<AliyunConfig> {
                     .map(GetRepoTagResponse::getImageId)
                     .orElseThrow(() -> new LeoBuildException("阿里云ACR中未找到构建镜像: instanceId={}, repoId={}, imageTag={}", crInstanceId, crRepoId, imageTag));
         } catch (ClientException e) {
-            throw new LeoBuildException("查询阿里云-ACR镜像错误: err={}", e.getMessage());
+            throw new LeoBuildException("查询阿里云-ACR镜像错误: {}", e.getMessage());
         }
     }
 

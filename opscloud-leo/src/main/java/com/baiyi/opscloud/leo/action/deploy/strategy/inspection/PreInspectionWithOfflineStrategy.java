@@ -6,11 +6,9 @@ import com.baiyi.opscloud.leo.action.deploy.strategy.inspection.base.PreInspecti
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
-import com.baiyi.opscloud.leo.helper.PodDetailsHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,8 +23,6 @@ import java.util.Optional;
 @Component
 public class PreInspectionWithOfflineStrategy extends PreInspectionStrategy {
 
-    @Resource
-    private PodDetailsHelper podDetailsHelper;
 
     /**
      * 预检查

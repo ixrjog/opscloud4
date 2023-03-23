@@ -41,7 +41,7 @@ public class LeoJobModel {
             Yaml yaml = new Yaml(new Constructor(JobConfig.class), representer);
             return yaml.loadAs(config, JobConfig.class);
         } catch (Exception e) {
-            throw new LeoJobException("转换配置文件错误: err={}", e.getMessage());
+            throw new LeoJobException("转换配置文件错误: {}", e.getMessage());
         }
     }
 
@@ -72,7 +72,9 @@ public class LeoJobModel {
         private List<LeoBaseModel.Notify> notifies;
         private String comment;
         private List<String> tags;
-        // 任务参数
+        /**
+         * 任务参数
+         */
         private List<LeoBaseModel.Parameter> parameters;
 
     }

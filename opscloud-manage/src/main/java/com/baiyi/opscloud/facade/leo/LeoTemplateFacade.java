@@ -19,6 +19,16 @@ public interface LeoTemplateFacade {
 
     LeoTemplateVO.Template updateLeoTemplateContent(LeoTemplateParam.UpdateTemplate template);
 
+    /**
+     * 删除模板
+     * @param templateId
+     */
     void deleteLeoTemplateById(int templateId);
+
+    /**
+     * 关联的任务模板升级
+     * @param templateId
+     */
+    void upgradeLeoJobTemplate(int templateId);
 
 }

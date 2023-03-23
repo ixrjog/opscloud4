@@ -108,4 +108,13 @@ public class LeoJobServiceImpl implements LeoJobService {
         return leoJobMapper.selectAll();
     }
 
+    @Override
+    public List<LeoJob> queryUpgradeableJobs(Integer templateId, String templateVersion) {
+        Example example = new Example(LeoJob.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("templateId", templateId)
+                .andNotEqualTo("templateVersion", templateVersion);
+        return leoJobMapper.selectByExample(example);
+    }
+
 }

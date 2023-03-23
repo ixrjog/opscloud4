@@ -9,6 +9,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * @Author baiyi
@@ -112,6 +113,18 @@ public class LeoTemplateParam {
 
         @ApiModelProperty(value = "描述")
         private String comment;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpgradeJobTemplate {
+
+        @NotNull(message = "模板ID不能为空")
+        @ApiModelProperty(value = "模板ID")
+        private Integer templateId;
 
     }
 

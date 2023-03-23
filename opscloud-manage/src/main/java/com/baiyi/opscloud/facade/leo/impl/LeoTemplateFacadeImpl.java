@@ -7,10 +7,12 @@ import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoTemplate;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.leo.LeoTemplateParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoTemplateVO;
+import com.baiyi.opscloud.facade.leo.LeoJobFacade;
 import com.baiyi.opscloud.facade.leo.LeoTemplateFacade;
 import com.baiyi.opscloud.facade.leo.tags.LeoTagHelper;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
@@ -26,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -55,6 +58,8 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
     private final LeoTagHelper tagHelper;
 
     private final LeoJobService jobService;
+
+    private final LeoJobFacade jobFacade;
 
     @Override
     public DataTable<LeoTemplateVO.Template> queryLeoTemplatePage(LeoTemplateParam.TemplatePageQuery pageQuery) {
@@ -183,6 +188,27 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
             throw new LeoTemplateException("删除模板错误，关联任务未删除！");
         }
         templateService.deleteById(templateId);
+    }
+
+    @Override
+    public void upgradeLeoJobTemplate(int templateId) {
+        LeoTemplate leoTemplate = templateService.getById(templateId);
+        if (leoTemplate == null) {
+            throw new LeoTemplateException("删除模板错误，模板不存在！");
+        }
+        LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(leoTemplate.getTemplateConfig());
+
+        final String templateVersion = Optional.ofNullable(templateConfig)
+                .map(LeoTemplateModel.TemplateConfig::getTemplate)
+                .map(LeoTemplateModel.Template::getVersion)
+                .orElseThrow(() -> new LeoTemplateException("模板版本未配置！"));
+        List<LeoJob> jobs = jobService.queryUpgradeableJobs(templateId, templateVersion);
+        if (CollectionUtils.isEmpty(jobs)) {
+            return;
+        }
+        for (LeoJob job : jobs) {
+            jobFacade.upgradeLeoJobTemplateContent(job, leoTemplate, templateVersion);
+        }
     }
 
 }

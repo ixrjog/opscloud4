@@ -48,8 +48,8 @@ public class GitLabRepoDelegate {
         List<LeoBuildVO.Option> options = Lists.newArrayList();
         try {
             // Branches option
-            List<Branch> GitLabBranches = GitLabProjectDriver.getBranchesWithProjectId(gitlab, projectId);
-            List<LeoBuildVO.BranchOrTag> branches = GitLabBranchConverter.toBranches(GitLabBranches);
+            List<Branch> gitLabBranches = GitLabProjectDriver.getBranchesWithProjectId(gitlab, projectId);
+            List<LeoBuildVO.BranchOrTag> branches = GitLabBranchConverter.toBranches(gitLabBranches);
             options.add(GitLabBranchConverter.toOption(BRANCHES, branches));
             // Tags option
             if (openTag) {

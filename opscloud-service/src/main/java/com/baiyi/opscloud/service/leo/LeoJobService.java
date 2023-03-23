@@ -38,4 +38,12 @@ public interface LeoJobService {
 
     List<LeoJob> queryAll();
 
+    /**
+     * 查询可升级的作业
+     * @param templateId
+     * @param templateVersion
+     * @return
+     */
+    List<LeoJob> queryUpgradeableJobs(Integer templateId, String templateVersion);
+
 }

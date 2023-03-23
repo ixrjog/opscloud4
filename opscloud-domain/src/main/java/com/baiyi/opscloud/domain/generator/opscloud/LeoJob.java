@@ -86,7 +86,7 @@ public class LeoJob implements Serializable, BaseBusiness.IBusiness {
     private Boolean hide;
 
     /**
-     * 模版ID
+     * 模板ID
      */
     @Column(name = "template_id")
     private Integer templateId;

@@ -33,7 +33,9 @@ public class LeoPostDeployHandler implements InitializingBean {
 
     @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
     public void handleDeploy(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
-        // 使用责任链设计模式解耦代码
+        /**
+         * 使用责任链设计模式解耦代码
+         */
         endDeployNotificationConcreteHandler.handleRequest(leoDeployService.getById(leoDeploy.getId()), deployConfig);
     }
 

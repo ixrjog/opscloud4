@@ -88,7 +88,7 @@ public class LeoJobVO {
         @ApiModelProperty(value = "有效")
         private Boolean isActive;
 
-        @ApiModelProperty(value = "模版ID")
+        @ApiModelProperty(value = "模板ID")
         private Integer templateId;
 
         @ApiModelProperty(value = "任务超文本链接")

@@ -178,6 +178,21 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .templateContent(leoTemplate.getTemplateContent())
                 .build();
         jobService.updateByPrimaryKeySelective(saveLeoJob);
+        log.info("升级模板版本: jobId={}, templateVersion={}", leoJob.getId(), templateVersion);
+    }
+
+    @Override
+    public void upgradeLeoJobTemplateContent(LeoJob leoJob, LeoTemplate leoTemplate, String templateVersion) {
+        if (templateVersion.equals(leoJob.getTemplateVersion())) {
+            return;
+        }
+        LeoJob saveLeoJob = LeoJob.builder()
+                .id(leoJob.getId())
+                .templateVersion(templateVersion)
+                .templateContent(leoTemplate.getTemplateContent())
+                .build();
+        jobService.updateByPrimaryKeySelective(saveLeoJob);
+        log.info("升级模板版本: jobId={}, templateVersion={}", leoJob.getId(), templateVersion);
     }
 
     @Override

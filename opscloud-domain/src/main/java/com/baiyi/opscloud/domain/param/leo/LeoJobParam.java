@@ -161,7 +161,7 @@ public class LeoJobParam {
         private Boolean hide;
 
         @NotNull
-        @ApiModelProperty(value = "模版ID")
+        @ApiModelProperty(value = "模板ID")
         private Integer templateId;
 
         @NotNull
@@ -219,7 +219,7 @@ public class LeoJobParam {
         @ApiModelProperty(value = "隐藏任务")
         private Boolean hide;
 
-        @ApiModelProperty(value = "模版ID")
+        @ApiModelProperty(value = "模板ID")
         private Integer templateId;
 
         @ApiModelProperty(value = "任务超文本链接")

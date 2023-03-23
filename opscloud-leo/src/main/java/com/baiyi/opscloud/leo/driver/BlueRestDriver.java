@@ -98,7 +98,7 @@ public class BlueRestDriver {
         @SneakyThrows
         @Override
         public Exception decode(String s, Response response) {
-            log.error("decode error: s={}", s);
+            log.error("decode error: {}", s);
             throw new Exception("decode error");
         }
     }

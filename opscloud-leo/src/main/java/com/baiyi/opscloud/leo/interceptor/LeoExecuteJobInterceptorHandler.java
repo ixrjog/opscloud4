@@ -148,8 +148,6 @@ public class LeoExecuteJobInterceptorHandler {
                 .businessId(jobId)
                 .build();
         return userPermissionService.countByBusiness(queryParam);
-
-
     }
 
     public void verifyRule(int jobId) {

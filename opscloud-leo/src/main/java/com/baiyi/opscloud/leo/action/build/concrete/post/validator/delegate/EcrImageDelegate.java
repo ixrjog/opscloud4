@@ -49,8 +49,8 @@ public class EcrImageDelegate {
                             new LeoBuildException("查询AWS-ECR镜像未找到对应的标签: imageTag={}", imageTag)
                     );
         } catch (Exception e) {
-            log.error("查询AWS-ECR镜像错误: err={}", e.getMessage());
-            throw new LeoBuildException("查询AWS-ECR镜像错误: err={}", e.getMessage());
+            log.error("查询AWS-ECR镜像错误: {}", e.getMessage());
+            throw new LeoBuildException("查询AWS-ECR镜像错误: {}", e.getMessage());
         }
     }
 

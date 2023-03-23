@@ -50,7 +50,9 @@ public class PreInspectionWithRollingStrategy extends PreInspectionStrategy {
                 .orElseThrow(() -> new LeoDeployException("字典配置不存在！"));
 
         List<LeoBuildImage> leoBuildImages = leoBuildImageService.queryImageWithJobIdAndImage(leoDeploy.getJobId(), image);
-        // 以前版本
+        /**
+         * 以前版本
+         */
         LeoDeployModel.DeployVersion previousVersion;
         if (CollectionUtils.isEmpty(leoBuildImages)) {
             previousVersion = LeoDeployModel.DeployVersion.UNKNOWN;
@@ -65,7 +67,9 @@ public class PreInspectionWithRollingStrategy extends PreInspectionStrategy {
                     .comment("Previous Version")
                     .build();
         }
-        // 发布版本
+        /**
+         * 发布版本
+         */
         LeoBuild leoBuild = leoBuildService.getById(leoDeploy.getBuildId());
         LeoDeployModel.DeployVersion releaseVersion = LeoDeployModel.DeployVersion.builder()
                 .buildId(leoDeploy.getBuildId())
