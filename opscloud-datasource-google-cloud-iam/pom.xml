@@ -2,37 +2,40 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>opscloud</artifactId>
         <groupId>com.baiyi</groupId>
+        <artifactId>opscloud</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>opscloud-datasource-huaweicloud-ecs</artifactId>
+    <artifactId>opscloud-datasource-google-cloud-iam</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-huaweicloud-core</artifactId>
+            <artifactId>opscloud-datasource-google-cloud-core</artifactId>
+        </dependency>
+
+        <!-- https://cloud.google.com/iam/docs/reference/libraries -->
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-iam-policy</artifactId>
+            <version>1.10.0</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>com.huaweicloud.sdk</groupId>
-            <artifactId>huaweicloud-sdk-vpc</artifactId>
-            <version>3.1.32</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.huaweicloud.sdk</groupId>
-            <artifactId>huaweicloud-sdk-ecs</artifactId>
-            <version>3.1.32</version>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-iamcredentials</artifactId>
+            <version>v1-rev20211203-2.0.0</version>
         </dependency>
 
     </dependencies>

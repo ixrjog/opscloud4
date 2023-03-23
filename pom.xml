@@ -56,6 +56,9 @@
         <module>opscloud-datasource-aws-ecr</module>
         <module>opscloud-datasource-lxhl</module>
         <module>opscloud-leo</module>
+        <module>opscloud-datasource-google-cloud-core</module>
+        <module>opscloud-datasource-google-cloud-iam</module>
+        <module>opscloud-datasource-google-cloud</module>
     </modules>
     <parent>
         <!--https://spring.io/projects/spring-boot#learn -->
@@ -479,6 +482,24 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-huaweicloud</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-google-cloud</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-google-cloud-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-google-cloud-iam</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
