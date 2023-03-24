@@ -28,8 +28,8 @@ Welcome to the opscloud wiki!
 ## 开发环境
 + JDK 8u251
 + MacBook M1 PRO (macOS Ventura 13.1)
-+ IntelliJ IDEA 2022.3.1 (Ultimate Edition)
-+ WebStorm 2022.3.1
++ IntelliJ IDEA 2022.3.3 (Ultimate Edition)
++ WebStorm 2022.3.3
 
 ## Leo持续交付
 + 部署
