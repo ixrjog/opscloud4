@@ -32,19 +32,19 @@ Welcome to the opscloud wiki!
 + WebStorm 2022.3.3
 
 ## Leo持续交付
-+ 部署
-
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-0.png" width="830"></img>
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-1.png" width="830"></img>
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-6.png" width="830"></img>
 
 + 构建
 
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-3.png" width="830"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-8.png" width="830"></img>
+
++ 部署
+
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-9.png" width="830"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-6.png" width="830"></img>
 
 + 规则配置（封网）
 
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-4.png" width="830"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-10.png" width="830"></img>
 
 + 任务配置
 
