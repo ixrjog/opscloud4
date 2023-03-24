@@ -36,7 +36,7 @@ Welcome to the opscloud wiki!
 
 <img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-0.png" width="830"></img>
 <img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-1.png" width="830"></img>
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-2.png" width="830"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-6.png" width="830"></img>
 
 + 构建
 
@@ -50,11 +50,14 @@ Welcome to the opscloud wiki!
 
 <img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-5.png" width="830"></img>
 
+## 容器堡垒机（集成版本信息）
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-7.png" width="830"></img>
+
 ## 主要功能
 + Leo持续交付（Kubernetes）
   + 多Jenkins实例调度
   + 权限控制/封网策略
-  + 可视化发布过程
+  + 分组（蓝/绿），金丝雀部署；可视化发布过程
 + 动态数据源
   + Zabbix、Nacos、LDAP、Jenkins、Guacamole、Ansible、Nexus、Gitlab、Sonar、Dingtalk、TencentExmail、Consul
   + `Kubernetes`
