@@ -13,7 +13,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
 import com.baiyi.opscloud.service.event.EventBusinessService;
 import com.baiyi.opscloud.service.event.EventService;
-import com.baiyi.opscloud.service.message.MessageTemplateService;
+import com.baiyi.opscloud.service.template.MessageTemplateService;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.service.tag.SimpleTagService;
 import com.baiyi.opscloud.zabbix.constant.SeverityType;

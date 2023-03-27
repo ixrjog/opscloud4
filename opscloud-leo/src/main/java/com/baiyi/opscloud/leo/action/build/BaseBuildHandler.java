@@ -11,7 +11,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
-import com.baiyi.opscloud.service.message.MessageTemplateService;
+import com.baiyi.opscloud.service.template.MessageTemplateService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.collect.Lists;
 

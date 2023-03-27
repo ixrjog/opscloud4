@@ -7,7 +7,7 @@ import com.baiyi.opscloud.common.util.BeetlUtil;
 import com.baiyi.opscloud.datasource.message.notice.DingtalkSendHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.AlertNotifyHistory;
 import com.baiyi.opscloud.domain.generator.opscloud.MessageTemplate;
-import com.baiyi.opscloud.service.message.MessageTemplateService;
+import com.baiyi.opscloud.service.template.MessageTemplateService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;

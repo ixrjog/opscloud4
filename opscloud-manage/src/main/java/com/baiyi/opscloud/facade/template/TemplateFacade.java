@@ -2,8 +2,10 @@ package com.baiyi.opscloud.facade.template;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.template.BusinessTemplateParam;
+import com.baiyi.opscloud.domain.param.template.MessageTemplateParam;
 import com.baiyi.opscloud.domain.param.template.TemplateParam;
 import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
+import com.baiyi.opscloud.domain.vo.template.MessageTemplateVO;
 import com.baiyi.opscloud.domain.vo.template.TemplateVO;
 
 /**
@@ -21,6 +23,12 @@ public interface TemplateFacade {
 
     void deleteTemplateById(int id);
 
+    /**
+     * 分页查询业务模板详情
+     *
+     * @param pageQuery
+     * @return
+     */
     DataTable<BusinessTemplateVO.BusinessTemplate> queryBusinessTemplatePage(BusinessTemplateParam.BusinessTemplatePageQuery pageQuery);
 
     BusinessTemplateVO.BusinessTemplate addBusinessTemplate(BusinessTemplateParam.BusinessTemplate businessTemplate);
@@ -32,5 +40,15 @@ public interface TemplateFacade {
     void scanBusinessTemplateByInstanceUuid(String instanceUuid);
 
     void deleteBusinessTemplateById(int id);
+
+    /**
+     * 分页查询消息模板详情
+     *
+     * @param pageQuery
+     * @return
+     */
+    DataTable<MessageTemplateVO.MessageTemplate> queryMessageTemplatePage(MessageTemplateParam.MessageTemplatePageQuery pageQuery);
+
+    void updateMessageTemplate(MessageTemplateParam.UpdateMessageTemplate messageTemplate);
 
 }

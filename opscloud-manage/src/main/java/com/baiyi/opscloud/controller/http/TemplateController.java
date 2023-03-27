@@ -3,8 +3,10 @@ package com.baiyi.opscloud.controller.http;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.template.BusinessTemplateParam;
+import com.baiyi.opscloud.domain.param.template.MessageTemplateParam;
 import com.baiyi.opscloud.domain.param.template.TemplateParam;
 import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
+import com.baiyi.opscloud.domain.vo.template.MessageTemplateVO;
 import com.baiyi.opscloud.domain.vo.template.TemplateVO;
 import com.baiyi.opscloud.facade.template.TemplateFacade;
 import io.swagger.annotations.Api;
@@ -66,7 +68,7 @@ public class TemplateController {
     }
 
     @ApiOperation(value = "更新业务模板")
-    @PostMapping(value = "/business/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/business/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<BusinessTemplateVO.BusinessTemplate> updateBusinessTemplate(@RequestBody @Valid BusinessTemplateParam.BusinessTemplate businessTemplate) {
         return new HttpResult<>(templateFacade.updateBusinessTemplate(businessTemplate));
     }
@@ -88,6 +90,21 @@ public class TemplateController {
     @PutMapping(value = "/business/scan", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> scanBusinessTemplateByInstance(@RequestParam @Valid String instanceUuid) {
         templateFacade.scanBusinessTemplateByInstanceUuid(instanceUuid);
+        return HttpResult.SUCCESS;
+    }
+
+    // MessageTemplate
+
+    @ApiOperation(value = "分页查询消息模板列表")
+    @PostMapping(value = "/message/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<MessageTemplateVO.MessageTemplate>> queryMessageTemplatePage(@RequestBody @Valid MessageTemplateParam.MessageTemplatePageQuery pageQuery) {
+        return new HttpResult<>(templateFacade.queryMessageTemplatePage(pageQuery));
+    }
+
+    @ApiOperation(value = "更新消息模板列表")
+    @PutMapping(value = "/message/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updateMessageTemplate(@RequestBody @Valid MessageTemplateParam.UpdateMessageTemplate messageTemplate) {
+        templateFacade.updateMessageTemplate(messageTemplate);
         return HttpResult.SUCCESS;
     }
 

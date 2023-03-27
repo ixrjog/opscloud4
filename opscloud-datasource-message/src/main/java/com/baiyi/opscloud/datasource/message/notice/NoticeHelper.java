@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.MessageTemplate;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.notice.INoticeMessage;
-import com.baiyi.opscloud.service.message.MessageTemplateService;
+import com.baiyi.opscloud.service.template.MessageTemplateService;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -19,6 +19,7 @@ import com.baiyi.opscloud.packer.template.BusinessTemplatePacker;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.baiyi.opscloud.service.template.BusinessTemplateService;
 import com.baiyi.opscloud.service.template.TemplateService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
 
@@ -31,6 +32,7 @@ import java.util.List;
  * @Date 2021/12/7 4:22 PM
  * @Version 1.0
  */
+@Slf4j
 public abstract class AbstractTemplateConsume<T> implements ITemplateConsume, InitializingBean {
 
     @Resource
@@ -55,23 +57,31 @@ public abstract class AbstractTemplateConsume<T> implements ITemplateConsume, In
         try {
             return BeetlUtil.renderTemplate(template.getContent(), vars);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             throw new OCException("无法创建资产: 渲染模板失败!");
         }
     }
 
+    /**
+     * 生产
+     * @param bizTemplate
+     * @param content
+     * @return
+     */
     abstract protected T produce(BusinessTemplate bizTemplate, String content);
 
     public BusinessTemplateVO.BusinessTemplate produce(BusinessTemplate bizTemplate) {
-        if (bizTemplate == null)
+        if (bizTemplate == null) {
             throw new OCException("无法创建资产: 业务模板不存在!");
+        }
         Template template = templateService.getById(bizTemplate.getTemplateId());
-        if (template == null)
+        if (template == null) {
             throw new OCException("无法创建资产: 模板不存在!");
+        }
         YamlVars.Vars vars = toVars(bizTemplate);
         // 渲染模板
         String content = renderTemplate(template, vars);
-        T entity = produce(bizTemplate,content);
+        T entity = produce(bizTemplate, content);
         List<DatasourceInstanceAsset> assets = dsInstanceFacade.pullAsset(bizTemplate.getInstanceUuid(), getAssetType(), entity);
         if (CollectionUtils.isEmpty(assets)) {
             throw new OCException("创建资产错误: 无法从生产者获取资产对象!");
