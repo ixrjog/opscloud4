@@ -49,12 +49,6 @@ public class ApplicationController {
         return new HttpResult<>(applicationFacade.queryMyApplicationPage(pageQuery));
     }
 
-//    @ApiOperation(value = "查询应用的kubernetes")
-//    @PostMapping(value = "/kubernetes/get", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public HttpResult<ApplicationVO.Application> getApplicationKubernetes(@RequestBody @Valid ApplicationParam.GetApplicationKubernetes getApplicationKubernetes) {
-//        return new HttpResult<>(applicationFacade.getApplicationKubernetes(getApplicationKubernetes));
-//    }
-
     @ApiOperation(value = "查询应用详情")
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<ApplicationVO.Application> getApplicationById(@Valid Integer id) {

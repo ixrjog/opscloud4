@@ -25,18 +25,6 @@
         </dependency>
 
         <!-- https://cloud.google.com/iam/docs/reference/libraries -->
-        <dependency>
-            <groupId>com.google.cloud</groupId>
-            <artifactId>google-iam-policy</artifactId>
-            <version>1.10.0</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.apis</groupId>
-            <artifactId>google-api-services-iamcredentials</artifactId>
-            <version>v1-rev20211203-2.0.0</version>
-        </dependency>
 
     </dependencies>
 

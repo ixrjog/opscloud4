@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.UserToken;
 import com.baiyi.opscloud.domain.model.message.KubernetesDeploymentMessage;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
-import com.baiyi.opscloud.facade.application.ApplicationFacade;
+import com.baiyi.opscloud.facade.application.KubernetesFacade;
 import com.baiyi.opscloud.service.user.UserTokenService;
 import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class KubernetesDeploymentRequestHandler implements IKubernetesDeploymentRequestHandler {
 
-    private final ApplicationFacade applicationFacade;
+    private final KubernetesFacade kubernetesFacade;
 
     private final UserTokenService userTokenService;
 
@@ -43,8 +43,8 @@ public class KubernetesDeploymentRequestHandler implements IKubernetesDeployment
                 .extend(true)
                 .build();
         String username = preAuth(kubernetesDeploymentMessage.getToken());
-        ApplicationVO.Application application = applicationFacade.getApplicationKubernetes(getApplicationKubernetes, username);
-        sendToSession(session, application);
+        ApplicationVO.Kubernetes kubernetes =  kubernetesFacade.getApplicationKubernetes(getApplicationKubernetes, username);
+        sendToSession(session, kubernetes);
     }
 
     private String preAuth(String token) {
@@ -58,7 +58,7 @@ public class KubernetesDeploymentRequestHandler implements IKubernetesDeployment
         return userToken.getUsername();
     }
 
-    protected void sendToSession(Session session, ApplicationVO.Application body) throws IOException {
+    protected void sendToSession(Session session, ApplicationVO.Kubernetes body) throws IOException {
         if (session.isOpen()) {
             KubernetesDeploymentResponse response = KubernetesDeploymentResponse.builder()
                     .body(body)

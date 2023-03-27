@@ -2,9 +2,7 @@ package com.baiyi.opscloud.facade.application;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.util.SessionUtil;
-import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
-import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
@@ -17,7 +15,7 @@ import javax.annotation.Resource;
 class ApplicationFacadeTest extends BaseUnit {
 
     @Resource
-    private ApplicationFacade applicationFacade;
+    private KubernetesFacade kubernetesFacade;
 
     @Test
     void queryPageTest() {
@@ -28,8 +26,8 @@ class ApplicationFacadeTest extends BaseUnit {
                 .page(1)
                 .length(5)
                 .build();
-        DataTable<ApplicationVO.Application> dataTable = applicationFacade.queryApplicationKubernetesPage(pageQuery);
-        print(dataTable);
+      //  DataTable<ApplicationVO.Application> dataTable = kubernetesFacade.queryKubernetesPage(pageQuery);
+     //   print(dataTable);
     }
 
 }

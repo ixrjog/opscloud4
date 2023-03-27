@@ -28,6 +28,59 @@ public class ApplicationVO {
     @Data
     @NoArgsConstructor
     @ApiModel
+    public static class Kubernetes extends BaseVO implements
+            IBusinessPermissionUser,
+            BusinessDocumentVO.IBusinessDocument,
+            UserVO.IUserPermission,
+            TagVO.ITags {
+
+        private final Integer businessType = BusinessTypeEnum.APPLICATION.getType();
+
+        @Override
+        public Integer getBusinessId() {
+            return id;
+        }
+
+        private List<TagVO.Tag> tags;
+
+        @ApiModelProperty(value = "授权用户")
+        private List<UserVO.User> users;
+
+        private List<ApplicationResourceVO.Resource> resources;
+
+        private Map<String, List<ApplicationResourceVO.Resource>> resourceMap;
+
+        @ApiModelProperty(value = "业务文档")
+        private BusinessDocumentVO.Document document;
+
+        @ApiModelProperty(value = "主键", example = "1")
+        private Integer id;
+
+        @ApiModelProperty(value = "应用名称")
+        private String name;
+
+        @ApiModelProperty(value = "应用关键字")
+        private String applicationKey;
+
+        private Integer applicationType;
+
+        @ApiModelProperty(value = "描述")
+        private String comment;
+
+        // 应用授权角度
+        private Integer userId;
+
+        private Boolean isActive;
+
+        private UserPermissionVO.UserPermission userPermission;
+
+    }
+
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @NoArgsConstructor
+    @ApiModel
     public static class Application extends BaseVO implements
             IBusinessPermissionUser,
             BusinessDocumentVO.IBusinessDocument,

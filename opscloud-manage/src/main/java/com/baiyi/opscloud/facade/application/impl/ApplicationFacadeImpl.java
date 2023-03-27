@@ -1,10 +1,8 @@
 package com.baiyi.opscloud.facade.application.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
-import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -13,7 +11,6 @@ import com.baiyi.opscloud.domain.annotation.TagClear;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
-import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
 import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
@@ -31,7 +28,6 @@ import com.baiyi.opscloud.packer.user.UserPermissionPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
-import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
@@ -63,8 +59,6 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
 
     private final AuthRoleService authRoleService;
 
-    private final UserPermissionService userPermissionService;
-
     private final UserPermissionPacker userPermissionPacker;
 
     @Override
@@ -86,84 +80,6 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
         List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class).stream().peek(e -> applicationPacker.wrap(e, pageQuery)).collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
-
-    /**
-     * 后期会删除，跨地域查询多应用性能太差
-     *
-     * @param pageQuery
-     * @return
-     */
-    @Deprecated
-    @Override
-    public DataTable<ApplicationVO.Application> queryApplicationKubernetesPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
-        pageQuery.setBusinessType(getBusinessType());
-        if (isAdmin(SessionUtil.getUsername())) {
-            pageQuery.setAdmin(true);
-        } else {
-            pageQuery.setUserId(userService.getByUsername(SessionUtil.getUsername()).getId());
-        }
-        DataTable<Application> table;
-        if (IdUtil.isEmpty(pageQuery.getApplicationId())) {
-            table = applicationService.queryPageByParam(pageQuery);
-        } else {
-            if (!pageQuery.getAdmin()) {
-                UserPermission query = UserPermission.builder().businessType(BusinessTypeEnum.APPLICATION.getType()).businessId(pageQuery.getApplicationId()).userId(pageQuery.getUserId()).build();
-                if (userPermissionService.getByUniqueKey(query) == null) {
-                    throw new AuthenticationException(ErrorEnum.AUTHENTICATION_FAILURE);
-                }
-            }
-            table = new DataTable<>(Lists.newArrayList(applicationService.getById(pageQuery.getApplicationId())), 1);
-        }
-        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class).stream().peek(e -> {
-            if (IdUtil.isEmpty(pageQuery.getApplicationId())) {
-                applicationPacker.wrap(e, pageQuery);
-            } else {
-                applicationPacker.wrap(e);
-            }
-        }).collect(Collectors.toList());
-        return new DataTable<>(data, table.getTotalNum());
-    }
-
-    @Override
-    public ApplicationVO.Application getApplicationKubernetes(ApplicationParam.GetApplicationKubernetes getApplicationKubernetes) {
-        // 鉴权
-        if (!isAdmin(SessionUtil.getUsername())) {
-            int userId = userService.getByUsername(SessionUtil.getUsername()).getId();
-            UserPermission query = UserPermission.builder()
-                    .businessType(BusinessTypeEnum.APPLICATION.getType())
-                    .businessId(getApplicationKubernetes.getApplicationId())
-                    .userId(userId)
-                    .build();
-            if (userPermissionService.getByUniqueKey(query) == null) {
-                throw new AuthenticationException(ErrorEnum.AUTHENTICATION_FAILURE);
-            }
-        }
-        Application application = applicationService.getById(getApplicationKubernetes.getApplicationId());
-        ApplicationVO.Application vo = BeanCopierUtil.copyProperties(application, ApplicationVO.Application.class);
-        applicationPacker.wrap(vo, getApplicationKubernetes.getEnvType());
-        return vo;
-    }
-
-    @Override
-    public ApplicationVO.Application getApplicationKubernetes(ApplicationParam.GetApplicationKubernetes getApplicationKubernetes, String username) {
-        // 鉴权
-        if (!isAdmin(username)) {
-            int userId = userService.getByUsername(username).getId();
-            UserPermission query = UserPermission.builder()
-                    .businessType(BusinessTypeEnum.APPLICATION.getType())
-                    .businessId(getApplicationKubernetes.getApplicationId())
-                    .userId(userId)
-                    .build();
-            if (userPermissionService.getByUniqueKey(query) == null) {
-                throw new AuthenticationException(ErrorEnum.AUTHENTICATION_FAILURE);
-            }
-        }
-        Application application = applicationService.getById(getApplicationKubernetes.getApplicationId());
-        ApplicationVO.Application vo = BeanCopierUtil.copyProperties(application, ApplicationVO.Application.class);
-        applicationPacker.wrap(vo, getApplicationKubernetes.getEnvType());
-        return vo;
-    }
-
 
     /**
      * OPS角色以上即认定为系统管理员
