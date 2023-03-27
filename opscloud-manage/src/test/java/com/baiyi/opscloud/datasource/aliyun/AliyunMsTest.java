@@ -2,6 +2,7 @@ package com.baiyi.opscloud.datasource.aliyun;
 
 import com.baiyi.opscloud.alert.notify.impl.VmsNotifyActivity;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.datasource.aliyun.base.BaseAliyunTest;
 import com.baiyi.opscloud.datasource.message.driver.AliyunSmsDriver;
 import com.baiyi.opscloud.datasource.message.driver.AliyunVmsDriver;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -37,9 +37,9 @@ public class AliyunMsTest extends BaseAliyunTest {
         String callId = aliyunVmsDriver.singleCallByTts("eu-west-1", config.getAliyun(), phone, ttsCode);
 //        String callId = "130094535587^116873080590";
         aliyunVmsDriver.queryCallDetailByCallId("eu-west-1", config.getAliyun(), callId, date);
-        TimeUnit.SECONDS.sleep(10L);
+        NewTimeUtil.sleep(10L);
         aliyunVmsDriver.queryCallDetailByCallId("eu-west-1", config.getAliyun(), callId, date);
-        TimeUnit.SECONDS.sleep(10L);
+        NewTimeUtil.sleep(10L);
         aliyunVmsDriver.queryCallDetailByCallId("eu-west-1", config.getAliyun(), callId, date);
     }
 

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshcore.task.base;
 
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.sshcore.AuditRecordHelper;
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.util.SessionOutputUtil;
@@ -9,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -41,7 +41,7 @@ public abstract class AbstractOutputTask implements IOutputTask {
             while ((read = br.read(buff)) != -1) {
                 write(buff, 0, read);
                 auditing(buff, 0, read);
-                TimeUnit.MILLISECONDS.sleep(10L);
+                NewTimeUtil.millisecondsSleep(10L);
             }
         } catch (Exception ex) {
             log.error(ex.toString(), ex);

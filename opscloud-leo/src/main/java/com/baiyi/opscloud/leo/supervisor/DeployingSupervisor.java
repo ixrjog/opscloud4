@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.leo.supervisor;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.leo.action.deploy.BaseDeployHandler;
 import com.baiyi.opscloud.leo.action.deploy.LeoPostDeployHandler;
@@ -18,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 部署监督
@@ -110,10 +110,7 @@ public class DeployingSupervisor implements ISupervisor {
                 log.warn(e.getMessage());
             }
             // 延迟执行
-            try {
-                TimeUnit.SECONDS.sleep(SLEEP_SECONDS);
-            } catch (InterruptedException ignored) {
-            }
+            NewTimeUtil.sleep(SLEEP_SECONDS);
         }
     }
 

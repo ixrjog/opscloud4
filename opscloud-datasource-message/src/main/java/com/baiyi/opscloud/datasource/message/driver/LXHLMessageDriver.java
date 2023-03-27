@@ -25,8 +25,9 @@ public class LXHLMessageDriver {
     public LXHLMessageResponse.SendMessage sendMessage(LXHLConfig.Account account, String mobile, String content, String signName) {
         final String signContent = preInvokeSign(signName, content);
         String result = messageServiceDriver.sendMessage(account, mobile, signContent);
-        if (StringUtils.isBlank(result))
+        if (StringUtils.isBlank(result)) {
             return null;
+        }
         String[] response = result.split(",");
         LXHLMessageResponse.SendMessage sendMessage = LXHLMessageResponse.SendMessage.builder()
                 .code(response[0])

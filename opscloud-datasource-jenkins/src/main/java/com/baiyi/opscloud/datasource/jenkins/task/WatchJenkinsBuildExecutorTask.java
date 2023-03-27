@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.datasource.jenkins.task;
 
 import com.baiyi.opscloud.common.util.JSONUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.datasource.jenkins.engine.JenkinsBuildExecutorHelper;
 import com.baiyi.opscloud.datasource.jenkins.status.JenkinsBuildExecutorStatusVO;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -8,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.Session;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -33,13 +33,9 @@ public class WatchJenkinsBuildExecutorTask implements Runnable {
     @Override
     public void run() {
         while (session.isOpen()) {
-            try {
-                JenkinsBuildExecutorStatusVO.Children children = jenkinsBuildExecutorHelper.generatorBuildExecutorStatus(instance);
-                send(children);
-                TimeUnit.MILLISECONDS.sleep(10000L);
-            } catch (InterruptedException e) {
-                log.error(e.getMessage());
-            }
+            JenkinsBuildExecutorStatusVO.Children children = jenkinsBuildExecutorHelper.generatorBuildExecutorStatus(instance);
+            send(children);
+            NewTimeUtil.sleep(10L);
         }
     }
 

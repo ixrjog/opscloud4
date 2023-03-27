@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.ansible.play.task;
 
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.datasource.ansible.play.PlayOutputMessage;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerTaskMember;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +10,6 @@ import javax.websocket.Session;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -39,9 +39,9 @@ public class ServerTaskPlayTask implements Runnable {
             while (session.isOpen() &&
                     ((output = outputReader.readLine()) != null || (error = errorReader.readLine()) != null)) {
                 send(output, error);
-                TimeUnit.MILLISECONDS.sleep(100L);
+                NewTimeUtil.millisecondsSleep(100L);
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             log.warn(e.getMessage());
         }
         log.info("ServerTaskPlayTask线程结束: serverTaskId={}, serverTaskMemberId={}", serverTaskMember.getServerTaskId(), serverTaskMember.getId());

@@ -3,6 +3,7 @@ package com.baiyi.opscloud.alert.notify.impl;
 import com.baiyi.opscloud.alert.notify.NotifyMediaEnum;
 import com.baiyi.opscloud.alert.notify.NotifyStatusEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.message.driver.AliyunVmsDriver;
 import com.baiyi.opscloud.domain.alert.AlertContext;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author 修远
@@ -67,23 +67,19 @@ public class VmsNotifyActivity extends AbstractNotifyActivity {
     }
 
     public Boolean singleCall(AliyunConfig.Aliyun config, String phone, String ttsCode) {
-        try {
-            long callTime = System.currentTimeMillis();
-            int time = 1;
-            String callId = aliyunVmsDriver.singleCallByTts(config.getRegionId(), config, phone, ttsCode);
-            do {
-                TimeUnit.SECONDS.sleep(90L);
-                if (aliyunVmsDriver.queryCallDetailByCallId(config.getRegionId(), config, callId, callTime)) {
-                    return true;
-                }
-                log.error("电话 {} 未接通，90秒后继续拨打，当前第 {} 次", phone, time);
-                time++;
-                callTime = System.currentTimeMillis();
-                callId = aliyunVmsDriver.singleCallByTts(config.getRegionId(), config, phone, ttsCode);
-            } while (time <= NO_CALL_TIME);
-        } catch (InterruptedException e) {
-            log.error(e.getMessage(), e);
-        }
+        long callTime = System.currentTimeMillis();
+        int time = 1;
+        String callId = aliyunVmsDriver.singleCallByTts(config.getRegionId(), config, phone, ttsCode);
+        do {
+            NewTimeUtil.sleep(90L);
+            if (aliyunVmsDriver.queryCallDetailByCallId(config.getRegionId(), config, callId, callTime)) {
+                return true;
+            }
+            log.error("电话 {} 未接通，90秒后继续拨打，当前第 {} 次", phone, time);
+            time++;
+            callTime = System.currentTimeMillis();
+            callId = aliyunVmsDriver.singleCallByTts(config.getRegionId(), config, phone, ttsCode);
+        } while (time <= NO_CALL_TIME);
         return false;
     }
 

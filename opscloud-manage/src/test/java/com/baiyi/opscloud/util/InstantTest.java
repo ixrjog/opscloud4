@@ -1,10 +1,10 @@
 package com.baiyi.opscloud.util;
 
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -18,7 +18,7 @@ public class InstantTest extends BaseUnit {
     void instantTest() {
         try {
             Instant inst1 = Instant.now();
-            TimeUnit.MILLISECONDS.sleep(25L);
+            NewTimeUtil.millisecondsSleep(25L);
             System.err.println(inst1);
            // Duration.between(inst1, Instant.now()).getSeconds`();
            // Instant.now().toEpochMilli();

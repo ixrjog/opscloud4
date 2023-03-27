@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.loop.kubernetes;
 
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.UserToken;
 import com.baiyi.opscloud.domain.model.message.KubernetesDeploymentMessage;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
@@ -41,20 +42,20 @@ public class KubernetesDeploymentRequestHandler implements IKubernetesDeployment
                 .envType(kubernetesDeploymentMessage.getEnvType())
                 .extend(true)
                 .build();
-
-        if (StringUtils.isEmpty(SessionUtil.getUsername())) {
-            if (StringUtils.isBlank(kubernetesDeploymentMessage.getToken())) {
-                return;
-            }
-            UserToken userToken = userTokenService.getByVaildToken(kubernetesDeploymentMessage.getToken());
-            if (userToken == null) {
-                return;
-            }
-            // 设置当前会话用户身份
-            SessionUtil.setUsername(userToken.getUsername());
-        }
-        ApplicationVO.Application application = applicationFacade.getApplicationKubernetes(getApplicationKubernetes);
+        String username = preAuth(kubernetesDeploymentMessage.getToken());
+        ApplicationVO.Application application = applicationFacade.getApplicationKubernetes(getApplicationKubernetes, username);
         sendToSession(session, application);
+    }
+
+    private String preAuth(String token) {
+        if (StringUtils.isBlank(token)) {
+            throw new AuthenticationException(ErrorEnum.AUTHENTICATION_REQUEST_NO_TOKEN);
+        }
+        UserToken userToken = userTokenService.getByVaildToken(token);
+        if (userToken == null) {
+            throw new AuthenticationException(ErrorEnum.AUTHENTICATION_TOKEN_INVALID);
+        }
+        return userToken.getUsername();
     }
 
     protected void sendToSession(Session session, ApplicationVO.Application body) throws IOException {

@@ -1,12 +1,9 @@
 package com.baiyi.opscloud.controller.ws;
 
 import com.baiyi.opscloud.common.util.NewTimeUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.common.ws.KubernetesDeploymentQuerySessionMap;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
-import com.baiyi.opscloud.domain.model.message.KubernetesDeploymentMessage;
 import com.baiyi.opscloud.loop.KubernetesDeploymentEventLoop;
-import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -39,7 +36,7 @@ public class KubernetesDeploymentController extends SimpleAuthentication {
     /**
      * 超时时间1H
      */
-    public static final Long WEBSOCKET_TIMEOUT = NewTimeUtil.MINUTE_TIME * 15;
+    public static final Long WEBSOCKET_TIMEOUT = NewTimeUtil.MINUTE_TIME * 5;
 
     private static ThreadPoolTaskExecutor kubernetesTerminalExecutor;
 
@@ -79,12 +76,12 @@ public class KubernetesDeploymentController extends SimpleAuthentication {
         if (StringUtils.isEmpty(message)) {
             return;
         }
-        if (StringUtils.isEmpty(this.username)) {
-            // 鉴权并更新会话信息
-            hasLogin(new GsonBuilder().create().fromJson(message, KubernetesDeploymentMessage.class));
-        } else {
-            SessionUtil.setUsername(this.username);
-        }
+//        if (StringUtils.isEmpty(this.username)) {
+//            // 鉴权并更新会话信息
+//            hasLogin(new GsonBuilder().create().fromJson(message, KubernetesDeploymentMessage.class));
+//        } else {
+//            SessionUtil.setUsername(this.username);
+//        }
         KubernetesDeploymentQuerySessionMap.addSessionQueryMap(sessionId, message);
     }
 

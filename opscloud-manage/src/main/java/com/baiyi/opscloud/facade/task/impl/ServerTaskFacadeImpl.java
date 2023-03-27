@@ -5,6 +5,7 @@ import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.template.YamlUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
@@ -41,7 +42,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
@@ -146,10 +146,8 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                     // 执行任务
                     fixedThreadPool.execute(ansibleServerTask);
                 }
-                TimeUnit.SECONDS.sleep(5L);
+                NewTimeUtil.sleep(5L);
             }
-        } catch (InterruptedException ie) {
-            log.warn(ie.getMessage());
         } finally {
             fixedThreadPool.shutdown();
         }
@@ -170,11 +168,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                 // 任务完成
                 return;
             } else {
-                try {
-                    TimeUnit.SECONDS.sleep(1L);
-                } catch (InterruptedException ie) {
-                    log.warn(ie.getMessage());
-                }
+                NewTimeUtil.sleep(1L);
             }
         }
     }

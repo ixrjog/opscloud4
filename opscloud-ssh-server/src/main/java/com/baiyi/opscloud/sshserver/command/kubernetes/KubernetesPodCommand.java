@@ -68,7 +68,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.sshserver.constants.TableConstants.TABLE_KUBERNETES_POD_FIELD_NAMES;
@@ -309,15 +308,9 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                     }
                 }
                 if (arthas) {
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(200L);
-                    } catch (InterruptedException ie) {
-                    }
+                    NewTimeUtil.millisecondsSleep(200L);
                     execWatch.getInput().write(KUBERNETES_EXECUTE_ARTHAS);
-                    try {
-                        TimeUnit.SECONDS.sleep(1L);
-                    } catch (InterruptedException ie) {
-                    }
+                    NewTimeUtil.sleep(1L);
                 }
             } catch (IOException ioException) {
                 log.warn("执行Arthas错误: {}", ioException.getMessage());
@@ -329,10 +322,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                     execWatch.getInput().flush();
                     if (ch == EOF) {
                         // 等待退出，避免sh残留
-                        try {
-                            TimeUnit.MILLISECONDS.sleep(200L);
-                        } catch (InterruptedException ie) {
-                        }
+                        NewTimeUtil.millisecondsSleep(200L);
                         break;
                     }
                 }
@@ -397,13 +387,10 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                     } else {
                         terminal.writer().print(sshShellHelper.getColored("\n输入 [ ctrl+c ] 关闭日志!\n", PromptColor.RED));
                         terminal.writer().flush();
-                        TimeUnit.MILLISECONDS.sleep(200L);
+                        NewTimeUtil.millisecondsSleep(200L);
                     }
                 }
-                try {
-                    TimeUnit.MILLISECONDS.sleep(25L);
-                } catch (InterruptedException ie) {
-                }
+                NewTimeUtil.millisecondsSleep(25L);
             }
         } catch (Exception e) {
             log.warn(e.getMessage());

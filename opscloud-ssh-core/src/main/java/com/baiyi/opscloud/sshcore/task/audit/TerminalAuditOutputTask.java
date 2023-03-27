@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshcore.task.audit;
 
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.sshcore.AuditRecordHelper;
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.task.audit.output.OutputMessage;
@@ -9,7 +10,6 @@ import javax.websocket.Session;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -37,9 +37,9 @@ public class TerminalAuditOutputTask implements Runnable {
                 if (!str.isEmpty()) {
                     send(str +"\n");
                 }
-                TimeUnit.MILLISECONDS.sleep(25L);
+                NewTimeUtil.millisecondsSleep(25L);
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
         }
         log.debug("outputTask线程结束: sessionId={}, instanceId={}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
     }

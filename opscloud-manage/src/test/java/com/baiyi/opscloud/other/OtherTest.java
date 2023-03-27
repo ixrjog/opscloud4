@@ -2,6 +2,7 @@ package com.baiyi.opscloud.other;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
 import com.baiyi.opscloud.schedule.task.ConsulAlertTask;
@@ -18,7 +19,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -134,7 +134,7 @@ public class OtherTest extends BaseUnit {
         redisUtil.incr(key, 1);
         Integer count1 = (Integer) redisUtil.get(key);
         print(count1);
-        TimeUnit.SECONDS.sleep(2L);
+        NewTimeUtil.sleep(2L);
         Integer count2 = (Integer) redisUtil.get(key);
         print(count2);
     }

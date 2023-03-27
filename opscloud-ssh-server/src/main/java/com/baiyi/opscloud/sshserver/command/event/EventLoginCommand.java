@@ -2,6 +2,7 @@ package com.baiyi.opscloud.sshserver.command.event;
 
 import com.baiyi.opscloud.common.exception.ssh.SshCommonException;
 import com.baiyi.opscloud.common.util.IdUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.sshcore.audit.ServerCommandAudit;
@@ -37,7 +38,6 @@ import org.springframework.shell.standard.ShellOption;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -93,7 +93,7 @@ public class EventLoginCommand extends BaseServerCommand {
             try {
                 while (true) {
                     if (isClosed(sessionId, instanceId)) {
-                        TimeUnit.MILLISECONDS.sleep(150L);
+                        NewTimeUtil.millisecondsSleep(150L);
                         sessionClosed("用户正常退出登录: 耗时%s/s", inst1);
                         break;
                     }

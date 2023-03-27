@@ -23,7 +23,6 @@ import java.io.PrintStream;
 @NoArgsConstructor
 public class KubernetesSession {
 
-
     private String sessionId;
     /**
      * 服务器唯一id

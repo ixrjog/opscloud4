@@ -81,13 +81,13 @@ public class AliyunVmsDriver {
                     JsonNode jsonNode = mapper.readTree(data.getData());
                     return CALL_OK.equals(jsonNode.get("stateDesc").asText());
                 }
-                log.error("queryCallDetailByCallId失败: err={}", data.getMessage());
+                log.error("queryCallDetailByCallId失败: {}", data.getMessage());
                 return false;
             }
         } catch (ClientException e) {
-            log.error("queryCallDetailByCallId失败: err={}", e.getMessage());
+            log.error("queryCallDetailByCallId失败: {}", e.getMessage());
         } catch (JsonProcessingException e) {
-            log.error("queryCallDetailByCallId失败: err={}", e.getMessage());
+            log.error("queryCallDetailByCallId失败: {}", e.getMessage());
         }
         return false;
     }

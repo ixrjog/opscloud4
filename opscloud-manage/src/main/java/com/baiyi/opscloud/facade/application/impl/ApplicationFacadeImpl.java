@@ -129,7 +129,11 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
         // 鉴权
         if (!isAdmin(SessionUtil.getUsername())) {
             int userId = userService.getByUsername(SessionUtil.getUsername()).getId();
-            UserPermission query = UserPermission.builder().businessType(BusinessTypeEnum.APPLICATION.getType()).businessId(getApplicationKubernetes.getApplicationId()).userId(userId).build();
+            UserPermission query = UserPermission.builder()
+                    .businessType(BusinessTypeEnum.APPLICATION.getType())
+                    .businessId(getApplicationKubernetes.getApplicationId())
+                    .userId(userId)
+                    .build();
             if (userPermissionService.getByUniqueKey(query) == null) {
                 throw new AuthenticationException(ErrorEnum.AUTHENTICATION_FAILURE);
             }
@@ -139,6 +143,27 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
         applicationPacker.wrap(vo, getApplicationKubernetes.getEnvType());
         return vo;
     }
+
+    @Override
+    public ApplicationVO.Application getApplicationKubernetes(ApplicationParam.GetApplicationKubernetes getApplicationKubernetes, String username) {
+        // 鉴权
+        if (!isAdmin(username)) {
+            int userId = userService.getByUsername(username).getId();
+            UserPermission query = UserPermission.builder()
+                    .businessType(BusinessTypeEnum.APPLICATION.getType())
+                    .businessId(getApplicationKubernetes.getApplicationId())
+                    .userId(userId)
+                    .build();
+            if (userPermissionService.getByUniqueKey(query) == null) {
+                throw new AuthenticationException(ErrorEnum.AUTHENTICATION_FAILURE);
+            }
+        }
+        Application application = applicationService.getById(getApplicationKubernetes.getApplicationId());
+        ApplicationVO.Application vo = BeanCopierUtil.copyProperties(application, ApplicationVO.Application.class);
+        applicationPacker.wrap(vo, getApplicationKubernetes.getEnvType());
+        return vo;
+    }
+
 
     /**
      * OPS角色以上即认定为系统管理员

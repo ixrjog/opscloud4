@@ -3,6 +3,7 @@ package com.baiyi.opscloud.sshserver.command.server;
 import com.baiyi.opscloud.common.exception.ssh.SshCommonException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
@@ -44,7 +45,6 @@ import org.springframework.shell.standard.ShellOption;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -116,7 +116,9 @@ public class ServerLoginCommand implements InitializingBean {
                     printWithSession(sessionId, instanceId, SERVER_EXECUTE_ARTHAS);
                     while (isClosed(sessionId, instanceId)) {
                         int ch = terminal.reader().read(1L);
-                        if (ch < 0) break;
+                        if (ch < 0) {
+                            break;
+                        }
                     }
                 } catch (Exception e) {
                     log.error("exec arthas error: {}", e.getMessage());
@@ -125,7 +127,7 @@ public class ServerLoginCommand implements InitializingBean {
             try {
                 while (true) {
                     if (isClosed(sessionId, instanceId)) {
-                        TimeUnit.MILLISECONDS.sleep(150L);
+                        NewTimeUtil.millisecondsSleep(150L);
                         printWithCloseSession("退出登录: 耗时%s/s", inst1);
                         break;
                     }
@@ -191,16 +193,24 @@ public class ServerLoginCommand implements InitializingBean {
     }
 
     private void printWithSession(String sessionId, String instanceId, int ch) throws Exception {
-        if (ch < 0) return;
+        if (ch < 0) {
+            return;
+        }
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
-        if (jSchSession == null) throw new Exception();
+        if (jSchSession == null) {
+            throw new Exception();
+        }
         jSchSession.getCommander().print((char) ch);
     }
 
     private void printWithSession(String sessionId, String instanceId, String cmd) throws Exception {
-        if (StringUtils.isEmpty(cmd)) return;
+        if (StringUtils.isEmpty(cmd)) {
+            return;
+        }
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
-        if (jSchSession == null) throw new Exception();
+        if (jSchSession == null) {
+            throw new Exception();
+        }
         jSchSession.getCommander().print(cmd);
     }
 

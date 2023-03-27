@@ -36,7 +36,7 @@ public class ThreadPoolTaskConfiguration {
     /**
      * 缓冲队列大小
      */
-    private static final int QUEUE_CAPACITY = 500;
+    private static final int QUEUE_CAPACITY = 50;
     /**
      * 线程池名前缀
      */
@@ -89,7 +89,7 @@ public class ThreadPoolTaskConfiguration {
         // 核心线程数（默认线程数）
         executor.setCorePoolSize(30);
         // 最大线程数
-        executor.setMaxPoolSize(300);
+        executor.setMaxPoolSize(100);
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix("leo-exec-");
@@ -110,7 +110,7 @@ public class ThreadPoolTaskConfiguration {
         // 核心线程数（默认线程数）
         executor.setCorePoolSize(10);
         // 最大线程数
-        executor.setMaxPoolSize(200);
+        executor.setMaxPoolSize(100);
         executor.setQueueCapacity(0);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix("st-exec-");
@@ -131,7 +131,7 @@ public class ThreadPoolTaskConfiguration {
         // 核心线程数（默认线程数）
         executor.setCorePoolSize(10);
         // 最大线程数
-        executor.setMaxPoolSize(200);
+        executor.setMaxPoolSize(100);
         executor.setQueueCapacity(0);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix("kt-exec-");

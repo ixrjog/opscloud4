@@ -8,6 +8,7 @@ import java.io.IOException;
  * @date 2012-12-5
  */
 public interface TableFormatter {
+
 	/**
 	 * @deprecated may cause OOM
 	 * 
@@ -24,4 +25,5 @@ public interface TableFormatter {
 	 * @throws IOException
 	 */
 	void format(Table table, Appendable writer) throws IOException;
+
 }

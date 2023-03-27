@@ -2,6 +2,7 @@ package com.baiyi.opscloud.leo.message.handler.impl.build;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsJobDriver;
@@ -27,7 +28,6 @@ import javax.websocket.Session;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -79,7 +79,7 @@ public class QueryLeoBuildConsoleStreamRequestHandler extends BaseLeoContinuousD
                 Build build = jobWithDetails.details().getLastBuild();
                 BuildWithDetails buildWithDetails = build.details();
                 if (buildWithDetails.equals(com.baiyi.opscloud.datasource.jenkins.model.Build.BUILD_HAS_NEVER_RUN)) {
-                    TimeUnit.SECONDS.sleep(3L);
+                    NewTimeUtil.sleep(3L);
                 } else {
                     jenkinsJobDriver.streamConsoleOutputToSession(sessionId, queryParam.getBuildId(), buildWithDetails, session, true);
                     break;

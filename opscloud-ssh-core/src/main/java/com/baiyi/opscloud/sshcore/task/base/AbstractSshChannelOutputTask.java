@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshcore.task.base;
 
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.sshcore.AuditRecordHelper;
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.util.SessionOutputUtil;
@@ -11,7 +12,6 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -38,11 +38,12 @@ public abstract class AbstractSshChannelOutputTask implements IOutputTask {
         SessionOutputUtil.addOutput(this.sessionOutput);
         try {
             while (!isClosed) {
-                TimeUnit.MILLISECONDS.sleep(25L);
+                NewTimeUtil.millisecondsSleep(25L);
 
                 InputStream ins = baos.toInputStream();
-                if (ins instanceof ClosedInputStream)
+                if (ins instanceof ClosedInputStream) {
                     continue;
+                }
                 baos.reset();
                 InputStreamReader isr = new InputStreamReader(ins);
                 BufferedReader br = new BufferedReader(isr, BUFF_SIZE);

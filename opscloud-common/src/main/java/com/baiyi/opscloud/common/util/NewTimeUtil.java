@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -91,5 +92,20 @@ public class NewTimeUtil {
         formatter.setTimeZone(TimeZone.getTimeZone("GMT+0:00"));
         return formatter.format(time);
     }
+
+    public static void sleep(long s) {
+        try {
+            TimeUnit.SECONDS.sleep(s);
+        } catch (InterruptedException ignored) {
+        }
+    }
+
+    public static void millisecondsSleep(long m) {
+        try {
+            TimeUnit.MILLISECONDS.sleep(m);
+        } catch (InterruptedException ignored) {
+        }
+    }
+
 
 }

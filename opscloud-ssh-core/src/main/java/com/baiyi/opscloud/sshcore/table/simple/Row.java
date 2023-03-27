@@ -24,8 +24,9 @@ class Row implements Comparable<Row> {
 		Object[] dd = oo.data;
 		for (int i = 0; i < data.length; i++) {
 			Object t = data[i];
-			if (i >= dd.length)
+			if (i >= dd.length) {
 				return 1;
+			}
 			Object o = dd[i];
 			Comparator comparator = table.getCellComparator();
 			if (comparator != null) {

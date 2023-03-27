@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.leo.task.loop;
 
 import com.baiyi.opscloud.common.leo.session.LeoDeployQuerySessionMap;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.leo.message.factory.LeoContinuousDeliveryMessageHandlerFactory;
 import com.baiyi.opscloud.leo.message.handler.base.ILeoContinuousDeliveryRequestHandler;
 import com.google.common.collect.Maps;
@@ -8,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.Session;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 用户部署事件循环
@@ -51,17 +51,9 @@ public class LeoDeployEventLoop implements Runnable {
                     }
                 }
             } catch (Exception e) {
-                if (e instanceof NullPointerException) {
-                    log.warn("Leo deploy event loop: NullPointerException");
-                    e.printStackTrace();
-                } else {
-                    log.warn(e.getMessage());
-                }
+                log.warn("Leo deploy event loop error: {}", e.getMessage());
             }
-            try {
-                TimeUnit.SECONDS.sleep(3L);
-            } catch (InterruptedException ignored) {
-            }
+            NewTimeUtil.sleep(3L);
         }
     }
 

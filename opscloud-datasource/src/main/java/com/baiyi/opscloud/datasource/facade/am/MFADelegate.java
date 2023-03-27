@@ -3,6 +3,7 @@ package com.baiyi.opscloud.datasource.facade.am;
 import com.amazonaws.services.identitymanagement.model.EnableMFADeviceResult;
 import com.amazonaws.services.identitymanagement.model.VirtualMFADevice;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementMFADriver;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.otp.OtpUtil;
@@ -15,7 +16,6 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -53,10 +53,7 @@ public class MFADelegate {
     private void setFlag() {
         if (firstExecution.get() == null) {
             firstExecution.set(Boolean.FALSE);
-            try {
-                TimeUnit.SECONDS.sleep(3L);
-            } catch (InterruptedException ignored) {
-            }
+            NewTimeUtil.sleep(3L);
         }
     }
 

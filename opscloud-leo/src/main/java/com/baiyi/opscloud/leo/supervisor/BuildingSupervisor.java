@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.leo.supervisor;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
 import com.baiyi.opscloud.datasource.jenkins.model.Build;
 import com.baiyi.opscloud.datasource.jenkins.model.BuildResult;
@@ -19,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import static com.baiyi.opscloud.leo.action.build.BaseBuildHandler.RESULT_ERROR;
 
@@ -79,10 +79,8 @@ public class BuildingSupervisor implements ISupervisor {
                 if (this.build == null) {
                     Build build = jobWithDetails.details().getLastBuild();
                     if (build.equals(Build.BUILD_HAS_NEVER_RUN)) {
-                        try {
-                            TimeUnit.SECONDS.sleep(SLEEP_SECONDS);
-                        } catch (InterruptedException ie) {
-                        }
+
+                        NewTimeUtil.sleep(SLEEP_SECONDS);
                         continue;
                     }
                     if (build.equals(Build.BUILD_HAS_BEEN_CANCELLED)) {
@@ -101,10 +99,7 @@ public class BuildingSupervisor implements ISupervisor {
                 // 查询构建结果
                 BuildWithDetails buildWithDetails = this.build.details();
                 if (buildWithDetails.isBuilding()) {
-                    try {
-                        TimeUnit.SECONDS.sleep(SLEEP_SECONDS);
-                    } catch (InterruptedException ie) {
-                    }
+                    NewTimeUtil.sleep(SLEEP_SECONDS);
                 } else {
                     // 任务正常完成
                     LeoBuild saveLeoBuild = LeoBuild.builder()

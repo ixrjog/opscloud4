@@ -12,8 +12,9 @@ public class Utils {
 	
 	public static String repeat(char ch, int count) {
 		StringBuilder buffer = new StringBuilder();
-		for (int i = 0; i < count; ++i)
-			buffer.append(ch);
+		for (int i = 0; i < count; ++i) {
+            buffer.append(ch);
+        }
 		return buffer.toString();
 	}
 
@@ -81,8 +82,11 @@ public class Utils {
         if (string != null) {
             int len = 0;
             for (int i = 0; i < string.length(); i++) {
-                if (isChChar(string.charAt(i))) len += 2;
-                else len++;
+                if (isChChar(string.charAt(i))) {
+                    len += 2;
+                } else {
+                    len++;
+                }
             }
             return len;
         }

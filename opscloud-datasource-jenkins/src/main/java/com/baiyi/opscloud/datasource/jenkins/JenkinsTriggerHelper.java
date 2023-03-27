@@ -1,11 +1,11 @@
 package com.baiyi.opscloud.datasource.jenkins;
 
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.datasource.jenkins.model.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * collection of convenient methods which use methods from {@link JenkinsServer}
@@ -166,7 +166,7 @@ public class JenkinsTriggerHelper {
 
         while (!queueItem.isCancelled() && job.isInQueue()) {
             //  Thread.sleep(retryInterval);
-            TimeUnit.MILLISECONDS.sleep(retryInterval);
+            NewTimeUtil.millisecondsSleep(retryInterval);
             job = this.server.getJob(jobName);
             queueItem = this.server.getQueueItem(queueRef);
         }
@@ -178,7 +178,7 @@ public class JenkinsTriggerHelper {
 
         boolean isBuilding = build.details().isBuilding();
         while (isBuilding) {
-            TimeUnit.MILLISECONDS.sleep(retryInterval);
+            NewTimeUtil.millisecondsSleep(retryInterval);
             //Thread.sleep(retryInterval);
             isBuilding = build.details().isBuilding();
         }

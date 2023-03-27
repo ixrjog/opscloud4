@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.loop;
 
+import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.common.ws.KubernetesDeploymentQuerySessionMap;
 import com.baiyi.opscloud.domain.model.message.KubernetesDeploymentMessage;
 import com.baiyi.opscloud.loop.kubernetes.IKubernetesDeploymentRequestHandler;
@@ -8,7 +10,6 @@ import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.Session;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -41,25 +42,19 @@ public class KubernetesDeploymentEventLoop implements Runnable {
                     IKubernetesDeploymentRequestHandler handler = KubernetesDeploymentMessageHandlerFactory.getHandlerByMessageType(kubernetesDeploymentMessage.getMessageType());
                     if (handler != null) {
                         handler.handleRequest(this.sessionId, session, message);
-                        try {
-                            TimeUnit.SECONDS.sleep(5L);
-                        } catch (InterruptedException ignored) {
-                        }
+                        NewTimeUtil.sleep(5L);
                     }
                 }
             } catch (Exception e) {
-                if (e instanceof NullPointerException) {
-                    log.warn("Query kubernetes deployment error: NullPointerException");
-                    e.printStackTrace();
-                } else {
+                if (e instanceof AuthenticationException) {
                     log.warn(e.getMessage());
+                    return;
                 }
+                log.warn("Query kubernetes deployment error: {}", e.getMessage());
             }
-            try {
-                TimeUnit.SECONDS.sleep(1L);
-            } catch (InterruptedException ignored) {
-            }
+            NewTimeUtil.sleep(2L);
         }
     }
+
 
 }

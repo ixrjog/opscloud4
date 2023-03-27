@@ -2,6 +2,7 @@ package com.baiyi.opscloud.leo.task.loop;
 
 import com.baiyi.opscloud.common.leo.session.LeoBuildQuerySessionMap;
 import com.baiyi.opscloud.common.leo.session.LeoDeployQuerySessionMap;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.leo.message.factory.LeoContinuousDeliveryMessageHandlerFactory;
 import com.baiyi.opscloud.leo.message.handler.base.ILeoContinuousDeliveryRequestHandler;
 import com.google.common.collect.Maps;
@@ -9,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.Session;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType.QUERY_LEO_BUILD_CONSOLE_STREAM;
 
@@ -45,7 +45,7 @@ public class LeoBuildEventLoop implements Runnable {
                     // 深copy
                     Map<String, String> queryMap = Maps.newHashMap(LeoBuildQuerySessionMap.getSessionQueryMap(this.sessionId));
                     for (String messageType : queryMap.keySet()) {
-                        if (messageType.equals(QUERY_LEO_BUILD_CONSOLE_STREAM.name())) {
+                        if (QUERY_LEO_BUILD_CONSOLE_STREAM.name().equals(messageType)) {
                             // 不处理控制台日志流
                             continue;
                         }
@@ -56,17 +56,9 @@ public class LeoBuildEventLoop implements Runnable {
                     }
                 }
             } catch (Exception e) {
-                if (e instanceof NullPointerException) {
-                    log.warn("Leo build event loop: NullPointerException");
-                    e.printStackTrace();
-                } else {
-                    log.warn(e.getMessage());
-                }
+                log.warn("Leo build event loop error: {}", e.getMessage());
             }
-            try {
-                TimeUnit.SECONDS.sleep(3L);
-            } catch (InterruptedException ignored) {
-            }
+            NewTimeUtil.sleep(3L);
         }
     }
 
