@@ -42,8 +42,7 @@ public class JasyptUtil {
     public static String decrypt(String password, String value) {
         PooledPBEStringEncryptor encryptOr = new PooledPBEStringEncryptor();
         encryptOr.setConfig(cryptOr(password));
-        String result = encryptOr.decrypt(value);
-        return result;
+        return encryptOr.decrypt(value);
     }
 
     public static SimpleStringPBEConfig cryptOr(String password) {

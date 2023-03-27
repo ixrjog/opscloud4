@@ -36,7 +36,7 @@ public class TicketPacker implements IWrapper<WorkOrderTicketVO.Ticket> {
 
     private final UserAvatarPacker userAvatarPacker;
 
-    private final TicketApproveHelper ticketApproverHelper;
+    private final TicketApproveHelper ticketApproveHelper;
 
     @Override
     @AgoWrapper
@@ -47,7 +47,7 @@ public class TicketPacker implements IWrapper<WorkOrderTicketVO.Ticket> {
         workOrderPacker.wrap(ticket);
         User user = userService.getByUsername(ticket.getUsername());
         ticket.setCreateUser(toCreateUser(ticket.getUsername()));
-        ticketApproverHelper.wrap(ticket);
+        ticketApproveHelper.wrap(ticket);
     }
 
     /**
@@ -90,7 +90,7 @@ public class TicketPacker implements IWrapper<WorkOrderTicketVO.Ticket> {
                 .endTime(workOrderTicket.getEndTime())
                 .comment(workOrderTicket.getComment())
                 .build();
-        ticketApproverHelper.wrap(ticket);
+        ticketApproveHelper.wrap(ticket);
         WorkOrderTicketVO.TicketView ticketView = WorkOrderTicketVO.TicketView.builder()
                 .createUser(toCreateUser(workOrderTicket.getUsername()))
                 .ticket(ticket)

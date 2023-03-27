@@ -70,7 +70,9 @@ public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermis
     @Override
     public void updateUserGroup(UserGroupVO.UserGroup userGroup) {
         UserGroup pre = userGroupService.getById(userGroup.getId());
-        if (pre == null) return;
+        if (pre == null) {
+            return;
+        }
         pre.setAllowOrder(userGroup.getAllowOrder());
         pre.setComment(userGroup.getComment());
         pre.setSource(userGroup.getSource());
@@ -87,8 +89,9 @@ public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermis
                 .businessType(BusinessTypeEnum.USERGROUP.getType())
                 .build();
         List<UserPermission> userPermissions = userPermissionService.queryByBusiness(userPermission);
-        if (!CollectionUtils.isEmpty(userPermissions))
+        if (!CollectionUtils.isEmpty(userPermissions)) {
             throw new OCException("必须删除用户组中的用户！");
+        }
         userGroupService.deleteById(id);
     }
 

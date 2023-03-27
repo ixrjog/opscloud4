@@ -46,7 +46,6 @@ public class ManageApplication {
         log.info("Opscloud 4 <Spring Boot {}>", SpringBootVersion.getVersion());
         // log.info("启动成功! 耗时:{}/s", Duration.between(inst, Instant.now()).getSeconds());
         System.setProperty("druid.mysql.usePingMethod","false");
-        // log.info("修改参数: druid.mysql.usePingMethod=false");
     }
 
 }

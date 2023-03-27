@@ -45,7 +45,8 @@ public class WorkOrderReportFacadeImpl implements WorkOrderReportFacade {
         return workorderList.stream().collect(
                 Collectors.toMap(WorkOrder::getName,
                         e -> WorkOrderReportVO.MonthStatistics.builder()
-                                .values(ticketService.statByMonth(e.getId()).stream()
+                                .values(ticketService.statByMonth(e.getId())
+                                        .stream()
                                         .map(WorkOrderReportVO.Report::getValue)
                                         .collect(Collectors.toList()))
                                 .color(workOrderService.getById(e.getId()).getColor())

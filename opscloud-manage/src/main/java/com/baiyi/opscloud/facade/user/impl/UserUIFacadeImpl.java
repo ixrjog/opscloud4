@@ -20,8 +20,6 @@ public class UserUIFacadeImpl implements UserUIFacade {
 
     private final MenuFacade menuFacade;
 
-    // private final AuthResourceService authResourceService;
-
     @Override
     public UIVO.UIInfo buildUIInfo() {
         List<MenuVO.Menu> menuInfo = menuFacade.queryMyMenu();

@@ -69,7 +69,9 @@ public class ServerTreeUtil {
     }
 
     private boolean isDisabled(Server server) {
-        if (!server.getIsActive()) return true;
+        if (!server.getIsActive()) {
+            return true;
+        }
         return "Windows".equalsIgnoreCase(server.getOsType());
     }
 
@@ -80,11 +82,14 @@ public class ServerTreeUtil {
     }
 
     public int getServerGroupMapSize(Map<String, List<ServerPack>> serverGroupMap) {
-        if (serverGroupMap.isEmpty())
+        if (serverGroupMap.isEmpty()) {
             return 0;
+        }
         int size = 0;
-        for (String key : serverGroupMap.keySet())
+        for (String key : serverGroupMap.keySet()) {
             size += serverGroupMap.get(key).size();
+        }
         return size;
     }
+
 }

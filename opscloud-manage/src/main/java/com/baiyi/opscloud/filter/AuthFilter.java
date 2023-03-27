@@ -64,8 +64,9 @@ public class AuthFilter extends OncePerRequestFilter {
             // GitlabSystemHooks鉴权
             try {
                 String gitlabToken = request.getHeader(GITLAB_TOKEN);
-                if (!StringUtils.isEmpty(gitlabToken))
+                if (!StringUtils.isEmpty(gitlabToken)) {
                     GitLabTokenUtil.setToken(gitlabToken);
+                }
             } catch (Exception ignored) {
             }
             try {

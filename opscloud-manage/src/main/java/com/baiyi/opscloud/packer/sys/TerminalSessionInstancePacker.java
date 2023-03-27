@@ -29,8 +29,10 @@ public class TerminalSessionInstancePacker implements IWrapper<TerminalSessionIn
 
     public void wrap(TerminalSessionInstanceVO.ISessionInstances iSessionInstances, IExtend iExtend) {
         List<TerminalSessionInstance> sessionInstances = terminalSessionInstanceService.queryBySessionId(iSessionInstances.getSessionId());
-        List<TerminalSessionInstanceVO.SessionInstance> data = BeanCopierUtil.copyListProperties(sessionInstances, TerminalSessionInstanceVO.SessionInstance.class).stream()
-                .peek(e -> wrap(e, iExtend)).collect(Collectors.toList());
+        List<TerminalSessionInstanceVO.SessionInstance> data = BeanCopierUtil.copyListProperties(sessionInstances, TerminalSessionInstanceVO.SessionInstance.class)
+                .stream()
+                .peek(e -> wrap(e, iExtend))
+                .collect(Collectors.toList());
         iSessionInstances.setSessionInstances(data);
     }
 

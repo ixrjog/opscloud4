@@ -138,7 +138,9 @@ public class UserFacadeImpl implements UserFacade {
                 DsAssetVO.Asset asset = BeanCopierUtil.copyProperties(a, DsAssetVO.Asset.class);
                 dsAssetPacker.wrap(asset, SimpleExtend.EXTEND, SimpleRelation.RELATION);
                 if (asset.getChildren().containsKey(DsAssetTypeConstants.GROUP.name())) {
-                    // GROUP存在
+                    /**
+                     * GROUP存在
+                     */
                     asset.getChildren().get(DsAssetTypeConstants.GROUP.name()).forEach(g ->
                             userPermissionUserGroup(u, g.getAssetId()));
                 }
@@ -207,7 +209,10 @@ public class UserFacadeImpl implements UserFacade {
         }
     }
 
-    // 撤销用户的所有授权信息
+    /**
+     * 撤销用户的所有授权信息
+     * @param id
+     */
     @RevokeUserPermission
     @TagClear
     @Override
@@ -303,8 +308,9 @@ public class UserFacadeImpl implements UserFacade {
     public UserVO.UserMFA resetUserMFA() {
         String username = SessionUtil.getUsername();
         User user = userService.getByUsername(username);
-        if (user.getForceMfa())
+        if (user.getForceMfa()) {
             throw new OCException("MFA无法重置: 管理员强制启用!");
+        }
         if (user.getMfa()) {
             User userMfa = User.builder()
                     .id(user.getId())

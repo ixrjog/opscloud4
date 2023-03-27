@@ -9,7 +9,6 @@ import com.baiyi.opscloud.domain.param.auth.LoginParam;
 import com.baiyi.opscloud.otp.OtpUtil;
 import com.baiyi.opscloud.otp.exception.OtpException;
 import com.baiyi.opscloud.service.user.UserCredentialService;
-import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -32,8 +31,6 @@ import java.util.List;
 public class MfaAuthHelper {
 
     private final UserCredentialService userCredentialService;
-
-    private final UserService userService;
 
     /**
      * MFA 验证

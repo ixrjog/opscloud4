@@ -185,7 +185,10 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         return ticketPacker.toTicketEntries(ticketId, workOrderKey);
     }
 
-    // 验证工单完整性
+    /**
+     * 验证工单完整性
+     * @param workOrderTicket
+     */
     private void verifyTicket(WorkOrderTicket workOrderTicket) {
         if (ticketEntryService.countByWorkOrderTicketId(workOrderTicket.getId()) == 0) {
             throw new TicketException("工单选项(条目)未配置");
@@ -249,7 +252,8 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
                 .build();
         ticketService.add(workOrderTicket);
         ticketNodeFacade.createWorkflowNodes(workOrder, workOrderTicket);
-        ticketSubscriberFacade.publish(workOrderTicket, user); // 增加创建订阅人
+        // 增加创建订阅人
+        ticketSubscriberFacade.publish(workOrderTicket, user);
         // 更新节点ID
         WorkOrderTicketNode workOrderTicketNode = ticketNodeService.getByUniqueKey(workOrderTicket.getId(), 0);
         workOrderTicket.setNodeId(workOrderTicketNode.getId());

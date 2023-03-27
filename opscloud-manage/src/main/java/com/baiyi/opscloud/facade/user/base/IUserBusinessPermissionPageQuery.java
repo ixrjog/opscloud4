@@ -11,8 +11,17 @@ import com.baiyi.opscloud.domain.vo.user.UserVO;
  */
 public interface IUserBusinessPermissionPageQuery {
 
+    /**
+     * 查询用户授权
+     * @param pageQuery
+     * @return
+     */
     DataTable<UserVO.IUserPermission> queryUserBusinessPermissionPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery);
 
+    /**
+     * 查询业务类型
+     * @return
+     */
     Integer getBusinessType();
 
 }

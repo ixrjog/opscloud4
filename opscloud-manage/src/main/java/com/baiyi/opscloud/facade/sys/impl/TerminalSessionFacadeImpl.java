@@ -43,16 +43,20 @@ public class TerminalSessionFacadeImpl implements TerminalSessionFacade {
     @Override
     public DataTable<TerminalSessionVO.Session> queryTerminalSessionPage(TerminalSessionParam.TerminalSessionPageQuery pageQuery) {
         DataTable<TerminalSession> table = terminalSessionService.queryTerminalSessionPage(pageQuery);
-        List<TerminalSessionVO.Session> data = BeanCopierUtil.copyListProperties(table.getData(), TerminalSessionVO.Session.class).stream()
-                .peek(e -> terminalSessionPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        List<TerminalSessionVO.Session> data = BeanCopierUtil.copyListProperties(table.getData(), TerminalSessionVO.Session.class)
+                .stream()
+                .peek(e -> terminalSessionPacker.wrap(e, pageQuery))
+                .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
     public DataTable<TerminalSessionInstanceCommandVO.Command> queryTerminalSessionCommandPage(TerminalSessionInstanceCommandParam.InstanceCommandPageQuery pageQuery) {
         DataTable<TerminalSessionInstanceCommand> table = terminalSessionInstanceCommandService.queryTerminalSessionInstanceCommandPage(pageQuery);
-        List<TerminalSessionInstanceCommandVO.Command> data = BeanCopierUtil.copyListProperties(table.getData(), TerminalSessionInstanceCommandVO.Command.class).stream()
-                .peek(e -> terminalSessionInstanceCommandPacker.wrap(e, pageQuery)).collect(Collectors.toList());
+        List<TerminalSessionInstanceCommandVO.Command> data = BeanCopierUtil.copyListProperties(table.getData(), TerminalSessionInstanceCommandVO.Command.class)
+                .stream()
+                .peek(e -> terminalSessionInstanceCommandPacker.wrap(e, pageQuery))
+                .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 

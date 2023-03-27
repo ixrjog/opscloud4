@@ -134,7 +134,9 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     }
 
     @Override
-    // 允许空密码登录
+    /**
+     * 允许空密码登录
+     */
     @PermitEmptyPasswords
     public LogVO.Login login(LoginParam.Login loginParam) {
         User user = userService.getByUsername(loginParam.getUsername());
