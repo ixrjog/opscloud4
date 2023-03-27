@@ -38,10 +38,10 @@ public class TaskWatchAspect {
         final String taskName = taskWatch.name();
         StopWatch stopWatch = new StopWatch();
         stopWatch.start(taskName);
-        log.info("Task start: {}", taskName);
+        log.info("Task {} start", taskName);
         Object result = joinPoint.proceed();
         stopWatch.stop();
-        log.info("Task end: {}, runtime={}/s", taskName, stopWatch.getTotalTimeSeconds());
+        log.info("Task {} end, runtime={}/s", taskName, stopWatch.getTotalTimeSeconds());
         return result;
     }
 

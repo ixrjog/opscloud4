@@ -49,25 +49,26 @@ public class SingleTaskAspect {
 
     @Around("@annotation(singleTask)")
     public Object around(ProceedingJoinPoint joinPoint, SingleTask singleTask) throws Throwable {
-        String key = buildKey(singleTask.name());
+        String taskName = singleTask.name();
+        String key = buildKey(taskName);
         try {
             if (isLocked(key)) {
-                log.warn("Asset synchronization task {} repeat", key);
+                log.warn("Execute {} task repeat", taskName);
                 return new OCException(ErrorEnum.SINGLE_TASK_RUNNING);
             } else {
                 // 加锁
                 lock(key, singleTask.lockTime());
-                log.info("Asset synchronization task {} start", key);
+                log.info("Execute {} task start", taskName);
                 StopWatch stopWatch = new StopWatch();
-                stopWatch.start("Asset synchronization task");
+                stopWatch.start("Execute asset sync task");
                 Object result = joinPoint.proceed();
                 unlock(key);
                 stopWatch.stop();
-                log.info("Asset synchronization task {} end, runtime={}/s", key, stopWatch.getTotalTimeSeconds());
+                log.info("Execute {} task end, runtime={}/s", taskName, stopWatch.getTotalTimeSeconds());
                 return result;
             }
         } catch (Exception e) {
-            log.warn("Asset synchronization task {} error: {}", key, e.getMessage());
+            log.warn("Execute {} task error: {}", taskName, e.getMessage());
             // 解锁
             unlock(key);
         }
