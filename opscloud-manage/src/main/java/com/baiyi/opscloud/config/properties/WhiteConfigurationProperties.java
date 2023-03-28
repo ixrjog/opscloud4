@@ -19,4 +19,6 @@ public class WhiteConfigurationProperties {
 
      private List<String> urls;
 
+     private List<String> resources;
+
 }

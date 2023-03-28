@@ -45,6 +45,20 @@ white:
     - /api/ws/continuous-delivery/deploy
     - /api/ws/continuous-delivery/jenkins/console/stream
     - /api/out/ticket/approve
+  resources:
+     - .js
+     - .md
+     - .css
+     - .woff
+     - .woff2
+     - .otf
+     - .eot
+     - .ttf
+     - .svg
+     - .jpg
+     - .png
+     - .html
+
 
 # 开发环境配置
 server:

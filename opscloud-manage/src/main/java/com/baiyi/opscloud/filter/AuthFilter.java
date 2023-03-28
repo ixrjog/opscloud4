@@ -16,7 +16,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.stream.Stream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -41,11 +40,6 @@ public class AuthFilter extends OncePerRequestFilter {
 
     public static final String GITLAB_TOKEN = "X-Gitlab-Token";
 
-    /**
-     * 静态资源
-     */
-    private static final String[] STATIC_RES = {".js", ".md", ".css", ".woff", ".woff2", ".otf", ".eot", ".ttf", ".svg", ".jpg", ".png", ".html"};
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         response.setContentType(APPLICATION_JSON_VALUE);
@@ -61,12 +55,12 @@ public class AuthFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-            //静态资源不拦截
-            if (Stream.of(STATIC_RES).anyMatch(resourceName::endsWith)) {
+            // 白名单-静态资源不拦截
+            if (whiteConfig.getResources().stream().anyMatch(resourceName::endsWith)) {
                 filterChain.doFilter(request, response);
                 return;
             }
-            // GitlabSystemHooks鉴权
+            // GitLab SystemHooks 鉴权
             try {
                 String gitlabToken = request.getHeader(GITLAB_TOKEN);
                 if (!StringUtils.isEmpty(gitlabToken)) {
