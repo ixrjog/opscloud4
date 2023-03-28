@@ -28,7 +28,7 @@
             <artifactId>opscloud-datasource-core</artifactId>
         </dependency>
 
-        <!--        https://next.api.aliyun.com/api-tools/sdk/dms-enterprise?version=2018-11-01&language=java-tea  -->
+        <!-- https://next.api.aliyun.com/api-tools/sdk/dms-enterprise?version=2018-11-01&language=java-tea -->
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>tea-openapi</artifactId>

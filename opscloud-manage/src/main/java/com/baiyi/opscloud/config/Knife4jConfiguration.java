@@ -13,6 +13,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 /**
+ * https://doc.xiaominfo.com/docs/quick-start
  * @Author baiyi
  * @Date 2023/3/28 15:46
  * @Version 1.0
@@ -38,8 +39,8 @@ public class Knife4jConfiguration {
 
     @Bean(value = "dockerBean")
     public Docket dockerBean() {
-        //指定使用Swagger2规范
-        Docket docket = new Docket(DocumentationType.SWAGGER_2)
+        // 指定使用Swagger2规范
+        return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(generatepApiInfo())
                 //分组名称
                 //.groupName("用户服务")
@@ -48,6 +49,5 @@ public class Knife4jConfiguration {
                 .apis(RequestHandlerSelectors.basePackage("com.baiyi.opscloud.controller"))
                 .paths(PathSelectors.any())
                 .build();
-        return docket;
     }
 }

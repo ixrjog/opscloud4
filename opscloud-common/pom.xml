@@ -44,22 +44,22 @@
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.13.0.RELEASE</version>
+            <version>3.14.1.RELEASE</version>
         </dependency>
 
-        <!--   Shedlock 分布式任务锁 -->
+        <!-- Shedlock 分布式任务锁 -->
+        <!-- https://mvnrepository.com/artifact/net.javacrumbs.shedlock/shedlock-spring -->
         <dependency>
             <groupId>net.javacrumbs.shedlock</groupId>
             <artifactId>shedlock-spring</artifactId>
-            <version>4.42.0</version>
+            <version>4.44.0</version>
         </dependency>
 
         <dependency>
             <groupId>net.javacrumbs.shedlock</groupId>
             <artifactId>shedlock-provider-jdbc-template</artifactId>
-            <version>4.42.0</version>
+            <version>4.44.0</version>
         </dependency>
-        <!--   Shedlock 分布式任务锁 -->
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
