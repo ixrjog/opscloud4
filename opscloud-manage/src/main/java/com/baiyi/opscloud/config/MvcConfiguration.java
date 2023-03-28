@@ -66,7 +66,7 @@ public class MvcConfiguration implements WebMvcConfigurer {
     }
 
     /**
-     * SpringBoot 2.4 修改
+     * SpringBoot 2.4+ 修改
      *
      * @param registry
      */
