@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.common.ws.KubernetesDeploymentQuerySessionMap;
 import com.baiyi.opscloud.domain.model.message.KubernetesDeploymentMessage;
 import com.baiyi.opscloud.loop.kubernetes.IKubernetesDeploymentRequestHandler;
-import com.baiyi.opscloud.loop.kubernetes.KubernetesDeploymentMessageHandlerFactory;
+import com.baiyi.opscloud.loop.kubernetes.factory.KubernetesDeploymentMessageHandlerFactory;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 

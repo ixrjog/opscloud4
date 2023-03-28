@@ -1,13 +1,6 @@
 package com.baiyi.opscloud.datasource.google.cloud.core.client;
 
 
-import com.google.auth.Credentials;
-import com.google.auth.oauth2.AccessToken;
-import com.google.auth.oauth2.GoogleCredentials;
-
-import java.util.Date;
-
-
 /**
  * 例子
  * @Author baiyi
@@ -16,8 +9,8 @@ import java.util.Date;
  */
 public class GoogleCloudClient {
 
-    public static Credentials getCredentials(String accessToken, Date expirationTime) {
-        return GoogleCredentials.create(new AccessToken(accessToken, expirationTime));
-    }
+//    public static Credentials getCredentials(String accessToken, Date expirationTime) {
+//        return GoogleCredentials.create(new AccessToken(accessToken, expirationTime));
+//    }
 
 }

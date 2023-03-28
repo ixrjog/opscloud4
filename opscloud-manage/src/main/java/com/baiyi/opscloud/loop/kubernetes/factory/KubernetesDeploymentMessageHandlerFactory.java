@@ -1,5 +1,6 @@
-package com.baiyi.opscloud.loop.kubernetes;
+package com.baiyi.opscloud.loop.kubernetes.factory;
 
+import com.baiyi.opscloud.loop.kubernetes.IKubernetesDeploymentRequestHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;

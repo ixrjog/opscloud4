@@ -19,6 +19,12 @@
             <version>1.0.2</version>
         </dependency>
 
+        <!--  base64  -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.tomcat.embed</groupId>-->
+<!--            <artifactId>tomcat-embed-core</artifactId>-->
+<!--        </dependency>-->
+
     </dependencies>
 
 </project>

@@ -41,6 +41,11 @@ public class AuthFilter extends OncePerRequestFilter {
 
     public static final String GITLAB_TOKEN = "X-Gitlab-Token";
 
+    /**
+     * 静态资源
+     */
+    private static final String[] STATIC_RES = {".js", ".md", ".css", ".woff", ".woff2", ".otf", ".eot", ".ttf", ".svg", ".jpg", ".png", ".html"};
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         response.setContentType(APPLICATION_JSON_VALUE);
@@ -57,7 +62,7 @@ public class AuthFilter extends OncePerRequestFilter {
                 return;
             }
             //静态资源不拦截
-            if (Stream.of(".js", ".md", ".css", ".woff", ".otf", ".eot", ".ttf", ".svg", ".jpg", ".png", ".html").anyMatch(resourceName::endsWith)) {
+            if (Stream.of(STATIC_RES).anyMatch(resourceName::endsWith)) {
                 filterChain.doFilter(request, response);
                 return;
             }
