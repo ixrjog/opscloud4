@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.packer.application;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.datasource.kubernetes.provider.KubernetesPodProvider;
+import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesPodHandler;
 import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO.Resource> {
 
-    private final KubernetesPodProvider kubernetesPodProvider;
+    private final KubernetesPodHandler kubernetesPodHandler;
 
     private final DsInstanceAssetService assetService;
 
@@ -83,7 +83,7 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
         try {
             DatasourceInstance dsInstance = dsInstanceService.getByUuid(datasourceInstanceAsset.getInstanceUuid());
             if (dsInstance != null) {
-                List<AssetContainer> assetContainers = kubernetesPodProvider.queryAssetsByDeployment(dsInstance.getId(), namespace, deployment)
+                List<AssetContainer> assetContainers = kubernetesPodHandler.queryAssetsByDeployment(dsInstance.getId(), namespace, deployment)
                         .stream()
                         .peek(c -> {
                             // 插入版本信息

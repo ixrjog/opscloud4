@@ -11,10 +11,10 @@ import com.baiyi.opscloud.datasource.kubernetes.converter.PodAssetConverter;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesNamespaceDriver;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
 import io.fabric8.kubernetes.api.model.Namespace;
 import io.fabric8.kubernetes.api.model.Pod;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_KUBERNETES_POD;
 
@@ -49,15 +48,6 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
 
     private KubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
         return dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
-    }
-
-    public List<AssetContainer> queryAssetsByDeployment(int dsInstanceId, String namespace, String deployment) {
-        DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
-        KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
-        List<Pod> pods = KubernetesPodDriver.listPod(kubernetes, namespace, deployment);
-        return pods.stream().map(e ->
-                toAssetContainer(dsInstanceContext.getDsInstance(), e)
-        ).collect(Collectors.toList());
     }
 
     @Override

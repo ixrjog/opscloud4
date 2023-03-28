@@ -1,7 +1,10 @@
 spring:
   application:
     name: opscloud
-    version: 4.2.4
+    version: 4.3.0
+  main:
+    # 允许循环依赖
+    allow-circular-references: true
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss

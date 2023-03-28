@@ -11,9 +11,9 @@ Welcome to the opscloud wiki!
 ![GitHub Stats Card](https://github-readme-stats.vercel.app/api?username=ixrjog&show_icons=true&theme=onedark)
 
 ## OpsCloud4 云上运维
-<img src="https://img.shields.io/badge/version-4.2.0-brightgreen.svg"></img>
+<img src="https://img.shields.io/badge/version-4.3.0-brightgreen.svg"></img>
 <img src="https://img.shields.io/badge/java-8-brightgreen.svg"></img> 
-<img src="https://img.shields.io/badge/springboot-2.4.13-brightgreen.svg"></img> 
+<img src="https://img.shields.io/badge/springboot-2.7.10-brightgreen.svg"></img> 
 <img src="https://img.shields.io/badge/mysql-8-brightgreen.svg"></img>
 <br>
 

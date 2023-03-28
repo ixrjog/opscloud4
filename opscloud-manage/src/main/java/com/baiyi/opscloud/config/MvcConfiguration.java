@@ -35,12 +35,13 @@ public class MvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/")
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("/webjars/")
                 .resourceChain(false);
         // registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
         // .resourceChain(false);
-//        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/")
-//                .resourceChain(false);
+        // registry.addResourceHandler("/**").addResourceLocations("classpath:/static/")
+        // .resourceChain(false);
 //        registry.addResourceHandler("/index.html").addResourceLocations("classpath:/static/");
 //        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
 //        registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/");
@@ -73,7 +74,8 @@ public class MvcConfiguration implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
+                //.allowedOrigins("*")
+                .allowedOriginPatterns("*")
                 .allowedMethods("PUT", "DELETE", "GET", "POST", "OPTIONS")
                 .allowedHeaders("*")
                 .exposedHeaders("access-control-allow-headers",
@@ -82,7 +84,7 @@ public class MvcConfiguration implements WebMvcConfigurer {
                         "access-control-max-age",
                         "X-Frame-Options")
                 // 启用后会导致websocket跨域配置失效
-                .allowCredentials(true)
+                // .allowCredentials(true)
                 .maxAge(3600L);
     }
 

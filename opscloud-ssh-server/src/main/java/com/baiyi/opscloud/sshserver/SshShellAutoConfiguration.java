@@ -38,10 +38,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.shell.ResultHandler;
@@ -72,8 +69,7 @@ import static com.baiyi.opscloud.sshserver.SshShellProperties.SSH_SHELL_ENABLE;
         "org.springframework.boot.actuate.autoconfigure.audit.AuditEventsEndpointAutoConfiguration",
         "org.springframework.boot.actuate.autoconfigure.beans.BeansEndpointAutoConfiguration",
         "org.springframework.boot.actuate.autoconfigure.condition.ConditionsReportEndpointAutoConfiguration",
-        "org.springframework.boot.actuate.autoconfigure.context.properties" +
-                ".ConfigurationPropertiesReportEndpointAutoConfiguration",
+        "org.springframework.boot.actuate.autoconfigure.context.properties.ConfigurationPropertiesReportEndpointAutoConfiguration",
         "org.springframework.boot.actuate.autoconfigure.context.ShutdownEndpointAutoConfiguration",
         "org.springframework.boot.actuate.autoconfigure.endpoint.EndpointAutoConfiguration",
         "org.springframework.boot.actuate.autoconfigure.endpoint.jmx.JmxEndpointAutoConfiguration",
@@ -254,5 +250,6 @@ public class SshShellAutoConfiguration {
             }
         };
     }
+
 }
 
