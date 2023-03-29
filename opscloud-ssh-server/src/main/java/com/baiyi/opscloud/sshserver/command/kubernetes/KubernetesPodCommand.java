@@ -3,7 +3,7 @@ package com.baiyi.opscloud.sshserver.command.kubernetes;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
-import com.baiyi.opscloud.datasource.kubernetes.client.KubernetesClientBuilder;
+import com.baiyi.opscloud.datasource.kubernetes.client.MyKubernetesClientBuilder;
 import com.baiyi.opscloud.datasource.kubernetes.converter.PodAssetConverter;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
 import com.baiyi.opscloud.domain.DataTable;
@@ -96,7 +96,9 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
     @Autowired
     private ThreadPoolTaskExecutor coreExecutor;
 
-    // ^C
+    /**
+     * ^C
+     */
     private static final int QUIT = 3;
     private static final int EOF = 4;
 
@@ -243,9 +245,15 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         }
     }
 
-    @ScreenClear
-    @InvokeSessionUser
-    @ShellMethod(value = "登录容器组,通过参数可指定容器 [ 输入 ctrl+d 退出会话 ]", key = {"login-k8s-pod"})
+    /**
+     * @param id
+     * @param name
+     * @param arthas
+     *
+     * @ScreenClear
+     * @InvokeSessionUser
+     * @ShellMethod(value = "登录容器组,通过参数可指定容器 [ 输入 ctrl+d 退出会话 ]", key = {"login-k8s-pod"})
+     */
     public void login(@ShellOption(help = "ID", defaultValue = "") int id, @ShellOption(help = "Container", defaultValue = "") String name, @ShellOption(value = {"-R", "--arthas"}, help = "Arthas") boolean arthas) {
         Map<Integer, PodContext> podMapper = SessionCommandContext.getPodMapper();
         PodContext podContext = podMapper.get(id);
@@ -270,7 +278,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         TerminalSessionInstance terminalSessionInstance = TerminalSessionInstanceBuilder.build(sessionId, podContext.getPodIp(), instanceId, InstanceSessionTypeEnum.CONTAINER_TERMINAL);
         simpleTerminalSessionFacade.recordTerminalSessionInstance(terminalSessionInstance);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try (KubernetesClient kc = KubernetesClientBuilder.build(kubernetesDsInstanceConfig.getKubernetes());
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetesDsInstanceConfig.getKubernetes());
              ExecWatch execWatch = kc.pods()
                      .inNamespace(podContext.getNamespace())
                      .withName(podContext.getPodName())
@@ -357,7 +365,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
             }
             name = names.get(0);
         }
-        try (KubernetesClient kc = KubernetesClientBuilder.build(kubernetesDsInstanceConfig.getKubernetes());
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetesDsInstanceConfig.getKubernetes());
              LogWatch logWatch = kc.pods()
                      .inNamespace(podContext.getNamespace())
                      .withName(podContext.getPodName())

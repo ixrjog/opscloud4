@@ -17,7 +17,7 @@ import java.net.URISyntaxException;
  * @Version 1.0
  */
 @Slf4j
-public class KubernetesClientBuilder {
+public class MyKubernetesClientBuilder {
 
     public interface Config {
         int CONNECTION_TIMEOUT = 30 * 1000;

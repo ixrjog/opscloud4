@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.kubernetes.driver;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.datasource.kubernetes.client.KubernetesClientBuilder;
+import com.baiyi.opscloud.datasource.kubernetes.client.MyKubernetesClientBuilder;
 import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesDeploymentException;
 import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesException;
 import com.baiyi.opscloud.datasource.kubernetes.util.KubernetesUtil;
@@ -109,7 +109,7 @@ public class KubernetesDeploymentDriver {
         if (nowReplicas >= replicas) {
             throw new KubernetesDeploymentException("Deployment扩容失败: 只能扩容不能缩容 nowReplicas={}, newReplicas={} ！", nowReplicas, replicas);
         }
-        KubernetesClientBuilder.build(kubernetes)
+        MyKubernetesClientBuilder.build(kubernetes)
                 .apps()
                 .deployments()
                 .inNamespace(namespace)
@@ -118,7 +118,7 @@ public class KubernetesDeploymentDriver {
     }
 
     public static List<Deployment> listDeployment(KubernetesConfig.Kubernetes kubernetes) {
-        try (KubernetesClient kc = KubernetesClientBuilder.build(kubernetes)) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             DeploymentList deploymentList = kc
                     .apps().deployments().list();
             return deploymentList.getItems();
@@ -129,7 +129,7 @@ public class KubernetesDeploymentDriver {
     }
 
     public static List<Deployment> listDeployment(KubernetesConfig.Kubernetes kubernetes, String namespace) {
-        try (KubernetesClient kc = KubernetesClientBuilder.build(kubernetes)) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             DeploymentList deploymentList = kc
                     .apps()
                     .deployments()
@@ -152,7 +152,7 @@ public class KubernetesDeploymentDriver {
      * @return
      */
     public static Deployment getDeployment(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
-        try (KubernetesClient kc = KubernetesClientBuilder.build(kubernetes)) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.apps()
                     .deployments()
                     .inNamespace(namespace)
@@ -171,7 +171,7 @@ public class KubernetesDeploymentDriver {
      * @return
      */
     public static Deployment rolloutSetImageEquivalentTest(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, String imageName, String image) {
-        try (KubernetesClient kc = KubernetesClientBuilder.build(kubernetes)) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.apps()
                     .deployments()
                     .inNamespace(namespace)
@@ -193,7 +193,7 @@ public class KubernetesDeploymentDriver {
      * @return
      */
     public static Deployment createDeployment(KubernetesConfig.Kubernetes kubernetes, String namespace, String content) {
-        try (KubernetesClient kc = KubernetesClientBuilder.build(kubernetes)) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             Deployment deployment = toDeployment(kc, content);
             return kc.apps()
                     .deployments()
@@ -213,7 +213,7 @@ public class KubernetesDeploymentDriver {
      * @return
      */
     public static Deployment createDeployment(KubernetesConfig.Kubernetes kubernetes, String content) {
-        try (KubernetesClient kc = KubernetesClientBuilder.build(kubernetes)) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             Deployment deployment = toDeployment(kc, content);
             return kc.apps()
                     .deployments()
@@ -233,7 +233,7 @@ public class KubernetesDeploymentDriver {
      * @return
      */
     public static Deployment createOrReplaceDeployment(KubernetesConfig.Kubernetes kubernetes, String namespace, String content) {
-        try (KubernetesClient kc = KubernetesClientBuilder.build(kubernetes)) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             Deployment deployment = toDeployment(kc, content);
             return createOrReplaceDeployment(kubernetes, namespace, deployment);
         } catch (Exception e) {
@@ -250,7 +250,7 @@ public class KubernetesDeploymentDriver {
      * @return
      */
     public static Deployment createOrReplaceDeployment(KubernetesConfig.Kubernetes kubernetes, String content) {
-        try (KubernetesClient kc = KubernetesClientBuilder.build(kubernetes)) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             Deployment deployment = toDeployment(kc, content);
             return createOrReplaceDeployment(kubernetes, deployment);
         } catch (Exception e) {
@@ -268,7 +268,7 @@ public class KubernetesDeploymentDriver {
      * @return
      */
     public static Deployment createOrReplaceDeployment(KubernetesConfig.Kubernetes kubernetes, String namespace, Deployment deployment) {
-        try (KubernetesClient kc = KubernetesClientBuilder.build(kubernetes)) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.apps()
                     .deployments()
                     .inNamespace(namespace)
@@ -280,7 +280,7 @@ public class KubernetesDeploymentDriver {
     }
 
     public static Deployment createOrReplaceDeployment(KubernetesConfig.Kubernetes kubernetes, Deployment deployment) {
-        try (KubernetesClient kc = KubernetesClientBuilder.build(kubernetes)) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.apps()
                     .deployments()
                     .inNamespace(deployment.getMetadata().getNamespace())
