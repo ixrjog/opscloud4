@@ -15,6 +15,7 @@ Welcome to the opscloud wiki!
 <img src="https://img.shields.io/badge/java-8-brightgreen.svg"></img> 
 <img src="https://img.shields.io/badge/springboot-2.7.10-brightgreen.svg"></img> 
 <img src="https://img.shields.io/badge/mysql-8-brightgreen.svg"></img>
+[![OSCS Status](https://www.oscs1024.com/platform/badge/opscloud4.svg?size=large)](https://www.murphysec.com/accept?code=7aaa623aab657dcd014503e205e8d7fc&type=1&from=2)
 <br>
 
 <img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/login_1.png" width="600"></img>
