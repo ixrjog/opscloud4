@@ -1,9 +1,6 @@
 package com.baiyi.opscloud.common.template;
 
 import org.apache.commons.lang3.StringUtils;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
-import org.yaml.snakeyaml.representer.Representer;
 
 /**
  * @Author baiyi
@@ -23,10 +20,7 @@ public class YamlUtil {
             return YamlVars.Vars.EMPTY;
         }
         try {
-            Representer representer = new Representer();
-            representer.getPropertyUtils().setSkipMissingProperties(true);
-            Yaml yaml = new Yaml(new Constructor(YamlVars.Vars.class),representer);
-            return yaml.loadAs(vars, YamlVars.Vars.class);
+            return com.baiyi.opscloud.common.util.YamlUtil.loadAs(vars, YamlVars.Vars.class);
         } catch (Exception e) {
             return YamlVars.Vars.EMPTY;
         }

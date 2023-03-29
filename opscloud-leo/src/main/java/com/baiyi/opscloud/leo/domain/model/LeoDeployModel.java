@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.leo.domain.model;
 
+import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO;
 import com.baiyi.opscloud.leo.domain.model.base.YamlDump;
@@ -7,10 +8,6 @@ import com.baiyi.opscloud.leo.exception.LeoJobException;
 import com.google.common.collect.Lists;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
-import org.yaml.snakeyaml.representer.Representer;
 
 import java.util.List;
 import java.util.Map;
@@ -37,13 +34,11 @@ public class LeoDeployModel {
             return DeployConfig.EMPTY_DEPLOY;
         }
         try {
-            Representer representer = new Representer(new DumperOptions());
-            representer.getPropertyUtils().setSkipMissingProperties(true);
-            Yaml yaml = new Yaml(new Constructor(LeoBuildModel.BuildConfig.class), representer);
-            return yaml.loadAs(config, DeployConfig.class);
+            return YamlUtil.loadAs(config, DeployConfig.class);
         } catch (Exception e) {
             throw new LeoJobException("转换配置文件错误: {}", e.getMessage());
         }
+
     }
 
     @Builder

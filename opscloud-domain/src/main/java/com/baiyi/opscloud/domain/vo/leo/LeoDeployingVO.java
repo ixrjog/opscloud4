@@ -24,7 +24,9 @@ import java.util.Map;
  */
 public class LeoDeployingVO {
 
-    // 最大RESTART
+    /**
+     * 最大RESTART
+     */
     public static final int MAX_RESTART = 2;
 
     @Data
