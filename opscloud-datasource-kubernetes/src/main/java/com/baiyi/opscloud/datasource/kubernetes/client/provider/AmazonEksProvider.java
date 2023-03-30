@@ -34,16 +34,16 @@ public class AmazonEksProvider {
      * @param kubernetes
      * @return
      */
-    public static KubernetesClient buildWithProviderClient(KubernetesConfig.Kubernetes kubernetes) throws URISyntaxException {
+    public static KubernetesClient buildClientWithProvider(KubernetesConfig.Kubernetes kubernetes) throws URISyntaxException {
         String token = amazonEksHelper.generateEksToken(kubernetes.getAmazonEks());
-        initConfig(kubernetes);
+        preSet(kubernetes);
         return build(kubernetes.getAmazonEks().getUrl(), token);
     }
 
     /**
      * 5.x
      * return new DefaultKubernetesClient(config);
-     *
+     * <p>
      * 6.x 写法
      * return new KubernetesClientBuilder().withConfig(config).build();
      *
@@ -56,9 +56,6 @@ public class AmazonEksProvider {
                 .withMasterUrl(url)
                 .withOauthToken(token)
                 .withTrustCerts(true)
-                //.withWebsocketTimeout(KubeClient.Config.WEBSOCKET_TIMEOUT)
-                //.withConnectionTimeout(KubeClient.Config.CONNECTION_TIMEOUT)
-                //.withRequestTimeout(KubeClient.Config.REQUEST_TIMEOUT)
                 .withWatchReconnectInterval(60000)
                 .build();
 
@@ -70,10 +67,13 @@ public class AmazonEksProvider {
      *
      * @param kubernetes
      */
-    private static void initConfig(KubernetesConfig.Kubernetes kubernetes) {
-        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_REQUEST_TIMEOUT_SYSTEM_PROPERTY, String.valueOf(MyKubernetesClientBuilder.Config.REQUEST_TIMEOUT));
-        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_WEBSOCKET_TIMEOUT_SYSTEM_PROPERTY, String.valueOf(MyKubernetesClientBuilder.Config.WEBSOCKET_TIMEOUT));
-        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_CONNECTION_TIMEOUT_SYSTEM_PROPERTY, String.valueOf(MyKubernetesClientBuilder.Config.CONNECTION_TIMEOUT));
+    private static void preSet(KubernetesConfig.Kubernetes kubernetes) {
+        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_REQUEST_TIMEOUT_SYSTEM_PROPERTY,
+                String.valueOf(MyKubernetesClientBuilder.Values.REQUEST_TIMEOUT));
+        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_WEBSOCKET_TIMEOUT_SYSTEM_PROPERTY,
+                String.valueOf(MyKubernetesClientBuilder.Values.WEBSOCKET_TIMEOUT));
+        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_CONNECTION_TIMEOUT_SYSTEM_PROPERTY,
+                String.valueOf(MyKubernetesClientBuilder.Values.CONNECTION_TIMEOUT));
     }
 
 }

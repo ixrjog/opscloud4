@@ -53,10 +53,10 @@ public class AliyunVmsDriver {
                         JSONUtil.readValue(response.getData(), AliyunVmsResponse.SingleCallByTts.class);
                 if (OK.equals(data.getCode()))
                     return data.getCallId();
-                log.error("singleCallByTts失败: err={}", data.getMessage());
+                log.error("singleCallByTts失败: {}", data.getMessage());
             }
         } catch (ClientException e) {
-            log.error("singleCallByTts失败: err={}", e.getMessage());
+            log.error("singleCallByTts失败: {}", e.getMessage());
         }
         return StringUtils.EMPTY;
     }

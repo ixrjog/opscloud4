@@ -93,7 +93,7 @@ public class PodAssetConverter {
                 }
             }
         } catch (Exception e) {
-            log.error("获取容器状态错误: err={}", e.getMessage());
+            log.error("获取容器状态错误: {}", e.getMessage());
         }
         return ContainerBO.ContainerStatus.builder().build().toContainerStatus();
     }

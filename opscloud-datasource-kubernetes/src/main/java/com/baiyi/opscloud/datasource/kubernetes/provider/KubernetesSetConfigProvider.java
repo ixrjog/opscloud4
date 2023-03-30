@@ -51,7 +51,7 @@ public class KubernetesSetConfigProvider extends AbstractSetDsInstanceConfigProv
         try {
             IOUtil.writeFile(kubeconfig, Joiner.on("/").join(kubeconfigPath, io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE));
         } catch (Exception e) {
-            throw new KubernetesException("写入配置文件错误: err={}", e.getMessage());
+            throw new KubernetesException("写入配置文件错误: {}", e.getMessage());
         }
     }
 

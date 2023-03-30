@@ -19,7 +19,7 @@ import java.net.URISyntaxException;
 @Slf4j
 public class MyKubernetesClientBuilder {
 
-    public interface Config {
+    public interface Values {
         int CONNECTION_TIMEOUT = 30 * 1000;
         int REQUEST_TIMEOUT = 30 * 1000;
         int WEBSOCKET_TIMEOUT = 60 * 1000;
@@ -29,7 +29,7 @@ public class MyKubernetesClientBuilder {
         if (StringUtils.isNotBlank(kubernetes.getProvider())) {
             return buildWithProvider(kubernetes);
         }
-        return DefaultKubernetesProvider.buildDefaultClient(kubernetes);
+        return DefaultKubernetesProvider.buildClient(kubernetes);
     }
 
     /**
@@ -41,7 +41,7 @@ public class MyKubernetesClientBuilder {
     private static KubernetesClient buildWithProvider(KubernetesConfig.Kubernetes kubernetes) {
         if (KubernetesProviders.AMAZON_EKS.getDesc().equalsIgnoreCase(kubernetes.getProvider())) {
             try {
-                return AmazonEksProvider.buildWithProviderClient(kubernetes);
+                return AmazonEksProvider.buildClientWithProvider(kubernetes);
             } catch (URISyntaxException e) {
                 throw new KubernetesException("KubernetesClient error: {}", e.getMessage());
             }

@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * @Author baiyi
  * @Date 2023/1/11 18:47
@@ -20,7 +18,7 @@ class LeoReportFacadeImplTest extends BaseUnit {
     private LeoReportFacade leoReportFacade;
 
     @Test
-    void repotTest() {
+    void reportTest() {
         LeoReportVO.LeoReport report = leoReportFacade.statLeoReport();
         print(report);
     }

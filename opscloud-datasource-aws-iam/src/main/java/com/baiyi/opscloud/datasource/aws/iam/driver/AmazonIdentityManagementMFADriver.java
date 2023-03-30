@@ -36,7 +36,7 @@ public class AmazonIdentityManagementMFADriver {
             CreateVirtualMFADeviceResult result = buildAmazonIdentityManagement(config).createVirtualMFADevice(request);
             return result.getVirtualMFADevice();
         } catch (Exception e) {
-            log.error("创建虚拟MFA设备错误: err={}", e.getMessage());
+            log.error("创建虚拟MFA设备错误: {}", e.getMessage());
             throw new RetryException("创建虚拟MFA设备错误: " + e.getMessage());
         }
     }

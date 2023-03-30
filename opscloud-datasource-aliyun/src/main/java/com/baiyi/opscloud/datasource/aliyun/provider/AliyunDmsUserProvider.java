@@ -65,7 +65,7 @@ public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
                 try {
                     AliyunDmsUserDriver.registerUser(aliyun, tid, dmsUser);
                 } catch (Exception e) {
-                    log.error("注册用户错误: nickName={}, err={}", dmsUser.nickName, e.getMessage());
+                    log.error("注册用户错误: nickName={}, {}", dmsUser.nickName, e.getMessage());
                 }
             });
             this.doPull(dsInstanceId);
