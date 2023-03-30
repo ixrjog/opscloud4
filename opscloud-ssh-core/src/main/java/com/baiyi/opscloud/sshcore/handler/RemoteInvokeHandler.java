@@ -197,7 +197,7 @@ public class RemoteInvokeHandler {
     public static void openKubernetesLog(String sessionId, String instanceId, KubernetesConfig.Kubernetes kubernetes,
                                          KubernetesResource.Pod pod, KubernetesResource.Container container, Integer lines) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        LogWatch logWatch = KubernetesPodDriver.getPodLogWatch(kubernetes,
+        LogWatch logWatch = KubernetesPodDriver.getLogWatch(kubernetes,
                 pod.getNamespace(),
                 pod.getName(),
                 container.getName(),
@@ -221,7 +221,7 @@ public class RemoteInvokeHandler {
                                               KubernetesResource.Pod pod, KubernetesResource.Container container) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         KubernetesPodDriver.SimpleListener listener = new KubernetesPodDriver.SimpleListener();
-        ExecWatch execWatch = KubernetesPodDriver.loginPod(
+        ExecWatch execWatch = KubernetesPodDriver.exec(
                 kubernetes,
                 pod.getNamespace(),
                 pod.getName(),

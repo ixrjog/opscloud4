@@ -53,10 +53,10 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
     @Override
     protected List<Pod> listEntities(DsInstanceContext dsInstanceContext) {
         KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
-        List<Namespace> namespaces = KubernetesNamespaceDriver.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
+        List<Namespace> namespaces = KubernetesNamespaceDriver.list(buildConfig(dsInstanceContext.getDsConfig()));
         List<Pod> pods = Lists.newArrayList();
         namespaces.forEach(e ->
-                pods.addAll(KubernetesPodDriver.listPod(kubernetes, e.getMetadata().getName()))
+                pods.addAll(KubernetesPodDriver.list(kubernetes, e.getMetadata().getName()))
         );
         return pods;
     }

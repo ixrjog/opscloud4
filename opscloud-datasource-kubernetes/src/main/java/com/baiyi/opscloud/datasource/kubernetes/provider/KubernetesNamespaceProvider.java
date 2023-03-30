@@ -51,13 +51,13 @@ public class KubernetesNamespaceProvider extends AbstractAssetRelationProvider<N
 
     @Override
     protected List<Namespace> listEntities(DsInstanceContext dsInstanceContext) {
-        return KubernetesNamespaceDriver.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
+        return KubernetesNamespaceDriver.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
     protected List<Namespace> listEntities(DsInstanceContext dsInstanceContext, Deployment target) {
         return Lists.newArrayList(
-                KubernetesNamespaceDriver.getNamespace(buildConfig(dsInstanceContext.getDsConfig()),
+                KubernetesNamespaceDriver.get(buildConfig(dsInstanceContext.getDsConfig()),
                 target.getMetadata().getNamespace())
         );
     }

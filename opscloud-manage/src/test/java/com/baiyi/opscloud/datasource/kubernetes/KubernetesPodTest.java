@@ -27,13 +27,13 @@ public class KubernetesPodTest extends BaseKubernetesTest {
 
     @Test
     void getLogTest() {
-        String l = KubernetesPodDriver.getPodLog(getConfig().getKubernetes(), "prod", "posp-7878b5d9ff-cf95v", "aaaa");
+        String l = KubernetesPodDriver.getLog(getConfig().getKubernetes(), "prod", "posp-7878b5d9ff-cf95v", "aaaa");
         print(l);
     }
 
     @Test
     void getLogTest2() {
-        String l = KubernetesPodDriver.getPodLog(getConfig().getKubernetes(), "prod", "mail-5c5b8dd569-vb6kd", "mail");
+        String l = KubernetesPodDriver.getLog(getConfig().getKubernetes(), "prod", "mail-5c5b8dd569-vb6kd", "mail");
         print(l);
     }
 
@@ -88,7 +88,7 @@ public class KubernetesPodTest extends BaseKubernetesTest {
     void getLogTest5() {
         KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_TEST);
         while (true) {
-            List<Pod> pods = KubernetesPodDriver.listPod(kubernetesConfig.getKubernetes(), "test", "c-front");
+            List<Pod> pods = KubernetesPodDriver.list(kubernetesConfig.getKubernetes(), "test", "c-front");
             for (Pod pod : pods) {
                 Optional<ContainerStatus> optCs = pod.getStatus().getContainerStatuses().stream().filter(e -> e.getName().equals("c-front")).findFirst();
                 if (!optCs.isPresent()) continue;

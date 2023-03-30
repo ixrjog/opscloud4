@@ -67,7 +67,7 @@ public class KubernetesTest extends BaseUnit {
         KubernetesConfig kubernetesDsInstanceConfig = (KubernetesConfig) getConfig();
         // KubernetesClient kubernetesClient = KubeClient.build(kubernetesDsInstanceConfig.getKubernetes());
 
-        List<Namespace> namespaces = KubernetesNamespaceDriver.listNamespace(kubernetesDsInstanceConfig.getKubernetes());
+        List<Namespace> namespaces = KubernetesNamespaceDriver.list(kubernetesDsInstanceConfig.getKubernetes());
 
         //  NamespaceList namespaceList = kubernetesClient.namespaces().list();
         for (Namespace item : namespaces) {
@@ -110,7 +110,7 @@ public class KubernetesTest extends BaseUnit {
         //  System.err.print(JSON.toJSONString(matchLabels));
 
         KubernetesConfig kubernetesDsInstanceConfig = (KubernetesConfig) getConfig();
-        List<Pod> pods = KubernetesPodDriver.listPod(kubernetesDsInstanceConfig.getKubernetes(), "dev", "coms-dev-deployment");
+        List<Pod> pods = KubernetesPodDriver.list(kubernetesDsInstanceConfig.getKubernetes(), "dev", "coms-dev-deployment");
         for (Pod item : pods) {
             System.err.print(item.getSpec());
         }

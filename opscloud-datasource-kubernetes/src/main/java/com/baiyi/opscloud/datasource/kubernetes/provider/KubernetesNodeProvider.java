@@ -49,7 +49,7 @@ public class KubernetesNodeProvider extends BaseAssetProvider<Node> {
 
     @Override
     protected List<Node> listEntities(DsInstanceContext dsInstanceContext) {
-        return KubernetesNodeDriver.listNode(buildConfig(dsInstanceContext.getDsConfig()));
+        return KubernetesNodeDriver.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override

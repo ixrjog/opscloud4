@@ -21,24 +21,14 @@ import java.util.List;
 @Slf4j
 public class KubernetesServiceDriver {
 
-    public static List<Service> listService(KubernetesConfig.Kubernetes kubernetes) {
-        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
-            ServiceList serviceList = kc.services()
-                    .list();
-            return serviceList.getItems();
-        } catch (Exception e) {
-            log.warn(e.getMessage());
-            throw e;
-        }
-    }
-
-    public static List<Service> listService(KubernetesConfig.Kubernetes kubernetes, String namespace) {
+    public static List<Service> list(KubernetesConfig.Kubernetes kubernetes, String namespace) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             ServiceList serviceList = kc.services()
                     .inNamespace(namespace)
                     .list();
-            if (CollectionUtils.isEmpty(serviceList.getItems()))
+            if (CollectionUtils.isEmpty(serviceList.getItems())) {
                 return Collections.emptyList();
+            }
             return serviceList.getItems();
         } catch (Exception e) {
             log.warn(e.getMessage());
@@ -52,7 +42,7 @@ public class KubernetesServiceDriver {
      * @param name       podName
      * @return
      */
-    public static Service getService(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
+    public static Service get(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.services()
                     .inNamespace(namespace)
@@ -64,26 +54,28 @@ public class KubernetesServiceDriver {
         }
     }
 
-    public static Service createOrReplaceService(KubernetesConfig.Kubernetes kubernetes, Service service) {
+    public static Service create(KubernetesConfig.Kubernetes kubernetes, Service service) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.services()
                     .inNamespace(service.getMetadata().getNamespace())
-                    .createOrReplace(service);
+                    .resource(service)
+                    .create();
         } catch (Exception e) {
             log.warn(e.getMessage());
             throw e;
         }
     }
 
-    public static Service createOrReplaceService(KubernetesConfig.Kubernetes kubernetes, String content) {
+    public static Service create(KubernetesConfig.Kubernetes kubernetes, String content) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             Service service = toService(kc, content);
-            return createOrReplaceService(kubernetes, service);
+            return create(kubernetes, service);
         } catch (Exception e) {
             log.warn(e.getMessage());
             throw e;
         }
     }
+
 
     /**
      * 配置文件转换为服务资源

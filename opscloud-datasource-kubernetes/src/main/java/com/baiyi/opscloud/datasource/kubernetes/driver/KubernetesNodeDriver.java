@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 public class KubernetesNodeDriver {
 
-    public static List<Node> listNode(KubernetesConfig.Kubernetes kubernetes) {
+    public static List<Node> list(KubernetesConfig.Kubernetes kubernetes) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             NodeList nodeList = kc.nodes().list();
             return nodeList.getItems();

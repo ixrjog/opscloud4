@@ -22,7 +22,7 @@ public class KubernetesServiceTemplateConsume extends AbstractTemplateConsume<Se
     protected Service produce(BusinessTemplate bizTemplate, String content) {
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
         KubernetesConfig.Kubernetes config = dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
-        return KubernetesServiceDriver.createOrReplaceService(config, content);
+        return KubernetesServiceDriver.create(config, content);
     }
 
     @Override

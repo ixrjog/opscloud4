@@ -53,10 +53,10 @@ public class KubernetesServiceProvider extends BaseAssetProvider<Service> {
     @Override
     protected List<Service> listEntities(DsInstanceContext dsInstanceContext) {
         KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
-        List<Namespace> namespaces = KubernetesNamespaceDriver.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
+        List<Namespace> namespaces = KubernetesNamespaceDriver.list(buildConfig(dsInstanceContext.getDsConfig()));
         List<Service> entities = Lists.newArrayList();
         namespaces.forEach(e ->
-                entities.addAll(KubernetesServiceDriver.listService(kubernetes, e.getMetadata().getName()))
+                entities.addAll(KubernetesServiceDriver.list(kubernetes, e.getMetadata().getName()))
         );
         return entities;
     }

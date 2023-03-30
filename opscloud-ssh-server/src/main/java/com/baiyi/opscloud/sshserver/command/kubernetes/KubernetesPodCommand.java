@@ -111,7 +111,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         }
         KubernetesConfig kubernetesDsInstanceConfig = buildConfig(asset.getInstanceUuid());
         DatasourceInstance datasourceInstance = dsInstanceService.getByUuid(asset.getInstanceUuid());
-        List<Pod> pods = KubernetesPodDriver.listPod(kubernetesDsInstanceConfig.getKubernetes(), asset.getAssetKey2(), asset.getAssetKey());
+        List<Pod> pods = KubernetesPodDriver.list(kubernetesDsInstanceConfig.getKubernetes(), asset.getAssetKey2(), asset.getAssetKey());
         if (CollectionUtils.isEmpty(pods)) {
             sshShellHelper.print(buildPagination(0));
             return;
@@ -183,7 +183,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                 kubernetesDsInstanceMap.put(instanceUuid, kubernetesDsInstance);
             }
             try {
-                List<Pod> pods = KubernetesPodDriver.listPod(kubernetesDsInstanceMap.get(instanceUuid).getKubernetesDsInstanceConfig().getKubernetes(), datasourceAsset.getAssetKey2(), datasourceAsset.getAssetKey());
+                List<Pod> pods = KubernetesPodDriver.list(kubernetesDsInstanceMap.get(instanceUuid).getKubernetesDsInstanceConfig().getKubernetes(), datasourceAsset.getAssetKey2(), datasourceAsset.getAssetKey());
                 if (CollectionUtils.isEmpty(pods)) {
                     log.warn("查询Pods为空: namespace={}, deploymentName={}", datasourceAsset.getAssetKey2(), datasourceAsset.getAssetKey());
                     continue;

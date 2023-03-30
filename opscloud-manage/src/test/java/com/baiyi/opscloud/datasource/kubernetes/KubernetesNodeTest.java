@@ -16,7 +16,7 @@ public class KubernetesNodeTest extends BaseKubernetesTest {
 
     @Test
     void listNodeTest() {
-        List<Node> nodes = KubernetesNodeDriver.listNode(getConfig().getKubernetes());
+        List<Node> nodes = KubernetesNodeDriver.list(getConfig().getKubernetes());
         print(nodes);
     }
 

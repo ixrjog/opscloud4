@@ -66,7 +66,7 @@ public class KubernetesDeploymentProvider extends AbstractAssetRelationProvider<
     @Override
     protected List<Deployment> listEntities(DsInstanceContext dsInstanceContext) {
         KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
-        List<Namespace> namespaces = KubernetesNamespaceDriver.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
+        List<Namespace> namespaces = KubernetesNamespaceDriver.list(buildConfig(dsInstanceContext.getDsConfig()));
         List<Deployment> entities = Lists.newArrayList();
         namespaces.forEach(e ->
                 entities.addAll(NewKubernetesDeploymentDriver.list(kubernetes, e.getMetadata().getName()))

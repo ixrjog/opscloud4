@@ -27,7 +27,7 @@ import java.util.Optional;
 @Slf4j
 public class KubernetesPodDriver {
 
-    public static List<Pod> listPod(KubernetesConfig.Kubernetes kubernetes) {
+    public static List<Pod> list(KubernetesConfig.Kubernetes kubernetes) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             PodList podList = kc.pods()
                     .list();
@@ -38,7 +38,7 @@ public class KubernetesPodDriver {
         }
     }
 
-    public static List<Pod> listPod(KubernetesConfig.Kubernetes kubernetes, String namespace) {
+    public static List<Pod> list(KubernetesConfig.Kubernetes kubernetes, String namespace) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             PodList podList = kc.pods()
                     .inNamespace(namespace)
@@ -53,7 +53,7 @@ public class KubernetesPodDriver {
         }
     }
 
-    public static List<Pod> listPod(KubernetesConfig.Kubernetes kubernetes, String namespace, String deploymentName) {
+    public static List<Pod> list(KubernetesConfig.Kubernetes kubernetes, String namespace, String deploymentName) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             Map<String, String> matchLabels = kc.apps()
                     .deployments()
@@ -77,7 +77,7 @@ public class KubernetesPodDriver {
         }
     }
 
-    public static List<Pod> listPod(KubernetesConfig.Kubernetes kubernetes, String namespace, Map<String, String> labels) {
+    public static List<Pod> list(KubernetesConfig.Kubernetes kubernetes, String namespace, Map<String, String> labels) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             PodList podList = kc.pods()
                     .inNamespace(namespace)
@@ -99,7 +99,7 @@ public class KubernetesPodDriver {
      * @param name       podName
      * @return
      */
-    public static Pod getPod(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
+    public static Pod get(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.pods()
                     .inNamespace(namespace)
@@ -111,7 +111,7 @@ public class KubernetesPodDriver {
         }
     }
 
-    public static String getPodLog(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, String container) {
+    public static String getLog(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, String container) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.pods()
                     .inNamespace(namespace)
@@ -124,15 +124,7 @@ public class KubernetesPodDriver {
         }
     }
 
-    public static LogWatch getPodLogWatch(KubernetesConfig.Kubernetes kubernetes, String namespace, String podName) {
-        return MyKubernetesClientBuilder.build(kubernetes).pods()
-                .inNamespace(namespace)
-                .withName(podName)
-                .watchLog();
-    }
-
-    @Deprecated
-    public static LogWatch getPodLogWatch(KubernetesConfig.Kubernetes kubernetes, String namespace, String podName, String containerName, Integer lines, OutputStream outputStream) {
+    public static LogWatch getLogWatch(KubernetesConfig.Kubernetes kubernetes, String namespace, String podName, String containerName, Integer lines, OutputStream outputStream) {
         return MyKubernetesClientBuilder.build(kubernetes)
                 .pods()
                 .inNamespace(namespace)
@@ -142,30 +134,22 @@ public class KubernetesPodDriver {
                 .watchLog(outputStream);
     }
 
-    @Deprecated
-    public static LogWatch getPodLogWatch2(KubernetesConfig.Kubernetes kubernetes, String namespace, String podName, String containerName, Integer lines, OutputStream outputStream) {
-        return MyKubernetesClientBuilder.build(kubernetes)
-                .pods()
-                .inNamespace(namespace)
-                .withName(podName)
-                .inContainer(containerName)
-                .withLogWaitTimeout(0)
-                .watchLog(outputStream);
-    }
-
-
     /**
+     * 执行sh
      * @param kubernetes
      * @param namespace
+     * @param podName
+     * @param containerName
+     * @param listener
+     * @param out
      * @return
      */
-    @Deprecated
-    public static ExecWatch loginPod(KubernetesConfig.Kubernetes kubernetes,
-                                     String namespace,
-                                     String podName,
-                                     String containerName,
-                                     SimpleListener listener,
-                                     OutputStream out) {
+    public static ExecWatch exec(KubernetesConfig.Kubernetes kubernetes,
+                                 String namespace,
+                                 String podName,
+                                 String containerName,
+                                 SimpleListener listener,
+                                 OutputStream out) {
         return MyKubernetesClientBuilder.build(kubernetes).pods()
                 .inNamespace(namespace)
                 .withName(podName)

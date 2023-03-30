@@ -18,19 +18,21 @@ import java.util.stream.Collectors;
 @Slf4j
 public class KubernetesNamespaceDriver {
 
-    public static List<Namespace> listNamespace(KubernetesConfig.Kubernetes kubernetes) {
+    public static List<Namespace> list(KubernetesConfig.Kubernetes kubernetes) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             NamespaceList namespaceList = kc.namespaces()
                     .list();
-            return namespaceList.getItems().stream().filter(e -> filter(kubernetes, e)
-            ).collect(Collectors.toList());
+            return namespaceList.getItems()
+                    .stream()
+                    .filter(e -> filter(kubernetes, e))
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             log.warn(e.getMessage());
             throw e;
         }
     }
 
-    public static Namespace getNamespace(KubernetesConfig.Kubernetes kubernetes, String namespace) {
+    public static Namespace get(KubernetesConfig.Kubernetes kubernetes, String namespace) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.namespaces()
                     .withName(namespace)

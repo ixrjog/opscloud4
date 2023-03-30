@@ -39,7 +39,7 @@ public class SupervisingWithRollingStrategy extends SupervisingStrategy {
                                                     KubernetesConfig.Kubernetes kubernetes,
                                                     LeoDeployModel.Deploy deploy,
                                                     LeoBaseModel.Deployment deployment) {
-        List<Pod> pods = KubernetesPodDriver.listPod(kubernetes, deployment.getNamespace(), deployment.getName());
+        List<Pod> pods = KubernetesPodDriver.list(kubernetes, deployment.getNamespace(), deployment.getName());
         if (CollectionUtils.isEmpty(pods)) {
             return LeoDeployingVO.Deploying.builder().build();
         }

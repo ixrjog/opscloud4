@@ -37,7 +37,7 @@ public class SupervisingWithOfflineStrategy extends SupervisingStrategy {
                                                     KubernetesConfig.Kubernetes kubernetes,
                                                     LeoDeployModel.Deploy deploy,
                                                     LeoBaseModel.Deployment deployment) {
-        List<Pod> pods = KubernetesPodDriver.listPod(kubernetes, deployment.getNamespace(), deployment.getName());
+        List<Pod> pods = KubernetesPodDriver.list(kubernetes, deployment.getNamespace(), deployment.getName());
         final String containerName = deployment.getContainer().getName();
         final String image = Optional.of(deployConfig)
                 .map(LeoDeployModel.DeployConfig::getDeploy)

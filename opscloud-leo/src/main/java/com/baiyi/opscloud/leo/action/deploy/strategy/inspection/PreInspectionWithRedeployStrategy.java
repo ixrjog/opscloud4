@@ -80,7 +80,7 @@ public class PreInspectionWithRedeployStrategy extends PreInspectionStrategy {
         final String containerName = kubernetes.getDeployment().getContainer().getName();
         KubernetesConfig kubernetesConfig = getKubernetesConfigWithUuid(instanceUuid);
 
-        List<LeoDeployingVO.PodDetails> pods = KubernetesPodDriver.listPod(kubernetesConfig.getKubernetes(), namespace, deploymentName)
+        List<LeoDeployingVO.PodDetails> pods = KubernetesPodDriver.list(kubernetesConfig.getKubernetes(), namespace, deploymentName)
                 .stream()
                 .map(p -> podDetailsHelper.toPodDetails(p, containerName))
                 .collect(Collectors.toList());

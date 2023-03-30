@@ -47,7 +47,7 @@ public class KubernetesPodHandler {
     public List<AssetContainer> queryAssetsByDeployment(int dsInstanceId, String namespace, String deployment) {
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
         KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
-        List<Pod> pods = KubernetesPodDriver.listPod(kubernetes, namespace, deployment);
+        List<Pod> pods = KubernetesPodDriver.list(kubernetes, namespace, deployment);
         return pods.stream().map(e ->
                 toAssetContainer(dsInstanceContext.getDsInstance(), e)
         ).collect(Collectors.toList());
@@ -56,7 +56,6 @@ public class KubernetesPodHandler {
     private KubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
         return dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
     }
-
 
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Pod entity) {
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstance.getId());

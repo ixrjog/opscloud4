@@ -21,7 +21,7 @@ public class KubernetesTestDriver {
      */
     public static Pod getPod(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, String cmd) {
         String containerName ="";
-        Pod pod = KubernetesPodDriver.getPod(kubernetes, namespace, name);
+        Pod pod = KubernetesPodDriver.get(kubernetes, namespace, name);
         ExecWatch watch = MyKubernetesClientBuilder.build(kubernetes).pods()
                 .inNamespace(namespace)
                 .withName(name)
