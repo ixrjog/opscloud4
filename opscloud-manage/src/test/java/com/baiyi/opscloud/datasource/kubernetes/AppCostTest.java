@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.kubernetes;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
-import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
+import com.baiyi.opscloud.datasource.kubernetes.driver.NewKubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
@@ -44,7 +44,7 @@ public class AppCostTest extends BaseKubernetesTest {
         List<Application> applications = applicationService.queryAll();
         for (Application application : applications) {
             String appName = application.getName();
-            Deployment deployment = KubernetesDeploymentDriver.getDeployment(kubernetesConfig.getKubernetes(), "prod", appName);
+            Deployment deployment = NewKubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), "prod", appName);
             if (deployment == null) continue;
 
             int replicas = deployment.getSpec().getReplicas();
@@ -66,7 +66,7 @@ public class AppCostTest extends BaseKubernetesTest {
         List<Application> applications = applicationService.queryAll();
         for (Application application : applications) {
             String appName = application.getName();
-            Deployment deployment = KubernetesDeploymentDriver.getDeployment(kubernetesConfig.getKubernetes(), "prod", appName);
+            Deployment deployment = NewKubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), "prod", appName);
             if (deployment == null) continue;
 
             int replicas = deployment.getSpec().getReplicas();

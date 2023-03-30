@@ -5,6 +5,8 @@ import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2022/11/8 16:15
@@ -41,5 +43,11 @@ public interface LeoBuildFacade {
 
     DataTable<LeoBuildVO.Build> queryLeoJobBuildPage(LeoJobParam.JobBuildPageQuery pageQuery);
 
+    /**
+     * 查询最近的构建
+     * @param size
+     * @return
+     */
+    List<LeoBuildVO.Build> getLatestLeoBuild(int size);
 
 }

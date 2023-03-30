@@ -200,11 +200,11 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(jenkinsUuid);
         JenkinsConfig jenkinsConfig = dsConfigHelper.build(dsConfig, JenkinsConfig.class);
         try {
-            logHelper.info(leoBuild, "用户停止构建任务: username={}", SessionUtil.getUsername());
+            logHelper.info(leoBuild, "用户 {} 停止构建任务", SessionUtil.getUsername());
             JenkinsPipeline.Step step = blueRestDriver.stopPipeline(jenkinsConfig.getJenkins(), leoBuild.getBuildJobName(), String.valueOf(1));
             logHelper.info(leoBuild, "用户停止构建任务: {}", JSONUtil.writeValueAsString(step));
         } catch (Exception e) {
-            logHelper.error(leoBuild, "停止构建任务失败: {}", e.getMessage());
+            logHelper.error(leoBuild, "用户停止构建任务失败: {}", e.getMessage());
         }
     }
 
@@ -333,6 +333,14 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .peek(leoBuildResponsePacker::wrap)
                 .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
+    }
+
+    @Override
+    public List<LeoBuildVO.Build> getLatestLeoBuild(int size) {
+        List<LeoBuild> builds = buildService.queryLatestLeoBuild(size);
+        return BeanCopierUtil.copyListProperties(builds, LeoBuildVO.Build.class).stream()
+                .peek(leoBuildResponsePacker::wrap)
+                .collect(Collectors.toList());
     }
 
 }

@@ -26,14 +26,18 @@ public interface LeoDeployFacade {
 
     /**
      * 停止部署(逻辑层)
+     *
      * @param deployId
      */
     void stopDeploy(int deployId);
 
     /**
      * 克隆部署无状态
+     *
      * @param cloneDeployDeployment
      */
     void cloneDeployDeployment(LeoDeployParam.CloneDeployDeployment cloneDeployDeployment);
+
+    List<LeoDeployVO.Deploy> getLatestLeoDeploy(int size);
 
 }

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.kubernetes;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
-import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
+import com.baiyi.opscloud.datasource.kubernetes.driver.NewKubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import io.fabric8.kubernetes.api.model.Container;
@@ -28,7 +28,7 @@ public class KubernetesDeploymentTest extends BaseKubernetesTest {
 
     @Test
     void aTest() {
-        Deployment deployment = KubernetesDeploymentDriver.getDeployment(getConfigById(KubernetesClusterConfigs.EKS_TEST).getKubernetes(), "ci", "account");
+        Deployment deployment = NewKubernetesDeploymentDriver.get(getConfigById(KubernetesClusterConfigs.EKS_TEST).getKubernetes(), "ci", "account");
         // KubernetesDeploymentDriver.redeployDeployment(getConfig().getKubernetes(), "dev", "merchant-rss-dev");
         Map<String, Quantity> limits = deployment.getSpec().getTemplate().getSpec().getContainers().get(1).getResources().getLimits();
         print(limits.get("cpu").getAmount());
@@ -41,7 +41,7 @@ public class KubernetesDeploymentTest extends BaseKubernetesTest {
 
     @Test
     void fTest() {
-        Deployment deployment = KubernetesDeploymentDriver.getDeployment(getConfigById(KubernetesClusterConfigs.EKS_PROD).getKubernetes(), "prod", "leo-demo-1");
+        Deployment deployment = NewKubernetesDeploymentDriver.get(getConfigById(KubernetesClusterConfigs.EKS_PROD).getKubernetes(), "prod", "leo-demo-1");
         print(deployment);
     }
 
@@ -51,7 +51,7 @@ public class KubernetesDeploymentTest extends BaseKubernetesTest {
         List<Application> applications = applicationService.queryAll();
         for (Application application : applications) {
             String appName = application.getName();
-            Deployment deployment = KubernetesDeploymentDriver.getDeployment(kubernetesConfig.getKubernetes(), "prod", appName);
+            Deployment deployment = NewKubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), "prod", appName);
             if (deployment == null) continue;
             Optional<Container> optionalContainer = deployment.getSpec().getTemplate().getSpec().getContainers().stream().filter(e -> "consul-agent".equals(e.getName())).findFirst();
             if (optionalContainer.isPresent()) {
@@ -74,7 +74,7 @@ public class KubernetesDeploymentTest extends BaseKubernetesTest {
         List<Application> applications = applicationService.queryAll();
         for (Application application : applications) {
             String appName = application.getName();
-            Deployment deployment = KubernetesDeploymentDriver.getDeployment(kubernetesConfig.getKubernetes(), "ci", appName);
+            Deployment deployment = NewKubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), "ci", appName);
             if (deployment == null) continue;
             print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
             print("应用名称: " + appName);
@@ -110,7 +110,7 @@ public class KubernetesDeploymentTest extends BaseKubernetesTest {
         String appName = application.getName();
         print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         print("应用名称: " + appName);
-        Deployment deployment = KubernetesDeploymentDriver.getDeployment(kubernetesConfig.getKubernetes(), "pre", appName);
+        Deployment deployment = NewKubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), "pre", appName);
         if (deployment == null) return;
         // 选中应用容器
         Optional<Container> optionalContainer = deployment
@@ -126,7 +126,7 @@ public class KubernetesDeploymentTest extends BaseKubernetesTest {
                 List<String> command = Lists.newArrayList("curl", "http://127.0.0.1:8080/eksshutdown", "-X", "GET");
                 container.getLifecycle().getPreStop().getExec().setCommand(command);
                 // 更新 Deployment
-                KubernetesDeploymentDriver.createOrReplaceDeployment(kubernetesConfig.getKubernetes(), deployment);
+                NewKubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), deployment);
             } catch (Exception e) {
                 print(e.getMessage());
             }

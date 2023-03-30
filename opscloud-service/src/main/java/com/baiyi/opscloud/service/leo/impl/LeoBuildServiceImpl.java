@@ -208,4 +208,12 @@ public class LeoBuildServiceImpl implements LeoBuildService {
         buildMapper.deleteByPrimaryKey(id);
     }
 
+    @Override
+    public List<LeoBuild> queryLatestLeoBuild(int size) {
+        PageHelper.startPage(1, size);
+        Example example = new Example(LeoBuild.class);
+        example.setOrderByClause("id desc");
+        return buildMapper.selectByExample(example);
+    }
+
 }

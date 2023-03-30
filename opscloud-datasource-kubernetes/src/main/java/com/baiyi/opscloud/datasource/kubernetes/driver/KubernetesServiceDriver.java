@@ -4,7 +4,6 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.MyKubernetesClientBuilder;
 import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesException;
 import com.baiyi.opscloud.datasource.kubernetes.util.KubernetesUtil;
-import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.ServiceList;
 import io.fabric8.kubernetes.client.KubernetesClient;
@@ -95,11 +94,7 @@ public class KubernetesServiceDriver {
      * @throws RuntimeException
      */
     public static Service toService(KubernetesClient kubernetesClient, String content) throws KubernetesException {
-        HasMetadata resource = KubernetesUtil.toResource(kubernetesClient, content);
-        if (resource instanceof Service) {
-            return (Service) resource;
-        }
-        throw new KubernetesException("类型不匹配");
+        return  KubernetesUtil.toService(kubernetesClient,content);
     }
 
 }

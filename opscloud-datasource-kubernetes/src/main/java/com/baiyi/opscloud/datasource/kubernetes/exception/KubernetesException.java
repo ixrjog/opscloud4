@@ -15,7 +15,6 @@ import org.slf4j.helpers.MessageFormatter;
 @EqualsAndHashCode(callSuper = true)
 public class KubernetesException extends BaseException {
 
-
     private static final long serialVersionUID = 596212694251808845L;
     private final Integer code = 11001;
 

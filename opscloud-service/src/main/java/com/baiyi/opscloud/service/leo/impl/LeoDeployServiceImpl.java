@@ -142,4 +142,12 @@ public class LeoDeployServiceImpl implements LeoDeployService {
         return deployMapper.statByEnvName();
     }
 
+    @Override
+    public List<LeoDeploy> queryLatestLeoDeploy(int size) {
+        PageHelper.startPage(1, size);
+        Example example = new Example(LeoDeploy.class);
+        example.setOrderByClause("id desc");
+        return deployMapper.selectByExample(example);
+    }
+
 }

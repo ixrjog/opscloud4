@@ -50,4 +50,6 @@ public interface LeoDeployService {
 
     List<ReportVO.Report> statByEnvName();
 
+    List<LeoDeploy> queryLatestLeoDeploy(int size);
+
 }

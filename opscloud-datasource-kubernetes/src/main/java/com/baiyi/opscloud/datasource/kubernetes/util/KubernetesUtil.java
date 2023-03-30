@@ -1,12 +1,11 @@
 package com.baiyi.opscloud.datasource.kubernetes.util;
 
-import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesException;
-import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.client.KubernetesClient;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * @Author baiyi
@@ -15,14 +14,30 @@ import java.util.List;
  */
 public class KubernetesUtil {
 
-    private KubernetesUtil(){}
+    private KubernetesUtil() {
+    }
 
-    public static HasMetadata toResource(KubernetesClient kuberClient, String content) throws KubernetesException {
-        InputStream is = new ByteArrayInputStream(content.getBytes());
-        List<HasMetadata> resources = kuberClient.load(is).get();
-        if (resources.isEmpty()) // 配置文件为空
-            throw new KubernetesException("转换Deployment配置文件错误!");
-        return resources.get(0);
+//    public static HasMetadata toResource(KubernetesClient kubernetesClient, String content) throws KubernetesException {
+//        InputStream is = new ByteArrayInputStream(content.getBytes());
+//        List<HasMetadata> resources = kubernetesClient.load(is).get();
+//        if (resources.isEmpty()) {
+//            throw new KubernetesException("转换配置文件错误!");
+//        }
+//        return resources.get(0);
+//    }
+
+    public static Service toService(KubernetesClient kubernetesClient, String yaml) {
+        InputStream is = new ByteArrayInputStream(yaml.getBytes());
+        return kubernetesClient.services()
+                .load(is)
+                .item();
+    }
+
+    public static Deployment toDeployment(KubernetesClient kubernetesClient, String yaml) {
+        InputStream is = new ByteArrayInputStream(yaml.getBytes());
+        return kubernetesClient.apps().deployments()
+                .load(is)
+                .item();
     }
 
 }

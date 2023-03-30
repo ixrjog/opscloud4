@@ -60,4 +60,6 @@ public interface LeoBuildService {
 
     void deleteById(Integer id);
 
+    List<LeoBuild> queryLatestLeoBuild(int size);
+
 }

@@ -266,4 +266,18 @@ public class LeoController {
         return HttpResult.SUCCESS;
     }
 
+    // Monitor
+
+    @ApiOperation(value = "查询最近的构建详情")
+    @GetMapping(value = "/latest/build/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<LeoBuildVO.Build>> getLatestLeoBuild(@RequestParam @Valid int size) {
+        return new HttpResult<>(buildFacade.getLatestLeoBuild(size));
+    }
+
+    @ApiOperation(value = "查询最近的部署详情")
+    @GetMapping(value = "/latest/deploy/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<LeoDeployVO.Deploy>> getLatestLeoDeploy(@RequestParam @Valid int size) {
+        return new HttpResult<>(deployFacade.getLatestLeoDeploy(size));
+    }
+
 }
