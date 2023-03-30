@@ -35,15 +35,21 @@ public class NoticeHelper {
     public void sendMessage(User user, String msgKey, List<DatasourceInstance> instances) {
         for (DatasourceInstance instance : instances) {
             MessageTemplate mt = getTemplate(msgKey, instance);
-            if (mt == null) continue;
+            if (mt == null) {
+                continue;
+            }
             Map<String, Object> contentMap = Maps.newHashMap();
             contentMap.put("username", user.getUsername());
-            if (!StringUtils.isEmpty(user.getPassword())) contentMap.put("password", user.getPassword());
+            if (!StringUtils.isEmpty(user.getPassword())) {
+                contentMap.put("password", user.getPassword());
+            }
             try {
                 String text = BeetlUtil.renderTemplate(mt.getMsgTemplate(), contentMap);
                 IMessageConsumer iMessageCustomer =
                         MessageConsumerFactory.getConsumerByInstanceType(instance.getInstanceType());
-                if (iMessageCustomer == null) continue;
+                if (iMessageCustomer == null) {
+                    continue;
+                }
                 iMessageCustomer.send(instance, user, mt, text);
                 return;
             } catch (IOException e) {
@@ -55,7 +61,9 @@ public class NoticeHelper {
     public void sendMessage(User user, String msgKey, List<DatasourceInstance> instances, INoticeMessage iNoticeMessage) {
         for (DatasourceInstance instance : instances) {
             MessageTemplate mt = getTemplate(msgKey, instance);
-            if (mt == null) continue;
+            if (mt == null) {
+                continue;
+            }
             Map<String, Object> contentMap = iNoticeMessage.toContentMap();
             this.send(instance, user, mt, contentMap);
         }
@@ -67,7 +75,9 @@ public class NoticeHelper {
             String text = BeetlUtil.renderTemplate(mt.getMsgTemplate(), contentMap);
             IMessageConsumer iMessageCustomer =
                     MessageConsumerFactory.getConsumerByInstanceType(instance.getInstanceType());
-            if (iMessageCustomer == null) return;
+            if (iMessageCustomer == null) {
+                return;
+            }
             iMessageCustomer.send(instance, user, mt, text);
             log.info("发送用户消息: instanceName={}, username={}", instance.getInstanceName(), user.getUsername());
         } catch (IOException e) {

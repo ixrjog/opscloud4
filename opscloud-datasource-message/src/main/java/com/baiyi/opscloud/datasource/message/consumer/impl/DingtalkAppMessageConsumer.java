@@ -31,8 +31,9 @@ public class DingtalkAppMessageConsumer extends AbstractMessageConsumer<Dingtalk
         List<BusinessAssetRelation> relations = businessAssetRelationService.queryBusinessRelations(BusinessTypeEnum.USER.getType(), user.getId());
         for (BusinessAssetRelation relation : relations) {
             DatasourceInstanceAsset asset = dsInstanceAssetService.getById(relation.getDatasourceInstanceAssetId());
-            if (asset.getInstanceUuid().equals(instance.getUuid()) && asset.getAssetType().equals(DsAssetTypeConstants.DINGTALK_USER.name()))
+            if (asset.getInstanceUuid().equals(instance.getUuid()) && asset.getAssetType().equals(DsAssetTypeConstants.DINGTALK_USER.name())) {
                 return asset;
+            }
         }
         throw new OCException("发送消息失败: 用户未绑定钉钉用户无法查找对应userid！username=" + user.getUsername());
     }

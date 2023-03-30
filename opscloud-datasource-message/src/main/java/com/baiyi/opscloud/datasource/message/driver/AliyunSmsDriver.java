@@ -34,7 +34,13 @@ public class AliyunSmsDriver {
     private static final String DEFAULT_REGIN_ID = "cn-hangzhou";
     private static final String OK = "OK";
 
-    // 根据该ID在接口QuerySendDetails中查询具体的发送状态
+    /**
+     * 根据该ID在接口QuerySendDetails中查询具体的发送状态
+     * @param aliyun
+     * @param phones
+     * @param templateCode
+     * @return
+     */
     public String sendBatchSms(AliyunConfig.Aliyun aliyun, Set<String> phones, String templateCode) {
         CommonRequest request = new CommonRequest();
         request.setSysMethod(MethodType.POST);
@@ -50,8 +56,9 @@ public class AliyunSmsDriver {
             if (response.getHttpStatus() == 200) {
                 AliyunSmsResponse.SendBatchSms data =
                         JSONUtil.readValue(response.getData(), AliyunSmsResponse.SendBatchSms.class);
-                if (OK.equals(data.getCode()))
+                if (OK.equals(data.getCode())) {
                     return data.getBizId();
+                }
                 log.error("sendBatchSms失败: {}", data.getMessage());
             }
         } catch (ClientException e) {

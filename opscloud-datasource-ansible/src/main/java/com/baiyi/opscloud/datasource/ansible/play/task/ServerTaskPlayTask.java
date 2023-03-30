@@ -23,7 +23,6 @@ public class ServerTaskPlayTask implements Runnable {
 
     private final ServerTaskMember serverTaskMember;
 
-
     public ServerTaskPlayTask(Session session, ServerTaskMember serverTaskMember) {
         this.session = session;
         this.serverTaskMember = serverTaskMember;

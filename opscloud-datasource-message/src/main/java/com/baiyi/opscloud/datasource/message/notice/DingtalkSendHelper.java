@@ -33,7 +33,9 @@ public class DingtalkSendHelper {
     }
 
     public void send(ZabbixConfig.Zabbix config, String message) {
-        if (config.getNotice() == null) return;
+        if (config.getNotice() == null) {
+            return;
+        }
         DingtalkRobotSendFeign feign = buildFeign();
         Gson gson = new GsonBuilder().create();
         DingtalkMsg.Msg msg = gson.fromJson(message, DingtalkMsg.Msg.class);

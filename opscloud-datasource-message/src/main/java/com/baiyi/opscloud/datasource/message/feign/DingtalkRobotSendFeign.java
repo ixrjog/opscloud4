@@ -12,8 +12,14 @@ import feign.RequestLine;
  */
 public interface DingtalkRobotSendFeign {
 
+    /**
+     * 发送消息
+     * @param token
+     * @param msg
+     * @return
+     */
     @RequestLine("POST /robot/send?access_token={token}")
     @Headers({"Content-Type: application/json"})
-    Object send(@Param("token") String token,DingtalkMsg.Msg msg);
+    Object send(@Param("token") String token, DingtalkMsg.Msg msg);
 
 }

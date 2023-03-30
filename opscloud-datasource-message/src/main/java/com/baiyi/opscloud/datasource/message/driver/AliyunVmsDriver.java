@@ -35,7 +35,14 @@ public class AliyunVmsDriver {
     private static final String OK = "OK";
     private static final String CALL_OK = "用户接听";
 
-    // calld可以通过QueryCallDetailByCallId接口查询呼叫详情。
+    /**
+     * call可以通过QueryCallDetailByCallId接口查询呼叫详情。
+     * @param regionId
+     * @param aliyun
+     * @param phone
+     * @param ttsCode
+     * @return
+     */
     public String singleCallByTts(String regionId, AliyunConfig.Aliyun aliyun, String phone, String ttsCode) {
         CommonRequest request = new CommonRequest();
         request.setSysMethod(MethodType.POST);
@@ -51,8 +58,9 @@ public class AliyunVmsDriver {
             if (response.getHttpStatus() == 200) {
                 AliyunVmsResponse.SingleCallByTts data =
                         JSONUtil.readValue(response.getData(), AliyunVmsResponse.SingleCallByTts.class);
-                if (OK.equals(data.getCode()))
+                if (OK.equals(data.getCode())) {
                     return data.getCallId();
+                }
                 log.error("singleCallByTts失败: {}", data.getMessage());
             }
         } catch (ClientException e) {
