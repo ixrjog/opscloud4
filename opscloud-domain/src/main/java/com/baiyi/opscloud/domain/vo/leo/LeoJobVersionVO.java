@@ -60,11 +60,13 @@ public class LeoJobVersionVO {
 
         private String deploymentName;
 
+        @Builder.Default
         private Integer replicas = 0;
 
         /**
          * 用于计算版本顺序
          */
+        @Builder.Default
         private Integer buildId = -1;
 
         private String versionTypeDesc;
@@ -104,19 +106,8 @@ public class LeoJobVersionVO {
         @Builder.Default
         private boolean isActive = true;
 
-//        @Min(value = 0, message = "关联任务ID不能为空")
-//        @ApiModelProperty(value = "关联任务ID")
-//        private Integer jobId;
-
         @ApiModelProperty(value = "构建ID")
         private Integer buildId;
-
-//        @Min(value = 0, message = "Deployment资产ID不能为空")
-//        @ApiModelProperty(value = "Deployment资产ID")
-//        private Integer assetId;
-//
-//        @ApiModelProperty(value = "部署类型")
-//        private String deployType;
 
     }
 

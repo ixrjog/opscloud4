@@ -36,11 +36,11 @@ public class SetSessionUserAspect {
     public void doBefore(JoinPoint joinPoint, SetSessionUser setSessionUser) throws Throwable {
         User user = userService.getById(setSessionUser.userId());
         if (user == null) {
-            log.error("设置当前会话用户: 用户不存在 userId={}", setSessionUser.userId());
+            log.error("设置当前会话但用户不存在: userId={}", setSessionUser.userId());
         }
         if (!setSessionUser.force()) {
             if (!StringUtils.isEmpty(SessionUtil.getUsername())) {
-                log.info("设置当前会话用户: 当前用户已存在 userId={}", setSessionUser.userId());
+                log.debug("设置当前会话用户: userId={}", setSessionUser.userId());
             }
         }
         SessionUtil.setUsername(user.getUsername());

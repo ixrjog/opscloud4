@@ -60,6 +60,7 @@
         <module>opscloud-datasource-google-cloud-iam</module>
         <module>opscloud-datasource-google-cloud</module>
     </modules>
+
     <parent>
         <!--  https://spring.io/projects/spring-boot#learn  -->
         <groupId>org.springframework.boot</groupId>
@@ -67,6 +68,7 @@
         <version>2.7.10</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.baiyi</groupId>
     <artifactId>opscloud</artifactId>
     <version>0.0.1-SNAPSHOT</version>

@@ -58,6 +58,7 @@ public class JenkinsPipeline {
         private String displayName = "Queue";
         private Integer durationInMillis;
         private String firstParent;
+        @Builder.Default
         private String id = String.valueOf(1);
         private Boolean restartable;
         private String result;

@@ -62,7 +62,7 @@ public abstract class BaseAlgorithm {
             return map;
         }
         List<ServerPack> serverPacks = serverList.stream().map(this::toServerPack).collect(Collectors.toList());
-        for (ServerPack e : serverPacks) {
+        serverPacks.forEach(e -> {
             String groupingName = toSubgroupName(serverGroup, e.getEnv());
             if (map.containsKey(groupingName)) {
                 map.get(groupingName).add(e);
@@ -71,7 +71,7 @@ public abstract class BaseAlgorithm {
                 list.add(e);
                 map.put(groupingName, list);
             }
-        }
+        });
         return map;
     }
 

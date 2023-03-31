@@ -98,7 +98,7 @@ public class UserCredentialFacadeImpl implements UserCredentialFacade {
 
     private void savePubKey(UserCredentialVO.Credential credential) {
         List<String> result = Splitter.on(" ").splitToList(credential.getCredential());
-        //计算指纹
+        // 计算指纹
         credential.setFingerprint(SSHUtil.getFingerprint(Joiner.on(" ").join(result.get(0), result.get(1))));
         if (result.size() == 3) {
             credential.setTitle(result.get(2));

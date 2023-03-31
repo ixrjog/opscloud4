@@ -10,20 +10,20 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 
 /**
- * @Author baiyi
- * @Date 2021/9/1 10:57 上午
- * @Version 1.0
+ * &#064;Author  baiyi
+ * &#064;Date  2021/9/1 10:57 上午  &#064;Version  1.0
  */
 public class AnsiblePlaybookVO {
 
     public interface IPlaybook {
+
         Integer getAnsiblePlaybookId();
 
         void setPlaybook(Playbook playbook);
 
         void setTaskName(String taskName);
-    }
 
+    }
 
     @EqualsAndHashCode(callSuper = true)
     @Data
@@ -57,4 +57,5 @@ public class AnsiblePlaybookVO {
          */
         private String comment;
     }
+
 }

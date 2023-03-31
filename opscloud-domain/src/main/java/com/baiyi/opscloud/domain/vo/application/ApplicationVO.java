@@ -76,7 +76,6 @@ public class ApplicationVO {
 
     }
 
-
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor

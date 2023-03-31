@@ -16,9 +16,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
- *
  * 代码已经完成，吾辈继续努力
- *
  *
  * @Author baiyi
  * @Date 2019/12/25 4:00 下午
@@ -45,7 +43,7 @@ public class ManageApplication {
         SpringApplication.run(ManageApplication.class, args);
         log.info("Opscloud 4 <Spring Boot {}>", SpringBootVersion.getVersion());
         // log.info("启动成功! 耗时:{}/s", Duration.between(inst, Instant.now()).getSeconds());
-        System.setProperty("druid.mysql.usePingMethod","false");
+        System.setProperty("druid.mysql.usePingMethod", "false");
     }
 
 }

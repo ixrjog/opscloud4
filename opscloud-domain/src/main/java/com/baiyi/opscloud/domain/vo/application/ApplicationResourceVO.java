@@ -14,9 +14,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @Author baiyi
- * @Date 2021/7/13 10:32 上午
- * @Version 1.0
+ * Date 2021/7/13 10:32 上午
+ * @version 1.0.0
+ * @author liangjian
  */
 public class ApplicationResourceVO {
 
