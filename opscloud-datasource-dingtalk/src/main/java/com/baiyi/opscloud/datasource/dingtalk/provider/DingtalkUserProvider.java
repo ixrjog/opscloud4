@@ -80,7 +80,7 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
             return entities;
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new DatasourceProviderException(e.getMessage());
+            throw new DatasourceProviderException(e.getMessage(), e);
         }
     }
 
@@ -92,8 +92,14 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
                     .build();
             DingtalkUser.UserResponse userResponse = dingtalkUserDriver.list(dingtalk, queryUserPage);
 
-            if (CollectionUtils.isEmpty(userResponse.getResult().getList())) return;
-            Map<String, DingtalkUser.User> userMap = userResponse.getResult().getList().stream().collect(Collectors.toMap(DingtalkUser.User::getUserid, a -> a, (k1, k2) -> k1));
+            if (CollectionUtils.isEmpty(userResponse.getResult().getList())) {
+                return;
+            }
+            Map<String, DingtalkUser.User> userMap = userResponse
+                    .getResult()
+                    .getList()
+                    .stream()
+                    .collect(Collectors.toMap(DingtalkUser.User::getUserid, a -> a, (k1, k2) -> k1));
             allUserMap.putAll(userMap);
             log.info("查询钉钉用户: 部门ID={}, 用户总数={}", deptId, allUserMap.size());
         });
@@ -111,7 +117,7 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
                 .length(10000)
                 .build();
         DataTable<DatasourceInstanceAsset> dataTable = dsInstanceAssetService.queryPageByParam(pageQuery);
-        if (CollectionUtils.isEmpty(dataTable.getData())){
+        if (CollectionUtils.isEmpty(dataTable.getData())) {
             return Sets.newHashSet();
         }
         return dataTable.getData().stream().map(e -> Long.valueOf(e.getAssetId()))

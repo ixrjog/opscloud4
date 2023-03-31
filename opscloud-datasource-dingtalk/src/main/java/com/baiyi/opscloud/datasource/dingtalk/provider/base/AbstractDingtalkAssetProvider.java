@@ -60,7 +60,7 @@ public abstract class AbstractDingtalkAssetProvider<T> extends AbstractAssetBusi
                 queryDeptIdSet.addAll(departmentSubIdResponse.getResult().getDeptIdList());
             }
         }
-        log.info("子部门Id列表: size={}", subIdSet.size());
+        log.info("子部门ID列表: size={}", subIdSet.size());
         return subIdSet;
     }
 

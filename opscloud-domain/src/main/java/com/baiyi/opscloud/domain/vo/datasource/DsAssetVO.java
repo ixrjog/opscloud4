@@ -24,8 +24,17 @@ import java.util.Map;
 public class DsAssetVO {
 
     public interface IDsAsset {
+
+        /**
+         * 资产ID
+         * @return
+         */
         Integer getAssetId();
 
+        /**
+         * 设置资产
+         * @param asset
+         */
         void setAsset(Asset asset);
 
     }
@@ -36,7 +45,6 @@ public class DsAssetVO {
     @ApiModel
     public static class Asset extends BaseVO implements TagVO.ITags, BusinessRelationVO.IRelations {
 
-        // ITags
         private List<TagVO.Tag> tags;
         private final Integer businessType = BusinessTypeEnum.ASSET.getType();
 
@@ -56,6 +64,8 @@ public class DsAssetVO {
 
         @ApiModelProperty(value = "子对象(依赖夫对象存在)")
         private Map<String, List<DsAssetVO.Asset>> tree;
+
+        private DsLoginAssetVO.LoginAsset loginAsset;
 
         private DsInstanceVO.Instance dsInstance;
 
