@@ -58,6 +58,8 @@ public class NewKubernetesDeploymentDriver {
     public static Deployment create(KubernetesConfig.Kubernetes kubernetes, String content) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             Deployment deployment = toDeployment(kc, content);
+            // 删除资源版本
+            deployment.getMetadata().setResourceVersion(null);
             return create(kubernetes, deployment);
         } catch (Exception e) {
             log.warn(e.getMessage());
@@ -66,6 +68,9 @@ public class NewKubernetesDeploymentDriver {
     }
 
     public static Deployment create(KubernetesConfig.Kubernetes kubernetes, String namespace, Deployment deployment) {
+        // 删除资源版本
+        deployment.getMetadata().setResourceVersion(null);
+
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.apps()
                     .deployments()
@@ -140,6 +145,8 @@ public class NewKubernetesDeploymentDriver {
     }
 
     private static Deployment create(KubernetesConfig.Kubernetes kubernetes, Deployment deployment) {
+        // 删除资源版本
+        deployment.getMetadata().setResourceVersion(null);
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.apps()
                     .deployments()

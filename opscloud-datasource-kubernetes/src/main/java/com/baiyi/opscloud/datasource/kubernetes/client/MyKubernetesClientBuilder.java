@@ -20,8 +20,8 @@ import java.net.URISyntaxException;
 public class MyKubernetesClientBuilder {
 
     public interface Values {
-        int CONNECTION_TIMEOUT = 30 * 1000;
-        int REQUEST_TIMEOUT = 30 * 1000;
+        int CONNECTION_TIMEOUT = 60 * 1000;
+        int REQUEST_TIMEOUT = 60 * 1000;
         int WEBSOCKET_TIMEOUT = 60 * 1000;
     }
 

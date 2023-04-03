@@ -229,7 +229,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 namespace,
                 deploymentName);
         if (deployment == null) {
-            throw new LeoDeployException("无状态 {} 不存在!", cloneDeployDeployment.getDeploymentName());
+            throw new LeoDeployException("无状态配置 {} 不存在!", cloneDeployDeployment.getDeploymentName());
         }
 
         preUpdateDeployment(deployment, deploymentName, cloneDeployDeployment.getDeploymentName(), cloneDeployDeployment.getReplicas());
@@ -268,7 +268,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .getLabels()
                 .put("group", newName);
 
-        // updateLabels
+        // 更新 Labels
         Map<String, String> labels = Optional.of(deployment)
                 .map(Deployment::getMetadata)
                 .map(ObjectMeta::getLabels)

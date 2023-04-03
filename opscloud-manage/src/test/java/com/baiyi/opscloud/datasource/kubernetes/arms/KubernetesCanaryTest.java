@@ -25,7 +25,15 @@ public class KubernetesCanaryTest extends BaseKubernetesTest {
     @Test
     void bTest() {
         List<String> apps = Lists.newArrayList(
-                "sms"
+                "trade",
+                "cashier-center",
+                "product-service",
+                "account",
+                "account-service",
+                "tag",
+                "coupon",
+                "loyalty",
+                "c-bff-product"
         );
         for (String app : apps) {
             oneTest(app);
@@ -112,7 +120,7 @@ public class KubernetesCanaryTest extends BaseKubernetesTest {
         /**
          * 更新 Deployment
          */
-        NewKubernetesDeploymentDriver.create(kubernetesConfig.getKubernetes(), namespace, deployment);
+        NewKubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), namespace, deployment);
         print("---------------------------------------------------------------------------");
         print("应用名称: " + appName);
         print("---------------------------------------------------------------------------");
