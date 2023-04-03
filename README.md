@@ -11,10 +11,10 @@ Welcome to the opscloud wiki!
 ![GitHub Stats Card](https://github-readme-stats.vercel.app/api?username=ixrjog&show_icons=true&theme=onedark)
 
 ## OpsCloud4 云上运维
-<img src="https://img.shields.io/badge/version-4.3.0-brightgreen.svg"></img>
-<img src="https://img.shields.io/badge/java-8-brightgreen.svg"></img> 
-<img src="https://img.shields.io/badge/springboot-2.7.10-brightgreen.svg"></img> 
-<img src="https://img.shields.io/badge/mysql-8-brightgreen.svg"></img>
+<img src="https://img.shields.io/badge/Version-4.4.0-brightgreen.svg"></img>
+<img src="https://img.shields.io/badge/JDK-17-brightgreen.svg"></img> 
+<img src="https://img.shields.io/badge/SpringBoot-3.0.5-brightgreen.svg"></img> 
+<img src="https://img.shields.io/badge/MySQL-8-brightgreen.svg"></img>
 [![OSCS Status](https://www.oscs1024.com/platform/badge/opscloud4.svg?size=large)](https://www.murphysec.com/accept?code=7aaa623aab657dcd014503e205e8d7fc&type=1&from=2)
 <br>
 
@@ -27,10 +27,10 @@ Welcome to the opscloud wiki!
   + [https://github.com/ixrjog/opscloud4-web](https://github.com/ixrjog/opscloud4-web)
 
 ## 开发环境
-+ JDK 8u251
++ JDK 17
 + MacBook M1 PRO (macOS Ventura 13.1)
-+ IntelliJ IDEA 2022.3.1 (Ultimate Edition)
-+ WebStorm 2022.3.1
++ IntelliJ IDEA 2023.1
++ WebStorm 2023.1
 
 ## Leo持续交付
 + 部署
