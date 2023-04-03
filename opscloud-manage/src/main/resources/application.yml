@@ -39,10 +39,10 @@ springdoc:
       paths-to-match: '/**'
       packages-to-scan: com.xiaominfo.knife4j.demo.web
 # knife4j的增强配置，不需要增强可以不配
-knife4j:
-  enable: true
-  setting:
-    language: zh_cn
+#knife4j:
+#  enable: true
+#  setting:
+#    language: zh_cn
 
 # 白名单配置
 white:
@@ -80,7 +80,6 @@ white:
      - .png
      - .html
 
-
 # 开发环境配置
 server:
   # 服务端口
@@ -100,13 +99,6 @@ server:
       # Tomcat启动初始化的线程数，默认值25
       min-spare: 25
 
-mapper:
-  mappers:
-    - tk.mybatis.mapper.common.Mapper
-  not-empty: true
-  identity: MYSQL
-  before: false
-
 pagehelper:
   helper-dialect: mysql
   reasonable: true
@@ -116,9 +108,16 @@ pagehelper:
 # mybatis
 mybatis:
   type-aliases-package: com.baiyi.opscloud.domain
-  mapper-locations: classpath:mapper/*.xml
+  mapper-locations: classpath:/mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
+
+mapper:
+  mappers:
+    - tk.mybatis.mapper.common.Mapper
+  not-empty: true
+  identity: MYSQL
+  before: false
 
 # ssh-server
 ssh:

@@ -25,6 +25,11 @@ public class InitialRedisConfiguration implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+//        boolean flag = true;
+//        if (flag) {
+//            return;
+//        }
+
         try {
             RedisTemplate<String, Object> redisTemplate = applicationContext.getBean("redisTemplate", RedisTemplate.class);
             redisTemplate.hasKey("initCheck");

@@ -31,18 +31,19 @@ spring:
     activate:
       on-profile:
         - dev
-  redis:
-    host: ENC(hOL0LX7EFVBNlLXqSaZV2rYKC2vcPGJ7)
-    # host: r-d7obmf3lmgs0hpph5n.redis.eu-west-1.rds.aliyuncs.com
-    port: 6379
-    password: ENC(5w2StO4dbBR/gLwjK0uuomVfN5vORxJn3GW5nPsIucDgD7TvGnMfVw==)
-    # password: ENC(o6UKSKlETx2g13HH0nsWttoQSvW0+OF/7/DcHo2lc0FOlf03x8jzTgB1khTUODtXRMzG2/PK8uQ=)
-    jedis:
-      pool:
-        max-wait: 5000
-        max-idle: 20
-        max-active: 100
-        min-idle: 0
+  data:
+    redis:
+      host: ENC(hOL0LX7EFVBNlLXqSaZV2rYKC2vcPGJ7)
+      # host: r-d7obmf3lmgs0hpph5n.redis.eu-west-1.rds.aliyuncs.com
+      port: 6379
+      password: ENC(5w2StO4dbBR/gLwjK0uuomVfN5vORxJn3GW5nPsIucDgD7TvGnMfVw==)
+      # password: ENC(o6UKSKlETx2g13HH0nsWttoQSvW0+OF/7/DcHo2lc0FOlf03x8jzTgB1khTUODtXRMzG2/PK8uQ=)
+      jedis:
+        pool:
+          max-wait: 5000
+          max-idle: 20
+          max-active: 100
+          min-idle: 0
   datasource:
     url: jdbc:mysql://172.19.0.128:3306/opscloud4-prod?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: opscloud4
