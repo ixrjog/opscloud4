@@ -1,14 +1,12 @@
 package com.baiyi.opscloud.domain.param;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Max;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import javax.validation.constraints.Max;
 
 /**
  * @Author baiyi
@@ -19,15 +17,15 @@ import javax.validation.constraints.Max;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@ApiModel
+@Schema
 public class SuperPageParam {
 
-    @ApiModelProperty(value = "分页页码")
+    @Schema(name = "分页页码")
     @Builder.Default
     private Integer page = 1;
 
     @Max(value = 1024, message = "分页查询最大限制1024条记录")
-    @ApiModelProperty(value = "分页页长", example = "10")
+    @Schema(name = "分页页长", example = "10")
     private Integer length;
 
 }

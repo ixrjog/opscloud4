@@ -9,7 +9,7 @@ import com.baiyi.opscloud.service.alert.AlertNotifyEventService;
 import com.baiyi.opscloud.service.alert.AlertNotifyHistoryService;
 import org.springframework.beans.factory.InitializingBean;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 

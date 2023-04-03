@@ -1,17 +1,15 @@
 package com.baiyi.opscloud.domain.param.server;
 
 import com.baiyi.opscloud.domain.base.IAllowOrder;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 /**
  * @Author baiyi
@@ -25,13 +23,13 @@ public class ServerGroupParam {
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class ServerGroupPageQuery extends SuperPageParam implements IExtend, IAllowOrder {
 
-        @ApiModelProperty(value = "组名")
+        @Schema(name = "组名")
         private String name;
 
-        @ApiModelProperty(value = "组类型")
+        @Schema(name = "组类型")
         private Integer serverGroupTypeId;
 
         private Boolean extend;
@@ -43,17 +41,17 @@ public class ServerGroupParam {
     @Data
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class UserPermissionServerGroupPageQuery extends PageParam implements IExtend {
 
-        @ApiModelProperty(value = "组名")
+        @Schema(name = "组名")
         private String queryName;
 
-        @ApiModelProperty(value = "用户id")
+        @Schema(name = "用户id")
         @NotNull(message = "用户id不能为空")
         private Integer userId;
 
-        @ApiModelProperty(value = "是否授权")
+        @Schema(name = "是否授权")
         @NotNull(message = "是否授权选项不能为空")
         private Boolean authorized;
 
@@ -65,15 +63,15 @@ public class ServerGroupParam {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class UserServerTreeQuery {
 
         private Integer userId;
 
-        @ApiModelProperty(value = "查询名称")
+        @Schema(name = "查询名称")
         private String name;
 
-        @ApiModelProperty(value = "服务器组类型", example = "1")
+        @Schema(name = "服务器组类型", example = "1")
         private Integer serverGroupTypeId;
 
         private Boolean isAdmin;
@@ -86,17 +84,16 @@ public class ServerGroupParam {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class ServerGroupEnvHostPatternQuery {
 
-        @ApiModelProperty(value = "环境类型")
+        @Schema(name = "环境类型")
         private Integer envType;
 
-        @ApiModelProperty(value = "服务器组名称")
+        @Schema(name = "服务器组名称")
         @NotBlank
         private String serverGroupName;
 
     }
-
 
 }

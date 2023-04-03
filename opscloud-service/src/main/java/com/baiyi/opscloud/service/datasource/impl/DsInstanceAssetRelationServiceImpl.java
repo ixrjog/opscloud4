@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.datasource.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
-import com.baiyi.opscloud.mapper.opscloud.DatasourceInstanceAssetRelationMapper;
+import com.baiyi.opscloud.mapper.DatasourceInstanceAssetRelationMapper;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

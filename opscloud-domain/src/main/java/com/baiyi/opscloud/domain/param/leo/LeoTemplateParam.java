@@ -3,13 +3,11 @@ package com.baiyi.opscloud.domain.param.leo;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 /**
  * @Author baiyi
@@ -23,19 +21,19 @@ public class LeoTemplateParam {
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class TemplatePageQuery extends SuperPageParam implements IExtend {
 
-        @ApiModelProperty(value = "名称")
+        @Schema(name = "名称")
         private String queryName;
 
-        @ApiModelProperty(value = "有效")
+        @Schema(name = "有效")
         private Boolean isActive;
 
-        @ApiModelProperty(value = "标签ID")
+        @Schema(name = "标签ID")
         private Integer tagId;
 
-        @ApiModelProperty(value = "数据源实例UUID")
+        @Schema(name = "数据源实例UUID")
         private String instanceUuid;
 
         private final Integer businessType = BusinessTypeEnum.LEO_TEMPLATE.getType();
@@ -48,34 +46,35 @@ public class LeoTemplateParam {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @Schema
     public static class AddTemplate {
 
         private Integer id;
 
         @NotEmpty(message = "名称不能为空")
-        @ApiModelProperty(value = "名称")
+        @Schema(name = "名称")
         private String name;
 
-        @ApiModelProperty(value = "实例UUID")
+        @Schema(name = "实例UUID")
         private String jenkinsInstanceUuid;
 
-        @ApiModelProperty(value = "模板名称")
+        @Schema(name = "模板名称")
         private String templateName;
 
         @NotEmpty(message = "模板配置不能为空")
-        @ApiModelProperty(value = "模板配置")
+        @Schema(name = "模板配置")
         private String templateConfig;
 
-        @ApiModelProperty(value = "模板参数")
+        @Schema(name = "模板参数")
         private String templateParameter;
 
-        @ApiModelProperty(value = "模板内容")
+        @Schema(name = "模板内容")
         private String templateContent;
 
-        @ApiModelProperty(value = "有效")
+        @Schema(name = "有效")
         private Boolean isActive;
 
-        @ApiModelProperty(value = "描述")
+        @Schema(name = "描述")
         private String comment;
 
     }
@@ -84,34 +83,35 @@ public class LeoTemplateParam {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @Schema
     public static class UpdateTemplate {
 
         private Integer id;
 
         @NotEmpty(message = "名称不能为空")
-        @ApiModelProperty(value = "名称")
+        @Schema(name = "名称")
         private String name;
 
-        @ApiModelProperty(value = "实例UUID")
+        @Schema(name = "实例UUID")
         private String jenkinsInstanceUuid;
 
-        @ApiModelProperty(value = "模板名称")
+        @Schema(name = "模板名称")
         private String templateName;
 
         @NotEmpty(message = "模板配置不能为空")
-        @ApiModelProperty(value = "模板配置")
+        @Schema(name = "模板配置")
         private String templateConfig;
 
-        @ApiModelProperty(value = "模板参数")
+        @Schema(name = "模板参数")
         private String templateParameter;
 
-        @ApiModelProperty(value = "模板内容")
+        @Schema(name = "模板内容")
         private String templateContent;
 
-        @ApiModelProperty(value = "有效")
+        @Schema(name = "有效")
         private Boolean isActive;
 
-        @ApiModelProperty(value = "描述")
+        @Schema(name = "描述")
         private String comment;
 
     }
@@ -120,10 +120,11 @@ public class LeoTemplateParam {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @Schema
     public static class UpgradeJobTemplate {
 
         @NotNull(message = "模板ID不能为空")
-        @ApiModelProperty(value = "模板ID")
+        @Schema(name = "模板ID")
         private Integer templateId;
 
     }

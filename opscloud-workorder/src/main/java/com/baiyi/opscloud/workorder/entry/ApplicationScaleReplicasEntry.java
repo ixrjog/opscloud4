@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.workorder.entry;
 
 import com.baiyi.opscloud.common.util.JSONUtil;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,10 +24,10 @@ public class ApplicationScaleReplicasEntry {
 
         private static final long serialVersionUID = -2057324997536563597L;
 
-        @ApiModelProperty(value = "数据实例UUID")
+        @Schema(name = "数据实例UUID")
         private String instanceUuid;
 
-        @ApiModelProperty(value = "namespace:deployment")
+        @Schema(name = "namespace:deployment")
         private String name;
 
         private String namespace;

@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.domain.vo.user;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,16 +17,16 @@ public class UserProfileVO {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Profiles {
 
-        @ApiModelProperty(value = "用户名")
+        @Schema(name = "用户名")
         private String username;
 
-        @ApiModelProperty(value = "用户ID")
+        @Schema(name = "用户ID")
         private Integer userId;
 
-        @ApiModelProperty(value = "终端设置")
+        @Schema(name = "终端设置")
         @Builder.Default
         private Terminal terminal = Terminal.builder().build();
 
@@ -37,13 +36,13 @@ public class UserProfileVO {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Terminal {
 
-        @ApiModelProperty(value = "主题")
+        @Schema(name = "主题")
         @Builder.Default
         private Theme theme = Theme.builder().build();
-        @ApiModelProperty(value = "行数")
+        @Schema(name = "行数")
         @Builder.Default
         private Integer rows = 30;
 
@@ -53,18 +52,18 @@ public class UserProfileVO {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Theme {
 
-        @ApiModelProperty(value = "字体颜色")
+        @Schema(name = "字体颜色")
         @Builder.Default
         private String foreground = "#090909";
 
-        @ApiModelProperty(value = "背景色")
+        @Schema(name = "背景色")
         @Builder.Default
         private String background = "#FFFFFF";
 
-        @ApiModelProperty(value = "光标色")
+        @Schema(name = "光标色")
         @Builder.Default
         private String cursor = "#090909";
 

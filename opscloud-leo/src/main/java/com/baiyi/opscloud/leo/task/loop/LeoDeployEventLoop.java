@@ -7,7 +7,7 @@ import com.baiyi.opscloud.leo.message.handler.base.ILeoContinuousDeliveryRequest
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import java.util.Map;
 
 /**

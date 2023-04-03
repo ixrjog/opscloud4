@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.user.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.UserProfile;
-import com.baiyi.opscloud.mapper.opscloud.UserProfileMapper;
+import com.baiyi.opscloud.mapper.UserProfileMapper;
 import com.baiyi.opscloud.service.user.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

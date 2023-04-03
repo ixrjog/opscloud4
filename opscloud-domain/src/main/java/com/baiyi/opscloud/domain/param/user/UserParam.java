@@ -8,8 +8,7 @@ import com.baiyi.opscloud.domain.param.IFilterTag;
 import com.baiyi.opscloud.domain.param.PageParam;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -24,44 +23,44 @@ public class UserParam {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class UpdateUser {
 
         private Integer id;
 
-        @ApiModelProperty(value = "用户名")
+        @Schema(name = "用户名")
         private String username;
 
-        @ApiModelProperty(value = "前端框架用户UUID")
+        @Schema(name = "前端框架用户UUID")
         private String uuid;
 
-        @ApiModelProperty(value = "密码")
+        @Schema(name = "密码")
         private String password;
 
-        @ApiModelProperty(value = "姓名")
+        @Schema(name = "姓名")
         private String name;
 
-        @ApiModelProperty(value = "显示名")
+        @Schema(name = "显示名")
         private String displayName;
 
-        @ApiModelProperty(value = "邮箱")
+        @Schema(name = "邮箱")
         private String email;
 
         private Boolean isActive;
 
         private String wechat;
 
-        @ApiModelProperty(value = "手机")
+        @Schema(name = "手机")
         private String phone;
 
-        @ApiModelProperty(value = "启用MFA")
+        @Schema(name = "启用MFA")
         private Boolean mfa;
 
         private Boolean forceMfa;
 
         private String createdBy;
 
-        @ApiModelProperty(value = "数据源")
+        @Schema(name = "数据源")
         private String source;
 
         private String comment;
@@ -72,7 +71,7 @@ public class UserParam {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class CreateUser implements BusinessAssetRelationVO.IBusinessAssetRelation {
 
         private final Integer businessType = BusinessTypeEnum.USER.getType();
@@ -91,43 +90,43 @@ public class UserParam {
 
         private Integer id;
 
-        @ApiModelProperty(value = "初始化默认配置", example = "false")
+        @Schema(name = "初始化默认配置", example = "false")
         private Boolean needInitializeDefaultConfiguration;
 
-        @ApiModelProperty(value = "用户名")
+        @Schema(name = "用户名")
         private String username;
 
-        @ApiModelProperty(value = "前端框架用户UUID")
+        @Schema(name = "前端框架用户UUID")
         private String uuid;
 
-        @ApiModelProperty(value = "密码")
+        @Schema(name = "密码")
         private String password;
 
-        @ApiModelProperty(value = "姓名")
+        @Schema(name = "姓名")
         private String name;
 
-        @ApiModelProperty(value = "显示名")
+        @Schema(name = "显示名")
         private String displayName;
 
-        @ApiModelProperty(value = "邮箱")
+        @Schema(name = "邮箱")
         private String email;
 
         private final Boolean isActive = true;
 
         private String wechat;
 
-        @ApiModelProperty(value = "手机")
+        @Schema(name = "手机")
         private String phone;
 
-        @ApiModelProperty(value = "启用MFA")
+        @Schema(name = "启用MFA")
         private final Boolean mfa = false;
 
-        @ApiModelProperty(value = "强制启用MFA")
+        @Schema(name = "强制启用MFA")
         private final Boolean forceMfa = false;
 
         private String createdBy;
 
-        @ApiModelProperty(value = "数据源")
+        @Schema(name = "数据源")
         private String source;
 
         private String comment;
@@ -139,26 +138,26 @@ public class UserParam {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class UserPageQuery extends PageParam implements IFilterTag, BaseBusiness.IBusinessType, IExtend {
 
         private final Integer businessType = BusinessTypeEnum.USER.getType();
 
         private final String FILTER_SYSTEM_TAG = TagConstants.SYSTEM.getTag();
 
-        @ApiModelProperty(value = "模糊查询")
+        @Schema(name = "模糊查询")
         private String queryName;
 
-        @ApiModelProperty(value = "过滤系统标签对象")
+        @Schema(name = "过滤系统标签对象")
         private Boolean filterTag;
 
-        @ApiModelProperty(value = "展开")
+        @Schema(name = "展开")
         private Boolean extend;
 
-        @ApiModelProperty(value = "有效")
+        @Schema(name = "有效")
         private Boolean isActive;
 
-        @ApiModelProperty(value = "标签ID")
+        @Schema(name = "标签ID")
         private Integer tagId;
 
     }
@@ -168,17 +167,17 @@ public class UserParam {
     @SuperBuilder(toBuilder = true)
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class EmployeeResignPageQuery extends SuperPageParam {
 
         private final Integer businessType = BusinessTypeEnum.USER.getType();
 
         private final String FILTER_SYSTEM_TAG = TagConstants.SYSTEM.getTag();
 
-        @ApiModelProperty(value = "模糊查询")
+        @Schema(name = "模糊查询")
         private String queryName;
 
-        @ApiModelProperty(value = "过滤系统标签对象")
+        @Schema(name = "过滤系统标签对象")
         private Boolean filterTag;
 
     }

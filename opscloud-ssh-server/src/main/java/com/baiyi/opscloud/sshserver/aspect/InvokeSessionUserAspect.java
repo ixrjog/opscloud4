@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.ExitRequest;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

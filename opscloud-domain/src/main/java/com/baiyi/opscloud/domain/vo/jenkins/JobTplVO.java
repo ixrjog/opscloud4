@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.vo.jenkins;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -23,7 +23,7 @@ public class JobTplVO {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class JobTpl {
 
         private Integer id;

@@ -2,8 +2,7 @@ package com.baiyi.opscloud.domain.vo.base;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +23,7 @@ public class ReportVO {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Report implements Serializable {
         private static final long serialVersionUID = -2683596358424500001L;
         private String cName;
@@ -34,7 +33,7 @@ public class ReportVO {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class CommonReport {
         private String cName;
         private Integer value0;
@@ -49,7 +48,7 @@ public class ReportVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class MonthlyReport implements Serializable {
 
         private static final long serialVersionUID = -7788541472908274625L;
@@ -73,10 +72,10 @@ public class ReportVO {
             return this;
         }
 
-        @ApiModelProperty(value = "月份")
+        @Schema(name = "月份")
         private List<String> dateCat;
 
-        @ApiModelProperty(value = "月度统计数据")
+        @Schema(name = "月度统计数据")
         @Builder.Default
         private Map<String, List<Integer>> valueMap = Maps.newHashMap();
 
@@ -89,15 +88,15 @@ public class ReportVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class MonthReport implements Serializable {
 
         private static final long serialVersionUID = 2165068012664529432L;
 
-        @ApiModelProperty(value = "日期(月)")
+        @Schema(name = "日期(月)")
         private List<String> dateCat;
 
-        @ApiModelProperty(value = "月度统计")
+        @Schema(name = "月度统计")
         private List<Integer> values;
 
         public static ReportVO.MonthReport buildMonthReport(List<ReportVO.Report> reports) {

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.aliyun.acr.driver.base;
 
 import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

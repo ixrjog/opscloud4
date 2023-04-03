@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.domain.vo.workorder;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +19,7 @@ public class WorkOrderReportVO {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Report {
         private String cName;
         private Integer value;
@@ -31,14 +30,14 @@ public class WorkOrderReportVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class MonthReport implements Serializable {
         private static final long serialVersionUID = -7642429717526988404L;
 
-        @ApiModelProperty(value = "日期")
+        @Schema(name = "日期")
         private List<String> dateCat;
 
-        @ApiModelProperty(value = "工单名称月度统计")
+        @Schema(name = "工单名称月度统计")
         private Map<String, MonthStatistics> nameCat;
     }
 
@@ -46,15 +45,15 @@ public class WorkOrderReportVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class MonthStatistics implements Serializable {
 
         private static final long serialVersionUID = -4917800861585712502L;
 
-        @ApiModelProperty(value = "月度统计")
+        @Schema(name = "月度统计")
         private List<Integer> values;
 
-        @ApiModelProperty(value = "类目颜色")
+        @Schema(name = "类目颜色")
         private String color;
 
     }

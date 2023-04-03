@@ -1,11 +1,10 @@
 package com.baiyi.opscloud.domain.param.server;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
@@ -14,24 +13,24 @@ import java.util.Set;
  * @Version 1.0
  */
 public class SeverGroupPropertyParam {
-
-
+    
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class PropertyParam {
 
-        @ApiModelProperty(value = "服务器组id")
+        @Schema(name = "服务器组id")
         @NotNull
         private Integer serverGroupId;
 
-        @ApiModelProperty(value = "属性名称")
+        @Schema(name = "属性名称")
         @NotNull
         private Set<String> propertyNameSet;
 
-        @ApiModelProperty(value = "环境类型",example = "-1")
+        @Schema(name = "环境类型",example = "-1")
         @NotNull
         private Integer envType;
 
     }
+    
 }

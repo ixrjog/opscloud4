@@ -7,7 +7,7 @@ import com.baiyi.opscloud.datasource.jenkins.status.JenkinsBuildExecutorStatusVO
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import java.io.IOException;
 
 /**

@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.datasource.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.AliyunLogMember;
 import com.baiyi.opscloud.domain.param.datasource.AliyunLogMemberParam;
-import com.baiyi.opscloud.mapper.opscloud.AliyunLogMemberMapper;
+import com.baiyi.opscloud.mapper.AliyunLogMemberMapper;
 import com.baiyi.opscloud.service.datasource.AliyunLogMemberService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;

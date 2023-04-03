@@ -11,7 +11,7 @@ import io.fabric8.kubernetes.api.model.apps.Deployment;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

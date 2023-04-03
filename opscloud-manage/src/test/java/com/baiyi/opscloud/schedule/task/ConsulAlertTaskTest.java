@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.annotation.TaskWatch;
 import com.baiyi.opscloud.facade.task.ConsulAlertFacade;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

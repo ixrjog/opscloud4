@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.jenkins.model;
 
 import com.google.common.collect.Lists;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 import java.util.List;
 
 @XmlRootElement(name = "parameterDefinitions")

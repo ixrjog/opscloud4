@@ -1,14 +1,12 @@
 package com.baiyi.opscloud.domain.param.datasource;
 
 import com.baiyi.opscloud.domain.param.IExtend;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.Valid;
 
 /**
  * @Author baiyi
@@ -21,13 +19,13 @@ public class DsInstanceParam {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class DsInstanceQuery implements IExtend {
 
-        @ApiModelProperty(value = "数据源类型")
+        @Schema(name = "数据源类型")
         private String instanceType;
 
-        @ApiModelProperty(value = "有效")
+        @Schema(name = "有效")
         @Builder.Default
         private Boolean isActive = true;
 
@@ -37,34 +35,34 @@ public class DsInstanceParam {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class RegisterDsInstance {
 
         private Integer id;
 
-        @ApiModelProperty(value = "数据源实例名称")
+        @Schema(name = "数据源实例名称")
         @Valid
         private String instanceName;
 
         private String uuid;
 
-        @ApiModelProperty(value = "数据源实例分类")
+        @Schema(name = "数据源实例分类")
         private String kind;
 
-        @ApiModelProperty(value = "数据源实例类型")
+        @Schema(name = "数据源实例类型")
         @Valid
         private String instanceType;
 
-        @ApiModelProperty(value = "数据源配置id", example = "1")
+        @Schema(name = "数据源配置id", example = "1")
         private Integer configId;
 
-        @ApiModelProperty(value = "父实例id", example = "1")
+        @Schema(name = "父实例id", example = "1")
         private Integer parentId;
 
-        @ApiModelProperty(value = "有效")
+        @Schema(name = "有效")
         private Boolean isActive;
 
-        @ApiModelProperty(value = "描述")
+        @Schema(name = "描述")
         private String comment;
 
     }

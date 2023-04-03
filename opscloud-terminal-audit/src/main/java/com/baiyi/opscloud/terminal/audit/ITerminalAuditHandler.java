@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.terminal.audit;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 
 /**
  * @Author baiyi

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.vo.base;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.Date;
@@ -14,11 +14,11 @@ import java.util.Date;
 @Data
 public class BaseVO {
 
-    @ApiModelProperty(value = "创建时间")
+    @Schema(name = "创建时间")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
-    @ApiModelProperty(value = "更新时间")
+    @Schema(name = "更新时间")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 

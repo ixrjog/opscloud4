@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.vo.workorder;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,7 +16,7 @@ public class WorkOrderViewVO {
 
     @Builder
     @Data
-    @ApiModel
+    @Schema
     public static class View implements Serializable {
         private static final long serialVersionUID = -69191171719476360L;
         private List<WorkOrderVO.Group> workOrderGroups;

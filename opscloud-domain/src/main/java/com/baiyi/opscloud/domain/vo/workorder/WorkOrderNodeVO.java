@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.vo.workorder;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +20,7 @@ public class WorkOrderNodeVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
-    @ApiModel
+    @Schema
     public static class NodeView implements Serializable {
 
         private static final long serialVersionUID = 466008285525003198L;
@@ -32,7 +32,7 @@ public class WorkOrderNodeVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
-    @ApiModel
+    @Schema
     public static class Stage implements Serializable {
 
         private static final long serialVersionUID = 1606626459378798989L;
@@ -52,7 +52,7 @@ public class WorkOrderNodeVO {
 
     @Builder
     @Data
-    @ApiModel
+    @Schema
     public static class PopInfo implements Serializable {
         private static final long serialVersionUID = 4493746212394051044L;
 

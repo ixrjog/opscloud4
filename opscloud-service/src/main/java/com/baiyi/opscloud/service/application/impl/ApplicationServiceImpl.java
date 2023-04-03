@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
-import com.baiyi.opscloud.mapper.opscloud.ApplicationMapper;
+import com.baiyi.opscloud.mapper.ApplicationMapper;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

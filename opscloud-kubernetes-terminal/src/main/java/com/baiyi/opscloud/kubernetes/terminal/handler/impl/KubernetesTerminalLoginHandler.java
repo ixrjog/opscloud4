@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 
 /**
  * @Author baiyi
@@ -27,7 +27,8 @@ import javax.websocket.Session;
  */
 @Slf4j
 @Component
-public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMessageHandler<KubernetesMessage.Login> implements ITerminalMessageHandler {
+public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMessageHandler<KubernetesMessage.Login>
+        implements ITerminalMessageHandler {
 
     public interface SessionType {
         String CONTAINER_LOG = "CONTAINER_LOG";

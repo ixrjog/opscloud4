@@ -11,7 +11,7 @@ import com.baiyi.opscloud.datasource.aws.ec2.model.InstanceModel;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.service.datasource.impl;
 
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
-import com.baiyi.opscloud.mapper.opscloud.DatasourceInstanceAssetPropertyMapper;
+import com.baiyi.opscloud.mapper.DatasourceInstanceAssetPropertyMapper;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

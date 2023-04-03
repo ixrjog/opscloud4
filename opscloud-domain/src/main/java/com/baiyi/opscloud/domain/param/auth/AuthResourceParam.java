@@ -3,9 +3,11 @@ package com.baiyi.opscloud.domain.param.auth;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -20,16 +22,16 @@ public class AuthResourceParam {
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class AuthResourcePageQuery extends SuperPageParam implements IExtend {
 
-        @ApiModelProperty(value = "资源组id")
+        @Schema(name = "资源组id")
         private Integer groupId;
 
-        @ApiModelProperty(value = "资源路径")
+        @Schema(name = "资源路径")
         private String resourceName;
 
-        @ApiModelProperty(value = "鉴权")
+        @Schema(name = "鉴权")
         private Boolean needAuth;
 
         @Override
@@ -42,17 +44,17 @@ public class AuthResourceParam {
     @Data
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class RoleBindResourcePageQuery extends PageParam {
 
-        @ApiModelProperty(value = "资源组id")
+        @Schema(name = "资源组id")
         private Integer groupId;
 
-        @ApiModelProperty(value = "资源id")
+        @Schema(name = "资源id")
         private Integer roleId;
 
 
-        @ApiModelProperty(value = "是否绑定")
+        @Schema(name = "是否绑定")
         private Boolean bind;
 
     }

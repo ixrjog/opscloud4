@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthPlatformLog;
 import com.baiyi.opscloud.domain.param.auth.AuthPlatformParam;
-import com.baiyi.opscloud.mapper.opscloud.AuthPlatformLogMapper;
+import com.baiyi.opscloud.mapper.AuthPlatformLogMapper;
 import com.baiyi.opscloud.service.auth.AuthPlatformLogService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;

@@ -9,8 +9,8 @@ import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
-import com.baiyi.opscloud.factory.gitlab.GitlabEventConsumerFactory;
-import com.baiyi.opscloud.factory.gitlab.IGitlabEventConsumer;
+import com.baiyi.opscloud.factory.gitlab.GitLabEventConsumerFactory;
+import com.baiyi.opscloud.factory.gitlab.IGitLabEventConsumer;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +54,7 @@ public class GitlabFacade extends BaseManager {
             // 数据源配置文件未配置 SystemHooks.SecretToken
             return;
         }
-        IGitlabEventConsumer eventConsume = GitlabEventConsumerFactory.getByEventName(systemHook.getEvent_name());
+        IGitLabEventConsumer eventConsume = GitLabEventConsumerFactory.getByEventName(systemHook.getEvent_name());
         if (eventConsume != null) {
             eventConsume.consumeEventV4(optional.get(), systemHook);
         }

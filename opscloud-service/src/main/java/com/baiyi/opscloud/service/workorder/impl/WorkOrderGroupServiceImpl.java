@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.workorder.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderGroup;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderGroupParam;
-import com.baiyi.opscloud.mapper.opscloud.WorkOrderGroupMapper;
+import com.baiyi.opscloud.mapper.WorkOrderGroupMapper;
 import com.baiyi.opscloud.service.workorder.WorkOrderGroupService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

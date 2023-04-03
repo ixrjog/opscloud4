@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.workorder.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
-import com.baiyi.opscloud.mapper.opscloud.WorkOrderTicketEntryMapper;
+import com.baiyi.opscloud.mapper.WorkOrderTicketEntryMapper;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketEntryService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;

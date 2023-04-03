@@ -10,7 +10,7 @@ import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.*;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

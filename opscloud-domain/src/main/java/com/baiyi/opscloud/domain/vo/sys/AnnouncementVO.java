@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.vo.sys;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +19,7 @@ public class AnnouncementVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Announcement implements Serializable {
 
         private static final long serialVersionUID = 4557571372190214188L;

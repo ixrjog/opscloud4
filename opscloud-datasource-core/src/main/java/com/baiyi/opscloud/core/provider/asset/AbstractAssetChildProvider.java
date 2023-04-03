@@ -9,7 +9,7 @@ import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.google.common.collect.Sets;
 import org.springframework.aop.support.AopUtils;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Set;
 

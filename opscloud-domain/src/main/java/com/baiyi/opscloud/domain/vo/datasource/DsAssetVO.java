@@ -6,8 +6,7 @@ import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessRelationVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -42,13 +41,13 @@ public class DsAssetVO {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Asset extends BaseVO implements TagVO.ITags, BusinessRelationVO.IRelations {
 
         private List<TagVO.Tag> tags;
         private final Integer businessType = BusinessTypeEnum.ASSET.getType();
 
-        @ApiModelProperty(value = "此资产可转换为其它业务对象")
+        @Schema(name = "此资产可转换为其它业务对象")
         private Map<BusinessTypeEnum, BusinessAssetRelationVO.IBusinessAssetRelation> convertBusinessTypes;
 
         @Override
@@ -56,13 +55,13 @@ public class DsAssetVO {
             return id;
         }
 
-        @ApiModelProperty(value = "资产属性")
+        @Schema(name = "资产属性")
         private Map<String, String> properties;
 
-        @ApiModelProperty(value = "关系对象(以实体资产存在)")
+        @Schema(name = "关系对象(以实体资产存在)")
         private Map<String, List<DsAssetVO.Asset>> children;
 
-        @ApiModelProperty(value = "子对象(依赖夫对象存在)")
+        @Schema(name = "子对象(依赖夫对象存在)")
         private Map<String, List<DsAssetVO.Asset>> tree;
 
         private DsLoginAssetVO.LoginAsset loginAsset;

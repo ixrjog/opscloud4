@@ -13,7 +13,7 @@ import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.user.UserGroupVO;
 import com.baiyi.opscloud.factory.business.base.AbstractBusinessService;
-import com.baiyi.opscloud.mapper.opscloud.UserGroupMapper;
+import com.baiyi.opscloud.mapper.UserGroupMapper;
 import com.baiyi.opscloud.service.user.UserGroupService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;

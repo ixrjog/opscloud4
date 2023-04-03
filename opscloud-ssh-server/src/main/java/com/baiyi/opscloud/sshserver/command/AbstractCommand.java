@@ -24,7 +24,7 @@ import com.baiyi.opscloud.sshserver.command.properties.CommandProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.shell.Availability;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

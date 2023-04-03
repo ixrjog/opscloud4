@@ -7,7 +7,7 @@ import com.baiyi.opscloud.datasource.message.LXHLMessageResponse;
 import com.baiyi.opscloud.datasource.message.driver.LXHLMessageDriver;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author 修远

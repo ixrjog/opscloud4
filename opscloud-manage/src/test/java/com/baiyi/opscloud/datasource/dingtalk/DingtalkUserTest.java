@@ -6,7 +6,7 @@ import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkUser;
 import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkUserParam;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

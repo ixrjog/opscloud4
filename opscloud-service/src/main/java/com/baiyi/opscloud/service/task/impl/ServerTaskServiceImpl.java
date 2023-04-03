@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.task.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerTask;
 import com.baiyi.opscloud.domain.param.task.ServerTaskParam;
-import com.baiyi.opscloud.mapper.opscloud.ServerTaskMapper;
+import com.baiyi.opscloud.mapper.ServerTaskMapper;
 import com.baiyi.opscloud.service.task.ServerTaskService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;

@@ -9,7 +9,7 @@ import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractUserPermissi
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * 应用权限申请工单票据处理

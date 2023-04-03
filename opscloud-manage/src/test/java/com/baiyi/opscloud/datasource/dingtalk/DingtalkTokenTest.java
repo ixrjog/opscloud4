@@ -5,7 +5,7 @@ import com.baiyi.opscloud.datasource.dingtalk.driver.DingtalkTokenDriver;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkToken;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

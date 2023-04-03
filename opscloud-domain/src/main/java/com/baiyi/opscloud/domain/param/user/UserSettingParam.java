@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.domain.param.user;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,13 +15,13 @@ public class UserSettingParam {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class UserSetting {
 
-        @ApiModelProperty(value = "组名称")
+        @Schema(name = "组名称")
         private String settingGroup;
 
-        @ApiModelProperty(value = "用户设置项")
+        @Schema(name = "用户设置项")
         private Map<String, String> settingMap;
 
     }

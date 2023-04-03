@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.common.datasource;
 
-import com.baiyi.opscloud.domain.alert.AlertRuleMatchExpression;
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
-import io.swagger.annotations.ApiModel;
+import com.baiyi.opscloud.domain.alert.AlertRuleMatchExpression;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -22,7 +22,7 @@ public class ConsulConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Consul {
 
         private String version;

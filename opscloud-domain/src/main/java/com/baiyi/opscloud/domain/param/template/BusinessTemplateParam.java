@@ -2,12 +2,10 @@ package com.baiyi.opscloud.domain.param.template;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 /**
  * @Author baiyi
@@ -21,20 +19,20 @@ public class BusinessTemplateParam {
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class BusinessTemplatePageQuery extends PageParam implements IExtend {
 
-        @ApiModelProperty(value = "实例UUID")
+        @Schema(name = "实例UUID")
         @NotNull(message = "必须指定实例UUID")
         private String instanceUuid;
 
-        @ApiModelProperty(value = "关键字查询")
+        @Schema(name = "关键字查询")
         private String queryName;
 
-        @ApiModelProperty(value = "环境类型")
+        @Schema(name = "环境类型")
         private Integer envType;
 
-        @ApiModelProperty(value = "展开数据")
+        @Schema(name = "展开数据")
         private Boolean extend;
     }
 
@@ -42,16 +40,16 @@ public class BusinessTemplateParam {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class BusinessTemplate {
 
         private Integer id;
-        @ApiModelProperty(value = "实例UUID")
+        @Schema(name = "实例UUID")
         @NotBlank(message = "必须指定实例UUID")
         private String instanceUuid;
-        @ApiModelProperty(value = "环境类型")
+        @Schema(name = "环境类型")
         private Integer envType;
-        @ApiModelProperty(value = "业务模板名称，不填写则自动生成")
+        @Schema(name = "业务模板名称，不填写则自动生成")
         private String name;
         private Integer businessType;
         private Integer businessId;

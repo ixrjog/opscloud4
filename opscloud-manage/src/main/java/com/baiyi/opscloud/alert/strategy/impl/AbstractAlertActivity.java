@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.AlertNotifyEvent;
 import com.baiyi.opscloud.service.alert.AlertNotifyEventService;
 import org.springframework.beans.factory.InitializingBean;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.vo.sys;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class DocumentVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Doc implements Serializable {
 
         private static final long serialVersionUID = -6463097211186364301L;
@@ -37,7 +37,7 @@ public class DocumentVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class DocZone implements Serializable {
 
         private static final long serialVersionUID = 4925220340334652936L;
@@ -56,7 +56,7 @@ public class DocumentVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Document implements Serializable {
 
         private static final long serialVersionUID = -1872814592253368098L;
@@ -78,7 +78,7 @@ public class DocumentVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Zone implements Serializable {
 
         private static final long serialVersionUID = 4925220340334652936L;

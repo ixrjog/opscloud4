@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.domain.vo.workevent;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,15 +21,15 @@ public class WorkEventReportVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class WeeklyReport implements Serializable {
 
         private static final long serialVersionUID = -6140886856564417436L;
 
-        @ApiModelProperty(value = "周")
+        @Schema(name = "周")
         private List<String> weeks;
 
-        @ApiModelProperty(value = "周统计数据")
+        @Schema(name = "周统计数据")
         private Map<String, WeeklyStatistics> valueMap;
 
 
@@ -40,15 +39,15 @@ public class WorkEventReportVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class WeeklyStatistics implements Serializable {
 
         private static final long serialVersionUID = -6140886856564417436L;
 
-        @ApiModelProperty(value = "周统计")
+        @Schema(name = "周统计")
         private List<Integer> values;
 
-        @ApiModelProperty(value = "类目颜色")
+        @Schema(name = "类目颜色")
         private String color;
 
 
@@ -58,7 +57,7 @@ public class WorkEventReportVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class ItemReport implements Serializable {
 
         private static final long serialVersionUID = -64254441708424804L;

@@ -9,7 +9,7 @@ import com.baiyi.opscloud.event.consumer.IEventConsumer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.annotation.Async;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 

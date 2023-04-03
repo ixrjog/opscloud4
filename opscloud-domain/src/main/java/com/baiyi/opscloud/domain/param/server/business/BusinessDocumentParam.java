@@ -1,8 +1,7 @@
 package com.baiyi.opscloud.domain.param.server.business;
 
 import com.baiyi.opscloud.domain.base.BaseBusiness;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,31 +20,31 @@ public class BusinessDocumentParam {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Document implements BaseBusiness.IBusiness, Serializable {
 
         private static final long serialVersionUID = 6050583884005972339L;
 
-        @ApiModelProperty(value = "业务对象显示名称")
+        @Schema(name = "业务对象显示名称")
         private String displayName;
 
         private Integer id;
 
-        @ApiModelProperty(value = "业务类型")
+        @Schema(name = "业务类型")
         private Integer businessType;
 
-        @ApiModelProperty(value = "业务ID")
+        @Schema(name = "业务ID")
         private Integer businessId;
 
-        @ApiModelProperty(value = "文档类型")
+        @Schema(name = "文档类型")
         private Integer documentType;
 
         private String comment;
 
-        @ApiModelProperty(value = "文档")
+        @Schema(name = "文档")
         private String doc;
 
-        @ApiModelProperty(value = "文档原内容")
+        @Schema(name = "文档原内容")
         private String content;
 
     }

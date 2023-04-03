@@ -3,7 +3,7 @@ package com.baiyi.opscloud.common.datasource;
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.google.common.base.Joiner;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -21,7 +21,7 @@ public class LdapConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Ldap {
 
         private static final String RDN = "%s=%s";
@@ -44,7 +44,7 @@ public class LdapConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class LdapManage {
         private String dn;  // 管理员账户
         private String password; // 管理员账户密码
@@ -52,14 +52,14 @@ public class LdapConfig extends BaseDsConfig {
 
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class LdapUser extends BaseLdapObject {
     }
 
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class LdapGroup extends BaseLdapObject {
         private String memberAttribute;
         private String memberFormat;
@@ -67,7 +67,7 @@ public class LdapConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class BaseLdapObject {
         private String id;
         private String dn;

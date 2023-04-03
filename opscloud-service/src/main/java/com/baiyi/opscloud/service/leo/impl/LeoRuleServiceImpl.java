@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.leo.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoRule;
 import com.baiyi.opscloud.domain.param.leo.LeoRuleParam;
-import com.baiyi.opscloud.mapper.opscloud.LeoRuleMapper;
+import com.baiyi.opscloud.mapper.LeoRuleMapper;
 import com.baiyi.opscloud.service.leo.LeoRuleService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
+import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetSubscriptionParam;
@@ -8,14 +9,12 @@ import com.baiyi.opscloud.domain.vo.datasource.DsAssetSubscriptionVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
 import com.baiyi.opscloud.facade.datasource.DsInstanceAssetSubscriptionFacade;
-import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 /**
  * @Author baiyi
@@ -24,7 +23,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/datasource/instance")
-@Api(tags = "数据源实例")
+@Tag(name = "数据源实例")
 @RequiredArgsConstructor
 public class DsInstanceController {
 
@@ -34,82 +33,82 @@ public class DsInstanceController {
 
     private final DsInstanceAssetSubscriptionFacade assetSubscriptionFacade;
 
-    @ApiOperation(value = "分页查询数据源资产列表")
+    @Operation(summary = "分页查询数据源资产列表")
     @PostMapping(value = "/asset/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<DsAssetVO.Asset>> queryAssetPage(@RequestBody @Valid DsAssetParam.AssetPageQuery pageQuery) {
         return new HttpResult<>(assetFacade.queryAssetPage(pageQuery));
     }
 
-    @ApiOperation(value = "设置数据源资产是否有效")
+    @Operation(summary = "设置数据源资产是否有效")
     @PutMapping(value = "/asset/active/set", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> setAssetActiveByAssetId(@RequestParam @Valid int assetId) {
         assetFacade.setAssetActiveByAssetId(assetId);
         return HttpResult.SUCCESS;
     }
 
-    @ApiOperation(value = "拉取数据源资产信息")
+    @Operation(summary = "拉取数据源资产信息")
     @PutMapping(value = "/asset/pull", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> pullAsset(@RequestBody DsAssetParam.PullAsset pullAssetParam) {
         instanceFacade.pullAsset(pullAssetParam);
         return HttpResult.SUCCESS;
     }
 
-    @ApiOperation(value = "删除指定的资产")
+    @Operation(summary = "删除指定的资产")
     @DeleteMapping(value = "/asset/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteAssetById(@RequestParam @Valid int id) {
         assetFacade.deleteAssetByAssetId(id);
         return HttpResult.SUCCESS;
     }
 
-    @ApiOperation(value = "设置数据源配置文件")
+    @Operation(summary = "设置数据源配置文件")
     @PutMapping(value = "/asset/set/config", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> setDsInstanceConfig(@RequestBody DsAssetParam.SetDsInstanceConfig setDsInstanceConfig) {
         instanceFacade.setDsInstanceConfig(setDsInstanceConfig);
         return HttpResult.SUCCESS;
     }
 
-    @ApiOperation(value = "扫描资产与业务对象关系")
+    @Operation(summary = "扫描资产与业务对象关系")
     @PutMapping(value = "/asset/business/scan", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> scanAssetBusiness(@RequestBody DsAssetParam.ScanAssetBusiness scanAssetBusiness) {
         instanceFacade.scanAssetBusiness(scanAssetBusiness);
         return HttpResult.SUCCESS;
     }
 
-    @ApiOperation(value = "分页查询数据源资产订阅列表")
+    @Operation(summary = "分页查询数据源资产订阅列表")
     @PostMapping(value = "/asset/subscription/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<DsAssetSubscriptionVO.AssetSubscription>> queryAssetSubscriptionPage(@RequestBody @Valid DsAssetSubscriptionParam.AssetSubscriptionPageQuery pageQuery) {
         return new HttpResult<>(assetSubscriptionFacade.queryAssetSubscriptionPage(pageQuery));
     }
 
-    @ApiOperation(value = "新增数据源资产订阅")
+    @Operation(summary = "新增数据源资产订阅")
     @PostMapping(value = "/asset/subscription/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> addAssetSubscription(@RequestBody @Valid DsAssetSubscriptionVO.AssetSubscription assetSubscription) {
         assetSubscriptionFacade.addAssetSubscription(assetSubscription);
         return HttpResult.SUCCESS;
     }
 
-    @ApiOperation(value = "更新数据源资产订阅")
+    @Operation(summary = "更新数据源资产订阅")
     @PutMapping(value = "/asset/subscription/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> updateAssetSubscription(@RequestBody @Valid DsAssetSubscriptionVO.AssetSubscription assetSubscription) {
         assetSubscriptionFacade.updateAssetSubscription(assetSubscription);
         return HttpResult.SUCCESS;
     }
 
-    @ApiOperation(value = "发布数据源资产订阅")
+    @Operation(summary = "发布数据源资产订阅")
     @PutMapping(value = "/asset/subscription/publish", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> publishAssetSubscription(@RequestParam @Valid int id) {
         assetSubscriptionFacade.publishAssetSubscriptionById(id);
         return HttpResult.SUCCESS;
     }
 
-    @ApiOperation(value = "删除指定的数据源资产订阅")
+    @Operation(summary = "删除指定的数据源资产订阅")
     @DeleteMapping(value = "/asset/subscription/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteAssetSubscriptionById(@RequestParam @Valid int id) {
         assetSubscriptionFacade.deleteAssetSubscriptionById(id);
         return HttpResult.SUCCESS;
     }
 
-    @ApiOperation(value = "推送数据源资产信息")
+    @Operation(summary = "推送数据源资产信息")
     @PutMapping(value = "/asset/push", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> pushAsset(@RequestBody DsAssetParam.PushAsset pushAssetParam) {
         instanceFacade.pushAsset(pushAssetParam);

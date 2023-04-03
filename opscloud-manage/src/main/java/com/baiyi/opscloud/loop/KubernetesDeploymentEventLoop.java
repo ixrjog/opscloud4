@@ -9,7 +9,7 @@ import com.baiyi.opscloud.loop.kubernetes.factory.KubernetesDeploymentMessageHan
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 
 /**
  * @Author baiyi

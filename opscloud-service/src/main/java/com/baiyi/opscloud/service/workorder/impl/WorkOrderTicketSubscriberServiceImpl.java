@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.workorder.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketSubscriber;
-import com.baiyi.opscloud.mapper.opscloud.WorkOrderTicketSubscriberMapper;
+import com.baiyi.opscloud.mapper.WorkOrderTicketSubscriberMapper;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketSubscriberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -4,9 +4,9 @@ import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.google.common.base.Joiner;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
+import jakarta.annotation.Resource;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

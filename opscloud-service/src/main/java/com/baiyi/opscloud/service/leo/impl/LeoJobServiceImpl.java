@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoJobRequestParam;
-import com.baiyi.opscloud.mapper.opscloud.LeoJobMapper;
+import com.baiyi.opscloud.mapper.LeoJobMapper;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

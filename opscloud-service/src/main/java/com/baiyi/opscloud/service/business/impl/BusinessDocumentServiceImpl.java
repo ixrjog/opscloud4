@@ -2,8 +2,7 @@ package com.baiyi.opscloud.service.business.impl;
 
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessDocument;
-import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
-import com.baiyi.opscloud.mapper.opscloud.BusinessDocumentMapper;
+import com.baiyi.opscloud.mapper.BusinessDocumentMapper;
 import com.baiyi.opscloud.service.business.BusinessDocumentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

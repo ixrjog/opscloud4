@@ -13,7 +13,7 @@ import com.baiyi.opscloud.service.user.UserPermissionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

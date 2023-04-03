@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.auth.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.PlatformNotifyHistory;
-import com.baiyi.opscloud.mapper.opscloud.PlatformNotifyHistoryMapper;
+import com.baiyi.opscloud.mapper.PlatformNotifyHistoryMapper;
 import com.baiyi.opscloud.service.auth.PlatformNotifyHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

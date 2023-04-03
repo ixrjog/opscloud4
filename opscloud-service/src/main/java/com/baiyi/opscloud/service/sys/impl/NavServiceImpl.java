@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.sys.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.Nav;
-import com.baiyi.opscloud.mapper.opscloud.NavMapper;
+import com.baiyi.opscloud.mapper.NavMapper;
 import com.baiyi.opscloud.service.sys.NavService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthResource;
 import com.baiyi.opscloud.domain.param.auth.AuthResourceParam;
-import com.baiyi.opscloud.mapper.opscloud.AuthResourceMapper;
+import com.baiyi.opscloud.mapper.AuthResourceMapper;
 import com.baiyi.opscloud.service.auth.AuthResourceService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;

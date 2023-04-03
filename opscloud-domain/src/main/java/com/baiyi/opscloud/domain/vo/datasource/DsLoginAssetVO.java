@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.vo.datasource;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,16 +19,16 @@ public class DsLoginAssetVO {
     @NoArgsConstructor
     public static class LoginAsset {
 
-        @ApiModelProperty(value = "资产ID")
+        @Schema(name = "资产ID")
         private String assetId;
 
-        @ApiModelProperty(value = "显示名")
+        @Schema(name = "显示名")
         private String displayName;
 
-        @ApiModelProperty(value = "登录IP")
+        @Schema(name = "登录IP")
         private String loginIp;
 
-        @ApiModelProperty(value = "资产类型")
+        @Schema(name = "资产类型")
         private String assetType;
 
     }

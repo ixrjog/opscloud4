@@ -8,7 +8,7 @@ import com.baiyi.opscloud.leo.constants.DeployStepConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.service.user.UserService;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;

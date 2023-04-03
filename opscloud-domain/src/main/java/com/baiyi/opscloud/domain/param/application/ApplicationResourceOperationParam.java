@@ -1,12 +1,10 @@
 package com.baiyi.opscloud.domain.param.application;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * @Author baiyi
@@ -18,17 +16,17 @@ public class ApplicationResourceOperationParam {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class OperationResource {
 
-        @ApiModelProperty(value = "应用资源ID")
+        @Schema(name = "应用资源ID")
         private Integer resourceId;
 
-        @ApiModelProperty(value = "操作类型")
+        @Schema(name = "操作类型")
         @NotNull(message = "必须指定操作类型")
         private String operationType;
 
-        @ApiModelProperty(value = "操作描述")
+        @Schema(name = "操作描述")
         private String comment;
 
     }

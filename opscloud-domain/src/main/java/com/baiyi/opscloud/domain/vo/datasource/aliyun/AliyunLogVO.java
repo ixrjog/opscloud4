@@ -1,13 +1,11 @@
 package com.baiyi.opscloud.domain.vo.datasource.aliyun;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * @Author baiyi
@@ -19,10 +17,10 @@ public class AliyunLogVO {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Log extends BaseVO {
 
-        @ApiModelProperty(value = "成员数量")
+        @Schema(name = "成员数量")
         private Integer memberSize;
 
         private Integer id;

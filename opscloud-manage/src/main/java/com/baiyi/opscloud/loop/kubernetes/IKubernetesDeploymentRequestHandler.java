@@ -2,7 +2,7 @@ package com.baiyi.opscloud.loop.kubernetes;
 
 import org.springframework.beans.factory.InitializingBean;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import java.io.IOException;
 
 /**

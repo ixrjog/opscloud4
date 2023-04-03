@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.application.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
-import com.baiyi.opscloud.mapper.opscloud.ApplicationResourceMapper;
+import com.baiyi.opscloud.mapper.ApplicationResourceMapper;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

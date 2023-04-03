@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.ServerTaskMember;
 import com.google.common.base.Joiner;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * 日志路径 opscloud-data/logs/serverTask/${taskUuid}/${serverTaskMemberId}

@@ -1,15 +1,13 @@
 package com.baiyi.opscloud.domain.param.server;
 
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * @Author baiyi
@@ -23,31 +21,31 @@ public class ServerParam {
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class ServerPageQuery extends SuperPageParam implements IExtend {
 
-        @ApiModelProperty(value = "关键字查询")
+        @Schema(name = "关键字查询")
         private String queryName;
 
-//        @ApiModelProperty(value = "查询ip")
+//        @Schema(name = "查询ip")
 //        private String queryIp;
 
-        @ApiModelProperty(value = "服务器组ID")
+        @Schema(name = "服务器组ID")
         private Integer serverGroupId;
 
-        @ApiModelProperty(value = "环境类型")
+        @Schema(name = "环境类型")
         private Integer envType;
 
-        @ApiModelProperty(value = "有效")
+        @Schema(name = "有效")
         private Boolean isActive;
 
-        @ApiModelProperty(value = "状态")
+        @Schema(name = "状态")
         private Integer serverStatus;
 
-        @ApiModelProperty(value = "监控状态")
+        @Schema(name = "监控状态")
         private Integer monitorStatus;
 
-        @ApiModelProperty(value = "标签ID")
+        @Schema(name = "标签ID")
         private Integer tagId;
 
         private final Integer businessType = BusinessTypeEnum.SERVER.getType();
@@ -61,27 +59,27 @@ public class ServerParam {
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class UserRemoteServerPageQuery extends PageParam implements IExtend {
 
         private Integer userId;
 
-        @ApiModelProperty(value = "关键字查询")
+        @Schema(name = "关键字查询")
         private String queryName;
 
-        @ApiModelProperty(value = "服务器组id")
+        @Schema(name = "服务器组id")
         private Integer serverGroupId;
 
-        @ApiModelProperty(value = "环境类型")
+        @Schema(name = "环境类型")
         private Integer envType;
 
-        @ApiModelProperty(value = "有效")
+        @Schema(name = "有效")
         private Boolean isActive;
 
-        @ApiModelProperty(value = "状态")
+        @Schema(name = "状态")
         private Integer serverStatus;
 
-        @ApiModelProperty(value = "标签id")
+        @Schema(name = "标签id")
         private Integer tagId;
 
         private final Integer businessType = BusinessTypeEnum.SERVERGROUP.getType();
@@ -95,17 +93,17 @@ public class ServerParam {
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class UserPermissionServerPageQuery extends SuperPageParam implements IExtend {
 
-        @ApiModelProperty(value = "用户id")
+        @Schema(name = "用户id")
         @NotNull
         private Integer userId;
 
-        @ApiModelProperty(value = "服务器名")
+        @Schema(name = "服务器名")
         private String name;
 
-        @ApiModelProperty(value = "查询ip")
+        @Schema(name = "查询ip")
         private String queryIp;
 
         private final Integer businessType = BusinessTypeEnum.SERVERGROUP.getType();

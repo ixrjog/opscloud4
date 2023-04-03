@@ -16,7 +16,7 @@ import com.baiyi.opscloud.sshcore.model.KubernetesResource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

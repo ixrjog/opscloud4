@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.vo.common;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,7 +16,7 @@ public class TreeVO {
 
     @Data
     @Builder
-    @ApiModel
+    @Schema
     public static class Tree implements Serializable {
         private static final long serialVersionUID = 8188509874837434759L;
         private String id;
@@ -28,7 +28,7 @@ public class TreeVO {
 
     @Data
     @Builder
-    @ApiModel
+    @Schema
     public static class DeptTree implements Serializable {
         private static final long serialVersionUID = 2763890334936283925L;
         private Integer id;

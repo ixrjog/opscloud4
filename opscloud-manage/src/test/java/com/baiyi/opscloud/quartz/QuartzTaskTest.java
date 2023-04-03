@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.quartz.SchedulerException;
 import org.springframework.scheduling.support.CronExpression;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;

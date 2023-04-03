@@ -2,8 +2,7 @@ package com.baiyi.opscloud.domain.param.user;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -18,16 +17,16 @@ public class UserGroupParam {
     @Data
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class UserGroupPageQuery extends PageParam implements IExtend {
 
-        @ApiModelProperty(value = "模糊查询")
+        @Schema(name = "模糊查询")
         private String queryName;
 
-        @ApiModelProperty(value = "展开")
+        @Schema(name = "展开")
         private Boolean extend;
 
-        @ApiModelProperty(value = "是否激活")
+        @Schema(name = "是否激活")
         private Boolean isActive;
     }
 }

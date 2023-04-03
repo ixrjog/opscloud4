@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 @XmlRootElement(name = "hudson.model.ParametersDefinitionProperty")
 @XmlAccessorOrder(XmlAccessOrder.ALPHABETICAL)

@@ -14,13 +14,13 @@ import com.baiyi.opscloud.datasource.jenkins.helper.JenkinsVersion;
 import com.baiyi.opscloud.datasource.jenkins.model.*;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
+import jakarta.xml.bind.JAXBException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.ContentType;
 import org.dom4j.DocumentException;
 
-import javax.xml.bind.JAXBException;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;

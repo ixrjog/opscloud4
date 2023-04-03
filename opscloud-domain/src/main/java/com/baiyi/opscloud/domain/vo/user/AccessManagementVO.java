@@ -2,8 +2,7 @@ package com.baiyi.opscloud.domain.vo.user;
 
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -25,7 +24,7 @@ public class AccessManagementVO {
     @EqualsAndHashCode(callSuper = true)
     @SuperBuilder(toBuilder = true)
     @Data
-    @ApiModel
+    @Schema
     public static class IAM extends XAccessManagement implements Serializable {
 
         private static final long serialVersionUID = -5541945548323066174L;
@@ -41,7 +40,7 @@ public class AccessManagementVO {
     @EqualsAndHashCode(callSuper = true)
     @SuperBuilder(toBuilder = true)
     @Data
-    @ApiModel
+    @Schema
     public static class RAM extends XAccessManagement implements Serializable {
 
         private static final long serialVersionUID = -2175343102360414610L;
@@ -51,32 +50,32 @@ public class AccessManagementVO {
 
     @SuperBuilder(toBuilder = true)
     @Data
-    @ApiModel
+    @Schema
     public static class XAccessManagement implements Serializable {
 
         private static final long serialVersionUID = -8444786214672507521L;
         private String type;
 
-        @ApiModelProperty(value = "实例名称")
+        @Schema(name = "实例名称")
         private String instanceName;
 
-        @ApiModelProperty(value = "实例UUID")
+        @Schema(name = "实例UUID")
         private String instanceUuid;
 
         private String name;
 
         private String username;
 
-        @ApiModelProperty(value = "登录用户")
+        @Schema(name = "登录用户")
         private String loginUser;
 
-        @ApiModelProperty(value = "登录地址")
+        @Schema(name = "登录地址")
         private String loginUrl;
 
-        @ApiModelProperty(value = "AccessKey列表")
+        @Schema(name = "AccessKey列表")
         private List<DsAssetVO.Asset> accessKeys;
 
-        @ApiModelProperty(value = "策略列表")
+        @Schema(name = "策略列表")
         private List<DsAssetVO.Asset> policies;
 
     }

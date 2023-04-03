@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,7 +33,7 @@ public class LeoDeployingVO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Deploying implements Serializable {
         private static final long serialVersionUID = -2373193776064021868L;
@@ -89,7 +89,7 @@ public class LeoDeployingVO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class VerionDetails implements Serializable {
         private static final long serialVersionUID = -605790384101352067L;
 
@@ -120,7 +120,7 @@ public class LeoDeployingVO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class PodDetails implements Serializable, ReadableTime.IAgo {
 

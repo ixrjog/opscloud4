@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.vo.template;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 /**
@@ -16,7 +16,7 @@ public class MessageTemplateVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class MessageTemplate extends BaseVO {
 
         private Integer id;

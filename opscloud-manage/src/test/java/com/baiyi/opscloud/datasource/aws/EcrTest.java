@@ -7,7 +7,7 @@ import com.baiyi.opscloud.datasource.aws.ecr.driver.AmazonEcrImageDriver;
 import com.baiyi.opscloud.datasource.aws.ecr.driver.AmazonEcrRepositoryDirver;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

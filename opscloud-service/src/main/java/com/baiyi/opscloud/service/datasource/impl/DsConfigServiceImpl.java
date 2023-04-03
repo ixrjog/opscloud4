@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.param.datasource.DsConfigParam;
 import com.baiyi.opscloud.factory.credential.AbstractCredentialCustomer;
-import com.baiyi.opscloud.mapper.opscloud.DatasourceConfigMapper;
+import com.baiyi.opscloud.mapper.DatasourceConfigMapper;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

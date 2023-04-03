@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.datasource.nacos.param;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +17,7 @@ public class NacosClusterParam {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class NodesQuery {
         @Builder.Default
         private Boolean withInstances = false;
@@ -28,7 +27,7 @@ public class NacosClusterParam {
         private Integer pageSize = 10;
         @Builder.Default
         private String keyword = "";
-        @ApiModelProperty(value = "token")
+        @Schema(name = "token")
         private String accessToken;
         @Builder.Default
         private String namespaceId = "dev";

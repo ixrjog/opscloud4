@@ -79,7 +79,9 @@ public class ServerProperty {
         private List<String> macros;
 
         public List<Macro> toMacros() {
-            if (CollectionUtils.isEmpty(macros)) return Collections.emptyList();
+            if (CollectionUtils.isEmpty(macros)) {
+                return Collections.emptyList();
+            }
             try {
                 return macros.stream().map(e -> new GsonBuilder().create().fromJson(e, Macro.class)).collect(Collectors.toList());
             } catch (Exception e) {

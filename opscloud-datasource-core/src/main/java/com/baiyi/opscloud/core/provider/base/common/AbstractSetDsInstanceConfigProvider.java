@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.InitializingBean;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

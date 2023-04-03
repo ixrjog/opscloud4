@@ -5,7 +5,7 @@ import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5ProxyDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixProxy;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

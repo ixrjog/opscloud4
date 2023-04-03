@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.EventActionTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
-import com.baiyi.opscloud.mapper.opscloud.BusinessAssetRelationMapper;
+import com.baiyi.opscloud.mapper.BusinessAssetRelationMapper;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;

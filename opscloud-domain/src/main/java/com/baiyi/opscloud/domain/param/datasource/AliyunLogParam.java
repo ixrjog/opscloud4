@@ -2,13 +2,11 @@ package com.baiyi.opscloud.domain.param.datasource;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * @Author baiyi
@@ -20,12 +18,12 @@ public class AliyunLogParam {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class AliyunLogPageQuery extends PageParam implements IExtend {
         @NotNull(message = "必须指定数据源实例id")
         private Integer instanceId;
 
-        @ApiModelProperty(value = "查询关键字")
+        @Schema(name = "查询关键字")
         private String queryName;
 
         private Boolean extend;
@@ -33,19 +31,19 @@ public class AliyunLogParam {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class ProjectQuery {
 
         @NotNull(message = "必须指定数据源实例id")
         private Integer instanceId;
 
-        @ApiModelProperty(value = "查询关键字")
+        @Schema(name = "查询关键字")
         private String queryName;
     }
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class LogStoreQuery {
         @NotNull(message = "必须指定数据源实例id")
         private Integer instanceId;
@@ -54,7 +52,7 @@ public class AliyunLogParam {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class ConfigQuery {
         @NotNull(message = "必须指定数据源实例id")
         private Integer instanceId;

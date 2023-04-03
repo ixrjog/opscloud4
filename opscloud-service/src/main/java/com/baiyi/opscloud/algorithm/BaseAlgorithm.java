@@ -14,7 +14,7 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

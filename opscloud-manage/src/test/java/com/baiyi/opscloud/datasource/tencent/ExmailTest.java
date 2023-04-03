@@ -10,7 +10,7 @@ import com.baiyi.opscloud.tencent.exmail.driver.TencentExmailTokenDriver;
 import com.baiyi.opscloud.tencent.exmail.driver.TencentExmailUserDriver;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

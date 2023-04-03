@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

@@ -38,7 +38,6 @@ import com.baiyi.opscloud.sshserver.command.kubernetes.base.PodContext;
 import com.baiyi.opscloud.sshserver.command.util.ServerUtil;
 import com.baiyi.opscloud.sshserver.config.SshServerArthasConfig;
 import com.baiyi.opscloud.sshserver.util.TerminalUtil;
-import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import io.fabric8.kubernetes.api.model.Container;
@@ -61,6 +60,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

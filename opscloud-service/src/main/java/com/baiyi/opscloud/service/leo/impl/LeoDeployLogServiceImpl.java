@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.leo.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeployLog;
-import com.baiyi.opscloud.mapper.opscloud.LeoDeployLogMapper;
+import com.baiyi.opscloud.mapper.LeoDeployLogMapper;
 import com.baiyi.opscloud.service.leo.LeoDeployLogService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

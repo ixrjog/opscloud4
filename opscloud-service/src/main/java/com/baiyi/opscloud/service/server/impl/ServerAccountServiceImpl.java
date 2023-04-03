@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.domain.param.server.ServerAccountParam;
 import com.baiyi.opscloud.factory.credential.AbstractCredentialCustomer;
-import com.baiyi.opscloud.mapper.opscloud.ServerAccountMapper;
+import com.baiyi.opscloud.mapper.ServerAccountMapper;
 import com.baiyi.opscloud.service.server.ServerAccountService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;

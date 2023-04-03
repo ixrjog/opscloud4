@@ -2,7 +2,7 @@ package com.baiyi.opscloud.service.user.impl;
 
 import com.baiyi.opscloud.common.annotation.ArkIntercept;
 import com.baiyi.opscloud.domain.generator.opscloud.UserToken;
-import com.baiyi.opscloud.mapper.opscloud.UserTokenMapper;
+import com.baiyi.opscloud.mapper.UserTokenMapper;
 import com.baiyi.opscloud.service.user.UserTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

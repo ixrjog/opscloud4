@@ -6,7 +6,7 @@ import com.baiyi.opscloud.service.user.UserService;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 
 /**

@@ -7,7 +7,7 @@ import com.baiyi.opscloud.zabbix.constant.SeverityType;
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

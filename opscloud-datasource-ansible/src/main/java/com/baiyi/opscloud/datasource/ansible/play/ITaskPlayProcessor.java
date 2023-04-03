@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.ansible.play;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 
 /**
  * @Author baiyi

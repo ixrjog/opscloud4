@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.event.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.domain.param.event.EventParam;
-import com.baiyi.opscloud.mapper.opscloud.EventMapper;
+import com.baiyi.opscloud.mapper.EventMapper;
 import com.baiyi.opscloud.service.event.EventService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

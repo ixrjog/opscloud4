@@ -16,7 +16,7 @@ import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
 import com.baiyi.opscloud.service.sys.EnvService;
 import org.springframework.beans.factory.InitializingBean;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Map;
 import java.util.Optional;
 

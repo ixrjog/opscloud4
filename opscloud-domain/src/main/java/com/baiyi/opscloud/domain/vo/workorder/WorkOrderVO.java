@@ -1,11 +1,10 @@
 package com.baiyi.opscloud.domain.vo.workorder;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -27,47 +26,47 @@ public class WorkOrderVO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class WorkOrder extends BaseVO {
 
         private WorkOrderVO.Group workOrderGroup;
 
         private Integer id;
 
-        @ApiModelProperty(value = "工单名称")
+        @Schema(name = "工单名称")
         @NotEmpty(message = "工单名称不能为空")
         private String name;
 
-        @ApiModelProperty(value = "顺序")
+        @Schema(name = "顺序")
         private Integer seq;
 
-        @ApiModelProperty(value = "图标")
+        @Schema(name = "图标")
         private String icon;
 
-        @ApiModelProperty(value = "工单Key")
+        @Schema(name = "工单Key")
         private String workOrderKey;
 
-        @ApiModelProperty(value = "帮助文档ID")
+        @Schema(name = "帮助文档ID")
         private Integer sysDocumentId;
 
-        @ApiModelProperty(value = "工单组ID")
+        @Schema(name = "工单组ID")
         private Integer workOrderGroupId;
 
-        @ApiModelProperty(value = "状态 0 正常 1 开发 2 停用 3")
+        @Schema(name = "状态 0 正常 1 开发 2 停用 3")
         private Integer status;
 
-        @ApiModelProperty(value = "报表颜色")
+        @Schema(name = "报表颜色")
         private String color;
 
-        @ApiModelProperty(value = "说明")
+        @Schema(name = "说明")
         private String comment;
 
-        @ApiModelProperty(value = "文档地址")
+        @Schema(name = "文档地址")
         private String docs;
 
         private Boolean isActive;
 
-        @ApiModelProperty(value = "工作流配置")
+        @Schema(name = "工作流配置")
         private String workflow;
 
         /**
@@ -80,31 +79,31 @@ public class WorkOrderVO {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Group extends BaseVO {
 
-        @ApiModelProperty(value = "工单数量", example = "1")
+        @Schema(name = "工单数量", example = "1")
         private Integer workOrderSize;
 
-        @ApiModelProperty(value = "组成员工单")
+        @Schema(name = "组成员工单")
         private List<WorkOrder> workOrders;
 
         private Integer id;
 
-        @ApiModelProperty(value = "工单组名称")
+        @Schema(name = "工单组名称")
         @NotEmpty(message = "工单组名称不能为空")
         private String name;
 
-        @ApiModelProperty(value = "顺序")
+        @Schema(name = "顺序")
         private Integer seq;
 
-        @ApiModelProperty(value = "图标")
+        @Schema(name = "图标")
         private String icon;
 
-        @ApiModelProperty(value = "工单组类型")
+        @Schema(name = "工单组类型")
         private Integer groupType;
 
-        @ApiModelProperty(value = "说明")
+        @Schema(name = "说明")
         private String comment;
     }
 }

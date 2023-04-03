@@ -3,12 +3,10 @@ package com.baiyi.opscloud.domain.param.datasource;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.IRelation;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * @Author baiyi
@@ -22,36 +20,36 @@ public class DsAssetParam {
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class AssetPageQuery extends SuperPageParam implements IExtend, IRelation {
 
-        @ApiModelProperty(value = "实例id")
+        @Schema(name = "实例id")
         @NotNull(message = "实例id不能为空")
         private Integer instanceId;
 
-        @ApiModelProperty(value = "实例uuid")
+        @Schema(name = "实例uuid")
         private String instanceUuid;
 
-        @ApiModelProperty(value = "regionId")
+        @Schema(name = "regionId")
         private String regionId;
 
-        @ApiModelProperty(value = "kind")
+        @Schema(name = "kind")
         private String kind;
 
-        @ApiModelProperty(value = "资产类型")
+        @Schema(name = "资产类型")
         @NotNull(message = "资产类型不能为空")
         private String assetType;
 
-        @ApiModelProperty(value = "模糊查询")
+        @Schema(name = "模糊查询")
         private String queryName;
 
-        @ApiModelProperty(value = "展开")
+        @Schema(name = "展开")
         private Boolean extend;
 
-        @ApiModelProperty(value = "展示资产关系")
+        @Schema(name = "展示资产关系")
         private Boolean relation;
 
-        @ApiModelProperty(value = "是否有效")
+        @Schema(name = "是否有效")
         @Builder.Default
         private Boolean isActive = true;
 
@@ -62,25 +60,25 @@ public class DsAssetParam {
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class UserPermissionAssetPageQuery extends SuperPageParam {
 
         private Integer businessType;
 
         private Integer userId;
 
-        @ApiModelProperty(value = "实例id")
+        @Schema(name = "实例id")
         @NotNull(message = "实例id不能为空")
         private Integer instanceId;
 
-        @ApiModelProperty(value = "实例uuid")
+        @Schema(name = "实例uuid")
         private String instanceUuid;
 
-        @ApiModelProperty(value = "资产类型")
+        @Schema(name = "资产类型")
         @NotNull(message = "资产类型不能为空")
         private String assetType;
 
-        @ApiModelProperty(value = "模糊查询")
+        @Schema(name = "模糊查询")
         private String queryName;
 
     }
@@ -89,14 +87,14 @@ public class DsAssetParam {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class BaseAsset {
 
-        @ApiModelProperty(value = "实例id")
+        @Schema(name = "实例id")
         @NotNull
         private Integer instanceId;
 
-        @ApiModelProperty(value = "资产类型")
+        @Schema(name = "资产类型")
         @NotNull
         private String assetType;
 
@@ -106,7 +104,7 @@ public class DsAssetParam {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class PushAsset extends BaseAsset {
     }
 
@@ -114,27 +112,27 @@ public class DsAssetParam {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class PullAsset extends BaseAsset {
     }
 
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class ScanAssetBusiness extends BaseAsset {
     }
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class SetDsInstanceConfig {
 
-        @ApiModelProperty(value = "实例id")
+        @Schema(name = "实例id")
         @NotNull
         private Integer instanceId;
 
-        @ApiModelProperty(value = "实例类型")
+        @Schema(name = "实例类型")
         @NotNull
         private String instanceType;
 

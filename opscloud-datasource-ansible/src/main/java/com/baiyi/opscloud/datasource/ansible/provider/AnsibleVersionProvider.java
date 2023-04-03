@@ -22,7 +22,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.exec.CommandLine;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 

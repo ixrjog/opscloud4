@@ -1,8 +1,7 @@
 package com.baiyi.opscloud.domain.param.sys;
 
 import com.baiyi.opscloud.domain.param.PageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -17,13 +16,13 @@ public class CredentialParam {
     @Data
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class CredentialPageQuery extends PageParam {
 
-        @ApiModelProperty(value = "查询名称")
+        @Schema(name = "查询名称")
         private String queryName;
 
-        @ApiModelProperty(value = "凭据分类")
+        @Schema(name = "凭据分类")
         private Integer kind;
 
     }

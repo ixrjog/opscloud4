@@ -2,8 +2,7 @@ package com.baiyi.opscloud.domain.vo.datasource;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.sys.CredentialVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -19,16 +18,16 @@ public class DsConfigVO {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class DsConfig extends BaseVO implements CredentialVO.ICredential {
 
-        @ApiModelProperty(value = "系统凭据")
+        @Schema(name = "系统凭据")
         private CredentialVO.Credential credential;
 
-        @ApiModelProperty(value = "此配置文件注册的实例数量")
+        @Schema(name = "此配置文件注册的实例数量")
         private Integer instanceSize;
 
-        @ApiModelProperty(value = "已注册")
+        @Schema(name = "已注册")
         private Boolean isRegistered;
 
         private Integer id;

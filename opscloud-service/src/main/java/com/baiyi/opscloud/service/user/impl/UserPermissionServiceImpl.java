@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.EventActionTypeEnum;
-import com.baiyi.opscloud.mapper.opscloud.UserPermissionMapper;
+import com.baiyi.opscloud.mapper.UserPermissionMapper;
 import com.baiyi.opscloud.service.user.UserPermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -8,7 +8,7 @@ import com.baiyi.opscloud.zabbix.provider.base.AbstractZabbixHostProvider;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

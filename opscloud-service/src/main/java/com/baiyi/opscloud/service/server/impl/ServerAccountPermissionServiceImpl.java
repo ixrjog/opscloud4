@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.server.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccountPermission;
-import com.baiyi.opscloud.mapper.opscloud.ServerAccountPermissionMapper;
+import com.baiyi.opscloud.mapper.ServerAccountPermissionMapper;
 import com.baiyi.opscloud.service.server.ServerAccountPermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

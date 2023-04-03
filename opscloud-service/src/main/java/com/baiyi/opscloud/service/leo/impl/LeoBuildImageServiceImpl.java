@@ -2,7 +2,7 @@ package com.baiyi.opscloud.service.leo.impl;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildImage;
-import com.baiyi.opscloud.mapper.opscloud.LeoBuildImageMapper;
+import com.baiyi.opscloud.mapper.LeoBuildImageMapper;
 import com.baiyi.opscloud.service.leo.LeoBuildImageService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

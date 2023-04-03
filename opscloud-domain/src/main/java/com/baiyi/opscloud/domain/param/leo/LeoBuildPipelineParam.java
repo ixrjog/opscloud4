@@ -1,13 +1,12 @@
 package com.baiyi.opscloud.domain.param.leo;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 
 /**
  * @Author baiyi
@@ -20,14 +19,15 @@ public class LeoBuildPipelineParam {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @Schema
     public static class GetPipelineRunNodeSteps {
 
         @Min(value = 0, message = "构建ID不能为空")
-        @ApiModelProperty(value = "构建ID")
+        @Schema(name = "构建ID")
         private Integer buildId;
 
         @NotBlank(message = "节点ID不能为空")
-        @ApiModelProperty(value = "节点ID")
+        @Schema(name = "节点ID")
         private String nodeId;
 
     }

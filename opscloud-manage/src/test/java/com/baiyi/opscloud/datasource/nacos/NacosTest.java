@@ -7,7 +7,7 @@ import com.baiyi.opscloud.datasource.nacos.entity.*;
 import com.baiyi.opscloud.datasource.nacos.param.NacosPageParam;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

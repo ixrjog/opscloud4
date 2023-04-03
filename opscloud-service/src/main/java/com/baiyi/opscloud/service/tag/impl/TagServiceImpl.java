@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Tag;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
-import com.baiyi.opscloud.mapper.opscloud.TagMapper;
+import com.baiyi.opscloud.mapper.TagMapper;
 import com.baiyi.opscloud.service.tag.TagService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;

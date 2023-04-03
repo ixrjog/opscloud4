@@ -3,20 +3,16 @@ package com.baiyi.opscloud.other;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
-import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
-import com.baiyi.opscloud.schedule.task.ConsulAlertTask;
-import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.workorder.verify.QueueValidator;
 import com.google.common.collect.Maps;
+import jakarta.annotation.Resource;
+import jakarta.validation.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
-import javax.validation.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,20 +32,10 @@ public class OtherTest extends BaseUnit {
     @Resource
     private QueueValidator queueValidator;
 
-    @Resource
-    private DsInstanceAssetFacade dsInstanceAssetFacade;
-
-    @Resource
-    private ConsulAlertTask consulAlertRule;
 
     @Resource
     private RedisUtil redisUtil;
 
-    @Resource
-    private DsInstanceService dsInstanceService;
-
-    @Resource
-    private DsConfigHelper dsConfigHelper;
 
     @Data
     @Builder

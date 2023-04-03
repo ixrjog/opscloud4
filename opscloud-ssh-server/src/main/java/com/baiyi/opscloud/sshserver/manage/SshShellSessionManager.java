@@ -21,7 +21,7 @@ import com.baiyi.opscloud.sshserver.auth.SshAuthentication;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Map;
 
 /**

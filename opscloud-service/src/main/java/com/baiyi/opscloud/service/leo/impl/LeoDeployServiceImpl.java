@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployRequestParam;
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
-import com.baiyi.opscloud.mapper.opscloud.LeoDeployMapper;
+import com.baiyi.opscloud.mapper.LeoDeployMapper;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

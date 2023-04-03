@@ -2,7 +2,7 @@ package com.baiyi.opscloud.domain.vo.workorder;
 
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.google.common.collect.Lists;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.io.Serializable;
@@ -52,13 +52,13 @@ public class WorkflowVO {
     @Data
     public static class Node implements Serializable {
         private static final long serialVersionUID = 2636039751664799398L;
-        @ApiModelProperty(value = "节点名称")
+        @Schema(name = "节点名称")
         private String name;
-        @ApiModelProperty(value = "节点类型，参考NodeTypeConstants")
+        @Schema(name = "节点类型，参考NodeTypeConstants")
         @Builder.Default
         private Integer type = 0;
         private String comment;
-        @ApiModelProperty(value = "筛选用户的标签")
+        @Schema(name = "筛选用户的标签")
         private List<String> tags;
     }
 

@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.sql.DataSource;
 
 
@@ -27,7 +27,7 @@ public class InitialDataSourceConfiguration implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         try {
-            DataSource dataSource = applicationContext.getBean("opscloudDataSource", DataSource.class);
+            DataSource dataSource = applicationContext.getBean("dataSource", DataSource.class);
             dataSource.getConnection().close();
             log.info("Start verification MySQL connection succeeded");
         } catch (Exception e) {

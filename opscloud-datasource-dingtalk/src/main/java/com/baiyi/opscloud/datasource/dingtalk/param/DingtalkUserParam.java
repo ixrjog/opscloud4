@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.dingtalk.param;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +21,7 @@ public class DingtalkUserParam {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class QueryUserPage {
         // 分页查询的游标，最开始传0，后续传返回参数中的next_cursor值。
         @Builder.Default

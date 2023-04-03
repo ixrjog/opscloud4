@@ -1,8 +1,7 @@
 package com.baiyi.opscloud.domain.vo.auth;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 /**
@@ -16,17 +15,17 @@ public class AuthRoleResourceVO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     @Builder
     public static class RoleResource extends BaseVO {
 
-        @ApiModelProperty(value = "主键",example="1")
+        @Schema(name = "主键",example="1")
         private Integer id;
 
-        @ApiModelProperty(value = "role主键",example="1")
+        @Schema(name = "role主键",example="1")
         private Integer roleId;
 
-        @ApiModelProperty(value = "资源主键",example="1")
+        @Schema(name = "资源主键",example="1")
         private Integer resourceId;
 
     }

@@ -15,7 +15,7 @@ import com.baiyi.opscloud.service.template.MessageTemplateService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.collect.Lists;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Map;

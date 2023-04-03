@@ -1,11 +1,10 @@
 package com.baiyi.opscloud.domain.param.datasource;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 /**
  * @Author 修远
@@ -16,7 +15,7 @@ public class DsInstanceScheduleParam {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class AddJob {
 
         @NotNull(message = "任务类型不能为空")
@@ -36,7 +35,7 @@ public class DsInstanceScheduleParam {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class UpdateJob {
 
         @NotNull(message = "任务组不能为空")
@@ -48,7 +47,7 @@ public class DsInstanceScheduleParam {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class CheckCron {
 
         @NotNull(message = "Cron不能为空")

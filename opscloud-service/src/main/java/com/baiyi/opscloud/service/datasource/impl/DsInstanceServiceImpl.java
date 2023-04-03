@@ -2,7 +2,7 @@ package com.baiyi.opscloud.service.datasource.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
-import com.baiyi.opscloud.mapper.opscloud.DatasourceInstanceMapper;
+import com.baiyi.opscloud.mapper.DatasourceInstanceMapper;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

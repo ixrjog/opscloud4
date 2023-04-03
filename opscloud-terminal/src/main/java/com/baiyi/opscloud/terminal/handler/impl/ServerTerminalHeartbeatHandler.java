@@ -7,7 +7,7 @@ import com.baiyi.opscloud.terminal.handler.AbstractServerTerminalHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 
 /**
  * 心跳

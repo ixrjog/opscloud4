@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.annotation.EventPublisher;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.constants.EventActionTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
-import com.baiyi.opscloud.mapper.opscloud.BusinessTagMapper;
+import com.baiyi.opscloud.mapper.BusinessTagMapper;
 import com.baiyi.opscloud.service.tag.BusinessTagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

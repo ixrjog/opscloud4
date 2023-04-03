@@ -2,8 +2,8 @@ package com.baiyi.opscloud.domain.vo.leo;
 
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.google.common.collect.Maps;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +24,7 @@ public class LeoJobVersionVO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class JobVersion implements EnvVO.IEnv, Serializable {
 
         private static final long serialVersionUID = -2925847833549310319L;
@@ -41,7 +41,7 @@ public class LeoJobVersionVO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class DeploymentVersion implements Serializable {
 
         private static final long serialVersionUID = 1901939181360045590L;
@@ -93,7 +93,7 @@ public class LeoJobVersionVO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class DoDeployVersion implements Serializable {
 
         private static final long serialVersionUID = -5057578961795862955L;
@@ -102,11 +102,11 @@ public class LeoJobVersionVO {
                 .isActive(false)
                 .build();
 
-        @ApiModelProperty(value = "有效")
+        @Schema(name = "有效")
         @Builder.Default
         private boolean isActive = true;
 
-        @ApiModelProperty(value = "构建ID")
+        @Schema(name = "构建ID")
         private Integer buildId;
 
     }
