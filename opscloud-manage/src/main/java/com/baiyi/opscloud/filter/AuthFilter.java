@@ -80,8 +80,7 @@ public class AuthFilter extends OncePerRequestFilter {
             } catch (AuthenticationException ex) {
                 response.setContentType("application/json;charset=UTF-8");
                 setHeaders(request, response);
-                HttpResult result = new HttpResult(ex);
-                response.getWriter().println(result);
+                response.getWriter().println(new HttpResult<>(ex));
             }
         } else {
             setHeaders(request, response);

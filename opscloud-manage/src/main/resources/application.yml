@@ -2,6 +2,11 @@ spring:
   application:
     name: opscloud
     version: 4.4.0
+#  web:
+#    resources:
+#      static-locations: classpath:/static/
+#  mvc:
+#    static-path-pattern: /static/**
   main:
     # 允许循环依赖
     allow-circular-references: true
@@ -15,34 +20,16 @@ spring:
   thymeleaf:
     cache: off
 
-management:
-  server:
-    ssl:
-      enabled: off
-  health:
-    ldap:
-      enabled: off
-
-#knife4j:
-#  enable: true
-
 # springdoc-openapi项目配置
 springdoc:
   swagger-ui:
-    path: /swagger-ui.html
-    tags-sorter: alpha
-    operations-sorter: alpha
+    path: /doc/swagger-ui.html
+    enabled: off
   api-docs:
     path: /v3/api-docs
-  group-configs:
-    - group: 'default'
-      paths-to-match: '/**'
-      packages-to-scan: com.xiaominfo.knife4j.demo.web
-# knife4j的增强配置，不需要增强可以不配
-#knife4j:
-#  enable: true
-#  setting:
-#    language: zh_cn
+    enabled: off
+  paths-to-match: '/**'
+  packages-to-scan: com.baiyi.opscloud.controller.http
 
 # 白名单配置
 white:
@@ -67,20 +54,19 @@ white:
     - /api/ws/continuous-delivery/jenkins/console/stream
     - /api/out/ticket/approve
   resources:
-     - .js
-     - .md
-     - .css
-     - .woff
-     - .woff2
-     - .otf
-     - .eot
-     - .ttf
-     - .svg
-     - .jpg
-     - .png
-     - .html
+    - .js
+    - .md
+    - .css
+    - .woff
+    - .woff2
+    - .otf
+    - .eot
+    - .ttf
+    - .svg
+    - .jpg
+    - .png
+    - .html
 
-# 开发环境配置
 server:
   # 服务端口
   port: 8080
@@ -142,48 +128,3 @@ ssh:
       # white|cyan
       color: cyan
       text: 'ssh-server>'
-
-
-## ssh-server
-#ssh:
-#  arthas:
-#    server: "cd /tmp && curl -O https://arthas.aliyun.com/arthas-boot.jar && sudo su - app -c 'java -jar /tmp/arthas-boot.jar'\n"
-#  shell:
-#    enable: true
-#    # 'simple' or 'security'
-#    authentication: security
-#    # if authentication set to 'security' the AuthenticationProvider bean name
-#    # if not specified and only one AuthenticationProvider bean is present in the context, it will be used
-#    confirmation-words:
-#      - y
-#      - yes
-#    # since 1.4.0, set enable to false to disable following default commands
-#    commands:
-#      actuator:
-#        create: false
-#        enable: false
-#        restricted: false
-#        # empty by default
-#        excludes:
-#          - ...
-#        authorized-roles:
-#          - ACTUATOR
-#    display-banner: true
-#    # to use ExtendedFileValueProviderTest instead of spring shell FileValueProvider for all File option parameters
-#    # if set to false, it still can be used via '@ShellOption(valueProvider = ExtendedFileValueProviderTest.class) File file'
-#    extended-file-provider: false
-#    history-file: ${home}/opscloud-data/ssh-server/sshShellHistory.log
-#    # since 1.3.0, set to false to have one file per user (<history-directory>/sshShellHistory-<user>.log)
-#    shared-history: false
-#    # since 1.3.0, only if shared-history is set to false
-#    history-directory: ${home}/opscloud-data/ssh-server
-#    host-key-file: ${home}/opscloud-data/ssh-server/hostKey.ser
-#    # displayed in log if generated
-#    port: 2222
-#    prompt:
-#      # in enum: com.github.fonimus.ssh.shell.PromptColor (black, red, green, yellow, blue, magenta, cyan, white, bright)
-#      color: white
-#      text: 'ssh-server>'
-#      local:
-#        # since 1.2.1, to let default local spring shell prompt when application starts
-#        enable: false

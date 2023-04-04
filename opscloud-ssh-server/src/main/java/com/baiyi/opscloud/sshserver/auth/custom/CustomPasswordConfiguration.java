@@ -1,9 +1,13 @@
 package com.baiyi.opscloud.sshserver.auth.custom;
 
+import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.service.user.UserService;
+import com.baiyi.opscloud.sshserver.auth.SshShellAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 /**
  * {@code @Author} baiyi
@@ -17,16 +21,16 @@ public class CustomPasswordConfiguration {
 
     private final UserService userService;
 
-//    @Bean
-//    @Primary
-//    public SshShellAuthenticationProvider passwordAuthenticatorProvider() {
-//        return (username, pass, serverSession) -> {
-//            User user = userService.getByUsername(username);
-//            if (user == null) {
-//                return false;
-//            }
-//            return pass.equals(user.getPassword());
-//        };
-//    }
+    @Bean
+    @Primary
+    public SshShellAuthenticationProvider passwordAuthenticatorProvider() {
+        return (username, pass, serverSession) -> {
+            User user = userService.getByUsername(username);
+            if (user == null) {
+                return false;
+            }
+            return pass.equals(user.getPassword());
+        };
+    }
 
 }

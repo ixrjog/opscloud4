@@ -23,26 +23,36 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * Security configuration
  */
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
-public class CompleteSecurity {
+@EnableMethodSecurity(prePostEnabled = false)
+public class SecurityConfiguration {
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
-//        http.authorizeHttpRequests()
-//                .requestMatchers("/ping").permitAll()
-//                .requestMatchers(EndpointRequest.to("info")).permitAll()
-//                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR")
-//                .and().authenticationManager(authManager);
-//        return http.build();
-//    }
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
+        http.cors().disable().authorizeHttpRequests()
+                .requestMatchers("**")
+                .permitAll()
+                .and()
+                .authenticationManager(authManager);
+        return http.build();
+    }
+
+    /**
+     * 过滤掉所有请求，不使用SpringSecurity认证
+     */
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("**");
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -53,18 +63,19 @@ public class CompleteSecurity {
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.inMemoryAuthentication()
-                .withUser("user")
-                .password(passwordEncoder().encode("password"))
-                .roles("USER")
-                .and()
-                .withUser("actuator")
-                .password(passwordEncoder().encode("password"))
-                .roles("ACTUATOR")
-                .and()
-                .withUser("admin")
-                .password(passwordEncoder().encode("admin"))
-                .roles("ADMIN", "ACTUATOR");
+
+//        authenticationManagerBuilder.inMemoryAuthentication()
+//                .withUser("user")
+//                .password(passwordEncoder().encode("password"))
+//                .roles("USER")
+//                .and()
+//                .withUser("actuator")
+//                .password(passwordEncoder().encode("password"))
+//                .roles("ACTUATOR")
+//                .and()
+//                .withUser("admin")
+//                .password(passwordEncoder().encode("admin"))
+//                .roles("ADMIN", "ACTUATOR");
         return authenticationManagerBuilder.build();
     }
 }

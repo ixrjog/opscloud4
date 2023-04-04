@@ -11,8 +11,8 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-<!--        <project.version>0.0.4-SNAPSHOT</project.version>-->
-<!--        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+        <!--        <project.version>0.0.4-SNAPSHOT</project.version>-->
+        <!--        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
@@ -26,20 +26,43 @@
             <artifactId>opscloud-ssh-core</artifactId>
         </dependency>
 
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-security</artifactId>-->
+        <!--        </dependency>-->
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>6.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>6.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>6.0.1</version>
+        </dependency>
+
         <dependency>
             <groupId>io.bretty</groupId>
             <artifactId>console-table-builder</artifactId>
             <version>1.2</version>
         </dependency>
 
-<!--        https://www.mail-archive.com/commits@mina.apache.org/msg09428.html-->
-<!--        +* [ed25519-java](https://github.com/str4d/ed25519-java)-->
-<!--        +Required for supporting-->
-<!--        [ssh-ed25519](https://tools.ietf.org/html/draft-bjh21-ssh-ed25519-02) keys and-->
-<!--        [ed25519-sha-512](https://tools.ietf.org/html/draft-josefsson-eddsa-ed25519-02)-->
-<!--        signatures. **Note:** the required Maven module(s) are defined as `optional` so-->
-<!--        must be added as an **explicit** dependency in order to be included in the-->
-<!--        classpath:-->
+        <!--        https://www.mail-archive.com/commits@mina.apache.org/msg09428.html-->
+        <!--        +* [ed25519-java](https://github.com/str4d/ed25519-java)-->
+        <!--        +Required for supporting-->
+        <!--        [ssh-ed25519](https://tools.ietf.org/html/draft-bjh21-ssh-ed25519-02) keys and-->
+        <!--        [ed25519-sha-512](https://tools.ietf.org/html/draft-josefsson-eddsa-ed25519-02)-->
+        <!--        signatures. **Note:** the required Maven module(s) are defined as `optional` so-->
+        <!--        must be added as an **explicit** dependency in order to be included in the-->
+        <!--        classpath:-->
         <dependency>
             <groupId>net.i2p.crypto</groupId>
             <artifactId>eddsa</artifactId>

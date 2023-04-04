@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sshd.common.util.io.IoUtils;
 import org.apache.sshd.server.SshServer;
-import org.apache.sshd.server.auth.password.PasswordAuthenticator;
 import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.springframework.context.annotation.Bean;
@@ -49,7 +48,7 @@ public class SshShellConfiguration {
 
     private final SshShellCommandFactory shellCommandFactory;
 
-    private final PasswordAuthenticator passwordAuthenticator;
+   // private final PasswordAuthenticator passwordAuthenticator;
 
     private final PublickeyAuthenticator publickeyAuthenticator;
 

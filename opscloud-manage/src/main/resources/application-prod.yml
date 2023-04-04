@@ -32,43 +32,22 @@ spring:
     activate:
       on-profile:
         - prod
-  redis:
-    host: r-d7obmf3lmgs0hpph5n.redis.eu-west-1.rds.aliyuncs.com
-    port: 6379
-    password: ENC(o6UKSKlETx2g13HH0nsWttoQSvW0+OF/7/DcHo2lc0FOlf03x8jzTgB1khTUODtXRMzG2/PK8uQ=)
-    jedis:
-      pool:
-        max-wait: 5000
-        max-idle: 20
-        max-active: 100
-        min-idle: 0
+  data:
+    redis:
+      host: r-d7obmf3lmgs0hpph5n.redis.eu-west-1.rds.aliyuncs.com
+      port: 6379
+      password: ENC(o6UKSKlETx2g13HH0nsWttoQSvW0+OF/7/DcHo2lc0FOlf03x8jzTgB1khTUODtXRMzG2/PK8uQ=)
+      jedis:
+        pool:
+          max-wait: 5000
+          max-idle: 20
+          max-active: 100
+          min-idle: 0
   datasource:
-    druid:
-      opscloud:
-        url: jdbc:mysql://rm-d7oczvp3c5k2su19b.mysql.eu-west-1.rds.aliyuncs.com:3306/opscloud4-prod?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
-        username: opscloud4
-        password: ENC(SyIQuAkShjZknkJ2d8FDKSSFNKmjd2lC2KLejtb1Xdeb4SyusueO+1NPGLXem1ug)
-        initial-size: 5
-        min-idle: 5
-        max-active: 50
-        # 获取连接时最大等待时间，单位毫秒。配置了maxWait之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置useUnfairLock属性为true使用非公平锁。
-        max-wait: 1000
-        # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
-        time-between-eviction-runs-millis: 60000
-        # 配置一个连接在池中最小生存的时间，单位是毫秒
-        min-evictable-idle-time-millis: 300000
-        # 用来检测连接是否有效的sql
-        validation-query: select 1
-        # 申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效
-        test-while-idle: on
-        # 申请连接时执行validationQuery检测连接是否有效, 默认on:检测, off:不检测
-        test-on-borrow: off
-        # 归还连接时执行validationQuery检测连接是否有效, 默认off:不检测, on:检测
-        test-on-return: off
-        # 打开PSCache(preparedStatement)，并且指定每个连接上PSCache的大小
-        pool-prepared-statements: on
-        # 要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true
-        max-pool-prepared-statement-per-connection-size: 20
+    url: jdbc:mysql://rm-d7oczvp3c5k2su19b.mysql.eu-west-1.rds.aliyuncs.com:3306/opscloud4-prod?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: opscloud4
+    password: ENC(SyIQuAkShjZknkJ2d8FDKSSFNKmjd2lC2KLejtb1Xdeb4SyusueO+1NPGLXem1ug)
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
 # java -jar -Djasypt.encryptor.password=${password}
 jasypt:

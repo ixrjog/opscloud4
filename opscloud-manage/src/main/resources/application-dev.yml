@@ -50,7 +50,6 @@ spring:
     password: ENC(SyIQuAkShjZknkJ2d8FDKSSFNKmjd2lC2KLejtb1Xdeb4SyusueO+1NPGLXem1ug)
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-
 # java -jar -Djasypt.encryptor.password=${password}
 jasypt:
   encryptor:
