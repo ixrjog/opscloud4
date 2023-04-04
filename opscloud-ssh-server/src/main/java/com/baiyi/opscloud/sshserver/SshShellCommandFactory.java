@@ -16,13 +16,16 @@
 
 package com.baiyi.opscloud.sshserver;
 
+import com.baiyi.opscloud.sshcore.model.SessionIdMapper;
 import com.baiyi.opscloud.sshserver.listeners.SshShellListenerService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.sshd.common.io.IoSession;
 import org.apache.sshd.server.ExitCallback;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.command.Command;
+import org.apache.sshd.server.session.ServerSession;
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.springframework.boot.Banner;
@@ -79,6 +82,7 @@ public class SshShellCommandFactory
      * @param channelSession ssh channel session
      * @param sshEnv         ssh environment
      */
+    @SuppressWarnings({"AlibabaLowerCamelCaseVariableNaming", "AlibabaAvoidManuallyCreateThread"})
     @Override
     public void start(ChannelSession channelSession, org.apache.sshd.server.Environment sshEnv) {
         SshIO sshIO = SSH_IO_CONTEXT.get();
@@ -89,6 +93,10 @@ public class SshShellCommandFactory
                 "ssh-session-" + System.nanoTime());
         sshThread.start();
         threads.put(channelSession, sshThread);
+        // 注入会话ID
+        ServerSession serverSession = channelSession.getSession();
+        IoSession ioSession = serverSession.getIoSession();
+        SessionIdMapper.put(ioSession);
         log.debug("{}: started [{} session(s) currently active]", channelSession, threads.size());
     }
 

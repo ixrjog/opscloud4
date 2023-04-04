@@ -130,10 +130,8 @@ ssh:
       actuator:
         excludes:
           - audit
-      manage-sessions:
-        enable: true
-      datasource:
-        excludes:
+      history:
+        enable: off
     display-banner: true
     host: 0.0.0.0
     port: 2222
@@ -142,7 +140,7 @@ ssh:
     host-key-file: ${home}/opscloud-data/ssh-server/hostKey.ser
     prompt:
       # white|cyan
-      color: white
+      color: cyan
       text: 'ssh-server>'
 
 

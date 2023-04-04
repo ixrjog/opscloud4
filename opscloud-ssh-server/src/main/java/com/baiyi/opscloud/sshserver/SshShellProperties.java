@@ -123,28 +123,12 @@ public class SshShellProperties {
         private CommandProperties server = new CommandProperties();
 
         @NestedConfigurationProperty
-        private CommandProperties jmx = new CommandProperties();
-
-        @NestedConfigurationProperty
-        private CommandProperties system = new CommandProperties();
-
-        @NestedConfigurationProperty
-        private CommandProperties tasks = new CommandProperties();
-
-        @NestedConfigurationProperty
-        private CommandProperties script = new CommandProperties();
-
-        @NestedConfigurationProperty
         private CommandProperties history = new CommandProperties();
 
         @NestedConfigurationProperty
         private CommandProperties stacktrace = new CommandProperties();
 
-        @NestedConfigurationProperty
-        private CommandProperties postprocessors = CommandProperties.notRestrictedByDefault();
 
-        @NestedConfigurationProperty
-        private CommandProperties manageSessions = CommandProperties.disabledByDefault();
     }
 
 }

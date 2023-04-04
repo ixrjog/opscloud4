@@ -18,20 +18,11 @@ package com.baiyi.opscloud.sshserver.commands;
 
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.SshShellProperties;
-import com.baiyi.opscloud.sshserver.providers.ExtendedFileValueProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
-import org.springframework.shell.standard.ShellOption;
 import org.springframework.shell.standard.commands.History;
-import org.springframework.util.CollectionUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Override history command to get history per user if not shared
@@ -50,25 +41,6 @@ public class HistoryCommand extends AbstractCommand implements History.Command {
 
     public HistoryCommand(SshShellProperties properties, SshShellHelper helper) {
         super(helper, properties, properties.getCommands().getHistory());
-    }
-
-    @ShellMethod(key = COMMAND_HISTORY, value = "Display or save the history of previously run commands")
-    @ShellMethodAvailability("historyAvailability")
-    public Object history(
-            @ShellOption(help = "A file to save history to.", defaultValue = ShellOption.NULL, valueProvider = ExtendedFileValueProvider.class) File file,
-            @ShellOption(help = "To display standard spring shell way (array.tostring). Default value: false", defaultValue = "false") boolean displayArray
-    ) throws IOException {
-        List<String> result = new History(helper.getHistory()).history(file);
-        if (file != null && result.size() == 1) {
-            return result.get(0);
-        } else if (displayArray) {
-            return result;
-        }
-        StringBuilder sb = new StringBuilder();
-        if (!CollectionUtils.isEmpty(result)) {
-            result.forEach(h -> sb.append(h).append(System.lineSeparator()));
-        }
-        return sb.toString();
     }
 
     private Availability historyAvailability() {

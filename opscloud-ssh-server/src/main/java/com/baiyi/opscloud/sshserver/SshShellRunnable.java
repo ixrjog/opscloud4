@@ -20,6 +20,7 @@ import com.baiyi.opscloud.sshserver.auth.SshAuthentication;
 import com.baiyi.opscloud.sshserver.auth.SshShellSecurityAuthenticationProvider;
 import com.baiyi.opscloud.sshserver.listeners.SshShellListenerService;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sshd.common.Factory;
 import org.apache.sshd.server.ExitCallback;
@@ -74,6 +75,7 @@ public class SshShellRunnable
     private final org.apache.sshd.server.Environment sshEnv;
     private final SshShellCommandFactory sshShellCommandFactory;
     private final InputStream is;
+    @Getter
     private final OutputStream os;
     private final ExitCallback ec;
 
@@ -83,7 +85,10 @@ public class SshShellRunnable
     @Override
     public void run() {
         log.debug("{}: running...", session.toString());
-        TerminalBuilder terminalBuilder = TerminalBuilder.builder().system(false).streams(is, os);
+        TerminalBuilder terminalBuilder = TerminalBuilder.builder()
+                .system(false)
+                .encoding(StandardCharsets.UTF_8)
+                .streams(is, os);
         boolean sizeAvailable = false;
         if (sshEnv.getEnv().containsKey(SSH_ENV_COLUMNS) && sshEnv.getEnv().containsKey(SSH_ENV_LINES)) {
             try {

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshserver.commands.custom;
+package com.baiyi.opscloud.sshserver.commands.custom.server;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
@@ -13,7 +13,7 @@ import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshShellCommandFactory;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.commands.custom.context.SessionCommandContext;
-import com.baiyi.opscloud.sshserver.commands.custom.param.ListServerParam;
+import com.baiyi.opscloud.sshserver.commands.custom.server.param.ListServerParam;
 import com.baiyi.opscloud.sshserver.packer.SshServerPacker;
 import com.baiyi.opscloud.sshserver.pagination.TableFooter;
 import com.baiyi.opscloud.sshserver.util.ServerUtil;
@@ -38,6 +38,10 @@ import static com.baiyi.opscloud.sshserver.constants.TableConstants.TABLE_SERVER
  */
 @Slf4j
 public abstract class BaseServerCommand {
+
+    public static final String GROUP = "server";
+    protected static final String COMMAND_SERVER_LIST = GROUP + "-list";
+    protected static final String COMMAND_SERVER_LOGIN = GROUP + "-login";
 
     protected static final int PAGE_FOOTER_SIZE = 6;
 
