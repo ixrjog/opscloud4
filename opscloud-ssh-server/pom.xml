@@ -7,6 +7,14 @@
         <groupId>com.baiyi</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+<!--        <project.version>0.0.4-SNAPSHOT</project.version>-->
+<!--        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+    </properties>
+
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>opscloud-ssh-server</artifactId>

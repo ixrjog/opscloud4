@@ -1,7 +1,7 @@
 spring:
   application:
     name: opscloud
-    version: 4.3.0
+    version: 4.4.0
   main:
     # 允许循环依赖
     allow-circular-references: true
@@ -119,46 +119,73 @@ mapper:
   identity: MYSQL
   before: false
 
-# ssh-server
 ssh:
-  arthas:
-    server: "cd /tmp && curl -O https://arthas.aliyun.com/arthas-boot.jar && sudo su - app -c 'java -jar /tmp/arthas-boot.jar'\n"
   shell:
-    enable: true
-    # 'simple' or 'security'
     authentication: security
-    # if authentication set to 'security' the AuthenticationProvider bean name
-    # if not specified and only one AuthenticationProvider bean is present in the context, it will be used
-    confirmation-words:
-      - y
-      - yes
-    # since 1.4.0, set enable to false to disable following default commands
+    authorized-public-keys: classpath:.ssh/authorized.keys
     commands:
       actuator:
-        create: false
-        enable: false
-        restricted: false
-        # empty by default
         excludes:
-          - ...
-        authorized-roles:
-          - ACTUATOR
-    display-banner: true
-    # to use ExtendedFileValueProviderTest instead of spring shell FileValueProvider for all File option parameters
-    # if set to false, it still can be used via '@ShellOption(valueProvider = ExtendedFileValueProviderTest.class) File file'
-    extended-file-provider: false
-    history-file: ${home}/opscloud-data/ssh-server/sshShellHistory.log
-    # since 1.3.0, set to false to have one file per user (<history-directory>/sshShellHistory-<user>.log)
-    shared-history: false
-    # since 1.3.0, only if shared-history is set to false
-    history-directory: ${home}/opscloud-data/ssh-server
-    host-key-file: ${home}/opscloud-data/ssh-server/hostKey.ser
-    # displayed in log if generated
-    port: 2222
-    prompt:
-      # in enum: com.github.fonimus.ssh.shell.PromptColor (black, red, green, yellow, blue, magenta, cyan, white, bright)
-      color: white
-      text: 'ssh-server>'
-      local:
-        # since 1.2.1, to let default local spring shell prompt when application starts
+          - audit
+      jvm:
         enable: false
+      threads:
+        enable: false
+      manage-sessions:
+        enable: true
+      datasource:
+        excludes:
+    host: 0.0.0.0
+    port: 2222
+    shared-history: false
+    history-directory: ${home}/opscloud-data/ssh-server/history-log/
+    host-key-file: ${home}/opscloud-data/ssh-server/hostKey.ser
+    prompt:
+      color: cyan
+      text: 'ssh-server::>'
+
+spring.shell.interactive.enabled: false
+
+## ssh-server
+#ssh:
+#  arthas:
+#    server: "cd /tmp && curl -O https://arthas.aliyun.com/arthas-boot.jar && sudo su - app -c 'java -jar /tmp/arthas-boot.jar'\n"
+#  shell:
+#    enable: true
+#    # 'simple' or 'security'
+#    authentication: security
+#    # if authentication set to 'security' the AuthenticationProvider bean name
+#    # if not specified and only one AuthenticationProvider bean is present in the context, it will be used
+#    confirmation-words:
+#      - y
+#      - yes
+#    # since 1.4.0, set enable to false to disable following default commands
+#    commands:
+#      actuator:
+#        create: false
+#        enable: false
+#        restricted: false
+#        # empty by default
+#        excludes:
+#          - ...
+#        authorized-roles:
+#          - ACTUATOR
+#    display-banner: true
+#    # to use ExtendedFileValueProviderTest instead of spring shell FileValueProvider for all File option parameters
+#    # if set to false, it still can be used via '@ShellOption(valueProvider = ExtendedFileValueProviderTest.class) File file'
+#    extended-file-provider: false
+#    history-file: ${home}/opscloud-data/ssh-server/sshShellHistory.log
+#    # since 1.3.0, set to false to have one file per user (<history-directory>/sshShellHistory-<user>.log)
+#    shared-history: false
+#    # since 1.3.0, only if shared-history is set to false
+#    history-directory: ${home}/opscloud-data/ssh-server
+#    host-key-file: ${home}/opscloud-data/ssh-server/hostKey.ser
+#    # displayed in log if generated
+#    port: 2222
+#    prompt:
+#      # in enum: com.github.fonimus.ssh.shell.PromptColor (black, red, green, yellow, blue, magenta, cyan, white, bright)
+#      color: white
+#      text: 'ssh-server>'
+#      local:
+#        # since 1.2.1, to let default local spring shell prompt when application starts
+#        enable: false
