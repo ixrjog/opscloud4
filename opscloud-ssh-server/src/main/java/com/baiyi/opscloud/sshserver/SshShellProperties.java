@@ -17,7 +17,7 @@
 package com.baiyi.opscloud.sshserver;
 
 import com.baiyi.opscloud.sshserver.commands.CommandProperties;
-import com.baiyi.opscloud.sshserver.commands.DatasourceCommand;
+
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -120,6 +120,9 @@ public class SshShellProperties {
         private CommandProperties actuator = CommandProperties.withAuthorizedRoles(new ArrayList<>(Collections.singletonList(ACTUATOR_ROLE)));
 
         @NestedConfigurationProperty
+        private CommandProperties server = new CommandProperties();
+
+        @NestedConfigurationProperty
         private CommandProperties jmx = new CommandProperties();
 
         @NestedConfigurationProperty
@@ -136,9 +139,6 @@ public class SshShellProperties {
 
         @NestedConfigurationProperty
         private CommandProperties stacktrace = new CommandProperties();
-
-        @NestedConfigurationProperty
-        private CommandProperties datasource = CommandProperties.withExcludedByDefault(new ArrayList<>(Collections.singletonList(DatasourceCommand.COMMAND_DATA_SOURCE_UPDATE)));
 
         @NestedConfigurationProperty
         private CommandProperties postprocessors = CommandProperties.notRestrictedByDefault();

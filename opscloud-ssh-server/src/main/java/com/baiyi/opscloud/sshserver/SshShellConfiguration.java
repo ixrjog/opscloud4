@@ -16,21 +16,20 @@
 
 package com.baiyi.opscloud.sshserver;
 
-import com.baiyi.opscloud.sshserver.auth.SshShellPublicKeyAuthenticationProvider;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sshd.common.util.io.IoUtils;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;
-import org.apache.sshd.server.auth.pubkey.RejectAllPublickeyAuthenticator;
+import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
-import jakarta.annotation.PreDestroy;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,6 +50,8 @@ public class SshShellConfiguration {
     private final SshShellCommandFactory shellCommandFactory;
 
     private final PasswordAuthenticator passwordAuthenticator;
+
+    private final PublickeyAuthenticator publickeyAuthenticator;
 
     /**
      * Create the bean responsible for starting and stopping the SSH server
@@ -73,20 +74,21 @@ public class SshShellConfiguration {
         SshServer server = SshServer.setUpDefaultServer();
         server.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(properties.getHostKeyFile().toPath()));
         server.setHost(properties.getHost());
-        server.setPasswordAuthenticator(passwordAuthenticator);
-        server.setPublickeyAuthenticator(RejectAllPublickeyAuthenticator.INSTANCE);
-        if (properties.getAuthorizedPublicKeys() != null) {
-            if (properties.getAuthorizedPublicKeys().exists()) {
-                server.setPublickeyAuthenticator(
-                        new SshShellPublicKeyAuthenticationProvider(getFile(properties.getAuthorizedPublicKeys()))
-                );
-                log.info("Using authorized public keys from : {}",
-                        properties.getAuthorizedPublicKeys().getDescription());
-            } else {
-                log.warn("Could not read authorized public keys from : {}, public key authentication is disabled.",
-                        properties.getAuthorizedPublicKeys().getDescription());
-            }
-        }
+        // server.setPasswordAuthenticator(passwordAuthenticator);
+        //server.setPublickeyAuthenticator(RejectAllPublickeyAuthenticator.INSTANCE);
+        server.setPublickeyAuthenticator(publickeyAuthenticator);
+//        if (properties.getAuthorizedPublicKeys() != null) {
+//            if (properties.getAuthorizedPublicKeys().exists()) {
+//                server.setPublickeyAuthenticator(
+//                        new SshShellPublicKeyAuthenticationProvider(getFile(properties.getAuthorizedPublicKeys()))
+//                );
+//                log.info("Using authorized public keys from : {}",
+//                        properties.getAuthorizedPublicKeys().getDescription());
+//            } else {
+//                log.warn("Could not read authorized public keys from : {}, public key authentication is disabled.",
+//                        properties.getAuthorizedPublicKeys().getDescription());
+//            }
+//        }
         server.setPort(properties.getPort());
         server.setShellFactory(channelSession -> shellCommandFactory);
         server.setCommandFactory((channelSession, s) -> shellCommandFactory);

@@ -45,4 +45,5 @@ public class SshShellPublicKeyAuthenticationProvider
         session.getIoSession().setAttribute(SshShellAuthenticationProvider.AUTHENTICATION_ATTRIBUTE, new SshAuthentication(username, username));
         return authenticated;
     }
+
 }

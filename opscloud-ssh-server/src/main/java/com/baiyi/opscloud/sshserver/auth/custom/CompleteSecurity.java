@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.baiyi.opscloud.sshserver.auth.provider;
+package com.baiyi.opscloud.sshserver.auth.custom;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

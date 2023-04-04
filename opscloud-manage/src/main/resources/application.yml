@@ -119,6 +119,9 @@ mapper:
   identity: MYSQL
   before: false
 
+# 关闭控制台
+spring.shell.interactive.enabled: false
+
 ssh:
   shell:
     authentication: security
@@ -127,24 +130,21 @@ ssh:
       actuator:
         excludes:
           - audit
-      jvm:
-        enable: false
-      threads:
-        enable: false
       manage-sessions:
         enable: true
       datasource:
         excludes:
+    display-banner: true
     host: 0.0.0.0
     port: 2222
     shared-history: false
     history-directory: ${home}/opscloud-data/ssh-server/history-log/
     host-key-file: ${home}/opscloud-data/ssh-server/hostKey.ser
     prompt:
-      color: cyan
-      text: 'ssh-server::>'
+      # white|cyan
+      color: white
+      text: 'ssh-server>'
 
-spring.shell.interactive.enabled: false
 
 ## ssh-server
 #ssh:

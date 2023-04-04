@@ -21,8 +21,7 @@ import java.io.Serial;
 /**
  * Post processor exception
  */
-public class PostProcessorException
-        extends Exception {
+public class PostProcessorException extends Exception {
 
     @Serial
     private static final long serialVersionUID = 150227794242813079L;
