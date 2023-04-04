@@ -1,7 +1,9 @@
-package com.baiyi.opscloud.sshserver.commands;
+package com.baiyi.opscloud.sshserver.commands.builtin;
 
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.SshShellProperties;
+import com.baiyi.opscloud.sshserver.commands.AbstractCommand;
+import com.baiyi.opscloud.sshserver.commands.SshShellComponent;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
