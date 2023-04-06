@@ -20,7 +20,7 @@ public class WorkflowUtil {
     private WorkflowUtil() {
     }
 
-    public static WorkflowVO.Workflow toView(String workflow) {
+    public static WorkflowVO.Workflow load(String workflow) {
         if (StringUtils.isEmpty(workflow)) {
             return WorkflowVO.Workflow.EMPTY_WORKFLOW;
         }
@@ -33,7 +33,7 @@ public class WorkflowUtil {
     }
 
     public static Map<String, WorkflowVO.Node> toNodeMap(String workflow) {
-        WorkflowVO.Workflow wf = toView(workflow);
+        WorkflowVO.Workflow wf = load(workflow);
         return wf.getNodes().stream().collect(Collectors.toMap(WorkflowVO.Node::getName, a -> a, (k1, k2) -> k1));
     }
 

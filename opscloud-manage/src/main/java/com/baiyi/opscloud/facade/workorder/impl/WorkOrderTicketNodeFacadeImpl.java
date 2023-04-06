@@ -32,7 +32,7 @@ public class WorkOrderTicketNodeFacadeImpl implements WorkOrderTicketNodeFacade 
 
     @Override
     public void createWorkflowNodes(WorkOrder workOrder, WorkOrderTicket workOrderTicket) {
-        WorkflowVO.Workflow workflowVO = WorkflowUtil.toView(workOrder.getWorkflow());
+        WorkflowVO.Workflow workflowVO = WorkflowUtil.load(workOrder.getWorkflow());
         List<WorkOrderTicketNode> nodes = Lists.newArrayList();
         for (WorkflowVO.Node node : workflowVO.getNodes()) {
             WorkOrderTicketNode workOrderTicketNode = WorkOrderTicketNode.builder()

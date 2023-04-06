@@ -3,7 +3,6 @@ package com.baiyi.opscloud.packer.workorder;
 import com.baiyi.opscloud.datasource.packer.DsInstancePacker;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
-import com.baiyi.opscloud.service.workorder.WorkOrderService;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketEntryService;
 import com.baiyi.opscloud.workorder.processor.ITicketProcessor;
 import com.baiyi.opscloud.workorder.processor.factory.WorkOrderTicketProcessorFactory;
@@ -23,8 +22,6 @@ import java.util.stream.Collectors;
 public class TicketEntryPacker {
 
     private final WorkOrderTicketEntryService workOrderTicketEntryService;
-
-    private final WorkOrderService workOrderService;
 
     private final DsInstancePacker dsInstancePacker;
 

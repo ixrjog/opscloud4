@@ -55,7 +55,7 @@ public abstract class AbstractAssetToAccessManagementConverter implements IAsset
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        AccessManagementPacker.context.put(getAMType(), this::toAM);
+        AccessManagementPacker.CONTEXT.put(getAMType(), this::toAM);
     }
 
 }

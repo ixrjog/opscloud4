@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class WorkflowVO {
     @Builder
     @Data
     public static class WorkflowView implements Serializable {
+        @Serial
         private static final long serialVersionUID = -11415446570849511L;
         @Builder.Default
         private List<NodeView> nodes = Lists.newArrayList();
@@ -30,6 +32,7 @@ public class WorkflowVO {
     @NoArgsConstructor
     @Data
     public static class NodeView extends Node implements Serializable {
+        @Serial
         private static final long serialVersionUID = -5431171001287996887L;
         private List<UserVO.User> auditUsers;
         private UserVO.User auditUser;
@@ -41,9 +44,11 @@ public class WorkflowVO {
     @Data
     public static class Workflow implements Serializable {
         public static final Workflow EMPTY_WORKFLOW = Workflow.builder().build();
+        @Serial
         private static final long serialVersionUID = -837044550263261422L;
         @Builder.Default
         private List<Node> nodes = Lists.newArrayList();
+
     }
 
     @Builder
@@ -51,6 +56,7 @@ public class WorkflowVO {
     @NoArgsConstructor
     @Data
     public static class Node implements Serializable {
+        @Serial
         private static final long serialVersionUID = 2636039751664799398L;
         @Schema(name = "节点名称")
         private String name;

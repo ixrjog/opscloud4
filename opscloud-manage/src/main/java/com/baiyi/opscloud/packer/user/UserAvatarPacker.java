@@ -51,7 +51,10 @@ public class UserAvatarPacker implements IWrapper<UserVO.User> {
         }
         for (BusinessAssetRelation relation : relations) {
             DatasourceInstanceAssetProperty property =
-                    dsInstanceAssetPropertyService.queryByAssetId(relation.getDatasourceInstanceAssetId()).stream().filter(p -> p.getName().equals("avatar")).findFirst().orElse(null);
+                    dsInstanceAssetPropertyService.queryByAssetId(relation.getDatasourceInstanceAssetId()).stream()
+                            .filter(p -> p.getName().equals("avatar"))
+                            .findFirst()
+                            .orElse(null);
             if (property != null) {
                 user.setAvatar(property.getValue());
                 return;

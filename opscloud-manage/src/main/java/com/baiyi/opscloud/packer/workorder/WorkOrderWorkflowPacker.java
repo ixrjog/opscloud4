@@ -41,7 +41,7 @@ public class WorkOrderWorkflowPacker {
         if (workOrder == null) {
             return;
         }
-        WorkflowVO.Workflow workflowVO = WorkflowUtil.toView(workOrder.getWorkflow());
+        WorkflowVO.Workflow workflowVO = WorkflowUtil.load(workOrder.getWorkflow());
         List<WorkflowVO.NodeView> nodes = workflowVO.getNodes().stream().map(e -> {
             WorkflowVO.NodeView nodeView = BeanCopierUtil.copyProperties(e, WorkflowVO.NodeView.class);
             try {
