@@ -54,4 +54,5 @@ public class PrettyJsonPostProcessor
             throw new PostProcessorException("Unable to prettify object. " + e.getMessage(), e);
         }
     }
+
 }

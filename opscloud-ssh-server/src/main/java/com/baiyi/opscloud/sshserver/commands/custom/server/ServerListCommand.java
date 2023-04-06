@@ -26,6 +26,7 @@ import org.springframework.shell.standard.ShellOption;
 public class ServerListCommand extends BaseServerCommand {
 
 
+    @SuppressWarnings("SpringShellCommandInspection")
     @ScreenClear
     @SettingContextSessionUser(invokeAdmin = true)
     @ShellMethod(key = {COMMAND_SERVER_LIST, "ls"}, value = "List server info.")

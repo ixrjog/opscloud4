@@ -40,6 +40,7 @@ import org.springframework.shell.standard.commands.Stacktrace;
         name = SshShellProperties.SSH_SHELL_PREFIX + ".commands." + StacktraceCommand.GROUP + ".create",
         havingValue = "true", matchIfMissing = true
 )
+@SuppressWarnings("SpringShellCommandInspection")
 public class StacktraceCommand extends AbstractCommand implements Stacktrace.Command {
 
     public static final String GROUP = "stacktrace";
@@ -50,6 +51,7 @@ public class StacktraceCommand extends AbstractCommand implements Stacktrace.Com
     public StacktraceCommand(SshShellHelper helper, SshShellProperties properties) {
         super(helper, properties, properties.getCommands().getStacktrace());
     }
+
 
     @ShellMethod(key = COMMAND_STACKTRACE, value = "Display the full stacktrace of the last error.")
     @ShellMethodAvailability("stacktraceAvailability")

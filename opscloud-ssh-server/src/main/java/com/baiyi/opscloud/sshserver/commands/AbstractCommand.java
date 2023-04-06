@@ -92,7 +92,6 @@ public class AbstractCommand extends AbstractShellComponent {
         // nothing by default
     }
 
-
     /**
      * Extends this to add behavior after the one in abstract
      *
@@ -101,4 +100,5 @@ public class AbstractCommand extends AbstractShellComponent {
     protected void postAvailability() throws AvailabilityException {
         // nothing by default
     }
+
 }

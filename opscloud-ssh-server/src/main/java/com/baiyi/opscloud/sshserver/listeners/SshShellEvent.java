@@ -34,4 +34,5 @@ public class SshShellEvent {
     public long getSessionId() {
         return session.getServerSession().getIoSession().getId();
     }
+
 }

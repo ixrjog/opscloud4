@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.template.factory.base;
 
 import com.baiyi.opscloud.common.exception.common.OCException;
-import com.baiyi.opscloud.common.template.YamlUtil;
+import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.common.template.YamlVars;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.BeetlUtil;
@@ -96,7 +96,7 @@ public abstract class AbstractTemplateConsume<T> implements ITemplateConsume, In
     }
 
     private YamlVars.Vars toVars(BusinessTemplate bizTemplate) {
-        YamlVars.Vars vars = YamlUtil.toVars(bizTemplate.getVars());
+        YamlVars.Vars vars = YamlUtil.loadVars(bizTemplate.getVars());
         if (!vars.getVars().containsKey("envName")) {
             Env env = envService.getByEnvType(bizTemplate.getEnvType());
             vars.getVars().put("envName", env.getEnvName());

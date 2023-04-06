@@ -77,8 +77,10 @@ public class ExtendedCompleterAdapter extends CompleterAutoConfiguration.Complet
      */
     private static List<String> sanitizeInput(List<String> words) {
         words = words.stream()
-                .map(s -> s.replaceAll("^\\n+|\\n+$", "")) // CR at beginning/end of line introduced by backslash continuation
-                .map(s -> s.replaceAll("\\n+", " ")) // CR in middle of word introduced by return inside a quoted string
+                // CR at beginning/end of line introduced by backslash continuation
+                .map(s -> s.replaceAll("^\\n+|\\n+$", ""))
+                // CR in middle of word introduced by return inside a quoted string
+                .map(s -> s.replaceAll("\\n+", " "))
                 .collect(Collectors.toList());
         return words;
     }

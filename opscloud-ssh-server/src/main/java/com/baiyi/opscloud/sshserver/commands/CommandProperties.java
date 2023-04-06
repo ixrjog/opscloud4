@@ -105,4 +105,5 @@ public class CommandProperties {
         properties.setExcludes(excludes);
         return properties;
     }
+
 }

@@ -59,9 +59,12 @@ public class SshShellHelper {
     );
 
     private final List<String> confirmWords;
+
     @Autowired
     @Lazy
     private Terminal defaultTerminal;
+
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     @Lazy
     private LineReader defaultLineReader;

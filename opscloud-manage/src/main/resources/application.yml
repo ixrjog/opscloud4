@@ -9,7 +9,7 @@ spring:
 #    static-path-pattern: /static/**
   main:
     # 允许循环依赖
-    allow-circular-references: true
+    allow-circular-references: on
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
@@ -87,8 +87,8 @@ server:
 
 pagehelper:
   helper-dialect: mysql
-  reasonable: true
-  support-methods-arguments: true
+  reasonable: on
+  support-methods-arguments: on
   params: count=countSql
 
 # mybatis
@@ -96,7 +96,7 @@ mybatis:
   type-aliases-package: com.baiyi.opscloud.domain
   mapper-locations: classpath:/mapper/*.xml
   configuration:
-    map-underscore-to-camel-case: true
+    map-underscore-to-camel-case: on
 
 mapper:
   mappers:
@@ -118,10 +118,10 @@ ssh:
           - audit
       history:
         enable: off
-    display-banner: true
+    display-banner: on
     host: 0.0.0.0
     port: 2222
-    shared-history: false
+    shared-history: off
     history-directory: ${home}/opscloud-data/ssh-server/history-log/
     host-key-file: ${home}/opscloud-data/ssh-server/hostKey.ser
     prompt:

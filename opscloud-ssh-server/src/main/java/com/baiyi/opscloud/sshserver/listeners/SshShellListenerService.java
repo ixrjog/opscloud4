@@ -72,12 +72,13 @@ public class SshShellListenerService {
     }
 
     private void notify(SshShellEvent event) {
-        for (SshShellListener listener : this.listeners) {
+        this.listeners.forEach(listener -> {
             try {
                 listener.onEvent(event);
             } catch (RuntimeException e) {
                 log.error("Unable to execute onSessionStarted on listener : {}", listener.getClass().getName(), e);
             }
-        }
+        });
     }
+
 }

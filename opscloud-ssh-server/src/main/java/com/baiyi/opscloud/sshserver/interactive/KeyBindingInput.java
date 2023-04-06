@@ -26,4 +26,5 @@ public interface KeyBindingInput {
      * Perform action
      */
     void action();
+
 }

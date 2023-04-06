@@ -27,6 +27,7 @@ public class ExtendedInteractiveShellRunner extends InteractiveShellRunner {
     private final Shell shell;
     private final ShellContext shellContext;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     public ExtendedInteractiveShellRunner(LineReader lineReader, PromptProvider promptProvider, Shell shell, ShellContext shellContext) {
         super(lineReader, promptProvider, shell, shellContext);
         this.lineReader = lineReader;
@@ -63,4 +64,5 @@ public class ExtendedInteractiveShellRunner extends InteractiveShellRunner {
             return super.readInput();
         }
     }
+
 }

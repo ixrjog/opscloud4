@@ -36,4 +36,5 @@ public class InteractiveInputIO {
 
     @NonNull
     private List<AttributedString> lines;
+
 }

@@ -58,6 +58,7 @@ public class ExtendedShell extends Shell {
      * @param exitCodeMappings     exit code mappipngs
      * @param postProcessors       post processors
      */
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     protected ExtendedShell(
             ResultHandlerService resultHandlerService, CommandCatalog commandRegistry,
             Terminal terminal, ShellContext shellContext, ExitCodeMappings exitCodeMappings,

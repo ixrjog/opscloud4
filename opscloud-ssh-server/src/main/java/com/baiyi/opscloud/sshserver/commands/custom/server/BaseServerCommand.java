@@ -59,7 +59,6 @@ public abstract class BaseServerCommand {
     @Resource
     protected SshServerPacker sshServerPacker;
 
-
     private final static String NO_AUTHORIZED_ACCOUNT = SshShellHelper.getBackgroundColoredMessage("No authorized account", PromptColor.MAGENTA);
 
     public interface LoginType {
@@ -77,7 +76,8 @@ public abstract class BaseServerCommand {
         SessionCommandContext.setServerQuery(pageQuery);
         DataTable<Server> table = serverService.queryUserPermissionServerPage(pageQuery);
         Map<Integer, Integer> idMapper = Maps.newHashMap();
-        List<ServerVO.Server> data = BeanCopierUtil.copyListProperties(table.getData(), ServerVO.Server.class).stream().peek(e -> sshServerPacker.wrap(e)).collect(Collectors.toList());
+        List<ServerVO.Server> data = BeanCopierUtil.copyListProperties(table.getData(), ServerVO.Server.class)
+                .stream().peek(e -> sshServerPacker.wrap(e)).toList();
         int id = 1;
         for (ServerVO.Server s : data) {
             idMapper.put(id, s.getId());

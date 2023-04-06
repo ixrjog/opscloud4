@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.datasource.impl;
 
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.exception.common.OCException;
-import com.baiyi.opscloud.common.template.YamlUtil;
+import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IOUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
@@ -89,7 +89,7 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
         DsInstanceContext instanceContext = buildDsInstanceContext(datasourceInstanceAssetSubscription.getInstanceUuid());
         AnsibleConfig.Ansible ansible = dsConfigHelper.build(instanceContext.getDsConfig(), AnsibleConfig.class).getAnsible();
         AnsiblePlaybookArgs args = AnsiblePlaybookArgs.builder()
-                .extraVars(YamlUtil.toVars(datasourceInstanceAssetSubscription.getVars()).getVars())
+                .extraVars(YamlUtil.loadVars(datasourceInstanceAssetSubscription.getVars()).getVars())
                 .keyFile(SystemEnvUtil.renderEnvHome(ansible.getPrivateKey()))
                 .playbook(toSubscriptionPlaybookFile(ansible, datasourceInstanceAssetSubscription))
                 .inventory(SystemEnvUtil.renderEnvHome(ansible.getInventoryHost()))

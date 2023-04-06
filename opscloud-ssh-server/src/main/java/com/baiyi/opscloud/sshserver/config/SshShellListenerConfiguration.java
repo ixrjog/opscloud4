@@ -21,12 +21,11 @@ public class SshShellListenerConfiguration {
     public SshShellListener sshShellListener() {
         return event -> {
             SshShellEventType eventType = event.getType();
-            ISshShellEvent sshShellEvent= SshShellEventFactory.getByType(eventType.name());
-            if(sshShellEvent != null){
+            ISshShellEvent sshShellEvent = SshShellEventFactory.getByType(eventType.name());
+            if (sshShellEvent != null) {
                 sshShellEvent.handle(event);
             }
         };
     }
-
 
 }

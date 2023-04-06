@@ -74,4 +74,5 @@ public class JsonPointerPostProcessor
         }
         return result;
     }
+
 }

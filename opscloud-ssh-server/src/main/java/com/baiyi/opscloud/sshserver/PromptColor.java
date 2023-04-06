@@ -21,6 +21,9 @@ package com.baiyi.opscloud.sshserver;
  */
 public enum PromptColor {
 
+    /**
+     * Color
+     */
     BLACK(0),
     RED(1),
     GREEN(2),

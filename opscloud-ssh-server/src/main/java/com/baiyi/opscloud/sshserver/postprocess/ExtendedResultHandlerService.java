@@ -119,4 +119,5 @@ public class ExtendedResultHandlerService implements ResultHandlerService {
     private void printError(String error) {
         delegate.handle(new AttributedString(error, AttributedStyle.DEFAULT.foreground(AttributedStyle.RED)).toAnsi());
     }
+
 }

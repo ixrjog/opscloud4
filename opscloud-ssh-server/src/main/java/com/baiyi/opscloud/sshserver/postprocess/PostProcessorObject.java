@@ -35,4 +35,5 @@ public class PostProcessorObject {
     private String name;
 
     private List<String> parameters;
+
 }

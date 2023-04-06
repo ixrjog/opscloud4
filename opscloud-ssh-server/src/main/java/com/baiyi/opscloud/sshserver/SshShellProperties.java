@@ -128,7 +128,6 @@ public class SshShellProperties {
         @NestedConfigurationProperty
         private CommandProperties stacktrace = new CommandProperties();
 
-
     }
 
 }

@@ -34,4 +34,5 @@ public class AvailabilityException
     public AvailabilityException(String message, Throwable cause) {
         super(message, cause);
     }
+
 }

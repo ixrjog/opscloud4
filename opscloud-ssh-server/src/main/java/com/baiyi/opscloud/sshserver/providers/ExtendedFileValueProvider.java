@@ -54,4 +54,5 @@ public class ExtendedFileValueProvider implements ValueProvider {
         String path = f.getPath().replaceAll("\\\\", "/");
         return f.isDirectory() ? path + "/" : path;
     }
+
 }

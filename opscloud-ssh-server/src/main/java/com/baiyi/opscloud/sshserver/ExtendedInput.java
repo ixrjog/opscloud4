@@ -81,5 +81,6 @@ public class ExtendedInput implements Input {
         }
         return firstIndex;
     }
+
 }
 

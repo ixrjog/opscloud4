@@ -11,16 +11,16 @@ import java.util.Map;
  */
 public class SessionCommandContext {
 
-    private static final ThreadLocal<Map<Integer, Integer>> idMapper = new ThreadLocal<>();
+    private static final ThreadLocal<Map<Integer, Integer>> ID_MAPPER = new ThreadLocal<>();
 
     private static final ThreadLocal<ServerParam.UserPermissionServerPageQuery> serverQuery = new ThreadLocal<>();
 
     public static void setIdMapper(Map<Integer, Integer> param) {
-        idMapper.set(param);
+        ID_MAPPER.set(param);
     }
 
     public static Map<Integer, Integer> getIdMapper() {
-        return idMapper.get();
+        return ID_MAPPER.get();
     }
 
     public static void setServerQuery(ServerParam.UserPermissionServerPageQuery param) {

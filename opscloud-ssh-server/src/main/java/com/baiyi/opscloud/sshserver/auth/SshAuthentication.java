@@ -42,4 +42,5 @@ public class SshAuthentication {
     private Object credentials;
 
     private List<String> authorities;
+
 }

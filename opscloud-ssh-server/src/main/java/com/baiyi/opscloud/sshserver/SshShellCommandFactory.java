@@ -138,4 +138,5 @@ public class SshShellCommandFactory
         return threads.keySet().stream()
                 .collect(Collectors.toMap(s -> s.getServerSession().getIoSession().getId(), Function.identity()));
     }
+
 }

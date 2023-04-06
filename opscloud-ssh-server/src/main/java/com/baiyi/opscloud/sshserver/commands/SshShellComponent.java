@@ -25,6 +25,7 @@ import static com.baiyi.opscloud.sshserver.SshShellProperties.SSH_SHELL_ENABLE;
 
 /**
  * Conditional {@link ShellComponent}
+ * @author liangjian
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -39,4 +40,5 @@ public @interface SshShellComponent {
      * @return the suggested component name, if any
      */
     String value() default "";
+
 }

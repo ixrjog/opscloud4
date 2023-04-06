@@ -94,6 +94,7 @@ public class SshShellConfiguration {
         return server;
     }
 
+    @Deprecated
     private File getFile(Resource authorizedPublicKeys) throws IOException {
         if ("file".equals(authorizedPublicKeys.getURL().getProtocol())) {
             return authorizedPublicKeys.getFile();
@@ -140,4 +141,5 @@ public class SshShellConfiguration {
             sshServer.stop();
         }
     }
+
 }

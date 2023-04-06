@@ -32,9 +32,9 @@ public class TerminalUtil {
         newAttr.setLocalFlags(EnumSet.of(Attributes.LocalFlag.ICANON, Attributes.LocalFlag.ECHO, Attributes.LocalFlag.IEXTEN), false);
         // 关闭输入处理
         newAttr.setInputFlags(EnumSet.of(Attributes.InputFlag.IXON, Attributes.InputFlag.ICRNL, Attributes.InputFlag.INLCR), false);
-        newAttr.setControlChar(Attributes.ControlChar.VMIN, 1); // 1
-        newAttr.setControlChar(Attributes.ControlChar.VTIME, 0); // 0
-        newAttr.setControlChar(Attributes.ControlChar.VINTR, 0);  // 0
+        newAttr.setControlChar(Attributes.ControlChar.VMIN, 1);
+        newAttr.setControlChar(Attributes.ControlChar.VTIME, 0);
+        newAttr.setControlChar(Attributes.ControlChar.VINTR, 0);
         terminal.setAttributes(newAttr);
     }
 

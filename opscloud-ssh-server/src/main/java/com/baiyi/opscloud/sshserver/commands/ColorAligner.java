@@ -44,4 +44,5 @@ public class ColorAligner implements Aligner {
         }
         return result;
     }
+
 }

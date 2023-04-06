@@ -77,6 +77,7 @@ public class ServerLoginCommand extends BaseServerCommand {
         return Joiner.on("#").join(serverVO.getDisplayName(), server.getPrivateIp(), IdUtil.buildUUID());
     }
 
+    @SuppressWarnings("SpringShellCommandInspection")
     @ScreenClear
     @SettingContextSessionUser(invokeAdmin = true)
     @ShellMethod(key = {COMMAND_SERVER_LOGIN, "login", "open"}, value = "Login to the server to execute the shell")
@@ -112,7 +113,7 @@ public class ServerLoginCommand extends BaseServerCommand {
                 while (true) {
                     if (isClosed(sessionId, instanceId)) {
                         NewTimeUtil.millisecondsSleep(150L);
-                        printWithCloseSession("退出登录: 耗时%s/s", inst1);
+                        printWithCloseSession("Exit login, session duration %s/s", inst1);
                         break;
                     }
                     doResize(size, terminal, sessionId, instanceId);
@@ -120,12 +121,12 @@ public class ServerLoginCommand extends BaseServerCommand {
                     send(sessionId, instanceId, i);
                 }
             } catch (Exception e) {
-                printWithCloseSession("服务端连接断开: 耗时%s/s", inst1);
+                printWithCloseSession("Server connection disconnected, session duration %s/s", inst1);
             } finally {
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             }
         } catch (SshCommonException e) {
-            String msg = String.format("ssh连接错误: %s", e.getMessage());
+            String msg = String.format("SSH connection error: %s", e.getMessage());
             log.error(msg);
             sshShellHelper.print(msg, PromptColor.RED);
         }

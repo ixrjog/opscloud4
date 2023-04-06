@@ -39,8 +39,9 @@ public class ServerUtil {
     }
 
     public static String toDisplayTag(TagVO.ITags iTags) {
-        if (CollectionUtils.isEmpty(iTags.getTags()))
+        if (CollectionUtils.isEmpty(iTags.getTags())) {
             return " ";
+        }
         return Joiner.on(",").skipNulls().join(iTags.getTags().stream().map(TagVO.Tag::getTagKey).collect(Collectors.toList()));
     }
 
@@ -50,6 +51,6 @@ public class ServerUtil {
         } else {
             return server.getPrivateIp();
         }
-
     }
+
 }

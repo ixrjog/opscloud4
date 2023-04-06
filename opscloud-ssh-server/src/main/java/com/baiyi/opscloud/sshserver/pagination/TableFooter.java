@@ -33,22 +33,20 @@ public class TableFooter {
         public String pageTurning = "翻页< 上一页: b 下一页: n >";
 
         public void print(SshShellHelper helper, PromptColor color) {
-            int tp = 0;
-            try {
-                tp = (int) (totalNum - 1) / length + 1;
-            } catch (Exception ignored) {
-            }
+            int tp = length == -1 ? 0 : (int) (totalNum - 1) / length + 1;
             String p = Joiner.on(" ,").skipNulls().join(
                     "页码: " + page,
-                    "分页长度: " + length,
-                    "总页数: " + tp,
-                    "总数量: " + totalNum,
+                    "页长: " + length,
+                    "页数: " + tp,
+                    "资产总数: " + totalNum,
                     needPageTurning ? pageTurning : null
             );
             helper.print(p, color);
         }
 
     }
+
+    public static final String FOOTER_STR = "页码: %s, 页长: %s, 页数: %s, 资产总数: %s, 翻页< 上一页: b 下一页: n >";
 
     @Builder
     @Data
@@ -61,15 +59,11 @@ public class TableFooter {
         private int length;
 
         public void print(SshShellHelper helper, PromptColor color) {
-            int tp = 0;
-            try {
-                tp = (int) (totalNum - 1) / length + 1;
-            } catch (Exception ignored) {
-            }
-            String f = Joiner.on(" ,").join("页码: " + page, "分页长度: " + length, "总页数: " + tp, "总数量: " + totalNum);
-            helper.print(f, color);
+            int tp = length == -1 ? 0 : (int) (totalNum - 1) / length + 1;
+
+            // String f = Joiner.on(" ,").join("页码: " + page, "分页长度: " + length, "总页数: " + tp, "总数量: " + totalNum);
+            helper.print(String.format(FOOTER_STR, page, length, tp, totalNum), color);
         }
     }
-
 
 }

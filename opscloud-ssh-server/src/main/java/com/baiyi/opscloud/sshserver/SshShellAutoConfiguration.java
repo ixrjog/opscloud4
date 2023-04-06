@@ -121,6 +121,7 @@ public class SshShellAutoConfiguration {
 
     // post processors
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
     @ConditionalOnClass(name = "com.fasterxml.jackson.databind.ObjectMapper")
     public JsonPointerPostProcessor jsonPointerPostProcessor(ObjectMapper mapper) {
