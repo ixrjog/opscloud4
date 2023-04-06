@@ -1,11 +1,10 @@
 package com.baiyi.opscloud.domain.param.auth;
 
 import com.baiyi.opscloud.domain.param.PageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import lombok.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -18,13 +17,13 @@ public class AuthUserRoleParam {
     @Data
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class PageQuery extends PageParam {
 
-        @ApiModelProperty(value = "用户名")
+        @Schema(name = "用户名")
         private String username;
 
-        @ApiModelProperty(value = "角色id")
+        @Schema(name = "角色id")
         private Integer roleId;
 
     }
@@ -33,25 +32,24 @@ public class AuthUserRoleParam {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class UpdateUserRole {
 
-        @ApiModelProperty(value = "用户名")
+        @Schema(name = "用户名")
         @Valid
         private String username;
 
-        @ApiModelProperty(value = "角色ids")
+        @Schema(name = "角色ids")
         private List<Integer> roleIds;
 
     }
 
-
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class UserRolesQuery {
 
-        @ApiModelProperty(value = "用户名")
+        @Schema(name = "用户名")
         private String username;
 
     }

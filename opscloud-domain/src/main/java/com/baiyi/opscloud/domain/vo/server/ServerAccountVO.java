@@ -2,12 +2,12 @@ package com.baiyi.opscloud.domain.vo.server;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.sys.CredentialVO;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class ServerAccountVO {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Account extends BaseVO implements CredentialVO.ICredential, Serializable {
 
         private static final long serialVersionUID = 1815467621572374314L;

@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTemplate;
 import com.baiyi.opscloud.domain.param.template.BusinessTemplateParam;
-import com.baiyi.opscloud.mapper.opscloud.BusinessTemplateMapper;
+import com.baiyi.opscloud.mapper.BusinessTemplateMapper;
 import com.baiyi.opscloud.service.template.BusinessTemplateService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;

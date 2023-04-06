@@ -10,7 +10,7 @@ import com.baiyi.opscloud.sshcore.model.KubernetesSessionContainer;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 
 /**
  * @Author baiyi

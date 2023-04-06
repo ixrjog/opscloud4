@@ -53,4 +53,5 @@ public class Interactive {
     private List<KeyBinding> bindings;
 
     private Size size;
+
 }

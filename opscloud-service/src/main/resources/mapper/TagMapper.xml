@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.TagMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.Tag">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="tag_key" jdbcType="VARCHAR" property="tagKey"/>
+        <result column="business_type" jdbcType="INTEGER" property="businessType"/>
+        <result column="color" jdbcType="VARCHAR" property="color"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <!--  查询业务tag-->
+    <select id="queryBusinessTagByParam" parameterType="com.baiyi.opscloud.domain.param.tag.TagParam$BusinessQuery"
+            resultMap="BaseResultMap">
+        select * from tag
+        where
+        id in ( select tag_id from business_tag where business_id = #{businessId} and business_type = #{businessType} )
+        <if test="tagKey != null and tagKey!= ''">
+            and tag_key like "%" #{tagKey} "%"
+        </if>
+    </select>
+
+</mapper>

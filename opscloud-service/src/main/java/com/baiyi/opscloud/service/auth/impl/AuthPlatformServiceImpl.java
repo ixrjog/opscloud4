@@ -2,7 +2,7 @@ package com.baiyi.opscloud.service.auth.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.AuthPlatform;
 import com.baiyi.opscloud.factory.credential.AbstractCredentialCustomer;
-import com.baiyi.opscloud.mapper.opscloud.AuthPlatformMapper;
+import com.baiyi.opscloud.mapper.AuthPlatformMapper;
 import com.baiyi.opscloud.service.auth.AuthPlatformService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

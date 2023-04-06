@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.WorkOrderTicketMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="work_order_id" jdbcType="INTEGER" property="workOrderId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="node_id" jdbcType="INTEGER" property="nodeId"/>
+        <result column="ticket_phase" jdbcType="VARCHAR" property="ticketPhase"/>
+        <result column="ticket_status" jdbcType="INTEGER" property="ticketStatus"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <!--    report-->
+    <resultMap id="ReportResultMap" type="com.baiyi.opscloud.domain.vo.workorder.WorkOrderReportVO$Report">
+        <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+        <result column="value" jdbcType="INTEGER" property="value"/>
+        <result column="color" jdbcType="VARCHAR" property="color"/>
+    </resultMap>
+
+    <select id="getNewTicketByUser" resultMap="BaseResultMap">
+        select a0.*
+        from work_order_ticket a0
+                 join work_order a1 on a0.work_order_id = a1.id
+        where username = #{username}
+          and ticket_phase = 'NEW'
+          and a1.work_order_key = #{workOrderKey}
+        order by a0.create_time limit 1
+    </select>
+
+    <select id="queryPageByParam"
+            parameterType="com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam$TicketPageQuery"
+            resultMap="BaseResultMap">
+        select * from work_order_ticket
+        <where>
+            <if test="ticketStatus != null">
+                ticket_status = #{ticketStatus}
+            </if>
+            <if test="workOrderId != null">
+                work_order_id = #{workOrderId}
+            </if>
+            <if test="ticketPhase != null and ticketPhase != ''">
+                and ticket_phase = #{ticketPhase}
+            </if>
+            <if test="username != null and username != ''">
+                and id in ( select work_order_ticket_id from work_order_ticket_subscriber where username = #{username}
+                and is_active = true )
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="queryReportByName" resultMap="ReportResultMap">
+        select a1.name as `c_name`, count(*) as `value`, a1.color
+        from work_order_ticket a0
+                 join work_order a1 on a1.id = a0.work_order_id
+        where a0.ticket_phase = 'SUCCESS'
+          and a0.end_time is not null
+        group by a0.work_order_id
+        order by a0.work_order_id;
+    </select>
+
+    <select id="queryReportByMonth" resultMap="ReportResultMap">
+        select date_format(a0.end_time, '%Y-%m') as `c_name`
+        <if test="workOrderId != -1">
+            , sum(if(a0.work_order_id = #{workOrderId}, 1, 0)) as `value`
+        </if>
+        from work_order_ticket a0
+                 join work_order a1 on a1.id = a0.work_order_id
+        where a0.ticket_phase = 'SUCCESS'
+          and a0.end_time is not null
+        group by `c_name`
+        order by `c_name`;
+    </select>
+
+</mapper>

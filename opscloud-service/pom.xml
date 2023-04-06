@@ -24,14 +24,25 @@
             <version>4.2.2</version>
             <exclusions>
                 <exclusion>
-                    <artifactId>org.mybatis</artifactId>
-                    <groupId>mybatis</groupId>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-jdbc</artifactId>
                 </exclusion>
                 <exclusion>
-                    <artifactId>org.mybatis</artifactId>
-                    <groupId>mybatis-spring</groupId>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis-spring</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <!--            <version>3.0.2-SNAPSHOT</version>-->
+            <version>3.0.1</version>
         </dependency>
 
         <dependency>

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.common.datasource;
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -21,7 +21,7 @@ public class ZabbixConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Zabbix {
         private String version;
         private String url;
@@ -37,7 +37,7 @@ public class ZabbixConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Operation {
         private String subject;
         private String message;
@@ -45,7 +45,7 @@ public class ZabbixConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Notice {
         private String media;
         private Integer priority;

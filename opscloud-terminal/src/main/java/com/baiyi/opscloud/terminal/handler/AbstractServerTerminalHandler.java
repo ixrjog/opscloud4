@@ -10,7 +10,7 @@ import com.baiyi.opscloud.terminal.factory.ServerTerminalMessageHandlerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 
 /**

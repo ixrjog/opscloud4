@@ -16,10 +16,11 @@
 
 package com.baiyi.opscloud.sshserver.postprocess.provided;
 
-import com.baiyi.opscloud.sshserver.postprocess.PostProcessor;
 import com.baiyi.opscloud.sshserver.postprocess.PostProcessorException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.baiyi.opscloud.sshserver.postprocess.PostProcessor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -28,9 +29,11 @@ import java.util.List;
  * Pretty json post processor
  */
 @Slf4j
-public class PrettyJsonPostProcessor implements PostProcessor<Object> {
+@AllArgsConstructor
+public class PrettyJsonPostProcessor
+        implements PostProcessor<Object, String> {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private final ObjectMapper mapper;
 
     @Override
     public String getName() {
@@ -38,12 +41,18 @@ public class PrettyJsonPostProcessor implements PostProcessor<Object> {
     }
 
     @Override
+    public String getDescription() {
+        return "Pretty print thanks to json format";
+    }
+
+    @Override
     public String process(Object result, List<String> parameters) throws PostProcessorException {
         try {
-            return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(result);
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(result);
         } catch (JsonProcessingException e) {
             log.warn("Unable to prettify object: {}", result);
             throw new PostProcessorException("Unable to prettify object. " + e.getMessage(), e);
         }
     }
+
 }

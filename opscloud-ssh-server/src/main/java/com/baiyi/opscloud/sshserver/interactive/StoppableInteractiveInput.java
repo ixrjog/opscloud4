@@ -40,4 +40,5 @@ public interface StoppableInteractiveInput extends InteractiveInput {
     default List<AttributedString> getLines(Size size, long currentDelay) {
         return getIO(size, currentDelay).getLines();
     }
+
 }

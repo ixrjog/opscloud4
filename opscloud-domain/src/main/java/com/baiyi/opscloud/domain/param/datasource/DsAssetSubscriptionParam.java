@@ -2,8 +2,7 @@ package com.baiyi.opscloud.domain.param.datasource;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 /**
@@ -18,13 +17,13 @@ public class DsAssetSubscriptionParam {
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class AssetSubscriptionPageQuery extends PageParam implements IExtend {
 
-        @ApiModelProperty(value = "展开")
+        @Schema(name = "展开")
         private Boolean extend;
 
-        @ApiModelProperty(value = "是否有效")
+        @Schema(name = "是否有效")
         @Builder.Default
         private Boolean isActive = true;
 

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.workevent.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.WorkRole;
-import com.baiyi.opscloud.mapper.opscloud.WorkRoleMapper;
+import com.baiyi.opscloud.mapper.WorkRoleMapper;
 import com.baiyi.opscloud.service.workevent.WorkRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

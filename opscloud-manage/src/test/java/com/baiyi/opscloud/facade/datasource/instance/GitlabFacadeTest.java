@@ -3,11 +3,11 @@ package com.baiyi.opscloud.facade.datasource.instance;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.util.GitLabTokenUtil;
 import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
-import com.baiyi.opscloud.factory.gitlab.GitlabEventNameEnum;
+import com.baiyi.opscloud.factory.gitlab.GitLabEventNameEnum;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.InitializingBean;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -25,7 +25,7 @@ class GitlabFacadeTest extends BaseUnit implements InitializingBean {
     @Test
     void consumeEventV4Test() {
         GitLabNotifyParam.SystemHook systemHook = GitLabNotifyParam.SystemHook.builder()
-                .event_name(GitlabEventNameEnum.KEY_CREATE.name().toLowerCase())
+                .event_name(GitLabEventNameEnum.KEY_CREATE.name().toLowerCase())
                 .user_name("baiyi")
                 .id(999)
                 .key("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC58FwqHUbebw2SdT7SP4FxZ0w+lAO/erhy2ylhlcW/tZ3GY3mBu9VeeiSGoGz8hCx80Zrz+aQv28xfFfKlC8XQFpCWwsnWnQqO2Lv9bS8V1fIHgMxOHIt5Vs+9CAWGCCvUOAurjsUDoE2ALIXLDMKnJxcxD13XjWdK54j6ZXDB4syLF0C2PnAQSVY9X7MfCYwtuFmhQhKaBussAXpaVMRHltie3UYSBUUuZaB3J4cg/7TxlmxcNd+ppPRIpSZAB0NI6aOnqoBCpimscO/VpQRJMVLr3XiSYeT6HBiDXWHnIVPfQc03OGcaFqOit6p8lYKMaP/iUQLm+pgpZqrXZ9vB john@localhost")

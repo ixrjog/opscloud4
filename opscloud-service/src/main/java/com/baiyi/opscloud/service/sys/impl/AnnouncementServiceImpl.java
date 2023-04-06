@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.sys.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.SysAnnouncement;
-import com.baiyi.opscloud.mapper.opscloud.SysAnnouncementMapper;
+import com.baiyi.opscloud.mapper.SysAnnouncementMapper;
 import com.baiyi.opscloud.service.sys.AnnouncementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

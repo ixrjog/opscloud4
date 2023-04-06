@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.ServerTaskMember;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;

@@ -2,8 +2,7 @@ package com.baiyi.opscloud.domain.param.auth;
 
 import com.baiyi.opscloud.domain.param.PageParam;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,10 +17,10 @@ public class AuthRoleParam {
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class AuthRolePageQuery extends SuperPageParam {
 
-        @ApiModelProperty(value = "角色名称")
+        @Schema(name = "角色名称")
         private String roleName;
 
     }
@@ -29,15 +28,15 @@ public class AuthRoleParam {
     @Data
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class UserTicketOcAuthRoleQuery extends PageParam {
 
-        @ApiModelProperty(value = "查询名称")
+        @Schema(name = "查询名称")
         private String queryName;
 
         private String username;
 
-        @ApiModelProperty(value = "工单票据id")
+        @Schema(name = "工单票据id")
         private Integer workorderTicketId;
 
     }

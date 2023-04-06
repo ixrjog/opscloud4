@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.vo.workorder.WorkOrderViewVO;
 import com.baiyi.opscloud.facade.workorder.WorkOrderFacade;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

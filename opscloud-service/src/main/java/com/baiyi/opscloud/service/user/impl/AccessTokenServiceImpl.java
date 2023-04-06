@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.user.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.AccessToken;
-import com.baiyi.opscloud.mapper.opscloud.AccessTokenMapper;
+import com.baiyi.opscloud.mapper.AccessTokenMapper;
 import com.baiyi.opscloud.service.user.AccessTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

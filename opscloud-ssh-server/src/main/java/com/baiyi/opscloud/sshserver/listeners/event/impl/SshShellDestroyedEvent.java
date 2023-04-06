@@ -2,6 +2,7 @@ package com.baiyi.opscloud.sshserver.listeners.event.impl;
 
 import com.baiyi.opscloud.sshserver.listeners.SshShellEvent;
 import com.baiyi.opscloud.sshserver.listeners.SshShellEventType;
+import com.baiyi.opscloud.sshserver.listeners.event.AbstractSshShellEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

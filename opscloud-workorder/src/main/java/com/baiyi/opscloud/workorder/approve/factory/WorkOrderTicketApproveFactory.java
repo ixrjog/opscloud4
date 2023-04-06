@@ -14,14 +14,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class WorkOrderTicketApproveFactory {
 
-    private static final Map<String, ITicketApprove> context = new ConcurrentHashMap<>();
+    private static final Map<String, ITicketApprove> CONTEXT = new ConcurrentHashMap<>();
 
     public static ITicketApprove getByApprovalType(String approvalType) {
-        return context.get(approvalType);
+        return CONTEXT.get(approvalType);
     }
 
     public static void register(ITicketApprove bean) {
-        context.put(bean.getApprovalType(), bean);
+        CONTEXT.put(bean.getApprovalType(), bean);
         log.debug("WorkOrderTicketApproveFactory Register: approvalType={}, beanName={}", bean.getApprovalType(), bean.getClass().getSimpleName());
     }
 

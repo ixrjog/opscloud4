@@ -2,8 +2,7 @@ package com.baiyi.opscloud.domain.param.template;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 /**
@@ -18,13 +17,12 @@ public class MessageTemplateParam {
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
     public static class MessageTemplatePageQuery extends PageParam implements IExtend {
 
-        @ApiModelProperty(value = "关键字查询")
+        @Schema(name = "关键字查询")
         private String queryName;
 
-        @ApiModelProperty(value = "展开数据")
+        @Schema(name = "展开数据")
         private Boolean extend;
 
     }
@@ -33,7 +31,7 @@ public class MessageTemplateParam {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class UpdateMessageTemplate {
 
         private Integer id;

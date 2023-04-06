@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.DatasourceInstanceAssetMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
+        <result column="instance_uuid" jdbcType="VARCHAR" property="instanceUuid"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="asset_id" jdbcType="VARCHAR" property="assetId"/>
+        <result column="asset_type" jdbcType="VARCHAR" property="assetType"/>
+        <result column="kind" jdbcType="VARCHAR" property="kind"/>
+        <result column="version" jdbcType="VARCHAR" property="version"/>
+        <result column="is_active" jdbcType="BIT" property="isActive"/>
+        <result column="asset_key" jdbcType="VARCHAR" property="assetKey"/>
+        <result column="asset_key_2" jdbcType="VARCHAR" property="assetKey2"/>
+        <result column="zone" jdbcType="VARCHAR" property="zone"/>
+        <result column="region_id" jdbcType="VARCHAR" property="regionId"/>
+        <result column="asset_status" jdbcType="VARCHAR" property="assetStatus"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="expired_time" jdbcType="TIMESTAMP" property="expiredTime"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="description" jdbcType="LONGVARCHAR" property="description"/>
+    </resultMap>
+
+    <select id="queryInstanceAssetTypes" resultType="java.lang.String">
+      select asset_type from datasource_instance_asset
+        where instance_uuid = #{instanceUuid}
+        group by asset_type
+    </select>
+
+    <select id="queryUserPermissionAssetByParam"
+            parameterType="com.baiyi.opscloud.domain.param.datasource.DsAssetParam$UserPermissionAssetPageQuery"
+            resultMap="BaseResultMap">
+        select * from datasource_instance_asset
+        <where>
+            asset_type = #{assetType}
+            <if test="queryName != null and queryName != ''">
+                and name like "%" #{queryName} "%"
+            </if>
+            <if test="userId != null">
+                and id in (
+                    select business_id from application_resource where resource_type = 'KUBERNETES_DEPLOYMENT'
+                    and application_id in ( select business_id from user_permission where business_type = #{businessType}
+                    and user_id = #{userId} )
+                )
+            </if>
+        </where>
+        order by create_time
+    </select>
+
+</mapper>

@@ -11,8 +11,8 @@ import com.baiyi.opscloud.sshcore.model.KubernetesSessionContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-import javax.websocket.Session;
+import jakarta.annotation.Resource;
+import jakarta.websocket.Session;
 import java.util.Date;
 import java.util.Map;
 

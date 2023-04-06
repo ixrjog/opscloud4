@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.TerminalSessionInstanceCommandMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstanceCommand">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="terminal_session_instance_id" jdbcType="INTEGER" property="terminalSessionInstanceId" />
+    <result column="prompt" jdbcType="VARCHAR" property="prompt" />
+    <result column="is_formatted" jdbcType="BIT" property="isFormatted" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="input" jdbcType="LONGVARCHAR" property="input" />
+    <result column="input_formatted" jdbcType="LONGVARCHAR" property="inputFormatted" />
+    <result column="output" jdbcType="LONGVARCHAR" property="output" />
+  </resultMap>
+
+  <resultMap id="ReportResultMap" type="com.baiyi.opscloud.domain.vo.base.ReportVO$Report">
+    <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+    <result column="value" jdbcType="INTEGER" property="value"/>
+  </resultMap>
+
+  <select id="statByMonth" resultMap="ReportResultMap">
+    select date_format(create_time, '%Y-%m') as `c_name`, sum(1) as `value`
+    from terminal_session_instance_command
+    group by `c_name`
+    order by `c_name`;
+  </select>
+
+  <select id="statTotal" resultType="int">
+    select count(*)
+    from terminal_session_instance_command
+  </select>
+
+</mapper>

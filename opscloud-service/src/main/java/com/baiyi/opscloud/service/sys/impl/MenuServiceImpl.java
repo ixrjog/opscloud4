@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.sys.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.Menu;
-import com.baiyi.opscloud.mapper.opscloud.MenuMapper;
+import com.baiyi.opscloud.mapper.MenuMapper;
 import com.baiyi.opscloud.service.sys.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

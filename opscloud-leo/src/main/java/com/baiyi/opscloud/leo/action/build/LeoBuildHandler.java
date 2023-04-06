@@ -52,7 +52,7 @@ public class LeoBuildHandler implements InitializingBean {
 
     @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
     public void handleBuild(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
-        /**
+        /*
          * 使用责任链设计模式解耦代码
          */
         deleteHistoricalBuildJobConcreteHandler.handleRequest(leoBuild, buildConfig);

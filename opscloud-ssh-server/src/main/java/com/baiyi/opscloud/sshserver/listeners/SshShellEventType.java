@@ -20,5 +20,12 @@ package com.baiyi.opscloud.sshserver.listeners;
  * Event types
  */
 public enum SshShellEventType {
-    SESSION_STARTED, SESSION_STOPPED, SESSION_STOPPED_UNEXPECTEDLY, SESSION_DESTROYED
+    /**
+     * 启动
+     */
+    SESSION_STARTED,
+    /**
+     * 停止
+     */
+    SESSION_STOPPED, SESSION_STOPPED_UNEXPECTEDLY, SESSION_DESTROYED
 }

@@ -16,11 +16,17 @@
 
 package com.baiyi.opscloud.sshserver;
 
-import com.baiyi.opscloud.sshserver.postprocess.PostProcessor;
 import com.baiyi.opscloud.sshserver.postprocess.PostProcessorObject;
+import com.baiyi.opscloud.sshserver.postprocess.PostProcessor;
 import com.baiyi.opscloud.sshserver.postprocess.provided.SavePostProcessor;
 import lombok.extern.slf4j.Slf4j;
+import org.jline.terminal.Terminal;
+import org.springframework.context.annotation.Primary;
 import org.springframework.shell.*;
+import org.springframework.shell.command.CommandCatalog;
+import org.springframework.shell.context.ShellContext;
+import org.springframework.shell.exit.ExitCodeMappings;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,38 +37,51 @@ import java.util.stream.IntStream;
 import static com.baiyi.opscloud.sshserver.ExtendedInput.*;
 import static com.baiyi.opscloud.sshserver.SshShellCommandFactory.SSH_THREAD_CONTEXT;
 
-
 /**
  * Extended shell which takes in account special characters
  */
 @Slf4j
+@Component
+@Primary
 public class ExtendedShell extends Shell {
 
-    private final ResultHandler resultHandler;
-
+    private final ResultHandlerService resultHandlerService;
     private final List<String> postProcessorNames = new ArrayList<>();
 
     /**
-     * Default constructor
+     * Extended shell to handle post processors
      *
-     * @param resultHandler  result handler
-     * @param postProcessors post processors list
+     * @param resultHandlerService result handler service
+     * @param commandRegistry      command registry
+     * @param terminal             terminal
+     * @param shellContext         shell context
+     * @param exitCodeMappings     exit code mappipngs
+     * @param postProcessors       post processors
      */
-    public ExtendedShell(ResultHandler resultHandler, List<PostProcessor> postProcessors) {
-        super(resultHandler);
-        this.resultHandler = resultHandler;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    protected ExtendedShell(
+            ResultHandlerService resultHandlerService, CommandCatalog commandRegistry,
+            Terminal terminal, ShellContext shellContext, ExitCodeMappings exitCodeMappings,
+            List<PostProcessor<?, ?>> postProcessors
+    ) {
+        super(resultHandlerService, commandRegistry, terminal, shellContext, exitCodeMappings);
+        this.resultHandlerService = resultHandlerService;
         if (postProcessors != null) {
-            postProcessorNames.addAll(postProcessors.stream().map(PostProcessor::getName).collect(Collectors.toList()));
+            this.postProcessorNames.addAll(postProcessors.stream().map(PostProcessor::getName).toList());
         }
     }
-
 
     @Override
     public void run(InputProvider inputProvider) {
         run(inputProvider, () -> false);
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * Run shell
+     *
+     * @param inputProvider input provider
+     * @param shellNotifier shell notifier
+     */
     public void run(InputProvider inputProvider, ShellNotifier shellNotifier) {
         Object result = null;
         // Handles ExitRequest thrown from Quit command
@@ -74,7 +93,7 @@ public class ExtendedShell extends Shell {
                 // Handles ExitRequest thrown from hitting CTRL-C
                 break;
             } catch (Exception e) {
-                resultHandler.handleResult(e);
+                resultHandlerService.handle(e);
                 continue;
             }
             if (input == null) {
@@ -83,7 +102,7 @@ public class ExtendedShell extends Shell {
 
             result = evaluate(input);
             if (result != NO_INPUT && !(result instanceof ExitRequest)) {
-                resultHandler.handleResult(result);
+                resultHandlerService.handle(result);
             }
         }
     }
@@ -100,7 +119,7 @@ public class ExtendedShell extends Shell {
             }
             if (isKeyCharInList(words)) {
                 List<Integer> indexes =
-                        IntStream.range(0, words.size()).filter(i -> KEY_CHARS.contains(words.get(i))).boxed().collect(Collectors.toList());
+                        IntStream.range(0, words.size()).filter(i -> KEY_CHARS.contains(words.get(i))).boxed().toList();
                 for (Integer index : indexes) {
                     if (words.size() > index + 1) {
                         String keyChar = words.get(index);
@@ -144,9 +163,17 @@ public class ExtendedShell extends Shell {
         return false;
     }
 
+    /**
+     * Shell notifier interface
+     */
     @FunctionalInterface
     public interface ShellNotifier {
+
+        /**
+         * Method used to break loop if shell should be stopped
+         *
+         * @return if shell should stop or not
+         */
         boolean shouldStop();
     }
-
 }

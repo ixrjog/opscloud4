@@ -16,21 +16,24 @@
 
 package com.baiyi.opscloud.sshserver.postprocess.provided;
 
-import com.baiyi.opscloud.sshserver.postprocess.PostProcessor;
 import com.baiyi.opscloud.sshserver.postprocess.PostProcessorException;
+import com.baiyi.opscloud.sshserver.postprocess.PostProcessor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 
+/**
+ * Post processor used to save console result into file
+ */
 @Slf4j
-public class SavePostProcessor implements PostProcessor<Object> {
+public class SavePostProcessor
+        implements PostProcessor<Object, String> {
 
     public static final String SAVE = "save";
 
@@ -39,6 +42,11 @@ public class SavePostProcessor implements PostProcessor<Object> {
     @Override
     public String getName() {
         return SAVE;
+    }
+
+    @Override
+    public String getDescription() {
+        return "Post processor to save result to file (or use special character '>')";
     }
 
     @Override
@@ -56,7 +64,7 @@ public class SavePostProcessor implements PostProcessor<Object> {
             File file = new File(path);
             try {
                 String toWrite = string(result).replaceAll(REPLACE_REGEX, "") + "\n";
-                Files.write(file.toPath(), toWrite.getBytes(StandardCharsets.UTF_8), CREATE, APPEND);
+                Files.writeString(file.toPath(), toWrite, CREATE, APPEND);
                 return "Result saved to file: " + file.getAbsolutePath();
             } catch (IOException e) {
                 log.debug("Unable to write to file: " + file.getAbsolutePath(), e);
@@ -76,4 +84,5 @@ public class SavePostProcessor implements PostProcessor<Object> {
             return "";
         }
     }
+
 }

@@ -4,6 +4,7 @@ import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.listeners.SshShellEvent;
 import com.baiyi.opscloud.sshserver.listeners.SshShellEventType;
+import com.baiyi.opscloud.sshserver.listeners.event.AbstractSshShellEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ public class SshShellStartedEvent extends AbstractSshShellEvent {
 
     private final SshShellHelper sshShellHelper;
 
-    private static final String WELCOME = "Dear %s, Welcome to Opscloud SSH-Server %s \n";
+    private static final String WELCOME = "Dear %s, Welcome to Opscloud SSH-Server 2.0 %s \n";
 
     @Override
     public String getEventType() {
@@ -31,7 +32,7 @@ public class SshShellStartedEvent extends AbstractSshShellEvent {
     public void handle(SshShellEvent event) {
         openTerminalSession(event);
         final String username = event.getSession().getServerSession().getUsername();
-        final String sshServerInstance = sshShellHelper.getColored(AbstractSshShellEvent.serverInfo.getHostname(), PromptColor.BLUE);
+        final String sshServerInstance = sshShellHelper.getColored(AbstractSshShellEvent.HOST_INFO.getHostname(), PromptColor.BLUE);
         String welcome = String.format(WELCOME, username, sshServerInstance);
         sshShellHelper.print(welcome, PromptColor.RED);
     }

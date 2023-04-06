@@ -19,38 +19,38 @@ import javax.sql.DataSource;
  */
 @Configuration
 @MapperScan(
-        basePackages = {"com.baiyi.opscloud.mapper.opscloud"},
-        sqlSessionTemplateRef = "opscloudSqlSessionTemplate"
+        basePackages = {"com.baiyi.opscloud.mapper"},
+        sqlSessionTemplateRef = "sqlSessionTemplate"
 )
 public class DatasourceConfiguration {
 
     @Bean
     @Primary
-    public SqlSessionTemplate opscloudSqlSessionTemplate() throws Exception {
-        return new SqlSessionTemplate(opscloudDataSourceSqlSessionFactory());
+    public SqlSessionTemplate sqlSessionTemplate() throws Exception {
+        return new SqlSessionTemplate(dynamicSqlSessionFactory());
     }
 
     @Bean
     @Primary
-    public DataSourceTransactionManager opscloudTransactionManager() {
-        return new DataSourceTransactionManager(opscloudDataSource());
+    public DataSourceTransactionManager transactionManager() {
+        return new DataSourceTransactionManager(dataSource());
     }
 
     @Bean
     @Primary
-    public SqlSessionFactory opscloudDataSourceSqlSessionFactory() throws Exception {
-        SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-        factoryBean.setDataSource(opscloudDataSource());
-        factoryBean.setMapperLocations(
+    public SqlSessionFactory dynamicSqlSessionFactory() throws Exception {
+        SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+        sessionFactory.setDataSource(dataSource());
+        sessionFactory.setMapperLocations(
                 new PathMatchingResourcePatternResolver()
-                        .getResources("classpath:mapper/opscloud/*.xml"));
-        return factoryBean.getObject();
+                        .getResources("classpath:/mapper/*.xml"));
+        return sessionFactory.getObject();
     }
 
     @Bean
     @Primary
-    @ConfigurationProperties("spring.datasource.druid.opscloud")
-    public DataSource opscloudDataSource() {
+    @ConfigurationProperties("spring.datasource")
+    public DataSource dataSource() {
         return DruidDataSourceBuilder.create()
                         .build();
     }

@@ -1,10 +1,9 @@
 package com.baiyi.opscloud.domain.vo.tag;
 
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import com.baiyi.opscloud.domain.base.BaseBusiness;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -27,26 +26,26 @@ public class TagVO {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Tag extends BaseVO implements Serializable {
 
         private static final long serialVersionUID = 1445359231777384339L;
 
         private Integer quantityUsed;
 
-        @ApiModelProperty(value = "主键", example = "1")
+        @Schema(name = "主键", example = "1")
         private Integer id;
 
-        @ApiModelProperty(value = "业务类型", example = "0")
-        private Integer BusinessType;
+        @Schema(name = "业务类型", example = "0")
+        private Integer businessType;
 
-        @ApiModelProperty(value = "标签key")
+        @Schema(name = "标签key")
         private String tagKey;
 
-        @ApiModelProperty(value = "颜色值")
+        @Schema(name = "颜色值")
         private String color;
 
-        @ApiModelProperty(value = "描述")
+        @Schema(name = "描述")
         private String comment;
 
         private BusinessTypeEnum businessTypeEnum;

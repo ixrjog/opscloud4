@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.vo.terminal.TerminalReportVO;
 import com.baiyi.opscloud.facade.terminal.TerminalReportFacade;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

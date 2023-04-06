@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.ansible.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.AnsiblePlaybook;
 import com.baiyi.opscloud.domain.param.ansible.AnsiblePlaybookParam;
-import com.baiyi.opscloud.mapper.opscloud.AnsiblePlaybookMapper;
+import com.baiyi.opscloud.mapper.AnsiblePlaybookMapper;
 import com.baiyi.opscloud.service.ansible.AnsiblePlaybookService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;

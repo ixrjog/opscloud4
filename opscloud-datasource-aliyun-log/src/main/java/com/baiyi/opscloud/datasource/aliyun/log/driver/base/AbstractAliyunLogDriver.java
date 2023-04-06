@@ -1,9 +1,5 @@
 package com.baiyi.opscloud.datasource.aliyun.log.driver.base;
 
-import com.aliyun.openservices.log.Client;
-import com.baiyi.opscloud.common.datasource.AliyunConfig;
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * @Author baiyi
  * @Date 2021/9/16 4:51 下午
@@ -21,9 +17,9 @@ public abstract class AbstractAliyunLogDriver {
      * @param aliyun
      * @return
      */
-    protected Client buildClient(AliyunConfig.Aliyun aliyun) {
-        String regionId = StringUtils.isEmpty(aliyun.getRegionId()) ? "cn-hangzhou" : aliyun.getRegionId();
-        String endpoint = ALIYUN_LOG_ENDPOINT.replace("${regionId}", regionId);
-        return new Client(endpoint, aliyun.getAccount().getAccessKeyId(), aliyun.getAccount().getSecret());
-    }
+//    protected Client buildClient(AliyunConfig.Aliyun aliyun) {
+//        String regionId = StringUtils.isEmpty(aliyun.getRegionId()) ? "cn-hangzhou" : aliyun.getRegionId();
+//        String endpoint = ALIYUN_LOG_ENDPOINT.replace("${regionId}", regionId);
+//        return new Client(endpoint, aliyun.getAccount().getAccessKeyId(), aliyun.getAccount().getSecret());
+//    }
 }

@@ -1,13 +1,12 @@
 package com.baiyi.opscloud.domain.vo.server;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -25,7 +24,7 @@ public class ServerGroupTypeVO {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class ServerGroupType extends BaseVO implements Serializable {
 
         private static final long serialVersionUID = -6926530768540517199L;
@@ -38,7 +37,7 @@ public class ServerGroupTypeVO {
 
         private String comment;
 
-        @ApiModelProperty(value = "使用类型的服务器组数量",example = "1")
+        @Schema(name = "使用类型的服务器组数量",example = "1")
         private Integer serverGroupSize;
     }
 }

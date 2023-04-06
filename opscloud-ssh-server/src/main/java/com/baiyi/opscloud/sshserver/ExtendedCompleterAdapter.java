@@ -16,14 +16,17 @@
 
 package com.baiyi.opscloud.sshserver;
 
+import lombok.AllArgsConstructor;
 import org.jline.reader.Candidate;
 import org.jline.reader.LineReader;
 import org.jline.reader.ParsedLine;
+import org.springframework.context.annotation.Primary;
 import org.springframework.shell.CompletingParsedLine;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.Shell;
-import org.springframework.shell.jline.JLineShellAutoConfiguration;
+import org.springframework.shell.boot.CompleterAutoConfiguration;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,31 +34,33 @@ import java.util.stream.Collectors;
 /**
  * Extended completer adapter to be able to set complete attribute of proposal
  * <br>
- * Based on @{@link JLineShellAutoConfiguration.CompleterAdapter}
+ * Based on @{@link CompleterAutoConfiguration.CompleterAdapter}
  */
-public class ExtendedCompleterAdapter extends JLineShellAutoConfiguration.CompleterAdapter {
+@Component
+@Primary
+@AllArgsConstructor
+public class ExtendedCompleterAdapter extends CompleterAutoConfiguration.CompleterAdapter {
 
     private final Shell shell;
-
-    public ExtendedCompleterAdapter(Shell shell) {
-        this.shell = shell;
-    }
 
     @Override
     public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
         CompletingParsedLine cpl = (line instanceof CompletingParsedLine) ? ((CompletingParsedLine) line) : t -> t;
-        CompletionContext context = new CompletionContext(sanitizeInput(line.words()), line.wordIndex(),
-                line.wordCursor());
 
-        shell.complete(context).stream().map(p -> new Candidate(
-                p.dontQuote() ? p.value() : cpl.emit(p.value()).toString(),
-                p.displayText(),
-                p.category(),
-                p.description(),
-                null,
-                null,
-                isComplete(p)
-        )).forEach(candidates::add);
+        CompletionContext context = new CompletionContext(sanitizeInput(line.words()), line.wordIndex(), line.wordCursor(), null, null);
+
+        List<CompletionProposal> proposals = shell.complete(context);
+        proposals.stream()
+                .map(p -> new Candidate(
+                        p.dontQuote() ? p.value() : cpl.emit(p.value()).toString(),
+                        p.displayText(),
+                        p.category(),
+                        p.description(),
+                        null,
+                        null,
+                        isComplete(p))
+                )
+                .forEach(candidates::add);
     }
 
     private static boolean isComplete(CompletionProposal p) {
@@ -68,15 +73,15 @@ public class ExtendedCompleterAdapter extends JLineShellAutoConfiguration.Comple
     /**
      * Sanitize the buffer input given the customizations applied to the JLine parser (<em>e.g.</em> support for
      * line continuations, <em>etc.</em>)
-     * See @{@link JLineShellAutoConfiguration}
+     * See @{@link CompleterAutoConfiguration}
      */
     private static List<String> sanitizeInput(List<String> words) {
-        return words.stream()
-                // CR at beginning/end of line introduced by backslash
+        words = words.stream()
+                // CR at beginning/end of line introduced by backslash continuation
                 .map(s -> s.replaceAll("^\\n+|\\n+$", ""))
                 // CR in middle of word introduced by return inside a quoted string
                 .map(s -> s.replaceAll("\\n+", " "))
                 .collect(Collectors.toList());
+        return words;
     }
-
 }

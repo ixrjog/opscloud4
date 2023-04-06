@@ -16,7 +16,7 @@ import com.baiyi.opscloud.service.tag.TagService;
 import com.google.common.base.Joiner;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

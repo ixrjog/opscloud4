@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.task.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.ServerTaskMember;
-import com.baiyi.opscloud.mapper.opscloud.ServerTaskMemberMapper;
+import com.baiyi.opscloud.mapper.ServerTaskMemberMapper;
 import com.baiyi.opscloud.service.task.ServerTaskMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

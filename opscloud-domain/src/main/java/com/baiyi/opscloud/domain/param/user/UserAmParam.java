@@ -1,8 +1,7 @@
 package com.baiyi.opscloud.domain.param.user;
 
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 /**
@@ -16,15 +15,15 @@ public class UserAmParam {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class CreateUser implements DsInstanceVO.IInstance {
-        @ApiModelProperty(value = "数据源实例UUID")
+        @Schema(name = "数据源实例UUID")
         private String instanceUuid;
 
-        @ApiModelProperty(value = "数据源实例ID")
+        @Schema(name = "数据源实例ID")
         private Integer instanceId;
 
-        @ApiModelProperty(value = "用户名")
+        @Schema(name = "用户名")
         private String username;
     }
 
@@ -32,22 +31,22 @@ public class UserAmParam {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class GrantPolicy implements DsInstanceVO.IInstance {
-        @ApiModelProperty(value = "数据源实例UUID")
+        @Schema(name = "数据源实例UUID")
         private String instanceUuid;
-        @ApiModelProperty(value = "数据源实例ID")
+        @Schema(name = "数据源实例ID")
         private Integer instanceId;
-        //        @ApiModelProperty(value = "需要创建账户")
+        //        @Schema(name = "需要创建账户")
 //        private Boolean needCreate;
         private Policy policy;
-        @ApiModelProperty(value = "用户名")
+        @Schema(name = "用户名")
         private String username;
     }
 
     @EqualsAndHashCode(callSuper = true)
     @Data
-    @ApiModel
+    @Schema
     public static class RevokePolicy extends GrantPolicy {
     }
 

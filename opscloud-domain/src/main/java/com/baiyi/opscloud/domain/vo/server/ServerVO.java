@@ -7,12 +7,11 @@ import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class ServerVO {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Server extends BaseVO implements
             EnvVO.IEnv,
             TagVO.ITags,
@@ -76,61 +75,61 @@ public class ServerVO {
             return id;
         }
 
-        @ApiModelProperty(value = "主键", example = "1")
+        @Schema(name = "主键", example = "1")
         @Builder.Default
         private Integer id = 0;
 
-        @ApiModelProperty(value = "服务器名称")
+        @Schema(name = "服务器名称")
         @NotBlank(message = "服务器名称不能为空")
         private String name;
 
-        @ApiModelProperty(value = "显示名称")
+        @Schema(name = "显示名称")
         private String displayName;
 
-        @ApiModelProperty(value = "服务器组id", example = "1")
+        @Schema(name = "服务器组id", example = "1")
         @NotNull(message = "服务器组不能为空")
         private Integer serverGroupId;
 
-        @ApiModelProperty(value = "环境类型", example = "1")
+        @Schema(name = "环境类型", example = "1")
         @NotNull(message = "环境类型不能为空")
         private Integer envType;
 
-        @ApiModelProperty(value = "公网IP")
+        @Schema(name = "公网IP")
         private String publicIp;
 
-        @ApiModelProperty(value = "私网IP")
+        @Schema(name = "私网IP")
         @NotBlank(message = "私网ip不能为空")
         private String privateIp;
 
-        @ApiModelProperty(value = "服务器类型", example = "1")
+        @Schema(name = "服务器类型", example = "1")
         @NotNull(message = "服务器类型不能为空")
         @Builder.Default
         private Integer serverType = 0;
 
-        @ApiModelProperty(value = "地区")
+        @Schema(name = "地区")
         private String area;
 
-        @ApiModelProperty(value = "系统类型")
+        @Schema(name = "系统类型")
         private String osType;
 
-        @ApiModelProperty(value = "序号", example = "1")
+        @Schema(name = "序号", example = "1")
         @Builder.Default
         private Integer serialNumber = 0;
 
-        @ApiModelProperty(value = "监控状态", example = "1")
+        @Schema(name = "监控状态", example = "1")
         private Integer monitorStatus;
 
-        @ApiModelProperty(value = "资源描述")
+        @Schema(name = "资源描述")
         private String comment;
 
-        @ApiModelProperty(value = "服务器状态", example = "1")
+        @Schema(name = "服务器状态", example = "1")
         private Integer serverStatus;
 
-        @ApiModelProperty(value = "有效")
+        @Schema(name = "有效")
         @Builder.Default
         private Boolean isActive = true;
 
-        @ApiModelProperty(value = "资产ID")
+        @Schema(name = "资产ID")
         private Integer assetId;
 
     }

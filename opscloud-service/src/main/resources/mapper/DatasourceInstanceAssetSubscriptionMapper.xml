@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.DatasourceInstanceAssetSubscriptionMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetSubscription">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="instance_uuid" jdbcType="VARCHAR" property="instanceUuid" />
+    <result column="datasource_instance_asset_id" jdbcType="INTEGER" property="datasourceInstanceAssetId" />
+    <result column="is_active" jdbcType="BIT" property="isActive" />
+    <result column="last_subscription_time" jdbcType="TIMESTAMP" property="lastSubscriptionTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="playbook" jdbcType="LONGVARCHAR" property="playbook" />
+    <result column="vars" jdbcType="LONGVARCHAR" property="vars" />
+    <result column="last_subscription_log" jdbcType="LONGVARCHAR" property="lastSubscriptionLog" />
+    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+  </resultMap>
+</mapper>

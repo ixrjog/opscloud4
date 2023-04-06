@@ -2,8 +2,7 @@ package com.baiyi.opscloud.domain.vo.leo;
 
 import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,18 +22,18 @@ public class LeoDeployVO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class Deploy implements Serializable, ReadableTime.IAgo, ReadableTime.IRuntime {
 
         private static final long serialVersionUID = -6080138223431460692L;
 
-        @ApiModelProperty(value = "以前")
+        @Schema(name = "以前")
         private String ago;
 
-        @ApiModelProperty(value = "运行时长")
+        @Schema(name = "运行时长")
         private String runtime;
 
-        @ApiModelProperty(value = "部署详情")
+        @Schema(name = "部署详情")
         private Object deployDetails;
 
         private Integer id;

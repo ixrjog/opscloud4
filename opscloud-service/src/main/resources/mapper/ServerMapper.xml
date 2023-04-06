@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.ServerMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.Server">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="display_name" jdbcType="VARCHAR" property="displayName"/>
+        <result column="server_group_id" jdbcType="INTEGER" property="serverGroupId"/>
+        <result column="os_type" jdbcType="VARCHAR" property="osType"/>
+        <result column="env_type" jdbcType="INTEGER" property="envType"/>
+        <result column="public_ip" jdbcType="VARCHAR" property="publicIp"/>
+        <result column="private_ip" jdbcType="VARCHAR" property="privateIp"/>
+        <result column="server_type" jdbcType="INTEGER" property="serverType"/>
+        <result column="area" jdbcType="VARCHAR" property="area"/>
+        <result column="serial_number" jdbcType="INTEGER" property="serialNumber"/>
+        <result column="monitor_status" jdbcType="INTEGER" property="monitorStatus"/>
+        <result column="is_active" jdbcType="BIT" property="isActive"/>
+        <result column="server_status" jdbcType="INTEGER" property="serverStatus"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+    <select id="queryServerByParam"
+            parameterType="com.baiyi.opscloud.domain.param.server.ServerParam$ServerPageQuery"
+            resultMap="BaseResultMap">
+        select a0.* from server a0
+        <if test="tagId != null and tagId > 0">
+            join business_tag a1 on a0.id = a1.business_id
+        </if>
+        <where>
+            <if test="tagId != null and tagId > 0">
+                a1.business_type = 1 and a1.tag_id = #{tagId}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and ( a0.display_name like "%" #{queryName} "%"
+                 or a0.private_ip like "%" #{queryName} "%"
+                 or a0.public_ip like "%" #{queryName} "%" )
+            </if>
+            <if test="serverGroupId != null and serverGroupId > 0">
+                and a0.server_group_id = #{serverGroupId}
+            </if>
+            <!--            <if test="queryIp != null and queryIp != ''">-->
+            <!--                and a0.private_ip = #{queryIp} or a0.public_ip = #{queryIp}-->
+            <!--            </if>-->
+            <if test="envType != null and envType >= 0">
+                and a0.env_type = #{envType}
+            </if>
+            <if test="isActive != null">
+                and a0.is_active = #{isActive}
+            </if>
+            <if test="serverStatus != null">
+                and a0.server_status = #{serverStatus}
+            </if>
+            <if test="monitorStatus != null">
+                and a0.monitor_status = #{monitorStatus}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryUserPermissionServerByParam"
+            parameterType="com.baiyi.opscloud.domain.param.server.ServerParam$UserPermissionServerPageQuery"
+            resultMap="BaseResultMap">
+        select * from server
+        <where>
+            <if test="userId != null">
+                server_group_id in ( select business_id from user_permission where user_id = #{userId} and business_type
+                = #{businessType} )
+            </if>
+            <if test="name != null and name != ''">
+                and display_name like "%" #{name} "%"
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                and ( private_ip like "%" #{queryIp} "%" or public_ip like "%" #{queryIp} "%" )
+            </if>
+            and is_active = true
+            and os_type != 'Windows'
+        </where>
+        order by name, serial_number, create_time
+    </select>
+
+    <select id="queryUserRemoteServerPage"
+            parameterType="com.baiyi.opscloud.domain.param.server.ServerParam$UserRemoteServerPageQuery"
+            resultMap="BaseResultMap">
+        select * from server
+        <where>
+            id in ( select server_id from server_account_permission where server_account_id in ( select id from server_account where protocol = 'rdp' or protocol = 'vnc') )
+            <if test="userId != null">
+               and  server_group_id in ( select business_id from user_permission where user_id = #{userId} and business_type = #{businessType} )
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and ( display_name like "%" #{queryName} "%"
+                or private_ip like "%" #{queryName} "%"
+                or public_ip like "%" #{queryName} "%" )
+            </if>
+            and is_active = true
+        </where>
+        order by name, serial_number,create_time
+    </select>
+
+</mapper>

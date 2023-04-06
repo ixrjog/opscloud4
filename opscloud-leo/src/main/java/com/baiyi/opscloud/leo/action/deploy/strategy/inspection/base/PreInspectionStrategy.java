@@ -18,7 +18,7 @@ import com.baiyi.opscloud.service.leo.LeoBuildService;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Map;
 import java.util.Optional;
 

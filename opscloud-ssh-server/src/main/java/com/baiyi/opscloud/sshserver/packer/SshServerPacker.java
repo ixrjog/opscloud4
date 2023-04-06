@@ -39,8 +39,9 @@ public class SshServerPacker {
                 .build();
 
         UserPermission userPermission = permissionService.getByUserPermission(query);
-        if (userPermission != null)
+        if (userPermission != null) {
             iUserPermission.setUserPermission(BeanCopierUtil.copyProperties(userPermission, UserPermissionVO.UserPermission.class));
+        }
     }
 
     public void wrap(ServerVO.Server server) {

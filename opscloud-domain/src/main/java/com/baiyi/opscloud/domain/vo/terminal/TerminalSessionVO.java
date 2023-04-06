@@ -3,8 +3,7 @@ package com.baiyi.opscloud.domain.vo.terminal;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.io.Serializable;
@@ -23,7 +22,7 @@ public class TerminalSessionVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Session extends BaseVO implements TerminalSessionInstanceVO.ISessionInstances, UserVO.IUser, Serializable {
 
         private static final long serialVersionUID = 7671719435444459757L;
@@ -36,14 +35,14 @@ public class TerminalSessionVO {
         private Integer userId;
         private String username;
         private String remoteAddr;
-        @ApiModelProperty(value = "会话关闭")
+        @Schema(name = "会话关闭")
         private Boolean sessionClosed;
-        @ApiModelProperty(value = "会话关闭事件")
+        @Schema(name = "会话关闭事件")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date closeTime;
         private String serverHostname;
         private String serverAddr;
-        @ApiModelProperty(value = "会话类型")
+        @Schema(name = "会话类型")
         private String sessionType;
 
     }

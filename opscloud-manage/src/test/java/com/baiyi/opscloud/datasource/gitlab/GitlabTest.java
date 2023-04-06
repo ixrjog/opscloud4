@@ -9,7 +9,7 @@ import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.workorder.delegate.GitLabUserDelegate;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

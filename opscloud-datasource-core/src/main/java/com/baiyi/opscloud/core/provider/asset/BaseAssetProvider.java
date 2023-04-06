@@ -16,7 +16,7 @@ import com.baiyi.opscloud.service.sys.CredentialService;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.InitializingBean;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

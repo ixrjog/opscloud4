@@ -5,7 +5,7 @@ import com.baiyi.opscloud.datasource.consul.driver.ConsulServiceDriver;
 import com.baiyi.opscloud.datasource.consul.entity.ConsulHealth;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

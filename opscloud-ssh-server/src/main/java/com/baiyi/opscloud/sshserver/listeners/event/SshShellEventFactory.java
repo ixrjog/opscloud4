@@ -13,14 +13,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class SshShellEventFactory {
 
-    private static final Map<String, ISshShellEvent> context = new ConcurrentHashMap<>();
+    private static final Map<String, ISshShellEvent> CONTEXT = new ConcurrentHashMap<>();
 
     public static ISshShellEvent getByType(String key) {
-        return context.get(key);
+        return CONTEXT.get(key);
     }
 
     public static void register(ISshShellEvent bean) {
-        context.put(bean.getEventType(), bean);
+        CONTEXT.put(bean.getEventType(), bean);
         log.debug("SshShellEventFactory Registered: eventType={}, beanName={}", bean.getEventType(), bean.getClass().getSimpleName());
     }
 

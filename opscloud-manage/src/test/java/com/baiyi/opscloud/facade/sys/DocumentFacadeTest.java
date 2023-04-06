@@ -4,11 +4,8 @@ import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.param.sys.DocumentParam;
 import com.baiyi.opscloud.domain.vo.sys.DocumentVO;
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
-
-import javax.annotation.Resource;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @Author baiyi

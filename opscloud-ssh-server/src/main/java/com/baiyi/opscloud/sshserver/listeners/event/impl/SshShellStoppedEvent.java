@@ -1,9 +1,8 @@
 package com.baiyi.opscloud.sshserver.listeners.event.impl;
 
-import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
-import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.listeners.SshShellEvent;
 import com.baiyi.opscloud.sshserver.listeners.SshShellEventType;
+import com.baiyi.opscloud.sshserver.listeners.event.AbstractSshShellEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -18,10 +17,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SshShellStoppedEvent extends AbstractSshShellEvent {
 
-    private final SshShellHelper sshShellHelper;
-
-    private final SimpleTerminalSessionFacade simpleTerminalSessionFacade;
-
     @Override
     public String getEventType() {
         return SshShellEventType.SESSION_STOPPED.name();
@@ -30,7 +25,7 @@ public class SshShellStoppedEvent extends AbstractSshShellEvent {
     @Override
     public void handle(SshShellEvent event) {
         final String username = event.getSession().getServerSession().getUsername();
-        log.info(String.format("The user %s exits SSH-Server normally", username));
+        log.info(String.format("User %s logout of the SSH-Server", username));
         closeTerminalSession(event);
     }
 

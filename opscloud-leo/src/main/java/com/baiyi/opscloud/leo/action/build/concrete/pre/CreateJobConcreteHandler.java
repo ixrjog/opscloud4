@@ -12,7 +12,7 @@ import com.baiyi.opscloud.service.leo.LeoJobService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Date;

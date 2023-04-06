@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderReportVO;
-import com.baiyi.opscloud.mapper.opscloud.WorkOrderTicketMapper;
+import com.baiyi.opscloud.mapper.WorkOrderTicketMapper;
 import com.baiyi.opscloud.service.workorder.WorkOrderTicketService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

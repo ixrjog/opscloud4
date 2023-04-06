@@ -21,7 +21,6 @@ import com.baiyi.opscloud.sshserver.auth.SshAuthentication;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -30,8 +29,7 @@ import java.util.Map;
 @Component
 public class SshShellSessionManager {
 
-    @Resource
-    private SshShellCommandFactory commandFactory;
+    private final SshShellCommandFactory commandFactory;
 
     /**
      * Ssh shell session manager
@@ -88,5 +86,4 @@ public class SshShellSessionManager {
         }
         return authentication.getName();
     }
-
 }

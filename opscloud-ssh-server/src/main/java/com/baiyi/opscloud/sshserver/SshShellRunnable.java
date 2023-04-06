@@ -17,7 +17,9 @@
 package com.baiyi.opscloud.sshserver;
 
 import com.baiyi.opscloud.sshserver.auth.SshAuthentication;
+import com.baiyi.opscloud.sshserver.auth.SshShellSecurityAuthenticationProvider;
 import com.baiyi.opscloud.sshserver.listeners.SshShellListenerService;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sshd.common.Factory;
@@ -27,25 +29,18 @@ import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.channel.ChannelSessionAware;
 import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.session.ServerSession;
-import org.jline.reader.EndOfFileException;
+import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.Parser;
 import org.jline.terminal.Attributes;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
-import org.jline.utils.AttributedString;
-import org.jline.utils.AttributedStringBuilder;
-import org.jline.utils.AttributedStyle;
-import org.jline.utils.InfoCmp;
 import org.springframework.boot.Banner;
 import org.springframework.core.env.Environment;
-import org.springframework.shell.ExitRequest;
-import org.springframework.shell.Input;
 import org.springframework.shell.Shell;
-import org.springframework.shell.jline.InteractiveShellApplicationRunner;
-import org.springframework.shell.jline.JLineShellAutoConfiguration;
+import org.springframework.shell.context.DefaultShellContext;
+import org.springframework.shell.jline.InteractiveShellRunner;
 import org.springframework.shell.jline.PromptProvider;
 import org.springframework.shell.result.DefaultResultHandler;
 
@@ -53,14 +48,14 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 import static com.baiyi.opscloud.sshserver.SshShellCommandFactory.SSH_THREAD_CONTEXT;
-import static com.baiyi.opscloud.sshserver.auth.SshShellAuthenticationProvider.AUTHENTICATION_ATTRIBUTE;
-
 
 /**
  * Runnable for ssh shell session
  */
 @Slf4j
-public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, Runnable {
+@AllArgsConstructor
+public class SshShellRunnable
+        implements Factory<Command>, ChannelSessionAware, Runnable {
 
     private static final String SSH_ENV_COLUMNS = "COLUMNS";
 
@@ -69,56 +64,20 @@ public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, 
     private static final String SSH_ENV_TERM = "TERM";
 
     private final SshShellProperties properties;
-
-    private ChannelSession session;
-
     private final SshShellListenerService shellListenerService;
-
     private final Banner shellBanner;
-
-    private final PromptProvider promptProvider;
-
     private final Shell shell;
-
-    private final JLineShellAutoConfiguration.CompleterAdapter completerAdapter;
-
-    private final Parser parser;
-
+    private final LineReader lineReader;
+    private final PromptProvider promptProvider;
+    private final Completer completer;
     private final Environment environment;
-
+    private ChannelSession session;
     private final org.apache.sshd.server.Environment sshEnv;
-
     private final SshShellCommandFactory sshShellCommandFactory;
-
     private final InputStream is;
-
     @Getter
     private final OutputStream os;
-
     private final ExitCallback ec;
-
-    public SshShellRunnable(SshShellProperties properties, ChannelSession session,
-                            SshShellListenerService shellListenerService, Banner shellBanner,
-                            PromptProvider promptProvider, Shell shell,
-                            JLineShellAutoConfiguration.CompleterAdapter completerAdapter, Parser parser,
-                            Environment environment, org.apache.sshd.server.Environment sshEnv,
-                            SshShellCommandFactory sshShellCommandFactory, InputStream is,
-                            OutputStream os, ExitCallback ec) {
-        this.properties = properties;
-        this.session = session;
-        this.shellListenerService = shellListenerService;
-        this.shellBanner = shellBanner;
-        this.promptProvider = promptProvider;
-        this.shell = shell;
-        this.completerAdapter = completerAdapter;
-        this.parser = parser;
-        this.environment = environment;
-        this.sshEnv = sshEnv;
-        this.sshShellCommandFactory = sshShellCommandFactory;
-        this.is = is;
-        this.os = os;
-        this.ec = ec;
-    }
 
     /**
      * Run ssh session
@@ -128,8 +87,7 @@ public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, 
         log.debug("{}: running...", session.toString());
         TerminalBuilder terminalBuilder = TerminalBuilder.builder()
                 .system(false)
-                //.dumb(true)
-                //.encoding(StandardCharsets.UTF_8.name)
+                .encoding(StandardCharsets.UTF_8)
                 .streams(is, os);
         boolean sizeAvailable = false;
         if (sshEnv.getEnv().containsKey(SSH_ENV_COLUMNS) && sshEnv.getEnv().containsKey(SSH_ENV_LINES)) {
@@ -141,7 +99,7 @@ public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, 
                 sizeAvailable = true;
             } catch (NumberFormatException e) {
                 if (!log.isTraceEnabled()) {
-                    log.debug("Unable to get terminal size: {}:{}", e.getClass().getSimpleName(), e.getMessage());
+                    log.debug("Unable to get terminal size : {}:{}", e.getClass().getSimpleName(), e.getMessage());
                 } else {
                     log.trace("Unable to get terminal size", e);
                 }
@@ -151,12 +109,11 @@ public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, 
             terminalBuilder.type(sshEnv.getEnv().get(SSH_ENV_TERM));
         }
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             PrintStream ps = new PrintStream(baos, true, StandardCharsets.UTF_8.name());
-             Terminal terminal = terminalBuilder.build()) {
-            try {
-                DefaultResultHandler resultHandler = new DefaultResultHandler();
-                resultHandler.setTerminal(terminal);
+             PrintStream ps = new PrintStream(baos, true, StandardCharsets.UTF_8);
+             Terminal terminal = terminalBuilder.build()
+        ) {
 
+            try {
                 Attributes attr = terminal.getAttributes();
                 SshShellUtils.fill(attr, sshEnv.getPtyModes());
                 terminal.setAttributes(attr);
@@ -169,41 +126,25 @@ public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, 
                         terminal.raise(Terminal.Signal.WINCH);
                     }, Signal.WINCH);
                 }
-                // 清理屏幕
-                //terminal.puts(InfoCmp.Capability.clear_screen, new Object[0]);
-                terminal.puts(InfoCmp.Capability.clear_screen);
+
                 if (properties.isDisplayBanner() && shellBanner != null) {
                     shellBanner.printBanner(environment, this.getClass(), ps);
                 }
-                resultHandler.handleResult(new String(baos.toByteArray(), StandardCharsets.UTF_8));
+
+                DefaultResultHandler resultHandler = new DefaultResultHandler(terminal);
+                resultHandler.handleResult(baos.toString(StandardCharsets.UTF_8));
                 resultHandler.handleResult("Please type `help` to see available commands");
 
                 LineReader reader = LineReaderBuilder.builder()
                         .terminal(terminal)
                         .appName("Spring Ssh Shell")
-                        .completer(completerAdapter)
-                        .highlighter((reader1, buffer) -> {
-                            int l = 0;
-                            String best = null;
-                            for (String command : shell.listCommands().keySet()) {
-                                if (buffer.startsWith(command) && command.length() > l) {
-                                    l = command.length();
-                                    best = command;
-                                }
-                            }
-                            if (best != null) {
-                                return new AttributedStringBuilder(buffer.length())
-                                        .append(best, AttributedStyle.BOLD)
-                                        .append(buffer.substring(l))
-                                        .toAttributedString();
-                            } else {
-                                return new AttributedString(buffer, AttributedStyle.DEFAULT.foreground(AttributedStyle.RED));
-                            }
-                        })
-                        .parser(parser)
+                        .completer(completer)
+                        .highlighter(lineReader.getHighlighter())
+                        .parser(lineReader.getParser())
                         .build();
 
-                Object authenticationObject = session.getSession().getIoSession().getAttribute(AUTHENTICATION_ATTRIBUTE);
+                Object authenticationObject = session.getSession().getIoSession().getAttribute(
+                        SshShellSecurityAuthenticationProvider.AUTHENTICATION_ATTRIBUTE);
                 SshAuthentication authentication = null;
                 if (authenticationObject != null) {
                     if (!(authenticationObject instanceof SshAuthentication)) {
@@ -218,23 +159,22 @@ public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, 
                     historyFile = new File(properties.getHistoryDirectory(), "sshShellHistory-" + user + ".log");
                 }
                 reader.setVariable(LineReader.HISTORY_FILE, historyFile.toPath());
+
                 SSH_THREAD_CONTEXT.set(new SshContext(this, terminal, reader, authentication));
                 shellListenerService.onSessionStarted(session);
-                shell.run(new SshShellInputProvider(reader, promptProvider));
+                new InteractiveShellRunner(reader, promptProvider, shell, new DefaultShellContext()).run(null);
                 shellListenerService.onSessionStopped(session);
-                log.debug("{}: closing", session.toString());
+                log.debug("{}: closing", session);
                 quit(0);
-            } catch (Throwable throwable) {
+            } catch (Throwable e) {
                 shellListenerService.onSessionError(session);
-                log.error("{}: unexpected exception", session.toString(), throwable);
+                log.error("{}: unexpected exception", session, e);
                 quit(1);
             }
         } catch (IOException e) {
-            shellListenerService.onSessionError(session);
             log.error("Unable to open terminal", e);
             quit(1);
         }
-        log.debug("{}: stoping...", session.toString());
     }
 
     private void quit(int exitCode) {
@@ -259,26 +199,6 @@ public class SshShellRunnable implements Factory<Command>, ChannelSessionAware, 
     @Override
     public Command create() {
         return sshShellCommandFactory;
-    }
-
-    static class SshShellInputProvider extends InteractiveShellApplicationRunner.JLineInputProvider {
-
-        public SshShellInputProvider(LineReader lineReader, PromptProvider promptProvider) {
-            super(lineReader, promptProvider);
-        }
-
-        @Override
-        public Input readInput() {
-            SshContext ctx = SSH_THREAD_CONTEXT.get();
-            if (ctx != null) {
-                ctx.getPostProcessorsList().clear();
-            }
-            try {
-                return super.readInput();
-            } catch (EndOfFileException e) {
-                throw new ExitRequest(1);
-            }
-        }
     }
 
 }

@@ -14,7 +14,7 @@ import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetPermi
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * 阿里云访问控制策略权限申请工单票据处理

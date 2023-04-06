@@ -1,11 +1,10 @@
 package com.baiyi.opscloud.domain.param.sys;
 
 import com.baiyi.opscloud.domain.param.PageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -20,7 +19,7 @@ public class DocumentParam {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class UpdateDocument implements Serializable {
 
         private static final long serialVersionUID = -8475762526256407735L;
@@ -42,7 +41,7 @@ public class DocumentParam {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class UpdateDocumentZone implements Serializable {
 
         private static final long serialVersionUID = -1413511527437308526L;
@@ -56,7 +55,7 @@ public class DocumentParam {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class AddDocument implements Serializable {
 
         private static final long serialVersionUID = 730778424833527441L;
@@ -78,14 +77,14 @@ public class DocumentParam {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class DocumentZoneQuery {
 
-        @ApiModelProperty(value = "文档挂载区域")
+        @Schema(name = "文档挂载区域")
         @NotNull(message = "必须指定文档挂载区域")
         private String mountZone;
 
-        @ApiModelProperty(value = "词典")
+        @Schema(name = "词典")
         private Map<String, String> dict;
 
     }
@@ -93,12 +92,12 @@ public class DocumentParam {
     @Data
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class DocumentZonePageQuery extends PageParam {
 
-        @ApiModelProperty(value = "关键字查询")
+        @Schema(name = "关键字查询")
         private String queryName;
-        @ApiModelProperty(value = "有效")
+        @Schema(name = "有效")
         private Boolean isActive;
 
     }
@@ -106,29 +105,29 @@ public class DocumentParam {
     @Data
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class DocumentPageQuery extends PageParam {
 
-        @ApiModelProperty(value = "关键字查询")
+        @Schema(name = "关键字查询")
         private String queryName;
 
-        @ApiModelProperty(value = "文档挂载区域")
+        @Schema(name = "文档挂载区域")
         private String mountZone;
 
-        @ApiModelProperty(value = "有效")
+        @Schema(name = "有效")
         private Boolean isActive;
 
     }
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class DocumentQuery {
 
-        @ApiModelProperty(value = "关键字")
+        @Schema(name = "关键字")
         private String documentKey;
 
-        @ApiModelProperty(value = "词典")
+        @Schema(name = "词典")
         private Map<String, String> dict;
 
     }

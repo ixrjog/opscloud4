@@ -18,12 +18,12 @@ import com.baiyi.opscloud.service.event.EventBusinessService;
 import com.baiyi.opscloud.service.event.EventService;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.service.tag.SimpleTagService;
-import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
 import com.google.common.collect.Lists;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

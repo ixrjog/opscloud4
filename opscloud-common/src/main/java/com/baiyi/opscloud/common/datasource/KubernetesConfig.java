@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.common.datasource;
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -21,7 +21,7 @@ public class KubernetesConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Kubernetes {
 
         private String version;
@@ -45,7 +45,7 @@ public class KubernetesConfig extends BaseDsConfig {
      */
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class AmazonEks {
 
         private String region;
@@ -58,28 +58,28 @@ public class KubernetesConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Kubeconfig {
         private String path;
     }
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Namespace {
         private List<String> ignore;
     }
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Container {
         private List<String> ignore;
     }
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Deployment {
         private Nomenclature nomenclature;
     }
@@ -87,13 +87,13 @@ public class KubernetesConfig extends BaseDsConfig {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Service extends Deployment {
     }
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Nomenclature {
         private String prefix;
         private String suffix;

@@ -2,17 +2,15 @@ package com.baiyi.opscloud.domain.param.leo;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 /**
  * @Author baiyi
@@ -26,10 +24,10 @@ public class LeoRuleParam {
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class RulePageQuery extends SuperPageParam implements IExtend {
 
-        @ApiModelProperty(value = "有效")
+        @Schema(name = "有效")
         private Boolean isActive;
 
         private Boolean extend;
@@ -39,7 +37,7 @@ public class LeoRuleParam {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class UpdateRule {
 
         @Min(value = 1, message = "必须指定规则ID")
@@ -58,7 +56,7 @@ public class LeoRuleParam {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class AddRule {
 
         private Integer id;
@@ -66,7 +64,7 @@ public class LeoRuleParam {
         @NotEmpty(message = "规则名称不能为空")
         private String name;
 
-        @ApiModelProperty(value = "有效")
+        @Schema(name = "有效")
         @NotNull(message = "必须指定有效")
         private Boolean isActive;
 

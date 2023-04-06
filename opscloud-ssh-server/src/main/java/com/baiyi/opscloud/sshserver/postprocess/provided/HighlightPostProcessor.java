@@ -27,11 +27,17 @@ import java.util.List;
  * Grep post processor
  */
 @Slf4j
-public class HighlightPostProcessor implements PostProcessor<String> {
+public class HighlightPostProcessor
+        implements PostProcessor<String, String> {
 
     @Override
     public String getName() {
         return "highlight";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Highlight some words in result";
     }
 
     @Override

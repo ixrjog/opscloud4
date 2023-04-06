@@ -11,7 +11,7 @@ import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import org.springframework.beans.factory.InitializingBean;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**
@@ -55,7 +55,7 @@ public abstract class AbstractAssetToAccessManagementConverter implements IAsset
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        AccessManagementPacker.context.put(getAMType(), this::toAM);
+        AccessManagementPacker.CONTEXT.put(getAMType(), this::toAM);
     }
 
 }

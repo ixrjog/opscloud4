@@ -1,11 +1,8 @@
 package com.baiyi.opscloud.service.user;
 
 import com.baiyi.opscloud.BaseUnit;
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
-
-import javax.annotation.Resource;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @Author baiyi

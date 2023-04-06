@@ -16,16 +16,19 @@
 
 package com.baiyi.opscloud.sshserver;
 
-import com.baiyi.opscloud.sshserver.command.properties.CommandProperties;
+import com.baiyi.opscloud.sshserver.commands.CommandProperties;
+
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.validation.annotation.Validated;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 
 /**
  * Ssh shell properties (prefix : {@link SshShellProperties#SSH_SHELL_PREFIX})
@@ -41,16 +44,9 @@ public class SshShellProperties {
 
     public static final String DISABLE_SSH_SHELL = SSH_SHELL_ENABLE + "=false";
 
-    public static final String SPRING_SHELL_AUTO_CONFIG_CLASSES = "org.springframework.shell.jline" +
-            ".JLineShellAutoConfiguration," +
-            "org.springframework.shell.SpringShellAutoConfiguration," +
-            "org.springframework.shell.jcommander.JCommanderParameterResolverAutoConfiguration," +
-            "org.springframework.shell.legacy.LegacyAdapterAutoConfiguration," +
-            "org.springframework.shell.standard.StandardAPIAutoConfiguration," +
-            "org.springframework.shell.standard.commands.StandardCommandsAutoConfiguration";
+    public static final String SPRING_SHELL_AUTO_CONFIG_CLASSES = "org.springframework.shell.boot.ExitCodeAutoConfiguration," + "org.springframework.shell.boot.ShellContextAutoConfiguration," + "org.springframework.shell.boot.SpringShellAutoConfiguration," + "org.springframework.shell.boot.ShellRunnerAutoConfiguration," + "org.springframework.shell.boot.ApplicationRunnerAutoConfiguration," + "org.springframework.shell.boot.CommandCatalogAutoConfiguration," + "org.springframework.shell.boot.LineReaderAutoConfiguration," + "org.springframework.shell.boot.CompleterAutoConfiguration," + "org.springframework.shell.boot.UserConfigAutoConfiguration," + "org.springframework.shell.boot.JLineAutoConfiguration," + "org.springframework.shell.boot.JLineShellAutoConfiguration," + "org.springframework.shell.boot.ParameterResolverAutoConfiguration," + "org.springframework.shell.boot.StandardAPIAutoConfiguration," + "org.springframework.shell.boot.ThemingAutoConfiguration," + "org.springframework.shell.boot.StandardCommandsAutoConfiguration," + "org.springframework.shell.boot.ComponentFlowAutoConfiguration";
 
-    public static final String DISABLE_SPRING_SHELL_AUTO_CONFIG =
-            "spring.autoconfigure.exclude=" + SPRING_SHELL_AUTO_CONFIG_CLASSES;
+    public static final String DISABLE_SPRING_SHELL_AUTO_CONFIG = "spring.autoconfigure.exclude=" + SPRING_SHELL_AUTO_CONFIG_CLASSES;
 
     public static final String ACTUATOR_ROLE = "ACTUATOR";
 
@@ -58,17 +54,23 @@ public class SshShellProperties {
 
     private boolean enable = true;
 
-    private String host = "0.0.0.0";
+    private String host = "127.0.0.1";
 
     private int port = 2222;
 
-    private boolean displayBanner = true;
+    private String user = "user";
 
-    private boolean extendedFileProvider = true;
+    private String password;
+
+    private boolean displayBanner = true;
 
     private AuthenticationType authentication = AuthenticationType.simple;
 
+    private String authProviderBeanName;
+
     private File hostKeyFile = new File(System.getProperty("java.io.tmpdir"), "hostKey.ser");
+
+    private Resource authorizedPublicKeys;
 
     private File historyFile = new File(System.getProperty("java.io.tmpdir"), "sshShellHistory.log");
 
@@ -79,8 +81,11 @@ public class SshShellProperties {
      */
     private File historyDirectory = new File(System.getProperty("java.io.tmpdir"));
 
-    private List<String> confirmationWords;
+    private List<String> confirmationWords = new ArrayList<>(SshShellHelper.DEFAULT_CONFIRM_WORDS);
 
+    /**
+     * Authentication type
+     */
     public enum AuthenticationType {
         simple, security
     }
@@ -88,6 +93,10 @@ public class SshShellProperties {
     private Prompt prompt = new Prompt();
 
     private Commands commands = new Commands();
+
+    public void setAuthorizedPublicKeysFile(File file) {
+        this.authorizedPublicKeys = new FileSystemResource(file);
+    }
 
     /**
      * Prompt configuration
@@ -99,16 +108,6 @@ public class SshShellProperties {
 
         private PromptColor color = PromptColor.WHITE;
 
-        private Local local = new Local();
-    }
-
-    /**
-     * Prompt local configuration
-     */
-    @Data
-    public static class Local {
-
-        private boolean enable;
     }
 
     /**
@@ -118,13 +117,17 @@ public class SshShellProperties {
     public static class Commands {
 
         @NestedConfigurationProperty
-        private CommandProperties actuator = CommandProperties.withAuthorizedRoles(Collections.singletonList(ACTUATOR_ROLE));
+        private CommandProperties actuator = CommandProperties.withAuthorizedRoles(new ArrayList<>(Collections.singletonList(ACTUATOR_ROLE)));
 
         @NestedConfigurationProperty
-        private CommandProperties postprocessors = CommandProperties.notRestrictedByDefault();
+        private CommandProperties server = new CommandProperties();
 
         @NestedConfigurationProperty
-        private CommandProperties manageSessions = CommandProperties.disabledByDefault();
+        private CommandProperties history = new CommandProperties();
+
+        @NestedConfigurationProperty
+        private CommandProperties stacktrace = new CommandProperties();
+
     }
 
 }

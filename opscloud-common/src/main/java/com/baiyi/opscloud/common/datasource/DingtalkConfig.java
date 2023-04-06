@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.common.datasource;
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -23,7 +23,7 @@ public class DingtalkConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Robot {
 
         private String token;
@@ -33,7 +33,7 @@ public class DingtalkConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Dingtalk {
 
         private String version;
@@ -46,7 +46,7 @@ public class DingtalkConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class App {
         private String name;
         private String agentId;
@@ -58,7 +58,7 @@ public class DingtalkConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Department {
         private Set<Long> deptIds;
     }

@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.sys.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Document;
 import com.baiyi.opscloud.domain.param.sys.DocumentParam;
-import com.baiyi.opscloud.mapper.opscloud.DocumentMapper;
+import com.baiyi.opscloud.mapper.DocumentMapper;
 import com.baiyi.opscloud.service.sys.DocumentService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;

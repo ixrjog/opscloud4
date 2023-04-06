@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.AlertNotifyEventMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.AlertNotifyEvent">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="event_uuid" jdbcType="VARCHAR" property="eventUuid" />
+    <result column="alert_name" jdbcType="VARCHAR" property="alertName" />
+    <result column="severity" jdbcType="VARCHAR" property="severity" />
+    <result column="message" jdbcType="VARCHAR" property="message" />
+    <result column="alert_value" jdbcType="VARCHAR" property="alertValue" />
+    <result column="alert_check" jdbcType="VARCHAR" property="alertCheck" />
+    <result column="alert_source" jdbcType="VARCHAR" property="alertSource" />
+    <result column="alert_type" jdbcType="VARCHAR" property="alertType" />
+    <result column="service" jdbcType="VARCHAR" property="service" />
+    <result column="alert_time" jdbcType="TIMESTAMP" property="alertTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="metadata" jdbcType="LONGVARCHAR" property="metadata" />
+  </resultMap>
+</mapper>

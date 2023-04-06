@@ -2,7 +2,7 @@ package com.baiyi.opscloud.domain.vo.business;
 
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -23,7 +23,7 @@ public class BusinessPropertyVO {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Property extends BaseVO implements BaseBusiness.IBusiness, Serializable {
 
         private static final long serialVersionUID = -1685813744181450467L;

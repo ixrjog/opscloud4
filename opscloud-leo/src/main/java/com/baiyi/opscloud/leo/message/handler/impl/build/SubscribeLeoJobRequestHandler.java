@@ -12,8 +12,8 @@ import com.baiyi.opscloud.service.leo.LeoJobService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-import javax.websocket.Session;
+import jakarta.annotation.Resource;
+import jakarta.websocket.Session;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;

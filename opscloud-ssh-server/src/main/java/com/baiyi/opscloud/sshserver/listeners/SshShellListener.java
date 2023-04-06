@@ -27,4 +27,5 @@ public interface SshShellListener {
      * @param event ssh shell event
      */
     void onEvent(SshShellEvent event);
+
 }

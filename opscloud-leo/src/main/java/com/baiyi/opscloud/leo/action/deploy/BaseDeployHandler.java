@@ -9,7 +9,7 @@ import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.leo.helper.DeployingLogHelper;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Date;
 
 /**

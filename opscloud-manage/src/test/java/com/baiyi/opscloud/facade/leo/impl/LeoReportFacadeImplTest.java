@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.vo.leo.LeoReportVO;
 import com.baiyi.opscloud.facade.leo.LeoReportFacade;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

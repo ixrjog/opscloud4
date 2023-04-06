@@ -22,7 +22,7 @@ import org.gitlab4j.api.models.SshKey;
 import org.gitlab4j.api.models.User;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_GITLAB_USER;

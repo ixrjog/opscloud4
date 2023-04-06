@@ -1,13 +1,13 @@
 package com.baiyi.opscloud.domain.param.leo;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import java.util.Map;
 
 /**
@@ -21,25 +21,26 @@ public class LeoBuildParam {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @Schema
     public static class DoBuild {
 
         @Min(value = 0, message = "关联任务ID不能为空")
-        @ApiModelProperty(value = "关联任务ID")
+        @Schema(name = "关联任务ID")
         private Integer jobId;
 
-        @ApiModelProperty(value = "分支")
+        @Schema(name = "分支")
         private String branch;
 
-        @ApiModelProperty(value = "COMMIT ID")
+        @Schema(name = "COMMIT ID")
         private String commitId;
 
-        @ApiModelProperty(value = "构建参数")
+        @Schema(name = "构建参数")
         private Map<String, String> params;
 
-        @ApiModelProperty(value = "版本名称")
+        @Schema(name = "版本名称")
         private String versionName;
 
-        @ApiModelProperty(value = "版本说明")
+        @Schema(name = "版本说明")
         private String versionDesc;
 
     }
@@ -48,17 +49,18 @@ public class LeoBuildParam {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @Schema
     public static class GetBuildBranchOptions {
 
         @Min(value = 0, message = "关联任务ID不能为空")
-        @ApiModelProperty(value = "关联任务ID")
+        @Schema(name = "关联任务ID")
         private Integer jobId;
 
         @NotEmpty(message = "必须指定项目SshURL")
-        @ApiModelProperty(value = "项目SshURL")
+        @Schema(name = "项目SshURL")
         private String sshUrl;
 
-        @ApiModelProperty(value = "查询Tag")
+        @Schema(name = "查询Tag")
         private Boolean openTag;
 
     }
@@ -67,18 +69,19 @@ public class LeoBuildParam {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @Schema
     public static class CreateBuildBranch {
 
         @Min(value = 0, message = "关联任务ID不能为空")
-        @ApiModelProperty(value = "关联任务ID")
+        @Schema(name = "关联任务ID")
         private Integer jobId;
 
         @NotEmpty(message = "必须指定项目SshURL")
-        @ApiModelProperty(value = "项目SshURL")
+        @Schema(name = "项目SshURL")
         private String sshUrl;
 
         @NotEmpty(message = "必须指定从哪个分支创建")
-        @ApiModelProperty(value = "从这个分支创建")
+        @Schema(name = "从这个分支创建")
         private String ref;
 
     }
@@ -87,20 +90,21 @@ public class LeoBuildParam {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @Schema
     public static class UpdateBuild {
 
         @Min(value = 0, message = "构建ID不能为空")
-        @ApiModelProperty(value = "构建ID")
+        @Schema(name = "构建ID")
         private Integer id;
 
         @NotEmpty(message = "版本名称不能为空")
-        @ApiModelProperty(value = "版本名称")
+        @Schema(name = "版本名称")
         private String versionName;
 
-        @ApiModelProperty(value = "版本描述")
+        @Schema(name = "版本描述")
         private String versionDesc;
 
-        @ApiModelProperty(value = "有效")
+        @Schema(name = "有效")
         private Boolean isActive;
 
     }

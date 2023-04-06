@@ -36,9 +36,9 @@ public class AccessManagementPacker {
 
     private final DsAssetPacker dsAssetPacker;
 
-    public static final Map<String, Function<DsAssetVO.Asset, AccessManagementVO.XAccessManagement>> context = new ConcurrentHashMap<>();
+    public static final Map<String, Function<DsAssetVO.Asset, AccessManagementVO.XAccessManagement>> CONTEXT = new ConcurrentHashMap<>();
 
-    private static final DsAssetTypeConstants[] xamAssetTypes = {DsAssetTypeConstants.RAM_USER, DsAssetTypeConstants.IAM_USER};
+    private static final DsAssetTypeConstants[] XAM_ASSET_TYPES = {DsAssetTypeConstants.RAM_USER, DsAssetTypeConstants.IAM_USER};
 
     /**
      * 包装amMap
@@ -47,9 +47,11 @@ public class AccessManagementPacker {
      */
     public void wrap(UserVO.User user) {
         Map<String, List<AccessManagementVO.XAccessManagement>> amMap = Maps.newHashMap();
-        Arrays.stream(xamAssetTypes).forEach(xamAssetType -> {
+        Arrays.stream(XAM_ASSET_TYPES).forEach(xamAssetType -> {
             List<AccessManagementVO.XAccessManagement> xams = toAms(user, xamAssetType.name());
-            if (CollectionUtils.isEmpty(xams)) return;
+            if (CollectionUtils.isEmpty(xams)) {
+                return;
+            }
             if (amMap.containsKey(xamAssetType.name())) {
                 amMap.get(xamAssetType.name()).addAll(xams);
             } else {
@@ -67,25 +69,30 @@ public class AccessManagementPacker {
      */
     public void wrap(UserVO.User user, String xamType) {
         List<AccessManagementVO.XAccessManagement> xams = toAms(user, xamType);
-        if (!CollectionUtils.isEmpty(xams))
+        if (!CollectionUtils.isEmpty(xams)) {
             user.setAms(xams);
+        }
     }
 
     public List<AccessManagementVO.XAccessManagement> toAms(UserVO.User user, String xamType) {
-        if (!context.containsKey(xamType)) return Collections.emptyList();
+        if (!CONTEXT.containsKey(xamType)) {
+            return Collections.emptyList();
+        }
         DatasourceInstanceAsset param = DatasourceInstanceAsset.builder()
                 .assetType(xamType)
                 .assetKey(user.getUsername())
                 .isActive(true)
                 .build();
         List<DatasourceInstanceAsset> data = dsInstanceAssetService.acqAssetByAssetParam(param);
-        if (CollectionUtils.isEmpty(data)) return Collections.emptyList();
+        if (CollectionUtils.isEmpty(data)) {
+            return Collections.emptyList();
+        }
 
         List<DsAssetVO.Asset> assets = BeanCopierUtil.copyListProperties(data, DsAssetVO.Asset.class).stream().peek(e ->
                 dsAssetPacker.wrap(e, SimpleExtend.EXTEND, SimpleRelation.RELATION)
-        ).collect(Collectors.toList());
+        ).toList();
 
-        Function<DsAssetVO.Asset, AccessManagementVO.XAccessManagement> converter = context.get(xamType);
+        Function<DsAssetVO.Asset, AccessManagementVO.XAccessManagement> converter = CONTEXT.get(xamType);
         return assets.stream().map(converter).collect(Collectors.toList());
     }
 

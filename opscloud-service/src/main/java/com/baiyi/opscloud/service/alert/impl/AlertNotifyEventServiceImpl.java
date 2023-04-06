@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.alert.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.AlertNotifyEvent;
-import com.baiyi.opscloud.mapper.opscloud.AlertNotifyEventMapper;
+import com.baiyi.opscloud.mapper.AlertNotifyEventMapper;
 import com.baiyi.opscloud.service.alert.AlertNotifyEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

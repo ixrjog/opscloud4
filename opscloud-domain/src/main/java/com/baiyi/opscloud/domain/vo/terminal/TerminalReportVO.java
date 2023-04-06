@@ -1,8 +1,7 @@
 package com.baiyi.opscloud.domain.vo.terminal;
 
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,21 +20,21 @@ public class TerminalReportVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class TerminalReport implements Serializable {
 
         private static final long serialVersionUID = 6948099219656277502L;
 
-        @ApiModelProperty(value = "用户总数")
+        @Schema(name = "用户总数")
         private Integer userTotal;
 
-        @ApiModelProperty(value = "会话总数")
+        @Schema(name = "会话总数")
         private Integer sessionTotal;
 
-        @ApiModelProperty(value = "实例总数")
+        @Schema(name = "实例总数")
         private Integer instanceTotal;
 
-        @ApiModelProperty(value = "命令总数")
+        @Schema(name = "命令总数")
         private Integer commandTotal;
 
         private ReportVO.MonthlyReport sessionReport;

@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import org.springframework.beans.factory.InitializingBean;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

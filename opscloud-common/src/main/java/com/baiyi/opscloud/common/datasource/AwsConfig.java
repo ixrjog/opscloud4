@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.common.datasource;
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -21,7 +21,7 @@ public class AwsConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Aws {
         private Account account;
         private String regionId;
@@ -31,7 +31,7 @@ public class AwsConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Account {
 
         private String id;
@@ -45,7 +45,7 @@ public class AwsConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Ec2 {
 
         private String instances;

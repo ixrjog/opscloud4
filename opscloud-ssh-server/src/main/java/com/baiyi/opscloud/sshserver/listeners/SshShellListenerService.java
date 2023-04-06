@@ -56,11 +56,12 @@ public class SshShellListenerService {
     /**
      * Session destroyed
      *
-      * @param channelSession ssh channel session
+     * @param channelSession ssh channel session
      */
     public void onSessionDestroyed(ChannelSession channelSession) {
         notify(new SshShellEvent(SshShellEventType.SESSION_DESTROYED, channelSession));
     }
+
     /**
      * Session stopped with error
      *
@@ -71,12 +72,13 @@ public class SshShellListenerService {
     }
 
     private void notify(SshShellEvent event) {
-        for (SshShellListener listener : this.listeners) {
+        this.listeners.forEach(listener -> {
             try {
                 listener.onEvent(event);
             } catch (RuntimeException e) {
                 log.error("Unable to execute onSessionStarted on listener : {}", listener.getClass().getName(), e);
             }
-        }
+        });
     }
+
 }

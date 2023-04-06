@@ -5,12 +5,12 @@ import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -24,7 +24,7 @@ public class AliyunLogMemberVO {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class LogMember extends BaseVO implements ReadableTime.IAgo, EnvVO.IEnv {
 
         private AliyunLogVO.Log log;

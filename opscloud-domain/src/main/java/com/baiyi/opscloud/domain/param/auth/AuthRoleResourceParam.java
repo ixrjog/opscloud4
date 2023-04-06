@@ -1,8 +1,7 @@
 package com.baiyi.opscloud.domain.param.auth;
 
 import com.baiyi.opscloud.domain.param.PageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 /**
@@ -16,17 +15,17 @@ public class AuthRoleResourceParam {
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     @Builder
     public static class RoleResourcePageQuery extends PageParam {
 
-        @ApiModelProperty(value = "资源组id")
+        @Schema(name = "资源组id")
         private Integer groupId;
 
-        @ApiModelProperty(value = "资源id")
+        @Schema(name = "资源id")
         private Integer roleId;
 
-        @ApiModelProperty(value = "是否绑定")
+        @Schema(name = "是否绑定")
         private Boolean bind;
 
     }

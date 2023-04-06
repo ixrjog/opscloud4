@@ -16,27 +16,27 @@
 
 package com.baiyi.opscloud.sshserver;
 
-import org.jline.terminal.Attributes;
-import org.jline.terminal.Cursor;
-import org.jline.terminal.MouseEvent;
-import org.jline.terminal.Size;
-import org.jline.terminal.Terminal;
+import org.jline.terminal.*;
+import org.jline.utils.ColorPalette;
 import org.jline.utils.InfoCmp;
 import org.jline.utils.NonBlockingReader;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
 
-import static com.baiyi.opscloud.sshserver.SshShellCommandFactory.SSH_THREAD_CONTEXT;
-
 /**
  * <p>Shell terminal delegate</p>
- * <p>Calls are binded to terminal stored in thread context</p>
+ * <p>Calls are bound to terminal stored in thread context</p>
  */
+@Component("terminalDelegate")
+@Primary
 public class SshShellTerminalDelegate implements Terminal {
 
     private final Terminal delegate;
@@ -51,7 +51,7 @@ public class SshShellTerminalDelegate implements Terminal {
     }
 
     private Terminal delegate() {
-        SshContext current = SSH_THREAD_CONTEXT.get();
+        SshContext current = SshShellCommandFactory.SSH_THREAD_CONTEXT.get();
         if (current != null && current.getTerminal() != null) {
             return current.getTerminal();
         }
@@ -87,6 +87,11 @@ public class SshShellTerminalDelegate implements Terminal {
     }
 
     @Override
+    public Charset encoding() {
+        return delegate().encoding();
+    }
+
+    @Override
     public InputStream input() {
         return delegate().input();
     }
@@ -94,6 +99,31 @@ public class SshShellTerminalDelegate implements Terminal {
     @Override
     public OutputStream output() {
         return delegate().output();
+    }
+
+    @Override
+    public boolean canPauseResume() {
+        return delegate().canPauseResume();
+    }
+
+    @Override
+    public void pause() {
+        delegate().pause();
+    }
+
+    @Override
+    public void pause(boolean wait) throws InterruptedException {
+        delegate().pause(wait);
+    }
+
+    @Override
+    public void resume() {
+        delegate().resume();
+    }
+
+    @Override
+    public boolean paused() {
+        return delegate().paused();
     }
 
     @Override
@@ -134,6 +164,7 @@ public class SshShellTerminalDelegate implements Terminal {
     @Override
     public void flush() {
         delegate().flush();
+
     }
 
     @Override
@@ -187,8 +218,22 @@ public class SshShellTerminalDelegate implements Terminal {
     }
 
     @Override
+    public boolean hasFocusSupport() {
+        return delegate().hasFocusSupport();
+    }
+
+    @Override
+    public boolean trackFocus(boolean tracking) {
+        return delegate().trackFocus(tracking);
+    }
+
+    @Override
+    public ColorPalette getPalette() {
+        return delegate().getPalette();
+    }
+
+    @Override
     public void close() throws IOException {
         delegate().close();
     }
-
 }

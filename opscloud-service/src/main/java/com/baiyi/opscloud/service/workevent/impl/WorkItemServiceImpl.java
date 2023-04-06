@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.workevent.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.WorkItem;
-import com.baiyi.opscloud.mapper.opscloud.WorkItemMapper;
+import com.baiyi.opscloud.mapper.WorkItemMapper;
 import com.baiyi.opscloud.service.workevent.WorkItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

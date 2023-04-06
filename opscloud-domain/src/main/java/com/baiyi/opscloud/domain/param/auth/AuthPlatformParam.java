@@ -2,8 +2,7 @@ package com.baiyi.opscloud.domain.param.auth;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,19 +21,19 @@ public class AuthPlatformParam {
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class AuthPlatformLogPageQuery extends SuperPageParam implements IExtend {
 
-        @ApiModelProperty(value = "平台ID")
+        @Schema(name = "平台ID")
         private Integer platformId;
 
-        @ApiModelProperty(value = "认证用户名")
+        @Schema(name = "认证用户名")
         private String username;
 
-        @ApiModelProperty(value = "是否成功")
+        @Schema(name = "是否成功")
         private Boolean result;
 
-        @ApiModelProperty(value = "展开")
+        @Schema(name = "展开")
         private Boolean extend;
 
     }

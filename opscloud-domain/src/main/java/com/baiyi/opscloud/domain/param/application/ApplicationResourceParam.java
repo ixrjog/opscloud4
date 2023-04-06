@@ -4,12 +4,13 @@ import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.base.IAppResType;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * @Author baiyi
@@ -23,30 +24,30 @@ public class ApplicationResourceParam {
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class ResourcePageQuery extends SuperPageParam implements IExtend, BaseBusiness.IBusinessType, IAppResType {
 
-        @ApiModelProperty(value = "数据源实例ID")
+        @Schema(name = "数据源实例ID")
         private Integer instanceId;
 
-        @ApiModelProperty(value = "数据源实例UUID")
+        @Schema(name = "数据源实例UUID")
         private String instanceUuid;
 
-        @ApiModelProperty(value = "应用资源类型")
+        @Schema(name = "应用资源类型")
         @NotNull(message = "必须指定应用资源类型")
         private String appResType;
 
-        @ApiModelProperty(value = "业务类型")
+        @Schema(name = "业务类型")
         @NotNull(message = "必须指定业务类型")
         private Integer businessType;
 
-        @ApiModelProperty(value = "应用ID")
+        @Schema(name = "应用ID")
         private Integer applicationId;
 
-        @ApiModelProperty(value = "应用名称")
+        @Schema(name = "应用名称")
         private String queryName;
 
-        @ApiModelProperty(value = "展开")
+        @Schema(name = "展开")
         private Boolean extend;
 
     }

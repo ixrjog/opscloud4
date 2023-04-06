@@ -8,7 +8,7 @@ import com.baiyi.opscloud.sshcore.audit.InstanceCommandBuilder;
 import io.netty.util.AsciiString;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;

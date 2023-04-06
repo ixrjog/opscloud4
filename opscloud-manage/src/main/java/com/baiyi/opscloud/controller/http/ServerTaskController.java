@@ -6,16 +6,15 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.task.ServerTaskParam;
 import com.baiyi.opscloud.domain.vo.task.ServerTaskVO;
 import com.baiyi.opscloud.facade.task.ServerTaskFacade;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 /**
  * @Author baiyi
@@ -24,19 +23,19 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/server/task")
-@Api(tags = "服务器任务管理")
+@Tag(name = "服务器任务管理")
 @RequiredArgsConstructor
 public class ServerTaskController {
 
     private final ServerTaskFacade serverTaskFacade;
 
-    @ApiOperation(value = "分页查询服务器任务列表")
+    @Operation(summary = "分页查询服务器任务列表")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<ServerTaskVO.ServerTask>> queryServerTaskPage(@RequestBody @Valid ServerTaskParam.ServerTaskPageQuery pageQuery) {
         return new HttpResult<>(serverTaskFacade.queryServerTaskPage(pageQuery));
     }
 
-    @ApiOperation(value = "提交服务器任务")
+    @Operation(summary = "提交服务器任务")
     @PostMapping(value = "/submit", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> submitServerTask(@RequestBody @Valid ServerTaskParam.SubmitServerTask submitServerTask) {
         serverTaskFacade.submitServerTask(submitServerTask, SessionUtil.getUsername());

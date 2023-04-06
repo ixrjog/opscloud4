@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.vo.common;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +18,7 @@ public class OptionsVO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     @Builder
     public static class Options {
         private List<Option> options;
@@ -27,7 +27,7 @@ public class OptionsVO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     @Builder
     public static class Option {
         private String label;

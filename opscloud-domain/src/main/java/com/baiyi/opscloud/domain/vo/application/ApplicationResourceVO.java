@@ -5,11 +5,10 @@ import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class ApplicationResourceVO {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Resource extends BaseVO implements DsInstanceVO.IDsInstance, TagVO.ITags {
 
         private List<TagVO.Tag> tags;
@@ -38,7 +37,7 @@ public class ApplicationResourceVO {
 
         private String instanceUuid;
 
-        @ApiModelProperty(value = "主键", example = "1")
+        @Schema(name = "主键", example = "1")
         private Integer id;
 
         @NotNull(message = "应用id不能为空")
@@ -46,7 +45,7 @@ public class ApplicationResourceVO {
 
         private String name;
 
-        @ApiModelProperty(value = "虚拟资源", example = "true")
+        @Schema(name = "虚拟资源", example = "true")
         @Builder.Default
         private Boolean virtualResource = false;
 
@@ -74,12 +73,12 @@ public class ApplicationResourceVO {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class BaseResource extends BaseVO implements Serializable {
 
         private static final long serialVersionUID = -782607267036174626L;
 
-        @ApiModelProperty(value = "主键", example = "1")
+        @Schema(name = "主键", example = "1")
         private Integer id;
 
         @NotNull(message = "应用id不能为空")
@@ -87,7 +86,7 @@ public class ApplicationResourceVO {
 
         private String name;
 
-        @ApiModelProperty(value = "虚拟资源", example = "true")
+        @Schema(name = "虚拟资源", example = "true")
         @Builder.Default
         private Boolean virtualResource = false;
 

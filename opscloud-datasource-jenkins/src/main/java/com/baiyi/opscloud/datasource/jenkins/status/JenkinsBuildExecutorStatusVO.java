@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.jenkins.status;
 
 import com.google.common.collect.Lists;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,7 +19,7 @@ public class JenkinsBuildExecutorStatusVO implements Serializable {
 
     @Data
     @Builder
-    @ApiModel
+    @Schema
     public static class Children implements Serializable {
 
         private static final long serialVersionUID = 2615134095285978523L;

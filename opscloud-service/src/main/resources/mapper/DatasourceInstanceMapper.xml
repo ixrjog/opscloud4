@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.DatasourceInstanceMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="instance_name" jdbcType="VARCHAR" property="instanceName" />
+    <result column="uuid" jdbcType="VARCHAR" property="uuid" />
+    <result column="instance_type" jdbcType="VARCHAR" property="instanceType" />
+    <result column="kind" jdbcType="VARCHAR" property="kind" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+    <result column="is_active" jdbcType="BIT" property="isActive" />
+    <result column="config_id" jdbcType="INTEGER" property="configId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+  </resultMap>
+</mapper>

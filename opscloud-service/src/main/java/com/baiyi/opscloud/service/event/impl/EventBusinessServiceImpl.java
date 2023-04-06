@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.event.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.EventBusiness;
-import com.baiyi.opscloud.mapper.opscloud.EventBusinessMapper;
+import com.baiyi.opscloud.mapper.EventBusinessMapper;
 import com.baiyi.opscloud.service.event.EventBusinessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

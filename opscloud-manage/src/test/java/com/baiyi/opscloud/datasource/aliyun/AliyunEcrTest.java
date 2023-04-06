@@ -11,7 +11,7 @@ import com.baiyi.opscloud.datasource.aliyun.acr.entity.AliyunAcr;
 import com.baiyi.opscloud.datasource.aliyun.base.BaseAliyunTest;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

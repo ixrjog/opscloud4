@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

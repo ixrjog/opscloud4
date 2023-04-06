@@ -14,7 +14,7 @@ import com.baiyi.opscloud.zabbix.provider.ZabbixHostProvider;
 import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5HostDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ZABBIX_HOST;

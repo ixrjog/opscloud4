@@ -2,8 +2,7 @@ package com.baiyi.opscloud.domain.vo.auth;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.base.ReadableTime;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.Date;
@@ -19,16 +18,16 @@ public class AuthPlatformVO {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Platform {
 
-        @ApiModelProperty(value = "平台ID")
+        @Schema(name = "平台ID")
         private Integer platformId;
 
-        @ApiModelProperty(value = "平台名称")
+        @Schema(name = "平台名称")
         private String name;
 
-        @ApiModelProperty(value = "平台说明")
+        @Schema(name = "平台说明")
         private String comment;
 
     }
@@ -38,26 +37,26 @@ public class AuthPlatformVO {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class AuthPlatformLog extends BaseVO implements ReadableTime.IAgo {
 
         private Integer id;
 
-        @ApiModelProperty(value = "平台ID")
+        @Schema(name = "平台ID")
         private Integer platformId;
 
-        @ApiModelProperty(value = "平台名称")
+        @Schema(name = "平台名称")
         private String platformName;
 
-        @ApiModelProperty(value = "认证用户名")
+        @Schema(name = "认证用户名")
         private String username;
 
         private Boolean otp;
 
-        @ApiModelProperty(value = "认证结果")
+        @Schema(name = "认证结果")
         private Boolean result;
 
-        @ApiModelProperty(value = "认证消息")
+        @Schema(name = "认证消息")
         private String resultMsg;
 
         private String ago;

@@ -19,7 +19,7 @@ import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

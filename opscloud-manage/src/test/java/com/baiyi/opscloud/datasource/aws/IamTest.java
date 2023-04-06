@@ -18,7 +18,7 @@ import com.baiyi.opscloud.otp.model.OTPAccessCode;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.crypto.SecretKey;
 import java.util.List;
 

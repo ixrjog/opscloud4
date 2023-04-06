@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.tencent.exmail.param;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,18 +19,18 @@ public class ExmailParam {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class User {
 
-        @ApiModelProperty(value = "成员UserID。企业邮帐号名，邮箱格式", example = "bob@example.com")
+        @Schema(name = "成员UserID。企业邮帐号名，邮箱格式", example = "bob@example.com")
         private String userid;
-        @ApiModelProperty(value = "成员名称")
+        @Schema(name = "成员名称")
         private String name;
-        @ApiModelProperty(value = "成员所属部门id列表")
+        @Schema(name = "成员所属部门id列表")
         private List<Long> department;
-        @ApiModelProperty(value = "手机号")
+        @Schema(name = "手机号")
         private String mobile;
-        @ApiModelProperty(value = "启用/禁用成员。1表示启用成员，0表示禁用成员")
+        @Schema(name = "启用/禁用成员。1表示启用成员，0表示禁用成员")
         @Builder.Default
         private Integer enable = 1;
 

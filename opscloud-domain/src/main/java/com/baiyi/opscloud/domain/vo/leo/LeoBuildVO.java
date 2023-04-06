@@ -3,8 +3,7 @@ package com.baiyi.opscloud.domain.vo.leo;
 import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.collect.Lists;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,27 +24,27 @@ public class LeoBuildVO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class Build implements Serializable, ReadableTime.IAgo, ReadableTime.IRuntime {
 
         private static final long serialVersionUID = -697201191162725310L;
 
-        @ApiModelProperty(value = "构建详情")
+        @Schema(name = "构建详情")
         private Object buildDetails;
 
-        @ApiModelProperty(value = "流水线")
+        @Schema(name = "流水线")
         private Pipeline pipeline;
 
-        @ApiModelProperty(value = "以前")
+        @Schema(name = "以前")
         private String ago;
 
-        @ApiModelProperty(value = "运行时长")
+        @Schema(name = "运行时长")
         private String runtime;
 
-        @ApiModelProperty(value = "镜像存在")
+        @Schema(name = "镜像存在")
         private Boolean isImageExists;
 
-        @ApiModelProperty(value = "镜像")
+        @Schema(name = "镜像")
         private LeoBuildVO.Image image;
 
         private Integer id;
@@ -88,7 +87,7 @@ public class LeoBuildVO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class LatestBuildInfo implements Serializable {
 
         private static final long serialVersionUID = -7617778439412190882L;
@@ -104,7 +103,7 @@ public class LeoBuildVO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class BranchOptions implements Serializable {
 
         private static final long serialVersionUID = 6999931515242829844L;
@@ -117,7 +116,7 @@ public class LeoBuildVO {
 
     @Data
     @Builder
-    @ApiModel
+    @Schema
     public static class Option implements Serializable {
 
         private static final long serialVersionUID = -6482052319954322970L;
@@ -130,7 +129,7 @@ public class LeoBuildVO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class Children implements Serializable {
 
         private static final long serialVersionUID = -1561200881442892379L;
@@ -147,7 +146,7 @@ public class LeoBuildVO {
 
     @Data
     @Builder
-    @ApiModel
+    @Schema
     @AllArgsConstructor
     public static class BranchOrTag implements Serializable {
 
@@ -165,7 +164,7 @@ public class LeoBuildVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Pipeline implements Serializable {
 
         private static final long serialVersionUID = -2644838767573635251L;
@@ -178,7 +177,7 @@ public class LeoBuildVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Node implements Serializable {
 
         public static final Node QUEUE = Node.builder()
@@ -209,7 +208,7 @@ public class LeoBuildVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Image implements Serializable {
 
         private static final long serialVersionUID = -8085991676738506575L;

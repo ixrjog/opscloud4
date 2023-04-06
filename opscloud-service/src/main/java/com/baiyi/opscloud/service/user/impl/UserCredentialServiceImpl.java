@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.user.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.UserCredential;
-import com.baiyi.opscloud.mapper.opscloud.UserCredentialMapper;
+import com.baiyi.opscloud.mapper.UserCredentialMapper;
 import com.baiyi.opscloud.service.user.UserCredentialService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

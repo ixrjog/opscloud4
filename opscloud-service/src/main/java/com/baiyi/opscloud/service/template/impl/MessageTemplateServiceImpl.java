@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.template.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.MessageTemplate;
 import com.baiyi.opscloud.domain.param.template.MessageTemplateParam;
-import com.baiyi.opscloud.mapper.opscloud.MessageTemplateMapper;
+import com.baiyi.opscloud.mapper.MessageTemplateMapper;
 import com.baiyi.opscloud.service.template.MessageTemplateService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;

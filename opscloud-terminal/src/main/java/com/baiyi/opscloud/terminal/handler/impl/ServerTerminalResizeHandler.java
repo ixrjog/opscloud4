@@ -12,7 +12,7 @@ import com.jcraft.jsch.ChannelShell;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 
 /**
  * XTerm改变形体

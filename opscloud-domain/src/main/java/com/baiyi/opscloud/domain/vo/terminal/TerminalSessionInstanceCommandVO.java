@@ -2,8 +2,7 @@ package com.baiyi.opscloud.domain.vo.terminal;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 /**
@@ -18,12 +17,12 @@ public class TerminalSessionInstanceCommandVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Command extends BaseVO {
 
         private UserVO.User user;
 
-        @ApiModelProperty(value = "输出行数")
+        @Schema(name = "输出行数")
         private Integer outputRows;
 
         private Integer id;

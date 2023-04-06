@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.LeoTemplateMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.LeoTemplate">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="jenkins_instance_uuid" jdbcType="CHAR" property="jenkinsInstanceUuid"/>
+        <result column="template_name" jdbcType="VARCHAR" property="templateName"/>
+        <result column="is_active" jdbcType="BIT" property="isActive"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="template_config" jdbcType="LONGVARCHAR" property="templateConfig"/>
+        <result column="template_parameter" jdbcType="LONGVARCHAR" property="templateParameter"/>
+        <result column="template_content" jdbcType="LONGVARCHAR" property="templateContent"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+    <select id="queryPageByParam"
+            parameterType="com.baiyi.opscloud.domain.param.leo.LeoTemplateParam$TemplatePageQuery"
+            resultMap="BaseResultMap">
+        select a0.* from leo_template a0
+        <if test="tagId != null and tagId > 0">
+            join business_tag a1 on a0.id = a1.business_id
+        </if>
+        <where>
+            <if test="tagId != null and tagId > 0">
+                a1.business_type = #{businessType} and a1.tag_id = #{tagId}
+            </if>
+            <if test="instanceUuid != null and instanceUuid != ''">
+                and a0.jenkins_instance_uuid = #{instanceUuid}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and a0.name like "%" #{queryName} "%"
+            </if>
+            <if test="isActive != null">
+                and a0.is_active = #{isActive}
+            </if>
+        </where>
+    </select>
+
+</mapper>

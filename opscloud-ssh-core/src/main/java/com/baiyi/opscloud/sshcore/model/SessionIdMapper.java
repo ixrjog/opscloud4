@@ -16,18 +16,18 @@ public class SessionIdMapper {
     /**
      * SshServer使用  将ioSessionId转换为UUID
      */
-    private static final Map<Long, String> mapper = new HashedMap<>();
+    private static final Map<Long, String> MAPPER = new HashedMap<>();
 
     public static void put(IoSession ioSession) {
-        mapper.put(ioSession.getId(), UUID.randomUUID().toString());
+        MAPPER.put(ioSession.getId(), UUID.randomUUID().toString());
     }
 
     public static String getSessionId(IoSession ioSession) {
-        return mapper.get(ioSession.getId());
+        return MAPPER.get(ioSession.getId());
     }
 
     public static void remove(IoSession ioSession) {
-        mapper.remove(ioSession.getId());
+        MAPPER.remove(ioSession.getId());
     }
 
 }

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.TerminalSessionInstanceMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="session_id" jdbcType="VARCHAR" property="sessionId" />
+    <result column="instance_id" jdbcType="VARCHAR" property="instanceId" />
+    <result column="duplicate_instance_id" jdbcType="VARCHAR" property="duplicateInstanceId" />
+    <result column="instance_session_type" jdbcType="VARCHAR" property="instanceSessionType" />
+    <result column="login_user" jdbcType="VARCHAR" property="loginUser" />
+    <result column="host_ip" jdbcType="VARCHAR" property="hostIp" />
+    <result column="output_size" jdbcType="BIGINT" property="outputSize" />
+    <result column="instance_closed" jdbcType="BIT" property="instanceClosed" />
+    <result column="open_time" jdbcType="TIMESTAMP" property="openTime" />
+    <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <resultMap id="ReportResultMap" type="com.baiyi.opscloud.domain.vo.base.ReportVO$Report">
+    <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+    <result column="value" jdbcType="INTEGER" property="value"/>
+  </resultMap>
+
+  <select id="statMonthlyByInstanceSessionType" resultMap="ReportResultMap">
+    select date_format(create_time, '%Y-%m') as `c_name`, sum(1) as `value`
+    from terminal_session_instance
+    where instance_closed = 1 and instance_session_type = #{instanceSessionType}
+    group by `c_name`
+    order by `c_name`;
+  </select>
+
+  <select id="queryMonth" resultMap="ReportResultMap">
+    select date_format(create_time, '%Y-%m') as `c_name`
+    from terminal_session_instance
+    where instance_closed = 1
+    group by `c_name`
+    order by `c_name`;
+  </select>
+
+  <select id="statTotal" resultType="int">
+    select count(*)
+    from terminal_session_instance
+  </select>
+
+</mapper>

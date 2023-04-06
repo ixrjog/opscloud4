@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkEvent;
 import com.baiyi.opscloud.domain.param.workevent.WorkEventParam;
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
-import com.baiyi.opscloud.mapper.opscloud.WorkEventMapper;
+import com.baiyi.opscloud.mapper.WorkEventMapper;
 import com.baiyi.opscloud.service.workevent.WorkEventService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.common.datasource;
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.google.common.base.Joiner;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -31,7 +31,7 @@ public class AliyunConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Aliyun {
 
         private String version;
@@ -57,7 +57,7 @@ public class AliyunConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Account {
 
         private String uid;
@@ -85,14 +85,14 @@ public class AliyunConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Ons {
         private String internetRegionId;
     }
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Dms {
         private String endpoint;
         private Long tid;
@@ -100,28 +100,28 @@ public class AliyunConfig extends BaseDsConfig {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Cms {
         private Dingtalk dingtalk;
     }
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Dingtalk {
         private String token;
     }
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Acr {
 
         private List<Instance> instances;
 
         @Data
         @NoArgsConstructor
-        @ApiModel
+        @Schema
         public static class Instance {
             private String id;
             private String domain;

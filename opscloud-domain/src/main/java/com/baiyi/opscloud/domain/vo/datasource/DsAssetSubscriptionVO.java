@@ -3,12 +3,12 @@ package com.baiyi.opscloud.domain.vo.datasource;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -21,7 +21,7 @@ public class DsAssetSubscriptionVO {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class AssetSubscription extends BaseVO implements DsInstanceVO.IDsInstance, DsAssetVO.IDsAsset, ReadableTime.IAgo {
 
         private DsInstanceVO.Instance instance;

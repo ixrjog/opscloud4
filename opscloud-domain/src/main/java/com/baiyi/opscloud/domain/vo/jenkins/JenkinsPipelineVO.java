@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.vo.jenkins;
 
 import com.google.common.collect.Lists;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,10 +16,9 @@ import java.util.List;
  */
 public class JenkinsPipelineVO {
 
-
     @Data
     @Builder
-    @ApiModel
+    @Schema
     public static class Pipeline implements  Serializable {
 
         private static final long serialVersionUID = -1020196514240621058L;
@@ -48,10 +47,9 @@ public class JenkinsPipelineVO {
 
     }
 
-
     @Data
     @Builder
-    @ApiModel
+    @Schema
     public static class Node implements Serializable {
 
         private static final long serialVersionUID = -1465972308441846486L;

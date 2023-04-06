@@ -7,6 +7,7 @@
         <groupId>com.baiyi</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>opscloud-ssh-core</artifactId>
@@ -21,6 +22,18 @@
         <dependency>
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.sshd</groupId>
+            <artifactId>sshd-core</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.shell</groupId>
+            <artifactId>spring-shell-starter</artifactId>
+            <version>3.0.0</version>
         </dependency>
 
         <dependency>
@@ -40,18 +53,11 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.sshd/sshd-core -->
-        <dependency>
-            <groupId>org.apache.sshd</groupId>
-            <artifactId>sshd-core</artifactId>
-            <!-- <version>2.8.0</version>-->
-            <version>2.9.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.shell</groupId>
-            <artifactId>spring-shell-starter</artifactId>
-            <version>2.0.1.RELEASE</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.sshd</groupId>-->
+<!--            <artifactId>sshd-core</artifactId>-->
+<!--            <version>2.9.2</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.fusesource.jansi</groupId>

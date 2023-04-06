@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.AuthRoleMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.AuthRole">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
+        <result column="access_level" jdbcType="INTEGER" property="accessLevel"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="allow_order" jdbcType="BIT" property="allowOrder"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="getRoleAccessLevelByUsername" resultType="java.lang.Integer">
+        select access_level from auth_role
+        <where>
+            id in ( select role_id from auth_user_role where username = #{username} )
+        </where>
+        order by access_level desc limit 1
+    </select>
+
+</mapper>

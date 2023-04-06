@@ -2,13 +2,11 @@ package com.baiyi.opscloud.domain.param.datasource;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * @Author baiyi
@@ -20,13 +18,13 @@ public class AliyunLogMemberParam {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class LogMemberPageQuery extends PageParam implements IExtend {
 
         @NotNull(message = "必须指定日志服务id")
         private Integer aliyunLogId;
 
-        @ApiModelProperty(value = "查询关键字")
+        @Schema(name = "查询关键字")
         private String queryName;
 
         private Boolean extend;
@@ -35,7 +33,7 @@ public class AliyunLogMemberParam {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class AddLogMember {
 
         @NotNull(message = "必须指定日志服务id")

@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.datasource.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetSubscription;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetSubscriptionParam;
-import com.baiyi.opscloud.mapper.opscloud.DatasourceInstanceAssetSubscriptionMapper;
+import com.baiyi.opscloud.mapper.DatasourceInstanceAssetSubscriptionMapper;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetSubscriptionService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

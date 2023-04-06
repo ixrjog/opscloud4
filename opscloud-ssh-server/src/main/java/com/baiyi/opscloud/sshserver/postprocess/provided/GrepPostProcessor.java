@@ -25,11 +25,17 @@ import java.util.List;
  * Grep post processor
  */
 @Slf4j
-public class GrepPostProcessor implements PostProcessor<String> {
+public class GrepPostProcessor
+        implements PostProcessor<String, String> {
 
     @Override
     public String getName() {
         return "grep";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Find pattern in result lines";
     }
 
     @Override

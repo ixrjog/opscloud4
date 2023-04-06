@@ -18,7 +18,6 @@ package com.baiyi.opscloud.sshserver;
 
 import com.baiyi.opscloud.sshserver.auth.SshAuthentication;
 import com.baiyi.opscloud.sshserver.postprocess.PostProcessorObject;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.sshd.server.Environment;
@@ -33,7 +32,6 @@ import java.util.List;
  * Ssh context to hold terminal, exit callback and thread per thread
  */
 @Getter
-@Data
 public class SshContext {
 
     private SshShellRunnable sshShellRunnable;
@@ -51,6 +49,9 @@ public class SshContext {
 
     private long backgroundCount = 0;
 
+    /**
+     * Default empty constructor
+     */
     public SshContext() {
     }
 
@@ -97,6 +98,9 @@ public class SshContext {
         return isLocalPrompt() ? null : sshShellRunnable.getSshEnv();
     }
 
+    /**
+     * Increment background sessions count
+     */
     public void incrementBackgroundCount() {
         this.backgroundCount++;
     }

@@ -2,8 +2,7 @@ package com.baiyi.opscloud.domain.param.auth;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,13 +21,13 @@ public class AuthGroupParam {
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class AuthGroupPageQuery extends SuperPageParam implements IExtend {
 
-        @ApiModelProperty(value = "资源组名称")
+        @Schema(name = "资源组名称")
         private String groupName;
 
-        @ApiModelProperty(value = "展开")
+        @Schema(name = "展开")
         private Boolean extend;
 
     }

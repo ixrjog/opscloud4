@@ -3,14 +3,13 @@ package com.baiyi.opscloud.domain.param.workevent;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.param.PageParam;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -25,12 +24,12 @@ public class WorkEventParam {
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class WorkEventPageQuery extends PageParam {
 
         private final int businessType = BusinessTypeEnum.WORK_EVENT.getType();
 
-        @ApiModelProperty(value = "模糊查询")
+        @Schema(name = "模糊查询")
         private String queryName;
 
         private Integer workRoleId;
@@ -51,7 +50,7 @@ public class WorkEventParam {
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class WorkItemQuery extends PageParam {
 
         @NotNull(message = "parentId 不能为空")
@@ -65,7 +64,7 @@ public class WorkEventParam {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class AddWorkEvent {
 
         private List<WorkEventVO.WorkEvent> workEventList;
@@ -75,7 +74,7 @@ public class WorkEventParam {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class UpdateWorkEvent {
 
         private WorkEventVO.WorkEvent workEvent;
@@ -85,7 +84,7 @@ public class WorkEventParam {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class WorkItemTreeQuery {
 
         @NotNull

@@ -4,7 +4,7 @@ import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.facade.user.UserFacade;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

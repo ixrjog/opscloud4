@@ -7,7 +7,7 @@ import com.baiyi.opscloud.datasource.aliyun.domain.entity.AliyunDomain;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

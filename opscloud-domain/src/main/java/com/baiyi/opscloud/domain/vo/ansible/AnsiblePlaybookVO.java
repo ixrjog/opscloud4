@@ -1,13 +1,11 @@
 package com.baiyi.opscloud.domain.vo.ansible;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * &#064;Author  baiyi
@@ -28,15 +26,15 @@ public class AnsiblePlaybookVO {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Playbook extends BaseVO {
 
         private Integer id;
 
-        @ApiModelProperty(value = "剧本UUID")
+        @Schema(name = "剧本UUID")
         private String playbookUuid;
 
-        @ApiModelProperty(value = "剧本名称")
+        @Schema(name = "剧本名称")
         @NotNull(message = "剧本名称不能为空")
         private String name;
 
@@ -46,10 +44,10 @@ public class AnsiblePlaybookVO {
         /**
          * 标签配置
          */
-        @ApiModelProperty(value = "剧本标签")
+        @Schema(name = "剧本标签")
         private String tags;
 
-        @ApiModelProperty(value = "剧本外部变量")
+        @Schema(name = "剧本外部变量")
         private String vars;
 
         /**

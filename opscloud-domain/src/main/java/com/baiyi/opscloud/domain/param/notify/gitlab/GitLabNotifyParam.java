@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.param.notify.gitlab;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class GitLabNotifyParam {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class SystemHook {
 
         private final String ver = "1.0.0";
@@ -50,10 +50,9 @@ public class GitLabNotifyParam {
         private String key;
     }
 
-
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Project {
         private long id;
         private String name;
@@ -74,7 +73,7 @@ public class GitLabNotifyParam {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Commits {
         private String id;
         private String message;
@@ -88,7 +87,7 @@ public class GitLabNotifyParam {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Repository {
         private String name;
         private String url;
@@ -101,7 +100,7 @@ public class GitLabNotifyParam {
 
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Author {
         private String name;
         private String email;

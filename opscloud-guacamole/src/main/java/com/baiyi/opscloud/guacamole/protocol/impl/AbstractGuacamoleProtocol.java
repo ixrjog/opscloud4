@@ -25,7 +25,7 @@ import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -71,8 +71,9 @@ public abstract class AbstractGuacamoleProtocol implements IGuacamoleProtocol, I
 
     protected Credential getCredential(ServerAccount serverAccount) {
         Credential credential = credentialService.getById(serverAccount.getCredentialId());
-        if (StringUtils.isEmpty(serverAccount.getUsername()))
+        if (StringUtils.isEmpty(serverAccount.getUsername())) {
             serverAccount.setUsername(credential.getUsername());
+        }
         credential.setCredential(stringEncryptor.decrypt(credential.getCredential()));
         return credential;
     }
@@ -93,8 +94,9 @@ public abstract class AbstractGuacamoleProtocol implements IGuacamoleProtocol, I
 
     private GuacamoleConfig getConfig() throws GuacamoleException{
         List<DatasourceInstance> instances = instanceHelper.listInstance(getFilterInstanceTypes(), getProtocol());
-        if (CollectionUtils.isEmpty(instances))
+        if (CollectionUtils.isEmpty(instances)) {
             throw new GuacamoleException("无可用的Guacamole数据源实例！");
+        }
         int index = RandomUtil.random(instances.size());
         DatasourceInstance instance = instances.get(index);
         DatasourceConfig datasourceConfig = dsConfigHelper.getConfigById(instance.getConfigId());

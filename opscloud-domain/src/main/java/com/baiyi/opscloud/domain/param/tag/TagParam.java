@@ -1,8 +1,7 @@
 package com.baiyi.opscloud.domain.param.tag;
 
 import com.baiyi.opscloud.domain.param.PageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 /**
@@ -15,16 +14,16 @@ public class TagParam {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class TagPageQuery extends PageParam {
 
-        @ApiModelProperty(value = "标签Key")
+        @Schema(name = "标签Key")
         private String tagKey;
 
-        @ApiModelProperty(value = "业务类型", example = "0")
+        @Schema(name = "业务类型", example = "0")
         private Integer businessType;
 
-        @ApiModelProperty(value = "是否追加通用标签")
+        @Schema(name = "是否追加通用标签")
         private Boolean append;
 
     }
@@ -33,16 +32,16 @@ public class TagParam {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @ApiModel
+    @Schema
     public static class BusinessQuery {
 
-        @ApiModelProperty(value = "标签Key")
+        @Schema(name = "标签Key")
         private String tagKey;
 
-        @ApiModelProperty(value = "业务类型", example = "1")
+        @Schema(name = "业务类型", example = "1")
         private Integer businessType;
 
-        @ApiModelProperty(value = "业务id", example = "1")
+        @Schema(name = "业务id", example = "1")
         private Integer businessId;
 
     }

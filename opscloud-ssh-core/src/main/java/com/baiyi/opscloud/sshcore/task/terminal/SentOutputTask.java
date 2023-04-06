@@ -34,7 +34,7 @@ import com.baiyi.opscloud.sshcore.util.SessionOutputUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import java.util.List;
 
 /**

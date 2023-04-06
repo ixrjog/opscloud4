@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.TerminalSessionMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.TerminalSession">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="session_id" jdbcType="VARCHAR" property="sessionId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="remote_addr" jdbcType="VARCHAR" property="remoteAddr" />
+    <result column="session_closed" jdbcType="BIT" property="sessionClosed" />
+    <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />
+    <result column="server_hostname" jdbcType="VARCHAR" property="serverHostname" />
+    <result column="server_addr" jdbcType="VARCHAR" property="serverAddr" />
+    <result column="session_type" jdbcType="VARCHAR" property="sessionType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <resultMap id="ReportResultMap" type="com.baiyi.opscloud.domain.vo.base.ReportVO$Report">
+    <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+    <result column="value" jdbcType="INTEGER" property="value"/>
+  </resultMap>
+
+  <select id="statMonthlyBySessionType" resultMap="ReportResultMap">
+    select date_format(create_time, '%Y-%m') as `c_name`, sum(1) as `value`
+    from  terminal_session
+    where session_closed = 1 and session_type = #{sessionType}
+    group by `c_name` order by `c_name`;
+  </select>
+
+  <select id="queryMonth" resultMap="ReportResultMap">
+    select date_format(create_time, '%Y-%m') as `c_name`
+    from  terminal_session
+    where session_closed = 1
+    group by `c_name` order by `c_name`;
+  </select>
+
+  <select id="statUserTotal" resultType="int">
+    select count(distinct(username))
+    from terminal_session
+  </select>
+
+  <select id="statTotal" resultType="int">
+    select count(*)
+    from terminal_session
+  </select>
+
+</mapper>

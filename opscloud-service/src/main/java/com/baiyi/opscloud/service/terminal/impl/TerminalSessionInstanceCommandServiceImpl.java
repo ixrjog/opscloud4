@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstanceCommand;
 import com.baiyi.opscloud.domain.param.terminal.TerminalSessionInstanceCommandParam;
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
-import com.baiyi.opscloud.mapper.opscloud.TerminalSessionInstanceCommandMapper;
+import com.baiyi.opscloud.mapper.TerminalSessionInstanceCommandMapper;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceCommandService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;

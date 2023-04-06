@@ -5,7 +5,7 @@ import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5TemplateDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

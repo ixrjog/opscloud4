@@ -22,7 +22,7 @@ import org.gitlab4j.api.models.Member;
 import org.gitlab4j.api.models.User;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.leo.message.handler.base;
 
 import com.baiyi.opscloud.domain.param.leo.request.ILeoRequestParam;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import java.io.IOException;
 
 

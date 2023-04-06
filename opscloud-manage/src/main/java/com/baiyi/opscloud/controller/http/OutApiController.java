@@ -3,8 +3,8 @@ package com.baiyi.opscloud.controller.http;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam;
 import com.baiyi.opscloud.facade.workorder.WorkOrderTicketFacade;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/out")
-@Api(tags = "外部API")
+@Tag(name = "外部API")
 @RequiredArgsConstructor
 public class OutApiController {
 
     private final WorkOrderTicketFacade workOrderTicketFacade;
 
-    @ApiOperation(value = "审批工单票据")
+    @Operation(summary = "审批工单票据")
     @GetMapping(value = "/ticket/approve", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult approveTicket(@RequestParam Integer ticketId, String username, String approvalType, String token) {
         WorkOrderTicketParam.OutApproveTicket outApproveTicket = WorkOrderTicketParam.OutApproveTicket.builder()

@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrder;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderParam;
-import com.baiyi.opscloud.mapper.opscloud.WorkOrderMapper;
+import com.baiyi.opscloud.mapper.WorkOrderMapper;
 import com.baiyi.opscloud.service.workorder.WorkOrderService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

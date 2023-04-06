@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.param.sys.CredentialParam;
-import com.baiyi.opscloud.mapper.opscloud.CredentialMapper;
+import com.baiyi.opscloud.mapper.CredentialMapper;
 import com.baiyi.opscloud.service.sys.CredentialService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;

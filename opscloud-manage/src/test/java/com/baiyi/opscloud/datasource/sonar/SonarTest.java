@@ -11,7 +11,7 @@ import com.baiyi.opscloud.datasource.sonar.driver.SonarProjectsDriver;
 import com.baiyi.opscloud.datasource.sonar.param.PagingParam;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

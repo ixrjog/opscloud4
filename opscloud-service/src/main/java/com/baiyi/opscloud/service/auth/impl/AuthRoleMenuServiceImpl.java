@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.auth.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.AuthRoleMenu;
-import com.baiyi.opscloud.mapper.opscloud.AuthRoleMenuMapper;
+import com.baiyi.opscloud.mapper.AuthRoleMenuMapper;
 import com.baiyi.opscloud.service.auth.AuthRoleMenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

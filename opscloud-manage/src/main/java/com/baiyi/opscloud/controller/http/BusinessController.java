@@ -6,13 +6,12 @@ import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
 import com.baiyi.opscloud.facade.business.BusinessDocumentFacade;
 import com.baiyi.opscloud.facade.business.BusinessPropertyFacade;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 /**
  * @Author baiyi
@@ -21,7 +20,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/business")
-@Api(tags = "业务对象管理")
+@Tag(name = "业务对象管理")
 @RequiredArgsConstructor
 public class BusinessController {
 
@@ -29,33 +28,33 @@ public class BusinessController {
 
     private final BusinessDocumentFacade businessDocumentFacade;
 
-    @ApiOperation(value = "新增业务对象属性配置")
+    @Operation(summary = "新增业务对象属性配置")
     @PostMapping(value = "/property/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> addBusinessProperty(@RequestBody @Valid BusinessPropertyVO.Property property) {
         businessPropertyFacade.add(property);
         return HttpResult.SUCCESS;
     }
 
-    @ApiOperation(value = "更新业务对象属性配置")
+    @Operation(summary = "更新业务对象属性配置")
     @PutMapping(value = "/property/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> updateBusinessProperty(@RequestBody @Valid BusinessPropertyVO.Property property) {
         businessPropertyFacade.update(property);
         return HttpResult.SUCCESS;
     }
 
-    @ApiOperation(value = "按ID查询业务文档")
+    @Operation(summary = "按ID查询业务文档")
     @GetMapping(value = "/document/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<BusinessDocumentVO.Document> getBusinessDocumentById(@RequestParam @Valid Integer id) {
         return new HttpResult<>(businessDocumentFacade.getById(id));
     }
 
-    @ApiOperation(value = "按联合键查询业务文档")
+    @Operation(summary = "按联合键查询业务文档")
     @GetMapping(value = "/document/unique/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<BusinessDocumentVO.Document> getBusinessDocumentByUniqueKey(@RequestParam @Valid Integer businessType, @Valid Integer businessId) {
         return new HttpResult<>(businessDocumentFacade.getByUniqueKey(businessType, businessId));
     }
 
-    @ApiOperation(value = "保存业务文档")
+    @Operation(summary = "保存业务文档")
     @PostMapping(value = "/document/save", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> saveBusinessDocument(@RequestBody @Valid BusinessDocumentParam.Document document) {
         businessDocumentFacade.save(document);

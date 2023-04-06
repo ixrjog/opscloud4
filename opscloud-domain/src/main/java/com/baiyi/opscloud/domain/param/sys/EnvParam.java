@@ -1,8 +1,7 @@
 package com.baiyi.opscloud.domain.param.sys;
 
 import com.baiyi.opscloud.domain.param.PageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -17,16 +16,16 @@ public class EnvParam {
     @Data
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class EnvPageQuery extends PageParam {
 
-        @ApiModelProperty(value = "环境名称")
+        @Schema(name = "环境名称")
         private String envName;
 
-        @ApiModelProperty(value = "环境值")
+        @Schema(name = "环境值")
         private Integer envType;
 
-        @ApiModelProperty(value = "有效")
+        @Schema(name = "有效")
         private Boolean isActive;
 
     }

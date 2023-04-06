@@ -63,7 +63,7 @@ public class Authorization {
     }
 
     private static String toBasice(String authString){
-        byte[] authEncBytes = Base64.encodeBase64(authString.getBytes(StandardCharsets.UTF_8));
+        byte[] authEncBytes = Base64.encodeBase64(authString.getBytes(StandardCharsets.UTF_8),false);
         return new String(authEncBytes);
     }
 

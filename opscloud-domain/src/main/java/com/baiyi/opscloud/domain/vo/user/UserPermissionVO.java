@@ -1,10 +1,10 @@
 package com.baiyi.opscloud.domain.vo.user;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -17,7 +17,7 @@ public class UserPermissionVO {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class UserPermission extends BaseVO implements Serializable {
 
         private static final long serialVersionUID = 8880598889712701828L;
@@ -35,7 +35,7 @@ public class UserPermissionVO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class UserBusinessPermission {
 
         @NotNull(message = "用户id不能为空")

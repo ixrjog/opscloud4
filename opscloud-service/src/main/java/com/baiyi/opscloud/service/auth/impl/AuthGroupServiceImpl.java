@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.auth.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthGroup;
 import com.baiyi.opscloud.domain.param.auth.AuthGroupParam;
-import com.baiyi.opscloud.mapper.opscloud.AuthGroupMapper;
+import com.baiyi.opscloud.mapper.AuthGroupMapper;
 import com.baiyi.opscloud.service.auth.AuthGroupService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;

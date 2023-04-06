@@ -35,4 +35,5 @@ public interface InteractiveInput {
      * @return lines
      */
     List<AttributedString> getLines(Size size, long currentDelay);
+
 }

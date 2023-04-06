@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.vo.leo;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +19,7 @@ public class LeoBuildPipelineVO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class Step implements Serializable {
 
         private static final long serialVersionUID = 1740884710532256025L;

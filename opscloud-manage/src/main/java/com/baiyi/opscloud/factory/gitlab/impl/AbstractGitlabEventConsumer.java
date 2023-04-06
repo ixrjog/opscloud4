@@ -7,9 +7,9 @@ import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
 import com.baiyi.opscloud.facade.datasource.SimpleDsAssetFacade;
 import com.baiyi.opscloud.facade.event.EventFacade;
-import com.baiyi.opscloud.factory.gitlab.GitlabEventConsumerFactory;
-import com.baiyi.opscloud.factory.gitlab.GitlabEventNameEnum;
-import com.baiyi.opscloud.factory.gitlab.IGitlabEventConsumer;
+import com.baiyi.opscloud.factory.gitlab.GitLabEventConsumerFactory;
+import com.baiyi.opscloud.factory.gitlab.GitLabEventNameEnum;
+import com.baiyi.opscloud.factory.gitlab.IGitLabEventConsumer;
 import com.baiyi.opscloud.factory.gitlab.context.GitlabEventContext;
 import com.baiyi.opscloud.factory.gitlab.converter.SystemHookConverter;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.annotation.Async;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +30,7 @@ import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskP
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractGitlabEventConsumer implements IGitlabEventConsumer, InitializingBean {
+public abstract class AbstractGitlabEventConsumer implements IGitLabEventConsumer, InitializingBean {
 
     @Resource
     private EventFacade eventFacade;
@@ -41,7 +41,7 @@ public abstract class AbstractGitlabEventConsumer implements IGitlabEventConsume
     @Resource
     protected SimpleDsAssetFacade simpleDsAssetFacade;
 
-    protected abstract GitlabEventNameEnum[] getEventNameEnums();
+    protected abstract GitLabEventNameEnum[] getEventNameEnums();
 
     protected final ThreadLocal<GitlabEventContext> eventContext = ThreadLocal.withInitial(GitlabEventContext::new);
 
@@ -88,7 +88,7 @@ public abstract class AbstractGitlabEventConsumer implements IGitlabEventConsume
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        GitlabEventConsumerFactory.register(this);
+        GitLabEventConsumerFactory.register(this);
     }
 
 }

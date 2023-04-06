@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 

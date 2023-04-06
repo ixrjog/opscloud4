@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.UserGroupMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.UserGroup">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="group_type" jdbcType="INTEGER" property="groupType"/>
+        <result column="source" jdbcType="VARCHAR" property="source"/>
+        <result column="allow_order" jdbcType="BIT" property="allowOrder"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+    <select id="queryUserPermissionGroupByParam"
+            parameterType="com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam$UserBusinessPermissionPageQuery"
+            resultMap="BaseResultMap">
+        select * from user_group
+        where
+        <choose>
+            <when test="authorized">
+                id in ( select business_id from user_permission where business_type = #{businessType} and user_id =
+                #{userId})
+            </when>
+            <otherwise>
+                id not in ( select business_id from user_permission where business_type = #{businessType} and user_id =
+                #{userId})
+            </otherwise>
+        </choose>
+        <if test="queryName != null and queryName != ''">
+            and name like "%" #{queryName} "%"
+        </if>
+        order by create_time
+    </select>
+
+</mapper>

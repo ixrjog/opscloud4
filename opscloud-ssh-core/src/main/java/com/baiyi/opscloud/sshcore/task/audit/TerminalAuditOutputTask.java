@@ -6,7 +6,7 @@ import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.task.audit.output.OutputMessage;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -39,9 +39,8 @@ public class TerminalAuditOutputTask implements Runnable {
                 }
                 NewTimeUtil.millisecondsSleep(25L);
             }
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
-        log.debug("outputTask线程结束: sessionId={}, instanceId={}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
     }
 
     private void send(String auditLog) throws IOException {

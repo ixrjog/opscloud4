@@ -2,8 +2,7 @@ package com.baiyi.opscloud.domain.param.ansible;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 /**
@@ -18,10 +17,10 @@ public class AnsiblePlaybookParam {
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class AnsiblePlaybookPageQuery extends PageParam implements IExtend {
 
-        @ApiModelProperty(value = "剧本名称")
+        @Schema(name = "剧本名称")
         private String name;
 
         private Boolean extend;

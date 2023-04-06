@@ -12,7 +12,7 @@ import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractUserGroupPer
 import com.baiyi.opscloud.workorder.query.impl.base.BaseTicketEntryQuery;
 import com.google.common.collect.Lists;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.template.impl;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.exception.common.OCException;
-import com.baiyi.opscloud.common.template.YamlUtil;
+import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.common.template.YamlVars;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
@@ -245,7 +245,7 @@ public class TemplateFacadeImpl implements TemplateFacade {
             if (StringUtils.isEmpty(bizTemplate.getName())) {
                 Template template = templateService.getById(bizTemplate.getTemplateId());
                 Env env = envService.getByEnvType(bizTemplate.getEnvType());
-                YamlVars.Vars vars = YamlUtil.toVars(bizTemplate.getVars());
+                YamlVars.Vars vars = YamlUtil.loadVars(bizTemplate.getVars());
                 DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
                 KubernetesConfig.Kubernetes config = dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
                 if (TEMPLATE_KEY_DEPLOYMENT.equals(template.getTemplateKey())) {

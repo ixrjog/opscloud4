@@ -32,6 +32,8 @@ import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.impl.AbstractPosixTerminal;
 import org.jline.utils.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.table.*;
 
 import java.io.PrintWriter;
@@ -58,10 +60,20 @@ public class SshShellHelper {
 
     private final List<String> confirmWords;
 
-    public SshShellHelper() {
-        this(null);
-    }
+    @Autowired
+    @Lazy
+    private Terminal defaultTerminal;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    @Lazy
+    private LineReader defaultLineReader;
+
+    /**
+     * Constructor with confirmation words
+     *
+     * @param confirmWords confirmation words
+     */
     public SshShellHelper(List<String> confirmWords) {
         this.confirmWords = confirmWords != null ? confirmWords : DEFAULT_CONFIRM_WORDS;
     }
@@ -98,12 +110,6 @@ public class SshShellHelper {
      */
     public String getBackgroundColored(String message, PromptColor backgroundColor) {
         return getBackgroundColoredMessage(message, backgroundColor);
-    }
-
-    public String getColoredMessage(String message, int colorCode) {
-        return new AttributedStringBuilder().append(message,
-                AttributedStyle.DEFAULT.foreground(colorCode)).toAnsi();
-
     }
 
     /**
@@ -673,33 +679,6 @@ public class SshShellHelper {
         }
     }
 
-    // Old interactive for compatibility
-
-    @Deprecated
-    public void interactive(InteractiveInput input) {
-        interactive(input, true);
-    }
-
-    @Deprecated
-    public void interactive(InteractiveInput input, long delay) {
-        interactive(input, delay, true);
-    }
-
-    @Deprecated
-    public void interactive(InteractiveInput input, boolean fullScreen) {
-        interactive(input, 1000, fullScreen);
-    }
-
-    @Deprecated
-    public void interactive(InteractiveInput input, long delay, boolean fullScreen) {
-        interactive(input, delay, fullScreen, null);
-    }
-
-    @Deprecated
-    public void interactive(InteractiveInput input, long delay, boolean fullScreen, Size size) {
-        interactive(Interactive.builder().input(input).refreshDelay(delay).fullScreen(fullScreen).size(size).build());
-    }
-
     private DisplayResult display(InteractiveInput input, Display display, Size size, long currentDelay) {
         display.resize(size.getRows(), size.getColumns());
         DisplayResult result = new DisplayResult();
@@ -724,21 +703,24 @@ public class SshShellHelper {
     }
 
     private Terminal terminal() {
-        SshContext sshContext = SshShellCommandFactory.SSH_THREAD_CONTEXT.get();
-        if (sshContext == null) {
-            throw new IllegalStateException("Unable to find ssh context");
+        if (isLocalPrompt()) {
+            // local prompt
+            return defaultTerminal;
         }
-        return sshContext.getTerminal();
+        return SshShellCommandFactory.SSH_THREAD_CONTEXT.get().getTerminal();
     }
 
     private LineReader reader() {
-        SshContext sshContext = SshShellCommandFactory.SSH_THREAD_CONTEXT.get();
-        if (sshContext == null) {
-            throw new IllegalStateException("Unable to find ssh context");
+        if (isLocalPrompt()) {
+            // local prompt
+            return defaultLineReader;
         }
-        return sshContext.getLineReader();
+        return SshShellCommandFactory.SSH_THREAD_CONTEXT.get().getLineReader();
     }
 
+    /**
+     * Display result POJO
+     */
     @Data
     public static class DisplayResult {
 
@@ -747,4 +729,11 @@ public class SshShellHelper {
         private boolean stop;
     }
 
+    public void setDefaultTerminal(Terminal defaultTerminal) {
+        this.defaultTerminal = defaultTerminal;
+    }
+
+    public void setDefaultLineReader(LineReader defaultLineReader) {
+        this.defaultLineReader = defaultLineReader;
+    }
 }

@@ -63,7 +63,12 @@ public class SimpleTable {
      */
     @FunctionalInterface
     public interface SimpleTableBuilderListener {
+
+        /**
+         * Method called before render
+         *
+         * @param tableBuilder table builder
+         */
         void onBuilt(TableBuilder tableBuilder);
     }
-
 }

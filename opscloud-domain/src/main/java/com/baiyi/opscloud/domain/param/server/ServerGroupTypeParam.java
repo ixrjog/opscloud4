@@ -2,8 +2,7 @@ package com.baiyi.opscloud.domain.param.server;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -18,10 +17,10 @@ public class ServerGroupTypeParam {
     @Data
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class ServerGroupTypePageQuery extends PageParam implements IExtend {
 
-        @ApiModelProperty(value = "名称")
+        @Schema(name = "名称")
         private String name;
 
         private Boolean extend;

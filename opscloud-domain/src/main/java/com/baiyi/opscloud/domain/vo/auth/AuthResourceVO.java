@@ -1,14 +1,12 @@
 package com.baiyi.opscloud.domain.vo.auth;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 /**
  * @Author baiyi
@@ -20,30 +18,30 @@ public class AuthResourceVO {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Resource extends BaseVO implements AuthGroupVO.IAuthGroup {
 
         // 资源组
         private AuthGroupVO.Group group;
 
-        @ApiModelProperty(value = "主键", example = "1")
+        @Schema(name = "主键", example = "1")
         private Integer id;
 
-        @ApiModelProperty(value = "资源组id", example = "1")
+        @Schema(name = "资源组id", example = "1")
         @Valid
         private Integer groupId;
 
-        @ApiModelProperty(value = "资源路径")
+        @Schema(name = "资源路径")
         @NotNull(message = "必须指定资源名称")
         private String resourceName;
 
-        @ApiModelProperty(value = "资源描述")
+        @Schema(name = "资源描述")
         private String comment;
 
-        @ApiModelProperty(value = "需要鉴权")
+        @Schema(name = "需要鉴权")
         private Boolean needAuth;
 
-        @ApiModelProperty(value = "用户界面")
+        @Schema(name = "用户界面")
         private Boolean ui;
     }
 

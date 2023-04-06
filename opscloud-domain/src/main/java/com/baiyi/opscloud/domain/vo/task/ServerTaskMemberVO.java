@@ -3,7 +3,7 @@ package com.baiyi.opscloud.domain.vo.task;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.Date;
@@ -26,7 +26,7 @@ public class ServerTaskMemberVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Member extends BaseVO implements EnvVO.IEnv {
 
         private EnvVO.Env env;

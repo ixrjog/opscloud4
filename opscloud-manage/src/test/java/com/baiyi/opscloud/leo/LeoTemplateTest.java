@@ -6,7 +6,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoTemplateModel;
 import com.baiyi.opscloud.service.leo.LeoTemplateService;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

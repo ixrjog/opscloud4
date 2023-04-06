@@ -39,4 +39,5 @@ public class KeyBinding {
     @NonNull
     @Singular
     private List<String> keys;
+
 }

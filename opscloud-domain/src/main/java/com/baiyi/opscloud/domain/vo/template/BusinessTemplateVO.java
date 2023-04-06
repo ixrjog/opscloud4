@@ -6,8 +6,7 @@ import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 /**
@@ -22,14 +21,14 @@ public class BusinessTemplateVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class BusinessTemplate extends BaseVO implements EnvVO.IEnv,
             TemplateVO.ITemplate,
             BaseBusiness.IBusiness,
             DsInstanceVO.IDsInstance,
             DsAssetVO.IDsAsset {
 
-        @ApiModelProperty(value = "前端按钮使用", example = "false")
+        @Schema(name = "前端按钮使用", example = "false")
         @Builder.Default
         private final Boolean creating = false;
 

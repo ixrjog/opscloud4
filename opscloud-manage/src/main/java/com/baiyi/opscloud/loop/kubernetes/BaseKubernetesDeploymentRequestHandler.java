@@ -7,8 +7,8 @@ import com.baiyi.opscloud.loop.kubernetes.factory.KubernetesDeploymentMessageHan
 import com.baiyi.opscloud.service.user.UserTokenService;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Resource;
-import javax.websocket.Session;
+import jakarta.annotation.Resource;
+import jakarta.websocket.Session;
 import java.io.IOException;
 
 /**

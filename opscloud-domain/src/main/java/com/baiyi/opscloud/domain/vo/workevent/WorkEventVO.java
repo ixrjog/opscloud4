@@ -9,8 +9,7 @@ import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,7 +30,7 @@ public class WorkEventVO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class WorkEvent implements ReadableTime.IAgo, TagVO.ITags, UserVO.IUser, Serializable {
 
         private static final long serialVersionUID = 5241869056680855688L;
@@ -40,30 +39,30 @@ public class WorkEventVO {
 
         private Integer id;
 
-        @ApiModelProperty(value = "工作角色id", example = "1")
+        @Schema(name = "工作角色id", example = "1")
         private Integer workRoleId;
 
         private WorkRole workRole;
 
-        @ApiModelProperty(value = "工作类目id", example = "1")
+        @Schema(name = "工作类目id", example = "1")
         private Integer workItemId;
 
         private WorkItem workItem;
 
         private String workItemTree;
 
-        @ApiModelProperty(value = "用户名")
+        @Schema(name = "用户名")
         private String username;
 
         private UserVO.User user;
 
-        @ApiModelProperty(value = "时间")
+        @Schema(name = "时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
         private Date workEventTime;
 
         private String ago;
 
-        @ApiModelProperty(value = "次数")
+        @Schema(name = "次数")
         private Integer workEventCnt;
 
         private String comment;
@@ -90,7 +89,7 @@ public class WorkEventVO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class Item {
 
         private Integer id;
@@ -122,7 +121,7 @@ public class WorkEventVO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @ApiModel
+    @Schema
     public static class EventProperty implements Serializable {
 
         private static final long serialVersionUID = 8869809924735578200L;
@@ -155,10 +154,10 @@ public class WorkEventVO {
                 .isShow(false)
                 .build();
 
-        @ApiModelProperty(value = "前端类型")
+        @Schema(name = "前端类型")
         private String feType;
 
-        @ApiModelProperty(value = "前端名称")
+        @Schema(name = "前端名称")
         private String feName;
 
         @Builder.Default

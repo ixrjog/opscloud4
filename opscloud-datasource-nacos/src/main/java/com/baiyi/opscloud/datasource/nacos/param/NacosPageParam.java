@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.datasource.nacos.param;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,13 +17,13 @@ public class NacosPageParam {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class PageQuery {
         @Builder.Default
         private Integer pageNo = 1;
         @Builder.Default
         private Integer pageSize = 100;
-        @ApiModelProperty(value = "token")
+        @Schema(name = "token")
         private String accessToken;
     }
 }

@@ -9,7 +9,7 @@ import com.baiyi.opscloud.domain.model.Authorization;
 import com.baiyi.opscloud.datasource.ldap.driver.LdapDriver;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi

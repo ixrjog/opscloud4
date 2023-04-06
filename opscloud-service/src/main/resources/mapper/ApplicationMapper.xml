@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.ApplicationMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.Application">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="application_key" jdbcType="VARCHAR" property="applicationKey"/>
+        <result column="application_type" jdbcType="INTEGER" property="applicationType"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_active" jdbcType="BIT" property="isActive" />
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+    <select id="queryUserPermissionApplicationByParam"
+            parameterType="com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam$UserBusinessPermissionPageQuery"
+            resultMap="BaseResultMap">
+        select * from application
+        where
+        <choose>
+            <when test="admin">
+                1 = 1
+            </when>
+            <when test="authorized">
+                id in ( select business_id from user_permission where business_type = #{businessType} and user_id = #{userId})
+            </when>
+            <otherwise>
+                id not in ( select business_id from user_permission where business_type = #{businessType} and user_id = #{userId})
+            </otherwise>
+        </choose>
+        <if test="queryName != null and queryName != ''">
+            and name like "%" #{queryName} "%"
+            and is_active = true
+            order by replace( name, #{queryName}, '' )
+        </if>
+    </select>
+
+    <select id="queryApplicationByParam"
+            parameterType="com.baiyi.opscloud.domain.param.application.ApplicationParam$ApplicationPageQuery"
+            resultMap="BaseResultMap">
+        select a0.* from application a0
+        <if test="tagId != null and tagId > 0">
+            join business_tag a1 on a0.id = a1.business_id
+        </if>
+        <where>
+            <if test="tagId != null and tagId > 0">
+                a1.business_type = 8 and a1.tag_id = #{tagId}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and ( a0.name like "%" #{queryName} "%"
+                or a0.application_key like "%" #{queryName} "%"
+                or a0.comment like "%" #{queryName} "%" )
+            </if>
+<!--            <if test="isActive != null">-->
+<!--                and a0.is_active = #{isActive}-->
+<!--            </if>-->
+        </where>
+        order by replace( a0.name, #{queryName}, '' ), a0.create_time
+    </select>
+
+
+</mapper>

@@ -3,8 +3,7 @@ package com.baiyi.opscloud.domain.vo.datasource;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.Date;
@@ -33,7 +32,7 @@ public class DsInstanceVO {
     @AllArgsConstructor
     @Data
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class Instance extends BaseVO implements TagVO.ITags {
 
         private final Integer businessType = BusinessTypeEnum.DATASOURCE_INSTANCE.getType();
@@ -49,7 +48,7 @@ public class DsInstanceVO {
 
         private List<AssetDetail> assetDetails;
 
-        @ApiModelProperty(value = "任务数量", example = "1")
+        @Schema(name = "任务数量", example = "1")
         private Integer jobSize;
 
         private List<Instance> children;
@@ -72,7 +71,7 @@ public class DsInstanceVO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    @ApiModel
+    @Schema
     public static class AssetDetail {
 
         private String assetType;
