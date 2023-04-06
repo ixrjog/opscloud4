@@ -2,7 +2,7 @@ package com.baiyi.opscloud.sshserver.aop.aspect;
 
 import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
-import com.baiyi.opscloud.sshserver.aop.annotation.CheckTerminalSize;
+import com.baiyi.opscloud.sshserver.aop.annotation.PreCheckTerminalSize;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Aspect
 @Component
-public class CheckTerminalSizeAspect {
+public class PreCheckTerminalSizeAspect {
 
     private SshShellHelper helper;
 
@@ -44,7 +44,7 @@ public class CheckTerminalSizeAspect {
         this.terminal = terminal;
     }
 
-    @Pointcut(value = "@annotation(com.baiyi.opscloud.sshserver.aop.annotation.CheckTerminalSize)")
+    @Pointcut(value = "@annotation(com.baiyi.opscloud.sshserver.aop.annotation.PreCheckTerminalSize)")
     public void annotationPoint() {
     }
 
@@ -53,8 +53,7 @@ public class CheckTerminalSizeAspect {
     }
 
     @Around("@annotation(checkTerminalSize)")
-    public Object around(ProceedingJoinPoint joinPoint, CheckTerminalSize checkTerminalSize) throws Throwable {
-
+    public Object around(ProceedingJoinPoint joinPoint, PreCheckTerminalSize checkTerminalSize) throws Throwable {
         String message = null;
         Size size = terminal.getSize();
         if (checkTerminalSize.cols() != 0) {
@@ -62,7 +61,6 @@ public class CheckTerminalSizeAspect {
                 message = String.format("列不能小于 %s", checkTerminalSize.cols());
             }
         }
-
         if (checkTerminalSize.rows() != 0) {
             if (checkTerminalSize.rows() > size.getRows()) {
                 message = Joiner.on(",").skipNulls().join(message, String.format("行不能小于 %s", checkTerminalSize.rows()));
@@ -74,7 +72,6 @@ public class CheckTerminalSizeAspect {
         }
         joinPoint.proceed();
         return joinPoint;
-
     }
 
 }
