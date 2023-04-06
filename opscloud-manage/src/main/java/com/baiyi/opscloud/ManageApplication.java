@@ -24,9 +24,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @Version 1.0
  */
 @EnableTransactionManagement
-// SecurityAutoConfiguration.class
 @SpringBootApplication(exclude = { SecurityFilterAutoConfiguration.class})
-//@SpringBootApplication
 @EnableAspectJAutoProxy(exposeProxy = true)
 @EnableScheduling
 @EnableSchedulerLock(defaultLockAtMostFor = "10m")
@@ -44,6 +42,7 @@ public class ManageApplication {
         SpringApplication.run(ManageApplication.class, args);
         log.info("Opscloud 4 <Spring Boot {}>", SpringBootVersion.getVersion());
         System.setProperty("druid.mysql.usePingMethod", "false");
+        log.info("Swagger UI page http://server:port/swagger-ui.html");
     }
 
 }

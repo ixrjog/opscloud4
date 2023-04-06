@@ -14,20 +14,20 @@ spring:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
   jmx:
-    enabled: false
+    enabled: off
   profiles:
     active: '@env@'
   thymeleaf:
     cache: off
 
-# springdoc-openapi项目配置
+# OpenAPI
 springdoc:
   swagger-ui:
-    path: /doc/swagger-ui.html
-    enabled: off
+    path: /swagger-ui.html
+    enabled: on
   api-docs:
     path: /v3/api-docs
-    enabled: off
+    enabled: on
   paths-to-match: '/**'
   packages-to-scan: com.baiyi.opscloud.controller.http
 
@@ -40,7 +40,7 @@ white:
     - /*.ico
     - /swagger-resources
     - /swagger-ui.html
-    - /v2/api-docs
+    - /v3/api-docs
     - /doc.html
     - /api/ws/guacamole/tunnel
     - /api/ws/terminal
