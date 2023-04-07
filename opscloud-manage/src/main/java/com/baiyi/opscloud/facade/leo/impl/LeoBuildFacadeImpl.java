@@ -175,7 +175,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .executionType(ExecutionTypeConstants.USER)
                 .username(SessionUtil.getUsername())
                 .buildConfig(buildConfig.dump())
-                .ocInstance(OcInstance.ocInstance)
+                .ocInstance(OcInstance.OC_INSTANCE)
                 .build();
         buildService.add(leoBuild);
         handleBuild(leoBuild, buildConfig);

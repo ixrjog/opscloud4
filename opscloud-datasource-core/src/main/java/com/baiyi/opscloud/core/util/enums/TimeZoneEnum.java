@@ -10,6 +10,9 @@ import lombok.Getter;
 @Getter
 public enum TimeZoneEnum {
 
+    /**
+     * UTC
+     */
     UTC("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     private final String format;

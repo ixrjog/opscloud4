@@ -8,4 +8,5 @@ package com.baiyi.opscloud.core.provider.base.common;
 public interface ITargetProvider {
 
     String getTargetAssetKey();
+
 }

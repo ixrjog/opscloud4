@@ -9,9 +9,10 @@ public class TableConstants {
 
     public final static String[] TABLE_KUBERNETES_DEPLOYMENT_FIELD_NAMES = {"ID", "Kubernetes Instance", "Namespace", "Deployment"};
 
-    public final static String[] TABLE_KUBERNETES_POD_FIELD_NAMES = {"ID", "Kubernetes Instance", "Namespace", "Pod", "Pod IP", "Start Time", "Status", "Restart", "Container"};
+    public final static String[] TABLE_KUBERNETES_POD_FIELD_NAMES
+            = {"ID", "Kubernetes Instance", "Namespace", "Pod", "Pod IP", "Start Time", "Status", "Restart", "Container"};
 
     public final static String[] TABLE_SERVER_FIELD_NAMES
-            = {"ID", "Server", "ServerGroup", "Env", "IP", "Tag", "Account", "Comment"};
+            = {"ID", "Server", "Server Group", "Env", "IP", "Tag", "Account", "Comment"};
 
 }

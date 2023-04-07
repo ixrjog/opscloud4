@@ -60,4 +60,5 @@ public class ServerTaskMemberServiceImpl implements ServerTaskMemberService {
         criteria.andEqualTo("serverTaskId", serverTaskId);
         return serverTaskMemberMapper.selectByExample(example);
     }
+
 }

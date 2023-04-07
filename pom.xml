@@ -221,7 +221,7 @@
         <dependency>
             <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.2.7</version>
+            <version>0.2.8</version>
         </dependency>
 
     </dependencies>

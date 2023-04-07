@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -18,6 +19,7 @@ import java.util.Date;
 @Table(name = "leo_job")
 public class LeoJob implements Serializable, BaseBusiness.IBusiness {
 
+    @Serial
     private static final long serialVersionUID = -37689929767342534L;
 
     @Override

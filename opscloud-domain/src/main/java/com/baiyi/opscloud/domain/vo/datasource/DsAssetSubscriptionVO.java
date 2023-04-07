@@ -42,10 +42,10 @@ public class DsAssetSubscriptionVO {
 
         private Integer id;
 
-        @NotNull(message = "必须指定数据源实例uuid")
+        @NotNull(message = "必须指定数据源实例UUID")
         private String instanceUuid;
 
-        @NotNull(message = "必须指定资产id")
+        @NotNull(message = "必须指定资产ID")
         private Integer datasourceInstanceAssetId;
 
         /**
@@ -77,4 +77,5 @@ public class DsAssetSubscriptionVO {
         private String comment;
 
     }
+
 }

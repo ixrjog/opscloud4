@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -53,6 +54,7 @@ public class WorkOrderTicketEntryParam {
     @Schema
     public static class TicketEntry extends WorkOrderTicketEntry implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 7854793943421192263L;
 
         private Map<String, String> properties;

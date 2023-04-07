@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +34,7 @@ public class WorkEventVO {
     @Schema
     public static class WorkEvent implements ReadableTime.IAgo, TagVO.ITags, UserVO.IUser, Serializable {
 
+        @Serial
         private static final long serialVersionUID = 5241869056680855688L;
 
         private final Integer businessType = BusinessTypeEnum.WORK_EVENT.getType();
@@ -124,6 +126,7 @@ public class WorkEventVO {
     @Schema
     public static class EventProperty implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 8869809924735578200L;
 
         // 故障

@@ -30,7 +30,7 @@ public class LeoBuildCompensationTask {
     private final BuildingLogHelper logHelper;
 
     public void handleTask() {
-        List<LeoBuild> leoBuilds = leobuildService.queryNotFinishBuildWithOcInstance(OcInstance.ocInstance);
+        List<LeoBuild> leoBuilds = leobuildService.queryNotFinishBuildWithOcInstance(OcInstance.OC_INSTANCE);
         if (CollectionUtils.isEmpty(leoBuilds)) {
             return;
         }

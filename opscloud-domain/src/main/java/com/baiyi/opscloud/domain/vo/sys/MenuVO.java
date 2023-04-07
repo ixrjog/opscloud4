@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class MenuVO {
     @NoArgsConstructor
     @Schema
     public static class Menu implements Serializable {
+        @Serial
         private static final long serialVersionUID = -2841897420522344967L;
         private Integer id;
         private String title;
@@ -38,6 +40,7 @@ public class MenuVO {
     @NoArgsConstructor
     @Schema
     public static class Child implements Serializable {
+        @Serial
         private static final long serialVersionUID = -548378621998577092L;
         private Integer id;
         private Integer menuId;
@@ -46,4 +49,5 @@ public class MenuVO {
         private String path;
         private Integer seq;
     }
+
 }

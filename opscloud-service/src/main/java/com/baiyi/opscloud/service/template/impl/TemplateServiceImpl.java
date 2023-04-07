@@ -32,16 +32,21 @@ public class TemplateServiceImpl implements TemplateService {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(Template.class);
         Example.Criteria criteria = example.createCriteria();
-        if (StringUtils.isNotBlank(pageQuery.getQueryName()))
+        if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
             criteria.andLike("name", SQLUtil.toLike(pageQuery.getQueryName()));
-        if (IdUtil.isNotEmpty(pageQuery.getEnvType()))
+        }
+        if (IdUtil.isNotEmpty(pageQuery.getEnvType())) {
             criteria.andEqualTo("envType", pageQuery.getEnvType());
-        if (StringUtils.isNotBlank(pageQuery.getInstanceType()))
+        }
+        if (StringUtils.isNotBlank(pageQuery.getInstanceType())) {
             criteria.andLike("instanceType", SQLUtil.toLike(pageQuery.getInstanceType()));
-        if (StringUtils.isNotBlank(pageQuery.getTemplateKey()))
+        }
+        if (StringUtils.isNotBlank(pageQuery.getTemplateKey())) {
             criteria.andLike("templateKey", SQLUtil.toLike(pageQuery.getTemplateKey()));
-        if (StringUtils.isNotBlank(pageQuery.getTemplateType()))
+        }
+        if (StringUtils.isNotBlank(pageQuery.getTemplateType())) {
             criteria.andLike("templateType", SQLUtil.toLike(pageQuery.getTemplateType()));
+        }
         List<Template> data = templateMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }

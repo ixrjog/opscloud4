@@ -38,7 +38,6 @@ public class GuacamoleConfig extends BaseDsConfig {
         }
     }
 
-
 }
 
 

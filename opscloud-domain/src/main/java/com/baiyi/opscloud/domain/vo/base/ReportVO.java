@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.util.CollectionUtils;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class ReportVO {
     @NoArgsConstructor
     @Schema
     public static class Report implements Serializable {
+        @Serial
         private static final long serialVersionUID = -2683596358424500001L;
         private String cName;
         private Integer value;
@@ -51,6 +53,7 @@ public class ReportVO {
     @Schema
     public static class MonthlyReport implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -7788541472908274625L;
 
         public static void put(MonthlyReport monthlyReport, String name, List<Report> reports) {
@@ -91,6 +94,7 @@ public class ReportVO {
     @Schema
     public static class MonthReport implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 2165068012664529432L;
 
         @Schema(name = "日期(月)")

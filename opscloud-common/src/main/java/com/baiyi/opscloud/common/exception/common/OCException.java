@@ -5,6 +5,8 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 /**
  * @Author baiyi
  * @Date 2021/5/19 2:59 下午
@@ -14,6 +16,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class OCException extends BaseException {
 
+    @Serial
     private static final long serialVersionUID = -2938977933351653100L;
     private final Integer code = 999;
 

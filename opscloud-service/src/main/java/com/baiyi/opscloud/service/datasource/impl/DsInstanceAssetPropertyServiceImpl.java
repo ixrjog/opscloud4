@@ -75,36 +75,4 @@ public class DsInstanceAssetPropertyServiceImpl implements DsInstanceAssetProper
         dsInstanceAssetPropertyMapper.insert(assetProperty);
     }
 
-    // Bug
-//    public void saveAssetProperties(int assetId, Map<String, String> properties) {
-//        List<DatasourceInstanceAssetProperty> assetPropertyList = queryByAssetId(assetId);
-//        properties.forEach((k, v) -> {
-//            if (isEmptyProperty(assetPropertyList, k, v)) {
-//                DatasourceInstanceAssetProperty property = DatasourceInstanceAssetProperty.builder()
-//                        .datasourceInstanceAssetId(assetId)
-//                        .name(k)
-//                        .value(v)
-//                        .build();
-//                dsInstanceAssetPropertyMapper.insert(property);
-//            }
-//        });
-//        assetPropertyList.forEach(e -> deleteById(e.getId()));
-//    }
-//
-//    private boolean isEmptyProperty(List<DatasourceInstanceAssetProperty> assetPropertyList, String name, String value) {
-//        Iterator<DatasourceInstanceAssetProperty> iter = assetPropertyList.iterator();
-//        while (iter.hasNext()) {
-//            DatasourceInstanceAssetProperty property = iter.next();
-//            if (property.getName().equals(name)) {
-//                if (property.getValue().equals(value)) {
-//                    iter.remove();
-//                } else {
-//                    property.setValue(value);
-//                    dsInstanceAssetPropertyMapper.updateByPrimaryKey(property);
-//                }
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
 }

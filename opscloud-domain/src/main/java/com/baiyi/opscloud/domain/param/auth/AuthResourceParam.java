@@ -53,9 +53,9 @@ public class AuthResourceParam {
         @Schema(name = "资源id")
         private Integer roleId;
 
-
         @Schema(name = "是否绑定")
         private Boolean bind;
 
     }
+
 }

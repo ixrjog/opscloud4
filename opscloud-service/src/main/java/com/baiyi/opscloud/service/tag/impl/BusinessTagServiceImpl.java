@@ -70,5 +70,4 @@ public class BusinessTagServiceImpl implements BusinessTagService {
         return businessTagMapper.selectCountByExample(example);
     }
 
-
 }

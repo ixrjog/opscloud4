@@ -66,4 +66,5 @@ public class ServerGroupTypeServiceImpl implements ServerGroupTypeService {
         criteria.andLike("name", name);
         return serverGroupTypeMapper.selectOneByExample(example);
     }
+
 }

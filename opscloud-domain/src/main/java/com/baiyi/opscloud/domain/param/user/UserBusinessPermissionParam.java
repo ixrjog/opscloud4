@@ -103,4 +103,5 @@ public class UserBusinessPermissionParam {
         private final int businessType = BusinessTypeEnum.USERGROUP.getType();
 
     }
+
 }

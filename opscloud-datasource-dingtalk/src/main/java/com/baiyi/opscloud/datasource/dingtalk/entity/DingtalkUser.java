@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +29,7 @@ public class DingtalkUser {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class UserResponse extends DingtalkResponse.Query implements Serializable {
+        @Serial
         private static final long serialVersionUID = -917033148762911968L;
         private Result result;
     }
@@ -35,6 +37,7 @@ public class DingtalkUser {
     @EqualsAndHashCode(callSuper = true)
     @Data
     public static class Result extends DingtalkResponse.Result implements Serializable {
+        @Serial
         private static final long serialVersionUID = -2508135692366815261L;
         private List<User> list;
     }
@@ -42,6 +45,7 @@ public class DingtalkUser {
     @Data
     public static class User implements IToAsset, Serializable {
 
+        @Serial
         private static final long serialVersionUID = 161013059944723592L;
 
         private String username; // 转换类处理

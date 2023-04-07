@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEvent;
 
+import java.io.Serial;
+
 /**
  * @Author baiyi
  * @Date 2021/8/17 4:26 下午
@@ -12,6 +14,7 @@ import org.springframework.context.ApplicationEvent;
 @Slf4j
 public class NoticeEvent extends ApplicationEvent {
 
+    @Serial
     private static final long serialVersionUID = 3500050498451084883L;
     /**
      * 接受信息

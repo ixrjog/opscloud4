@@ -31,26 +31,26 @@ public class MessageParam {
          * VMS 语音
          * SMS 短信
          */
-        @Schema(name = "媒介类型 SMS , VMS", required = true)
+        @Schema(name = "媒介类型 SMS , VMS")
         @NotBlank(message = "媒介不能为空")
         @Pattern(regexp = "VMS|SMS", message = "媒介类型 SMS , VMS")
         private String media;
 
-        @Schema(name = "内容", required = true)
+        @Schema(name = "内容")
         @NotBlank(message = "内容不能为空")
         @Length(max = 32, message = "内容长度不能大于32")
         private String content;
 
-        @Schema(name = "手机", required = true)
+        @Schema(name = "手机")
         @Size(min = 1, message = "至少需要一个号码")
         private List<String> mobile;
 
         @NotBlank(message = "平台名称不能为空")
-        @Schema(name = "平台名称(用于审计)", required = true)
+        @Schema(name = "平台名称(用于审计)")
         public String platform;
 
         @NotBlank(message = "平台令牌不能为空")
-        @Schema(name = "平台令牌用于鉴权", required = true)
+        @Schema(name = "平台令牌用于鉴权")
         public String platformToken;
 
     }

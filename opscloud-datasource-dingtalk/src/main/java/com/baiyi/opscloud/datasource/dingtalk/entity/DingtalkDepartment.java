@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class DingtalkDepartment {
     @NoArgsConstructor
     public static class DepartmentSubIdResponse extends DingtalkResponse.Query implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -1645875807947138110L;
         private Result result;
     }
@@ -35,6 +37,7 @@ public class DingtalkDepartment {
     @Data
     public static class Result implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -3578724346220243981L;
         @JsonProperty("dept_id_list")
         private List<Long> deptIdList;
@@ -45,6 +48,7 @@ public class DingtalkDepartment {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class GetDepartmentResponse extends DingtalkResponse.Query implements Serializable {
+        @Serial
         private static final long serialVersionUID = 1232648774708157947L;
         private Department result;
     }
@@ -55,6 +59,7 @@ public class DingtalkDepartment {
     @Data
     public static class Department implements IToAsset, Serializable {
 
+        @Serial
         private static final long serialVersionUID = 8992563745168682046L;
         @JsonProperty("dept_id")
         private Long deptId;

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -27,6 +28,7 @@ public class ServerGroupTypeVO {
     @Schema
     public static class ServerGroupType extends BaseVO implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -6926530768540517199L;
         private Integer id;
 
@@ -40,4 +42,5 @@ public class ServerGroupTypeVO {
         @Schema(name = "使用类型的服务器组数量",example = "1")
         private Integer serverGroupSize;
     }
+
 }

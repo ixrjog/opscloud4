@@ -34,10 +34,12 @@ public class BusinessTemplateServiceImpl implements BusinessTemplateService {
         Example example = new Example(BusinessTemplate.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("instanceUuid", pageQuery.getInstanceUuid());
-        if (IdUtil.isNotEmpty(pageQuery.getEnvType()))
+        if (IdUtil.isNotEmpty(pageQuery.getEnvType())) {
             criteria.andEqualTo("envType", pageQuery.getEnvType());
-        if (StringUtils.isNotBlank(pageQuery.getQueryName()))
+        }
+        if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
             criteria.andLike("name", SQLUtil.toLike(pageQuery.getQueryName()));
+        }
         List<BusinessTemplate> data = businessTemplateMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }
@@ -54,7 +56,9 @@ public class BusinessTemplateServiceImpl implements BusinessTemplateService {
 
     @Override
     public List<BusinessTemplate> queryByBusinessId(int businessId) {
-        if (businessId == 0) return Collections.emptyList();
+        if (businessId == 0) {
+            return Collections.emptyList();
+        }
         Example example = new Example(BusinessTemplate.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("businessId", businessId);

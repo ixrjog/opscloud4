@@ -35,4 +35,5 @@ public class BusinessTagVO {
         private Set<Integer> tagIds;
 
     }
+
 }

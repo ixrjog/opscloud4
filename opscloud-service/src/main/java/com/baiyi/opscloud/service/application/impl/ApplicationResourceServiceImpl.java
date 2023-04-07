@@ -87,4 +87,5 @@ public class ApplicationResourceServiceImpl implements ApplicationResourceServic
                 .andEqualTo("businessId", businessId);
         return applicationResourceMapper.selectByExample(example);
     }
+
 }

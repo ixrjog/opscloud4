@@ -36,7 +36,7 @@ public class AuthRoleParam {
 
         private String username;
 
-        @Schema(name = "工单票据id")
+        @Schema(name = "工单票据ID")
         private Integer workorderTicketId;
 
     }

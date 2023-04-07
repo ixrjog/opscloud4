@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.CronUtil;
 import com.baiyi.opscloud.domain.vo.datasource.ScheduleVO;
 import com.google.common.collect.Lists;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
@@ -12,12 +13,10 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @Author 修远
@@ -193,7 +192,7 @@ public class QuartzService {
         List<ScheduleVO.Job> jobs = Lists.newArrayList();
         for (JobKey jobKey : jobKeys) {
             List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
-            jobs.addAll(triggers.stream().map(e -> buildJob(jobKey, e)).collect(Collectors.toList()));
+            jobs.addAll(triggers.stream().map(e -> buildJob(jobKey, e)).toList());
         }
         return jobs;
     }
@@ -232,7 +231,7 @@ public class QuartzService {
         List<ScheduleVO.Job> jobs = Lists.newArrayList();
         for (JobKey jobKey : jobKeys) {
             List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
-            jobs.addAll(triggers.stream().map(e -> buildJob(jobKey, e)).collect(Collectors.toList()));
+            jobs.addAll(triggers.stream().map(e -> buildJob(jobKey, e)).toList());
         }
         return jobs;
     }

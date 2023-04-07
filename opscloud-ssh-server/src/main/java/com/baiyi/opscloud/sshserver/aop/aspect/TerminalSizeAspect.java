@@ -2,7 +2,7 @@ package com.baiyi.opscloud.sshserver.aop.aspect;
 
 import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
-import com.baiyi.opscloud.sshserver.aop.annotation.PreCheckTerminalSize;
+import com.baiyi.opscloud.sshserver.aop.annotation.TerminalSize;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Aspect
 @Component
-public class PreCheckTerminalSizeAspect {
+public class TerminalSizeAspect {
 
     private SshShellHelper helper;
 
@@ -44,7 +44,7 @@ public class PreCheckTerminalSizeAspect {
         this.terminal = terminal;
     }
 
-    @Pointcut(value = "@annotation(com.baiyi.opscloud.sshserver.aop.annotation.PreCheckTerminalSize)")
+    @Pointcut(value = "@annotation(com.baiyi.opscloud.sshserver.aop.annotation.TerminalSize)")
     public void annotationPoint() {
     }
 
@@ -52,18 +52,18 @@ public class PreCheckTerminalSizeAspect {
     public void doBefore(JoinPoint joinPoint) throws Throwable {
     }
 
-    @Around("@annotation(checkTerminalSize)")
-    public Object around(ProceedingJoinPoint joinPoint, PreCheckTerminalSize checkTerminalSize) throws Throwable {
+    @Around("@annotation(terminalSize)")
+    public Object around(ProceedingJoinPoint joinPoint, TerminalSize terminalSize) throws Throwable {
         String message = null;
         Size size = terminal.getSize();
-        if (checkTerminalSize.cols() != 0) {
-            if (checkTerminalSize.cols() > size.getColumns()) {
-                message = String.format("列不能小于 %s", checkTerminalSize.cols());
+        if (terminalSize.cols() != 0) {
+            if (terminalSize.cols() > size.getColumns()) {
+                message = String.format("列不能小于 %s", terminalSize.cols());
             }
         }
-        if (checkTerminalSize.rows() != 0) {
-            if (checkTerminalSize.rows() > size.getRows()) {
-                message = Joiner.on(",").skipNulls().join(message, String.format("行不能小于 %s", checkTerminalSize.rows()));
+        if (terminalSize.rows() != 0) {
+            if (terminalSize.rows() > size.getRows()) {
+                message = Joiner.on(",").skipNulls().join(message, String.format("行不能小于 %s", terminalSize.rows()));
             }
         }
         if (!StringUtils.isEmpty(message)) {

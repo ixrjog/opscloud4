@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
  */
 public class DingtalkMessageParam {
 
-
     @Data
     @Builder
     @AllArgsConstructor

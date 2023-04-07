@@ -34,4 +34,5 @@ public class TerminalSessionInstanceCommandVO {
         private String output;
 
     }
+
 }

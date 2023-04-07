@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -29,6 +30,7 @@ public class EnvVO {
     @Schema
     public static class Env extends BaseVO implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 5444243347465574812L;
         @Schema(name = "主键", example = "1")
         private Integer id;

@@ -75,7 +75,7 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
     }
 
     protected void doCreate(Server server, ServerProperty.Server property) {
-        if (!property.enabledZabbix()) {
+        if (!property.zabbixEnabled()) {
             return;
         }
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()

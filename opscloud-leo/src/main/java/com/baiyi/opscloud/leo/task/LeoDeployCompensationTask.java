@@ -31,7 +31,7 @@ public class LeoDeployCompensationTask {
     private final DeployingLogHelper logHelper;
 
     public void handleTask() {
-        List<LeoDeploy> leoDeploys = deployService.queryNotFinishDeployWithOcInstance(OcInstance.ocInstance);
+        List<LeoDeploy> leoDeploys = deployService.queryNotFinishDeployWithOcInstance(OcInstance.OC_INSTANCE);
         if (CollectionUtils.isEmpty(leoDeploys)) {
             return;
         }

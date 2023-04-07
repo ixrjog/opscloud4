@@ -56,4 +56,5 @@ public class MenuChildServiceImpl implements MenuChildService {
         criteria.andIn("id", idList);
         return menuChildMapper.selectByExample(example);
     }
+
 }

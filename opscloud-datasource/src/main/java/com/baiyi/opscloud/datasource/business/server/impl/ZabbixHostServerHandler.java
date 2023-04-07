@@ -30,16 +30,22 @@ public class ZabbixHostServerHandler extends AbstractZabbixHostServerHandler {
 
     @Override
     protected void doCreate(Server server) {
-        if (!isInRegions(server)) return;
+        if (!isInRegions(server)) {
+            return;
+        }
         ServerProperty.Server property = getBusinessProperty(server);
         doCreate(server, property);
     }
 
     @Override
     protected void doUpdate(Server server) {
-        if (!isInRegions(server)) return;
+        if (!isInRegions(server)) {
+            return;
+        }
         ServerProperty.Server property = getBusinessProperty(server);
-        if (!property.enabledZabbix()) return;
+        if (!property.zabbixEnabled()) {
+            return;
+        }
         String manageIp = HostParamUtil.getManageIp(server, property);
         ZabbixHost.Host host = zabbixV5HostDriver.getByIp(configContext.get(), manageIp);
         if (host == null) {
@@ -51,7 +57,9 @@ public class ZabbixHostServerHandler extends AbstractZabbixHostServerHandler {
 
     @Override
     protected void doDelete(Server server) {
-        if (!isInRegions(server)) return;
+        if (!isInRegions(server)) {
+            return;
+        }
         ServerProperty.Server property = getBusinessProperty(server);
         String manageIp = HostParamUtil.getManageIp(server, property);
         try {

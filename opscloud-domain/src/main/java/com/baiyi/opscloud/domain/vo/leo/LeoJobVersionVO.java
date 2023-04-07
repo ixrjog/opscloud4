@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ public class LeoJobVersionVO {
     @Schema
     public static class JobVersion implements EnvVO.IEnv, Serializable {
 
+        @Serial
         private static final long serialVersionUID = -2925847833549310319L;
 
         private String jobName;
@@ -44,6 +46,7 @@ public class LeoJobVersionVO {
     @Schema
     public static class DeploymentVersion implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 1901939181360045590L;
 
         public static final DeploymentVersion EMPTY = DeploymentVersion.builder().build();
@@ -96,6 +99,7 @@ public class LeoJobVersionVO {
     @Schema
     public static class DoDeployVersion implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -5057578961795862955L;
 
         public static final DoDeployVersion INVALID = DoDeployVersion.builder()

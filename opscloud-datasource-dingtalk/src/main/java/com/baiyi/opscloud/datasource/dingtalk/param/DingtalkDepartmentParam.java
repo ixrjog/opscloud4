@@ -48,4 +48,5 @@ public class DingtalkDepartmentParam {
         private String language ="zh_CN";
 
     }
+
 }

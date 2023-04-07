@@ -25,9 +25,12 @@ public class SimpleTagServiceImpl implements SimpleTagService {
     @Override
     public boolean hasBusinessTag(String tagKey, Integer businessType, Integer businessId, boolean isConstraint) {
         Tag tag = tagService.getByTagKey(tagKey);
-        if (tag == null) return false;
-        if (isConstraint && (!tag.getBusinessType().equals(businessType)))
+        if (tag == null) {
             return false;
+        }
+        if (isConstraint && (!tag.getBusinessType().equals(businessType))) {
+            return false;
+        }
         BusinessTag businessTag = BusinessTag.builder()
                 .businessId(businessId)
                 .businessType(businessType)

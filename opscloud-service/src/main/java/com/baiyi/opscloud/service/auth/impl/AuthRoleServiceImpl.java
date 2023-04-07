@@ -71,4 +71,5 @@ public class AuthRoleServiceImpl implements AuthRoleService {
     public int getRoleAccessLevelByUsername(String username) {
         return authRoleMapper.getRoleAccessLevelByUsername(username);
     }
+
 }

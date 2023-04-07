@@ -39,4 +39,5 @@ public class EventParam {
         private String eventType;
 
     }
+
 }

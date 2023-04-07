@@ -26,4 +26,5 @@ public class ServerGroupTypeParam {
         private Boolean extend;
 
     }
+
 }

@@ -47,12 +47,12 @@ public class SupervisingWithRedeployStrategy extends SupervisingStrategy {
         final String containerName = deployment.getContainer().getName();
         final String image = deploy.getDeployVersion1().getImage();
 
-        LeoDeployingVO.VerionDetails beforeRedeployVersion = LeoDeployingVO.VerionDetails.builder()
+        LeoDeployingVO.VersionDetails beforeRedeployVersion = LeoDeployingVO.VersionDetails.builder()
                 .title("重启前")
                 .image(image)
                 .build();
 
-        LeoDeployingVO.VerionDetails afterRedeployVersion = LeoDeployingVO.VerionDetails.builder()
+        LeoDeployingVO.VersionDetails afterRedeployVersion = LeoDeployingVO.VersionDetails.builder()
                 .title("重启后")
                 .image(image)
                 .build();

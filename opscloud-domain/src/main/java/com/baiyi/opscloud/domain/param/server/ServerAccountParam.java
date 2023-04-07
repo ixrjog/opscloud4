@@ -50,4 +50,5 @@ public class ServerAccountParam {
         private Boolean extend;
 
     }
+
 }

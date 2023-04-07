@@ -54,4 +54,5 @@ public class AccessTokenVO {
         private String comment;
 
     }
+
 }

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class ServerAccountVO {
     @Schema
     public static class Account extends BaseVO implements CredentialVO.ICredential, Serializable {
 
+        @Serial
         private static final long serialVersionUID = 1815467621572374314L;
 
         private CredentialVO.Credential credential;

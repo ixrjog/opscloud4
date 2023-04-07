@@ -68,5 +68,4 @@ public class CredentialServiceImpl implements CredentialService {
         return new DataTable<>(data, page.getTotal());
     }
 
-
 }

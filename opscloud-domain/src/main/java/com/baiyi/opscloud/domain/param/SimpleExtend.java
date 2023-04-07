@@ -17,4 +17,5 @@ public class SimpleExtend implements IExtend {
     public static final SimpleExtend NOT_EXTEND = SimpleExtend.builder().extend(false).build();
 
     private Boolean extend;
+
 }

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -76,6 +77,7 @@ public class ApplicationResourceVO {
     @Schema
     public static class BaseResource extends BaseVO implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -782607267036174626L;
 
         @Schema(name = "主键", example = "1")

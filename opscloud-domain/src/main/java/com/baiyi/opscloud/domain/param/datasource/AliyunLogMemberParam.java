@@ -51,4 +51,5 @@ public class AliyunLogMemberParam {
 
         private String comment;
     }
+
 }

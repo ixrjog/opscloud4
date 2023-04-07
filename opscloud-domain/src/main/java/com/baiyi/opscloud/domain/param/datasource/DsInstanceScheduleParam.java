@@ -53,4 +53,5 @@ public class DsInstanceScheduleParam {
         @NotNull(message = "Cron不能为空")
         private String jobTime;
     }
+
 }

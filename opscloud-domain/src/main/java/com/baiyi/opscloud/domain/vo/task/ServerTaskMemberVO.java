@@ -64,4 +64,5 @@ public class ServerTaskMemberVO {
         private String errorMsg;
 
     }
+
 }

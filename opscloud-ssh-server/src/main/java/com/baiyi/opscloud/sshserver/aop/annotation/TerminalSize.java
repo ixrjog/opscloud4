@@ -13,7 +13,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
-public @interface PreCheckTerminalSize {
+public @interface TerminalSize {
 
     int cols() default 0;
     int rows() default 0;

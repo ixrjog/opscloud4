@@ -58,4 +58,5 @@ public class MessageTemplateVO {
         private String comment;
 
     }
+
 }

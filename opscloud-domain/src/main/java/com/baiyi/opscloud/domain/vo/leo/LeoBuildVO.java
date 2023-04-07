@@ -9,9 +9,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @Author baiyi
@@ -27,6 +29,7 @@ public class LeoBuildVO {
     @Schema
     public static class Build implements Serializable, ReadableTime.IAgo, ReadableTime.IRuntime {
 
+        @Serial
         private static final long serialVersionUID = -697201191162725310L;
 
         @Schema(name = "构建详情")
@@ -73,10 +76,7 @@ public class LeoBuildVO {
 
         @Override
         public Date getAgoTime() {
-            if (this.startTime != null) {
-                return this.startTime;
-            }
-            return new Date();
+            return Objects.requireNonNullElseGet(this.startTime, Date::new);
         }
     }
 
@@ -90,6 +90,7 @@ public class LeoBuildVO {
     @Schema
     public static class LatestBuildInfo implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -7617778439412190882L;
 
         private Integer buildId;
@@ -106,6 +107,7 @@ public class LeoBuildVO {
     @Schema
     public static class BranchOptions implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 6999931515242829844L;
 
         public static final BranchOptions EMPTY_OPTIONS = BranchOptions.builder().build();
@@ -119,6 +121,7 @@ public class LeoBuildVO {
     @Schema
     public static class Option implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -6482052319954322970L;
 
         private String label;
@@ -132,6 +135,7 @@ public class LeoBuildVO {
     @Schema
     public static class Children implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -1561200881442892379L;
 
         private String value;
@@ -150,6 +154,7 @@ public class LeoBuildVO {
     @AllArgsConstructor
     public static class BranchOrTag implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 8033652452171334565L;
 
         private String name;
@@ -167,6 +172,7 @@ public class LeoBuildVO {
     @Schema
     public static class Pipeline implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -2644838767573635251L;
 
         private List<Node> nodes;
@@ -190,6 +196,7 @@ public class LeoBuildVO {
                 .state("SKIPPED")
                 .build();
 
+        @Serial
         private static final long serialVersionUID = -1465972308441846486L;
         private String firstParent;
         private String name;
@@ -211,6 +218,7 @@ public class LeoBuildVO {
     @Schema
     public static class Image implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -8085991676738506575L;
         private Integer id;
         private Integer buildId;

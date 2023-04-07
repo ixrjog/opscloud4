@@ -29,4 +29,5 @@ public class AuthMenuVO {
         private String menu;
 
     }
+
 }

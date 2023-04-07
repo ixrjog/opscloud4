@@ -16,7 +16,7 @@ import java.util.List;
 public class GitLabNotifyParam {
 
     /**
-     * https://gitlab.xinc818.com/help/system_hooks/system_hooks.md
+     * https://gitlab.xxx.com/help/system_hooks/system_hooks.md
      */
     @Builder
     @Data

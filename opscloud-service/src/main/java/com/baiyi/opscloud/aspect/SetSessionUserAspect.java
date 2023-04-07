@@ -43,8 +43,10 @@ public class SetSessionUserAspect {
                 log.debug("设置当前会话用户: userId={}", setSessionUser.userId());
             }
         }
-        SessionUtil.setUsername(user.getUsername());
-        SessionUtil.setUserId(user.getId());
+        if (user != null) {
+            SessionUtil.setUsername(user.getUsername());
+            SessionUtil.setUserId(user.getId());
+        }
     }
 
 }

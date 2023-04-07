@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.util.CollectionUtils;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +28,7 @@ public class ServerProperty {
     @AllArgsConstructor
     public static class Server implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -4846682649445122975L;
         @Builder.Default
         private String kind = "Server";
@@ -37,8 +39,8 @@ public class ServerProperty {
         @Builder.Default
         private Ansible ansible = Ansible.builder().build();
 
-        public boolean enabledZabbix() {
-            return Optional.ofNullable(this)
+        public boolean zabbixEnabled() {
+            return Optional.of(this)
                     .map(ServerProperty.Server::getZabbix)
                     .map(ServerProperty.Zabbix::getEnabled)
                     .orElse(false);
@@ -51,6 +53,7 @@ public class ServerProperty {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Metadata implements Serializable {
+        @Serial
         private static final long serialVersionUID = 8854978086918993503L;
         @Builder.Default
         private Integer sshPort = 22;
@@ -69,6 +72,7 @@ public class ServerProperty {
     @AllArgsConstructor
     public static class Zabbix implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 5911353965481533349L;
         @Builder.Default
         private Boolean enabled = false;
@@ -97,6 +101,7 @@ public class ServerProperty {
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Macro implements Serializable {
+        @Serial
         private static final long serialVersionUID = -5748446862825981795L;
         private String macro;
         private String value;
@@ -108,6 +113,7 @@ public class ServerProperty {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Ansible implements Serializable {
+        @Serial
         private static final long serialVersionUID = -8106749818500817348L;
         @Builder.Default
         private Integer subgroup = 2;

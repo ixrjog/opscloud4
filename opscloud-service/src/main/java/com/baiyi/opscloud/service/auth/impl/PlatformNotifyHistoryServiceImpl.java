@@ -22,4 +22,5 @@ public class PlatformNotifyHistoryServiceImpl implements PlatformNotifyHistorySe
     public void add(PlatformNotifyHistory platformNotifyHistory) {
         platformNotifyHistoryMapper.insert(platformNotifyHistory);
     }
+
 }

@@ -39,7 +39,7 @@ public class AuthUserRoleParam {
         @Valid
         private String username;
 
-        @Schema(name = "角色ids")
+        @Schema(name = "角色IDs")
         private List<Integer> roleIds;
 
     }

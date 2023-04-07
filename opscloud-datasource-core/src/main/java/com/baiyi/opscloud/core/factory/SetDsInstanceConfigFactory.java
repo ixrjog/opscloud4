@@ -13,20 +13,21 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2021/6/24 7:16 下午
  * @Version 1.0
  */
+@SuppressWarnings("ALL")
 @Slf4j
 public class SetDsInstanceConfigFactory {
 
     private SetDsInstanceConfigFactory() {
     }
 
-    private static final Map<String, AbstractSetDsInstanceConfigProvider> context = new ConcurrentHashMap<>();
+    private static final Map<String, AbstractSetDsInstanceConfigProvider> CONTEXT = new ConcurrentHashMap<>();
 
     public static AbstractSetDsInstanceConfigProvider getProvider(String instanceType) {
-        return context.get(instanceType);
+        return CONTEXT.get(instanceType);
     }
 
     public static void register(AbstractSetDsInstanceConfigProvider bean) {
-        context.put(bean.getInstanceType(), bean);
+        CONTEXT.put(bean.getInstanceType(), bean);
         log.debug("SetDsInstanceConfigFactory Registered: instanceType={}", bean.getInstanceType());
     }
 

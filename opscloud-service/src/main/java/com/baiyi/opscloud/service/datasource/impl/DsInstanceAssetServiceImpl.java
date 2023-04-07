@@ -88,12 +88,15 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("instanceUuid", pageQuery.getInstanceUuid())
                 .andEqualTo("assetType", pageQuery.getAssetType());
-        if (pageQuery.getIsActive() != null)
+        if (pageQuery.getIsActive() != null) {
             criteria.andEqualTo("isActive", pageQuery.getIsActive());
-        if (StringUtils.isNotBlank(pageQuery.getRegionId()))
+        }
+        if (StringUtils.isNotBlank(pageQuery.getRegionId())) {
             criteria.andEqualTo("regionId", pageQuery.getRegionId());
-        if (StringUtils.isNotBlank(pageQuery.getKind()))
+        }
+        if (StringUtils.isNotBlank(pageQuery.getKind())) {
             criteria.andEqualTo("kind", pageQuery.getKind());
+        }
         if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
             Example.Criteria criteria2 = example.createCriteria();
             String likeName = SQLUtil.toLike(pageQuery.getQueryName());
@@ -120,22 +123,30 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
     public List<DatasourceInstanceAsset> queryAssetByAssetParam(DatasourceInstanceAsset asset) {
         Example example = new Example(DatasourceInstanceAsset.class);
         Example.Criteria criteria = example.createCriteria();
-        if (!StringUtils.isEmpty(asset.getInstanceUuid()))
+        if (!StringUtils.isEmpty(asset.getInstanceUuid())) {
             criteria.andEqualTo("instanceUuid", asset.getInstanceUuid());
-        if (!StringUtils.isEmpty(asset.getAssetType()))
+        }
+        if (!StringUtils.isEmpty(asset.getAssetType())) {
             criteria.andEqualTo("assetType", asset.getAssetType());
-        if (asset.getIsActive() != null)
+        }
+        if (asset.getIsActive() != null) {
             criteria.andEqualTo("isActive", asset.getIsActive());
-        if (!StringUtils.isEmpty(asset.getName()))
+        }
+        if (!StringUtils.isEmpty(asset.getName())) {
             criteria.andEqualTo("name", asset.getName());
-        if (!StringUtils.isEmpty(asset.getAssetId()))
+        }
+        if (!StringUtils.isEmpty(asset.getAssetId())) {
             criteria.andEqualTo("assetId", asset.getAssetId());
-        if (!StringUtils.isEmpty(asset.getAssetKey()))
+        }
+        if (!StringUtils.isEmpty(asset.getAssetKey())) {
             criteria.andLike("assetKey", SQLUtil.toLike(asset.getAssetKey()));
-        if (!StringUtils.isEmpty(asset.getAssetKey2()))
+        }
+        if (!StringUtils.isEmpty(asset.getAssetKey2())) {
             criteria.andEqualTo("assetKey2", asset.getAssetKey2());
-        if (!StringUtils.isEmpty(asset.getRegionId()))
+        }
+        if (!StringUtils.isEmpty(asset.getRegionId())) {
             criteria.andEqualTo("regionId", asset.getRegionId());
+        }
         example.setOrderByClause("create_time");
         return dsInstanceAssetMapper.selectByExample(example);
     }
@@ -144,12 +155,15 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
     public List<DatasourceInstanceAsset> acqAssetByAssetParam(DatasourceInstanceAsset asset) {
         Example example = new Example(DatasourceInstanceAsset.class);
         Example.Criteria criteria = example.createCriteria();
-        if (!StringUtils.isEmpty(asset.getAssetType()))
+        if (!StringUtils.isEmpty(asset.getAssetType())) {
             criteria.andEqualTo("assetType", asset.getAssetType());
-        if (asset.getIsActive() != null)
+        }
+        if (asset.getIsActive() != null) {
             criteria.andEqualTo("isActive", asset.getIsActive());
-        if (!StringUtils.isEmpty(asset.getAssetKey()))
+        }
+        if (!StringUtils.isEmpty(asset.getAssetKey())) {
             criteria.andLike("assetKey", asset.getAssetKey());
+        }
         example.setOrderByClause("create_time");
         return dsInstanceAssetMapper.selectByExample(example);
     }
@@ -175,4 +189,5 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
         criteria.andEqualTo("parentId", parentId);
         return dsInstanceAssetMapper.selectByExample(example);
     }
+
 }

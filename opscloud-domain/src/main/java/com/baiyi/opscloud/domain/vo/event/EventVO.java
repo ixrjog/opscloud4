@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,6 +24,7 @@ public class EventVO {
     @Schema
     public static class Event extends BaseVO implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -1509640973227933L;
 
         private Integer id;

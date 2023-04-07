@@ -28,4 +28,5 @@ public class DsAssetSubscriptionParam {
         private Boolean isActive = true;
 
     }
+
 }

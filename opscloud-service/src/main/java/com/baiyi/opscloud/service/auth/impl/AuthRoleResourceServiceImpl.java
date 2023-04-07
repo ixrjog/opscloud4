@@ -51,4 +51,5 @@ public class AuthRoleResourceServiceImpl implements AuthRoleResourceService {
         criteria.andEqualTo("resourceId", resourceId);
         authRoleResourceMapper.deleteByExample(example);
     }
+
 }

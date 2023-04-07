@@ -76,7 +76,7 @@ public class ThreadPoolTaskConfiguration {
     @Bean(name = LEO)
     public ThreadPoolTaskExecutor leoExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        /**
+        /*
          * 那么poolSize、corePoolSize、maximumPoolSize三者的关系是如何的呢？
          * 当新提交一个任务时：
          * （1）如果poolSize<corePoolSize，新增加一个线程处理新的任务。

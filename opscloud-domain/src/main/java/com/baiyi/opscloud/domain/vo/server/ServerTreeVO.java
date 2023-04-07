@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class ServerTreeVO {
     @Builder
     @Schema
     public static class ServerTree implements Serializable {
+        @Serial
         private static final long serialVersionUID = 5811239982201037450L;
         private Integer size;
         private Integer userId;
@@ -29,6 +31,7 @@ public class ServerTreeVO {
     @Builder
     @Schema
     public static class Tree implements Serializable {
+        @Serial
         private static final long serialVersionUID = -3916923942990638381L;
         private String id;
         private String label;

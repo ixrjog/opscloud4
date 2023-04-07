@@ -11,14 +11,21 @@ import java.util.Arrays;
  * @Version 1.0
  */
 @Getter
-public enum BusinessErrorCodeEnum implements ErrorCode{
+public enum BusinessErrorCodeEnum implements ErrorCode {
 
+    /**
+     *
+     */
     UNSPECIFIED("500", "网络异常，请稍后再试");
 
-    /** 错误码 */
+    /**
+     * 错误码
+     */
     private final String code;
 
-    /** 描述 */
+    /**
+     * 描述
+     */
     private final String desc;
 
     BusinessErrorCodeEnum(final String code, final String desc) {
@@ -38,10 +45,11 @@ public enum BusinessErrorCodeEnum implements ErrorCode{
 
     /**
      * 枚举是否包含此code
+     *
      * @param code 枚举code
      * @return 结果
      */
-    public static Boolean contains(String code){
+    public static Boolean contains(String code) {
         return Arrays.stream(BusinessErrorCodeEnum.values()).anyMatch(value -> StringUtils.equals(code, value.getCode()));
     }
 

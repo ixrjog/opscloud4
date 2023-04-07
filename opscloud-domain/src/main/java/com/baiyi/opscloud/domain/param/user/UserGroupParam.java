@@ -29,4 +29,5 @@ public class UserGroupParam {
         @Schema(name = "是否激活")
         private Boolean isActive;
     }
+
 }

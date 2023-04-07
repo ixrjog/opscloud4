@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ public class DocumentParam {
     @Schema
     public static class UpdateDocument implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -8475762526256407735L;
 
         private Integer id;
@@ -58,6 +60,7 @@ public class DocumentParam {
     @Schema
     public static class AddDocument implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 730778424833527441L;
 
         private Integer id;

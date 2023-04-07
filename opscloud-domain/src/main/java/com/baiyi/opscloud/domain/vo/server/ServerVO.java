@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -21,11 +22,6 @@ import java.util.List;
  * @Version 1.0
  */
 public class ServerVO {
-
-    public interface IServer {
-        void setServer(Server server);
-        Integer getServerId();
-    }
 
     @EqualsAndHashCode(callSuper = true)
     @Builder
@@ -49,6 +45,7 @@ public class ServerVO {
             return privateIp;
         }
 
+        @Serial
         private static final long serialVersionUID = -1011261913967456450L;
 
         private BusinessDocumentVO.Document document;

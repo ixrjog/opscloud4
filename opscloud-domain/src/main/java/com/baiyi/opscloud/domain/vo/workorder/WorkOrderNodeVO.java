@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class WorkOrderNodeVO {
     @Schema
     public static class NodeView implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 466008285525003198L;
         private List<Stage> stages;
 
@@ -35,6 +37,7 @@ public class WorkOrderNodeVO {
     @Schema
     public static class Stage implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 1606626459378798989L;
         private String name;
 
@@ -54,6 +57,7 @@ public class WorkOrderNodeVO {
     @Data
     @Schema
     public static class PopInfo implements Serializable {
+        @Serial
         private static final long serialVersionUID = 4493746212394051044L;
 
         private String title;

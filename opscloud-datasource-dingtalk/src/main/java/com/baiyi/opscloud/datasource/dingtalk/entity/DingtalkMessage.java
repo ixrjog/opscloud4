@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -20,6 +21,7 @@ public class DingtalkMessage {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class MessageResponse extends DingtalkResponse.Query implements Serializable {
+        @Serial
         private static final long serialVersionUID = -2576980035091872379L;
         @JsonProperty("task_id")
         private Long taskId;

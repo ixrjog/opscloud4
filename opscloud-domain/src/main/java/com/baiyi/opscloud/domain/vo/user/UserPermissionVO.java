@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -20,6 +21,7 @@ public class UserPermissionVO {
     @Schema
     public static class UserPermission extends BaseVO implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 8880598889712701828L;
         private Integer id;
         private Integer userId;
@@ -38,7 +40,7 @@ public class UserPermissionVO {
     @Schema
     public static class UserBusinessPermission {
 
-        @NotNull(message = "用户id不能为空")
+        @NotNull(message = "用户ID不能为空")
         private Integer userId;
 
         @NotNull(message = "业务类型不能为空")
@@ -48,6 +50,5 @@ public class UserPermissionVO {
         private Integer businessId;
 
     }
-
 
 }

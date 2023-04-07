@@ -134,7 +134,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .isFinish(false)
                 .isActive(true)
                 .isRollback(false)
-                .ocInstance(OcInstance.ocInstance)
+                .ocInstance(OcInstance.OC_INSTANCE)
                 .build();
         deployService.add(newLeoDeploy);
         handleDeploy(newLeoDeploy, deployConfig);

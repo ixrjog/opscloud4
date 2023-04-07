@@ -3,12 +3,14 @@ package com.baiyi.opscloud.domain.generator.opscloud;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @Table(name = "work_order")
 public class WorkOrder implements Serializable {
+    @Serial
     private static final long serialVersionUID = -20798480896238199L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

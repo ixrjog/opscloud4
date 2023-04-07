@@ -26,6 +26,7 @@ public class TerminalUtil {
      */
     // 行模式支持 Ctrl+C
     public static void rawModeSupportVintr(Terminal terminal) {
+        // terminal.enterRawMode();
         Attributes prvAttr = terminal.getAttributes();
         Attributes newAttr = new Attributes(prvAttr);
         // 规范模式关闭，回显关闭，回显换行关闭，扩展输入处理关闭

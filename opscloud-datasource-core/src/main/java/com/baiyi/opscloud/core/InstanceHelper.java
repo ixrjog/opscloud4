@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -52,7 +51,7 @@ public class InstanceHelper {
             // 过滤掉没有标签的实例
             instances.addAll(dsInstanceService.queryByParam(query).stream()
                     .filter(e -> simpleTagService.hasBusinessTag(tag, DATASOURCE_INSTANCE_TYPE, e.getId()))
-                    .collect(Collectors.toList()));
+                    .toList());
         }
         return instances;
     }

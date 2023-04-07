@@ -45,14 +45,14 @@ public class SupervisingWithRollingStrategy extends SupervisingStrategy {
         }
         final String containerName = deployment.getContainer().getName();
 
-        LeoDeployingVO.VerionDetails previousVersion = LeoDeployingVO.VerionDetails.builder()
+        LeoDeployingVO.VersionDetails previousVersion = LeoDeployingVO.VersionDetails.builder()
                 .title("以前版本")
                 .versionName(deploy.getDeployVersion1().getVersionName())
                 .versionDesc(deploy.getDeployVersion1().getVersionDesc())
                 .image(deploy.getDeployVersion1().getImage())
                 .build();
 
-        LeoDeployingVO.VerionDetails releaseVersion = LeoDeployingVO.VerionDetails.builder()
+        LeoDeployingVO.VersionDetails releaseVersion = LeoDeployingVO.VersionDetails.builder()
                 .title("发布版本")
                 .versionName(deploy.getDeployVersion2().getVersionName())
                 .versionDesc(deploy.getDeployVersion2().getVersionDesc())

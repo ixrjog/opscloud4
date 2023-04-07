@@ -59,4 +59,5 @@ public class AliyunLogParam {
         private String projectName;
         private String logstoreName;
     }
+
 }

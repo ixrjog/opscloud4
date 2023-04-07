@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -25,6 +26,7 @@ public class LeoDeployVO {
     @Schema
     public static class Deploy implements Serializable, ReadableTime.IAgo, ReadableTime.IRuntime {
 
+        @Serial
         private static final long serialVersionUID = -6080138223431460692L;
 
         @Schema(name = "以前")

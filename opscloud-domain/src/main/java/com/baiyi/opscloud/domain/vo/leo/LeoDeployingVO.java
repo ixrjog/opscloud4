@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.util.CollectionUtils;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -36,12 +37,13 @@ public class LeoDeployingVO {
     @Schema
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Deploying implements Serializable {
+        @Serial
         private static final long serialVersionUID = -2373193776064021868L;
         private String deployType;
 
         // previous/release
-        private VerionDetails versionDetails1;
-        private VerionDetails versionDetails2;
+        private VersionDetails versionDetails1;
+        private VersionDetails versionDetails2;
         // 副本数
         private Integer replicas;
 
@@ -90,10 +92,11 @@ public class LeoDeployingVO {
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema
-    public static class VerionDetails implements Serializable {
+    public static class VersionDetails implements Serializable {
+        @Serial
         private static final long serialVersionUID = -605790384101352067L;
 
-        public static final VerionDetails NO_SHOW = VerionDetails.builder()
+        public static final VersionDetails NO_SHOW = VersionDetails.builder()
                 .show(false)
                 .build();
 
@@ -124,6 +127,7 @@ public class LeoDeployingVO {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class PodDetails implements Serializable, ReadableTime.IAgo {
 
+        @Serial
         private static final long serialVersionUID = 6072373268821025901L;
 
         private Map<String, String> conditions;

@@ -12,6 +12,6 @@ public class OcInstance {
     /**
      * 实例名称
      */
-    public static final String ocInstance = HostUtil.getHostName();
+    public static final String OC_INSTANCE = HostUtil.getHostName();
 
 }

@@ -41,12 +41,12 @@ public class OtpUtil {
      * @throws NoSuchAlgorithmException
      */
     public static Key generateOtpSK() throws NoSuchAlgorithmException {
-        /**
+        /*
          * 30S
          */
         final TimeBasedOneTimePasswordGenerator totp = new TimeBasedOneTimePasswordGenerator(DURATION);
         final KeyGenerator keyGenerator = KeyGenerator.getInstance(totp.getAlgorithm());
-        /**
+        /*
          *  Key length should match the length of the HMAC output (160 bits for SHA-1, 256 bits
          *  for SHA-256, and 512 bits for SHA-512). Note that while Mac#getMacLength() returns a
          *  length in _bytes,_ KeyGenerator#init(int) takes a key length in _bits._

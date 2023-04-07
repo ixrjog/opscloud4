@@ -34,7 +34,6 @@ public class NavServiceImpl implements NavService {
     @Override
     public void del(Integer id) {
         navMapper.deleteByPrimaryKey(id);
-
     }
 
     @Override
@@ -55,4 +54,5 @@ public class NavServiceImpl implements NavService {
         criteria.andEqualTo("isActive", true);
         return navMapper.selectByExample(example);
     }
+
 }

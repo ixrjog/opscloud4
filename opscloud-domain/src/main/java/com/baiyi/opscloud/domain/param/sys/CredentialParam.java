@@ -26,4 +26,5 @@ public class CredentialParam {
         private Integer kind;
 
     }
+
 }

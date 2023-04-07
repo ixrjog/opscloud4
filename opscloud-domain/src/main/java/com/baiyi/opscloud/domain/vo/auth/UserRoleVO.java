@@ -28,7 +28,7 @@ public class UserRoleVO {
         @Schema(name = "显示名")
         private String displayName;
 
-        @Schema(name = "角色id",example="1")
+        @Schema(name = "角色ID",example="1")
         private Integer roleId;
 
         @Schema(name = "角色名")
@@ -38,4 +38,5 @@ public class UserRoleVO {
         private String roleComment;
 
     }
+
 }

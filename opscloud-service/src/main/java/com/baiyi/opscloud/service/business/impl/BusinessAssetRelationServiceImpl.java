@@ -9,7 +9,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
 import com.baiyi.opscloud.mapper.BusinessAssetRelationMapper;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -27,8 +26,6 @@ public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationSe
 
     private final BusinessAssetRelationMapper bizAssetRelationMapper;
 
-    private final ApplicationEventPublisher applicationEventPublisher;
-
     @Override
     public BusinessAssetRelation getByUniqueKey(BusinessAssetRelation businessAssetRelation) {
         Example example = new Example(BusinessAssetRelation.class);
@@ -41,7 +38,9 @@ public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationSe
 
     @Override
     public void add(BusinessAssetRelation businessAssetRelation) {
-        if (businessAssetRelation.getBusinessId() == null || businessAssetRelation.getBusinessId() <= 0) return;
+        if (businessAssetRelation.getBusinessId() == null || businessAssetRelation.getBusinessId() <= 0) {
+            return;
+        }
         bizAssetRelationMapper.insert(businessAssetRelation);
     }
 
@@ -62,7 +61,9 @@ public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationSe
         Example example = new Example(BusinessAssetRelation.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("datasourceInstanceAssetId", datasourceInstanceAssetId);
-        if (businessType >= 0) criteria.andEqualTo("businessType", businessType);
+        if (businessType >= 0) {
+            criteria.andEqualTo("businessType", businessType);
+        }
         return bizAssetRelationMapper.selectByExample(example);
     }
 

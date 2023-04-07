@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,7 @@ public class TerminalSessionVO {
     @Schema
     public static class Session extends BaseVO implements TerminalSessionInstanceVO.ISessionInstances, UserVO.IUser, Serializable {
 
+        @Serial
         private static final long serialVersionUID = 7671719435444459757L;
         private List<TerminalSessionInstanceVO.SessionInstance> sessionInstances;
 

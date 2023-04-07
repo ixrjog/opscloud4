@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,6 +21,7 @@ import java.util.Date;
 @Data
 @Decrypt
 public class User implements Serializable {
+    @Serial
     private static final long serialVersionUID = 7775998575519732616L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

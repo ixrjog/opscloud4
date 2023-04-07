@@ -7,7 +7,7 @@ package com.baiyi.opscloud.domain.param;
  */
 public interface IFilterTag {
 
-    String getFILTER_SYSTEM_TAG();
+   // String getFILTER_SYSTEM_TAG();
 
     Boolean getFilterTag();
 

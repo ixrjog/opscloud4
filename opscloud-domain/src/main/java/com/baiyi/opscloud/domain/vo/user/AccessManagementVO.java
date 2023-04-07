@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class AccessManagementVO {
     @Schema
     public static class IAM extends XAccessManagement implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -5541945548323066174L;
         
         private final String type = DsAssetTypeConstants.IAM_USER.name();
@@ -43,6 +45,7 @@ public class AccessManagementVO {
     @Schema
     public static class RAM extends XAccessManagement implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -2175343102360414610L;
         private final String type = DsAssetTypeConstants.RAM_USER.name();
 
@@ -53,6 +56,7 @@ public class AccessManagementVO {
     @Schema
     public static class XAccessManagement implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -8444786214672507521L;
         private String type;
 

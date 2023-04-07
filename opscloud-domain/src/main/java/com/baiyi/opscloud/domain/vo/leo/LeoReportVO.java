@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class LeoReportVO {
     @Schema
     public static class LeoReport implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 5737296480391365951L;
 
         @Schema(name = "仪表盘")
@@ -56,6 +58,7 @@ public class LeoReportVO {
     @Schema
     public static class Dashboard implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -2386828955543538401L;
 
         @Schema(name = "应用总数")
@@ -84,6 +87,7 @@ public class LeoReportVO {
     @Schema
     public static class MonthReport implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 1759830997901199516L;
 
         @Schema(name = "日期(月)")
@@ -114,6 +118,7 @@ public class LeoReportVO {
     @Schema
     public static class LeoJenkinsInstance implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -8703855218611943799L;
 
         @Schema(name = "数据源实例ID")

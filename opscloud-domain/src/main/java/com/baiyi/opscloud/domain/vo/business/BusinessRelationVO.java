@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class BusinessRelationVO {
     @Schema
     public static class Relation extends BaseVO implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -7796721327490285102L;
         private Integer id;
 

@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class ServerGroupVO {
             BusinessDocumentVO.IBusinessDocument,
             Serializable {
 
+        @Serial
         private static final long serialVersionUID = 5059407999240740609L;
 
         private final Integer businessType = BusinessTypeEnum.SERVERGROUP.getType();

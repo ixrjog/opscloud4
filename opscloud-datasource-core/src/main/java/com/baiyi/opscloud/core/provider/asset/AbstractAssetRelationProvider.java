@@ -88,7 +88,7 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
                 .collect(Collectors.toMap(DatasourceInstanceAssetRelation::getId, a -> a, (k1, k2) -> k1));
         List<DatasourceInstanceAssetRelation> invalidRelations = dsInstanceAssetRelationService.queryTargetAsset(dsInstanceContext.getDsInstance().getUuid(), asset.getId())
                 .stream()
-                .filter(e -> !relationMap.containsKey(e.getId())).collect(Collectors.toList());
+                .filter(e -> !relationMap.containsKey(e.getId())).toList();
         if (CollectionUtils.isEmpty(invalidRelations)) {
             return;
         }

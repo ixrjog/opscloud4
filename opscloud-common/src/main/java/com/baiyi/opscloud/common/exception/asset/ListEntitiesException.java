@@ -5,6 +5,8 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 /**
  * @Author baiyi
  * @Date 2022/8/16 13:34
@@ -14,6 +16,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class ListEntitiesException extends BaseException {
 
+    @Serial
     private static final long serialVersionUID = 520938458076138276L;
     private final Integer code = 10005;
 

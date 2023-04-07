@@ -25,4 +25,5 @@ public class NavVO {
         private String navUrl;
         private String navContent;
     }
+
 }

@@ -21,4 +21,5 @@ public class JenkinsJobVO {
         private String fullName;
 
     }
+
 }

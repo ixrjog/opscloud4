@@ -99,7 +99,15 @@ public class ServerLoginCommand extends BaseServerCommand {
             TerminalSessionInstance terminalSessionInstance = TerminalSessionInstanceBuilder.build(sessionId, hostSystem, InstanceSessionTypeEnum.SERVER);
             simpleTerminalSessionFacade.recordTerminalSessionInstance(terminalSessionInstance);
 
+//            sshContext.getSshEnv().getEnv().put("LC_CTYPE", "en_US.UTF-8");
+//            sshContext.getSshEnv().getEnv().put("LANG", "en_US.UTF-8");
+//            sshContext.getSshEnv().getEnv().put("LC_ALL", "en_US.UTF-8");
+
+
             ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
+
+           // sshContext.getLineReader().unsetOpt(LineReader.Option.BRACKETED_PASTE);
+
 
             // 无延迟
             out.setNoDelay(true);
@@ -117,6 +125,7 @@ public class ServerLoginCommand extends BaseServerCommand {
                         break;
                     }
                     doResize(size, terminal, sessionId, instanceId);
+
                     int i = terminal.reader().read(5L);
                     send(sessionId, instanceId, i);
                 }

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -119,6 +120,7 @@ public class WorkOrderTicketVO {
     @Schema
     public static class Ticket extends BaseVO implements WorkOrderVO.IWorkOrder, IApprover, ReadableTime.IAgo, Serializable {
 
+        @Serial
         private static final long serialVersionUID = -3191271933875590264L;
 
         @Schema(name = "是否为审批人")
@@ -176,6 +178,7 @@ public class WorkOrderTicketVO {
     @Schema
     public static class Entry<T> extends BaseVO implements DsInstanceVO.IDsInstance, Serializable {
 
+        @Serial
         private static final long serialVersionUID = 5462899820190005914L;
 
         private DsInstanceVO.Instance instance;

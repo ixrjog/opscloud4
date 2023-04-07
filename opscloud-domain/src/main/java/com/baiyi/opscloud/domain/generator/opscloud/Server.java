@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -17,6 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 public class Server implements Serializable {
+    @Serial
     private static final long serialVersionUID = -912214650070659359L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -87,7 +87,7 @@ public class GitLabSshKeyProvider extends AbstractAssetRelationProvider<SshKey, 
                                 GitLabSshKey sshKey = BeanCopierUtil.copyProperties(e, GitLabSshKey.class);
                                 sshKey.setUsername(user.getUsername());
                                 return sshKey;
-                            }).collect(Collectors.toList())
+                            }).toList()
                     );
                 }
             }

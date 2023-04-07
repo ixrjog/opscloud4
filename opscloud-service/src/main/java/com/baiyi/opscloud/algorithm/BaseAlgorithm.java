@@ -11,14 +11,13 @@ import com.baiyi.opscloud.service.sys.EnvService;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import jakarta.annotation.Resource;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.springframework.util.CollectionUtils;
 
-import jakarta.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -61,7 +60,7 @@ public abstract class BaseAlgorithm {
         if (CollectionUtils.isEmpty(serverList)) {
             return map;
         }
-        List<ServerPack> serverPacks = serverList.stream().map(this::toServerPack).collect(Collectors.toList());
+        List<ServerPack> serverPacks = serverList.stream().map(this::toServerPack).toList();
         serverPacks.forEach(e -> {
             String groupingName = toSubgroupName(serverGroup, e.getEnv());
             if (map.containsKey(groupingName)) {

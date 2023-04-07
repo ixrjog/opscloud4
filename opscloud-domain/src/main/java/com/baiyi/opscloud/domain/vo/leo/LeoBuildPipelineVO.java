@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -22,6 +23,7 @@ public class LeoBuildPipelineVO {
     @Schema
     public static class Step implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 1740884710532256025L;
 
         private String displayDescription;

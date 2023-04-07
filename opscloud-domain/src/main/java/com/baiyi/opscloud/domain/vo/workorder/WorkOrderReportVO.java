@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ public class WorkOrderReportVO {
     @NoArgsConstructor
     @Schema
     public static class MonthReport implements Serializable {
+        @Serial
         private static final long serialVersionUID = -7642429717526988404L;
 
         @Schema(name = "日期")
@@ -48,6 +50,7 @@ public class WorkOrderReportVO {
     @Schema
     public static class MonthStatistics implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -4917800861585712502L;
 
         @Schema(name = "月度统计")

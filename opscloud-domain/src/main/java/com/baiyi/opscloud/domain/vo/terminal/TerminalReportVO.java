@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -23,6 +24,7 @@ public class TerminalReportVO {
     @Schema
     public static class TerminalReport implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 6948099219656277502L;
 
         @Schema(name = "用户总数")
@@ -44,7 +46,5 @@ public class TerminalReportVO {
         private ReportVO.MonthReport commandMonthReport;
 
     }
-
-
 
 }

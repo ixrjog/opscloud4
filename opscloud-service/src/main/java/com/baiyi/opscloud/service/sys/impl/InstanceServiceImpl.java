@@ -77,4 +77,5 @@ public class InstanceServiceImpl implements InstanceService {
         criteria.andEqualTo("isActive", true);
         return instanceMapper.selectByExample(example);
     }
+
 }

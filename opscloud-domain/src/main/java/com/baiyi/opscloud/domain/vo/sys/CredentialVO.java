@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.vo.base.ISecret;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -29,6 +30,7 @@ public class CredentialVO {
     @Builder
     public static class Credential extends BaseVO implements ISecret, Serializable {
 
+        @Serial
         private static final long serialVersionUID = -8663845116665600709L;
         private Integer id;
         private String title;

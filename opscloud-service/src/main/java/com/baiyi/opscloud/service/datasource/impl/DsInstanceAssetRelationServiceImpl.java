@@ -63,4 +63,5 @@ public class DsInstanceAssetRelationServiceImpl implements DsInstanceAssetRelati
                 .orEqualTo("targetAssetId", assetId);
         return dsInstanceAssetRelationMapper.selectByExample(example);
     }
+
 }

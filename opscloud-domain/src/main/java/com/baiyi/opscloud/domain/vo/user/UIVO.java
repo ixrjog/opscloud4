@@ -26,4 +26,5 @@ public class UIVO {
         private List<MenuVO.Menu> menuInfo;
 
     }
+
 }

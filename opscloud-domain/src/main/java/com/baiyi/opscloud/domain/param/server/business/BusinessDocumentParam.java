@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -23,6 +24,7 @@ public class BusinessDocumentParam {
     @Schema
     public static class Document implements BaseBusiness.IBusiness, Serializable {
 
+        @Serial
         private static final long serialVersionUID = 6050583884005972339L;
 
         @Schema(name = "业务对象显示名称")

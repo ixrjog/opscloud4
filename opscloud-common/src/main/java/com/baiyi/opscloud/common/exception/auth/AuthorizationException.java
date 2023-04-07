@@ -5,6 +5,8 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 /**
  * 权限校验
  *
@@ -16,6 +18,7 @@ import lombok.EqualsAndHashCode;
 @Data
 public class AuthorizationException extends BaseException {
 
+    @Serial
     private static final long serialVersionUID = 7450373461196192021L;
 
     private Integer code;

@@ -23,6 +23,7 @@ public class JSchSession {
      * 会话复制后 id#uuid
      */
     private String instanceId;
+
     private PrintStream commander;
 
 

@@ -23,7 +23,6 @@ import org.springframework.util.CollectionUtils;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -42,7 +41,7 @@ public class UserCredentialFacadeImpl implements UserCredentialFacade {
     public void clearCredential(int userId, String instanceUuid, int credentialType) {
         List<UserCredential> credentials = userCredentialService.queryByUserIdAndType(userId, credentialType).stream()
                 .filter(e -> instanceUuid.equals(e.getInstanceUuid()))
-                .collect(Collectors.toList());
+                .toList();
         if (!CollectionUtils.isEmpty(credentials)) {
             credentials.forEach(e -> userCredentialService.deleteById(e.getId()));
         }

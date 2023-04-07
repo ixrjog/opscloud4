@@ -13,14 +13,6 @@ import java.util.Date;
  */
 public class JobTplVO {
 
-    public interface IJobTpl {
-
-        void setJobTpl(JobTpl jobTpl);
-
-        Integer getJobTplId();
-    }
-
-
     @Data
     @NoArgsConstructor
     @Schema

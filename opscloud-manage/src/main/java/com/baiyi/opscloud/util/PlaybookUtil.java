@@ -28,4 +28,5 @@ public class PlaybookUtil {
         String fileName = Joiner.on(".").join(ansiblePlaybook.getPlaybookUuid(), "yml");
         return Joiner.on("/").join(opscloudConfigurationProperties.getAnsiblePlaybookPath(), fileName);
     }
+
 }

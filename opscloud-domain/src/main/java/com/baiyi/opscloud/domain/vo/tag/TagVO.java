@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class TagVO {
     @Schema
     public static class Tag extends BaseVO implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 1445359231777384339L;
 
         private Integer quantityUsed;

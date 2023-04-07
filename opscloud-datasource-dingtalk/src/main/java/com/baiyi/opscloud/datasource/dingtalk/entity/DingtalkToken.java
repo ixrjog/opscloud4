@@ -3,6 +3,7 @@ package com.baiyi.opscloud.datasource.dingtalk.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,6 +18,7 @@ public class DingtalkToken {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class TokenResponse extends DingtalkResponse.BaseMsg implements Serializable {
+        @Serial
         private static final long serialVersionUID = -4998201798603077254L;
         @JsonProperty("access_token")
         private String accessToken;

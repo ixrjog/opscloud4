@@ -53,10 +53,12 @@ public class ServerAccountServiceImpl extends AbstractCredentialCustomer impleme
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(ServerAccount.class);
         Example.Criteria criteria = example.createCriteria();
-        if (StringUtils.isNotBlank(pageQuery.getUsername()))
+        if (StringUtils.isNotBlank(pageQuery.getUsername())) {
             criteria.andLike("username", SQLUtil.toLike(pageQuery.getUsername()));
-        if (IdUtil.isNotEmpty(pageQuery.getAccountType()))
+        }
+        if (IdUtil.isNotEmpty(pageQuery.getAccountType())) {
             criteria.andEqualTo("accountType", pageQuery.getAccountType());
+        }
         if (StringUtils.isNotBlank(pageQuery.getProtocol())) {
             criteria.andEqualTo("protocol", pageQuery.getProtocol());
         }

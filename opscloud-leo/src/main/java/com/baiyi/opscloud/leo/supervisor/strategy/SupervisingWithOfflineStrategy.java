@@ -47,7 +47,7 @@ public class SupervisingWithOfflineStrategy extends SupervisingStrategy {
                 .map(LeoBaseModel.Container::getImage)
                 .orElse("N/A");
 
-        LeoDeployingVO.VerionDetails offlineVersion = LeoDeployingVO.VerionDetails.builder()
+        LeoDeployingVO.VersionDetails offlineVersion = LeoDeployingVO.VersionDetails.builder()
                 .title("下线中")
                 .image(image)
                 .build();
@@ -60,7 +60,7 @@ public class SupervisingWithOfflineStrategy extends SupervisingStrategy {
         return LeoDeployingVO.Deploying.builder()
                 .deployType(deploy.getDeployType())
                 .versionDetails1(offlineVersion)
-                .versionDetails2(LeoDeployingVO.VerionDetails.NO_SHOW)
+                .versionDetails2(LeoDeployingVO.VersionDetails.NO_SHOW)
                 .replicas(deployment.getReplicas())
                 .build()
                 .init();

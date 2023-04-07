@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +26,7 @@ public class DocumentVO {
     @Schema
     public static class Doc implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -6463097211186364301L;
         private String name;
         private String icon;
@@ -40,6 +42,7 @@ public class DocumentVO {
     @Schema
     public static class DocZone implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 4925220340334652936L;
 
         public static final DocZone EMPTY = DocZone.builder().build();
@@ -59,6 +62,7 @@ public class DocumentVO {
     @Schema
     public static class Document implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -1872814592253368098L;
 
         private Integer id;
@@ -81,6 +85,7 @@ public class DocumentVO {
     @Schema
     public static class Zone implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 4925220340334652936L;
 
         private Integer id;

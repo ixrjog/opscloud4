@@ -55,4 +55,5 @@ public class ServerTaskServiceImpl implements ServerTaskService {
     public void update(ServerTask serverTask) {
         serverTaskMapper.updateByPrimaryKey(serverTask);
     }
+
 }

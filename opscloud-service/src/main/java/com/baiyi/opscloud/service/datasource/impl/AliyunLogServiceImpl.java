@@ -32,8 +32,9 @@ public class AliyunLogServiceImpl implements AliyunLogService {
         Example example = new Example(AliyunLog.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("datasourceInstanceId", pageQuery.getInstanceId());
-        if (StringUtils.isNotBlank(pageQuery.getQueryName()))
+        if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
             criteria.andLike("comment", SQLUtil.toLike(pageQuery.getQueryName()));
+        }
         List<AliyunLog> data = aliyunLogMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }

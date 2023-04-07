@@ -148,4 +148,5 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
         }
         tagService.deleteById(id);
     }
+
 }

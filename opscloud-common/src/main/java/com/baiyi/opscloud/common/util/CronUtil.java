@@ -31,7 +31,7 @@ public class CronUtil {
                 result.add(dtf.format(dateTime));
                 cnt--;
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return result;
     }

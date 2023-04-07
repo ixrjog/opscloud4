@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.slf4j.helpers.MessageFormatter;
 
+import java.io.Serial;
+
 /**
  * @Author baiyi
  * @Date 2020/4/19 12:17 下午
@@ -16,6 +18,7 @@ import org.slf4j.helpers.MessageFormatter;
 @NoArgsConstructor
 public abstract class BaseException extends RuntimeException {
 
+    @Serial
     private static final long serialVersionUID = -6758520149628532498L;
 
     private Integer code;
