@@ -106,8 +106,9 @@ public class ServerLoginCommand extends BaseServerCommand {
 
             ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
 
-           // sshContext.getLineReader().unsetOpt(LineReader.Option.BRACKETED_PASTE);
+            // sshContext.getLineReader().getTerminal().writer().println();
 
+            // sshContext.getLineReader().unsetOpt(LineReader.Option.BRACKETED_PASTE);
 
             // 无延迟
             out.setNoDelay(true);
@@ -125,9 +126,8 @@ public class ServerLoginCommand extends BaseServerCommand {
                         break;
                     }
                     doResize(size, terminal, sessionId, instanceId);
-
-                    int i = terminal.reader().read(5L);
-                    send(sessionId, instanceId, i);
+                    int input = terminal.reader().read(5L);
+                    send(sessionId, instanceId, input);
                 }
             } catch (Exception e) {
                 printWithCloseSession("Server connection disconnected, session duration %s/s", inst1);

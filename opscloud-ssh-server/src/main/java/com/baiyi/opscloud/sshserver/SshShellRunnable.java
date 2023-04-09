@@ -86,6 +86,7 @@ public class SshShellRunnable
     public void run() {
         log.debug("{}: running...", session.toString());
         TerminalBuilder terminalBuilder = TerminalBuilder.builder()
+                .jna(true)
                 .system(false)
                 .encoding(StandardCharsets.UTF_8)
                 .streams(is, os);
