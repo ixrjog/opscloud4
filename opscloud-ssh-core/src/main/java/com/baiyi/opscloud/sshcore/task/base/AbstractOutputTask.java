@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @Author baiyi
@@ -32,7 +33,7 @@ public abstract class AbstractOutputTask implements IOutputTask {
 
     @Override
     public void run() {
-        InputStreamReader isr = new InputStreamReader(outFromChannel);
+        InputStreamReader isr = new InputStreamReader(outFromChannel, StandardCharsets.UTF_8);
         BufferedReader br = new BufferedReader(isr, BUFF_SIZE);
         try {
             SessionOutputUtil.addOutput(sessionOutput);
@@ -43,10 +44,10 @@ public abstract class AbstractOutputTask implements IOutputTask {
                 auditing(buff, 0, read);
                 NewTimeUtil.millisecondsSleep(10L);
             }
-        } catch (Exception ex) {
-            log.error(ex.toString(), ex);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         } finally {
-            log.info("Watch server output task end: sessionId={}, instanceId={}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
+            log.debug("Watch server output task end: sessionId={}, instanceId={}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
             SessionOutputUtil.removeOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId());
         }
     }

@@ -73,6 +73,8 @@ public class RemoteInvokeHandler {
             case 3:
                 jsch.addIdentity(appId, credential.getCredential().trim().getBytes(), credential.getCredential2().getBytes(), credential.getPassphrase().getBytes());
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + hostSystem.getSshCredential().getCredential().getKind());
         }
     }
 
@@ -83,7 +85,7 @@ public class RemoteInvokeHandler {
      * @param instanceId
      * @param hostSystem
      */
-    public static void openWithWebTerminal(String sessionId, String instanceId, HostSystem hostSystem) {
+    public static void openWebTerminal(String sessionId, String instanceId, HostSystem hostSystem) {
         JSch jsch = new JSch();
 
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
@@ -144,7 +146,7 @@ public class RemoteInvokeHandler {
      * @param sessionId
      * @param hostSystem
      */
-    public static void openWithSSHServer(String sessionId, HostSystem hostSystem, OutputStream out) throws SshCommonException {
+    public static void openSSHServer(String sessionId, HostSystem hostSystem, OutputStream out) throws SshCommonException {
         JSch jsch = new JSch();
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
         try {
@@ -157,6 +159,7 @@ public class RemoteInvokeHandler {
             // 默认设置
             SessionConfigUtil.setDefault(session);
             ChannelShell channel = (ChannelShell) session.openChannel("shell");
+
             ChannelShellUtil.setDefault(channel);
             setChannelPtySize(channel, hostSystem.getTerminalSize());
             // new session output
@@ -170,7 +173,7 @@ public class RemoteInvokeHandler {
             JSchSession jSchSession = JSchSession.builder()
                     .sessionId(sessionId)
                     .instanceId(hostSystem.getInstanceId())
-                    .commander(new PrintStream(inputToChannel, true, StandardCharsets.UTF_8.name()))
+                    .commander(new PrintStream(inputToChannel, true, StandardCharsets.UTF_8))
                     .inputToChannel(inputToChannel)
                     .channel(channel)
                     .hostSystem(hostSystem)

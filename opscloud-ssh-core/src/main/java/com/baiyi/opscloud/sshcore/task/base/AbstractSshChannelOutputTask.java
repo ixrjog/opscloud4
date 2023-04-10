@@ -12,6 +12,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @Author baiyi
@@ -39,13 +40,12 @@ public abstract class AbstractSshChannelOutputTask implements IOutputTask {
         try {
             while (!isClosed) {
                 NewTimeUtil.millisecondsSleep(25L);
-
                 InputStream ins = baos.toInputStream();
                 if (ins instanceof ClosedInputStream) {
                     continue;
                 }
                 baos.reset();
-                InputStreamReader isr = new InputStreamReader(ins);
+                InputStreamReader isr = new InputStreamReader(ins, StandardCharsets.UTF_8);
                 BufferedReader br = new BufferedReader(isr, BUFF_SIZE);
                 char[] buff = new char[BUFF_SIZE];
                 int read;
@@ -54,10 +54,10 @@ public abstract class AbstractSshChannelOutputTask implements IOutputTask {
                     auditing(buff, 0, read);
                 }
             }
-        } catch (Exception ex) {
-            log.error(ex.toString(), ex);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         } finally {
-            log.info("Ssh channel output task end: sessionId={}, instanceId={}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
+            log.debug("Ssh channel output task end: sessionId={}, instanceId={}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
             SessionOutputUtil.removeOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId());
         }
     }

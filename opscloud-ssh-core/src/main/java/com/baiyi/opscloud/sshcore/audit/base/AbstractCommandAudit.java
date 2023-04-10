@@ -70,15 +70,17 @@ public abstract class AbstractCommandAudit {
                                 // save
                                 TerminalSessionInstanceCommand auditCommand = builder.build();
                                 if (auditCommand != null) {
-                                    if (!StringUtils.isEmpty(auditCommand.getInputFormatted()))
+                                    if (!StringUtils.isEmpty(auditCommand.getInputFormatted())) {
                                         terminalSessionInstanceCommandService.add(auditCommand);
+                                    }
                                     builder = null;
                                 }
                             }
                             builder = builder(terminalSessionInstance.getId(), str);
                         } else {
-                            if (builder != null)
+                            if (builder != null) {
                                 builder.addOutput(str);
+                            }
                         }
                     }
                 }

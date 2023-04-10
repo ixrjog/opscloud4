@@ -57,7 +57,7 @@ public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<Se
                     sAInterceptor.interceptLoginServer(serverNode.getId());
                     HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverNode, loginMessage);
                     Server server = serverService.getById(serverNode.getId());
-                    RemoteInvokeHandler.openWithWebTerminal(terminalSession.getSessionId(), serverNode.getInstanceId(), hostSystem);
+                    RemoteInvokeHandler.openWebTerminal(terminalSession.getSessionId(), serverNode.getInstanceId(), hostSystem);
                     terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, hostSystem, InstanceSessionTypeEnum.SERVER));
                 });
             }

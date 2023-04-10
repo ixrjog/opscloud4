@@ -50,10 +50,7 @@ import java.util.Map;
 @Slf4j
 @SshShellComponent
 @ShellCommandGroup("Server Commands")
-@ConditionalOnProperty(
-        name = SshShellProperties.SSH_SHELL_PREFIX + ".commands." + BaseServerCommand.GROUP + ".create",
-        havingValue = "true", matchIfMissing = true
-)
+@ConditionalOnProperty(name = SshShellProperties.SSH_SHELL_PREFIX + ".commands." + BaseServerCommand.GROUP + ".create", havingValue = "true", matchIfMissing = true)
 @RequiredArgsConstructor
 public class ServerLoginCommand extends BaseServerCommand {
 
@@ -86,8 +83,11 @@ public class ServerLoginCommand extends BaseServerCommand {
                       @ShellOption(value = {"-A", "--admin"}, help = "Admin") boolean admin) {
         ServerSession serverSession = sshShellHelper.getSshSession();
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
-        Terminal terminal = getTerminal();
-        SshContext sshContext = getSshContext();
+        // 从上下文中取出
+        SshContext sshContext = SshShellCommandFactory.SSH_THREAD_CONTEXT.get();
+        Terminal terminal = sshContext.getTerminal();
+        ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
+
         Map<Integer, Integer> idMapper = SessionCommandContext.getIdMapper();
         Server server = serverService.getById(idMapper.get(id));
         sAInterceptor.interceptLoginServer(server.getId());
@@ -98,31 +98,18 @@ public class ServerLoginCommand extends BaseServerCommand {
             hostSystem.setTerminalSize(sshShellHelper.terminalSize());
             TerminalSessionInstance terminalSessionInstance = TerminalSessionInstanceBuilder.build(sessionId, hostSystem, InstanceSessionTypeEnum.SERVER);
             simpleTerminalSessionFacade.recordTerminalSessionInstance(terminalSessionInstance);
-
-//            sshContext.getSshEnv().getEnv().put("LC_CTYPE", "en_US.UTF-8");
-//            sshContext.getSshEnv().getEnv().put("LANG", "en_US.UTF-8");
-//            sshContext.getSshEnv().getEnv().put("LC_ALL", "en_US.UTF-8");
-
-
-            ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
-
-            // sshContext.getLineReader().getTerminal().writer().println();
-
-            // sshContext.getLineReader().unsetOpt(LineReader.Option.BRACKETED_PASTE);
-
+            RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, out);
+            TerminalUtil.enterRawMode(terminal);
             // 无延迟
             out.setNoDelay(true);
-
-            RemoteInvokeHandler.openWithSSHServer(sessionId, hostSystem, out);
-            TerminalUtil.rawModeSupportVintr(terminal);
             // 计时
-            Instant inst1 = Instant.now();
+            // Instant inst1 = Instant.now();
             Size size = terminal.getSize();
             try {
                 while (true) {
                     if (isClosed(sessionId, instanceId)) {
                         NewTimeUtil.millisecondsSleep(150L);
-                        printWithCloseSession("Exit login, session duration %s/s", inst1);
+                        // printLogout("Exit login, session duration %s/s", inst1);
                         break;
                     }
                     doResize(size, terminal, sessionId, instanceId);
@@ -130,7 +117,7 @@ public class ServerLoginCommand extends BaseServerCommand {
                     send(sessionId, instanceId, input);
                 }
             } catch (Exception e) {
-                printWithCloseSession("Server connection disconnected, session duration %s/s", inst1);
+                // printLogout("Server connection disconnected, session duration %s/s", inst1);
             } finally {
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             }
@@ -138,9 +125,10 @@ public class ServerLoginCommand extends BaseServerCommand {
             String msg = String.format("SSH connection error: %s", e.getMessage());
             log.error(msg);
             sshShellHelper.print(msg, PromptColor.RED);
+        } finally {
+            serverCommandAudit.asyncRecordCommand(sessionId, instanceId);
+            JSchSessionContainer.closeSession(sessionId, instanceId);
         }
-        serverCommandAudit.asyncRecordCommand(sessionId, instanceId);
-        JSchSessionContainer.closeSession(sessionId, instanceId);
     }
 
     private void doResize(Size size, Terminal terminal, String sessionId, String instanceId) {
@@ -150,34 +138,14 @@ public class ServerLoginCommand extends BaseServerCommand {
         }
     }
 
-    private Terminal getTerminal() {
-        SshContext sshContext = SshShellCommandFactory.SSH_THREAD_CONTEXT.get();
-        if (sshContext == null) {
-            throw new IllegalStateException("Unable to find ssh context");
-        } else {
-            return sshContext.getTerminal();
-        }
-    }
-
-    private SshContext getSshContext() {
-        SshContext sshContext = SshShellCommandFactory.SSH_THREAD_CONTEXT.get();
-        if (sshContext == null) {
-            throw new IllegalStateException("Unable to find ssh context");
-        } else {
-            return sshContext;
-        }
-    }
-
     /**
      * 打印会话关闭信息
      *
      * @param logout
      * @param instant
      */
-    private void printWithCloseSession(String logout, Instant instant) {
-        sshShellHelper.print(
-                String.format(logout, Duration.between(instant, Instant.now()).getSeconds()),
-                PromptColor.RED);
+    private void printLogout(String logout, Instant instant) {
+        sshShellHelper.print(String.format(logout, Duration.between(instant, Instant.now()).getSeconds()), PromptColor.RED);
     }
 
     private boolean isClosed(String sessionId, String instanceId) {
@@ -196,16 +164,5 @@ public class ServerLoginCommand extends BaseServerCommand {
         }
         jSchSession.getCommander().print((char) ch);
     }
-
-//    private void printWithSession(String sessionId, String instanceId, String cmd) throws Exception {
-//        if (StringUtils.isEmpty(cmd)) {
-//            return;
-//        }
-//        JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
-//        if (jSchSession == null) {
-//            throw new Exception();
-//        }
-//        jSchSession.getCommander().print(cmd);
-//    }
 
 }

@@ -16,6 +16,7 @@
 
 package com.baiyi.opscloud.sshserver;
 
+import com.baiyi.opscloud.sshcore.util.ChannelShellUtil;
 import com.baiyi.opscloud.sshserver.auth.SshAuthentication;
 import com.baiyi.opscloud.sshserver.auth.SshShellSecurityAuthenticationProvider;
 import com.baiyi.opscloud.sshserver.listeners.SshShellListenerService;
@@ -86,11 +87,12 @@ public class SshShellRunnable
     public void run() {
         log.debug("{}: running...", session.toString());
         TerminalBuilder terminalBuilder = TerminalBuilder.builder()
-                .jna(true)
                 .system(false)
+                .dumb(true)
                 .encoding(StandardCharsets.UTF_8)
                 .streams(is, os);
         boolean sizeAvailable = false;
+        sshEnv.getEnv().put("LANG", ChannelShellUtil.DEF_UNICODE);
         if (sshEnv.getEnv().containsKey(SSH_ENV_COLUMNS) && sshEnv.getEnv().containsKey(SSH_ENV_LINES)) {
             try {
                 terminalBuilder.size(new Size(
