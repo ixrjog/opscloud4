@@ -70,7 +70,6 @@ public class NewKubernetesDeploymentDriver {
     public static Deployment create(KubernetesConfig.Kubernetes kubernetes, String namespace, Deployment deployment) {
         // 删除资源版本
         deployment.getMetadata().setResourceVersion(null);
-
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.apps()
                     .deployments()
@@ -96,6 +95,15 @@ public class NewKubernetesDeploymentDriver {
         }
     }
 
+    /**
+     * 扩容
+     *
+     * @param kubernetes
+     * @param namespace
+     * @param name
+     * @param replicas
+     * @throws KubernetesDeploymentException
+     */
     public static void scale(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, Integer replicas) throws KubernetesDeploymentException {
         Deployment deployment = get(kubernetes, namespace, name);
         final Integer nowReplicas = Optional.ofNullable(deployment)
@@ -104,15 +112,54 @@ public class NewKubernetesDeploymentDriver {
                 .orElseThrow(() -> new KubernetesDeploymentException("Deployment扩容失败: 读取副本数量错误！"));
         // 更新副本数
         if (nowReplicas >= replicas) {
-            throw new KubernetesDeploymentException("只能扩容不能缩容 nowReplicas={}, newReplicas={} ！", nowReplicas, replicas);
+            throw new KubernetesDeploymentException("只能扩容 nowReplicas={}, newReplicas={} ！", nowReplicas, replicas);
         }
-        MyKubernetesClientBuilder.build(kubernetes)
-                .apps()
-                .deployments()
-                .inNamespace(namespace)
-                .withName(name)
-                .scale(replicas);
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
+            kc.apps()
+                    .deployments()
+                    .inNamespace(namespace)
+                    .withName(name)
+                    .scale(replicas);
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
     }
+
+    /**
+     * 缩容
+     *
+     * @param kubernetes
+     * @param namespace
+     * @param name
+     * @param replicas
+     * @throws KubernetesDeploymentException
+     */
+    public static void reduce(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, Integer replicas) throws KubernetesDeploymentException {
+        Deployment deployment = get(kubernetes, namespace, name);
+        final Integer nowReplicas = Optional.ofNullable(deployment)
+                .map(Deployment::getSpec)
+                .map(DeploymentSpec::getReplicas)
+                .orElseThrow(() -> new KubernetesDeploymentException("Deployment缩容失败: 读取副本数量错误！"));
+        // 更新副本数
+        if (replicas < 1) {
+            throw new KubernetesDeploymentException("指定副本数不能少于1 replicas={} ！", replicas);
+        }
+        if (replicas >= nowReplicas) {
+            throw new KubernetesDeploymentException("只能缩容 nowReplicas={}, newReplicas={} ！", nowReplicas, replicas);
+        }
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
+            kc.apps()
+                    .deployments()
+                    .inNamespace(namespace)
+                    .withName(name)
+                    .scale(replicas);
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
+    }
+
 
     public static Deployment update(KubernetesConfig.Kubernetes kubernetes, Deployment deployment) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {

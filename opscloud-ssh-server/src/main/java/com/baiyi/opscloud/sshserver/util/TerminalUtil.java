@@ -23,6 +23,7 @@ public class TerminalUtil {
     /**
      * 行模式支持 Ctrl+C
      * https://ftp.gnu.org/old-gnu/Manuals/glibc-2.2.3/html_node/libc_355.html
+     *
      * @param terminal
      */
     public static void enterRawMode(Terminal terminal) {
@@ -59,7 +60,6 @@ public class TerminalUtil {
     private static int getFlag(Attributes attributes, Attributes.LocalFlag flag) {
         return attributes.getLocalFlag(flag) ? 1 : 0;
     }
-
 
     public static void resize(String sessionId, String instanceId, Size size) {
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
