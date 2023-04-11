@@ -33,15 +33,25 @@ public class TerminalUtil {
         // see also https://en.wikibooks.org/wiki/Serial_Programming/termios#Basic_Configuration_of_a_Serial_Interface
         // no line processing
         // canonical mode off, echo off, echo newline off, extended input processing off / 规范模式关闭，回显关闭，回显换行关闭，扩展输入处理关闭
-        newAttr.setLocalFlags(EnumSet.of(Attributes.LocalFlag.ICANON, Attributes.LocalFlag.ECHO, Attributes.LocalFlag.IEXTEN), false);
+        newAttr.setLocalFlags(EnumSet.of(
+                // 行模式，屏蔽则变成自定义模式
+                Attributes.LocalFlag.ICANON,
+                // 回显，如果屏蔽则不显示输入的字符，像输入密码一样
+                Attributes.LocalFlag.ECHO, Attributes.LocalFlag.IEXTEN), false);
         // turn off input processing / 关闭输入处理
-        newAttr.setInputFlags(EnumSet.of(Attributes.InputFlag.IXON, Attributes.InputFlag.ICRNL, Attributes.InputFlag.INLCR), false);
+        newAttr.setInputFlags(EnumSet.of(
+                        Attributes.InputFlag.IXON,
+                        // 按下回车换行，屏蔽则不换行打印一个^M
+                        Attributes.InputFlag.ICRNL,
+                        Attributes.InputFlag.INLCR),
+                false);
 
-        ///////
-        // newAttr.setLocalFlags(EnumSet.of(Attributes.LocalFlag.ISIG), true);
+        // 使终端产生的信号(ctrl+c/ctrl+z等)起作用，屏蔽则忽略信号
+        newAttr.setLocalFlags(EnumSet.of(Attributes.LocalFlag.ISIG), true);
 
         // one input byte is enough to return from read, inter-character timer off
         // VMIN 1 / VTIME 0 / VINTR 0
+        // http://unixwiz.net/techtips/termios-vmin-vtime.html
         newAttr.setControlChar(Attributes.ControlChar.VMIN, 1);
         newAttr.setControlChar(Attributes.ControlChar.VTIME, 0);
         newAttr.setControlChar(Attributes.ControlChar.VINTR, 0);

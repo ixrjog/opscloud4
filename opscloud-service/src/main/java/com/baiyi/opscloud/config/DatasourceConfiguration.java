@@ -18,10 +18,7 @@ import javax.sql.DataSource;
  * @author baiyi
  */
 @Configuration
-@MapperScan(
-        basePackages = {"com.baiyi.opscloud.mapper"},
-        sqlSessionTemplateRef = "sqlSessionTemplate"
-)
+@MapperScan(basePackages = {"com.baiyi.opscloud.mapper"},sqlSessionTemplateRef = "sqlSessionTemplate")
 public class DatasourceConfiguration {
 
     @Bean
@@ -52,7 +49,7 @@ public class DatasourceConfiguration {
     @ConfigurationProperties("spring.datasource")
     public DataSource dataSource() {
         return DruidDataSourceBuilder.create()
-                        .build();
+                .build();
     }
 
 }

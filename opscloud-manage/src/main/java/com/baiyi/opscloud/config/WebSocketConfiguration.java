@@ -40,7 +40,7 @@ public class WebSocketConfiguration implements ServletContextInitializer {
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         servletContext.addListener(WebAppRootListener.class);
-        /**
+        /*
          * If the application does not define a MessageHandler.Partial for incoming text messages, any incoming text
          * messages must be buffered so the entire message can be delivered in a single call to the registered MessageHandler.Whole
          * for text messages. The default buffer size for text messages is 8192 bytes. This may be changed for a web application

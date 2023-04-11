@@ -32,7 +32,7 @@ public class InitialDataSourceConfiguration implements ApplicationContextAware {
             log.info("Start verification MySQL connection succeeded");
         } catch (Exception e) {
             log.error("Start verification MySQL unable to connect: {}", e.getMessage());
-            /**
+            /*
              * 停止项目启动
              */
             configurableApplicationContext.close();

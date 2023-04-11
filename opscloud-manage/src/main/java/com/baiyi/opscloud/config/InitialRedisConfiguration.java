@@ -25,18 +25,13 @@ public class InitialRedisConfiguration implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-//        boolean flag = true;
-//        if (flag) {
-//            return;
-//        }
-
         try {
             RedisTemplate<String, Object> redisTemplate = applicationContext.getBean("redisTemplate", RedisTemplate.class);
             redisTemplate.hasKey("initCheck");
             log.info("Start verification Redis connection succeeded");
         } catch (Exception e) {
             log.error("Start verification Redis unable to connect: {}", e.getMessage());
-            /**
+            /*
              * 停止项目启动
              */
             configurableApplicationContext.close();

@@ -100,6 +100,7 @@ public class ServerLoginCommand extends BaseServerCommand {
             simpleTerminalSessionFacade.recordTerminalSessionInstance(terminalSessionInstance);
             RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, out);
             TerminalUtil.enterRawMode(terminal);
+
             // 无延迟
             out.setNoDelay(true);
             // 计时
@@ -162,7 +163,8 @@ public class ServerLoginCommand extends BaseServerCommand {
         if (jSchSession == null) {
             throw new Exception();
         }
-        jSchSession.getCommander().print((char) ch);
+        char in = (char) ch;
+        jSchSession.getCommander().print(in);
     }
 
 }
