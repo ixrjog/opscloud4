@@ -15,6 +15,6 @@ public @interface ArkIntercept {
 
     boolean bigFlood() default true;
 
-    String doomsday() default "2023-04-22 12:30:55";
+    String doomsday() default "2023-05-10 12:30:55";
 
 }

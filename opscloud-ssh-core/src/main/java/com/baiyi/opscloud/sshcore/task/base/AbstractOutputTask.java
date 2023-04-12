@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -44,8 +45,8 @@ public abstract class AbstractOutputTask implements IOutputTask {
                 auditing(buff, 0, read);
                 NewTimeUtil.millisecondsSleep(10L);
             }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
+        } catch (IOException ignored) {
+            // Exit
         } finally {
             log.debug("Watch server output task end: sessionId={}, instanceId={}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
             SessionOutputUtil.removeOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId());

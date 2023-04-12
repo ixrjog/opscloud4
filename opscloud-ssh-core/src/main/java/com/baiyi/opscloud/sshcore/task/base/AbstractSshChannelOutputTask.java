@@ -10,6 +10,7 @@ import org.apache.commons.io.input.ClosedInputStream;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -54,8 +55,7 @@ public abstract class AbstractSshChannelOutputTask implements IOutputTask {
                     auditing(buff, 0, read);
                 }
             }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
+        } catch (IOException ignored) {
         } finally {
             log.debug("Ssh channel output task end: sessionId={}, instanceId={}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
             SessionOutputUtil.removeOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId());

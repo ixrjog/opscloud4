@@ -42,7 +42,7 @@ public class SessionOutput extends HostSystem {
 
     String sessionId;
     StringBuilder output = new StringBuilder();
-    ByteArrayOutputStream outputStream ;
+    ByteArrayOutputStream outputStream;
 
     public SessionOutput() {
     }
