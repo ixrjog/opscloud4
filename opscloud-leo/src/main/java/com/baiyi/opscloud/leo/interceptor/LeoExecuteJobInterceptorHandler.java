@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.leo.interceptor;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
+import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
 import com.baiyi.opscloud.common.exception.auth.AuthorizationException;
 import com.baiyi.opscloud.common.util.SessionUtil;
@@ -125,12 +126,12 @@ public class LeoExecuteJobInterceptorHandler {
         }
         Env env = envService.getByEnvType(leoJob.getEnvType());
         if (ENV_PROD.equalsIgnoreCase(env.getEnvName())) {
-            if (!"ADMIN".equalsIgnoreCase(userPermission.getPermissionRole())) {
+            if (!Global.ADMIN.equalsIgnoreCase(userPermission.getPermissionRole())) {
                 throw new AuthorizationException(42100, "非应用管理员禁止操作生产环境！");
             }
         }
         if (ENV_PRE.equalsIgnoreCase(env.getEnvName())) {
-            if (!"ADMIN".equalsIgnoreCase(userPermission.getPermissionRole())) {
+            if (!Global.ADMIN.equalsIgnoreCase(userPermission.getPermissionRole())) {
                 throw new AuthorizationException(42100, "非应用管理员禁止操作预发环境！");
             }
         }

@@ -28,7 +28,7 @@ public class AmazonIdentityManagementMFADriver {
      * @param user
      * @return
      */
-    @Retryable(value = RetryException.class, maxAttempts = 2, backoff = @Backoff(delay = 5000))
+    @Retryable(retryFor = RetryException.class, maxAttempts = 2, backoff = @Backoff(delay = 5000))
     public VirtualMFADevice createVirtualMFADevice(AwsConfig.Aws config, User user) throws RetryException {
         try {
             CreateVirtualMFADeviceRequest request = new CreateVirtualMFADeviceRequest();

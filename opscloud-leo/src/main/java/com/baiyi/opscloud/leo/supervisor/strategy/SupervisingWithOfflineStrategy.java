@@ -31,7 +31,7 @@ import static com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO.MAX_RESTART;
 public class SupervisingWithOfflineStrategy extends SupervisingStrategy {
 
     @Override
-    @Retryable(value = LeoDeployException.class, maxAttempts = 2, backoff = @Backoff(delay = 1000, multiplier = 1.5))
+    @Retryable(retryFor = LeoDeployException.class, maxAttempts = 2, backoff = @Backoff(delay = 1000, multiplier = 1.5))
     protected LeoDeployingVO.Deploying getDeploying(LeoDeploy leoDeploy,
                                                     LeoDeployModel.DeployConfig deployConfig,
                                                     KubernetesConfig.Kubernetes kubernetes,

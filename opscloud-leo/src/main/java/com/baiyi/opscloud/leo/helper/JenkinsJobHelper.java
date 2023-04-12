@@ -23,7 +23,6 @@ import java.net.URL;
 @Component
 public class JenkinsJobHelper {
 
-
     /**
      * 获取Job内容
      *

@@ -40,7 +40,7 @@ public class JenkinsJobDriver {
      * @throws URISyntaxException
      * @throws IOException
      */
-    @Retryable(value = IOException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000))
+    @Retryable(retryFor = IOException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000))
     public QueueReference buildJobWithParams(JenkinsConfig.Jenkins jenkins, String jobName, Map<String, String> params) throws URISyntaxException, IOException {
         boolean crumbFlag = Optional.of(jenkins)
                 .map(JenkinsConfig.Jenkins::getSecurity)
@@ -65,7 +65,7 @@ public class JenkinsJobDriver {
      * @throws URISyntaxException
      * @throws IOException
      */
-    @Retryable(value = IOException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000))
+    @Retryable(retryFor = IOException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000))
     public void createJob(JenkinsConfig.Jenkins jenkins, String jobName, String jobXml) throws URISyntaxException, IOException {
         boolean crumbFlag = Optional.of(jenkins)
                 .map(JenkinsConfig.Jenkins::getSecurity)
@@ -160,7 +160,7 @@ public class JenkinsJobDriver {
                 // 任务日志会话关闭！
                 try {
                     session.close();
-                } catch (IOException e) {
+                } catch (IOException ignored) {
                 }
             }
 

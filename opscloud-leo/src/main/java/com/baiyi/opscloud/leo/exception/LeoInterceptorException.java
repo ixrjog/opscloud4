@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.slf4j.helpers.MessageFormatter;
 
+import java.io.Serial;
+
 /**
  * @Author baiyi
  * @Date 2022/12/29 19:34
@@ -16,6 +18,7 @@ import org.slf4j.helpers.MessageFormatter;
 @NoArgsConstructor
 public class LeoInterceptorException extends BaseException {
 
+    @Serial
     private static final long serialVersionUID = -3978288350964809573L;
 
     private Integer code;

@@ -9,10 +9,10 @@ import com.baiyi.opscloud.leo.domain.model.LeoRuleModel;
  */
 public interface IRuleExpression {
 
-    public String getType();
+    String getType();
 
-    public boolean parse(LeoRuleModel.Expression expression);
+    boolean parse(LeoRuleModel.Expression expression);
 
-    public String toDisplayName(LeoRuleModel.Expression expression);
+    String toDisplayName(LeoRuleModel.Expression expression);
 
 }

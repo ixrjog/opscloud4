@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class GitLabProjectDelegate {
 
-    @Retryable(value = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
+    @Retryable(retryFor = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
     public void addProjectMember(GitLabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
         try {
             GitLabProjectDriver.addMember(gitlab, projectId, userId, accessLevel);
@@ -29,7 +29,7 @@ public class GitLabProjectDelegate {
             if (e.getMessage().contains("is not included in the list")) {
                 throw new TicketProcessException("Gitlab新增项目成员错误: 不支持授权 {} 角色", accessLevel.name());
             }
-            throw new TicketProcessException("Gitlab新增项目成员错误: {}", e.getMessage());
+            throw new TicketProcessException("GitLab新增项目成员错误: {}", e.getMessage());
         }
     }
 
@@ -41,7 +41,7 @@ public class GitLabProjectDelegate {
      * @return
      * @throws TicketProcessException
      */
-    @Retryable(value = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
+    @Retryable(retryFor = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
     public List<Member> getProjectMembers(GitLabConfig.Gitlab gitlab, Long projectId) throws TicketProcessException {
         try {
             return GitLabProjectDriver.getMembersWithProjectId(gitlab, projectId);
@@ -50,12 +50,12 @@ public class GitLabProjectDelegate {
         }
     }
 
-    @Retryable(value = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
+    @Retryable(retryFor = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
     public void updateProjectMember(GitLabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
         try {
             GitLabProjectDriver.updateMember(gitlab, projectId, userId, accessLevel);
         } catch (GitLabApiException e) {
-            throw new TicketProcessException("Gitlab更新项目成员错误: {}", e.getMessage());
+            throw new TicketProcessException("GitLab更新项目成员错误: {}", e.getMessage());
         }
     }
 

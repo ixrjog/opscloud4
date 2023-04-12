@@ -47,7 +47,7 @@ public class SimpleTerminalSessionFacadeImpl implements SimpleTerminalSessionFac
     }
 
     @Override
-    @Retryable(value = RetryException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
+    @Retryable(retryFor = RetryException.class, maxAttempts = 4, backoff = @Backoff(delay = 2000, multiplier = 1.5))
     public void closeTerminalSessionInstance(TerminalSession terminalSession, String instanceId) throws RetryException {
         TerminalSessionInstance terminalSessionInstance = terminalSessionInstanceService.getByUniqueKey(terminalSession.getSessionId(), instanceId);
         if (terminalSessionInstance == null) {

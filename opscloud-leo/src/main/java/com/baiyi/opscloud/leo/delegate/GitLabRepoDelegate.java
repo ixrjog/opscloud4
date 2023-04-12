@@ -91,7 +91,7 @@ public class GitLabRepoDelegate {
         } catch (GitLabApiException e) {
             log.error(e.getMessage());
         }
-        throw new LeoBuildException("查询构建分支Commit错误: gitlab={}, projectId={}, branchOrTag={}", gitlab.getUrl(), projectId, branchNameOrTagName);
+        throw new LeoBuildException("查询构建分支Commit错误: gitLab={}, projectId={}, branchOrTag={}", gitlab.getUrl(), projectId, branchNameOrTagName);
     }
 
 }

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class JenkinsPipeline {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Node implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -498230742918409089L;
 
 //        public static final Node QUEUE = Node.builder().build();
@@ -75,6 +77,7 @@ public class JenkinsPipeline {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Step implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -8565646505496192779L;
 
         private String displayDescription;
@@ -87,6 +90,5 @@ public class JenkinsPipeline {
         private String log;
 
     }
-
 
 }

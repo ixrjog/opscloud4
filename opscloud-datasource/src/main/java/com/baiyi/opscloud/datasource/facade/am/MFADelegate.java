@@ -31,7 +31,7 @@ public class MFADelegate {
 
     private final ThreadLocal<Boolean> firstExecution = new ThreadLocal<>();
 
-    @Retryable(value = RetryException.class, maxAttempts = 5, backoff = @Backoff(delay = 3000))
+    @Retryable(retryFor = RetryException.class, maxAttempts = 5, backoff = @Backoff(delay = 3000))
     public void enableMFADevice(AwsConfig.Aws config, User user, VirtualMFADevice vMFADevice) throws RetryException {
         setFlag();
         try {

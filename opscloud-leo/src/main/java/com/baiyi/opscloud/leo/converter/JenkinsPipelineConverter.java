@@ -29,8 +29,9 @@ public class JenkinsPipelineConverter {
     }
 
     public static List<LeoBuildVO.Node> toLeoBuildNodes(List<JenkinsPipeline.Node> nodes) {
-        if (CollectionUtils.isEmpty(nodes))
+        if (CollectionUtils.isEmpty(nodes)) {
             return Collections.emptyList();
+        }
         List<LeoBuildVO.Node> result = Lists.newArrayList();
         nodes.forEach(pn -> {
             LeoBuildVO.Node node = LeoBuildVO.Node.builder()
@@ -56,18 +57,13 @@ public class JenkinsPipelineConverter {
         if (StringUtils.isEmpty(node.getState())) {
             return "not_built";
         }
-        switch (node.getState()) {
-            case States.FINISHED:
-                return node.getResult();
-            case States.RUNNING:
-                return States.RUNNING;
-            case States.SKIPPED:
-                return States.SKIPPED.toLowerCase();
-            case States.PAUSED:
-                return States.PAUSED;
-            default:
-                return "not_built";
-        }
+        return switch (node.getState()) {
+            case States.FINISHED -> node.getResult();
+            case States.RUNNING -> States.RUNNING;
+            case States.SKIPPED -> States.SKIPPED.toLowerCase();
+            case States.PAUSED -> States.PAUSED;
+            default -> "not_built";
+        };
     }
 
 }

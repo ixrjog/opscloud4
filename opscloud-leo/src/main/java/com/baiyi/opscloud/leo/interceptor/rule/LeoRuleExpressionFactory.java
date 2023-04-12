@@ -16,14 +16,14 @@ public class LeoRuleExpressionFactory {
     private LeoRuleExpressionFactory() {
     }
 
-    private static final Map<String, IRuleExpression> context = new ConcurrentHashMap<>();
+    private static final Map<String, IRuleExpression> CONTEXT = new ConcurrentHashMap<>();
 
     public static IRuleExpression getExpressionByType(String type) {
-        return context.get(type);
+        return CONTEXT.get(type);
     }
 
     public static void register(IRuleExpression bean) {
-        context.put(bean.getType(), bean);
+        CONTEXT.put(bean.getType(), bean);
         log.debug("LeoRuleExpressionFactory Registered: beanName={}, type={}", bean.getClass().getSimpleName(), bean.getType());
     }
 

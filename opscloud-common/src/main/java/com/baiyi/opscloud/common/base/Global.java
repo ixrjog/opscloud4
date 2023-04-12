@@ -21,4 +21,7 @@ public class Global {
 
     public static final String ENV_PRE = "pre";
 
+
+    public static final String ADMIN = "ADMIN";
+
 }
