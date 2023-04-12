@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.gitlab.convert;
+package com.baiyi.opscloud.datasource.gitlab.converter;
 
 import com.baiyi.opscloud.common.util.SSHUtil;
 import com.baiyi.opscloud.datasource.gitlab.entity.GitLabSshKey;
@@ -19,7 +19,7 @@ import org.gitlab4j.api.models.User;
  * @Version 1.0
  */
 @Slf4j
-public class GitLabAssetConvert {
+public class GitLabAssetConverter {
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, User entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()

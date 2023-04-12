@@ -8,7 +8,7 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.gitlab.convert.GitLabAssetConvert;
+import com.baiyi.opscloud.datasource.gitlab.converter.GitLabAssetConverter;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabGroupDriver;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -98,7 +98,7 @@ public class GitLabGroupProvider extends AbstractAssetRelationProvider<Group, Pr
 
     @Override
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Group entity) {
-        return GitLabAssetConvert.toAssetContainer(dsInstance, entity);
+        return GitLabAssetConverter.toAssetContainer(dsInstance, entity);
     }
 
     @Override

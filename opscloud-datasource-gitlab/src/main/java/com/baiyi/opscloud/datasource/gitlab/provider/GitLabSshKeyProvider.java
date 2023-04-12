@@ -9,7 +9,7 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.gitlab.convert.GitLabAssetConvert;
+import com.baiyi.opscloud.datasource.gitlab.converter.GitLabAssetConverter;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabSshKeyDriver;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabUserDriver;
 import com.baiyi.opscloud.datasource.gitlab.entity.GitLabSshKey;
@@ -133,7 +133,7 @@ public class GitLabSshKeyProvider extends AbstractAssetRelationProvider<SshKey, 
 
     @Override
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, SshKey entity) {
-        return GitLabAssetConvert.toAssetContainer(dsInstance, entity);
+        return GitLabAssetConverter.toAssetContainer(dsInstance, entity);
     }
 
     @Override
