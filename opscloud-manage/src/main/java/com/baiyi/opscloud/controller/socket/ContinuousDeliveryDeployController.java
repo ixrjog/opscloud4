@@ -1,10 +1,10 @@
-package com.baiyi.opscloud.controller.ws;
+package com.baiyi.opscloud.controller.socket;
 
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
 import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
 import com.baiyi.opscloud.common.leo.session.LeoDeployQuerySessionMap;
 import com.baiyi.opscloud.common.util.SessionUtil;
-import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
+import com.baiyi.opscloud.controller.socket.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.param.leo.request.LoginLeoRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.SimpleLeoRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
@@ -21,7 +21,7 @@ import jakarta.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.UUID;
 
-import static com.baiyi.opscloud.controller.ws.ServerTerminalController.WEBSOCKET_TIMEOUT;
+import static com.baiyi.opscloud.controller.socket.ServerTerminalController.WEBSOCKET_TIMEOUT;
 
 /**
  * @Author baiyi

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.controller.ws.base;
+package com.baiyi.opscloud.controller.socket.base;
 
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
 import com.baiyi.opscloud.common.util.SessionUtil;

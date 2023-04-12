@@ -9,6 +9,9 @@ import lombok.Getter;
  */
 public enum ApplicationResEnum {
 
+    /**
+     * 资源类型
+     */
     SERVER_GROUP("SERVER_GROUP"),
     GITLAB_PROJECT("GITLAB_PROJECT"),
     GITLAB_GROUP("GITLAB_GROUP");

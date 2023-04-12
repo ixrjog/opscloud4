@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.baiyi.opscloud.common.base.Global.ENV_PRE;
 import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
 
 /**
@@ -87,7 +88,7 @@ public class LeoExecuteJobInterceptorHandler {
         LeoJob leoJob = leoJobService.getById(jobId);
         String username = SessionUtil.getUsername();
 
-        /**
+        /*
          * 用户是平台管理员则通过
          */
         if (isAdmin(username)) {
@@ -126,6 +127,11 @@ public class LeoExecuteJobInterceptorHandler {
         if (ENV_PROD.equalsIgnoreCase(env.getEnvName())) {
             if (!"ADMIN".equalsIgnoreCase(userPermission.getPermissionRole())) {
                 throw new AuthorizationException(42100, "非应用管理员禁止操作生产环境！");
+            }
+        }
+        if (ENV_PRE.equalsIgnoreCase(env.getEnvName())) {
+            if (!"ADMIN".equalsIgnoreCase(userPermission.getPermissionRole())) {
+                throw new AuthorizationException(42100, "非应用管理员禁止操作预发环境！");
             }
         }
     }

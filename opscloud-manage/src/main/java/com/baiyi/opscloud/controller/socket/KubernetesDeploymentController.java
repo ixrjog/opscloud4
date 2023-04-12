@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.controller.ws;
+package com.baiyi.opscloud.controller.socket;
 
 import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.common.ws.KubernetesDeploymentQuerySessionMap;
-import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
+import com.baiyi.opscloud.controller.socket.base.SimpleAuthentication;
 import com.baiyi.opscloud.loop.KubernetesDeploymentEventLoop;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

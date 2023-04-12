@@ -1,17 +1,17 @@
-package com.baiyi.opscloud.controller.ws;
+package com.baiyi.opscloud.controller.socket;
 
 import com.baiyi.opscloud.common.model.HostInfo;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
-import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
+import com.baiyi.opscloud.controller.socket.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalMessageHandlerFactory;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionBuilder;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.enums.SessionTypeEnum;
 import com.baiyi.opscloud.sshcore.message.base.SimpleLoginMessage;
 import com.baiyi.opscloud.sshcore.task.terminal.SentOutputTask;
+import com.baiyi.opscloud.terminal.factory.ServerTerminalMessageHandlerFactory;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -26,40 +26,40 @@ import java.util.UUID;
 
 /**
  * @Author baiyi
- * @Date 2021/7/14 5:06 下午
+ * @Date 2021/5/28 9:15 上午
  * @Version 1.0
  */
 @Slf4j
-@ServerEndpoint(value = "/api/ws/kubernetes/terminal")
+@ServerEndpoint(value = "/api/ws/terminal")
 @Component
-public class KubernetesTerminalController extends SimpleAuthentication {
+public class ServerTerminalController extends SimpleAuthentication {
 
     /**
-     * 当前会话 UUID
+     * 当前会话UUID
      */
     private final String sessionId = UUID.randomUUID().toString();
 
     /**
-     * 超时时间1H
+     * 超时时间5分钟
      */
-    public static final Long WEBSOCKET_TIMEOUT = NewTimeUtil.MINUTE_TIME * 15;
+    public static final Long WEBSOCKET_TIMEOUT = NewTimeUtil.MINUTE_TIME * 5;
 
     private static final HostInfo SERVER_INFO = HostInfo.build();
 
-    private TerminalSession terminalSession;
-
     private static TerminalSessionService terminalSessionService;
 
-    private static ThreadPoolTaskExecutor kubernetesTerminalExecutor;
+    private TerminalSession terminalSession;
+
+    private static ThreadPoolTaskExecutor serverTerminalExecutor;
 
     @Autowired
     public void setTerminalSessionService(TerminalSessionService terminalSessionService) {
-        KubernetesTerminalController.terminalSessionService = terminalSessionService;
+        ServerTerminalController.terminalSessionService = terminalSessionService;
     }
 
     @Resource
-    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor kubernetesTerminalExecutor) {
-        KubernetesTerminalController.kubernetesTerminalExecutor = kubernetesTerminalExecutor;
+    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor serverTerminalExecutor) {
+        ServerTerminalController.serverTerminalExecutor = serverTerminalExecutor;
     }
 
     /**
@@ -68,14 +68,15 @@ public class KubernetesTerminalController extends SimpleAuthentication {
     @OnOpen
     public void onOpen(Session session) {
         try {
-            log.info("Kubernetes terminal session try to connect: instanceIP={}, sessionId={}", SERVER_INFO.getHostAddress(), sessionId);
-            TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, SERVER_INFO, SessionTypeEnum.KUBERNETES_TERMINAL);
-            this.terminalSession = terminalSession;
+            log.info("Server terminal session try to connect: instanceIP={}, sessionId={}", SERVER_INFO.getHostAddress(), sessionId);
+            TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, SERVER_INFO, SessionTypeEnum.WEB_TERMINAL);
             terminalSessionService.add(terminalSession);
+            this.terminalSession = terminalSession;
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
-            kubernetesTerminalExecutor.execute(new SentOutputTask(sessionId, session));
+            // 线程启动
+            serverTerminalExecutor.execute(new SentOutputTask(sessionId, session));
         } catch (Exception e) {
-            log.error("Kubernetes terminal create connection error: {}", e.getMessage());
+            log.error("Server terminal create connection error: {}", e.getMessage());
         }
     }
 
@@ -84,7 +85,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
      */
     @OnClose
     public void onClose(Session session) {
-        KubernetesTerminalMessageHandlerFactory.getHandlerByState(MessageState.CLOSE.getState())
+        ServerTerminalMessageHandlerFactory.getHandlerByState(MessageState.CLOSE.getState())
                 .handle("", session, terminalSession);
     }
 
@@ -101,14 +102,15 @@ public class KubernetesTerminalController extends SimpleAuthentication {
         }
         String state = getState(message);
         if (StringUtils.isEmpty(this.terminalSession.getUsername())) {
-            // 鉴权并更新会话信息
             if (MessageState.LOGIN.getState().equals(state)) {
+                // 鉴权并更新会话信息
                 updateSessionUsername(hasLogin(new GsonBuilder().create().fromJson(message, SimpleLoginMessage.class)));
             }
         } else {
             SessionUtil.setUsername(this.terminalSession.getUsername());
         }
-        KubernetesTerminalMessageHandlerFactory.getHandlerByState(state).handle(message, session, terminalSession);
+        ServerTerminalMessageHandlerFactory.getHandlerByState(state)
+                .handle(message, session, terminalSession);
     }
 
     private void updateSessionUsername(String username) {

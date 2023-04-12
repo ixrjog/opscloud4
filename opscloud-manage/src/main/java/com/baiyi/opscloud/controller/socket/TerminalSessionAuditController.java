@@ -1,9 +1,8 @@
-package com.baiyi.opscloud.controller.ws;
+package com.baiyi.opscloud.controller.socket;
 
-import com.baiyi.opscloud.common.util.NewTimeUtil;
-import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
-import com.baiyi.opscloud.datasource.ansible.play.ITaskPlayProcessor;
-import com.baiyi.opscloud.datasource.ansible.play.ServerTaskPlayFactory;
+import com.baiyi.opscloud.controller.socket.base.SimpleAuthentication;
+import com.baiyi.opscloud.terminal.audit.ITerminalAuditHandler;
+import com.baiyi.opscloud.terminal.audit.TerminalAuditHandlerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -13,25 +12,20 @@ import jakarta.websocket.server.ServerEndpoint;
 
 /**
  * @Author baiyi
- * @Date 2021/9/26 3:33 下午
+ * @Date 2021/7/23 2:39 下午
  * @Version 1.0
  */
 @Slf4j
-@ServerEndpoint(value = "/api/ws/server/task/play")
+@ServerEndpoint(value = "/api/ws/terminal/session/audit")
 @Component
-public class ServerTaskPlayController extends SimpleAuthentication {
-
-    /**
-     * 超时时间1H
-     */
-    public static final long WEBSOCKET_TIMEOUT = NewTimeUtil.HOUR_TIME;
+public class TerminalSessionAuditController extends SimpleAuthentication {
 
     /**
      * 连接建立成功调用的方法
      */
     @OnOpen
     public void onOpen(Session session) {
-        session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
+        session.setMaxIdleTimeout(ServerTerminalController.WEBSOCKET_TIMEOUT);
     }
 
     /**
@@ -39,7 +33,6 @@ public class ServerTaskPlayController extends SimpleAuthentication {
      */
     @OnClose
     public void onClose() {
-        // sessionSet.get().remove(session);
     }
 
     /**
@@ -48,15 +41,15 @@ public class ServerTaskPlayController extends SimpleAuthentication {
      *
      * @param message 客户端发送过来的消息
      */
-    @OnMessage(maxMessageSize = 1024)
+    @OnMessage(maxMessageSize = 10 * 1024)
     public void onMessage(String message, Session session) {
         if (!session.isOpen() || StringUtils.isEmpty(message)) {
             return;
         }
         String state = getState(message);
-        ITaskPlayProcessor iTaskPlayProcess = ServerTaskPlayFactory.getProcessByKey(state);
-        if (iTaskPlayProcess != null) {
-            iTaskPlayProcess.process(message, session);
+        ITerminalAuditHandler terminalAuditHandler = TerminalAuditHandlerFactory.getHandlerByKey(state);
+        if (terminalAuditHandler != null) {
+            terminalAuditHandler.handle(message, session);
         }
     }
 
@@ -71,4 +64,3 @@ public class ServerTaskPlayController extends SimpleAuthentication {
     }
 
 }
-

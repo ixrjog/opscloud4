@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.controller.ws;
+package com.baiyi.opscloud.controller.socket;
 
 import com.baiyi.opscloud.guacamole.tunnel.BaseGuacamoleTunnel;
 import jakarta.websocket.server.ServerEndpoint;

@@ -3,15 +3,18 @@ package com.baiyi.opscloud.datasource.kubernetes.xray;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
 import com.baiyi.opscloud.datasource.kubernetes.driver.NewKubernetesDeploymentDriver;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
+import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
-import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import jakarta.annotation.Resource;
 import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,23 +32,34 @@ public class KubernetesProdXRayTest extends BaseKubernetesTest {
     private ApplicationService applicationService;
 
     @Resource
-    private BusinessAssetRelationService relationService;
+    private ApplicationResourceService applicationResourceService;
 
-    /*
-     * nibss, pay-route, ng-channel
-     */
+    @Resource
+    private DsInstanceAssetService dsInstanceAssetService;
 
-    @Test
     void bTest() {
-        List<String> apps = Lists.newArrayList(
-                "mail"
-        );
-        for (String app : apps) {
-            Application application = applicationService.getByName(app);
+        List<Application> apps = applicationService.queryAll();
+        KubernetesConfig kubernetesConfig = getConfigById(BaseKubernetesTest.KubernetesClusterConfigs.EKS_PROD);
+        for (Application application : apps) {
+            //  Application application = applicationService.getByName(appName);
+            // 查询应用绑定的所有生产环境的Deployment
+            List<ApplicationResource> resources = applicationResourceService.queryByApplication(application.getId(), DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name());
+            String appName = application.getName();
 
-          //  relationService.
+            List<DatasourceInstanceAsset> assets = Lists.newArrayList();
+            for (ApplicationResource resource : resources) {
+                if (resource.getName().startsWith("prod:")) {
+                    DatasourceInstanceAsset asset = dsInstanceAssetService.getById(resource.getBusinessId());
+                    if (!asset.getName().endsWith("-canary")) {
+                        assets.add(asset);
+                    }
+                }
+            }
 
-            //  oneTest(app);
+            for (DatasourceInstanceAsset asset : assets) {
+                print("appName=" + appName + ", deploymentName=" + asset.getName());
+                oneTest(kubernetesConfig, appName, asset.getName(), "prod");
+            }
         }
     }
 
@@ -53,8 +67,7 @@ public class KubernetesProdXRayTest extends BaseKubernetesTest {
      * 单个Deployment(Canary) 启用ARMS
      */
 
-    private void oneTest(String appName, String deploymentName, String envName) {
-        KubernetesConfig kubernetesConfig = getConfigById(BaseKubernetesTest.KubernetesClusterConfigs.EKS_PROD);
+    private void oneTest(KubernetesConfig kubernetesConfig, String appName, String deploymentName, String envName) {
         /*
          * ARMS中应用的名称
          */
@@ -122,7 +135,7 @@ public class KubernetesProdXRayTest extends BaseKubernetesTest {
         /*
          * 更新 Deployment
          */
-        NewKubernetesDeploymentDriver.create(kubernetesConfig.getKubernetes(), NAMESPACE, deployment);
+        NewKubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), NAMESPACE, deployment);
         print("---------------------------------------------------------------------------");
         print("应用名称: " + appName);
         print("---------------------------------------------------------------------------");

@@ -19,4 +19,6 @@ public class Global {
 
     public static final String ENV_PROD = "prod";
 
+    public static final String ENV_PRE = "pre";
+
 }

@@ -1,7 +1,7 @@
-package com.baiyi.opscloud.leo.aspect;
+package com.baiyi.opscloud.leo.aop.aspect;
 
 import com.baiyi.opscloud.common.util.IdUtil;
-import com.baiyi.opscloud.leo.annotation.LeoBuildInterceptor;
+import com.baiyi.opscloud.leo.aop.annotation.LeoBuildInterceptor;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
 import com.baiyi.opscloud.leo.interceptor.LeoExecuteJobInterceptorHandler;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class LeoBuildInterceptorAspect {
 
     private final LeoExecuteJobInterceptorHandler executeJobInterceptorHandler;
 
-    @Pointcut(value = "@annotation(com.baiyi.opscloud.leo.annotation.LeoBuildInterceptor)")
+    @Pointcut(value = "@annotation(com.baiyi.opscloud.leo.aop.annotation.LeoBuildInterceptor)")
     public void annotationPoint() {
     }
 

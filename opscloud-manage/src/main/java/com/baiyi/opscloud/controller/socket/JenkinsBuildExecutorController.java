@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.controller.ws;
+package com.baiyi.opscloud.controller.socket;
 
 import com.baiyi.opscloud.datasource.jenkins.engine.JenkinsBuildExecutorHelper;
 import com.baiyi.opscloud.datasource.jenkins.message.SimpleMessage;
@@ -19,7 +19,7 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 import java.util.UUID;
 
-import static com.baiyi.opscloud.controller.ws.ServerTerminalController.WEBSOCKET_TIMEOUT;
+import static com.baiyi.opscloud.controller.socket.ServerTerminalController.WEBSOCKET_TIMEOUT;
 
 /**
  * @Author baiyi

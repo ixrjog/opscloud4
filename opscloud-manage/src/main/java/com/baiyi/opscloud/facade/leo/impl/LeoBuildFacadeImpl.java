@@ -16,7 +16,7 @@ import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
 import com.baiyi.opscloud.leo.action.build.LeoBuildHandler;
-import com.baiyi.opscloud.leo.annotation.LeoBuildInterceptor;
+import com.baiyi.opscloud.leo.aop.annotation.LeoBuildInterceptor;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.delegate.GitLabRepoDelegate;

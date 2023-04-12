@@ -1,9 +1,9 @@
-package com.baiyi.opscloud.leo.aspect;
+package com.baiyi.opscloud.leo.aop.aspect;
 
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
-import com.baiyi.opscloud.leo.annotation.LeoDeployInterceptor;
+import com.baiyi.opscloud.leo.aop.annotation.LeoDeployInterceptor;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
 import com.baiyi.opscloud.leo.interceptor.LeoExecuteJobInterceptorHandler;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class LeoDeployInterceptorAspect {
 
     private final LeoExecuteJobInterceptorHandler executeJobInterceptorHandler;
 
-    @Pointcut(value = "@annotation(com.baiyi.opscloud.leo.annotation.LeoDeployInterceptor)")
+    @Pointcut(value = "@annotation(com.baiyi.opscloud.leo.aop.annotation.LeoDeployInterceptor)")
     public void annotationPoint() {
     }
 
@@ -73,15 +73,14 @@ public class LeoDeployInterceptorAspect {
                 executeJobInterceptorHandler.tryLockWithDeploy(jobId);
             }
             if (executeJobInterceptorHandler.isAdmin(SessionUtil.getUsername())) {
-                // 管理员操作，跳过验证
+                log.debug("管理员操作，跳过验证");
             } else {
                 // 权限校验
                 executeJobInterceptorHandler.verifyAuthorization(jobId);
                 // deployType Expression 解析表达式并获取SpEL的值
                 Expression deployTypeExpression = expressionParser.parseExpression(leoDeployInterceptor.deployTypeSpEL());
                 Object deployTypeParam = deployTypeExpression.getValue(context);
-                if (deployTypeParam instanceof String) {
-                    String deployType = (String) deployTypeParam;
+                if (deployTypeParam instanceof String deployType) {
                     if (DeployTypeConstants.ROLLING.name().equalsIgnoreCase(deployType)) {
                         // 规则校验
                         executeJobInterceptorHandler.verifyRule(jobId);
