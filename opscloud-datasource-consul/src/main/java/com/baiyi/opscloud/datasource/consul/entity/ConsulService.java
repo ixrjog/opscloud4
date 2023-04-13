@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class ConsulService {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Service implements IToAsset, Serializable {
 
+        @Serial
         private static final long serialVersionUID = 6582576243069037013L;
 
         private String dc;

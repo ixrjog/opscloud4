@@ -14,12 +14,11 @@ import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.collect.Lists;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -59,7 +58,7 @@ public class ConsulServiceProvider extends BaseAssetProvider<ConsulService.Servi
                 List<ConsulService.Service> ss = consulServiceDriver.listServices(buildConfig(dsInstanceContext.getDsConfig()), dc)
                         .stream()
                         .peek(e -> e.setDc(dc))
-                        .collect(Collectors.toList());
+                        .toList();
 
                 services.addAll(ss);
             } catch (Exception e) {

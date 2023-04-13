@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class ConsulHealth {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Health extends IToString implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -8728643808503511223L;
 
         @JsonProperty("Checks")
@@ -44,6 +46,7 @@ public class ConsulHealth {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Check implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 5915894874497873338L;
 
         /**
@@ -103,6 +106,7 @@ public class ConsulHealth {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Node implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 4553843314261874365L;
 
         /**
@@ -145,6 +149,7 @@ public class ConsulHealth {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TaggedAddresses implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -5231833540389274188L;
 
         private String lan;
@@ -179,6 +184,7 @@ public class ConsulHealth {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Service implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -8138453725165674673L;
 
         @JsonProperty("Address")
