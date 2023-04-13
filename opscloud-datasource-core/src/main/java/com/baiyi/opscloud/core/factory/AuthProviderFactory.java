@@ -17,14 +17,14 @@ public class AuthProviderFactory {
     private AuthProviderFactory() {
     }
 
-    private static final Map<String, BaseAuthProvider> context = new ConcurrentHashMap<>();
+    private static final Map<String, BaseAuthProvider> CONTEXT = new ConcurrentHashMap<>();
 
     public static BaseAuthProvider getProvider(String instanceType) {
-        return context.get(instanceType);
+        return CONTEXT.get(instanceType);
     }
 
     public static void register(BaseAuthProvider bean) {
-        context.put(bean.getInstanceType(), bean);
+        CONTEXT.put(bean.getInstanceType(), bean);
         log.debug("AuthProviderFactory Registered: beanName={}, instanceType={}", bean.getClass().getSimpleName(), bean.getInstanceType());
     }
 

@@ -10,4 +10,5 @@ import com.baiyi.opscloud.domain.base.IInstanceType;
 public interface ISetDsInstanceConfig extends IInstanceType {
 
     void setConfig(int instanceId);
+
 }

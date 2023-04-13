@@ -70,7 +70,7 @@ public class DsAssetPacker implements IWrapperRelation<DsAssetVO.Asset> {
                 .stream().collect(Collectors.toMap(DatasourceInstanceAssetProperty::getName, DatasourceInstanceAssetProperty::getValue, (k1, k2) -> k1));
         asset.setProperties(properties);
         // 资产可转换为业务对象
-        IAssetConverter converter = AssetConverterFactory.getIAssetConvertByAssetType(asset.getAssetType());
+        IAssetConverter converter = AssetConverterFactory.getConverterByAssetType(asset.getAssetType());
         if (converter != null) {
             asset.setConvertBusinessTypes(converter.toBusinessTypes(asset));
         }

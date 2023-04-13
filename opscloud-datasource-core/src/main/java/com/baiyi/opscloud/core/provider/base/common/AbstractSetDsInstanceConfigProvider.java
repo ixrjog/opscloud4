@@ -45,4 +45,5 @@ public abstract class AbstractSetDsInstanceConfigProvider<T> extends SimpleDsIns
     public void afterPropertiesSet() {
         SetDsInstanceConfigFactory.register(this);
     }
+
 }

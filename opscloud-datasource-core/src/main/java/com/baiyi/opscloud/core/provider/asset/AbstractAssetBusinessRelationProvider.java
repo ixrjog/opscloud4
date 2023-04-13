@@ -65,7 +65,7 @@ public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAsset
 
     @Override
     public void scan(DsAssetVO.Asset asset) {
-        IAssetConverter iAssetConvert = AssetConverterFactory.getIAssetConvertByAssetType(getAssetType());
+        IAssetConverter iAssetConvert = AssetConverterFactory.getConverterByAssetType(getAssetType());
         if (iAssetConvert == null) {
             return;
         }
