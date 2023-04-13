@@ -35,7 +35,7 @@ public class DeploymentAssetConverter {
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Deployment entity) {
         String namespace = entity.getMetadata().getNamespace();
         String name = entity.getMetadata().getName();
-        /**
+        /*
          * 为了兼容多集群中deployment名称相同导致无法拉取资产
          * 资产id使用联合键 namespace:deploymentName
          */
@@ -53,7 +53,7 @@ public class DeploymentAssetConverter {
                 .createdTime(toGmtDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
 
-        /**
+        /*
          *         resources:
          *           limits:
          *             cpu: "4"
@@ -68,7 +68,7 @@ public class DeploymentAssetConverter {
                 .getSpec()
                 .getContainers()
                 .stream()
-                /**
+                /*
                  * 无状态名称 name: account-1
                  * 容器名称 c: account
                  */

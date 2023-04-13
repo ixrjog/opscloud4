@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class NacosPermission {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class PermissionsResponse extends BasePage.PageResponse implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 5679634631994334473L;
         private List<Permission> pageItems;
 
@@ -47,6 +49,7 @@ public class NacosPermission {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Permission implements IToAsset, Serializable {
 
+        @Serial
         private static final long serialVersionUID = -2841569536441847893L;
         private String action;
         private String resource;

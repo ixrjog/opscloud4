@@ -89,7 +89,9 @@ public class JenkinsTemplateProvider extends BaseAssetProvider<Job> {
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) return false;
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
+            return false;
+        }
         return true;
     }
 

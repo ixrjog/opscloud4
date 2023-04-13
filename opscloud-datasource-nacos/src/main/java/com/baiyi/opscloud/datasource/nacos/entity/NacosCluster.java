@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class NacosCluster {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class NodesResponse implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 8010771839187137253L;
         private Integer code;
         private String message;
@@ -42,6 +44,7 @@ public class NacosCluster {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Node implements IToAsset, Serializable {
 
+        @Serial
         private static final long serialVersionUID = -2017355534427518949L;
 
         private String address;

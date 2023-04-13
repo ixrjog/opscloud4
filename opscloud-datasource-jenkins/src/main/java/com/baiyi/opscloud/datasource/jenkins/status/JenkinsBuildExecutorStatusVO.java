@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  */
 public class JenkinsBuildExecutorStatusVO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -2642546999291350826L;
 
     @Data
@@ -22,6 +24,7 @@ public class JenkinsBuildExecutorStatusVO implements Serializable {
     @Schema
     public static class Children implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 2615134095285978523L;
 
         private String name;

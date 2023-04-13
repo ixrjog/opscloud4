@@ -18,7 +18,8 @@ public class JenkinsAssetConverter {
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ComputerWithDetails entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entity.getDisplayName()) // 资产id
+                // 资产id
+                .assetId(entity.getDisplayName())
                 .name(entity.getDisplayName())
                 .assetKey(entity.getDisplayName())
                 .kind("computer")
@@ -28,7 +29,8 @@ public class JenkinsAssetConverter {
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("numExecutos", entity.getNumExecutors()) // 并发
+                // 并发
+                .paramProperty("numExecutos", entity.getNumExecutors())
                 .paramProperty("totalPhysicalMemory",
                         entity.getMonitorData().get("hudson.node_monitors.SwapSpaceMonitor").get("totalPhysicalMemory"))
                 .paramProperty("availablePhysicalMemory",

@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class NexusAsset {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Assets implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -8706403916963623866L;
 
         /**
@@ -49,6 +51,7 @@ public class NexusAsset {
     @AllArgsConstructor
     public static class Item implements IToAsset, Serializable {
 
+        @Serial
         private static final long serialVersionUID = 3605486735533585738L;
 
         private String downloadUrl;

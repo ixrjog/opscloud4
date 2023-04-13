@@ -51,7 +51,7 @@ public final class Range {
         if (from < 0) {
             throw new IllegalArgumentException("from value must be greater or equal null.");
         }
-        this.from = new Integer(from);
+        this.from = from;
         return this;
     }
 
@@ -59,7 +59,7 @@ public final class Range {
         if (to < 0) {
             throw new IllegalArgumentException("to must be greater or equal null.");
         }
-        this.to = new Integer(to);
+        this.to = to;
         return this;
     }
 

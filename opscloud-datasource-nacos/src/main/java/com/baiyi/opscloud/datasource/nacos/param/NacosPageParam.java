@@ -26,4 +26,5 @@ public class NacosPageParam {
         @Schema(name = "token")
         private String accessToken;
     }
+
 }

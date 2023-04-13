@@ -126,13 +126,15 @@ public class JenkinsJobDriver {
 
     /**
      * 输出日志到会话
-     *
+     * @param sessionId
+     * @param buildId
      * @param buildWithDetails
      * @param session
+     * @param crumbFlag
      * @throws IOException
      * @throws InterruptedException
      */
-    public void streamConsoleOutputToSession(String seesionId, int buildId, BuildWithDetails buildWithDetails, Session session, boolean crumbFlag) throws IOException, InterruptedException {
+    public void streamConsoleOutputToSession(String sessionId, int buildId, BuildWithDetails buildWithDetails, Session session, boolean crumbFlag) throws IOException, InterruptedException {
         buildWithDetails.streamConsoleOutput(new BuildConsoleStreamListener() {
 
             @Override

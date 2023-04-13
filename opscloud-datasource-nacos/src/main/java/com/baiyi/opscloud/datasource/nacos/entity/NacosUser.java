@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class NacosUser {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class UsersResponse extends BasePage.PageResponse implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -4192497555316727625L;
         private List<User> pageItems;
 
@@ -36,6 +38,7 @@ public class NacosUser {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class CreateUserResponse implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 4110339556174099015L;
         private Integer code;
         private String message;
@@ -49,6 +52,7 @@ public class NacosUser {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class AuthRoleResponse implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -1258014694158106573L;
         private Integer code;
         private String message;
@@ -62,6 +66,7 @@ public class NacosUser {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class User implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 3832085642768517657L;
         private String username;
 

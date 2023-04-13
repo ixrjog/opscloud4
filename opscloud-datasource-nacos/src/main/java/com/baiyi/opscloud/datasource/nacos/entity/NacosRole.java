@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class NacosRole {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class RolesResponse extends BasePage.PageResponse implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -1855804540035445313L;
         private List<Role> pageItems;
 
@@ -42,6 +44,7 @@ public class NacosRole {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Role implements IToAsset, Serializable {
 
+        @Serial
         private static final long serialVersionUID = -83954783773211983L;
         private String username;
         private String role;

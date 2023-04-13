@@ -77,7 +77,7 @@ public class PodAssetConverter {
                 .paramProperty("containersReady", podStatusMap.get("ContainersReady"))
                 .paramProperty("initialized", podStatusMap.get("Initialized"))
                 .paramProperty("ready", podStatusMap.get("Ready"))
-                .paramProperty("status", !statusOptional.isPresent())
+                .paramProperty("status", statusOptional.isEmpty())
                 .paramProperty("reason", entity.getStatus().getReason())
                 .build();
         assetContainer.setAgo(AgoUtil.format(startTime));
@@ -103,7 +103,7 @@ public class PodAssetConverter {
         if (CollectionUtils.isEmpty(containers)) {
             return null;
         }
-        return containers.stream().filter(c -> tryIgnoreName(kubernetes, c.getName())).collect(Collectors.toList())
+        return containers.stream().filter(c -> tryIgnoreName(kubernetes, c.getName())).toList()
                 .stream().map(c -> {
                     DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                             .name(c.getName())

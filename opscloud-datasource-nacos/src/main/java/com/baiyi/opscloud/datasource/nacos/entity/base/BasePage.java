@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -21,6 +22,7 @@ public class BasePage {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class PageResponse implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -5501378006388206219L;
         private Integer pageNumber;
         private Integer totalCount;

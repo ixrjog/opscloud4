@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.slf4j.helpers.MessageFormatter;
 
+import java.io.Serial;
+
 /**
  * @Author baiyi
  * @Date 2022/10/24 19:48
@@ -15,6 +17,7 @@ import org.slf4j.helpers.MessageFormatter;
 @EqualsAndHashCode(callSuper = true)
 public class KubernetesException extends BaseException {
 
+    @Serial
     private static final long serialVersionUID = 596212694251808845L;
     private final Integer code = 11001;
 

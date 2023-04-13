@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -19,6 +20,7 @@ public class NexusRepository {
     @AllArgsConstructor
     public static class Repository implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -6489853813444696312L;
         // Unique
         private String name;

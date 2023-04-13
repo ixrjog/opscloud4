@@ -27,9 +27,7 @@ public final class UrlUtils {
     private UrlUtils() {
         //do nothing
     }
-    
-    
-    
+
     /**
      * Helper to create a base url in case a folder is given
      * @param folder the folder or {@code null}
@@ -38,8 +36,6 @@ public final class UrlUtils {
     public static String toBaseUrl(final FolderJob folder) {
         return folder == null ? "/" : folder.getUrl();
     }
-    
-    
     
     /**
      * Helper to create the base url for a job, with or without a given folder
@@ -50,13 +46,17 @@ public final class UrlUtils {
     public static String toJobBaseUrl(final FolderJob folder, final String jobName) {
         final StringBuilder sb = new StringBuilder(DEFAULT_BUFFER_SIZE);
         sb.append(UrlUtils.toBaseUrl(folder));
-        if (sb.charAt(sb.length() - 1) != '/') sb.append('/');
+        if (sb.charAt(sb.length() - 1) != '/') {
+            sb.append('/');
+        }
         sb.append("job/");
         final String[] jobNameParts = jobName.split("/");
 
         for (int i = 0; i < jobNameParts.length; i++) {
             sb.append(EncodingUtils.encode(jobNameParts[i]));
-            if (i != jobNameParts.length - 1) sb.append('/');
+            if (i != jobNameParts.length - 1) {
+                sb.append('/');
+            }
         }
         return sb.toString();
     }
@@ -72,12 +72,13 @@ public final class UrlUtils {
         final StringBuilder sb = new StringBuilder(DEFAULT_BUFFER_SIZE);
         final String base = UrlUtils.toBaseUrl(folder);
         sb.append(base);
-        if (!base.endsWith("/")) sb.append('/');
+        if (!base.endsWith("/")) {
+            sb.append('/');
+        }
         sb.append("view/")
           .append(EncodingUtils.encode(name));
         return sb.toString();
     }
-    
     
     /**
      * Parses the provided job name for folders to get the full path for the job.
@@ -86,17 +87,19 @@ public final class UrlUtils {
      */
     public static String toFullJobPath(final String jobName) {
         final String[] parts = jobName.split("/");
-        if (parts.length == 1) return parts[0];
+        if (parts.length == 1) {
+            return parts[0];
+        }
         final StringBuilder sb = new StringBuilder(DEFAULT_BUFFER_SIZE);
         
         for (int i = 0; i < parts.length; i++) {
             sb.append(parts[i]);
-            if (i != parts.length -1) sb.append("/job/");
+            if (i != parts.length -1) {
+                sb.append("/job/");
+            }
         }
         return sb.toString();
     }
-    
-    
     
     /**
      * Join two paths together taking into account leading/trailing slashes.
@@ -105,13 +108,23 @@ public final class UrlUtils {
      * @return the joins path
      */
     public static String join(final String path1, final String path2) {
-        if (path1.isEmpty() && path2.isEmpty()) return "";
-        if (path1.isEmpty() && !path2.isEmpty()) return path2;
-        if (path2.isEmpty() && !path1.isEmpty()) return path1;
+        if (path1.isEmpty() && path2.isEmpty()) {
+            return "";
+        }
+        if (path1.isEmpty() && !path2.isEmpty()) {
+            return path2;
+        }
+        if (path2.isEmpty() && !path1.isEmpty()) {
+            return path1;
+        }
         final StringBuilder sb = new StringBuilder(DEFAULT_BUFFER_SIZE);
         sb.append(path1);
-        if (sb.charAt(sb.length() - 1) == '/') sb.setLength(sb.length() - 1);
-        if (path2.charAt(0) != '/') sb.append('/');
+        if (sb.charAt(sb.length() - 1) == '/') {
+            sb.setLength(sb.length() - 1);
+        }
+        if (path2.charAt(0) != '/') {
+            sb.append('/');
+        }
         sb.append(path2);
         return sb.toString();
     }
@@ -125,7 +138,9 @@ public final class UrlUtils {
      */
     public static URI toJsonApiUri(final URI uri, final String context, final String path) {
         String p = path;
-        if (!p.matches("(?i)https?://.*")) p = join(context, p);
+        if (!p.matches("(?i)https?://.*")) {
+            p = join(context, p);
+        }
  
         if (!p.contains("?")) {
             p = join(p, "api/json");

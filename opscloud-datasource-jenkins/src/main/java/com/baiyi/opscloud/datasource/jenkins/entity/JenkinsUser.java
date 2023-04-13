@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -18,6 +19,7 @@ public class JenkinsUser {
     @NoArgsConstructor
     public static class User implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 967178899220442346L;
 
         private String id;
@@ -58,6 +60,5 @@ public class JenkinsUser {
         private Boolean configure;
 
     }
-
 
 }

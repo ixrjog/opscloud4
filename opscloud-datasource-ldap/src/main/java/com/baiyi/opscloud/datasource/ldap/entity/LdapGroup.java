@@ -27,7 +27,7 @@ public class LdapGroup {
     @AllArgsConstructor
     @NoArgsConstructor
     @ToString
-    @Entry(objectClasses = {"groupOfUniqueNames"}) // base = "ou=groups"
+    @Entry(objectClasses = {"groupOfUniqueNames"})
     public static class Group implements IToAsset {
 
         /**
