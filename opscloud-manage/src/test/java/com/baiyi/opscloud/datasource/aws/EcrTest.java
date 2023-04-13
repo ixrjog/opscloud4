@@ -4,7 +4,7 @@ import com.amazonaws.services.ecr.model.ImageDetail;
 import com.amazonaws.services.ecr.model.Repository;
 import com.baiyi.opscloud.datasource.aws.base.BaseAwsTest;
 import com.baiyi.opscloud.datasource.aws.ecr.driver.AmazonEcrImageDriver;
-import com.baiyi.opscloud.datasource.aws.ecr.driver.AmazonEcrRepositoryDirver;
+import com.baiyi.opscloud.datasource.aws.ecr.driver.AmazonEcrRepositoryDriver;
 import org.junit.jupiter.api.Test;
 
 import jakarta.annotation.Resource;
@@ -18,7 +18,7 @@ import java.util.List;
 public class EcrTest extends BaseAwsTest {
 
     @Resource
-    private AmazonEcrRepositoryDirver amazonEcrRepositoryDirver;
+    private AmazonEcrRepositoryDriver amazonEcrRepositoryDirver;
 
     @Resource
     private AmazonEcrImageDriver amazonEcrImageDriver;

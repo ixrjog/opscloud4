@@ -2,7 +2,7 @@ package com.baiyi.opscloud.leo.action.build.concrete.post.validator;
 
 import com.amazonaws.services.ecr.model.Repository;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
-import com.baiyi.opscloud.datasource.aws.ecr.driver.AmazonEcrRepositoryDirver;
+import com.baiyi.opscloud.datasource.aws.ecr.driver.AmazonEcrRepositoryDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.leo.action.build.concrete.post.validator.base.BaseCrValidator;
 import com.baiyi.opscloud.leo.action.build.concrete.post.validator.delegate.EcrImageDelegate;
@@ -30,7 +30,7 @@ import static com.baiyi.opscloud.leo.action.build.concrete.post.validator.base.B
 public class EcrValidator extends BaseCrValidator<AwsConfig> {
 
     @Resource
-    private AmazonEcrRepositoryDirver amazonEcrRepositoryDirver;
+    private AmazonEcrRepositoryDriver amazonEcrRepositoryDirver;
 
     @Resource
     private EcrImageDelegate ecrImageDelegate;

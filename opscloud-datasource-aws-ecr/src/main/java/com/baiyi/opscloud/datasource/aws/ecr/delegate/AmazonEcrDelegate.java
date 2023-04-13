@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.aws.ecr.delegate;
 import com.amazonaws.services.ecr.model.Repository;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.datasource.aws.ecr.driver.AmazonEcrRepositoryDirver;
+import com.baiyi.opscloud.datasource.aws.ecr.driver.AmazonEcrRepositoryDriver;
 import com.baiyi.opscloud.datasource.aws.ecr.entity.AmazonEcr;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AmazonEcrDelegate {
 
-    private final AmazonEcrRepositoryDirver amazonEcrRepositoryDirver;
+    private final AmazonEcrRepositoryDriver amazonEcrRepositoryDirver;
 
     @Retryable(retryFor = Exception.class, maxAttempts = 4, backoff = @Backoff(delay = 3000, multiplier = 1.5))
     public List<AmazonEcr.Repository> listRepository(AwsConfig.Aws config) {

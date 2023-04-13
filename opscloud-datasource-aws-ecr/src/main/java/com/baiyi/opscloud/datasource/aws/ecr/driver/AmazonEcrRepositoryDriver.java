@@ -16,7 +16,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-public class AmazonEcrRepositoryDirver {
+public class AmazonEcrRepositoryDriver {
 
     private static final int MAX_RESULTS = 1000;
 
