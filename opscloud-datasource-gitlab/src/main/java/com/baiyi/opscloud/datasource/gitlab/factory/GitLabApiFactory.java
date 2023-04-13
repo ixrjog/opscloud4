@@ -22,12 +22,8 @@ public class GitLabApiFactory {
                 .map(GitLabConfig.Gitlab::getApi)
                 .map(GitLabConfig.Api::getVersion)
                 .orElse("v4");
-        GitLabApi gitLabApi;
-        if (version.equalsIgnoreCase("v3")) {
-            gitLabApi = new GitLabApi(GitLabApi.ApiVersion.V3, gitlab.getUrl(), gitlab.getToken());
-        } else {
-            gitLabApi = new GitLabApi(GitLabApi.ApiVersion.V4, gitlab.getUrl(), gitlab.getToken());
-        }
+        GitLabApi gitLabApi = buildWithVersion(version, gitlab);
+
         int connectTimeout = Optional.of(gitlab)
                 .map(GitLabConfig.Gitlab::getApi)
                 .map(GitLabConfig.Api::getConnectTimeout)
@@ -38,6 +34,13 @@ public class GitLabApiFactory {
                 .orElse(READ_TIMEOUT);
         gitLabApi.setRequestTimeout(connectTimeout, readTimeout);
         return gitLabApi;
+    }
+
+    private static GitLabApi buildWithVersion(String version, GitLabConfig.Gitlab gitlab) {
+        if (version.equalsIgnoreCase(GitLabApi.ApiVersion.V3.name())) {
+            return new GitLabApi(GitLabApi.ApiVersion.V3, gitlab.getUrl(), gitlab.getToken());
+        }
+        return new GitLabApi(GitLabApi.ApiVersion.V4, gitlab.getUrl(), gitlab.getToken());
     }
 
 }
