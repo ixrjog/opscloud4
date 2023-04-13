@@ -30,7 +30,7 @@ public class IamPolicyDocument {
     private String id;
 
     @JsonProperty("Statement")
-    private List<Statement> Statement;
+    private List<Statement> statement;
 
     @Data
     @Builder
@@ -79,6 +79,5 @@ public class IamPolicyDocument {
         private Map<String, String> arnLike;
 
     }
-
 
 }

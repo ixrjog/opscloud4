@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -27,6 +28,7 @@ public class IamAccessKey {
     @Data
     public static class AccessKey implements IToAsset, Serializable {
 
+        @Serial
         private static final long serialVersionUID = 4294789140463106594L;
         private String userName;
         private String accessKeyId;

@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -27,6 +28,7 @@ public class IamPolicy {
     @Data
     public static class Policy implements IToAsset, Serializable {
 
+        @Serial
         private static final long serialVersionUID = -5742551542170034934L;
         private String policyName;
         private String policyId;

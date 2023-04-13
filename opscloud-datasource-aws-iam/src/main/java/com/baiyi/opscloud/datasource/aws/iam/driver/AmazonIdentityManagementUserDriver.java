@@ -93,7 +93,7 @@ public class AmazonIdentityManagementUserDriver {
         // 用于筛选结果的类型
         request.setEntityFilter(EntityFilter.USER);
         request.setPolicyArn(policyArn);
-        /**
+        /*
          * 用于过滤结果的策略使用方法
          * 只列出权限策略，设置为PermissionsPolicy
          * 只列出用于设置权限边界的策略，设置为PermissionsBoundary

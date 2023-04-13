@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -31,6 +32,7 @@ public class IamUser {
     @Data
     public static class User implements IToAsset, Serializable {
 
+        @Serial
         private static final long serialVersionUID = 4845240806163256599L;
 
         private String path;
@@ -58,4 +60,5 @@ public class IamUser {
                     .build();
         }
     }
+
 }
