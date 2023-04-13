@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
@@ -29,6 +30,7 @@ public class SimpleQueueService {
     @Data
     public static class Queue implements IToAsset, Serializable {
 
+        @Serial
         private static final long serialVersionUID = -6375013141277179377L;
 
         // 工单使用

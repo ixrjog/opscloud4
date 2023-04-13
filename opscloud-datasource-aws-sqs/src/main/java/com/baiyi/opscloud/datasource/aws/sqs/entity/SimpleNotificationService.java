@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ public class SimpleNotificationService {
     @Data
     public static class Topic implements IToAsset, Serializable {
 
+        @Serial
         private static final long serialVersionUID = 7688439944039959106L;
 
         // 工单使用
@@ -88,6 +90,7 @@ public class SimpleNotificationService {
     @Data
     public static class Subscription implements IToAsset, Serializable {
 
+        @Serial
         private static final long serialVersionUID = -1065834695056874611L;
 
         private String subscriptionArn;

@@ -51,8 +51,9 @@ public class AmazonSimpleNotificationServiceDriver {
     public String createTopic(AwsConfig.Aws config, String regionId, String topic, Map<String, String> attributes) {
         CreateTopicRequest request = new CreateTopicRequest();
         request.setName(topic);
-        if (!CollectionUtils.isEmpty(attributes))
+        if (!CollectionUtils.isEmpty(attributes)) {
             request.setAttributes(attributes);
+        }
         CreateTopicResult result = AmazonSNSService.buildAmazonSNS(config, regionId).createTopic(request);
         return result.getTopicArn();
     }

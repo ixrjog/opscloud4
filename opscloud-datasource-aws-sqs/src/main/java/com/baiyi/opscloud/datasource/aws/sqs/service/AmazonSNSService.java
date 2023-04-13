@@ -24,4 +24,5 @@ public class AmazonSNSService {
                 .withRegion(regionId)
                 .build();
     }
+
 }
