@@ -13,15 +13,14 @@ import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.collect.Lists;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import jakarta.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_AWS_SQS;
 
@@ -81,7 +80,7 @@ public class AwsSqsProvider extends AbstractAssetBusinessRelationProvider<Simple
                                         .regionId(regionId)
                                         .attributes(attributes)
                                         .build();
-                            }).collect(Collectors.toList())
+                            }).toList()
                     );
                 }
         );

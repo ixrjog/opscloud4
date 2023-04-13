@@ -14,14 +14,13 @@ import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.collect.Lists;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import jakarta.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_AWS_SNS_SUBSCRIPTION;
 
@@ -81,7 +80,7 @@ public class AwsSnsSubscriptionProvider extends AbstractAssetBusinessRelationPro
                                     .protocol(e.getProtocol())
                                     .regionId(regionId)
                                     .build()
-                    ).collect(Collectors.toList()));
+                    ).toList());
                 }
         );
         return entities;

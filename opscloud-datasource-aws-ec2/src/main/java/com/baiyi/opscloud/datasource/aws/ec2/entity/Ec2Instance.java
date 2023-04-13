@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -31,6 +32,7 @@ public class Ec2Instance {
     @Data
     public static class Instance implements IToAsset, Serializable {
 
+        @Serial
         private static final long serialVersionUID = -5709404012386189803L;
 
         private String regionId;
@@ -115,7 +117,6 @@ public class Ec2Instance {
                     .paramProperty("memory", getEc2InstanceType() != null ? getEc2InstanceType().acqMemory() : 0)
                     .build();
         }
-
-
     }
+
 }

@@ -14,4 +14,5 @@ public class AmazonEc2Util {
     public static String getInstanceName(List<Tag> tags) {
         return tags.stream().filter(tag -> tag.getKey().equals("Name")).findFirst().map(Tag::getValue).orElse("");
     }
+
 }

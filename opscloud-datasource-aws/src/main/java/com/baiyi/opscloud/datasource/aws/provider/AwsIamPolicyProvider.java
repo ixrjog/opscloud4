@@ -8,15 +8,14 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementPolicyDriver;
-import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementUserDriver;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamPolicy;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamUser;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_AWS_IAM_POLICY;
@@ -31,9 +30,6 @@ public class AwsIamPolicyProvider extends AbstractAssetRelationProvider<IamPolic
 
     @Resource
     private AmazonIdentityManagementPolicyDriver amazonIMPolicyDriver;
-
-    @Resource
-    private AmazonIdentityManagementUserDriver amazonIMUserDriver;
 
     @Resource
     private AwsIamPolicyProvider awsIamPolicyProvider;

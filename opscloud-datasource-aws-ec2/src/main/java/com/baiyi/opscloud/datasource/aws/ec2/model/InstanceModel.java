@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,6 +18,7 @@ public class InstanceModel {
     @JsonIgnoreProperties
     public static class EC2InstanceType implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -5237645353918681264L;
         private String memory; // GiB,
 
