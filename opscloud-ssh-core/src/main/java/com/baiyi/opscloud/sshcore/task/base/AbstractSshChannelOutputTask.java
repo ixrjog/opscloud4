@@ -22,9 +22,9 @@ import java.nio.charset.StandardCharsets;
  */
 @Slf4j
 @Data
-public abstract class AbstractSshChannelOutputTask implements IOutputTask {
+public abstract class AbstractSshChannelOutputTask implements IRecordOutputTask {
 
-    private ByteArrayOutputStream baos;
+    private ByteArrayOutputStream outputStream;
     private SessionOutput sessionOutput;
 
     private boolean isClosed = false;
@@ -41,18 +41,17 @@ public abstract class AbstractSshChannelOutputTask implements IOutputTask {
         try {
             while (!isClosed) {
                 NewTimeUtil.millisecondsSleep(25L);
-                InputStream ins = baos.toInputStream();
+                InputStream ins = outputStream.toInputStream();
                 if (ins instanceof ClosedInputStream) {
                     continue;
                 }
-                baos.reset();
+                outputStream.reset();
                 InputStreamReader isr = new InputStreamReader(ins, StandardCharsets.UTF_8);
                 BufferedReader br = new BufferedReader(isr, BUFF_SIZE);
                 char[] buff = new char[BUFF_SIZE];
                 int read;
                 while ((read = br.read(buff)) != -1) {
-                    write(buff, 0, read);
-                    auditing(buff, 0, read);
+                    writeAndRecord(buff, 0, read);
                 }
             }
         } catch (IOException ignored) {
@@ -63,16 +62,19 @@ public abstract class AbstractSshChannelOutputTask implements IOutputTask {
     }
 
     /**
-     * 审计日志
+     * 写审计
      *
      * @param buf
+     * @param off
+     * @param len
      */
-    private void auditing(char[] buf, int off, int len) {
-        AuditRecordHelper.recordAuditLog(sessionOutput.getSessionId(), sessionOutput.getInstanceId(), buf, off, len);
+    @Override
+    public void record(char[] buf, int off, int len) {
+        AuditRecordHelper.record(sessionOutput.getSessionId(), sessionOutput.getInstanceId(), buf, off, len);
     }
 
     protected byte[] toBytes(char[] chars) {
-        return TaskUtil.toBytes(chars);
+        return String.valueOf(chars).getBytes(StandardCharsets.UTF_8);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshcore.task.base;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.sshcore.AuditRecordHelper;
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
@@ -20,9 +21,10 @@ import java.nio.charset.StandardCharsets;
  */
 @Slf4j
 @Data
-public abstract class AbstractOutputTask implements IOutputTask {
+public abstract class AbstractOutputTask implements IRecordOutputTask {
 
     private InputStream outFromChannel;
+
     private SessionOutput sessionOutput;
 
     private static final int BUFF_SIZE = 1024 * 8;
@@ -41,12 +43,11 @@ public abstract class AbstractOutputTask implements IOutputTask {
             char[] buff = new char[BUFF_SIZE];
             int read;
             while ((read = br.read(buff)) != -1) {
-                write(buff, 0, read);
-                auditing(buff, 0, read);
+                char[] outBuff = ArrayUtil.sub(buff, 0, read);
+                writeAndRecord(outBuff, 0, outBuff.length);
                 NewTimeUtil.millisecondsSleep(10L);
             }
         } catch (IOException ignored) {
-            // Exit
         } finally {
             log.debug("Watch server output task end: sessionId={}, instanceId={}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
             SessionOutputUtil.removeOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId());
@@ -54,17 +55,12 @@ public abstract class AbstractOutputTask implements IOutputTask {
     }
 
     protected byte[] toBytes(char[] chars) {
-        return TaskUtil.toBytes(chars);
+        return String.valueOf(chars).getBytes(StandardCharsets.UTF_8);
     }
 
-    /**
-     * 审计日志
-     *
-     * @param buf
-     */
-    private void auditing(char[] buf, int off, int len) {
-        AuditRecordHelper.recordAuditLog(sessionOutput.getSessionId(), sessionOutput.getInstanceId(), buf, off, len);
+    @Override
+    public void record(char[] buf, int off, int len) {
+        AuditRecordHelper.record(sessionOutput.getSessionId(), sessionOutput.getInstanceId(), buf, off, len);
     }
 
 }
-

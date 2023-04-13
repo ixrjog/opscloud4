@@ -52,17 +52,20 @@ public final class JsonParser implements Parser {
     private static Object toStr(final Map.Entry<String, JsonNode> field) {
         JsonNode value = field.getValue();
         switch (value.getNodeType()) {
-            case STRING:
+            case STRING -> {
                 return value.asText();
-            case NUMBER:
+            }
+            case NUMBER -> {
                 if (value.toString().contains(".")) {
                     return value.asDouble();
                 } else {
                     return value.asInt();
                 }
-
-            default:
+            }
+            default -> {
                 return value.toString();
+            }
         }
     }
+
 }

@@ -1,27 +1,28 @@
 package com.baiyi.opscloud.datasource.jenkins.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
-import com.baiyi.opscloud.datasource.jenkins.converter.JenkinsAssetConverter;
-import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
+import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
+import com.baiyi.opscloud.datasource.jenkins.converter.JenkinsAssetConverter;
+import com.baiyi.opscloud.datasource.jenkins.model.Computer;
+import com.baiyi.opscloud.datasource.jenkins.model.ComputerWithDetails;
+import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
-import com.baiyi.opscloud.datasource.jenkins.model.Computer;
-import com.baiyi.opscloud.datasource.jenkins.model.ComputerWithDetails;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -55,15 +56,16 @@ public class JenkinsComputerProvider extends BaseAssetProvider<ComputerWithDetai
 
     @Override
     protected List<ComputerWithDetails> listEntities(DsInstanceContext dsInstanceContext) {
-        try {
-            Map<String, Computer> computerMap = JenkinsServerDriver.getComputers(buildConfig(dsInstanceContext.getDsConfig()));
+        JenkinsConfig.Jenkins jenkins = buildConfig(dsInstanceContext.getDsConfig());
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
+            Map<String, Computer> computerMap = jenkinsServer.getComputers();
             List<ComputerWithDetails> computerWithDetails = Lists.newArrayList();
             for (String k : computerMap.keySet()) {
                 computerWithDetails.add(computerMap.get(k).details());
             }
             return computerWithDetails;
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.debug(e.getMessage());
             throw new DatasourceProviderException(e.getMessage());
         }
     }

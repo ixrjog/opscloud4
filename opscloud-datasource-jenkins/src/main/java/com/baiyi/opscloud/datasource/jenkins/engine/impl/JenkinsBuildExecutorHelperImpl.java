@@ -3,12 +3,13 @@ package com.baiyi.opscloud.datasource.jenkins.engine.impl;
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
-import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
+import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
 import com.baiyi.opscloud.datasource.jenkins.engine.JenkinsBuildExecutorHelper;
 import com.baiyi.opscloud.datasource.jenkins.model.Computer;
 import com.baiyi.opscloud.datasource.jenkins.model.ComputerWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.model.Executor;
 import com.baiyi.opscloud.datasource.jenkins.model.Job;
+import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
 import com.baiyi.opscloud.datasource.jenkins.status.JenkinsBuildExecutorStatusVO;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -58,8 +59,8 @@ public class JenkinsBuildExecutorHelperImpl implements JenkinsBuildExecutorHelpe
 
     private List<JenkinsBuildExecutorStatusVO.Children> buildComputers(JenkinsConfig.Jenkins jenkins) {
         List<JenkinsBuildExecutorStatusVO.Children> computers = Lists.newArrayList();
-        try {
-            Map<String, Computer> computerMap = JenkinsServerDriver.getComputers(jenkins);
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
+            Map<String, Computer> computerMap = jenkinsServer.getComputers();
             computerMap.keySet().forEach(k -> {
                 if (!k.equals(BUILT_IN_NODE)) {
                     List<JenkinsBuildExecutorStatusVO.Children> executors = buildExecutors(computerMap.get(k));

@@ -30,7 +30,7 @@ public class SessionOutputUtil {
         SessionOutputUtil.redisUtil = redisUtil;
     }
 
-    private static final Map<String, UserSessionsOutput> userSessionsOutputMap = new ConcurrentHashMap<>();
+    private static final Map<String, UserSessionsOutput> USER_SESSIONS_OUTPUT_MAP = new ConcurrentHashMap<>();
 
     private SessionOutputUtil() {
     }
@@ -41,11 +41,11 @@ public class SessionOutputUtil {
      * @param sessionId session id
      */
     public static void removeUserSession(String sessionId) {
-        UserSessionsOutput userSessionsOutput = userSessionsOutputMap.get(sessionId);
+        UserSessionsOutput userSessionsOutput = USER_SESSIONS_OUTPUT_MAP.get(sessionId);
         if (userSessionsOutput != null) {
             userSessionsOutput.getSessionOutputMap().clear();
         }
-        userSessionsOutputMap.remove(sessionId);
+        USER_SESSIONS_OUTPUT_MAP.remove(sessionId);
     }
 
     /**
@@ -55,7 +55,7 @@ public class SessionOutputUtil {
      * @param instanceId id of host system instance
      */
     public static void removeOutput(String sessionId, String instanceId) {
-        UserSessionsOutput userSessionsOutput = userSessionsOutputMap.get(sessionId);
+        UserSessionsOutput userSessionsOutput = USER_SESSIONS_OUTPUT_MAP.get(sessionId);
         if (userSessionsOutput != null) {
             userSessionsOutput.getSessionOutputMap().remove(instanceId);
         }
@@ -67,10 +67,10 @@ public class SessionOutputUtil {
      * @param sessionOutput session output object
      */
     public static void addOutput(SessionOutput sessionOutput) {
-        UserSessionsOutput userSessionsOutput = userSessionsOutputMap.get(sessionOutput.getSessionId());
+        UserSessionsOutput userSessionsOutput = USER_SESSIONS_OUTPUT_MAP.get(sessionOutput.getSessionId());
         if (userSessionsOutput == null) {
-            userSessionsOutputMap.put(sessionOutput.getSessionId(), new UserSessionsOutput());
-            userSessionsOutput = userSessionsOutputMap.get(sessionOutput.getSessionId());
+            USER_SESSIONS_OUTPUT_MAP.put(sessionOutput.getSessionId(), new UserSessionsOutput());
+            userSessionsOutput = USER_SESSIONS_OUTPUT_MAP.get(sessionOutput.getSessionId());
         }
         userSessionsOutput.getSessionOutputMap().put(sessionOutput.getInstanceId(), sessionOutput);
     }
@@ -85,7 +85,7 @@ public class SessionOutputUtil {
      * @param count      The length
      */
     public static void addToOutput(String sessionId, String instanceId, char[] value, int offset, int count) {
-        UserSessionsOutput userSessionsOutput = userSessionsOutputMap.get(sessionId);
+        UserSessionsOutput userSessionsOutput = USER_SESSIONS_OUTPUT_MAP.get(sessionId);
         if (userSessionsOutput != null) {
             Map<String, SessionOutput> sessionOutputMap = userSessionsOutput.getSessionOutputMap();
             if (sessionOutputMap.containsKey(instanceId)) {
@@ -95,7 +95,7 @@ public class SessionOutputUtil {
     }
 
     public static SessionOutput getSessionOutput(String sessionId, String instanceId) {
-        UserSessionsOutput userSessionsOutput = userSessionsOutputMap.get(sessionId);
+        UserSessionsOutput userSessionsOutput = USER_SESSIONS_OUTPUT_MAP.get(sessionId);
         if (userSessionsOutput != null) {
             return userSessionsOutput.getSessionOutputMap().get(instanceId);
         }
@@ -110,7 +110,7 @@ public class SessionOutputUtil {
      */
     public static List<SessionOutput> getOutput(String sessionId) {
         List<SessionOutput> outputList = Lists.newArrayList();
-        UserSessionsOutput userSessionsOutput = userSessionsOutputMap.get(sessionId);
+        UserSessionsOutput userSessionsOutput = USER_SESSIONS_OUTPUT_MAP.get(sessionId);
         if (userSessionsOutput != null) {
             userSessionsOutput.getSessionOutputMap().keySet().forEach(instanceId -> {
                 //get output chars and set to output
@@ -120,7 +120,6 @@ public class SessionOutputUtil {
                             && StringUtils.isNotEmpty(sessionOutput.getOutput())) {
                         outputList.add(sessionOutput);
                         userSessionsOutput.getSessionOutputMap().put(instanceId, new SessionOutput(sessionId, sessionOutput));
-                        //  auditing(sessionId, instanceId, sessionOutput);
                     }
                 } catch (Exception ex) {
                     log.error(ex.toString(), ex);
@@ -137,7 +136,8 @@ public class SessionOutputUtil {
      * @param instanceId
      * @param sessionOutput
      */
-    private static void auditing(String sessionId, String instanceId, SessionOutput sessionOutput) {
+    @Deprecated
+    private static void record(String sessionId, String instanceId, SessionOutput sessionOutput) {
         String outputStr = sessionOutput.getOutput().toString();
         String auditLog;
 
@@ -147,11 +147,10 @@ public class SessionOutputUtil {
         } else {
             auditLog = sessionOutput.getOutput().toString();
         }
-        String cacheKey =  Joiner.on("_").join(sessionId, instanceId, "auditLog");
+        String cacheKey = Joiner.on("_").join(sessionId, instanceId, "auditLog");
         String logRepo;
         if (redisUtil.hasKey(cacheKey)) {
-            //   logRepo = new StringBuilder((String) redisUtil.get(cacheKey)).append(auditLog).toString();
-            logRepo =  redisUtil.get(cacheKey) + auditLog;
+            logRepo = redisUtil.get(cacheKey) + auditLog;
         } else {
             logRepo = auditLog;
         }
@@ -164,18 +163,11 @@ public class SessionOutputUtil {
         int maxLine = 5;
         int index = 0;
         int line = 1;
-        while (true) {
-            if (line > maxLine) {
-                break;
-            }
-            int find = auditContent.indexOf("\r\n", index) + 2;
-            if (find != 0) {
-                index = find;
-            } else {
-                break;
-            }
+        while (line <= maxLine) {
+            index = auditContent.indexOf("\r\n", index) + 2;
             line++;
         }
         return index;
     }
+
 }

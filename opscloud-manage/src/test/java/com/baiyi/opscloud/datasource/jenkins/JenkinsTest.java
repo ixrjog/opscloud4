@@ -6,6 +6,7 @@ import com.baiyi.opscloud.datasource.jenkins.base.BaseJenkinsTest;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
 import com.baiyi.opscloud.datasource.jenkins.engine.JenkinsBuildExecutorHelper;
 import com.baiyi.opscloud.datasource.jenkins.model.*;
+import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.datasource.jenkins.status.JenkinsBuildExecutorStatusVO;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
@@ -13,6 +14,7 @@ import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import org.junit.jupiter.api.Test;
 
 import jakarta.annotation.Resource;
+
 import java.util.Map;
 
 /**
@@ -37,8 +39,9 @@ public class JenkinsTest extends BaseJenkinsTest {
     @Test
     void logTest() {
         JenkinsConfig jenkinsDsInstanceConfig = getConfig();
-        try {
-            Map<String, Computer> computerMap = JenkinsServerDriver.getComputers(jenkinsDsInstanceConfig.getJenkins());
+
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkinsDsInstanceConfig.getJenkins())) {
+            Map<String, Computer> computerMap = jenkinsServer.getComputers();
             for (String s : computerMap.keySet()) {
                 Computer c = computerMap.get(s);
 
@@ -49,6 +52,8 @@ public class JenkinsTest extends BaseJenkinsTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
 
     @Test

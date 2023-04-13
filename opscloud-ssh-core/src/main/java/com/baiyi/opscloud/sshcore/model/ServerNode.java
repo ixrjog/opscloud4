@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshcore.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,9 +16,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ServerNode {
-    // 实例id
+
+    @Schema(name = "实例ID")
     private String instanceId;
-    // 标签（服务器名+ip）
+
+    @Schema(name = "标签（服务器名+IP）")
     private String label;
 
     private Integer id;

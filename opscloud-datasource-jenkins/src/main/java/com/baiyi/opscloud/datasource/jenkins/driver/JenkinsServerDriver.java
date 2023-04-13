@@ -3,7 +3,10 @@ package com.baiyi.opscloud.datasource.jenkins.driver;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
 import com.baiyi.opscloud.datasource.jenkins.helper.JenkinsVersion;
-import com.baiyi.opscloud.datasource.jenkins.model.*;
+import com.baiyi.opscloud.datasource.jenkins.model.Computer;
+import com.baiyi.opscloud.datasource.jenkins.model.FolderJob;
+import com.baiyi.opscloud.datasource.jenkins.model.Job;
+import com.baiyi.opscloud.datasource.jenkins.model.JobWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,7 +22,8 @@ import java.util.Map;
 @Slf4j
 public class JenkinsServerDriver {
 
-    public static Map<String, Computer> getComputers(JenkinsConfig.Jenkins jenkins) throws URISyntaxException, IOException {
+    @Deprecated
+    private static Map<String, Computer> getComputers(JenkinsConfig.Jenkins jenkins) throws URISyntaxException, IOException {
         try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
             return jenkinsServer.getComputers();
         } catch (Exception e) {

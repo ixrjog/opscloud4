@@ -59,4 +59,5 @@ public class ColoredConsoleConverter extends ConsoleConverter implements Colored
     public String toString() {
         return ansi.toString();
     }
+
 }

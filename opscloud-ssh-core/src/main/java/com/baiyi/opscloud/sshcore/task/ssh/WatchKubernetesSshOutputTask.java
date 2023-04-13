@@ -23,13 +23,13 @@ public class WatchKubernetesSshOutputTask extends AbstractSshChannelOutputTask {
 
     public WatchKubernetesSshOutputTask(SessionOutput sessionOutput, ByteArrayOutputStream baos, PrintWriter printWriter) {
         setSessionOutput(sessionOutput);
-        setBaos(baos);
+        setOutputStream(baos);
         this.printWriter = printWriter;
     }
 
     public WatchKubernetesSshOutputTask(SessionOutput sessionOutput, ByteArrayOutputStream baos, OutputStream channelOutput) {
         setSessionOutput(sessionOutput);
-        setBaos(baos);
+        setOutputStream(baos);
         this.channelOutput = channelOutput;
     }
 

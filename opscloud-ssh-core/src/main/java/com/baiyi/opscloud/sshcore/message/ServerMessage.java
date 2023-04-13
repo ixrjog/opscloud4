@@ -90,4 +90,5 @@ public class ServerMessage {
     public static class Resize extends BaseMessage {
         private String instanceId;
     }
+
 }

@@ -87,7 +87,6 @@ public class ServerLoginCommand extends BaseServerCommand {
         SshContext sshContext = SshShellCommandFactory.SSH_THREAD_CONTEXT.get();
         Terminal terminal = sshContext.getTerminal();
         ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
-
         Map<Integer, Integer> idMapper = SessionCommandContext.getIdMapper();
         Server server = serverService.getById(idMapper.get(id));
         sAInterceptor.interceptLoginServer(server.getId());

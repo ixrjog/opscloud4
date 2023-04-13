@@ -23,7 +23,7 @@ public class AuditRecordHelper {
         AuditRecordHelper.terminalConfigurationProperties = terminalConfigurationProperties;
     }
 
-    public static void recordAuditLog(String sessionId, String instanceId, char[] buf, int off, int len) {
+    public static void record(String sessionId, String instanceId, char[] buf, int off, int len) {
         try {
             IOUtil.appendFile(new String(buf).substring(off, len), terminalConfigurationProperties.buildAuditLogPath(sessionId, instanceId));
         } catch (Exception e) {
@@ -47,7 +47,8 @@ public class AuditRecordHelper {
             String log = new String(commander);
             log = log.replaceAll("(\n|\r\n)\\s+", "");
             while (log.contains("\b")) {
-                log = log.replaceFirst(".\b", ""); // 退格处理
+                // 退格处理
+                log = log.replaceFirst(".\b", "");
             }
             IOUtil.appendFile(log, terminalConfigurationProperties.buildCommanderLogPath(sessionId, instanceId));
         } catch (Exception e) {

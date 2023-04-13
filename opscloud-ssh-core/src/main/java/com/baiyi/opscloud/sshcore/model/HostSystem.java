@@ -45,7 +45,6 @@ public class HostSystem {
 
     private Long id;
     private String displayNm;
-    // String user;
     private String host;
     @Builder.Default
     private Integer port = 22;
@@ -57,7 +56,7 @@ public class HostSystem {
     @Builder.Default
     private String statusCd = INITIAL_STATUS;
     private String errorMsg;
-    // List<String> publicKeyList;
+
     private String instanceId;
 
     private org.jline.terminal.Size terminalSize;
@@ -75,4 +74,5 @@ public class HostSystem {
     public static final String GENERIC_FAIL_STATUS = "GENERICFAIL";
     public static final String SUCCESS_STATUS = "SUCCESS";
     public static final String HOST_FAIL_STATUS = "HOSTFAIL";
+
 }

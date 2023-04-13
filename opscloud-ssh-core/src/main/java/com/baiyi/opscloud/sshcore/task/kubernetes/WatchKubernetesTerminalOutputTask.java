@@ -16,7 +16,7 @@ public class WatchKubernetesTerminalOutputTask extends AbstractSshChannelOutputT
 
     public WatchKubernetesTerminalOutputTask(SessionOutput sessionOutput, ByteArrayOutputStream baos) {
         setSessionOutput(sessionOutput);
-        setBaos(baos);
+        setOutputStream(baos);
     }
 
     @Override

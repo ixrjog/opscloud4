@@ -35,6 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
 import jakarta.websocket.Session;
+
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -63,8 +65,7 @@ public class SentOutputTask implements Runnable {
                 }
                 NewTimeUtil.millisecondsSleep(25L);
             }
-        } catch (Exception ex) {
-            log.error(ex.toString(), ex);
+        } catch (IOException ignored) {
         }
     }
     

@@ -7,6 +7,7 @@ import com.baiyi.opscloud.sshcore.task.audit.output.OutputMessage;
 import lombok.extern.slf4j.Slf4j;
 
 import jakarta.websocket.Session;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -30,12 +31,12 @@ public class TerminalAuditOutputTask implements Runnable {
     @Override
     public void run() {
         String auditLogPath = AuditRecordHelper.getAuditLogPath(sessionOutput.getSessionId(), sessionOutput.getInstanceId());
-        String str;
         try {
             LineNumberReader reader = new LineNumberReader(new FileReader(auditLogPath));
-            while (session.isOpen() && (str = reader.readLine()) != null) {
-                if (!str.isEmpty()) {
-                    send(str +"\n");
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.isEmpty()) {
+                    send(line + "\n");
                 }
                 NewTimeUtil.millisecondsSleep(25L);
             }

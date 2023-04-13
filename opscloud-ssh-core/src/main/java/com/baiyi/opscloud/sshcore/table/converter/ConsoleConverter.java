@@ -215,10 +215,13 @@ public abstract class ConsoleConverter implements Converter, Bordered {
         final StringBuilder sb = new StringBuilder();
 
         sb.append("+");
-        for (int i = 0; i < maxWidth.length; i++) {
+        int i = 0;
+        while (i < maxWidth.length) {
             sb.append(StringUtils.rightPad("", maxWidth[i] + 2, '-'));
             sb.append("+");
+            i++;
         }
         return sb.toString();
     }
+
 }

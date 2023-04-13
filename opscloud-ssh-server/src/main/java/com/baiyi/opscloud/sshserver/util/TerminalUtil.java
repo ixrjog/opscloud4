@@ -58,19 +58,7 @@ public class TerminalUtil {
         terminal.setAttributes(newAttr);
         // terminal.puts(InfoCmp.Capability.enter_ca_mode);
     }
-
-    private static int getFlag(Attributes attributes, Attributes.InputFlag flag) {
-        return attributes.getInputFlag(flag) ? 1 : 0;
-    }
-
-    private static int getFlag(Attributes attributes, Attributes.OutputFlag flag) {
-        return attributes.getOutputFlag(flag) ? 1 : 0;
-    }
-
-    private static int getFlag(Attributes attributes, Attributes.LocalFlag flag) {
-        return attributes.getLocalFlag(flag) ? 1 : 0;
-    }
-
+    
     public static void resize(String sessionId, String instanceId, Size size) {
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         assert jSchSession != null;

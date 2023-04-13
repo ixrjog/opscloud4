@@ -146,6 +146,7 @@ public class SshShellRunnable
                         .parser(lineReader.getParser())
                         .build();
 
+
                 Object authenticationObject = session.getSession().getIoSession().getAttribute(
                         SshShellSecurityAuthenticationProvider.AUTHENTICATION_ATTRIBUTE);
                 SshAuthentication authentication = null;
