@@ -34,4 +34,5 @@ public class ZabbixMapper {
             return null;
         }
     }
+
 }

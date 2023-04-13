@@ -38,7 +38,7 @@ public class UserAmParam {
         @Schema(name = "数据源实例ID")
         private Integer instanceId;
         //        @Schema(name = "需要创建账户")
-//        private Boolean needCreate;
+        //        private Boolean needCreate;
         private Policy policy;
         @Schema(name = "用户名")
         private String username;

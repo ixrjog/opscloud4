@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class ZabbixProxy {
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Proxy implements Serializable {
+        @Serial
         private static final long serialVersionUID = 4169371114358814825L;
         //     "interface": [],
         @JsonIgnore
@@ -71,6 +73,5 @@ public class ZabbixProxy {
         private String tls_psk;
 
     }
-
 
 }

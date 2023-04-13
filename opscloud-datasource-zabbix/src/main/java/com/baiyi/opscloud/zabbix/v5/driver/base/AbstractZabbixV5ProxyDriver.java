@@ -47,4 +47,5 @@ public abstract class AbstractZabbixV5ProxyDriver {
         request.setAuth(simpleZabbixAuth.getAuth(config));
         return zabbixAPI.update(request);
     }
+
 }

@@ -7,6 +7,9 @@ package com.baiyi.opscloud.common.event;
  */
 public enum EventTypeConstants {
 
+    /**
+     *
+     */
     EMPLOYEE_RESIGN
 
 }

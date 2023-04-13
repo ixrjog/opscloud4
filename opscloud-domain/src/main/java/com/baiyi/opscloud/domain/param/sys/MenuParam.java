@@ -43,5 +43,5 @@ public class MenuParam {
         private List<Integer> menuChildIdList;
 
     }
-}
 
+}

@@ -9,6 +9,9 @@ import lombok.Getter;
  */
 public enum TagConstants {
 
+    /**
+     *
+     */
     SYSTEM_HOOKS("SystemHooks"),
     SERVER("Server"),
     AUTHORIZATION("Authorization"),
@@ -21,8 +24,7 @@ public enum TagConstants {
     DMS("DMS"),
     VMS("VMS"),
     SMS("SMS"),
-    LEO("Leo"),
-    ;
+    LEO("Leo");
 
     @Getter
     private final String tag;

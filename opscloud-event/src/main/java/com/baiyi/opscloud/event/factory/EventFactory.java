@@ -16,10 +16,10 @@ public class EventFactory {
     private EventFactory() {
     }
 
-    private static final Map<String, IEventHandler> context = new ConcurrentHashMap<>();
+    private static final Map<String, IEventHandler> CONTEXT = new ConcurrentHashMap<>();
 
-    public static IEventHandler getIEventProcessByEventType(EventTypeEnum eventType) {
-        return context.get(eventType.name());
+    public static IEventHandler getByEventType(EventTypeEnum eventType) {
+        return CONTEXT.get(eventType.name());
     }
 
     /**
@@ -28,7 +28,7 @@ public class EventFactory {
      * @param bean
      */
     public static void register(IEventHandler bean) {
-        context.put(bean.getEventType().name(), bean);
+        CONTEXT.put(bean.getEventType().name(), bean);
     }
 
 }

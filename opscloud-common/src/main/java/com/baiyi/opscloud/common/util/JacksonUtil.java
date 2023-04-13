@@ -14,7 +14,7 @@ import java.io.IOException;
 @Slf4j
 public class JacksonUtil {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     /**
      * JSON字符串反序列化成Java对象
@@ -24,7 +24,7 @@ public class JacksonUtil {
      */
     public static <T> T parse(String json, Class<T> clazz) {
         try {
-            return objectMapper.readValue(json, clazz);
+            return OBJECT_MAPPER.readValue(json, clazz);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -39,7 +39,7 @@ public class JacksonUtil {
      */
     public static String toJSONString(Object object) {
         try {
-            return objectMapper.writeValueAsString(object);
+            return OBJECT_MAPPER.writeValueAsString(object);
         } catch (IOException e) {
             log.error(e.getMessage());
         }

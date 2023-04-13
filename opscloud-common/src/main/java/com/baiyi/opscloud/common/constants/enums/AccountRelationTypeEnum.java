@@ -12,6 +12,9 @@ import java.util.Arrays;
 @Getter
 public enum AccountRelationTypeEnum {
 
+    /**
+     *
+     */
     ACCOUNT_GROUP(0, "ACCOUNT_GROUP");
 
     private final int type;

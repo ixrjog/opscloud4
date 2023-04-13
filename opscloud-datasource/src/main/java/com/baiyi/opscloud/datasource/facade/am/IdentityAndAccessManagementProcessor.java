@@ -79,7 +79,7 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
 
     @Override
     public void revokePolicy(UserAmParam.RevokePolicy revokePolicy) {
-        User user = userService.getByUsername(revokePolicy.getUsername());
+        //  User user = userService.getByUsername(revokePolicy.getUsername());
         AwsConfig.Aws config = buildConfig(revokePolicy.getInstanceUuid());
         try {
             IamUser.User iamUser = amazonIMUserDriver.getUser(config, revokePolicy.getUsername());

@@ -48,8 +48,9 @@ public class AliyunRamUserDriver {
     public RamUser.User createUser(String regionId, AliyunConfig.Aliyun aliyun, User user, boolean createLoginProfile, boolean enableMFA) {
         try {
             CreateUserResponse.User createUser = createUser(regionId, aliyun, user);
-            if (createLoginProfile)
+            if (createLoginProfile) {
                 createLoginProfile(regionId, aliyun, user, NO_PASSWORD_RESET_REQUIRED, enableMFA);
+            }
             return BeanCopierUtil.copyProperties(createUser, RamUser.User.class);
         } catch (ClientException e) {
             throw new OCException("创建RAM用户错误: " + e.getMessage());
@@ -81,10 +82,12 @@ public class AliyunRamUserDriver {
         CreateUserRequest request = new CreateUserRequest();
         request.setUserName(user.getUsername());
         request.setDisplayName(user.getDisplayName());
-        if (ValidationUtil.isPhone(user.getPhone()))
+        if (ValidationUtil.isPhone(user.getPhone())) {
             request.setMobilePhone("86-" + user.getPhone());
-        if (!StringUtils.isEmpty(user.getEmail()))
+        }
+        if (!StringUtils.isEmpty(user.getEmail())) {
             request.setEmail(user.getEmail());
+        }
         request.setComments(CREATED_BY);
         return aliyunClient.getAcsResponse(regionId, aliyun, request).getUser();
     }
@@ -130,7 +133,9 @@ public class AliyunRamUserDriver {
         GetUserRequest request = new GetUserRequest();
         request.setUserName(ramUsername);
         GetUserResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
-        if (response == null || response.getUser() == null) return null;
+        if (response == null || response.getUser() == null) {
+            return null;
+        }
         return BeanCopierUtil.copyProperties(response.getUser(), RamUser.User.class);
     }
 
@@ -190,8 +195,9 @@ public class AliyunRamUserDriver {
         request.setUserName(username);
         try {
             DeleteUserResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
-            if (!StringUtils.isEmpty(response.getRequestId()))
+            if (!StringUtils.isEmpty(response.getRequestId())) {
                 return true;
+            }
         } catch (ClientException e) {
             log.error(e.getMessage());
         }
@@ -211,8 +217,9 @@ public class AliyunRamUserDriver {
         request.setUserName(username);
         try {
             DeleteLoginProfileResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
-            if (!StringUtils.isEmpty(response.getRequestId()))
+            if (!StringUtils.isEmpty(response.getRequestId())) {
                 return true;
+            }
         } catch (ClientException e) {
             log.error(e.getMessage());
         }
@@ -230,11 +237,13 @@ public class AliyunRamUserDriver {
         UpdateUserRequest request = new UpdateUserRequest();
         request.setUserName(ramUser.getUserName());
         // 修改Email
-        if (StringUtils.isNotBlank(ramUser.getEmail()))
+        if (StringUtils.isNotBlank(ramUser.getEmail())) {
             request.setNewEmail(ramUser.getEmail());
+        }
         // 修改显示名
-        if (StringUtils.isNotBlank(ramUser.getDisplayName()))
+        if (StringUtils.isNotBlank(ramUser.getDisplayName())) {
             request.setNewDisplayName(ramUser.getDisplayName());
+        }
         try {
             UpdateUserResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
         } catch (ClientException e) {

@@ -19,7 +19,6 @@ import java.util.Date;
  */
 public class OnsInstance {
 
-
     /**
      *  https://help.aliyun.com/document_detail/106351.html
      */
@@ -67,7 +66,6 @@ public class OnsInstance {
         }
     }
 
-
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
@@ -77,7 +75,6 @@ public class OnsInstance {
         private String httpInternetSecureEndpoint;
         private String httpInternalEndpoint;
     }
-
 
     @Data
     public static class Instance {
@@ -90,4 +87,5 @@ public class OnsInstance {
 
         private String regionId;
     }
+
 }

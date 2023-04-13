@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.util.CollectionUtils;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class ZabbixUser {
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class User implements IToAsset, Serializable {
-
+        @Serial
         private static final long serialVersionUID = -8414101569080017905L;
         // @JsonProperty("userid")
         private String userid;
@@ -115,7 +116,7 @@ public class ZabbixUser {
                         try {
                             String email = ((List<String>) media.getSendto()).get(0);
                             builder.paramProperty("email", email);
-                        } catch (Exception e) {
+                        } catch (Exception ignored) {
                         }
                         continue;
                     }

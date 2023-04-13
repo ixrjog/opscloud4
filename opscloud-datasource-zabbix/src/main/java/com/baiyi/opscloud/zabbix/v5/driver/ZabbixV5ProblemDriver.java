@@ -54,11 +54,11 @@ public class ZabbixV5ProblemDriver {
 
     public List<ZabbixProblem.Problem> list(ZabbixConfig.Zabbix config, List<SeverityType> severityTypes) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
-                /**
+                /*
                  * true - 仅返回被抑制问题;
                  * false - 返回问题在正常状态。
                  */
-                /**
+                /*
                  * 只返回给定事件严重程度的问题。仅当对象是触发器时才应用。
                  */
                 .putParam("severities", severityTypes.stream().map(SeverityType::getType).collect(Collectors.toList()))
@@ -101,4 +101,5 @@ public class ZabbixV5ProblemDriver {
         }
         return response.getResult().get(0);
     }
+
 }

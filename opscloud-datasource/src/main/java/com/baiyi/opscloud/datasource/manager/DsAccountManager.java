@@ -69,7 +69,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
             return;
         }
         decrypt(user);
-        instances.forEach(e -> AccountHandlerFactory.getIAccountByInstanceType(e.getInstanceType()).create(e, user));
+        instances.forEach(e -> AccountHandlerFactory.getByInstanceType(e.getInstanceType()).create(e, user));
         noticeManager.sendMessage(user, NoticeManager.MsgKeys.CREATE_USER);
     }
 
@@ -81,7 +81,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
             return;
         }
         decrypt(user);
-        instances.forEach(e -> AccountHandlerFactory.getIAccountByInstanceType(e.getInstanceType()).update(e, user));
+        instances.forEach(e -> AccountHandlerFactory.getByInstanceType(e.getInstanceType()).update(e, user));
         // 非修改密码不发通知
         if (!StringUtils.isEmpty(user.getPassword())) {
             noticeManager.sendMessage(user, NoticeManager.MsgKeys.UPDATE_USER_PASSWORD);
@@ -95,7 +95,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
             log.info("{} 数据源账户管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> AccountHandlerFactory.getIAccountByInstanceType(e.getInstanceType()).delete(e, user));
+        instances.forEach(e -> AccountHandlerFactory.getByInstanceType(e.getInstanceType()).delete(e, user));
     }
 
     @Override
@@ -105,7 +105,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
             log.info("{} 数据源账户管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> AccountHandlerFactory.getIAccountByInstanceType(e.getInstanceType()).grant(e, user,
+        instances.forEach(e -> AccountHandlerFactory.getByInstanceType(e.getInstanceType()).grant(e, user,
                 businessResource));
     }
 
@@ -116,7 +116,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
             log.info("{} 数据源账户管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> AccountHandlerFactory.getIAccountByInstanceType(e.getInstanceType()).revoke(e, user,
+        instances.forEach(e -> AccountHandlerFactory.getByInstanceType(e.getInstanceType()).revoke(e, user,
                 businessResource));
     }
 

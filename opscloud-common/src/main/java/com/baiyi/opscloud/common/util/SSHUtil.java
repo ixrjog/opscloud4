@@ -32,7 +32,7 @@ public class SSHUtil {
                 if (keyPair != null) {
                     fingerprint = keyPair.getFingerPrint();
                 }
-            } catch (JSchException ex) {
+            } catch (JSchException ignored) {
             }
         }
         return fingerprint;

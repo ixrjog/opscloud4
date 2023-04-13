@@ -77,8 +77,9 @@ public class AliyunOnsRocketMqGroupDriver {
             request.setGroupId(groupId);
         }
         OnsGroupListResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
-        if (response == null || CollectionUtils.isEmpty(response.getData()))
+        if (response == null || CollectionUtils.isEmpty(response.getData())) {
             return Collections.emptyList();
+        }
         return response.getData().stream().map(e -> {
             OnsRocketMqGroup.Group g = BeanCopierUtil.copyProperties(e, OnsRocketMqGroup.Group.class);
             g.setRegionId(regionId);

@@ -7,6 +7,9 @@ package com.baiyi.opscloud.event.enums;
  */
 public enum EventTypeEnum {
 
+    /**
+     *
+     */
     ZABBIX_PROBLEM
 
 }

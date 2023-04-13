@@ -26,4 +26,5 @@ public interface ZabbixGroupHelper {
      * @return
      */
     ZabbixHostGroup.HostGroup getOrCreateHostGroup(ZabbixConfig.Zabbix zabbix, String hostgroupName);
+
 }

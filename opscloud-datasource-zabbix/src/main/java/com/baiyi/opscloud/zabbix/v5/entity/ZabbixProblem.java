@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class ZabbixProblem {
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Problem implements IRecover, Serializable {
-
+        @Serial
         private static final long serialVersionUID = 6687178758774377921L;
         private String eventid;
         private String name;
@@ -59,4 +60,5 @@ public class ZabbixProblem {
             return rClock != 0;
         }
     }
+
 }

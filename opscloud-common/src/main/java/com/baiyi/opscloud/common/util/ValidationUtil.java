@@ -52,13 +52,15 @@ public class ValidationUtil {
      * @return
      */
     public static void tryServerGroupNameRule(String serverGroupName) {
-        if (!serverGroupName.matches(RegexMatches.SERVER_GROUP_NAME))
+        if (!serverGroupName.matches(RegexMatches.SERVER_GROUP_NAME)) {
             throw new OCException(ErrorEnum.SERVERGROUP_NAME_NON_COMPLIANCE_WITH_RULES);
+        }
     }
 
     public static void tryServerNameRule(String serverName) {
-        if (!serverName.matches(RegexMatches.SERVER_NAME))
+        if (!serverName.matches(RegexMatches.SERVER_NAME)) {
             throw new OCException(ErrorEnum.SERVER_NAME_NON_COMPLIANCE_WITH_RULES);
+        }
     }
 
     public static boolean isEmail(String email) {
@@ -135,8 +137,9 @@ public class ValidationUtil {
      * @return
      */
     public static boolean isJobKeyRule(String key) {
-        if (key.endsWith("-") || key.startsWith("-"))
+        if (key.endsWith("-") || key.startsWith("-")) {
             return false;
+        }
         return key.matches(RegexMatches.JOB_KEY);
     }
 

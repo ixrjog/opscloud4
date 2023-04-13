@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ZabbixRequestBuilder {
 
-    private static final AtomicInteger nextId = new AtomicInteger(1);
+    private static final AtomicInteger NEXT_ID = new AtomicInteger(1);
 
     private final ZabbixRequest.DefaultRequest request = ZabbixRequest.DefaultRequest.builder().build();
 
@@ -30,7 +30,7 @@ public class ZabbixRequestBuilder {
 
     public ZabbixRequest.DefaultRequest build() {
         if (request.getId() == null) {
-            request.setId(nextId.getAndIncrement());
+            request.setId(NEXT_ID.getAndIncrement());
         }
         return request;
     }
@@ -87,4 +87,5 @@ public class ZabbixRequestBuilder {
         request.setId(id);
         return this;
     }
+
 }

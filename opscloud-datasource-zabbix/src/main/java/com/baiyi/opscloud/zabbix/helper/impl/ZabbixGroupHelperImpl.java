@@ -32,7 +32,9 @@ public class ZabbixGroupHelperImpl implements ZabbixGroupHelper {
     @Override
     public ZabbixUserGroup.UserGroup getOrCreateUserGroup(ZabbixConfig.Zabbix zabbix, String usergroupName) {
         com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup.UserGroup userGroup = zabbixV5UserGroupDrive.getByName(zabbix, usergroupName);
-        if (userGroup != null) return userGroup;
+        if (userGroup != null) {
+            return userGroup;
+        }
         // 用户组不存在
         String hostgroup = ZabbixUtil.toHostgroupName(usergroupName);
         com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup.HostGroup hostGroup = getOrCreateHostGroup(zabbix, hostgroup);
@@ -42,8 +44,11 @@ public class ZabbixGroupHelperImpl implements ZabbixGroupHelper {
     @Override
     public com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup.HostGroup getOrCreateHostGroup(ZabbixConfig.Zabbix zabbix, String hostgroupName) {
         com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup.HostGroup hostGroup = zabbixV5HostGroupDrive.getByName(zabbix, hostgroupName);
-        if (hostGroup != null) return hostGroup;
+        if (hostGroup != null) {
+            return hostGroup;
+        }
         zabbixV5HostGroupDrive.create(zabbix, hostgroupName);
         return zabbixV5HostGroupDrive.getByName(zabbix, hostgroupName);
     }
+
 }

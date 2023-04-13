@@ -61,7 +61,8 @@ public class ExmailUser extends BaseExmailResult implements IToAsset {
                 .assetId(this.userId)
                 .name(this.name)
                 .assetKey(this.userId)
-                .assetKey2(this.userId.split("@")[0])  // 用户名
+                // 用户名
+                .assetKey2(this.userId.split("@")[0])
                 .description(this.position)
                 .isActive("1".equals(this.enable))
                 .assetType(DsAssetTypeConstants.TENCENT_EXMAIL_USER.name())

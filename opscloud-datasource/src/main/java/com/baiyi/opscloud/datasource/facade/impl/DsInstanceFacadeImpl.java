@@ -67,7 +67,7 @@ public class DsInstanceFacadeImpl<T> implements DsInstanceFacade<T> {
         dsInstancePacker.wrap(instance, SimpleExtend.EXTEND);
         List<SimpleAssetProvider> providers = AssetProviderFactory.getProviders(instance.getInstanceType(), assetType);
         assert providers != null;
-        return providers.stream().map(e -> e.pullAsset(instance.getId(), entity)).collect(Collectors.toList())
+        return providers.stream().map(e -> e.pullAsset(instance.getId(), entity)).toList()
                 .stream().filter(e -> e.getAssetType().equals(assetType)).collect(Collectors.toList());
     }
 

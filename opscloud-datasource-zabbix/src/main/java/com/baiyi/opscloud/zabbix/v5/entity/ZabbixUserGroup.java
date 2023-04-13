@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class ZabbixUserGroup {
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class UserGroup implements IToAsset, Serializable {
-
+        @Serial
         private static final long serialVersionUID = 1637937748007727428L;
         @JsonProperty("usrgrpid")
         private String usrgrpid;
@@ -88,4 +89,5 @@ public class ZabbixUserGroup {
                     .build();
         }
     }
+
 }

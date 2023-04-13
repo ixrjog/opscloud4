@@ -17,8 +17,10 @@ import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
 public class ConditionsBuilder {
 
     private static final ZabbixActionParam.Condition conditionA = ZabbixActionParam.Condition.builder()
-            .conditiontype(Conditiontype.TRIGGER_SEVERITY.getType()) // 4 - trigger severity;
-            .operator(OperatorType.IS_GREATER_THAN_OR_EQUALS.getType()) // 5 - is greater than or equals;
+            // 4 - trigger severity;
+            .conditiontype(Conditiontype.TRIGGER_SEVERITY.getType())
+            // 5 - is greater than or equals;
+            .operator(OperatorType.IS_GREATER_THAN_OR_EQUALS.getType())
             .value("4")
             .formulaid("A")
             .build();
@@ -31,8 +33,10 @@ public class ConditionsBuilder {
      */
     private static ZabbixActionParam.Condition buildConditionB(String groupid) {
         return ZabbixActionParam.Condition.builder()
-                .conditiontype(Conditiontype.HOST_GROUP.getType()) // 0 - host group;
-                .operator(OperatorType.EQUALS.getType()) // 0 - (default) equals;
+                // 0 - host group;
+                .conditiontype(Conditiontype.HOST_GROUP.getType())
+                // 0 - (default) equals;
+                .operator(OperatorType.EQUALS.getType())
                 .value(groupid)
                 .formulaid("B")
                 .build();
@@ -42,8 +46,10 @@ public class ConditionsBuilder {
      * 环境标签
      */
     private static final ZabbixActionParam.Condition conditionC = ZabbixActionParam.Condition.builder()
-            .conditiontype(Conditiontype.EVENT_TAG_VALUE.getType()) // 26 - event tag value.
-            .operator(OperatorType.EQUALS.getType()) // 0 - (default) equals;
+            // 26 - event tag value.
+            .conditiontype(Conditiontype.EVENT_TAG_VALUE.getType())
+            // 0 - (default) equals;
+            .operator(OperatorType.EQUALS.getType())
             .value(ENV_PROD)
             .value2("env")
             .formulaid("C")

@@ -22,8 +22,9 @@ public class AssetContainerBuilder {
     }
 
     public AssetContainerBuilder paramProperty(String name, Object value) {
-        if (!ObjectUtils.isEmpty(value))
+        if (!ObjectUtils.isEmpty(value)) {
             assetContainer.getProperties().put(name, String.valueOf(value));
+        }
         return this;
     }
 

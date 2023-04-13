@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class ZabbixHostGroup {
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class HostGroup implements IToAsset, Serializable {
-
+        @Serial
         private static final long serialVersionUID = -2761527660016718187L;
         @JsonProperty("groupid")
         private String groupid;

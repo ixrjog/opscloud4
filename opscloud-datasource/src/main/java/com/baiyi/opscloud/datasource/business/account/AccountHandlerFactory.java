@@ -15,16 +15,12 @@ public class AccountHandlerFactory {
 
     private static final Map<String, IAccount> CONTEXT = new ConcurrentHashMap<>();
 
-    public static IAccount getIAccountByInstanceType(String instanceType) {
+    public static IAccount getByInstanceType(String instanceType) {
         return CONTEXT.get(instanceType);
     }
 
     public static void register(IAccount bean) {
         CONTEXT.put(bean.getInstanceType(), bean);
-    }
-
-    public static Map<String, IAccount> getIAccountContainer() {
-        return CONTEXT;
     }
 
 }

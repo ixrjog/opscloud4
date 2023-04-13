@@ -65,7 +65,7 @@ public class AliyunRedisInstanceProvider extends BaseAssetProvider<AliyunRedis.K
         aliyun.getRegionIds().forEach(regionId -> {
             try {
                 entities.addAll(aliyunRedisInstanceDriver.listInstance(regionId, aliyun));
-            } catch (ClientException e) {
+            } catch (ClientException ignored) {
             }
         });
         return entities;

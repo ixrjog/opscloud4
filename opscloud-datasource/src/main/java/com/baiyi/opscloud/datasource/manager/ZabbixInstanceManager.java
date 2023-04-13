@@ -80,7 +80,7 @@ public class ZabbixInstanceManager extends BaseManager {
                 .filter(c -> IPUtil.includeMasks(server.getPrivateIp(), c.getZabbix().getRegions()))
                 .findFirst();
         // 未匹配路由规则
-        if (!optionalZabbixConfig.isPresent()) {
+        if (optionalZabbixConfig.isEmpty()) {
             return;
         }
         ZabbixConfig zabbixConfig = optionalZabbixConfig.get();

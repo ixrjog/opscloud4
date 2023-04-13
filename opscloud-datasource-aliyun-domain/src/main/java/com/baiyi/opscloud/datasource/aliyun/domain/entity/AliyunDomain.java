@@ -46,7 +46,17 @@ public class AliyunDomain {
 
         @Override
         public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
-            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder().instanceUuid(dsInstance.getUuid()).assetId(this.domainName).name(this.domainName).assetKey(this.domainName).kind("domain").assetType(DsAssetTypeConstants.ALIYUN_DOMAIN.name()).description(this.remark).expiredTime(new Date(this.expirationDateLong)).createdTime(new Date(this.registrationDateLong)).build();
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(dsInstance.getUuid())
+                    .assetId(this.domainName)
+                    .name(this.domainName)
+                    .assetKey(this.domainName)
+                    .kind("domain")
+                    .assetType(DsAssetTypeConstants.ALIYUN_DOMAIN.name())
+                    .description(this.remark)
+                    .expiredTime(new Date(this.expirationDateLong))
+                    .createdTime(new Date(this.registrationDateLong))
+                    .build();
 
             return AssetContainerBuilder.newBuilder().paramAsset(asset)
                     // 域名实名认证状态。取值: FAILED：实名认证失败、SUCCEED：实名认证成功、NONAUDIT：未实名认证、AUDITING：审核中
@@ -62,6 +72,5 @@ public class AliyunDomain {
         }
 
     }
-
 
 }

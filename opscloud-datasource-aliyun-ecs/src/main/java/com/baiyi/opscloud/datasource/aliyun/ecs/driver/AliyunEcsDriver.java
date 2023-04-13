@@ -50,7 +50,7 @@ public class AliyunEcsDriver {
             DescribeImagesRequest describe = new DescribeImagesRequest();
             describe.setSysRegionId(regionId);
             describe.setPageSize(PAGE_SIZE);
-            /**
+            /*
              * system：阿里云提供的公共镜像。
              * self：您创建的自定义镜像。
              * others：其他阿里云用户共享给您的镜像。

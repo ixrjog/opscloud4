@@ -165,7 +165,7 @@ public class AmazonSimpleNotificationServiceDriver {
             IamPolicyDocument policyDocument = IamPolicyDocument.builder()
                     .version(DEFAULT_VERSION)
                     .id(Joiner.on("/").join(endpoint, DEFAULT_ID))
-                    .Statement(Lists.newArrayList(buildStatement(topicArn, endpoint)))
+                    .statement(Lists.newArrayList(buildStatement(topicArn, endpoint)))
                     .build();
             return JacksonUtil.toJSONString(policyDocument);
         }

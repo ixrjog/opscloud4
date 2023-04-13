@@ -46,7 +46,7 @@ public class DsServerManager extends BaseManager implements IManager<Server> {
             log.info("{} 数据源服务器管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> ServerHandlerFactory.getIServerByInstanceType(e.getInstanceType()).create(e, server));
+        instances.forEach(e -> ServerHandlerFactory.getByInstanceType(e.getInstanceType()).create(e, server));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class DsServerManager extends BaseManager implements IManager<Server> {
             log.info("{} 数据源服务器管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> ServerHandlerFactory.getIServerByInstanceType(e.getInstanceType()).update(e, server));
+        instances.forEach(e -> ServerHandlerFactory.getByInstanceType(e.getInstanceType()).update(e, server));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class DsServerManager extends BaseManager implements IManager<Server> {
             log.info("{} 数据源服务器管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> ServerHandlerFactory.getIServerByInstanceType(e.getInstanceType()).delete(e, server));
+        instances.forEach(e -> ServerHandlerFactory.getByInstanceType(e.getInstanceType()).delete(e, server));
     }
 
     @Override
@@ -77,4 +77,5 @@ public class DsServerManager extends BaseManager implements IManager<Server> {
     @Override
     public void revoke(User user, BaseBusiness.IBusiness businessResource) {
     }
+
 }

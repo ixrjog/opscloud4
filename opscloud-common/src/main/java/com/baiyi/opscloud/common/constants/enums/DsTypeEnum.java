@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 @Getter
 public enum DsTypeEnum {
 
+    /**
+     * 数据源类型
+     */
     LOCAL(0, "LOCAL"),
     LDAP(1, "LDAP"),
     JENKINS(2, "JENKINS"),

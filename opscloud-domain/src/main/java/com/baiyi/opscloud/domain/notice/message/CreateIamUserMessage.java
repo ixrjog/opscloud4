@@ -19,7 +19,8 @@ public class CreateIamUserMessage implements INoticeMessage {
 
     private String awsName;
     private String loginUrl;
-    private String accountId; // 账户ID
+    // 账户ID
+    private String accountId;
     private String username;
     private String password;
 

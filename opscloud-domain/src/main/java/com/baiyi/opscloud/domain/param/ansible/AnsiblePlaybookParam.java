@@ -26,4 +26,5 @@ public class AnsiblePlaybookParam {
         private Boolean extend;
 
     }
+
 }

@@ -22,4 +22,5 @@ public interface ZabbixUserGroupFeign {
     @RequestLine(REQUEST_API)
     @Headers({CONTENT_TYPE})
     ZabbixUserGroup.CreateUserGroupResponse create(ZabbixRequest.DefaultRequest request);
+
 }

@@ -109,6 +109,3 @@ public class AliyunAcrNamespaceProvider extends AbstractAssetChildProvider<Aliyu
     }
 
 }
-
-
-

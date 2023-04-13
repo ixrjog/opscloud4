@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +34,7 @@ public class ZabbixTrigger {
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Trigger implements IToAsset, IRecover, Serializable {
-
+        @Serial
         private static final long serialVersionUID = -7481001921036889808L;
         private String triggerid;
         private String description;
@@ -84,6 +85,5 @@ public class ZabbixTrigger {
                     .build();
         }
     }
-
 
 }

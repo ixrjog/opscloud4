@@ -45,7 +45,7 @@ public class DocumentParam {
     @AllArgsConstructor
     @Schema
     public static class UpdateDocumentZone implements Serializable {
-
+        @Serial
         private static final long serialVersionUID = -1413511527437308526L;
         private Integer id;
         private String name;

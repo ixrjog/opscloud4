@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -50,6 +51,7 @@ public class ZabbixAction {
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Action implements Serializable {
+        @Serial
         private static final long serialVersionUID = -8261120829584702330L;
         private String actionid;
         private String name;

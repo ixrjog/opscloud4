@@ -24,7 +24,9 @@ public class EventConverter {
      * @return
      */
     public static Event toEvent(DatasourceInstance dsInstance, ZabbixProblem.Problem problem, ZabbixTrigger.Trigger trigger) {
-        if (trigger == null) return toEvent(dsInstance, problem);
+        if (trigger == null) {
+            return toEvent(dsInstance, problem);
+        }
         return Event.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .eventId(problem.getEventid())
@@ -32,9 +34,12 @@ public class EventConverter {
                 .eventIdDesc(EventTypeEnum.ZABBIX_PROBLEM.name())
                 .eventMessage(JSONUtil.writeValueAsString(problem))
                 .priority(problem.getSeverity())
-                .createTime(new Date(problem.getClock() * 1000)) // UNIT时间戳转换
-                .lastchangeTime(new Date(trigger.getLastchange() * 1000)) // UNIT时间戳转换
-                .isActive(!problem.isRecover()) // 有效事件
+                // UNIT时间戳转换
+                .createTime(new Date(problem.getClock() * 1000))
+                // UNIT时间戳转换
+                .lastchangeTime(new Date(trigger.getLastchange() * 1000))
+                // 有效事件
+                .isActive(!problem.isRecover())
                 .build();
     }
 
@@ -46,8 +51,10 @@ public class EventConverter {
                 .eventIdDesc(EventTypeEnum.ZABBIX_PROBLEM.name())
                 .eventMessage(JSONUtil.writeValueAsString(problem))
                 .priority(problem.getSeverity())
-                .createTime(new Date(problem.getClock() * 1000)) // UNIT时间戳转换
-                .isActive(false) // 有效事件
+                // UNIT时间戳转换
+                .createTime(new Date(problem.getClock() * 1000))
+                // 有效事件
+                .isActive(false)
                 .build();
     }
 

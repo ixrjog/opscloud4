@@ -36,7 +36,6 @@ public class JenkinsConfig extends BaseDsConfig {
 
     }
 
-
     @Data
     @NoArgsConstructor
     @Schema
@@ -51,7 +50,6 @@ public class JenkinsConfig extends BaseDsConfig {
         private String _class;
 
     }
-
 
     @Data
     @NoArgsConstructor

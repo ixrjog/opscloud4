@@ -24,10 +24,10 @@ public class UserAmFacade {
 
     private final DsInstanceService dsInstanceService;
 
-    private static final Map<String, IAccessManagementProcessor> context = new ConcurrentHashMap<>();
+    private static final Map<String, IAccessManagementProcessor> CONTEXT = new ConcurrentHashMap<>();
 
     public static void register(IAccessManagementProcessor bean) {
-        context.put(bean.getDsType(), bean);
+        CONTEXT.put(bean.getDsType(), bean);
         log.debug("AM Processor Registered: dsType={}, beanName={}", bean.getDsType(), bean.getClass().getSimpleName());
     }
 
@@ -61,10 +61,10 @@ public class UserAmFacade {
         if (instance == null) {
             throw new OCException("数据源实例不存在！");
         }
-        if (!context.containsKey(instance.getInstanceType())) {
+        if (!CONTEXT.containsKey(instance.getInstanceType())) {
             throw new OCException("数据源实例类型不正确！");
         }
-        return context.get(instance.getInstanceType());
+        return CONTEXT.get(instance.getInstanceType());
     }
 
 }

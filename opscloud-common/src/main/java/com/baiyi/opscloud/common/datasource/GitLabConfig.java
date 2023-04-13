@@ -45,5 +45,5 @@ public class GitLabConfig extends BaseDsConfig {
     public static class SystemHooks {
         private String token;  // 回调token
     }
-}
 
+}

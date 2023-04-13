@@ -63,4 +63,5 @@ public abstract class AbstractZabbixV5UserDriver {
         request.setAuth(simpleZabbixAuth.getAuth(config));
         return zabbixAPI.delete(request);
     }
+
 }

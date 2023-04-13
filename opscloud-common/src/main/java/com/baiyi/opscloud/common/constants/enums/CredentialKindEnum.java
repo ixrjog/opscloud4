@@ -15,12 +15,16 @@ import java.util.stream.Collectors;
 @Getter
 public enum CredentialKindEnum {
 
+    /**
+     * 凭据类型
+     */
     USERNAME_WITH_PASSWORD(1,"Username with password"),
     SSH_USERNAME_WITH_PRIVATE_KEY(2,"SSH Username with private key"),
     SSH_USERNAME_WITH_KEY_PAIR(3,"SSH Username with key pair"),
     TOKEN(4,"Token"),
     ACCESS_KEY(5,"Access key"),
-    KUBE_CONFIG(6,"Kubernetes kubeconfig"), // Kubernetes Config 客户端配置文件
+    // Kubernetes Config 客户端配置文件
+    KUBE_CONFIG(6,"Kubernetes kubeconfig"),
     ;
 
     private final int kind;
@@ -45,4 +49,5 @@ public enum CredentialKindEnum {
                 .options(optionList)
                 .build();
     }
+
 }

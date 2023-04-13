@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.datasource.business.accountGroup.impl;
+package com.baiyi.opscloud.datasource.business.account.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.LdapConfig;
-import com.baiyi.opscloud.datasource.business.accountGroup.impl.base.AbstractAccountGroupHandler;
+import com.baiyi.opscloud.datasource.business.account.impl.base.AbstractAccountGroupHandler;
 import com.baiyi.opscloud.datasource.ldap.repo.GroupRepo;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;

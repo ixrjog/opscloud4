@@ -55,4 +55,5 @@ public class OnsRocketMqGroup {
             return JSONUtil.writeValueAsString(this);
         }
     }
+
 }

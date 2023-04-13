@@ -61,8 +61,9 @@ public class AliyunOnsRocketMqTopicDriver {
             request.setTopic(topic);
         }
         OnsTopicListResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
-        if (response == null || CollectionUtils.isEmpty(response.getData()))
+        if (response == null || CollectionUtils.isEmpty(response.getData())) {
             return Collections.emptyList();
+        }
         return response.getData().stream().map(e -> {
             OnsRocketMqTopic.Topic t = BeanCopierUtil.copyProperties(e, OnsRocketMqTopic.Topic.class);
             t.setRegionId(regionId);

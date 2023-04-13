@@ -82,11 +82,11 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetChildProvider<O
                     instances.forEach(instance -> {
                         try {
                             entities.addAll(aliyunOnsRocketMqTopicDriver.listTopic(regionId, aliyun, instance.getInstanceId()));
-                        } catch (ClientException e) {
+                        } catch (ClientException ignored) {
                         }
                     });
                 }
-            } catch (ClientException e) {
+            } catch (ClientException ignored) {
             }
         });
         return entities;

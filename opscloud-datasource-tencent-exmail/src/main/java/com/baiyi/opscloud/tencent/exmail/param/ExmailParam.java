@@ -47,4 +47,5 @@ public class ExmailParam {
         private Integer fuzzy = 0;
 
     }
+
 }

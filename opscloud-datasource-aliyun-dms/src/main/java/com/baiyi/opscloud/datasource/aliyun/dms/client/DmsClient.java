@@ -49,5 +49,4 @@ public class DmsClient extends com.aliyun.dms_enterprise20181101.Client {
         return TeaModel.toModel(this.callApi(params, req, runtime), new RegisterUserResponse());
     }
 
-
 }

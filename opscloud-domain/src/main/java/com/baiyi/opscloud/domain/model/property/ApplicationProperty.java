@@ -34,4 +34,5 @@ public class ApplicationProperty {
         private String templateCode;
 
     }
+
 }

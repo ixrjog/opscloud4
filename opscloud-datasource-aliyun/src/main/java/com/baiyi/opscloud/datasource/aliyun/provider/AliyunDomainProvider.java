@@ -91,4 +91,5 @@ public class AliyunDomainProvider extends BaseAssetProvider<AliyunDomain.Domain>
     public void afterPropertiesSet() {
         AssetProviderFactory.register(aliyunDomainProvider);
     }
+
 }

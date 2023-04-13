@@ -65,7 +65,7 @@ public class AliyunOnsRocketMqInstanceProvider extends BaseAssetProvider<OnsInst
         regionIds.forEach(regionId -> {
             try {
                 entities.addAll(aliyunOnsRocketMqInstanceDriver.listInstance(regionId, aliyun));
-            } catch (ClientException e) {
+            } catch (ClientException ignored) {
             }
         });
         return entities;

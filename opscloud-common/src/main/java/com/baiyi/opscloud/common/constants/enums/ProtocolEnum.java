@@ -9,6 +9,9 @@ import lombok.Getter;
  */
 public enum ProtocolEnum {
 
+    /**
+     * 协议类型
+     */
     SSH("ssh"),
     VNC("vnc"),
     RDP("rdp");

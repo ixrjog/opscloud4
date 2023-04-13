@@ -52,5 +52,3 @@ public class NacosConfig extends BaseDsConfig {
     }
 
 }
-
-

@@ -44,7 +44,9 @@ public class SessionUtil {
     }
 
     public static boolean equalsUsername(String name) {
-        if (StringUtils.isEmpty(name)) return false;
+        if (StringUtils.isEmpty(name)) {
+            return false;
+        }
         return name.equals(username.get());
     }
 

@@ -53,8 +53,6 @@ public class RamPolicy {
                     .paramAsset(asset)
                     .build();
         }
-
-
     }
 
 }

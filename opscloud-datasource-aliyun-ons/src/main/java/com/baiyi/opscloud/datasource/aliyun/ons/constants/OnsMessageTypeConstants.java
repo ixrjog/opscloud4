@@ -12,6 +12,9 @@ import java.util.Arrays;
 @Getter
 public enum OnsMessageTypeConstants {
 
+    /**
+     * 消息类型
+     */
     TYPE_0(0, "普通消息"),
     TYPE_1(1, "分区顺序消息"),
     TYPE_2(2, "全局顺序消息"),

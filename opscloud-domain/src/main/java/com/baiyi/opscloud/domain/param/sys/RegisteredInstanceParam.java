@@ -29,4 +29,5 @@ public class RegisteredInstanceParam {
         private Boolean extend;
 
     }
+
 }

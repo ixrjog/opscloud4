@@ -53,4 +53,3 @@ public class ZabbixConfig extends BaseDsConfig {
     }
 
 }
-

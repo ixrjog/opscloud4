@@ -26,8 +26,9 @@ public class AliyunDmsUserDriver {
                 .map(AliyunConfig.Aliyun::getDms)
                 .map(AliyunConfig.Dms::getTid)
                 .orElse(-1L);
-        if (tid == -1L)
+        if (tid == -1L) {
             throw new OCException("租户TID未配置！");
+        }
         return listUser(aliyun, tid);
     }
 
@@ -62,8 +63,9 @@ public class AliyunDmsUserDriver {
         request.setUid(user.getUid());
         request.setRoleNames("USER");
         RegisterUserResponse response = client.registerUser(request);
-        if (!response.getBody().getSuccess())
+        if (!response.getBody().getSuccess()) {
             throw new OCException(response.getBody().errorMessage);
+        }
     }
 
 }

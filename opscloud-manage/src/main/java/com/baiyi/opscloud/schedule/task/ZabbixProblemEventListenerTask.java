@@ -27,7 +27,7 @@ public class ZabbixProblemEventListenerTask {
     @SchedulerLock(name = "zabbix_problem_event_listener_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
     @TaskWatch(name = "Listen for zabbix problems")
     public void run() {
-        IEventHandler iEventProcess = EventFactory.getIEventProcessByEventType(EventTypeEnum.ZABBIX_PROBLEM);
+        IEventHandler iEventProcess = EventFactory.getByEventType(EventTypeEnum.ZABBIX_PROBLEM);
         if (iEventProcess != null) {
             iEventProcess.listener();
         }

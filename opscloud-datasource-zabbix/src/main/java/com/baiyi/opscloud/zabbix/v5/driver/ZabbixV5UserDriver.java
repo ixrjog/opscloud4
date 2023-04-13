@@ -44,8 +44,9 @@ public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
                         .build())
                 .build();
         ZabbixUser.QueryUserResponse response = queryHandle(config, request);
-        if (CollectionUtils.isEmpty(response.getResult()))
+        if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
+        }
         return response.getResult().get(0);
     }
 

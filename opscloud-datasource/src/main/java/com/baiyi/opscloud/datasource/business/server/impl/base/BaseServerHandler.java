@@ -75,20 +75,6 @@ public abstract class BaseServerHandler<T> extends SimpleDsInstanceProvider impl
         doDelete(server);
     }
 
-//    @Override
-//    public void add(DatasourceInstance dsInstance, Server server, BaseBusiness.IBusiness businessResource) {
-//        DsInstanceContext context = buildDsInstanceContext(dsInstance.getId());
-//        if (getBusinessResourceType() == businessResource.getBusinessType())
-//            doGrant(buildConfig(context.getDsConfig()), server, businessResource);
-//    }
-//
-//    @Override
-//    public void remove(DatasourceInstance dsInstance, Server server, BaseBusiness.IBusiness businessResource) {
-//        DsInstanceContext context = buildDsInstanceContext(dsInstance.getId());
-//        if (getBusinessResourceType() == businessResource.getBusinessType())
-//            doRevoke(buildConfig(context.getDsConfig()), server, businessResource);
-//    }
-
     @Override
     public void grant(DatasourceInstance dsInstance, User user, BaseBusiness.IBusiness businessResource) {
     }

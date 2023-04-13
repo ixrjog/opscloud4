@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class ZabbixUtil {
 
-    public static final String HOSTId = "hostid";
+    public static final String HOSTID = "hostid";
 
     /**
      * 服务器组名称转换为 zabbix 用户组名称
@@ -56,7 +56,7 @@ public class ZabbixUtil {
         List<Map<String, String>> hosts = Lists.newArrayList();
         hostids.forEach(id -> {
             Map<String, String> hostid = Maps.newHashMap();
-            hostid.put(HOSTId, id);
+            hostid.put(HOSTID, id);
             hosts.add(hostid);
         });
         return hosts;

@@ -60,5 +60,4 @@ public class TopicHelper {
         return Joiner.on("").join(TOPIC_PREFIX, topic);
     }
 
-
 }

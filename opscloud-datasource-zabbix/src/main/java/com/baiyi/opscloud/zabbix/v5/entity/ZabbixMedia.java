@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -29,7 +30,7 @@ public class ZabbixMedia {
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Media implements Serializable {
-
+        @Serial
         private static final long serialVersionUID = -2666172175949534479L;
 
 

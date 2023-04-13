@@ -24,4 +24,5 @@ public class BusinessPropertyConstants {
         String METRICS_PATH = "metrics_path";
         String CONFIG_PATH = "config_path";
     }
+
 }

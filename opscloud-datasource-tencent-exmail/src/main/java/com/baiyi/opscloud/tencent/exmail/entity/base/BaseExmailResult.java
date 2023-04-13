@@ -16,4 +16,5 @@ public class BaseExmailResult {
     public boolean isError(){
         return "0".equals(errcode);
     }
+
 }

@@ -33,8 +33,9 @@ public class AliyunOnsRocketMqInstanceDriver {
     public List<OnsInstance.InstanceBaseInfo> listInstance(String regionId, AliyunConfig.Aliyun aliyun) throws ClientException {
         OnsInstanceInServiceListRequest request = new OnsInstanceInServiceListRequest();
         OnsInstanceInServiceListResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
-        if (response == null || CollectionUtils.isEmpty(response.getData()))
+        if (response == null || CollectionUtils.isEmpty(response.getData())) {
             return Collections.emptyList();
+        }
         List<OnsInstance.InstanceBaseInfo> instanceBaseInfos = Lists.newArrayList();
         for (OnsInstanceInServiceListResponse.InstanceVO i : response.getData()) {
             instanceBaseInfos.add(getInstanceInfo(regionId, aliyun, i.getInstanceId()));

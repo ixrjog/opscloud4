@@ -22,4 +22,5 @@ public interface ZabbixHostGroupFeign {
     @RequestLine(REQUEST_API)
     @Headers({CONTENT_TYPE})
     ZabbixHostGroup.CreateHostGroupResponse create(ZabbixRequest.DefaultRequest request);
+
 }

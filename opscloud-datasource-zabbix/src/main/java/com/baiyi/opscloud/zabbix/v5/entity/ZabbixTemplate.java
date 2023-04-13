@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class ZabbixTemplate {
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Template implements IToAsset, Serializable {
+        @Serial
         private static final long serialVersionUID = 6189522582952178463L;
         //@JsonProperty("templateid")
         private String templateid;

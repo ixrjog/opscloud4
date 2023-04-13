@@ -24,18 +24,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AmazonEcrDelegate {
 
-    private final AmazonEcrRepositoryDriver amazonEcrRepositoryDirver;
+    private final AmazonEcrRepositoryDriver amazonEcrRepositoryDriver;
 
     @Retryable(retryFor = Exception.class, maxAttempts = 4, backoff = @Backoff(delay = 3000, multiplier = 1.5))
     public List<AmazonEcr.Repository> listRepository(AwsConfig.Aws config) {
         if (CollectionUtils.isEmpty(config.getRegionIds())) {
-            return amazonEcrRepositoryDirver.describeRepositories(config.getRegionId(), config).stream().map(e ->
+            return amazonEcrRepositoryDriver.describeRepositories(config.getRegionId(), config).stream().map(e ->
                     toRepository(config.getRegionId(), e)
             ).collect(Collectors.toList());
         }
         List<AmazonEcr.Repository> repositories = Lists.newArrayList();
         for (String regionId : config.getRegionIds()) {
-            repositories.addAll(amazonEcrRepositoryDirver.describeRepositories(regionId, config).stream().map(e ->
+            repositories.addAll(amazonEcrRepositoryDriver.describeRepositories(regionId, config).stream().map(e ->
                     toRepository(regionId, e)
             ).toList());
         }

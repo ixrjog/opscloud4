@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractEventHandler<E extends IRecover> extends SimpleDsInstanceProvider implements IEventHandler, InitializingBean {
 
-    protected static final int dsInstanceBusinessType = BusinessTypeEnum.DATASOURCE_INSTANCE.getType();
+    protected static final int DATASOURCE_INSTANCE_TYPE = BusinessTypeEnum.DATASOURCE_INSTANCE.getType();
 
     protected static final String EVENT_TAG = "Event";
 
@@ -196,8 +196,8 @@ public abstract class AbstractEventHandler<E extends IRecover> extends SimpleDsI
         // 过滤掉没有标签的实例
         instances.addAll(
                 dsInstanceService.queryByParam(query).stream().filter(e ->
-                        simpleTagService.hasBusinessTag(EVENT_TAG, dsInstanceBusinessType, e.getId())
-                ).collect(Collectors.toList())
+                        simpleTagService.hasBusinessTag(EVENT_TAG, DATASOURCE_INSTANCE_TYPE, e.getId())
+                ).toList()
         );
         return instances;
     }

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.manager;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.datasource.business.serverGroup.factory.ServerGroupHandlerFactory;
+import com.baiyi.opscloud.datasource.business.server.factory.ServerGroupHandlerFactory;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.datasource.manager.base.IManager;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
@@ -46,7 +46,7 @@ public class DsServerGroupManager extends BaseManager implements IManager<Server
             log.info("{} 数据源服务器组管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> ServerGroupHandlerFactory.getIServerGroupByInstanceType(e.getInstanceType()).create(e, serverGroup));
+        instances.forEach(e -> ServerGroupHandlerFactory.getByInstanceType(e.getInstanceType()).create(e, serverGroup));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class DsServerGroupManager extends BaseManager implements IManager<Server
             log.info("{} 数据源服务器组管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> ServerGroupHandlerFactory.getIServerGroupByInstanceType(e.getInstanceType()).update(e, serverGroup));
+        instances.forEach(e -> ServerGroupHandlerFactory.getByInstanceType(e.getInstanceType()).update(e, serverGroup));
     }
 
     @Override
@@ -71,7 +71,7 @@ public class DsServerGroupManager extends BaseManager implements IManager<Server
             log.info("{} 数据源服务器组管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> ServerGroupHandlerFactory.getIServerGroupByInstanceType(e.getInstanceType()).grant(e, user, businessResource));
+        instances.forEach(e -> ServerGroupHandlerFactory.getByInstanceType(e.getInstanceType()).grant(e, user, businessResource));
     }
 
     @Override
@@ -81,7 +81,7 @@ public class DsServerGroupManager extends BaseManager implements IManager<Server
             log.info("{} 数据源服务器组管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> ServerGroupHandlerFactory.getIServerGroupByInstanceType(e.getInstanceType()).revoke(e, user, businessResource));
+        instances.forEach(e -> ServerGroupHandlerFactory.getByInstanceType(e.getInstanceType()).revoke(e, user, businessResource));
     }
 
 }

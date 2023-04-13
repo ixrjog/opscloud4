@@ -66,4 +66,5 @@ public class TencentExmailUserDriver {
         TencentExmailUserFeign exmailAPI = buildFeign(config);
         BaseExmailResult result = exmailAPI.deleteUser(exmailToken.getAccessToken(), userId);
     }
+
 }

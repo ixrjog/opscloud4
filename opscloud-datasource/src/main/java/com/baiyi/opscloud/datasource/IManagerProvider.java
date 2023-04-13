@@ -20,4 +20,5 @@ public interface IManagerProvider<T> {
     void grant(DatasourceInstance dsInstance, User user, BaseBusiness.IBusiness businessResource);
 
     void revoke(DatasourceInstance dsInstance, User user, BaseBusiness.IBusiness businessResource);
+
 }

@@ -12,6 +12,9 @@ import java.util.Arrays;
 @Getter
 public enum DeployTypeConstants {
 
+    /**
+     *
+     */
     ROLLING("滚动 Rolling"),
     REDEPLOY("重启 Redeploy"),
     OFFLINE("下线 Offline"),

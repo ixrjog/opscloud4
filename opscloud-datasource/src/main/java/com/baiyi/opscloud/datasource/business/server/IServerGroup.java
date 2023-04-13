@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.business.serverGroup;
+package com.baiyi.opscloud.datasource.business.server;
 
 import com.baiyi.opscloud.datasource.IManagerProvider;
 import com.baiyi.opscloud.domain.base.IInstanceType;

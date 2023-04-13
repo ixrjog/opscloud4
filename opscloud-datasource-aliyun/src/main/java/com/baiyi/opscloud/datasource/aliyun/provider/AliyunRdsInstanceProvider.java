@@ -67,7 +67,7 @@ public class AliyunRdsInstanceProvider extends BaseAssetProvider<AliyunRds.DBIns
         aliyun.getRegionIds().forEach(regionId -> {
             try {
                 entities.addAll(aliyunRdsInstanceDriver.listDbInstance(regionId, aliyun));
-            } catch (ClientException e) {
+            } catch (ClientException ignored) {
             }
         });
         return entities;

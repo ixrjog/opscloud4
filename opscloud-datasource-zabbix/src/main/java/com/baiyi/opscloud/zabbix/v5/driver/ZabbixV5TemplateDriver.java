@@ -118,4 +118,5 @@ public class ZabbixV5TemplateDriver {
         }
         return response.getResult().get(0);
     }
+
 }

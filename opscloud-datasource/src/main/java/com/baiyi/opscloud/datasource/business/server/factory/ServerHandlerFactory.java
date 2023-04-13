@@ -15,18 +15,15 @@ public class ServerHandlerFactory {
     private ServerHandlerFactory() {
     }
 
-    private static final Map<String, IServer> context = new ConcurrentHashMap<>();
+    private static final Map<String, IServer> CONTEXT = new ConcurrentHashMap<>();
 
-    public static IServer getIServerByInstanceType(String instanceType) {
-        return context.get(instanceType);
+    public static IServer getByInstanceType(String instanceType) {
+        return CONTEXT.get(instanceType);
     }
 
     public static void register(IServer bean) {
-        context.put(bean.getInstanceType(), bean);
+        CONTEXT.put(bean.getInstanceType(), bean);
     }
 
-    public static Map<String, IServer> getIServerContainer() {
-        return context;
-    }
 
 }

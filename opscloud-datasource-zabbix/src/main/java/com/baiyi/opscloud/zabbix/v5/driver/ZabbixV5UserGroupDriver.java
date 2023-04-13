@@ -72,7 +72,7 @@ public class ZabbixV5UserGroupDriver extends AbstractZabbixV5UserGroupDriver {
     public ZabbixUserGroup.UserGroup create(ZabbixConfig.Zabbix config, String usergroup, ZabbixHostGroup.HostGroup hostGroup) {
         // 创建用户组
         Map<String, String> rights = Maps.newHashMap();
-        /**
+        /*
          * Possible values:
          0 - access denied;
          2 - read-only access;
