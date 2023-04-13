@@ -36,8 +36,9 @@ public class AliyunRedisInstanceDriver {
     public List<AliyunRedis.KVStoreInstance> listInstance(String regionId, AliyunConfig.Aliyun aliyun, String instanceIds) throws ClientException {
         List<AliyunRedis.KVStoreInstance> instances = Lists.newArrayList();
         DescribeInstancesRequest request = new  DescribeInstancesRequest();
-        if (!StringUtils.isEmpty(instanceIds))
-           request.setInstanceIds(instanceIds);
+        if (!StringUtils.isEmpty(instanceIds)) {
+            request.setInstanceIds(instanceIds);
+        }
         request.setPageSize(PAGE_SIZE);
         int size = PAGE_SIZE;
         int pageNumber = 1;
