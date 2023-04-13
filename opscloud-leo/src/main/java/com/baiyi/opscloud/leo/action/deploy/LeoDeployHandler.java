@@ -58,7 +58,7 @@ public class LeoDeployHandler implements InitializingBean {
 
     @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
     public void handleDeploy(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
-        /**
+        /*
          * 使用责任链设计模式解耦代码
          */
         bootHandler.handleRequest(leoDeploy, deployConfig);
@@ -66,7 +66,7 @@ public class LeoDeployHandler implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        /**
+        /*
          * 装配
          */
         bootHandler.setNextHandler(preInspectionConcreteHandler)

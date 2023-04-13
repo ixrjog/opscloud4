@@ -212,19 +212,19 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
                     .map(LeoJobModel.Job::getCr)
                     .map(LeoJobModel.CR::getRepo)
                     .map(LeoJobModel.Repo::getName)
-                    .orElseThrow(() -> new LeoBuildException("执行构建任务错误: 未指定Project配置！"));
+                    .orElseThrow(() -> new LeoBuildException("执行构建任务错误: 未指定gitLab->project配置！"));
         }
         dict.put(BuildDictConstants.PROJECT.getKey(), project);
 
         final String registryUrl = dict.get(BuildDictConstants.REGISTRY_URL.getKey());
         /*
          * example:
-         * 460e7585-19
+         * imageTag = 460e7585-19
          */
         final String imageTag = Joiner.on("-").join(commitId, buildNumber);
         /*
          * example:
-         * aliyun-cr-uk.example.com/daily/merchant-rss:460e7585-19
+         * image = aliyun-cr-uk.example.com/daily/merchant-rss:460e7585-19
          */
         dict.put(BuildDictConstants.IMAGE.getKey(), String.format("%s/%s/%s:%s", registryUrl, envName, project, imageTag));
         dict.put(BuildDictConstants.IMAGE_TAG.getKey(), imageTag);
@@ -241,7 +241,7 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
         }
         List<ApplicationResource> resources = applicationResourceService.queryByApplication(application.getId(), DsAssetTypeConstants.GITLAB_PROJECT.name());
         if (CollectionUtils.isEmpty(resources) || resources.size() > 1) {
-            throw new LeoBuildException("执行构建任务错误: 未指定GitLab->Project->sshUrl配置！");
+            throw new LeoBuildException("执行构建任务错误: 未指定gitLab->project->sshUrl配置！");
         }
         gitLabProject.setSshUrl(resources.get(0).getName());
     }

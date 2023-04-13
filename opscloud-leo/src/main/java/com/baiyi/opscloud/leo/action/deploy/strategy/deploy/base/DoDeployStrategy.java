@@ -68,7 +68,6 @@ public abstract class DoDeployStrategy extends BaseDeployStrategy {
 
     abstract protected void doDeploy(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig, KubernetesConfig kubernetesConfig, Deployment deployment);
 
-
     @Override
     public String getStep() {
         return DeployStepConstants.DO_DEPLOY.name();

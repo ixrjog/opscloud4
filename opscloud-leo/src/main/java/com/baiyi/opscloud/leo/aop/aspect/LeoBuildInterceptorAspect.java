@@ -59,8 +59,7 @@ public class LeoBuildInterceptorAspect {
         //解析表达式并获取SpEL的值
         Expression expression = expressionParser.parseExpression(leoBuildInterceptor.jobIdSpEL());
         Object jobIdParam = expression.getValue(context);
-        if (jobIdParam instanceof Integer) {
-            Integer jobId = (Integer) jobIdParam;
+        if (jobIdParam instanceof Integer jobId) {
             if (IdUtil.isEmpty(jobId)) {
                 throw new LeoJobException("任务ID不存在！");
             }

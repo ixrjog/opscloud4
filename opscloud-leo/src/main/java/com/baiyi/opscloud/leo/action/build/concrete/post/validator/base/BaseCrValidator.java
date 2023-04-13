@@ -57,7 +57,7 @@ public abstract class BaseCrValidator<T extends BaseDsConfig> implements Initial
                 .map(LeoBuildModel.Build::getDict)
                 .orElseThrow(() -> new LeoBuildException("无法获取构建字典"));
         if (!dict.containsKey(BuildDictConstants.IMAGE_TAG.getKey())) {
-            throw new LeoBuildException("无法从构建字典中获取镜像标签: dict.imageTag");
+            throw new LeoBuildException("无法从构建字典中获取镜像标签: dict->imageTag");
         }
     }
 
@@ -71,14 +71,14 @@ public abstract class BaseCrValidator<T extends BaseDsConfig> implements Initial
     protected void preInspection(LeoJob leoJob, LeoJobModel.CR cr) {
         LeoJobModel.CRInstance crInstance = Optional.of(cr)
                 .map(LeoJobModel.CR::getInstance)
-                .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job.cr.instance"));
+                .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job->cr->instance"));
         Optional.of(crInstance)
                 .map(LeoJobModel.CRInstance::getRegionId)
-                .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job.cr.instance.regionId"));
+                .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job->cr->instance->regionId"));
         Optional.of(cr)
                 .map(LeoJobModel.CR::getRepo)
                 .map(LeoJobModel.Repo::getName)
-                .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job.cr.repo.name"));
+                .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job->cr->repo->name"));
     }
 
     public void verifyImage(LeoJob leoJob, LeoBuild leoBuild, LeoJobModel.CR cr, LeoBuildModel.BuildConfig buildConfig) {
@@ -143,7 +143,7 @@ public abstract class BaseCrValidator<T extends BaseDsConfig> implements Initial
         final String name = Optional.of(cr)
                 .map(LeoJobModel.CR::getCloud)
                 .map(LeoJobModel.Cloud::getName)
-                .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job.cr.cloud.name"));
+                .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job->cr->cloud->name"));
         DatasourceInstance dsInstance = instanceHelper.getInstanceByName(name);
         if (dsInstance == null) {
             throw new LeoBuildException("任务CR数据源实例不存在无法验证镜像是否推送成功！");

@@ -11,18 +11,18 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * 按每周时间范围来匹配
+ * 按每月时间范围来匹配
  *
  * @Author baiyi
- * @Date 2023/1/10 10:33
+ * @Date 2023/1/11 09:20
  * @Version 1.0
  */
 @Slf4j
 @Component
-public class LeoRuleExpressionWithWeekly extends BaseLeoRuleExpression {
+public class LeoRuleWithMonthlyExpression extends BaseLeoRuleExpression {
 
     public String getType() {
-        return RuleExpressionConstants.WEEKLY.name();
+        return RuleExpressionConstants.MONTHLY.name();
     }
 
     /**
@@ -32,35 +32,37 @@ public class LeoRuleExpressionWithWeekly extends BaseLeoRuleExpression {
      * @return 命中
      */
     public boolean parse(LeoRuleModel.Expression expression) {
-        // 今天星期几
-        final int nowDayOfWeek = calendarValueGet(Calendar.DAY_OF_WEEK) - 1;
+        // 本月第几天
+        final int nowDayOfMonth = calendarValueGet(Calendar.DAY_OF_MONTH);
         List<String> beginArgs = getExpressionArgs(expression.getBegin());
         List<String> endArgs = getExpressionArgs(expression.getEnd());
-        int beginDayOfWeek = Integer.parseInt(beginArgs.get(0));
-        int endDayOfWeek = Integer.parseInt(endArgs.get(0));
+        int beginDayOfMonth = Integer.parseInt(beginArgs.get(0));
+        int endDayOfMonth = Integer.parseInt(endArgs.get(0));
 
         // 命中开始时间
         boolean hitBegin = false;
         // 命中结束时间
         boolean hitEnd = false;
 
-        if (nowDayOfWeek >= beginDayOfWeek) {
+        if (nowDayOfMonth >= beginDayOfMonth) {
             // 比较时间
-            if (nowDayOfWeek == beginDayOfWeek) {
+            if (nowDayOfMonth == beginDayOfMonth) {
                 LocalTime beginTime = parse(beginArgs.get(1));
                 hitBegin = LocalTime.now().isAfter(beginTime);
             } else {
                 hitBegin = true;
             }
         }
+
         log.debug("开始时间: hitBeginTime={}", hitBegin);
+
         if (!hitBegin) {
             return false;
         }
 
-        if (nowDayOfWeek <= endDayOfWeek) {
+        if (nowDayOfMonth <= endDayOfMonth) {
             // 比较时间
-            if (nowDayOfWeek == endDayOfWeek) {
+            if (nowDayOfMonth == endDayOfMonth) {
                 LocalTime endTime = parse(endArgs.get(1));
                 hitEnd = LocalTime.now().isBefore(endTime);
             } else {
@@ -72,11 +74,11 @@ public class LeoRuleExpressionWithWeekly extends BaseLeoRuleExpression {
         return hitEnd;
     }
 
-    private static final String DISPLAY_NAME = "每周封网(开始时间: 星期%s %s, 结束时间: 星期%s %s)";
+    private static final String DISPLAY_NAME = "每月封网(开始时间: 第%s天 %s, 结束时间: 第%s天 %s)";
 
     /**
      * @param expression
-     * @return 每周封网; 开始时间: 星期5 18:00:00, 结束时间: 星期7 24:00:00
+     * @return 每月封网; 开始时间: 第5天 18:00:00, 结束时间: 第7天 24:00:00
      */
     public String toDisplayName(LeoRuleModel.Expression expression) {
         List<String> beginArgs = getExpressionArgs(expression.getBegin());

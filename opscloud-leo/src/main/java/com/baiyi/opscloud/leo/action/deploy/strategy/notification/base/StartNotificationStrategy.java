@@ -52,4 +52,3 @@ public abstract class StartNotificationStrategy extends BaseNotificationStrategy
     }
 
 }
-

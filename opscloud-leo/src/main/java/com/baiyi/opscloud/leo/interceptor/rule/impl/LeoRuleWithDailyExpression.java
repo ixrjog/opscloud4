@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class LeoRuleExpressionWithDaily extends BaseLeoRuleExpression {
+public class LeoRuleWithDailyExpression extends BaseLeoRuleExpression {
 
     public String getType() {
         return RuleExpressionConstants.DAILY.name();
