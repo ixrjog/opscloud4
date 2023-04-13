@@ -2,9 +2,8 @@ package com.baiyi.opscloud.leo.action.build.concrete.pre;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsJobDriver;
-import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.leo.action.build.BaseBuildHandler;
 import com.baiyi.opscloud.leo.action.build.helper.ApplicationTagsHelper;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
@@ -12,6 +11,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
+import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.sys.EnvService;
@@ -19,10 +19,11 @@ import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
-import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Date;
@@ -57,6 +58,9 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
 
     @Resource
     private ApplicationTagsHelper applicationTagsHelper;
+
+    @Resource
+    private ApplicationResourceService applicationResourceService;
 
     /**
      * 执行构建
@@ -161,6 +165,7 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
                 );
 
         final String applicationTags = applicationTagsHelper.getTagsStr(leoJob.getApplicationId());
+        Application application = applicationService.getById(leoJob.getApplicationId());
 
         LeoBaseModel.GitLabProject gitLabProject = Optional.of(buildConfig)
                 .map(LeoBuildModel.BuildConfig::getBuild)
@@ -168,11 +173,14 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
                 .map(LeoBaseModel.GitLab::getProject)
                 .orElseThrow(() -> new LeoBuildException("执行构建任务错误: 未指定GitLab项目配置！"));
 
+        fillGitLabProjectSshUrl(application, gitLabProject);
+
         final String envName = getEnvNameWithLeoJob(leoJob);
         final String commit = gitLabProject.getCommit().getId();
         final String commitId = gitLabProject.getCommit().getId().substring(0, 8);
         final String buildNumber = String.valueOf(leoBuild.getBuildNumber());
-        final String applicationName = applicationService.getById(leoJob.getApplicationId()).getApplicationKey();
+
+        final String applicationName = application.getApplicationKey();
         if (paramMap.containsKey(BuildDictConstants.REGISTRY_URL.getKey())) {
             dict.put(BuildDictConstants.REGISTRY_URL.getKey(), paramMap.get(BuildDictConstants.REGISTRY_URL.getKey()));
         } else {
@@ -209,12 +217,12 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
         dict.put(BuildDictConstants.PROJECT.getKey(), project);
 
         final String registryUrl = dict.get(BuildDictConstants.REGISTRY_URL.getKey());
-        /**
+        /*
          * example:
          * 460e7585-19
          */
         final String imageTag = Joiner.on("-").join(commitId, buildNumber);
-        /**
+        /*
          * example:
          * aliyun-cr-uk.example.com/daily/merchant-rss:460e7585-19
          */
@@ -225,6 +233,17 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
 
     private String getEnvNameWithLeoJob(final LeoJob leoJob) {
         return envService.getByEnvType(leoJob.getEnvType()).getEnvName();
+    }
+
+    private void fillGitLabProjectSshUrl(Application application, LeoBaseModel.GitLabProject gitLabProject) {
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(gitLabProject.getSshUrl())) {
+            return;
+        }
+        List<ApplicationResource> resources = applicationResourceService.queryByApplication(application.getId(), DsAssetTypeConstants.GITLAB_PROJECT.name());
+        if (CollectionUtils.isEmpty(resources) || resources.size() > 1) {
+            throw new LeoBuildException("执行构建任务错误: 未指定GitLab->Project->sshUrl配置！");
+        }
+        gitLabProject.setSshUrl(resources.get(0).getName());
     }
 
 }
