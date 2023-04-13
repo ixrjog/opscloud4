@@ -37,4 +37,5 @@ public class DingtalkMessageDriver {
         DingtalkMessageFeign dingtalkAPI = buildFeign(config);
         return dingtalkAPI.asyncSend(tokenResponse.getAccessToken(), asyncSendMessage);
     }
+
 }

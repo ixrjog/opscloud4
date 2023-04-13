@@ -27,5 +27,4 @@ public class DingtalkToken {
         private Integer expiresIn; // 过期时间 单位秒
     }
 
-
 }
