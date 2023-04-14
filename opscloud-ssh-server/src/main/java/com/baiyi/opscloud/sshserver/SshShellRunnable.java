@@ -88,6 +88,7 @@ public class SshShellRunnable
         log.debug("{}: running...", session.toString());
         TerminalBuilder terminalBuilder = TerminalBuilder.builder()
                 .system(false)
+                .jna(true)
                 .dumb(true)
                 .encoding(StandardCharsets.UTF_8)
                 .streams(is, os);
@@ -146,6 +147,8 @@ public class SshShellRunnable
                         .parser(lineReader.getParser())
                         .build();
 
+                // 删除不可见字符
+                lineReader.unsetOpt(LineReader.Option.BRACKETED_PASTE);
 
                 Object authenticationObject = session.getSession().getIoSession().getAttribute(
                         SshShellSecurityAuthenticationProvider.AUTHENTICATION_ATTRIBUTE);

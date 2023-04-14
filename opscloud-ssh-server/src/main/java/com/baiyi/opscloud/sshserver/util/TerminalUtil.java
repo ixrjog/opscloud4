@@ -56,7 +56,6 @@ public class TerminalUtil {
         newAttr.setControlChar(Attributes.ControlChar.VTIME, 0);
         newAttr.setControlChar(Attributes.ControlChar.VINTR, 0);
         terminal.setAttributes(newAttr);
-        // terminal.puts(InfoCmp.Capability.enter_ca_mode);
     }
     
     public static void resize(String sessionId, String instanceId, Size size) {

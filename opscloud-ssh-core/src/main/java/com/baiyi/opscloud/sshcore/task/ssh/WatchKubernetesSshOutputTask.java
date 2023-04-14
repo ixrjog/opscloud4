@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshcore.task.ssh;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.task.base.AbstractSshChannelOutputTask;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +8,6 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 
 /**
  * @Author baiyi
@@ -19,13 +19,13 @@ public class WatchKubernetesSshOutputTask extends AbstractSshChannelOutputTask {
 
     private OutputStream channelOutput;
 
-    private PrintWriter printWriter;
-
-    public WatchKubernetesSshOutputTask(SessionOutput sessionOutput, ByteArrayOutputStream baos, PrintWriter printWriter) {
-        setSessionOutput(sessionOutput);
-        setOutputStream(baos);
-        this.printWriter = printWriter;
-    }
+//    private PrintWriter printWriter;
+//
+//    public WatchKubernetesSshOutputTask(SessionOutput sessionOutput, ByteArrayOutputStream byteArrayOutputStream, PrintWriter printWriter) {
+//        setSessionOutput(sessionOutput);
+//        setOutputStream(byteArrayOutputStream);
+//        this.printWriter = printWriter;
+//    }
 
     public WatchKubernetesSshOutputTask(SessionOutput sessionOutput, ByteArrayOutputStream baos, OutputStream channelOutput) {
         setSessionOutput(sessionOutput);
@@ -34,14 +34,14 @@ public class WatchKubernetesSshOutputTask extends AbstractSshChannelOutputTask {
     }
 
     @Override
-    public void write(char[] buf, int off, int len) throws IOException {
-        if (printWriter != null) {
-            this.printWriter.write(buf, off, len);
-            this.printWriter.flush();
-            return;
-        }
-        this.channelOutput.write(toBytes(buf), off, len);
-        //this.channelOutput.flush();
+    public void write(char[] buff, int off, int len) throws IOException {
+//        if (printWriter != null) {
+//            this.printWriter.write(buff, off, len);
+//            this.printWriter.flush();
+//            return;
+//        }
+        char[] outBuff = ArrayUtil.sub(buff, 0, len);
+        this.channelOutput.write(toBytes(outBuff));
     }
 
 }

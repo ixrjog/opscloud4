@@ -99,7 +99,6 @@ public class ServerLoginCommand extends BaseServerCommand {
             simpleTerminalSessionFacade.recordTerminalSessionInstance(terminalSessionInstance);
             RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, out);
             TerminalUtil.enterRawMode(terminal);
-
             // 无延迟
             out.setNoDelay(true);
             // 计时
@@ -154,16 +153,16 @@ public class ServerLoginCommand extends BaseServerCommand {
         return jSchSession.getChannel().isClosed();
     }
 
-    private void send(String sessionId, String instanceId, int ch) throws Exception {
-        if (ch < 0) {
+    private void send(String sessionId, String instanceId, int input) throws Exception {
+        if (input < 0) {
             return;
         }
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) {
             throw new Exception();
         }
-        char in = (char) ch;
-        jSchSession.getCommander().print(in);
+        char ch = (char) input;
+        jSchSession.getCommander().print(ch);
     }
 
 }
