@@ -19,14 +19,14 @@ public class ApplicationResourceOperationParam {
     @Schema
     public static class OperationResource {
 
-        @Schema(name = "应用资源ID")
+        @Schema(description = "应用资源ID")
         private Integer resourceId;
 
-        @Schema(name = "操作类型")
+        @Schema(description = "操作类型")
         @NotNull(message = "必须指定操作类型")
         private String operationType;
 
-        @Schema(name = "操作描述")
+        @Schema(description = "操作描述")
         private String comment;
 
     }

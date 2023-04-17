@@ -22,10 +22,10 @@ public class DsInstanceParam {
     @Schema
     public static class DsInstanceQuery implements IExtend {
 
-        @Schema(name = "数据源类型")
+        @Schema(description = "数据源类型")
         private String instanceType;
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         @Builder.Default
         private Boolean isActive = true;
 
@@ -40,29 +40,29 @@ public class DsInstanceParam {
 
         private Integer id;
 
-        @Schema(name = "数据源实例名称")
+        @Schema(description = "数据源实例名称")
         @Valid
         private String instanceName;
 
         private String uuid;
 
-        @Schema(name = "数据源实例分类")
+        @Schema(description = "数据源实例分类")
         private String kind;
 
-        @Schema(name = "数据源实例类型")
+        @Schema(description = "数据源实例类型")
         @Valid
         private String instanceType;
 
-        @Schema(name = "数据源配置id", example = "1")
+        @Schema(description = "数据源配置ID", example = "1")
         private Integer configId;
 
-        @Schema(name = "父实例id", example = "1")
+        @Schema(description = "父实例ID", example = "1")
         private Integer parentId;
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         private Boolean isActive;
 
-        @Schema(name = "描述")
+        @Schema(description = "描述")
         private String comment;
 
     }

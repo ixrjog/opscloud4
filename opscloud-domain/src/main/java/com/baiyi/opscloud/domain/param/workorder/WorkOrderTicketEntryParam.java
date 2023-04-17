@@ -22,25 +22,25 @@ public class WorkOrderTicketEntryParam {
     @Schema
     public static class EntryQuery {
 
-        @Schema(name = "数据实例UUID")
+        @Schema(description = "数据实例UUID")
         private String instanceUuid;
 
-        @Schema(name = "regionId")
+        @Schema(description = "regionId")
         private String regionId;
 
-        @Schema(name = "kind")
+        @Schema(description = "kind")
         private String kind;
 
-        @Schema(name = "assetType")
+        @Schema(description = "资产类型")
         private String assetType;
 
-        @Schema(name = "工单票据ID")
+        @Schema(description = "工单票据ID")
         private Integer workOrderTicketId;
 
-        @Schema(name = "查询名称")
+        @Schema(description = "查询名称")
         private String queryName;
 
-        @Schema(name = "查询条目数量")
+        @Schema(description = "查询条目数量")
         @Builder.Default
         private Integer length = 20;
 

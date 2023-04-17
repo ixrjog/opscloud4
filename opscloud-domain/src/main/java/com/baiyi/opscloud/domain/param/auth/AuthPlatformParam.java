@@ -24,16 +24,16 @@ public class AuthPlatformParam {
     @Schema
     public static class AuthPlatformLogPageQuery extends SuperPageParam implements IExtend {
 
-        @Schema(name = "平台ID")
+        @Schema(description = "平台ID")
         private Integer platformId;
 
-        @Schema(name = "认证用户名")
+        @Schema(description = "认证用户名")
         private String username;
 
-        @Schema(name = "是否成功")
+        @Schema(description = "是否成功")
         private Boolean result;
 
-        @Schema(name = "展开")
+        @Schema(description = "展开")
         private Boolean extend;
 
     }

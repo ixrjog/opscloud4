@@ -24,16 +24,16 @@ public class LeoTemplateParam {
     @Schema
     public static class TemplatePageQuery extends SuperPageParam implements IExtend {
 
-        @Schema(name = "名称")
+        @Schema(description = "名称")
         private String queryName;
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         private Boolean isActive;
 
-        @Schema(name = "标签ID")
+        @Schema(description = "标签ID")
         private Integer tagId;
 
-        @Schema(name = "数据源实例UUID")
+        @Schema(description = "数据源实例UUID")
         private String instanceUuid;
 
         private final Integer businessType = BusinessTypeEnum.LEO_TEMPLATE.getType();
@@ -52,29 +52,29 @@ public class LeoTemplateParam {
         private Integer id;
 
         @NotEmpty(message = "名称不能为空")
-        @Schema(name = "名称")
+        @Schema(description = "名称")
         private String name;
 
-        @Schema(name = "实例UUID")
+        @Schema(description = "实例UUID")
         private String jenkinsInstanceUuid;
 
-        @Schema(name = "模板名称")
+        @Schema(description = "模板名称")
         private String templateName;
 
         @NotEmpty(message = "模板配置不能为空")
-        @Schema(name = "模板配置")
+        @Schema(description = "模板配置")
         private String templateConfig;
 
-        @Schema(name = "模板参数")
+        @Schema(description = "模板参数")
         private String templateParameter;
 
-        @Schema(name = "模板内容")
+        @Schema(description = "模板内容")
         private String templateContent;
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         private Boolean isActive;
 
-        @Schema(name = "描述")
+        @Schema(description = "描述")
         private String comment;
 
     }
@@ -89,29 +89,29 @@ public class LeoTemplateParam {
         private Integer id;
 
         @NotEmpty(message = "名称不能为空")
-        @Schema(name = "名称")
+        @Schema(description = "名称")
         private String name;
 
-        @Schema(name = "实例UUID")
+        @Schema(description = "实例UUID")
         private String jenkinsInstanceUuid;
 
-        @Schema(name = "模板名称")
+        @Schema(description = "模板名称")
         private String templateName;
 
         @NotEmpty(message = "模板配置不能为空")
-        @Schema(name = "模板配置")
+        @Schema(description = "模板配置")
         private String templateConfig;
 
-        @Schema(name = "模板参数")
+        @Schema(description = "模板参数")
         private String templateParameter;
 
-        @Schema(name = "模板内容")
+        @Schema(description = "模板内容")
         private String templateContent;
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         private Boolean isActive;
 
-        @Schema(name = "描述")
+        @Schema(description = "描述")
         private String comment;
 
     }
@@ -124,7 +124,7 @@ public class LeoTemplateParam {
     public static class UpgradeJobTemplate {
 
         @NotNull(message = "模板ID不能为空")
-        @Schema(name = "模板ID")
+        @Schema(description = "模板ID")
         private Integer templateId;
 
     }

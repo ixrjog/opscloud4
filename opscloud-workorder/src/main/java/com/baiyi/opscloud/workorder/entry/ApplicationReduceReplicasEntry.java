@@ -26,20 +26,20 @@ public class ApplicationReduceReplicasEntry {
         @Serial
         private static final long serialVersionUID = 1L;
 
-        @Schema(name = "数据实例UUID")
+        @Schema(description = "数据实例UUID")
         private String instanceUuid;
 
-        @Schema(name = "namespace:deployment")
+        @Schema(description = "namespace:deployment")
         private String name;
 
         private String namespace;
 
         private String deploymentName;
 
-        @Schema(name = "原副本数量")
+        @Schema(description = "原副本数量")
         private Integer replicas;
 
-        @Schema(name = "缩容后的副本数量")
+        @Schema(description = "缩容后的副本数量")
         private Integer reduceReplicas;
 
         private Integer id;

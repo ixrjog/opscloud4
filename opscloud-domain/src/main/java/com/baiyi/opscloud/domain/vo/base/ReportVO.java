@@ -75,10 +75,10 @@ public class ReportVO {
             return this;
         }
 
-        @Schema(name = "月份")
+        @Schema(description = "月份")
         private List<String> dateCat;
 
-        @Schema(name = "月度统计数据")
+        @Schema(description = "月度统计数据")
         @Builder.Default
         private Map<String, List<Integer>> valueMap = Maps.newHashMap();
 
@@ -97,10 +97,10 @@ public class ReportVO {
         @Serial
         private static final long serialVersionUID = 2165068012664529432L;
 
-        @Schema(name = "日期(月)")
+        @Schema(description = "日期(月)")
         private List<String> dateCat;
 
-        @Schema(name = "月度统计")
+        @Schema(description = "月度统计")
         private List<Integer> values;
 
         public static ReportVO.MonthReport buildMonthReport(List<ReportVO.Report> reports) {

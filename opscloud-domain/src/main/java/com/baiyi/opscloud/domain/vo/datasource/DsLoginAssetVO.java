@@ -19,16 +19,16 @@ public class DsLoginAssetVO {
     @NoArgsConstructor
     public static class LoginAsset {
 
-        @Schema(name = "资产ID")
+        @Schema(description = "资产ID")
         private String assetId;
 
-        @Schema(name = "显示名")
+        @Schema(description = "显示名")
         private String displayName;
 
-        @Schema(name = "登录IP")
+        @Schema(description = "登录IP")
         private String loginIp;
 
-        @Schema(name = "资产类型")
+        @Schema(description = "资产类型")
         private String assetType;
 
     }

@@ -19,15 +19,15 @@ public class SeverGroupPropertyParam {
     @Schema
     public static class PropertyParam {
 
-        @Schema(name = "服务器组id")
+        @Schema(description = "服务器组ID")
         @NotNull
         private Integer serverGroupId;
 
-        @Schema(name = "属性名称")
+        @Schema(description = "属性名称")
         @NotNull
         private Set<String> propertyNameSet;
 
-        @Schema(name = "环境类型",example = "-1")
+        @Schema(description = "环境类型",example = "-1")
         @NotNull
         private Integer envType;
 

@@ -23,11 +23,11 @@ public class LeoBuildPipelineParam {
     public static class GetPipelineRunNodeSteps {
 
         @Min(value = 0, message = "构建ID不能为空")
-        @Schema(name = "构建ID")
+        @Schema(description = "构建ID")
         private Integer buildId;
 
         @NotBlank(message = "节点ID不能为空")
-        @Schema(name = "节点ID")
+        @Schema(description = "节点ID")
         private String nodeId;
 
     }

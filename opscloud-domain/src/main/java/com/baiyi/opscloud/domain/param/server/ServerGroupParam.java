@@ -26,10 +26,10 @@ public class ServerGroupParam {
     @Schema
     public static class ServerGroupPageQuery extends SuperPageParam implements IExtend, IAllowOrder {
 
-        @Schema(name = "组名")
+        @Schema(description = "组名")
         private String name;
 
-        @Schema(name = "组类型")
+        @Schema(description = "组类型")
         private Integer serverGroupTypeId;
 
         private Boolean extend;
@@ -44,14 +44,14 @@ public class ServerGroupParam {
     @Schema
     public static class UserPermissionServerGroupPageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "组名")
+        @Schema(description = "组名")
         private String queryName;
 
-        @Schema(name = "用户id")
-        @NotNull(message = "用户id不能为空")
+        @Schema(description = "用户ID")
+        @NotNull(message = "用户ID不能为空")
         private Integer userId;
 
-        @Schema(name = "是否授权")
+        @Schema(description = "是否授权")
         @NotNull(message = "是否授权选项不能为空")
         private Boolean authorized;
 
@@ -68,10 +68,10 @@ public class ServerGroupParam {
 
         private Integer userId;
 
-        @Schema(name = "查询名称")
+        @Schema(description = "查询名称")
         private String name;
 
-        @Schema(name = "服务器组类型", example = "1")
+        @Schema(description = "服务器组类型", example = "1")
         private Integer serverGroupTypeId;
 
         private Boolean isAdmin;
@@ -87,10 +87,10 @@ public class ServerGroupParam {
     @Schema
     public static class ServerGroupEnvHostPatternQuery {
 
-        @Schema(name = "环境类型")
+        @Schema(description = "环境类型")
         private Integer envType;
 
-        @Schema(name = "服务器组名称")
+        @Schema(description = "服务器组名称")
         @NotBlank
         private String serverGroupName;
 

@@ -28,10 +28,10 @@ public class WorkEventReportVO {
         @Serial
         private static final long serialVersionUID = -6140886856564417436L;
 
-        @Schema(name = "周")
+        @Schema(description = "周")
         private List<String> weeks;
 
-        @Schema(name = "周统计数据")
+        @Schema(description = "周统计数据")
         private Map<String, WeeklyStatistics> valueMap;
 
 
@@ -47,10 +47,10 @@ public class WorkEventReportVO {
         @Serial
         private static final long serialVersionUID = -6140886856564417436L;
 
-        @Schema(name = "周统计")
+        @Schema(description = "周统计")
         private List<Integer> values;
 
-        @Schema(name = "类目颜色")
+        @Schema(description = "类目颜色")
         private String color;
 
 

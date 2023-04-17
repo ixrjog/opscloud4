@@ -22,15 +22,15 @@ public class ExmailParam {
     @Schema
     public static class User {
 
-        @Schema(name = "成员UserID。企业邮帐号名，邮箱格式", example = "bob@example.com")
+        @Schema(description = "成员UserID。企业邮帐号名，邮箱格式", example = "bob@example.com")
         private String userid;
-        @Schema(name = "成员名称")
+        @Schema(description = "成员名称")
         private String name;
-        @Schema(name = "成员所属部门id列表")
+        @Schema(description = "成员所属部门id列表")
         private List<Long> department;
-        @Schema(name = "手机号")
+        @Schema(description = "手机号")
         private String mobile;
-        @Schema(name = "启用/禁用成员。1表示启用成员，0表示禁用成员")
+        @Schema(description = "启用/禁用成员。1表示启用成员，0表示禁用成员")
         @Builder.Default
         private Integer enable = 1;
 

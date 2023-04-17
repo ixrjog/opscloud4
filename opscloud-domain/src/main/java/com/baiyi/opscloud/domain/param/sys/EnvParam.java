@@ -19,13 +19,13 @@ public class EnvParam {
     @Schema
     public static class EnvPageQuery extends PageParam {
 
-        @Schema(name = "环境名称")
+        @Schema(description = "环境名称")
         private String envName;
 
-        @Schema(name = "环境值")
+        @Schema(description = "环境值")
         private Integer envType;
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         private Boolean isActive;
 
     }

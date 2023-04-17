@@ -21,7 +21,7 @@ public class DsInstanceScheduleParam {
         @NotNull(message = "任务类型不能为空")
         private String jobType;
 
-        @NotNull(message = "必须指定数据源实例id")
+        @NotNull(message = "必须指定数据源实例ID")
         private Integer instanceId;
 
         @NotBlank(message = "资产类型不能为空")

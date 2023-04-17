@@ -17,13 +17,13 @@ public class TagParam {
     @Schema
     public static class TagPageQuery extends PageParam {
 
-        @Schema(name = "标签Key")
+        @Schema(description = "标签Key")
         private String tagKey;
 
-        @Schema(name = "业务类型", example = "0")
+        @Schema(description = "业务类型", example = "0")
         private Integer businessType;
 
-        @Schema(name = "是否追加通用标签")
+        @Schema(description = "是否追加通用标签")
         private Boolean append;
 
     }
@@ -35,13 +35,13 @@ public class TagParam {
     @Schema
     public static class BusinessQuery {
 
-        @Schema(name = "标签Key")
+        @Schema(description = "标签Key")
         private String tagKey;
 
-        @Schema(name = "业务类型", example = "1")
+        @Schema(description = "业务类型", example = "1")
         private Integer businessType;
 
-        @Schema(name = "业务id", example = "1")
+        @Schema(description = "业务ID", example = "1")
         private Integer businessId;
 
     }

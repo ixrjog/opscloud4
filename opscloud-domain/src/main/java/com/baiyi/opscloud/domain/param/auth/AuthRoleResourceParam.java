@@ -19,13 +19,13 @@ public class AuthRoleResourceParam {
     @Builder
     public static class RoleResourcePageQuery extends PageParam {
 
-        @Schema(name = "资源组ID")
+        @Schema(description = "资源组ID")
         private Integer groupId;
 
-        @Schema(name = "资源ID")
+        @Schema(description = "资源ID")
         private Integer roleId;
 
-        @Schema(name = "是否绑定")
+        @Schema(description = "是否绑定")
         private Boolean bind;
 
     }

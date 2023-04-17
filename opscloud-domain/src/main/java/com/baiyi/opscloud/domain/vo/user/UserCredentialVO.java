@@ -24,8 +24,13 @@ public class UserCredentialVO {
     @NoArgsConstructor
     @Schema
     public static class CredentialDetails {
-        private Map<String, List<Credential>> credentialMap; // 用户凭据
-        private Map<String,List<DsAssetVO.Asset>> assetCredentialMap; // 资产凭据
+
+        @Schema(description = "用户凭据")
+        private Map<String, List<Credential>> credentialMap;
+
+        @Schema(description = "资产凭据")
+        private Map<String, List<DsAssetVO.Asset>> assetCredentialMap;
+
     }
 
     @EqualsAndHashCode(callSuper = true)
@@ -35,32 +40,32 @@ public class UserCredentialVO {
     @NoArgsConstructor
     @Schema
     public static class Credential extends BaseVO {
-        @Schema(name = "主键")
+        @Schema(description = "主键")
         private Integer id;
 
-        @Schema(name = "用户ID")
+        @Schema(description = "用户ID")
         private Integer userId;
 
-        @Schema(name = "实例UUID")
+        @Schema(description = "实例UUID")
         private String instanceUuid;
 
-        @Schema(name = "标题")
+        @Schema(description = "标题")
         private String title;
 
-        @Schema(name = "凭据类型")
+        @Schema(description = "凭据类型")
         private Integer credentialType;
 
-        @Schema(name = "凭据内容")
+        @Schema(description = "凭据内容")
         @NotNull(message = "凭据不能为空")
         private String credential;
 
-        @Schema(name = "凭据指纹")
+        @Schema(description = "凭据指纹")
         private String fingerprint;
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         private Boolean valid;
 
-        @Schema(name = "有效期")
+        @Schema(description = "有效期")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date expiredTime;
 

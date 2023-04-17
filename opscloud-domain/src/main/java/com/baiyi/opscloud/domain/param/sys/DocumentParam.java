@@ -83,11 +83,11 @@ public class DocumentParam {
     @Schema
     public static class DocumentZoneQuery {
 
-        @Schema(name = "文档挂载区域")
+        @Schema(description = "文档挂载区域")
         @NotNull(message = "必须指定文档挂载区域")
         private String mountZone;
 
-        @Schema(name = "词典")
+        @Schema(description = "词典")
         private Map<String, String> dict;
 
     }
@@ -98,9 +98,9 @@ public class DocumentParam {
     @Schema
     public static class DocumentZonePageQuery extends PageParam {
 
-        @Schema(name = "关键字查询")
+        @Schema(description = "关键字查询")
         private String queryName;
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         private Boolean isActive;
 
     }
@@ -111,13 +111,13 @@ public class DocumentParam {
     @Schema
     public static class DocumentPageQuery extends PageParam {
 
-        @Schema(name = "关键字查询")
+        @Schema(description = "关键字查询")
         private String queryName;
 
-        @Schema(name = "文档挂载区域")
+        @Schema(description = "文档挂载区域")
         private String mountZone;
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         private Boolean isActive;
 
     }
@@ -127,10 +127,10 @@ public class DocumentParam {
     @Schema
     public static class DocumentQuery {
 
-        @Schema(name = "关键字")
+        @Schema(description = "关键字")
         private String documentKey;
 
-        @Schema(name = "词典")
+        @Schema(description = "词典")
         private Map<String, String> dict;
 
     }

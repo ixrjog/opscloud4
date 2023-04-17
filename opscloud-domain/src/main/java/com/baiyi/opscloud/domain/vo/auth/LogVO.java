@@ -18,7 +18,8 @@ public class LogVO {
     @Builder
     public static class Login {
 
-        private String name; // 用户显示名
+        @Schema(description = "用户显示名")
+        private String name;
         private String uuid;
         private String token;
 

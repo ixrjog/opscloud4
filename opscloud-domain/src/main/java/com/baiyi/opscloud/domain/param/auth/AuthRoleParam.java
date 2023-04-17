@@ -20,7 +20,7 @@ public class AuthRoleParam {
     @Schema
     public static class AuthRolePageQuery extends SuperPageParam {
 
-        @Schema(name = "角色名称")
+        @Schema(description = "角色名称")
         private String roleName;
 
     }
@@ -31,12 +31,12 @@ public class AuthRoleParam {
     @Schema
     public static class UserTicketOcAuthRoleQuery extends PageParam {
 
-        @Schema(name = "查询名称")
+        @Schema(description = "查询名称")
         private String queryName;
 
         private String username;
 
-        @Schema(name = "工单票据ID")
+        @Schema(description = "工单票据ID")
         private Integer workorderTicketId;
 
     }

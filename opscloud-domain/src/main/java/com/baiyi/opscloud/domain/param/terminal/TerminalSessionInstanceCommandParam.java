@@ -22,12 +22,12 @@ public class TerminalSessionInstanceCommandParam {
     @Schema
     public static class InstanceCommandPageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "会话实例ID")
+        @Schema(description = "会话实例ID")
         @Min(value = 1,message = "必需指定会话实例ID")
         @NotNull
         private Integer terminalSessionInstanceId;
 
-        @Schema(name = "查询参数")
+        @Schema(description = "查询参数")
         private String queryName;
 
         private Boolean extend;

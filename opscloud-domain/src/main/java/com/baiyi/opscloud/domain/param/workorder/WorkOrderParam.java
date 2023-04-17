@@ -22,10 +22,10 @@ public class WorkOrderParam {
     @Schema
     public static class WorkOrderPageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "工单组ID")
+        @Schema(description = "工单组ID")
         private Integer workOrderGroupId;
 
-        @Schema(name = "展开")
+        @Schema(description = "展开")
         private Boolean extend;
 
     }

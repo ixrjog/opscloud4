@@ -24,28 +24,28 @@ public class ServerParam {
     @Schema
     public static class ServerPageQuery extends SuperPageParam implements IExtend {
 
-        @Schema(name = "关键字查询")
+        @Schema(description = "关键字查询")
         private String queryName;
 
-//        @Schema(name = "查询ip")
+//        @Schema(description = "查询ip")
 //        private String queryIp;
 
-        @Schema(name = "服务器组ID")
+        @Schema(description = "服务器组ID")
         private Integer serverGroupId;
 
-        @Schema(name = "环境类型")
+        @Schema(description = "环境类型")
         private Integer envType;
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         private Boolean isActive;
 
-        @Schema(name = "状态")
+        @Schema(description = "状态")
         private Integer serverStatus;
 
-        @Schema(name = "监控状态")
+        @Schema(description = "监控状态")
         private Integer monitorStatus;
 
-        @Schema(name = "标签ID")
+        @Schema(description = "标签ID")
         private Integer tagId;
 
         private final Integer businessType = BusinessTypeEnum.SERVER.getType();
@@ -64,22 +64,22 @@ public class ServerParam {
 
         private Integer userId;
 
-        @Schema(name = "关键字查询")
+        @Schema(description = "关键字查询")
         private String queryName;
 
-        @Schema(name = "服务器组id")
+        @Schema(description = "服务器组ID")
         private Integer serverGroupId;
 
-        @Schema(name = "环境类型")
+        @Schema(description = "环境类型")
         private Integer envType;
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         private Boolean isActive;
 
-        @Schema(name = "状态")
+        @Schema(description = "状态")
         private Integer serverStatus;
 
-        @Schema(name = "标签id")
+        @Schema(description = "标签ID")
         private Integer tagId;
 
         private final Integer businessType = BusinessTypeEnum.SERVERGROUP.getType();
@@ -96,14 +96,14 @@ public class ServerParam {
     @Schema
     public static class UserPermissionServerPageQuery extends SuperPageParam implements IExtend {
 
-        @Schema(name = "用户id")
+        @Schema(description = "用户ID")
         @NotNull
         private Integer userId;
 
-        @Schema(name = "服务器名")
+        @Schema(description = "服务器名")
         private String name;
 
-        @Schema(name = "查询ip")
+        @Schema(description = "查询IP")
         private String queryIp;
 
         private final Integer businessType = BusinessTypeEnum.SERVERGROUP.getType();

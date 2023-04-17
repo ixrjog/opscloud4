@@ -28,7 +28,7 @@ public class TemplateVO {
     @Schema
     public static class Template extends BaseVO implements EnvVO.IEnv {
 
-        @Schema(name = "业务模板数量", example = "1")
+        @Schema(description = "业务模板数量", example = "1")
         private Integer bizTemplateSize;
 
         private EnvVO.Env env;

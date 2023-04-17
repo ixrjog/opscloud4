@@ -22,7 +22,7 @@ public class WorkOrderGroupParam {
     @Schema
     public static class WorkOrderGroupPageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "展开")
+        @Schema(description = "展开")
         private Boolean extend;
 
     }

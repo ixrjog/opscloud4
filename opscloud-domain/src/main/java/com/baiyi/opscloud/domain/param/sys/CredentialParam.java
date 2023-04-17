@@ -19,10 +19,10 @@ public class CredentialParam {
     @Schema
     public static class CredentialPageQuery extends PageParam {
 
-        @Schema(name = "查询名称")
+        @Schema(description = "查询名称")
         private String queryName;
 
-        @Schema(name = "凭据分类")
+        @Schema(description = "凭据分类")
         private Integer kind;
 
     }

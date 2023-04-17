@@ -24,24 +24,24 @@ public class AuthResourceVO {
         // 资源组
         private AuthGroupVO.Group group;
 
-        @Schema(name = "主键", example = "1")
+        @Schema(description = "主键", example = "1")
         private Integer id;
 
-        @Schema(name = "资源组id", example = "1")
+        @Schema(description = "资源组id", example = "1")
         @Valid
         private Integer groupId;
 
-        @Schema(name = "资源路径")
+        @Schema(description = "资源路径")
         @NotNull(message = "必须指定资源名称")
         private String resourceName;
 
-        @Schema(name = "资源描述")
+        @Schema(description = "资源描述")
         private String comment;
 
-        @Schema(name = "需要鉴权")
+        @Schema(description = "需要鉴权")
         private Boolean needAuth;
 
-        @Schema(name = "用户界面")
+        @Schema(description = "用户界面")
         private Boolean ui;
     }
 

@@ -20,13 +20,13 @@ public class BusinessTagParam {
     @Schema
     public static class UpdateBusinessTags implements BaseBusiness.IBusiness {
 
-        @Schema(name = "业务类型", example = "1")
+        @Schema(description = "业务类型", example = "1")
         private Integer businessType;
 
-        @Schema(name = "业务对象id", example = "1")
+        @Schema(description = "业务对象ID", example = "1")
         private Integer businessId;
 
-        @Schema(name = "标签key")
+        @Schema(description = "标签key")
         private Set<Integer> tagIds;
 
     }
@@ -36,13 +36,13 @@ public class BusinessTagParam {
     @Schema
     public static class UniqueKeyQuery {
 
-        @Schema(name = "标签Kid", example = "1")
+        @Schema(description = "标签ID", example = "1")
         private Integer tagId;
 
-        @Schema(name = "业务类型", example = "1")
+        @Schema(description = "业务类型", example = "1")
         private Integer businessType;
 
-        @Schema(name = "业务id", example = "1")
+        @Schema(description = "业务ID", example = "1")
         private Integer businessId;
 
     }

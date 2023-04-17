@@ -24,19 +24,19 @@ public class AuthRoleVO {
     @Schema
     public static class Role extends BaseVO {
 
-        @Schema(name = "主键", example = "1")
+        @Schema(description = "主键", example = "1")
         private Integer id;
 
-        @Schema(name = "角色名称")
+        @Schema(description = "角色名称")
         private String roleName;
 
-        @Schema(name = "访问级别", example = "50")
+        @Schema(description = "访问级别", example = "50")
         private Integer accessLevel;
 
-        @Schema(name = "角色描述")
+        @Schema(description = "角色描述")
         private String comment;
 
-        @Schema(name = "是否支持工单", example = "true")
+        @Schema(description = "是否支持工单", example = "true")
         private Boolean allowOrder;
 
     }

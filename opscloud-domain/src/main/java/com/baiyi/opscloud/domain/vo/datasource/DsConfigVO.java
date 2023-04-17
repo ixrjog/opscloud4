@@ -21,13 +21,13 @@ public class DsConfigVO {
     @Schema
     public static class DsConfig extends BaseVO implements CredentialVO.ICredential {
 
-        @Schema(name = "系统凭据")
+        @Schema(description = "系统凭据")
         private CredentialVO.Credential credential;
 
-        @Schema(name = "此配置文件注册的实例数量")
+        @Schema(description = "此配置文件注册的实例数量")
         private Integer instanceSize;
 
-        @Schema(name = "已注册")
+        @Schema(description = "已注册")
         private Boolean isRegistered;
 
         private Integer id;

@@ -23,33 +23,33 @@ public class DsAssetParam {
     @Schema
     public static class AssetPageQuery extends SuperPageParam implements IExtend, IRelation {
 
-        @Schema(name = "实例id")
+        @Schema(description = "实例ID")
         @NotNull(message = "实例id不能为空")
         private Integer instanceId;
 
-        @Schema(name = "实例uuid")
+        @Schema(description = "实例UUID")
         private String instanceUuid;
 
-        @Schema(name = "regionId")
+        @Schema(description = "regionId")
         private String regionId;
 
-        @Schema(name = "kind")
+        @Schema(description = "kind")
         private String kind;
 
-        @Schema(name = "资产类型")
+        @Schema(description = "资产类型")
         @NotNull(message = "资产类型不能为空")
         private String assetType;
 
-        @Schema(name = "模糊查询")
+        @Schema(description = "模糊查询")
         private String queryName;
 
-        @Schema(name = "展开")
+        @Schema(description = "展开")
         private Boolean extend;
 
-        @Schema(name = "展示资产关系")
+        @Schema(description = "展示资产关系")
         private Boolean relation;
 
-        @Schema(name = "是否有效")
+        @Schema(description = "是否有效")
         @Builder.Default
         private Boolean isActive = true;
 
@@ -67,18 +67,18 @@ public class DsAssetParam {
 
         private Integer userId;
 
-        @Schema(name = "实例id")
+        @Schema(description = "实例ID")
         @NotNull(message = "实例id不能为空")
         private Integer instanceId;
 
-        @Schema(name = "实例uuid")
+        @Schema(description = "实例UUID")
         private String instanceUuid;
 
-        @Schema(name = "资产类型")
+        @Schema(description = "资产类型")
         @NotNull(message = "资产类型不能为空")
         private String assetType;
 
-        @Schema(name = "模糊查询")
+        @Schema(description = "模糊查询")
         private String queryName;
 
     }
@@ -90,11 +90,11 @@ public class DsAssetParam {
     @Schema
     public static class BaseAsset {
 
-        @Schema(name = "实例id")
+        @Schema(description = "实例ID")
         @NotNull
         private Integer instanceId;
 
-        @Schema(name = "资产类型")
+        @Schema(description = "资产类型")
         @NotNull
         private String assetType;
 
@@ -128,13 +128,14 @@ public class DsAssetParam {
     @Schema
     public static class SetDsInstanceConfig {
 
-        @Schema(name = "实例id")
+        @Schema(description = "实例ID")
         @NotNull
         private Integer instanceId;
 
-        @Schema(name = "实例类型")
+        @Schema(description = "实例类型")
         @NotNull
         private String instanceType;
 
     }
+
 }

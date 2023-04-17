@@ -19,16 +19,16 @@ public class UserBusinessGroupParam {
     @Schema
     public static class PageQuery extends PageParam {
 
-        @Schema(name = "用户组名称")
+        @Schema(description = "用户组名称")
         private String name;
 
-        @Schema(name = "用户组类型", example = "1")
+        @Schema(description = "用户组类型", example = "1")
         private Integer grpType;
 
-        @Schema(name = "允许工单申请", example = "true")
+        @Schema(description = "允许工单申请", example = "true")
         private Boolean allowOrder;
 
-        @Schema(name = "扩展属性", example = "0")
+        @Schema(description = "扩展属性", example = "0")
         private Integer extend;
 
     }
@@ -39,10 +39,10 @@ public class UserBusinessGroupParam {
     @Schema
     public static class UserUserGroupPageQuery extends PageParam {
 
-        @Schema(name = "用户id")
+        @Schema(description = "用户ID")
         private Integer userId;
 
-        @Schema(name = "查询名称")
+        @Schema(description = "查询名称")
         private String queryName;
     }
 
@@ -52,10 +52,10 @@ public class UserBusinessGroupParam {
     @Schema
     public static class UserServerGroupPageQuery extends PageParam {
 
-        @Schema(name = "用户id")
+        @Schema(description = "用户ID")
         private Integer userId;
 
-        @Schema(name = "查询名称")
+        @Schema(description = "查询名称")
         private String queryName;
     }
 
@@ -64,10 +64,10 @@ public class UserBusinessGroupParam {
     @Schema
     public static class UserUserGroupPermission {
 
-        @Schema(name = "用户id")
+        @Schema(description = "用户ID")
         private Integer userId;
 
-        @Schema(name = "用户组id")
+        @Schema(description = "用户组ID")
         private Integer userGroupId;
     }
 
@@ -77,12 +77,12 @@ public class UserBusinessGroupParam {
     @Schema
     public static class UserTicketOcUserGroupQuery extends PageParam {
 
-        @Schema(name = "查询名称")
+        @Schema(description = "查询名称")
         private String queryName;
 
         private Integer userId;
 
-        @Schema(name = "工单票据id")
+        @Schema(description = "工单票据ID")
         private Integer workorderTicketId;
 
     }

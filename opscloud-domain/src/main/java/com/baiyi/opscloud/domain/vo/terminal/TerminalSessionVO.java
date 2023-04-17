@@ -37,14 +37,14 @@ public class TerminalSessionVO {
         private Integer userId;
         private String username;
         private String remoteAddr;
-        @Schema(name = "会话关闭")
+        @Schema(description = "会话关闭")
         private Boolean sessionClosed;
-        @Schema(name = "会话关闭事件")
+        @Schema(description = "会话关闭事件")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date closeTime;
         private String serverHostname;
         private String serverAddr;
-        @Schema(name = "会话类型")
+        @Schema(description = "会话类型")
         private String sessionType;
 
     }

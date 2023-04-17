@@ -22,17 +22,17 @@ public class BusinessTemplateParam {
     @Schema
     public static class BusinessTemplatePageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "实例UUID")
+        @Schema(description = "实例UUID")
         @NotNull(message = "必须指定实例UUID")
         private String instanceUuid;
 
-        @Schema(name = "关键字查询")
+        @Schema(description = "关键字查询")
         private String queryName;
 
-        @Schema(name = "环境类型")
+        @Schema(description = "环境类型")
         private Integer envType;
 
-        @Schema(name = "展开数据")
+        @Schema(description = "展开数据")
         private Boolean extend;
     }
 
@@ -44,12 +44,12 @@ public class BusinessTemplateParam {
     public static class BusinessTemplate {
 
         private Integer id;
-        @Schema(name = "实例UUID")
+        @Schema(description = "实例UUID")
         @NotBlank(message = "必须指定实例UUID")
         private String instanceUuid;
-        @Schema(name = "环境类型")
+        @Schema(description = "环境类型")
         private Integer envType;
-        @Schema(name = "业务模板名称，不填写则自动生成")
+        @Schema(description = "业务模板名称，不填写则自动生成")
         private String name;
         private Integer businessType;
         private Integer businessId;

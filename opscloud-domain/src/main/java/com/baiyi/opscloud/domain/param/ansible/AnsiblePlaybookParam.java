@@ -20,7 +20,7 @@ public class AnsiblePlaybookParam {
     @Schema
     public static class AnsiblePlaybookPageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "剧本名称")
+        @Schema(description = "剧本名称")
         private String name;
 
         private Boolean extend;

@@ -42,28 +42,28 @@ public class ApplicationVO {
 
         private List<TagVO.Tag> tags;
 
-        @Schema(name = "授权用户")
+        @Schema(description = "授权用户")
         private List<UserVO.User> users;
 
         private List<ApplicationResourceVO.Resource> resources;
 
         private Map<String, List<ApplicationResourceVO.Resource>> resourceMap;
 
-        @Schema(name = "业务文档")
+        @Schema(description = "业务文档")
         private BusinessDocumentVO.Document document;
 
-        @Schema(name = "主键", example = "1")
+        @Schema(description = "主键", example = "1")
         private Integer id;
 
-        @Schema(name = "应用名称")
+        @Schema(description = "应用名称")
         private String name;
 
-        @Schema(name = "应用关键字")
+        @Schema(description = "应用关键字")
         private String applicationKey;
 
         private Integer applicationType;
 
-        @Schema(name = "描述")
+        @Schema(description = "描述")
         private String comment;
 
         // 应用授权角度
@@ -94,30 +94,30 @@ public class ApplicationVO {
 
         private List<TagVO.Tag> tags;
 
-        @Schema(name = "授权用户")
+        @Schema(description = "授权用户")
         private List<UserVO.User> users;
 
         private List<ApplicationResourceVO.Resource> resources;
 
         private Map<String, List<ApplicationResourceVO.Resource>> resourceMap;
 
-        @Schema(name = "业务文档")
+        @Schema(description = "业务文档")
         private BusinessDocumentVO.Document document;
 
-        @Schema(name = "主键", example = "1")
+        @Schema(description = "主键", example = "1")
         private Integer id;
 
         @NotNull(message = "应用名称不能为空")
-        @Schema(name = "应用名称")
+        @Schema(description = "应用名称")
         private String name;
 
         @NotNull(message = "应用关键字不能为空")
-        @Schema(name = "应用关键字")
+        @Schema(description = "应用关键字")
         private String applicationKey;
 
         private Integer applicationType;
 
-        @Schema(name = "描述")
+        @Schema(description = "描述")
         private String comment;
 
         // 应用授权角度

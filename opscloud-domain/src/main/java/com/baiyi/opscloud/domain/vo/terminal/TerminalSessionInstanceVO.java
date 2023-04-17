@@ -27,7 +27,7 @@ public class TerminalSessionInstanceVO {
     @NoArgsConstructor
     @Schema
     public static class SessionInstance extends BaseVO {
-        @Schema(name = "会话时长")
+        @Schema(description = "会话时长")
         private Integer sessionDuration;
 
         private Integer id;
@@ -35,19 +35,19 @@ public class TerminalSessionInstanceVO {
         private String instanceId;
         private String duplicateInstanceId;
         private String instanceSessionType;
-        @Schema(name = "会话账户")
+        @Schema(description = "会话账户")
         private String loginUser;
         private String hostIp;
-        @Schema(name = "会话日志大小")
+        @Schema(description = "会话日志大小")
         private Long outputSize;
-        @Schema(name = "是否关闭")
+        @Schema(description = "是否关闭")
         private Boolean instanceClosed;
-        @Schema(name = "命令数量")
+        @Schema(description = "命令数量")
         private Integer commandSize;
-        @Schema(name = "会话实例开启时间")
+        @Schema(description = "会话实例开启时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date openTime;
-        @Schema(name = "会话实例关闭时间")
+        @Schema(description = "会话实例关闭时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date closeTime;
     }

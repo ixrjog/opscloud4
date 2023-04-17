@@ -13,13 +13,13 @@ public class DataTable<T> {
 
     public final static DataTable EMPTY = new DataTable<>();
 
-    @Schema(name = "分页数据")
+    @Schema(description = "分页数据")
     private List<T> data;
 
-    @Schema(name = "当前页码")
+    @Schema(description = "当前页码")
     private int nowPage;
 
-    @Schema(name = "总记录数")
+    @Schema(description = "总记录数")
     private long totalNum;
 
     public DataTable(List<T> data, long totalNum) {

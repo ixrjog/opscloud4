@@ -28,29 +28,19 @@ public class AnnouncementVO {
 
         private Integer id;
 
-        /**
-         * 标题
-         */
+        @Schema(description = "标题")
         private String title;
 
-        /**
-         * 分类
-         */
+        @Schema(description = "分类")
         private Integer kind;
 
-        /**
-         * 有效的
-         */
+        @Schema(description = "有效")
         private Boolean isActive;
 
-        /**
-         * 内容
-         */
+        @Schema(description = "内容")
         private String content;
 
-        /**
-         * 描述
-         */
+        @Schema(description = "描述")
         private String comment;
 
     }

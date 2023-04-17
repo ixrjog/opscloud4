@@ -17,10 +17,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ServerNode {
 
-    @Schema(name = "实例ID")
+    @Schema(description = "实例ID")
     private String instanceId;
 
-    @Schema(name = "标签（服务器名+IP）")
+    @Schema(description = "标签（服务器名+IP）")
     private String label;
 
     private Integer id;

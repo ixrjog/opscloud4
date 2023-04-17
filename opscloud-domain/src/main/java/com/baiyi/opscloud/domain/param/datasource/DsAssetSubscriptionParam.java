@@ -20,10 +20,10 @@ public class DsAssetSubscriptionParam {
     @Schema
     public static class AssetSubscriptionPageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "展开")
+        @Schema(description = "展开")
         private Boolean extend;
 
-        @Schema(name = "是否有效")
+        @Schema(description = "是否有效")
         @Builder.Default
         private Boolean isActive = true;
 

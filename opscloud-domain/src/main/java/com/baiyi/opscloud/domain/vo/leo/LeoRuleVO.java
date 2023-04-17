@@ -30,7 +30,7 @@ public class LeoRuleVO {
 
         private String comment;
 
-        @Schema(name = "显示名称")
+        @Schema(description = "显示名称")
         private String displayName;
 
     }

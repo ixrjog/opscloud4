@@ -24,13 +24,13 @@ public class ApplicationParam {
     @Schema
     public static class ApplicationPageQuery extends SuperPageParam implements IExtend {
 
-        @Schema(name = "应用名称")
+        @Schema(description = "应用名称")
         private String queryName;
 
-        @Schema(name = "标签ID")
+        @Schema(description = "标签ID")
         private Integer tagId;
 
-        @Schema(name = "展开")
+        @Schema(description = "展开")
         private Boolean extend;
 
     }
@@ -42,7 +42,7 @@ public class ApplicationParam {
     @Schema
     public static class GetApplicationKubernetes implements IExtend {
 
-        @Schema(name = "应用ID")
+        @Schema(description = "应用ID")
         @NotNull(message = "必须指定应用ID")
         @Min(value = 0, message = "应用ID不能为空")
         private Integer applicationId;
@@ -50,7 +50,7 @@ public class ApplicationParam {
         @Builder.Default
         private Boolean extend = false;
 
-        @Schema(name = "环境类型")
+        @Schema(description = "环境类型")
         private Integer envType;
 
     }
@@ -63,13 +63,13 @@ public class ApplicationParam {
     @Schema
     public static class UserPermissionApplicationPageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "应用名称")
+        @Schema(description = "应用名称")
         private String queryName;
 
-        @Schema(name = "用户ID", example = "1")
+        @Schema(description = "用户ID", example = "1")
         private Integer userId;
 
-        @Schema(name = "展开")
+        @Schema(description = "展开")
         private Boolean extend;
 
     }
@@ -78,7 +78,7 @@ public class ApplicationParam {
     public static class Query {
 
         @NotNull
-        @Schema(name = "应用ID")
+        @Schema(description = "应用ID")
         private Integer applicationId;
 
     }

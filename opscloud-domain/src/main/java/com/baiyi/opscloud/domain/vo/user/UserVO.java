@@ -50,26 +50,26 @@ public class UserVO {
     @Schema
     public static class RamUser {
 
-        @Schema(name = "实例名称")
+        @Schema(description = "实例名称")
         private String instanceName;
 
-        @Schema(name = "实例UUID")
+        @Schema(description = "实例UUID")
         private String instanceUuid;
 
         private String name;
 
         private String username;
 
-        @Schema(name = "登录用户(username@company-alias): https://help.aliyun.com/document_detail/143060.html")
+        @Schema(description = "登录用户(username@company-alias): https://help.aliyun.com/document_detail/143060.html")
         private String loginUser;
 
-        @Schema(name = "登录地址")
+        @Schema(description = "登录地址")
         private String loginUrl;
 
-        @Schema(name = "AccessKey列表")
+        @Schema(description = "AccessKey列表")
         private List<DsAssetVO.Asset> accessKeys;
 
-        @Schema(name = "策略列表")
+        @Schema(description = "策略列表")
         private List<DsAssetVO.Asset> ramPolicies;
 
     }
@@ -100,88 +100,88 @@ public class UserVO {
             return id;
         }
 
-        @Schema(name = "资产id")
+        @Schema(description = "资产id")
         private Integer assetId;
 
         private List<AuthRoleVO.Role> roles;
 
-        @Schema(name = "头像")
+        @Schema(description = "头像")
         private String avatar;
 
-        @Schema(name = "用户凭证")
+        @Schema(description = "用户凭证")
         private UserCredentialVO.CredentialDetails credentialDetails;
 
-        @Schema(name = "有效的AccessToken")
+        @Schema(description = "有效的AccessToken")
         private List<AccessTokenVO.AccessToken> accessTokens;
 
         private Map<String, List<IUserPermission>> businessPermissions;
 
-        @Schema(name = "云AM账户Map")
+        @Schema(description = "云AM账户Map")
         @Builder.Default
         private Map<String, List<AccessManagementVO.XAccessManagement>> amMap = Maps.newHashMap();
 
-        @Schema(name = "云AM用户列表（某一类型）")
+        @Schema(description = "云AM用户列表（某一类型）")
         @Builder.Default
         private List<AccessManagementVO.XAccessManagement> ams = Lists.newArrayList();
 
         // 废弃
-        @Schema(name = "阿里云RAM用户列表")
+        @Schema(description = "阿里云RAM用户列表")
         @Builder.Default
         private List<RamUser> ramUsers = Lists.newArrayList();
 
-        @Schema(name = "主键")
+        @Schema(description = "主键")
         @Builder.Default
         private Integer id = 0;
 
-        @Schema(name = "用户名")
+        @Schema(description = "用户名")
         private String username;
 
-        @Schema(name = "前端框架专用")
+        @Schema(description = "前端框架专用")
         private String uuid;
 
         @DesensitizedField(type = SensitiveTypeEnum.PASSWORD)
-        @Schema(name = "密码")
+        @Schema(description = "密码")
         private String password;
 
-        @Schema(name = "显示名")
+        @Schema(description = "显示名")
         private String displayName;
 
-        @Schema(name = "姓名")
+        @Schema(description = "姓名")
         private String name;
 
         @Email
-        @Schema(name = "邮箱")
+        @Schema(description = "邮箱")
         private String email;
 
-        @Schema(name = "有效用户")
+        @Schema(description = "有效用户")
         @NotNull(message = "有效用户字段不能为空")
         @Builder.Default
         private Boolean isActive = true;
 
-        @Schema(name = "最后登录时间")
+        @Schema(description = "最后登录时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date lastLogin;
 
-        @Schema(name = "微信")
+        @Schema(description = "微信")
         private String wechat;
 
         // @DesensitizedField(type = SensitiveTypeEnum.MOBILE_PHONE)
-        @Schema(name = "手机")
+        @Schema(description = "手机")
         private String phone;
 
-        @Schema(name = "启用MFA")
+        @Schema(description = "启用MFA")
         private Boolean mfa;
 
-        @Schema(name = "管理员强制启用MFA")
+        @Schema(description = "管理员强制启用MFA")
         private Boolean forceMfa;
 
-        @Schema(name = "创建者")
+        @Schema(description = "创建者")
         private String createdBy;
 
-        @Schema(name = "数据源")
+        @Schema(description = "数据源")
         private String source;
 
-        @Schema(name = "留言")
+        @Schema(description = "留言")
         private String comment;
 
         @Override
@@ -203,13 +203,13 @@ public class UserVO {
 
         private String username;
 
-        @Schema(name = "用户是否启用MFA")
+        @Schema(description = "用户是否启用MFA")
         private Boolean mfa;
 
-        @Schema(name = "是否强制用户启用MFA")
+        @Schema(description = "是否强制用户启用MFA")
         private Boolean forceMfa;
 
-        @Schema(name = "用户MFA配置")
+        @Schema(description = "用户MFA配置")
         private MfaVO.MFA userMfa;
 
     }
@@ -225,10 +225,10 @@ public class UserVO {
 
         private String username;
 
-        @Schema(name = "用户是否启用MFA")
+        @Schema(description = "用户是否启用MFA")
         private Boolean mfa;
 
-        @Schema(name = "用户MFA配置")
+        @Schema(description = "用户MFA配置")
         private List<MfaVO.MFA> userMfas;
 
     }

@@ -35,19 +35,19 @@ public class TagVO {
 
         private Integer quantityUsed;
 
-        @Schema(name = "主键", example = "1")
+        @Schema(description = "主键", example = "1")
         private Integer id;
 
-        @Schema(name = "业务类型", example = "0")
+        @Schema(description = "业务类型", example = "0")
         private Integer businessType;
 
-        @Schema(name = "标签key")
+        @Schema(description = "标签key")
         private String tagKey;
 
-        @Schema(name = "颜色值")
+        @Schema(description = "颜色值")
         private String color;
 
-        @Schema(name = "描述")
+        @Schema(description = "描述")
         private String comment;
 
         private BusinessTypeEnum businessTypeEnum;

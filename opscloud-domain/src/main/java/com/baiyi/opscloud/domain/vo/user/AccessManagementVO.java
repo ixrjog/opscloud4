@@ -60,26 +60,26 @@ public class AccessManagementVO {
         private static final long serialVersionUID = -8444786214672507521L;
         private String type;
 
-        @Schema(name = "实例名称")
+        @Schema(description = "实例名称")
         private String instanceName;
 
-        @Schema(name = "实例UUID")
+        @Schema(description = "实例UUID")
         private String instanceUuid;
 
         private String name;
 
         private String username;
 
-        @Schema(name = "登录用户")
+        @Schema(description = "登录用户")
         private String loginUser;
 
-        @Schema(name = "登录地址")
+        @Schema(description = "登录地址")
         private String loginUrl;
 
-        @Schema(name = "AccessKey列表")
+        @Schema(description = "AccessKey列表")
         private List<DsAssetVO.Asset> accessKeys;
 
-        @Schema(name = "策略列表")
+        @Schema(description = "策略列表")
         private List<DsAssetVO.Asset> policies;
 
     }

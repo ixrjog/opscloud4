@@ -31,7 +31,8 @@ public class AliyunLogMemberVO {
 
         private ServerGroup serverGroup;
 
-        private ArrayList<String> machineList; // IP列表
+        @Schema(description = "IP列表")
+        private ArrayList<String> machineList;
 
         private EnvVO.Env env;
 
@@ -39,10 +40,10 @@ public class AliyunLogMemberVO {
 
         private Integer id;
 
-        @NotNull(message = "必须指定日志服务id")
+        @NotNull(message = "必须指定日志服务ID")
         private Integer aliyunLogId;
 
-        @NotNull(message = "必须指定服务器组id")
+        @NotNull(message = "必须指定服务器组ID")
         private Integer serverGroupId;
 
         private String serverGroupName;

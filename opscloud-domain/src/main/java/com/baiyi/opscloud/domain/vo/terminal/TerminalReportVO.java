@@ -27,16 +27,16 @@ public class TerminalReportVO {
         @Serial
         private static final long serialVersionUID = 6948099219656277502L;
 
-        @Schema(name = "用户总数")
+        @Schema(description = "用户总数")
         private Integer userTotal;
 
-        @Schema(name = "会话总数")
+        @Schema(description = "会话总数")
         private Integer sessionTotal;
 
-        @Schema(name = "实例总数")
+        @Schema(description = "实例总数")
         private Integer instanceTotal;
 
-        @Schema(name = "命令总数")
+        @Schema(description = "命令总数")
         private Integer commandTotal;
 
         private ReportVO.MonthlyReport sessionReport;

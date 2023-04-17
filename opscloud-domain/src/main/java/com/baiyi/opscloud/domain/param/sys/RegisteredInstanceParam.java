@@ -20,10 +20,10 @@ public class RegisteredInstanceParam {
     @Schema
     public static class RegisteredInstancePageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "实例名称")
+        @Schema(description = "实例名称")
         private String name;
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         private Boolean isActive;
 
         private Boolean extend;

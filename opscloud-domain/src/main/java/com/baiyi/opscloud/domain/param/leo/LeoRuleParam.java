@@ -27,7 +27,7 @@ public class LeoRuleParam {
     @Schema
     public static class RulePageQuery extends SuperPageParam implements IExtend {
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         private Boolean isActive;
 
         private Boolean extend;
@@ -64,7 +64,7 @@ public class LeoRuleParam {
         @NotEmpty(message = "规则名称不能为空")
         private String name;
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         @NotNull(message = "必须指定有效")
         private Boolean isActive;
 

@@ -26,20 +26,20 @@ public class ApplicationScaleReplicasEntry {
         @Serial
         private static final long serialVersionUID = -2057324997536563597L;
 
-        @Schema(name = "数据实例UUID")
+        @Schema(description = "数据实例UUID")
         private String instanceUuid;
 
-        @Schema(name = "namespace:deployment")
+        @Schema(description = "namespace:deployment")
         private String name;
 
         private String namespace;
 
         private String deploymentName;
 
-        @Schema(name = "原副本数量")
+        @Schema(description = "原副本数量")
         private Integer replicas;
 
-        @Schema(name = "扩容后的副本数量")
+        @Schema(description = "扩容后的副本数量")
         private Integer scaleReplicas;
 
         private Integer id;

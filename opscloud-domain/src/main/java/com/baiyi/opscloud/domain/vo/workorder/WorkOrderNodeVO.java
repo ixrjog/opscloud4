@@ -41,12 +41,17 @@ public class WorkOrderNodeVO {
         private static final long serialVersionUID = 1606626459378798989L;
         private String name;
 
-        private String state; // "SUCCESS","PAUSED","not_built","FINISHED"
+        @Schema(description = "SUCCESS,PAUSED,not_built,FINISHED")
+        private String state;
+
         @Builder.Default
         private int completePercent = 50;
 
         private int id;
-        private String type; // STAGE,PARALLEL
+
+        @Schema(description = "STAGE,PARALLEL")
+        private String type;
+
         private PopInfo popInfo;
 
         private List<Stage> children;

@@ -39,7 +39,7 @@ public class ServerGroupTypeVO {
 
         private String comment;
 
-        @Schema(name = "使用类型的服务器组数量",example = "1")
+        @Schema(description = "使用类型的服务器组数量",example = "1")
         private Integer serverGroupSize;
     }
 

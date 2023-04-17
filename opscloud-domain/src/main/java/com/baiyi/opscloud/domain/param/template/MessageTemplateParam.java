@@ -19,10 +19,10 @@ public class MessageTemplateParam {
     @AllArgsConstructor
     public static class MessageTemplatePageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "关键字查询")
+        @Schema(description = "关键字查询")
         private String queryName;
 
-        @Schema(name = "展开数据")
+        @Schema(description = "展开数据")
         private Boolean extend;
 
     }

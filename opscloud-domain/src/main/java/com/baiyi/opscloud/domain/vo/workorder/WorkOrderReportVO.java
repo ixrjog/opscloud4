@@ -36,10 +36,10 @@ public class WorkOrderReportVO {
         @Serial
         private static final long serialVersionUID = -7642429717526988404L;
 
-        @Schema(name = "日期")
+        @Schema(description = "日期")
         private List<String> dateCat;
 
-        @Schema(name = "工单名称月度统计")
+        @Schema(description = "工单名称月度统计")
         private Map<String, MonthStatistics> nameCat;
     }
 
@@ -53,10 +53,10 @@ public class WorkOrderReportVO {
         @Serial
         private static final long serialVersionUID = -4917800861585712502L;
 
-        @Schema(name = "月度统计")
+        @Schema(description = "月度统计")
         private List<Integer> values;
 
-        @Schema(name = "类目颜色")
+        @Schema(description = "类目颜色")
         private String color;
 
     }

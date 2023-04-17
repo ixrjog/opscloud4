@@ -19,19 +19,19 @@ public class BusinessTagVO {
     @Schema
     public static class BusinessTag {
 
-        @Schema(name = "业务类型", example = "1")
+        @Schema(description = "业务类型", example = "1")
         private Integer businessType;
 
-        @Schema(name = "业务id(优先级高)", example = "1")
+        @Schema(description = "业务ID(优先级高)", example = "1")
         private Integer businessId;
 
-        @Schema(name = "业务ids(优先级低)", example = "1")
+        @Schema(description = "业务IDs(优先级低)", example = "1")
         private Set<Integer> businessIds;
 
-        @Schema(name = "标签id", example = "1")
+        @Schema(description = "标签ID", example = "1")
         private Integer tagId;
 
-        @Schema(name = "标签key")
+        @Schema(description = "标签key")
         private Set<Integer> tagIds;
 
     }

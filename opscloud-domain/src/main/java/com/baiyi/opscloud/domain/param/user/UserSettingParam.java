@@ -18,10 +18,10 @@ public class UserSettingParam {
     @Schema
     public static class UserSetting {
 
-        @Schema(name = "组名称")
+        @Schema(description = "组名称")
         private String settingGroup;
 
-        @Schema(name = "用户设置项")
+        @Schema(description = "用户设置项")
         private Map<String, String> settingMap;
 
     }

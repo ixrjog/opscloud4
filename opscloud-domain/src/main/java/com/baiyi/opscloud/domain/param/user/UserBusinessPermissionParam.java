@@ -28,21 +28,21 @@ public class UserBusinessPermissionParam {
 
         private int businessType;
 
-        @Schema(name = "查询名称")
+        @Schema(description = "查询名称")
         private String queryName;
 
-        @Schema(name = "应用ID")
+        @Schema(description = "应用ID")
         private Integer applicationId;
 
-        @Schema(name = "用户ID")
+        @Schema(description = "用户ID")
         private Integer userId;
 
-        @Schema(name = "是否授权")
+        @Schema(description = "是否授权")
         @NotNull(message = "是否授权选项不能为空")
         @Builder.Default
         private Boolean authorized = true;
 
-        @Schema(name = "是否管理员")
+        @Schema(description = "是否管理员")
         @Builder.Default
         private Boolean admin = false;
 
@@ -59,27 +59,27 @@ public class UserBusinessPermissionParam {
     @Schema
     public static class BusinessPermissionUserPageQuery extends PageParam implements IFilterTag, IExtend {
 
-        @Schema(name = "查询用户")
+        @Schema(description = "查询用户")
         private String queryName;
 
-        @Schema(name = "是否授权")
+        @Schema(description = "是否授权")
         @NotNull(message = "是否授权选项不能为空")
         @Builder.Default
         private Boolean authorized = true;
 
         private Boolean extend;
 
-        @Schema(name = "业务对象类型")
+        @Schema(description = "业务对象类型")
         @NotNull(message = "业务对象类型不能为空")
         private int businessType;
 
-        @Schema(name = "业务对象ID")
+        @Schema(description = "业务对象ID")
         @NotNull(message = "业务对象ID不能为空")
         private int businessId;
 
         private final String FILTER_SYSTEM_TAG = TagConstants.SYSTEM.getTag();
 
-        @Schema(name = "过滤系统标签对象")
+        @Schema(description = "过滤系统标签对象")
         private Boolean filterTag;
 
     }

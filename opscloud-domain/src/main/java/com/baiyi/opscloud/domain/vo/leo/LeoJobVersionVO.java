@@ -106,11 +106,11 @@ public class LeoJobVersionVO {
                 .isActive(false)
                 .build();
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         @Builder.Default
         private boolean isActive = true;
 
-        @Schema(name = "构建ID")
+        @Schema(description = "构建ID")
         private Integer buildId;
 
     }

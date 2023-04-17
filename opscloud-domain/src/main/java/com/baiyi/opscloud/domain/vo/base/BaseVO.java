@@ -14,11 +14,11 @@ import java.util.Date;
 @Data
 public class BaseVO {
 
-    @Schema(name = "创建时间")
+    @Schema(description = "创建时间")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
-    @Schema(name = "更新时间")
+    @Schema(description = "更新时间")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 

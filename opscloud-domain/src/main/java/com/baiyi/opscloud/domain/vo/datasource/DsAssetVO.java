@@ -47,7 +47,7 @@ public class DsAssetVO {
         private List<TagVO.Tag> tags;
         private final Integer businessType = BusinessTypeEnum.ASSET.getType();
 
-        @Schema(name = "此资产可转换为其它业务对象")
+        @Schema(description = "此资产可转换为其它业务对象")
         private Map<BusinessTypeEnum, BusinessAssetRelationVO.IBusinessAssetRelation> convertBusinessTypes;
 
         @Override
@@ -55,13 +55,13 @@ public class DsAssetVO {
             return id;
         }
 
-        @Schema(name = "资产属性")
+        @Schema(description = "资产属性")
         private Map<String, String> properties;
 
-        @Schema(name = "关系对象(以实体资产存在)")
+        @Schema(description = "关系对象(以实体资产存在)")
         private Map<String, List<DsAssetVO.Asset>> children;
 
-        @Schema(name = "子对象(依赖夫对象存在)")
+        @Schema(description = "子对象(依赖夫对象存在)")
         private Map<String, List<DsAssetVO.Asset>> tree;
 
         private DsLoginAssetVO.LoginAsset loginAsset;

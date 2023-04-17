@@ -23,7 +23,7 @@ public class NacosPageParam {
         private Integer pageNo = 1;
         @Builder.Default
         private Integer pageSize = 100;
-        @Schema(name = "token")
+        @Schema(description = "token")
         private String accessToken;
     }
 

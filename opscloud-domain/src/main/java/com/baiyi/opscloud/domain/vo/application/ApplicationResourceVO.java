@@ -38,15 +38,15 @@ public class ApplicationResourceVO {
 
         private String instanceUuid;
 
-        @Schema(name = "主键", example = "1")
+        @Schema(description = "主键", example = "1")
         private Integer id;
 
-        @NotNull(message = "应用id不能为空")
+        @NotNull(message = "应用ID不能为空")
         private Integer applicationId;
 
         private String name;
 
-        @Schema(name = "虚拟资源", example = "true")
+        @Schema(description = "虚拟资源", example = "true")
         @Builder.Default
         private Boolean virtualResource = false;
 
@@ -80,7 +80,7 @@ public class ApplicationResourceVO {
         @Serial
         private static final long serialVersionUID = -782607267036174626L;
 
-        @Schema(name = "主键", example = "1")
+        @Schema(description = "主键", example = "1")
         private Integer id;
 
         @NotNull(message = "应用id不能为空")
@@ -88,7 +88,7 @@ public class ApplicationResourceVO {
 
         private String name;
 
-        @Schema(name = "虚拟资源", example = "true")
+        @Schema(description = "虚拟资源", example = "true")
         @Builder.Default
         private Boolean virtualResource = false;
 

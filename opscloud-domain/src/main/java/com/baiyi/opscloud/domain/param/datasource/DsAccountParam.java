@@ -21,19 +21,19 @@ public class DsAccountParam {
     @Schema
     public static class AccountPageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "实例id")
+        @Schema(description = "实例ID")
         @NotNull
         private Integer instanceId;
 
         private String accountUid;
 
-        @Schema(name = "模糊查询")
+        @Schema(description = "模糊查询")
         private String queryName;
 
-        @Schema(name = "展开")
+        @Schema(description = "展开")
         private Boolean extend;
 
-        @Schema(name = "是否激活")
+        @Schema(description = "是否激活")
         private Boolean isActive;
 
     }

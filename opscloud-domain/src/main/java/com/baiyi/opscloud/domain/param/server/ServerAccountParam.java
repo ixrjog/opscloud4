@@ -23,11 +23,11 @@ public class ServerAccountParam {
     @Schema
     public static class UpdateServerAccountPermission {
 
-        @Schema(name = "服务器id", example = "1")
+        @Schema(description = "服务器ID", example = "1")
         @NotNull(message = "服务器id不能为空")
         private Integer serverId;
 
-        @Schema(name = "账户id列表")
+        @Schema(description = "账户ID列表")
         private Set<Integer> accountIds;
 
     }
@@ -38,13 +38,13 @@ public class ServerAccountParam {
     @Schema
     public static class ServerAccountPageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "用户名")
+        @Schema(description = "用户名")
         private String username;
 
-        @Schema(name = "账户类型")
+        @Schema(description = "账户类型")
         private Integer accountType;
 
-        @Schema(name = "协议")
+        @Schema(description = "协议")
         private String protocol;
 
         private Boolean extend;

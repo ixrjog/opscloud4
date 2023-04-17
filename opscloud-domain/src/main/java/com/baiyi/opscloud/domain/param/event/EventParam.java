@@ -21,13 +21,13 @@ public class EventParam {
     @Schema
     public static class UserPermissionEventPageQuery extends SuperPageParam implements IExtend {
 
-        @Schema(name = "用户id")
+        @Schema(description = "用户ID")
         private Integer userId;
 
-        @Schema(name = "查询名称")
+        @Schema(description = "查询名称")
         private String name;
 
-        @Schema(name = "业务类型")
+        @Schema(description = "业务类型")
         private Integer businessType;
 
         @Builder.Default

@@ -41,30 +41,30 @@ public class WorkEventVO {
 
         private Integer id;
 
-        @Schema(name = "工作角色id", example = "1")
+        @Schema(description = "工作角色ID", example = "1")
         private Integer workRoleId;
 
         private WorkRole workRole;
 
-        @Schema(name = "工作类目id", example = "1")
+        @Schema(description = "工作类目ID", example = "1")
         private Integer workItemId;
 
         private WorkItem workItem;
 
         private String workItemTree;
 
-        @Schema(name = "用户名")
+        @Schema(description = "用户名")
         private String username;
 
         private UserVO.User user;
 
-        @Schema(name = "时间")
+        @Schema(description = "时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
         private Date workEventTime;
 
         private String ago;
 
-        @Schema(name = "次数")
+        @Schema(description = "次数")
         private Integer workEventCnt;
 
         private String comment;
@@ -157,10 +157,10 @@ public class WorkEventVO {
                 .isShow(false)
                 .build();
 
-        @Schema(name = "前端类型")
+        @Schema(description = "前端类型")
         private String feType;
 
-        @Schema(name = "前端名称")
+        @Schema(description = "前端名称")
         private String feName;
 
         @Builder.Default

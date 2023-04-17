@@ -12,6 +12,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @Author baiyi
@@ -46,18 +47,19 @@ public class WorkOrderTicketVO {
     @Data
     @Schema
     public static class TicketView implements WorkOrderVO.IWorkOrder, ITicketEntries, Serializable {
+        @Serial
         private static final long serialVersionUID = -5342262347843407536L;
-        @Schema(name = "工单")
+        @Schema(description = "工单")
         private WorkOrderVO.WorkOrder workOrder;
-        @Schema(name = "工单票据")
+        @Schema(description = "工单票据")
         private Ticket ticket;
-        @Schema(name = "工单票据条目")
+        @Schema(description = "工单票据条目")
         private List<Entry> ticketEntries;
-        @Schema(name = "工单创建用户")
+        @Schema(description = "工单创建用户")
         private UserVO.User createUser;
-        @Schema(name = "工作流")
+        @Schema(description = "工作流")
         private WorkflowVO.WorkflowView workflowView;
-        @Schema(name = "工作流审批节点视图")
+        @Schema(description = "工作流审批节点视图")
         private WorkOrderNodeVO.NodeView nodeView;
 
         @Override
@@ -123,23 +125,20 @@ public class WorkOrderTicketVO {
         @Serial
         private static final long serialVersionUID = -3191271933875590264L;
 
-        @Schema(name = "是否为审批人")
+        @Schema(description = "是否为审批人")
         private Boolean isApprover;
 
         @Override
         public Boolean getIsApprover() {
-            if (this.isApprover == null) {
-                return false;
-            }
-            return this.isApprover;
+            return Objects.requireNonNullElse(this.isApprover, false);
         }
 
         private String ago;
 
-        @Schema(name = "工单")
+        @Schema(description = "工单")
         private WorkOrderVO.WorkOrder workOrder;
 
-        @Schema(name = "创建（申请）人")
+        @Schema(description = "创建（申请）人")
         private UserVO.User createUser;
 
         private Integer id;

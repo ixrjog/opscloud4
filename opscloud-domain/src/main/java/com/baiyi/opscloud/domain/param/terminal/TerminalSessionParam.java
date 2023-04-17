@@ -22,16 +22,16 @@ public class TerminalSessionParam {
     @Schema
     public static class TerminalSessionPageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "用户名")
+        @Schema(description = "用户名")
         private String username;
 
-        @Schema(name = "会话类型")
+        @Schema(description = "会话类型")
         private String sessionType;
 
-        @Schema(name = "会话状态")
+        @Schema(description = "会话状态")
         private Boolean sessionClosed;
 
-        @Schema(name = "Opscloud实例名称")
+        @Schema(description = "Opscloud实例名称")
         private String serverHostname;
 
         private Boolean extend;
@@ -43,7 +43,7 @@ public class TerminalSessionParam {
     @Schema
     public static class BatchCloseTerminalSession  {
 
-        @Schema(name = "查询参数")
+        @Schema(description = "查询参数")
         private List<Integer> ids;
 
     }

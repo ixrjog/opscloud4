@@ -30,23 +30,23 @@ public class LeoReportVO {
         @Serial
         private static final long serialVersionUID = 5737296480391365951L;
 
-        @Schema(name = "仪表盘")
+        @Schema(description = "仪表盘")
         private Dashboard dashboard;
 
-        @Schema(name = "持续交付报表")
+        @Schema(description = "持续交付报表")
         private ReportVO.MonthlyReport continuousDeliveryReport;
 
         private List<ReportVO.Report> buildWithEnvReport;
 
         private List<ReportVO.Report> deployWithEnvReport;
 
-//        @Schema(name = "构建月报表")
+//        @Schema(description = "构建月报表")
 //        private MonthReport buildMonthReport;
 //
-//        @Schema(name = "部署月报表")
+//        @Schema(description = "部署月报表")
 //        private MonthReport deployMonthReport;
 
-        @Schema(name = "Jenkins实例")
+        @Schema(description = "Jenkins实例")
         private List<LeoJenkinsInstance> instances;
 
     }
@@ -61,22 +61,22 @@ public class LeoReportVO {
         @Serial
         private static final long serialVersionUID = -2386828955543538401L;
 
-        @Schema(name = "应用总数")
+        @Schema(description = "应用总数")
         private Integer applicationTotal;
 
-        @Schema(name = "任务总数")
+        @Schema(description = "任务总数")
         private Integer jobTotal;
 
-        @Schema(name = "构建总数")
+        @Schema(description = "构建总数")
         private Integer buildTotal;
 
-        @Schema(name = "部署总数")
+        @Schema(description = "部署总数")
         private Integer deployTotal;
 
-        @Schema(name = "用户总数<使用过的>")
+        @Schema(description = "用户总数<使用过的>")
         private Integer userTotal;
 
-        @Schema(name = "授权用户总数")
+        @Schema(description = "授权用户总数")
         private Integer authorizedUserTotal;
     }
 
@@ -90,10 +90,10 @@ public class LeoReportVO {
         @Serial
         private static final long serialVersionUID = 1759830997901199516L;
 
-        @Schema(name = "日期(月)")
+        @Schema(description = "日期(月)")
         private List<String> dateCat;
 
-        @Schema(name = "月度统计")
+        @Schema(description = "月度统计")
         private List<Integer> values;
 
         public static MonthReport buildMonthReport(List<ReportVO.Report> reports) {
@@ -121,13 +121,13 @@ public class LeoReportVO {
         @Serial
         private static final long serialVersionUID = -8703855218611943799L;
 
-        @Schema(name = "数据源实例ID")
+        @Schema(description = "数据源实例ID")
         private Integer instanceId;
 
-        @Schema(name = "数据源实例名称")
+        @Schema(description = "数据源实例名称")
         private String instanceName;
 
-        @Schema(name = "数据源实例标签")
+        @Schema(description = "数据源实例标签")
         private List<TagVO.Tag> tags;
 
     }

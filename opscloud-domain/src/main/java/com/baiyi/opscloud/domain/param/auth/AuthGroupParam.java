@@ -24,10 +24,10 @@ public class AuthGroupParam {
     @Schema
     public static class AuthGroupPageQuery extends SuperPageParam implements IExtend {
 
-        @Schema(name = "资源组名称")
+        @Schema(description = "资源组名称")
         private String groupName;
 
-        @Schema(name = "展开")
+        @Schema(description = "展开")
         private Boolean extend;
 
     }

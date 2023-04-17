@@ -32,28 +32,28 @@ public class EnvVO {
 
         @Serial
         private static final long serialVersionUID = 5444243347465574812L;
-        @Schema(name = "主键", example = "1")
+        @Schema(description = "主键", example = "1")
         private Integer id;
 
-        @Schema(name = "环境名称")
+        @Schema(description = "环境名称")
         private String envName;
 
-        @Schema(name = "颜色值")
+        @Schema(description = "颜色值")
         private String color;
 
-        @Schema(name = "终端提示色")
+        @Schema(description = "终端提示色")
         private Integer promptColor;
 
-        @Schema(name = "环境值", example = "1")
+        @Schema(description = "环境值", example = "1")
         private Integer envType;
 
-        @Schema(name = "有效", example = "true")
+        @Schema(description = "有效", example = "true")
         private Boolean isActive;
 
-        @Schema(name = "顺序")
+        @Schema(description = "顺序")
         private Integer seq;
 
-        @Schema(name = "描述")
+        @Schema(description = "描述")
         private String comment;
 
     }

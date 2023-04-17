@@ -28,28 +28,28 @@ public class AccessTokenVO {
 
         private String later;
 
-        @Schema(name = "主键")
+        @Schema(description = "主键")
         private Integer id;
 
-        @Schema(name = "用户名")
+        @Schema(description = "用户名")
         private String username;
 
-        @Schema(name = "是否有效")
+        @Schema(description = "是否有效")
         private Boolean valid;
 
-        @Schema(name = "令牌")
+        @Schema(description = "令牌")
         @DesensitizedField(type = SensitiveTypeEnum.TOKEN)
         private String token;
 
-        @Schema(name = "令牌标识")
+        @Schema(description = "令牌标识")
         private String tokenId;
 
-        @Schema(name = "过期时间")
+        @Schema(description = "过期时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         @NotNull(message = "必须指定过期时间")
         private Date expiredTime;
 
-        @Schema(name = "描述")
+        @Schema(description = "描述")
         @NotNull(message = "必须指定描述")
         private String comment;
 

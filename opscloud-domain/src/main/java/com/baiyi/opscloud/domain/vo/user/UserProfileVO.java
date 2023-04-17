@@ -20,13 +20,13 @@ public class UserProfileVO {
     @Schema
     public static class Profiles {
 
-        @Schema(name = "用户名")
+        @Schema(description = "用户名")
         private String username;
 
-        @Schema(name = "用户ID")
+        @Schema(description = "用户ID")
         private Integer userId;
 
-        @Schema(name = "终端设置")
+        @Schema(description = "终端设置")
         @Builder.Default
         private Terminal terminal = Terminal.builder().build();
 
@@ -39,10 +39,10 @@ public class UserProfileVO {
     @Schema
     public static class Terminal {
 
-        @Schema(name = "主题")
+        @Schema(description = "主题")
         @Builder.Default
         private Theme theme = Theme.builder().build();
-        @Schema(name = "行数")
+        @Schema(description = "行数")
         @Builder.Default
         private Integer rows = 30;
 
@@ -55,15 +55,15 @@ public class UserProfileVO {
     @Schema
     public static class Theme {
 
-        @Schema(name = "字体颜色")
+        @Schema(description = "字体颜色")
         @Builder.Default
         private String foreground = "#090909";
 
-        @Schema(name = "背景色")
+        @Schema(description = "背景色")
         @Builder.Default
         private String background = "#FFFFFF";
 
-        @Schema(name = "光标色")
+        @Schema(description = "光标色")
         @Builder.Default
         private String cursor = "#090909";
 

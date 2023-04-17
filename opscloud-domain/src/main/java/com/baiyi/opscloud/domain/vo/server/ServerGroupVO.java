@@ -58,7 +58,7 @@ public class ServerGroupVO {
             return name;
         }
 
-        @Schema(name = "组类型")
+        @Schema(description = "组类型")
         private ServerGroupTypeVO.ServerGroupType serverGroupType;
 
         private List<TagVO.Tag> tags;
@@ -74,30 +74,30 @@ public class ServerGroupVO {
 
         private Integer userId;
 
-        @Schema(name = "服务器数量", example = "1")
+        @Schema(description = "服务器数量", example = "1")
         private Integer serverSize;
 
-        @Schema(name = "主键", example = "1")
+        @Schema(description = "主键", example = "1")
         private Integer id;
 
-        @Schema(name = "组名称")
+        @Schema(description = "组名称")
         @NotBlank(message = "组名称不能为空")
         private String name;
 
-        @Schema(name = "组类型", example = "1")
+        @Schema(description = "组类型", example = "1")
         @NotNull(message = "组类型不能为空")
         private Integer serverGroupTypeId;
 
-        @Schema(name = "是否支持工单")
+        @Schema(description = "是否支持工单")
         @NotNull(message = "是否支持工单不能为空")
         private Boolean allowOrder;
 
-        @Schema(name = "资源描述")
+        @Schema(description = "资源描述")
         private String comment;
 
         private Boolean isAdmin;
 
-        @Schema(name = "资产id")
+        @Schema(description = "资产id")
         private Integer assetId;
 
     }

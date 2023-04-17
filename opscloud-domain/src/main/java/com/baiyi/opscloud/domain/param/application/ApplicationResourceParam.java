@@ -27,27 +27,27 @@ public class ApplicationResourceParam {
     @Schema
     public static class ResourcePageQuery extends SuperPageParam implements IExtend, BaseBusiness.IBusinessType, IAppResType {
 
-        @Schema(name = "数据源实例ID")
+        @Schema(description = "数据源实例ID")
         private Integer instanceId;
 
-        @Schema(name = "数据源实例UUID")
+        @Schema(description = "数据源实例UUID")
         private String instanceUuid;
 
-        @Schema(name = "应用资源类型")
+        @Schema(description = "应用资源类型")
         @NotNull(message = "必须指定应用资源类型")
         private String appResType;
 
-        @Schema(name = "业务类型")
+        @Schema(description = "业务类型")
         @NotNull(message = "必须指定业务类型")
         private Integer businessType;
 
-        @Schema(name = "应用ID")
+        @Schema(description = "应用ID")
         private Integer applicationId;
 
-        @Schema(name = "应用名称")
+        @Schema(description = "应用名称")
         private String queryName;
 
-        @Schema(name = "展开")
+        @Schema(description = "展开")
         private Boolean extend;
 
     }

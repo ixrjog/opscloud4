@@ -58,13 +58,13 @@ public class WorkflowVO {
     public static class Node implements Serializable {
         @Serial
         private static final long serialVersionUID = 2636039751664799398L;
-        @Schema(name = "节点名称")
+        @Schema(description = "节点名称")
         private String name;
-        @Schema(name = "节点类型，参考NodeTypeConstants")
+        @Schema(description = "节点类型，参考NodeTypeConstants")
         @Builder.Default
         private Integer type = 0;
         private String comment;
-        @Schema(name = "筛选用户的标签")
+        @Schema(description = "筛选用户的标签")
         private List<String> tags;
     }
 

@@ -29,30 +29,30 @@ public class EventVO {
 
         private Integer id;
 
-        @Schema(name = "数据源实例uuid")
+        @Schema(description = "数据源实例UUID")
         private String instanceUuid;
 
-        @Schema(name = "事件id")
+        @Schema(description = "事件ID")
         private String eventId;
 
-        @Schema(name = "事件id描述")
+        @Schema(description = "事件ID描述")
         private String eventIdDesc;
 
-        @Schema(name = "严重性级别")
+        @Schema(description = "严重性级别")
         private Integer priority;
 
-        @Schema(name = "严重类型")
+        @Schema(description = "严重类型")
         private String severityType;
 
-        @Schema(name = "最后更改其状态的时间")
+        @Schema(description = "最后更改其状态的时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date lastchangeTime;
 
-        @Schema(name = "过期时间")
+        @Schema(description = "过期时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date expiredTime;
 
-        @Schema(name = "事件信息")
+        @Schema(description = "事件信息")
         private String eventMessage;
 
     }

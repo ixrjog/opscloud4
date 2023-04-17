@@ -16,13 +16,13 @@ public class LoginParam {
     public static class Login {
 
         @NotBlank(message = "用户名不能为空")
-        @Schema(name = "用户名")
+        @Schema(description = "用户名")
         private String username;
 
-        @Schema(name = "密码")
+        @Schema(description = "密码")
         private String password;
 
-        @Schema(name = "一次性密码(OTP)")
+        @Schema(description = "一次性密码(OTP)")
         private String otp;
 
         public boolean isEmptyPassword() {
@@ -38,11 +38,11 @@ public class LoginParam {
     public static class PlatformLogin extends Login implements IAuthPlatform {
 
         @NotBlank(message = "平台名称不能为空")
-        @Schema(name = "平台名称(用于审计)")
+        @Schema(description = "平台名称(用于审计)")
         public String platform;
 
         @NotBlank(message = "平台令牌不能为空")
-        @Schema(name = "平台令牌用于鉴权")
+        @Schema(description = "平台令牌用于鉴权")
         public String platformToken;
 
     }
@@ -53,11 +53,11 @@ public class LoginParam {
     public static class Logout {
 
         @NotBlank(message = "用户名不能为空")
-        @Schema(name = "用户名")
+        @Schema(description = "用户名")
         private String username;
 
         @NotBlank(message = "令牌不能为空")
-        @Schema(name = "令牌")
+        @Schema(description = "令牌")
         private String token;
 
     }

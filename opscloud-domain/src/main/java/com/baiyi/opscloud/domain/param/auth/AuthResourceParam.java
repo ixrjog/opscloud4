@@ -25,13 +25,13 @@ public class AuthResourceParam {
     @Schema
     public static class AuthResourcePageQuery extends SuperPageParam implements IExtend {
 
-        @Schema(name = "资源组id")
+        @Schema(description = "资源组ID")
         private Integer groupId;
 
-        @Schema(name = "资源路径")
+        @Schema(description = "资源路径")
         private String resourceName;
 
-        @Schema(name = "鉴权")
+        @Schema(description = "鉴权")
         private Boolean needAuth;
 
         @Override
@@ -47,13 +47,13 @@ public class AuthResourceParam {
     @Schema
     public static class RoleBindResourcePageQuery extends PageParam {
 
-        @Schema(name = "资源组id")
+        @Schema(description = "资源组ID")
         private Integer groupId;
 
-        @Schema(name = "资源id")
+        @Schema(description = "资源ID")
         private Integer roleId;
 
-        @Schema(name = "是否绑定")
+        @Schema(description = "是否绑定")
         private Boolean bind;
 
     }

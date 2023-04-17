@@ -27,7 +27,7 @@ public class NacosClusterParam {
         private Integer pageSize = 10;
         @Builder.Default
         private String keyword = "";
-        @Schema(name = "token")
+        @Schema(description = "token")
         private String accessToken;
         @Builder.Default
         private String namespaceId = "dev";

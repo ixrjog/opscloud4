@@ -33,26 +33,26 @@ public class BusinessDocumentVO {
         @Serial
         private static final long serialVersionUID = 6050583884005972339L;
 
-        @Schema(name = "业务对象显示名称")
+        @Schema(description = "业务对象显示名称")
         private String displayName;
 
         private Integer id;
 
-        @Schema(name = "业务类型")
+        @Schema(description = "业务类型")
         private Integer businessType;
 
-        @Schema(name = "业务ID")
+        @Schema(description = "业务ID")
         private Integer businessId;
 
-        @Schema(name = "文档类型")
+        @Schema(description = "文档类型")
         private Integer documentType;
 
         private String comment;
 
-        @Schema(name = "文档")
+        @Schema(description = "文档")
         private String doc;
 
-        @Schema(name = "文档原内容")
+        @Schema(description = "文档原内容")
         private String content;
 
     }

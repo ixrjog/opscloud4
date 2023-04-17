@@ -20,7 +20,7 @@ public class AliyunLogVO {
     @Schema
     public static class Log extends BaseVO {
 
-        @Schema(name = "成员数量")
+        @Schema(description = "成员数量")
         private Integer memberSize;
 
         private Integer id;

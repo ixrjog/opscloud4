@@ -72,61 +72,61 @@ public class ServerVO {
             return id;
         }
 
-        @Schema(name = "主键", example = "1")
+        @Schema(description = "主键", example = "1")
         @Builder.Default
         private Integer id = 0;
 
-        @Schema(name = "服务器名称")
+        @Schema(description = "服务器名称")
         @NotBlank(message = "服务器名称不能为空")
         private String name;
 
-        @Schema(name = "显示名称")
+        @Schema(description = "显示名称")
         private String displayName;
 
-        @Schema(name = "服务器组id", example = "1")
+        @Schema(description = "服务器组id", example = "1")
         @NotNull(message = "服务器组不能为空")
         private Integer serverGroupId;
 
-        @Schema(name = "环境类型", example = "1")
+        @Schema(description = "环境类型", example = "1")
         @NotNull(message = "环境类型不能为空")
         private Integer envType;
 
-        @Schema(name = "公网IP")
+        @Schema(description = "公网IP")
         private String publicIp;
 
-        @Schema(name = "私网IP")
+        @Schema(description = "私网IP")
         @NotBlank(message = "私网ip不能为空")
         private String privateIp;
 
-        @Schema(name = "服务器类型", example = "1")
+        @Schema(description = "服务器类型", example = "1")
         @NotNull(message = "服务器类型不能为空")
         @Builder.Default
         private Integer serverType = 0;
 
-        @Schema(name = "地区")
+        @Schema(description = "地区")
         private String area;
 
-        @Schema(name = "系统类型")
+        @Schema(description = "系统类型")
         private String osType;
 
-        @Schema(name = "序号", example = "1")
+        @Schema(description = "序号", example = "1")
         @Builder.Default
         private Integer serialNumber = 0;
 
-        @Schema(name = "监控状态", example = "1")
+        @Schema(description = "监控状态", example = "1")
         private Integer monitorStatus;
 
-        @Schema(name = "资源描述")
+        @Schema(description = "资源描述")
         private String comment;
 
-        @Schema(name = "服务器状态", example = "1")
+        @Schema(description = "服务器状态", example = "1")
         private Integer serverStatus;
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         @Builder.Default
         private Boolean isActive = true;
 
-        @Schema(name = "资产ID")
+        @Schema(description = "资产ID")
         private Integer assetId;
 
     }

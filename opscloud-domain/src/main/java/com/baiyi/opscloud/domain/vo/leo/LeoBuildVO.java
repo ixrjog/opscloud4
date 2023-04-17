@@ -32,22 +32,22 @@ public class LeoBuildVO {
         @Serial
         private static final long serialVersionUID = -697201191162725310L;
 
-        @Schema(name = "构建详情")
+        @Schema(description = "构建详情")
         private Object buildDetails;
 
-        @Schema(name = "流水线")
+        @Schema(description = "流水线")
         private Pipeline pipeline;
 
-        @Schema(name = "以前")
+        @Schema(description = "以前")
         private String ago;
 
-        @Schema(name = "运行时长")
+        @Schema(description = "运行时长")
         private String runtime;
 
-        @Schema(name = "镜像存在")
+        @Schema(description = "镜像存在")
         private Boolean isImageExists;
 
-        @Schema(name = "镜像")
+        @Schema(description = "镜像")
         private LeoBuildVO.Image image;
 
         private Integer id;

@@ -20,10 +20,10 @@ public class AuthUserRoleParam {
     @Schema
     public static class PageQuery extends PageParam {
 
-        @Schema(name = "用户名")
+        @Schema(description = "用户名")
         private String username;
 
-        @Schema(name = "角色id")
+        @Schema(description = "角色ID")
         private Integer roleId;
 
     }
@@ -35,11 +35,11 @@ public class AuthUserRoleParam {
     @Schema
     public static class UpdateUserRole {
 
-        @Schema(name = "用户名")
+        @Schema(description = "用户名")
         @Valid
         private String username;
 
-        @Schema(name = "角色IDs")
+        @Schema(description = "角色IDs")
         private List<Integer> roleIds;
 
     }
@@ -49,7 +49,7 @@ public class AuthUserRoleParam {
     @Schema
     public static class UserRolesQuery {
 
-        @Schema(name = "用户名")
+        @Schema(description = "用户名")
         private String username;
 
     }

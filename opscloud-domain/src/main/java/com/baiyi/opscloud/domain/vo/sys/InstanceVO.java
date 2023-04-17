@@ -76,4 +76,5 @@ public class InstanceVO {
         private Map<String,Integer> activeSessionMap;
 
     }
+
 }

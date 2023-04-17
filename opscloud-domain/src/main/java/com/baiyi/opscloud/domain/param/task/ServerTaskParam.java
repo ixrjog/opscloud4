@@ -24,10 +24,10 @@ public class ServerTaskParam {
     @Schema
     public static class ServerTaskPageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "关键字查询")
+        @Schema(description = "关键字查询")
         private String queryName;
 
-        @Schema(name = "任务是否完成")
+        @Schema(description = "任务是否完成")
         private Boolean finalized;
 
         private Boolean extend;
@@ -39,26 +39,26 @@ public class ServerTaskParam {
     @Schema
     public static class SubmitServerTask {
 
-        @Schema(name = "执行实例")
+        @Schema(description = "执行实例")
         @NotNull(message = "必须指定Ansible实例")
         private String instanceUuid;
 
-        @Schema(name = "任务uuid(幂等)")
+        @Schema(description = "任务UUID(幂等)")
         @NotNull(message = "必须指定任务uuid")
         private String taskUuid;
 
-        @Schema(name = "剧本id", example = "1")
+        @Schema(description = "剧本ID", example = "1")
         @NotNull(message = "必须指定任务剧本")
         private Integer ansiblePlaybookId;
 
-        @Schema(name = "任务类型")
+        @Schema(description = "任务类型")
         private String taskType;
 
         private String vars;
 
         private String tags;
 
-        @Schema(name = "执行任务的服务器列表")
+        @Schema(description = "执行任务的服务器列表")
         @NotNull(message = "必须指定执行任务的服务器列表")
         private List<ServerVO.Server> servers;
 

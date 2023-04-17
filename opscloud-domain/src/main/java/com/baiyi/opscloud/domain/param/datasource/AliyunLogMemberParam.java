@@ -21,10 +21,10 @@ public class AliyunLogMemberParam {
     @Schema
     public static class LogMemberPageQuery extends PageParam implements IExtend {
 
-        @NotNull(message = "必须指定日志服务id")
+        @NotNull(message = "必须指定日志服务ID")
         private Integer aliyunLogId;
 
-        @Schema(name = "查询关键字")
+        @Schema(description = "查询关键字")
         private String queryName;
 
         private Boolean extend;
@@ -36,10 +36,10 @@ public class AliyunLogMemberParam {
     @Schema
     public static class AddLogMember {
 
-        @NotNull(message = "必须指定日志服务id")
+        @NotNull(message = "必须指定日志服务ID")
         private Integer aliyunLogId;
 
-        @NotNull(message = "必须指定服务器组id")
+        @NotNull(message = "必须指定服务器组ID")
         private Integer serverGroupId;
 
         private String serverGroupName;

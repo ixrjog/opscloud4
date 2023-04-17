@@ -154,7 +154,7 @@ public class LeoDeployingVO {
         public PodDetails init() {
             this.isComplete = conditions.keySet()
                     .stream()
-                    .filter(k -> conditions.get(k).equalsIgnoreCase("True"))
+                    .filter(k -> "True".equalsIgnoreCase(conditions.get(k)))
                     .count() == 4;
             return this;
         }

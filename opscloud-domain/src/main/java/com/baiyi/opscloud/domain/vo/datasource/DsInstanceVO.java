@@ -48,7 +48,7 @@ public class DsInstanceVO {
 
         private List<AssetDetail> assetDetails;
 
-        @Schema(name = "任务数量", example = "1")
+        @Schema(description = "任务数量", example = "1")
         private Integer jobSize;
 
         private List<Instance> children;

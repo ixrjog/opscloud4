@@ -29,13 +29,13 @@ public class LeoDeployVO {
         @Serial
         private static final long serialVersionUID = -6080138223431460692L;
 
-        @Schema(name = "以前")
+        @Schema(description = "以前")
         private String ago;
 
-        @Schema(name = "运行时长")
+        @Schema(description = "运行时长")
         private String runtime;
 
-        @Schema(name = "部署详情")
+        @Schema(description = "部署详情")
         private Object deployDetails;
 
         private Integer id;

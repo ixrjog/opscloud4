@@ -20,7 +20,7 @@ public class ServerGroupTypeParam {
     @Schema
     public static class ServerGroupTypePageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "名称")
+        @Schema(description = "名称")
         private String name;
 
         private Boolean extend;

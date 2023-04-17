@@ -19,13 +19,13 @@ public class AuthRoleResourceVO {
     @Builder
     public static class RoleResource extends BaseVO {
 
-        @Schema(name = "主键",example="1")
+        @Schema(description = "主键",example="1")
         private Integer id;
 
-        @Schema(name = "role主键",example="1")
+        @Schema(description = "role主键",example="1")
         private Integer roleId;
 
-        @Schema(name = "资源主键",example="1")
+        @Schema(description = "资源主键",example="1")
         private Integer resourceId;
 
     }

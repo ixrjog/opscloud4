@@ -17,13 +17,13 @@ public class UserAmParam {
     @NoArgsConstructor
     @Schema
     public static class CreateUser implements DsInstanceVO.IInstance {
-        @Schema(name = "数据源实例UUID")
+        @Schema(description = "数据源实例UUID")
         private String instanceUuid;
 
-        @Schema(name = "数据源实例ID")
+        @Schema(description = "数据源实例ID")
         private Integer instanceId;
 
-        @Schema(name = "用户名")
+        @Schema(description = "用户名")
         private String username;
     }
 
@@ -33,14 +33,14 @@ public class UserAmParam {
     @NoArgsConstructor
     @Schema
     public static class GrantPolicy implements DsInstanceVO.IInstance {
-        @Schema(name = "数据源实例UUID")
+        @Schema(description = "数据源实例UUID")
         private String instanceUuid;
-        @Schema(name = "数据源实例ID")
+        @Schema(description = "数据源实例ID")
         private Integer instanceId;
-        //        @Schema(name = "需要创建账户")
+        //        @Schema(description = "需要创建账户")
         //        private Boolean needCreate;
         private Policy policy;
-        @Schema(name = "用户名")
+        @Schema(description = "用户名")
         private String username;
     }
 

@@ -25,22 +25,22 @@ public class LeoBuildParam {
     public static class DoBuild {
 
         @Min(value = 0, message = "关联任务ID不能为空")
-        @Schema(name = "关联任务ID")
+        @Schema(description = "关联任务ID")
         private Integer jobId;
 
-        @Schema(name = "分支")
+        @Schema(description = "分支")
         private String branch;
 
-        @Schema(name = "COMMIT ID")
+        @Schema(description = "COMMIT ID")
         private String commitId;
 
-        @Schema(name = "构建参数")
+        @Schema(description = "构建参数")
         private Map<String, String> params;
 
-        @Schema(name = "版本名称")
+        @Schema(description = "版本名称")
         private String versionName;
 
-        @Schema(name = "版本说明")
+        @Schema(description = "版本说明")
         private String versionDesc;
 
     }
@@ -53,14 +53,14 @@ public class LeoBuildParam {
     public static class GetBuildBranchOptions {
 
         @Min(value = 0, message = "关联任务ID不能为空")
-        @Schema(name = "关联任务ID")
+        @Schema(description = "关联任务ID")
         private Integer jobId;
 
         @NotEmpty(message = "必须指定项目SshURL")
-        @Schema(name = "项目SshURL")
+        @Schema(description = "项目SshURL")
         private String sshUrl;
 
-        @Schema(name = "查询Tag")
+        @Schema(description = "查询Tag")
         private Boolean openTag;
 
     }
@@ -73,15 +73,15 @@ public class LeoBuildParam {
     public static class CreateBuildBranch {
 
         @Min(value = 0, message = "关联任务ID不能为空")
-        @Schema(name = "关联任务ID")
+        @Schema(description = "关联任务ID")
         private Integer jobId;
 
         @NotEmpty(message = "必须指定项目SshURL")
-        @Schema(name = "项目SshURL")
+        @Schema(description = "项目SshURL")
         private String sshUrl;
 
         @NotEmpty(message = "必须指定从哪个分支创建")
-        @Schema(name = "从这个分支创建")
+        @Schema(description = "从这个分支创建")
         private String ref;
 
     }
@@ -94,17 +94,17 @@ public class LeoBuildParam {
     public static class UpdateBuild {
 
         @Min(value = 0, message = "构建ID不能为空")
-        @Schema(name = "构建ID")
+        @Schema(description = "构建ID")
         private Integer id;
 
         @NotEmpty(message = "版本名称不能为空")
-        @Schema(name = "版本名称")
+        @Schema(description = "版本名称")
         private String versionName;
 
-        @Schema(name = "版本描述")
+        @Schema(description = "版本描述")
         private String versionDesc;
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         private Boolean isActive;
 
     }

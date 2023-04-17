@@ -295,6 +295,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                 .build(sessionId, podContext.getPodIp(), instanceId, InstanceSessionTypeEnum.CONTAINER_TERMINAL);
         simpleTerminalSessionFacade.recordTerminalSessionInstance(terminalSessionInstance);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Size size = terminal.getSize();
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetesDsInstanceConfig.getKubernetes());
              ExecWatch execWatch = kc.pods()
                      .inNamespace(podContext.getNamespace())
@@ -308,9 +309,10 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                      .writingOutput(baos)
                      .withTTY()
                      .usingListener(listener)
-                     .exec("env", "TERM=xterm", "sh");
+                     // .exec("env", "TERM=xterm", "COLUMNS=" + columns, "LINES=" + lines, "sh", "-c", "ls -la");
+                     .exec("env", "TERM=xterm", "COLUMNS=" + size.getColumns(), "LINES=" + size.getRows(), "sh");
         ) {
-            Size size = terminal.getSize();
+
             execWatch.resize(size.getColumns(), size.getRows());
             SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
             ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
@@ -319,11 +321,13 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
             coreExecutor.execute(run);
             // 行模式
             TerminalUtil.enterRawMode(terminal);
+
             while (!listener.isClosed()) {
-                int ch = terminal.reader().read(10L);
+                int ch = terminal.reader().read(5L);
                 if (ch >= 0) {
                     execWatch.getInput().write(ch);
                     execWatch.getInput().flush();
+                    char c = (char) ch;
                     if (ch == EOF) {
                         // 等待退出，避免sh残留
                         NewTimeUtil.millisecondsSleep(200L);
@@ -331,7 +335,6 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                     }
                 }
                 tryResize(size, terminal, execWatch);
-                NewTimeUtil.millisecondsSleep(15L);
             }
         } catch (Exception e) {
             log.warn(e.getMessage());

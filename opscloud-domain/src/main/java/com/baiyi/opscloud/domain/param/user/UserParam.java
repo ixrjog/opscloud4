@@ -28,39 +28,39 @@ public class UserParam {
 
         private Integer id;
 
-        @Schema(name = "用户名")
+        @Schema(description = "用户名")
         private String username;
 
-        @Schema(name = "前端框架用户UUID")
+        @Schema(description = "前端框架用户UUID")
         private String uuid;
 
-        @Schema(name = "密码")
+        @Schema(description = "密码")
         private String password;
 
-        @Schema(name = "姓名")
+        @Schema(description = "姓名")
         private String name;
 
-        @Schema(name = "显示名")
+        @Schema(description = "显示名")
         private String displayName;
 
-        @Schema(name = "邮箱")
+        @Schema(description = "邮箱")
         private String email;
 
         private Boolean isActive;
 
         private String wechat;
 
-        @Schema(name = "手机")
+        @Schema(description = "手机")
         private String phone;
 
-        @Schema(name = "启用MFA")
+        @Schema(description = "启用MFA")
         private Boolean mfa;
 
         private Boolean forceMfa;
 
         private String createdBy;
 
-        @Schema(name = "数据源")
+        @Schema(description = "数据源")
         private String source;
 
         private String comment;
@@ -90,43 +90,43 @@ public class UserParam {
 
         private Integer id;
 
-        @Schema(name = "初始化默认配置", example = "false")
+        @Schema(description = "初始化默认配置", example = "false")
         private Boolean needInitializeDefaultConfiguration;
 
-        @Schema(name = "用户名")
+        @Schema(description = "用户名")
         private String username;
 
-        @Schema(name = "前端框架用户UUID")
+        @Schema(description = "前端框架用户UUID")
         private String uuid;
 
-        @Schema(name = "密码")
+        @Schema(description = "密码")
         private String password;
 
-        @Schema(name = "姓名")
+        @Schema(description = "姓名")
         private String name;
 
-        @Schema(name = "显示名")
+        @Schema(description = "显示名")
         private String displayName;
 
-        @Schema(name = "邮箱")
+        @Schema(description = "邮箱")
         private String email;
 
         private final Boolean isActive = true;
 
         private String wechat;
 
-        @Schema(name = "手机")
+        @Schema(description = "手机")
         private String phone;
 
-        @Schema(name = "启用MFA")
+        @Schema(description = "启用MFA")
         private final Boolean mfa = false;
 
-        @Schema(name = "强制启用MFA")
+        @Schema(description = "强制启用MFA")
         private final Boolean forceMfa = false;
 
         private String createdBy;
 
-        @Schema(name = "数据源")
+        @Schema(description = "数据源")
         private String source;
 
         private String comment;
@@ -145,19 +145,19 @@ public class UserParam {
 
         private final String FILTER_SYSTEM_TAG = TagConstants.SYSTEM.getTag();
 
-        @Schema(name = "模糊查询")
+        @Schema(description = "模糊查询")
         private String queryName;
 
-        @Schema(name = "过滤系统标签对象")
+        @Schema(description = "过滤系统标签对象")
         private Boolean filterTag;
 
-        @Schema(name = "展开")
+        @Schema(description = "展开")
         private Boolean extend;
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         private Boolean isActive;
 
-        @Schema(name = "标签ID")
+        @Schema(description = "标签ID")
         private Integer tagId;
 
     }
@@ -174,10 +174,10 @@ public class UserParam {
 
         private final String FILTER_SYSTEM_TAG = TagConstants.SYSTEM.getTag();
 
-        @Schema(name = "模糊查询")
+        @Schema(description = "模糊查询")
         private String queryName;
 
-        @Schema(name = "过滤系统标签对象")
+        @Schema(description = "过滤系统标签对象")
         private Boolean filterTag;
 
     }

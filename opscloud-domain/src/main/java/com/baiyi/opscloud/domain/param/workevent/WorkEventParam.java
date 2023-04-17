@@ -29,7 +29,7 @@ public class WorkEventParam {
 
         private final int businessType = BusinessTypeEnum.WORK_EVENT.getType();
 
-        @Schema(name = "模糊查询")
+        @Schema(description = "模糊查询")
         private String queryName;
 
         private Integer workRoleId;
@@ -53,10 +53,10 @@ public class WorkEventParam {
     @Schema
     public static class WorkItemQuery extends PageParam {
 
-        @NotNull(message = "parentId 不能为空")
+        @NotNull(message = "parentId不能为空")
         private Integer parentId;
 
-        @NotNull(message = "角色 id 不能为空")
+        @NotNull(message = "角色ID不能为空")
         private Integer workRoleId;
 
     }

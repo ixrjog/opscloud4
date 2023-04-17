@@ -22,7 +22,7 @@ public class TerminalSessionInstanceCommandVO {
 
         private UserVO.User user;
 
-        @Schema(name = "输出行数")
+        @Schema(description = "输出行数")
         private Integer outputRows;
 
         private Integer id;

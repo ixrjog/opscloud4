@@ -22,22 +22,22 @@ public class TemplateParam {
     @Schema
     public static class TemplatePageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "关键字查询")
+        @Schema(description = "关键字查询")
         private String queryName;
 
-        @Schema(name = "实例类型查询")
+        @Schema(description = "实例类型查询")
         private String instanceType;
 
-        @Schema(name = "模板关键字查询")
+        @Schema(description = "模板关键字查询")
         private String templateKey;
 
-        @Schema(name = "模板类型查询")
+        @Schema(description = "模板类型查询")
         private String templateType;
 
-        @Schema(name = "环境类型")
+        @Schema(description = "环境类型")
         private Integer envType;
 
-        @Schema(name = "展开数据")
+        @Schema(description = "展开数据")
         private Boolean extend;
     }
 

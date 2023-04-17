@@ -21,13 +21,13 @@ public class AuthPlatformVO {
     @Schema
     public static class Platform {
 
-        @Schema(name = "平台ID")
+        @Schema(description = "平台ID")
         private Integer platformId;
 
-        @Schema(name = "平台名称")
+        @Schema(description = "平台名称")
         private String name;
 
-        @Schema(name = "平台说明")
+        @Schema(description = "平台说明")
         private String comment;
 
     }
@@ -42,21 +42,21 @@ public class AuthPlatformVO {
 
         private Integer id;
 
-        @Schema(name = "平台ID")
+        @Schema(description = "平台ID")
         private Integer platformId;
 
-        @Schema(name = "平台名称")
+        @Schema(description = "平台名称")
         private String platformName;
 
-        @Schema(name = "认证用户名")
+        @Schema(description = "认证用户名")
         private String username;
 
         private Boolean otp;
 
-        @Schema(name = "认证结果")
+        @Schema(description = "认证结果")
         private Boolean result;
 
-        @Schema(name = "认证消息")
+        @Schema(description = "认证消息")
         private String resultMsg;
 
         private String ago;

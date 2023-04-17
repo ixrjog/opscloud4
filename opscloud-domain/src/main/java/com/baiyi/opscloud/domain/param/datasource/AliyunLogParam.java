@@ -20,10 +20,10 @@ public class AliyunLogParam {
     @NoArgsConstructor
     @Schema
     public static class AliyunLogPageQuery extends PageParam implements IExtend {
-        @NotNull(message = "必须指定数据源实例id")
+        @NotNull(message = "必须指定数据源实例ID")
         private Integer instanceId;
 
-        @Schema(name = "查询关键字")
+        @Schema(description = "查询关键字")
         private String queryName;
 
         private Boolean extend;
@@ -34,10 +34,10 @@ public class AliyunLogParam {
     @Schema
     public static class ProjectQuery {
 
-        @NotNull(message = "必须指定数据源实例id")
+        @NotNull(message = "必须指定数据源实例ID")
         private Integer instanceId;
 
-        @Schema(name = "查询关键字")
+        @Schema(description = "查询关键字")
         private String queryName;
     }
 
@@ -45,7 +45,7 @@ public class AliyunLogParam {
     @NoArgsConstructor
     @Schema
     public static class LogStoreQuery {
-        @NotNull(message = "必须指定数据源实例id")
+        @NotNull(message = "必须指定数据源实例ID")
         private Integer instanceId;
         private String projectName;
     }
@@ -54,7 +54,7 @@ public class AliyunLogParam {
     @NoArgsConstructor
     @Schema
     public static class ConfigQuery {
-        @NotNull(message = "必须指定数据源实例id")
+        @NotNull(message = "必须指定数据源实例ID")
         private Integer instanceId;
         private String projectName;
         private String logstoreName;

@@ -33,7 +33,7 @@ public class UserGroupVO {
 
         private final Integer businessType = BusinessTypeEnum.USERGROUP.getType();
 
-        @Schema(name = "资产id")
+        @Schema(description = "资产ID")
         private Integer assetId;
 
         @Override
@@ -47,28 +47,28 @@ public class UserGroupVO {
 
         private List<UserVO.User> users;
 
-        @Schema(name = "授权用户数量", example = "1")
+        @Schema(description = "授权用户数量", example = "1")
         private Integer userSize;
 
-        @Schema(name = "主键")
+        @Schema(description = "主键")
         @Builder.Default
         private Integer id = 0;
 
         @NotBlank(message = "用户组名称不能为空")
-        @Schema(name = "用户组名称")
+        @Schema(description = "用户组名称")
         private String name;
 
-        @Schema(name = "用户组类型")
+        @Schema(description = "用户组类型")
         @Builder.Default
         private Integer groupType = 0;
 
-        @Schema(name = "允许工单申请")
+        @Schema(description = "允许工单申请")
         private Boolean allowOrder;
 
-        @Schema(name = "数据源")
+        @Schema(description = "数据源")
         private String source;
 
-        @Schema(name = "留言")
+        @Schema(description = "留言")
         private String comment;
 
         @Override

@@ -19,22 +19,22 @@ public class UserRoleVO {
     @Schema
     public static class UserRole extends BaseVO {
 
-        @Schema(name = "主键",example="1")
+        @Schema(description = "主键", example = "1")
         private Integer id;
 
-        @Schema(name = "用户名")
+        @Schema(description = "用户名")
         private String username;
 
-        @Schema(name = "显示名")
+        @Schema(description = "显示名")
         private String displayName;
 
-        @Schema(name = "角色ID",example="1")
+        @Schema(description = "角色ID", example = "1")
         private Integer roleId;
 
-        @Schema(name = "角色名")
+        @Schema(description = "角色名")
         private String roleName;
 
-        @Schema(name = "角色描述")
+        @Schema(description = "角色描述")
         private String roleComment;
 
     }

@@ -34,37 +34,37 @@ public class SonarQubeVO {
         // http://sonar.xinc818.com/dashboard?id=DATA-CENTER_data-center-server-dev
         private String projectUrl;
 
-        @Schema(name = "警报")
+        @Schema(description = "警报")
         private String alertStatus;
 
-        @Schema(name = "Bugs")
+        @Schema(description = "Bugs")
         private String bugs;
 
-        @Schema(name = "异味")
+        @Schema(description = "异味")
         private String codeSmells;
 
-        @Schema(name = "覆盖率%")
+        @Schema(description = "覆盖率%")
         private String coverage;
 
-        @Schema(name = "重复行%")
+        @Schema(description = "重复行%")
         private String duplicatedLinesDensity;
 
-        @Schema(name = "代码行数")
+        @Schema(description = "代码行数")
         private String ncloc;
 
-        @Schema(name = "SQALE评级")
+        @Schema(description = "SQALE评级")
         private String sqaleRating;
 
-        @Schema(name = "可靠性评级")
+        @Schema(description = "可靠性评级")
         private String reliabilityRating;
 
-        @Schema(name = "安全评级")
+        @Schema(description = "安全评级")
         private String securityRating;
 
-        @Schema(name = "技术债务")
+        @Schema(description = "技术债务")
         private String sqaleIndex;
 
-        @Schema(name = "漏洞")
+        @Schema(description = "漏洞")
         private String vulnerabilities;
 
     }

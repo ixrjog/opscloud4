@@ -31,10 +31,10 @@ public class LeoTemplateVO {
             return this.id;
         }
 
-        @Schema(name = "业务标签")
+        @Schema(description = "业务标签")
         private List<TagVO.Tag> tags;
 
-        @Schema(name = "数据源实例")
+        @Schema(description = "数据源实例")
         private DsInstanceVO.Instance instance;
 
         @Override
@@ -46,34 +46,34 @@ public class LeoTemplateVO {
 
         private Integer id;
 
-        @Schema(name = "显示名称")
+        @Schema(description = "显示名称")
         private String name;
 
-        @Schema(name = "模板版本")
+        @Schema(description = "模板版本")
         private String version;
 
-        @Schema(name = "实例UUID")
+        @Schema(description = "实例UUID")
         private String jenkinsInstanceUuid;
 
-        @Schema(name = "模板名称")
+        @Schema(description = "模板名称")
         private String templateName;
 
-        @Schema(name = "模板配置")
+        @Schema(description = "模板配置")
         private String templateConfig;
 
-        @Schema(name = "模板参数")
+        @Schema(description = "模板参数")
         private String templateParameter;
 
-        @Schema(name = "模板内容")
+        @Schema(description = "模板内容")
         private String templateContent;
 
-        @Schema(name = "有效")
+        @Schema(description = "有效")
         private Boolean isActive;
 
-        @Schema(name = "描述")
+        @Schema(description = "描述")
         private String comment;
 
-        @Schema(name = "任务数量")
+        @Schema(description = "任务数量")
         private Integer jobSize;
 
     }

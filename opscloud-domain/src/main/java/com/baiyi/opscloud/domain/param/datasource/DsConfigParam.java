@@ -20,16 +20,16 @@ public class DsConfigParam {
     @Schema
     public static class DsConfigPageQuery extends PageParam implements IExtend {
 
-        @Schema(name = "模糊查询")
+        @Schema(description = "模糊查询")
         private String queryName;
 
-        @Schema(name = "展开")
+        @Schema(description = "展开")
         private Boolean extend;
 
-        @Schema(name = "数据源类型", example = "1")
+        @Schema(description = "数据源类型", example = "1")
         private Integer dsType;
 
-        @Schema(name = "是否激活")
+        @Schema(description = "是否激活")
         private Boolean isActive;
 
     }

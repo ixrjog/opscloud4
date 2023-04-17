@@ -28,7 +28,7 @@ public class BusinessTemplateVO {
             DsInstanceVO.IDsInstance,
             DsAssetVO.IDsAsset {
 
-        @Schema(name = "前端按钮使用", example = "false")
+        @Schema(description = "前端按钮使用", example = "false")
         @Builder.Default
         private final Boolean creating = false;
 

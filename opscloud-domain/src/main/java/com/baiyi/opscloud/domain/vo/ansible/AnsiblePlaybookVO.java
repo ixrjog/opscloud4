@@ -31,10 +31,10 @@ public class AnsiblePlaybookVO {
 
         private Integer id;
 
-        @Schema(name = "剧本UUID")
+        @Schema(description = "剧本UUID")
         private String playbookUuid;
 
-        @Schema(name = "剧本名称")
+        @Schema(description = "剧本名称")
         @NotNull(message = "剧本名称不能为空")
         private String name;
 
@@ -44,10 +44,10 @@ public class AnsiblePlaybookVO {
         /**
          * 标签配置
          */
-        @Schema(name = "剧本标签")
+        @Schema(description = "剧本标签")
         private String tags;
 
-        @Schema(name = "剧本外部变量")
+        @Schema(description = "剧本外部变量")
         private String vars;
 
         /**
