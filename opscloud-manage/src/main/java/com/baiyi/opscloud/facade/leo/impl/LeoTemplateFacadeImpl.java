@@ -172,7 +172,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
         Optional<DatasourceInstance> optionalDsInstance = dsInstanceService.listByInstanceType(DsTypeEnum.JENKINS.getName()).stream()
                 .filter(i -> i.getInstanceName().equals(instance.getName()))
                 .findFirst();
-        if (!optionalDsInstance.isPresent()) {
+        if (optionalDsInstance.isEmpty()) {
             throw new LeoTemplateException("模板配置缺少Jenkins实例配置项: 实例名称无效！");
         }
         return optionalDsInstance.get().getUuid();

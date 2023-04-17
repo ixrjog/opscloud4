@@ -127,8 +127,6 @@ public abstract class AbstractEventHandler<E extends IRecover> extends SimpleDsI
                                 .build();
                         // 恢复事件
                         eventService.updateByExampleSelective(saveEvent);
-                    } else {
-                        // 没有恢复
                     }
                 } catch (Exception ex) {
                     log.debug("查询事件失败: eventId={}", event.getEventId());

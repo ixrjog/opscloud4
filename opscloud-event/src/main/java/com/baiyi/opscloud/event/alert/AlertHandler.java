@@ -13,9 +13,9 @@ import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
 import com.baiyi.opscloud.service.event.EventBusinessService;
 import com.baiyi.opscloud.service.event.EventService;
-import com.baiyi.opscloud.service.template.MessageTemplateService;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.service.tag.SimpleTagService;
+import com.baiyi.opscloud.service.template.MessageTemplateService;
 import com.baiyi.opscloud.zabbix.constant.SeverityType;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -30,7 +30,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -87,11 +86,15 @@ public class AlertHandler extends SimpleDsInstanceProvider {
         Map<String, String> hostMap = Maps.newHashMap();
         List<Event> events = eventService.queryEventByInstance(instance.getUuid())
                 .stream().filter(e -> e.getPriority() >= zabbixConfig.getZabbix().getNotice().getPriority())
-                .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(events)) return;
+                .toList();
+        if (CollectionUtils.isEmpty(events)) {
+            return;
+        }
         events.forEach(event -> {
             List<EventBusiness> eventBusinesses = eventBusinessService.queryByEventId(event.getId());
-            if (CollectionUtils.isEmpty(eventBusinesses)) return;
+            if (CollectionUtils.isEmpty(eventBusinesses)) {
+                return;
+            }
             eventBusinesses.forEach(eventBusiness -> {
                 final String key = eventBusiness.getName();
                 if (eventMap.containsKey(key)) {
@@ -118,7 +121,7 @@ public class AlertHandler extends SimpleDsInstanceProvider {
 
     private String renderTemplate(String host, List<Event> events, Map<String, String> hostMap) {
         Optional<Event> max = events.stream().max(Comparator.comparing(Event::getPriority));
-        if (!max.isPresent()) {
+        if (max.isEmpty()) {
             return null;
         }
         Map<String, Object> contentMap = Maps.newHashMap();
@@ -128,7 +131,9 @@ public class AlertHandler extends SimpleDsInstanceProvider {
         contentMap.put("events", events);
         try {
             MessageTemplate messageTemplate = messageTemplateService.getByUniqueKey(ZBX_ALERT, "DINGTALK_APP", "markdown");
-            if (messageTemplate == null) return null;
+            if (messageTemplate == null) {
+                return null;
+            }
             return BeetlUtil.renderTemplate(messageTemplate.getMsgTemplate(), contentMap);
         } catch (IOException ioEx) {
             log.error(ioEx.getMessage());
@@ -163,7 +168,10 @@ public class AlertHandler extends SimpleDsInstanceProvider {
         List<DatasourceInstance> instances = Lists.newArrayList();
         DsInstanceParam.DsInstanceQuery query = DsInstanceParam.DsInstanceQuery.builder().instanceType(getDsInstanceType().getName()).build();
         // 过滤掉没有标签的实例
-        instances.addAll(dsInstanceService.queryByParam(query).stream().filter(e -> simpleTagService.hasBusinessTag(EVENT_TAG, DATASOURCE_INSTANCE_TYPE, e.getId())).collect(Collectors.toList()));
+        instances.addAll(dsInstanceService.queryByParam(query)
+                .stream()
+                .filter(e -> simpleTagService.hasBusinessTag(EVENT_TAG, DATASOURCE_INSTANCE_TYPE, e.getId()))
+                .toList());
         return instances;
     }
 

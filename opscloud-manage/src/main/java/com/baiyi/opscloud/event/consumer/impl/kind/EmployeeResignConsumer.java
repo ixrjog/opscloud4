@@ -85,7 +85,7 @@ public class EmployeeResignConsumer {
         List<WorkOrderTicketVO.Entry> entries = workOrderTicketFacade.queryTicketEntry(entryQuery);
         // 找出匹配的用户
         Optional<WorkOrderTicketVO.Entry> optionalEntry = entries.stream().filter(e -> e.getEntryKey().equals(user.getUsername())).findFirst();
-        if (!optionalEntry.isPresent()) {
+        if (optionalEntry.isEmpty()) {
             return;
         }
         WorkOrderTicketEntryParam.TicketEntry entry = BeanCopierUtil.copyProperties(optionalEntry.get(), WorkOrderTicketEntryParam.TicketEntry.class);
