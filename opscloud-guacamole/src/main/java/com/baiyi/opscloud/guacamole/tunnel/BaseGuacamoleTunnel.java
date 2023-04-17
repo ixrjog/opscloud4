@@ -11,7 +11,7 @@ import java.util.Map;
  * @Version 1.0
  */
 public class BaseGuacamoleTunnel  {
-    // extends GuacamoleWebSocketTunnelEndpoint
+    //extends GuacamoleWebSocketTunnelEndpoint
 
     public interface SupportProtocol {
         String KUBERNETES = "kubernetes";

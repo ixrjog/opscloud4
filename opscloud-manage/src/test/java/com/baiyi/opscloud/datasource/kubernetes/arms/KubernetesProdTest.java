@@ -28,7 +28,7 @@ public class KubernetesProdTest extends BaseKubernetesTest {
     @Test
     void bTest() {
         List<String> apps = Lists.newArrayList(
-                "nibss","pay-route"
+                "channel-center"
         );
         for (String app : apps) {
             oneTest(app);
@@ -42,15 +42,15 @@ public class KubernetesProdTest extends BaseKubernetesTest {
     private void oneTest(String appName) {
         KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_PROD);
 
-        final String deploymentName = appName + "-1";
-        /**
+        final String deploymentName = appName;
+        /*
          * ARMS中应用的名称
          */
         final String armsAppName = appName + "-prod";
 
         Deployment deployment = NewKubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), NAMESPACE, deploymentName);
         if (deployment == null) return;
-        /**
+        /*
          * 移除X-Ray容器
          */
         for (int i = 0; i < deployment.getSpec().getTemplate().getSpec().getContainers().size(); i++) {
@@ -60,11 +60,11 @@ public class KubernetesProdTest extends BaseKubernetesTest {
             }
         }
 
-        /**
+        /*
          * 查询应用容器
          */
         Optional<Container> optionalContainer = deployment.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith(appName)).findFirst();
-        if (!optionalContainer.isPresent()) {
+        if (optionalContainer.isEmpty()) {
             print("未找到容器: 退出");
             return;
         }
@@ -72,14 +72,14 @@ public class KubernetesProdTest extends BaseKubernetesTest {
         List<EnvVar> srcEnvVars = optionalContainer.get().getEnv();
         List<EnvVar> newEnvVars = Lists.newArrayList();
 
-        /**
+        /*
          * 设置环境变量 $APP_NAME
          */
         EnvVar appNameEnvVar = new EnvVar("APP_NAME", armsAppName, null);
         newEnvVars.add(appNameEnvVar);
 
         for (EnvVar srcEnvVar : srcEnvVars) {
-            /**
+            /*
              * 下线X-Ray
              */
             if (srcEnvVar.getName().equals("JAVA_TOOL_OPTIONS")) {
@@ -103,7 +103,7 @@ public class KubernetesProdTest extends BaseKubernetesTest {
             if (srcEnvVar.getName().equals("APP_NAME")) {
                 continue;
             }
-            /**
+            /*
              * 启用ARMS
              */
             if (srcEnvVar.getName().equals("JAVA_JVM_AGENT")) {
@@ -112,14 +112,14 @@ public class KubernetesProdTest extends BaseKubernetesTest {
             newEnvVars.add(srcEnvVar);
         }
         optionalContainer.get().getEnv().clear();
-        /**
+        /*
          * 重新设置环境变量
          */
         optionalContainer.get().setEnv(newEnvVars);
-        /**
+        /*
          * 更新 Deployment
          */
-        NewKubernetesDeploymentDriver.create(kubernetesConfig.getKubernetes(), NAMESPACE, deployment);
+        NewKubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), NAMESPACE, deployment);
         print("---------------------------------------------------------------------------");
         print("应用名称: " + appName);
         print("---------------------------------------------------------------------------");
