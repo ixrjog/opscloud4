@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.domain.model.base.YamlDump;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -59,11 +60,12 @@ public class LeoBuildModel {
         private LeoBaseModel.Jenkins jenkins;
         private LeoBaseModel.Notify notify;
         private String comment;
-        // 字典
+
+        @Schema(description = "字典")
         private Map<String, String> dict;
-        // 构建参数
+        @Schema(description = "构建参数")
         private List<LeoBaseModel.Parameter> parameters;
-        // 构建标签
+        @Schema(description = "构建标签")
         private List<String> tags;
     }
 

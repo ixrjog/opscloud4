@@ -10,13 +10,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TerminalAuditHandlerFactory {
 
-    private static final Map<String, ITerminalAuditHandler> context = new ConcurrentHashMap<>();
+    private static final Map<String, ITerminalAuditHandler> CONTEXT = new ConcurrentHashMap<>();
 
     public static ITerminalAuditHandler getHandlerByKey(String key) {
-        return context.get(key);
+        return CONTEXT.get(key);
     }
 
     public static void register(ITerminalAuditHandler bean) {
-        context.put(bean.getState(), bean);
+        CONTEXT.put(bean.getState(), bean);
     }
+
 }

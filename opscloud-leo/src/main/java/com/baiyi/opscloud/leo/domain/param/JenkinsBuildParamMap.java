@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class JenkinsBuildParamMap {
 
-    private Map<String, String> params = Maps.newHashMap();
+    private final Map<String, String> params = Maps.newHashMap();
 
     public void putParam(String key, String value) {
         this.params.put(key, value);

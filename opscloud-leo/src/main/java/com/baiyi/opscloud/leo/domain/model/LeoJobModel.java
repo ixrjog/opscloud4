@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.leo.domain.model.base.YamlDump;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -54,21 +55,21 @@ public class LeoJobModel {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Job {
-        //  private String version;
         private LeoBaseModel.GitLab gitLab;
         private String name;
         private Build build;
         private Deploy deploy;
         private CR cr;
-        // 代码扫描 <不支持>
+
+        @Schema(description = "代码扫描 <不支持>")
         private Sonar sonar;
-        // 通知配置: 多个 <不支持>
+
+        @Schema(description = "通知配置: 多个 <不支持>")
         private List<LeoBaseModel.Notify> notifies;
         private String comment;
         private List<String> tags;
-        /**
-         * 任务参数
-         */
+
+        @Schema(description = "任务参数")
         private List<LeoBaseModel.Parameter> parameters;
 
     }
