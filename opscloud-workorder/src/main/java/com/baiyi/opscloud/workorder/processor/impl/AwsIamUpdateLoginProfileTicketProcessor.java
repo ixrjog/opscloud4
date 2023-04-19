@@ -11,19 +11,15 @@ import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetPermissionExtendedBaseTicketProcessor;
+import com.baiyi.opscloud.workorder.util.AwsPasswordUtil;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 
-/**
- * @Author baiyi
- * @Date 2022/2/14 9:13 AM
- * @Version 1.0
- */
 @Slf4j
 @Component
-public class IamPolicyTicketProcessor extends AbstractDsAssetPermissionExtendedBaseTicketProcessor {
+public class AwsIamUpdateLoginProfileTicketProcessor extends AbstractDsAssetPermissionExtendedBaseTicketProcessor {
 
     @Resource
     private UserAmFacade userAmFacade;
@@ -31,40 +27,19 @@ public class IamPolicyTicketProcessor extends AbstractDsAssetPermissionExtendedB
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
         User createUser = queryCreateUser(ticketEntry);
-        try {
-            preProcess(ticketEntry, createUser);
-        } catch (Exception e) {
-            throw new TicketProcessException("工单创建IAM账户错误: {}", e.getMessage());
-        }
-        UserAmParam.Policy policy = UserAmParam.Policy.builder()
-                .policyName(entry.getAssetId())
-                .policyType(entry.getAssetKey())
-                .policyArn(entry.getAssetKey2())
-                .build();
-        UserAmParam.GrantPolicy grantPolicy = UserAmParam.GrantPolicy.builder()
+        String newPassword = AwsPasswordUtil.generatorRandomPassword();
+
+        UserAmParam.UpdateLoginProfile updateLoginProfile = UserAmParam.UpdateLoginProfile.builder()
                 .instanceUuid(ticketEntry.getInstanceUuid())
                 .username(createUser.getUsername())
-                .policy(policy)
+                .password(newPassword)
                 .build();
         try {
-            userAmFacade.grantPolicy(grantPolicy);
-        } catch (Exception e) {
-            throw new TicketProcessException("工单授权策略失败: {}", e.getMessage());
-        }
-    }
+            userAmFacade.updateLoginProfile(updateLoginProfile);
 
-    /**
-     * 创建RAM用户
-     *
-     * @param ticketEntry
-     * @param user
-     */
-    private void preProcess(WorkOrderTicketEntry ticketEntry, User user) {
-        UserAmParam.CreateUser createUser = UserAmParam.CreateUser.builder()
-                .instanceUuid(ticketEntry.getInstanceUuid())
-                .username(user.getUsername())
-                .build();
-        userAmFacade.createUser(createUser);
+        } catch (Exception e) {
+            throw new TicketProcessException("工单更新用户登录配置密码失败: {}", e.getMessage());
+        }
     }
 
     @Override
@@ -76,7 +51,7 @@ public class IamPolicyTicketProcessor extends AbstractDsAssetPermissionExtendedB
 
     @Override
     public String getKey() {
-        return WorkOrderKeyConstants.IAM_POLICY.name();
+        return WorkOrderKeyConstants.AWS_IAM_UPDATE_LOGIN_PROFILE.name();
     }
 
     @Override

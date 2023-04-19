@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
+ * Aliyun RAM
  * @Author baiyi
  * @Date 2022/2/10 6:46 PM
  * @Version 1.0
@@ -155,6 +156,10 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
     private AliyunConfig.Aliyun buildConfig(String instanceUuid) {
         DatasourceConfig config = dsConfigHelper.getConfigByInstanceUuid(instanceUuid);
         return dsConfigHelper.build(config, AliyunConfig.class).getAliyun();
+    }
+
+    public void updateLoginProfile(UserAmParam.UpdateLoginProfile updateLoginProfile){
+        throw new OCException("不支持此操作！");
     }
 
 }

@@ -139,8 +139,9 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
             approveTicket.setApprovalComment(ApprovalTypeConstants.getDesc(approveTicket.getApprovalType()));
         }
         ITicketApprove iTicketApprove = WorkOrderTicketApproveFactory.getByApprovalType(approveTicket.getApprovalType());
-        if (iTicketApprove == null)
+        if (iTicketApprove == null) {
             throw new TicketException("审批类型不正确!");
+        }
         iTicketApprove.approve(approveTicket);
         WorkOrderTicket ticket = ticketService.getById(approveTicket.getTicketId());
         // 工单通知

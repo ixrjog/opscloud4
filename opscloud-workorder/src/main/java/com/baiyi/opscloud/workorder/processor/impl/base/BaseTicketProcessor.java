@@ -30,7 +30,7 @@ import java.util.Date;
  * @Version 1.0
  */
 @Slf4j
-public abstract class BaseTicketProcessor<T> implements ITicketProcessor, InitializingBean {
+public abstract class BaseTicketProcessor<T> implements ITicketProcessor<T>, InitializingBean {
 
     @Resource
     protected WorkOrderTicketEntryService ticketEntryService;

@@ -1,6 +1,6 @@
-package com.baiyi.opscloud.workorder.verify;
+package com.baiyi.opscloud.workorder.validator;
 
-import com.baiyi.opscloud.workorder.verify.attribute.QueueAttributes;
+import com.baiyi.opscloud.workorder.validator.attribute.QueueAttributes;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

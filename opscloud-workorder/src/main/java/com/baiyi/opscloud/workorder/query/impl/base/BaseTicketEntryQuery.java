@@ -16,13 +16,22 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Slf4j
-public abstract class BaseTicketEntryQuery<T> implements ITicketEntryQuery, InitializingBean {
+public abstract class BaseTicketEntryQuery<T> implements ITicketEntryQuery<T>, InitializingBean {
 
     @Override
-    public List<WorkOrderTicketVO.Entry> query(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
+    public List<WorkOrderTicketVO.Entry<T>> query(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
         preHandle(entryQuery);
-        List<T> entries = queryEntries(entryQuery);
+        List<T> entries = doFilter(queryEntries(entryQuery));
         return entries.stream().map(e -> toEntry(entryQuery, e)).collect(Collectors.toList());
+    }
+
+    /**
+     * 重写此方法过滤结果集
+     * @param preEntries
+     * @return
+     */
+    protected List<T> doFilter(List<T> preEntries) {
+        return preEntries;
     }
 
     /**
@@ -38,7 +47,7 @@ public abstract class BaseTicketEntryQuery<T> implements ITicketEntryQuery, Init
 
     abstract protected List<T> queryEntries(WorkOrderTicketEntryParam.EntryQuery entryQuery);
 
-    abstract protected WorkOrderTicketVO.Entry toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, T entry);
+    abstract protected WorkOrderTicketVO.Entry<T> toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, T entry);
 
     @Override
     public void afterPropertiesSet() throws Exception {

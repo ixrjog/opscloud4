@@ -40,7 +40,7 @@ public abstract class AbstractSendNotice implements ISendNotice, InitializingBea
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        getPhases().forEach(p -> TicketNoticeHelper.context.put(p, this::send));
+        getPhases().forEach(p -> TicketNoticeHelper.CONTEXT.put(p, this::send));
     }
 
 }

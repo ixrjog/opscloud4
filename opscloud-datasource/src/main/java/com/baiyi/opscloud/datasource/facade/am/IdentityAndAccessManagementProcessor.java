@@ -17,6 +17,7 @@ import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.notice.message.CreateIamUserMessage;
+import com.baiyi.opscloud.domain.notice.message.UpdateIamLoginProfileMessage;
 import com.baiyi.opscloud.domain.param.user.UserAmParam;
 import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
 import com.baiyi.opscloud.facade.user.UserCredentialFacade;
@@ -25,11 +26,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import static com.baiyi.opscloud.datasource.aliyun.ram.driver.AliyunRamUserDriver.NO_PASSWORD_RESET_REQUIRED;
+
 /**
+ * AWS IAM
+ *
  * @Author baiyi
  * @Date 2022/2/10 8:02 PM
  * @Version 1.0
  */
+@SuppressWarnings("ALL")
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -64,8 +70,9 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
         AwsConfig.Aws config = buildConfig(grantPolicy.getInstanceUuid());
         try {
             IamUser.User iamUser = amazonIMUserDriver.getUser(config, grantPolicy.getUsername());
-            if (iamUser == null)
+            if (iamUser == null) {
                 iamUser = createUser(config, grantPolicy.getInstanceUuid(), user);
+            }
             IamPolicy.Policy policy = IamPolicy.Policy.builder()
                     .arn(grantPolicy.getPolicy().getPolicyArn())
                     .build();
@@ -79,7 +86,6 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
 
     @Override
     public void revokePolicy(UserAmParam.RevokePolicy revokePolicy) {
-        //  User user = userService.getByUsername(revokePolicy.getUsername());
         AwsConfig.Aws config = buildConfig(revokePolicy.getInstanceUuid());
         try {
             IamUser.User iamUser = amazonIMUserDriver.getUser(config, revokePolicy.getUsername());
@@ -133,7 +139,7 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
             log.debug("删除IAM虚拟MFA设备错误: serialNumber={}, {}", serialNumber, e.getMessage());
         }
         try {
-            log.info("创建用户的IAM虚拟MFA: username={}", user.getUsername());
+            log.info("创建用户 {} 的IAM虚拟MFA", user.getUsername());
             VirtualMFADevice vMFADevice = amazonIMMFADriver.createVirtualMFADevice(config, user);
             mfaDelegate.enableMFADevice(config, user, vMFADevice);
             // 录入MFA密钥
@@ -146,11 +152,28 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
                     .credential(new String(vMFADevice.getBase32StringSeed().array()))
                     .comment(Joiner.on("@").join(user.getUsername(), config.getAccount().getName()))
                     .build();
-            log.info("录入用户凭据(IAM-虚拟MFA): username={}", user.getUsername());
+            log.info("录入用户 {} 的IAM虚拟MFA凭据", user.getUsername());
             userCredentialFacade.saveCredential(credential, user);
         } catch (Exception e) {
             log.error("启用IAM虚拟MFA失败: {}", e.getMessage());
         }
+    }
+
+    @Override
+    public void updateLoginProfile(UserAmParam.UpdateLoginProfile updateLoginProfile) {
+        AwsConfig.Aws config = buildConfig(updateLoginProfile.getInstanceUuid());
+        User user = userService.getByUsername(updateLoginProfile.getUsername());
+        amazonIMUserDriver.updateLoginProfile(config, user, updateLoginProfile.getPassword(), NO_PASSWORD_RESET_REQUIRED);
+
+        UpdateIamLoginProfileMessage message = UpdateIamLoginProfileMessage.builder()
+                .awsName(config.getAccount().getName())
+                .loginUrl(config.getAccount().getLoginUrl())
+                .accountId(config.getAccount().getId())
+                .username(updateLoginProfile.getUsername())
+                .password(updateLoginProfile.getPassword())
+                .build();
+        noticeManager.sendMessage(user, NoticeManager.MsgKeys.AWS_IAM_UPDATE_LOGIN_PROFILE, message);
+
     }
 
     private AwsConfig.Aws buildConfig(String instanceUuid) {

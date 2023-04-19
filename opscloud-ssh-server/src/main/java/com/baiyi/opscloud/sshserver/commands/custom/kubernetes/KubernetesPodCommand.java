@@ -60,12 +60,14 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import org.springframework.util.CollectionUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.baiyi.opscloud.sshcore.util.ChannelShellUtil.DEF_UNICODE;
 import static com.baiyi.opscloud.sshserver.constants.TableConstants.TABLE_KUBERNETES_POD_FIELD_NAMES;
 
 /**
@@ -118,7 +120,9 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
         for (Pod pod : pods) {
             idMapper.put(seq, asset.getId());
             List<String> names = pod.getSpec().getContainers().stream().map(Container::getName).collect(Collectors.toList());
-            Map<String, Boolean> podStatusMap = pod.getStatus().getConditions().stream().collect(Collectors.toMap(PodCondition::getType, a -> Boolean.valueOf(a.getStatus()), (k1, k2) -> k1));
+            Map<String, Boolean> podStatusMap = pod.getStatus().getConditions()
+                    .stream()
+                    .collect(Collectors.toMap(PodCondition::getType, a -> Boolean.valueOf(a.getStatus()), (k1, k2) -> k1));
             pt.addRow(seq,
                     datasourceInstance.getInstanceName(),
                     toNamespaceStr(pod.getMetadata().getNamespace()),
@@ -281,7 +285,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                 return;
             }
             if (names.size() > 1) {
-                sshShellHelper.print("多容器必须指定容器名称: --name ${containerName}", PromptColor.RED);
+                sshShellHelper.print("Pod中有多个Container必须指定ContainerName: --name ${containerName}", PromptColor.RED);
                 return;
             }
             name = names.get(0);
@@ -310,10 +314,9 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                      .withTTY()
                      .usingListener(listener)
                      // .exec("env", "TERM=xterm", "COLUMNS=" + columns, "LINES=" + lines, "sh", "-c", "ls -la");
-                     .exec("env", "TERM=xterm", "COLUMNS=" + size.getColumns(), "LINES=" + size.getRows(), "sh");
+                     .exec("env", "TERM=xterm", "LANG=" + DEF_UNICODE, "COLUMNS=" + size.getColumns(), "LINES=" + size.getRows(), "sh");
         ) {
-
-            execWatch.resize(size.getColumns(), size.getRows());
+            //execWatch.resize(size.getColumns(), size.getRows());
             SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
             ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
             out.setNoDelay(true);
@@ -321,14 +324,13 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
             coreExecutor.execute(run);
             // 行模式
             TerminalUtil.enterRawMode(terminal);
-
             while (!listener.isClosed()) {
-                int ch = terminal.reader().read(5L);
-                if (ch >= 0) {
-                    execWatch.getInput().write(ch);
+                int input = terminal.reader().read(5L);
+                if (input >= 0) {
+                    // execWatch.getInput().write(input);
+                    execWatch.getInput().write(Character.toString((char) input).getBytes(StandardCharsets.UTF_8));
                     execWatch.getInput().flush();
-                    char c = (char) ch;
-                    if (ch == EOF) {
+                    if (input == EOF) {
                         // 等待退出，避免sh残留
                         NewTimeUtil.millisecondsSleep(200L);
                         break;
@@ -337,7 +339,6 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                 tryResize(size, terminal, execWatch);
             }
         } catch (Exception e) {
-            log.warn(e.getMessage());
         } finally {
             simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             podCommandAudit.asyncRecordCommand(sessionId, instanceId);
@@ -422,4 +423,3 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
     }
 
 }
-

@@ -46,7 +46,7 @@ public class TerminalUtil {
                         Attributes.InputFlag.INLCR),
                 false);
 
-        // 使终端产生的信号(ctrl+c/ctrl+z等)起作用，屏蔽则忽略信号
+        // 使终端产生的信号(Ctrl+c/Ctrl+z等)起作用，屏蔽则忽略信号
         newAttr.setLocalFlags(EnumSet.of(Attributes.LocalFlag.ISIG), true);
 
         // one input byte is enough to return from read, inter-character timer off

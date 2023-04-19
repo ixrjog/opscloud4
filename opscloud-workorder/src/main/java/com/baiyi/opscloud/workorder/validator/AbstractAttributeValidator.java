@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.workorder.verify;
+package com.baiyi.opscloud.workorder.validator;
 
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.google.common.base.Joiner;

@@ -92,8 +92,7 @@ public class PrettyTable {
     }
 
     public PrettyTable fromString(String text) throws IOException {
-        PrettyTable pt = parser.parse(text);
-        return pt;
+        return parser.parse(text);
     }
 
     public PrettyTable converter(final Converter converter) {
@@ -108,9 +107,7 @@ public class PrettyTable {
     public PrettyTable sortTable(final String fieldName, final boolean reverse) {
         int idx = Collections.binarySearch(fieldNames, fieldName);
         rows.sort((o1, o2) -> {
-
-            if (o1[idx] instanceof Comparable
-                    && o2[idx] instanceof Comparable) {
+            if (o1[idx] instanceof Comparable && o2[idx] instanceof Comparable) {
                 int c = ((Comparable) o1[idx]).compareTo(o2[idx]);
                 return c * (reverse ? -1 : 1);
             }
@@ -133,17 +130,15 @@ public class PrettyTable {
 
     @Override
     public String toString() {
-
         if (converter instanceof Bordered) {
             ((Bordered) converter).border(border);
         }
-
         if (converter instanceof Colored) {
             ((Colored) converter)
                     .fontColor(fontColor)
                     .borderColor(borderColor);
         }
-
         return converter.convert(this);
     }
+
 }

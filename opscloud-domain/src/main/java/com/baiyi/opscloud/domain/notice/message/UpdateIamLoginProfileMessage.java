@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 
 /**
  * @Author baiyi
- * @Date 2022/2/10 8:11 PM
+ * @Date 2023/4/19 11:24
  * @Version 1.0
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateIamUserMessage implements INoticeMessage {
+public class UpdateIamLoginProfileMessage implements INoticeMessage {
 
     private String awsName;
     private String loginUrl;

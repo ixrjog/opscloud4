@@ -13,7 +13,7 @@ import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshShellCommandFactory;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.commands.custom.context.SessionCommandContext;
-import com.baiyi.opscloud.sshserver.commands.custom.server.param.ListServerParam;
+import com.baiyi.opscloud.sshserver.commands.custom.server.param.QueryServerParam;
 import com.baiyi.opscloud.sshserver.packer.SshServerPacker;
 import com.baiyi.opscloud.sshserver.pagination.TableFooter;
 import com.baiyi.opscloud.sshserver.util.ServerUtil;
@@ -66,7 +66,7 @@ public abstract class BaseServerCommand {
         int HIGH_AUTHORITY = 1;
     }
 
-    protected void doListServer(ListServerParam commandContext) {
+    protected void queryServer(QueryServerParam commandContext) {
         PrettyTable pt = PrettyTable.fieldNames(TABLE_SERVER_FIELD_NAMES);
         ServerParam.UserPermissionServerPageQuery pageQuery = commandContext.getQueryParam();
         pageQuery.setUserId(com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin() ? null : com.baiyi.opscloud.common.util.SessionUtil.getUserId());

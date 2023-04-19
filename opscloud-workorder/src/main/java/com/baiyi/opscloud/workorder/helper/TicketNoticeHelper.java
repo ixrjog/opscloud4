@@ -23,7 +23,7 @@ import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskP
 @Component
 public class TicketNoticeHelper {
 
-    public static final Map<String, Consumer<WorkOrderTicket>> context = new ConcurrentHashMap<>();
+    public static final Map<String, Consumer<WorkOrderTicket>> CONTEXT = new ConcurrentHashMap<>();
 
     /**
      * 发送通知
@@ -33,8 +33,8 @@ public class TicketNoticeHelper {
     @Async(CORE)
     public void send(WorkOrderTicket ticket) {
         final String phase = ticket.getTicketPhase();
-        if (context.containsKey(phase)) {
-            context.get(phase).accept(ticket);
+        if (CONTEXT.containsKey(phase)) {
+            CONTEXT.get(phase).accept(ticket);
         }
     }
 

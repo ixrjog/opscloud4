@@ -10,7 +10,7 @@ import java.util.List;
  * @Date 2022/1/11 3:45 PM
  * @Version 1.0
  */
-public interface ITicketEntryQuery {
+public interface ITicketEntryQuery<T> {
 
     /**
      * 查询工单条目
@@ -18,7 +18,7 @@ public interface ITicketEntryQuery {
      * @param entryQuery
      * @return
      */
-    List<WorkOrderTicketVO.Entry> query(WorkOrderTicketEntryParam.EntryQuery entryQuery);
+    List<WorkOrderTicketVO.Entry<T>> query(WorkOrderTicketEntryParam.EntryQuery entryQuery);
 
     /**
      * 工单Key

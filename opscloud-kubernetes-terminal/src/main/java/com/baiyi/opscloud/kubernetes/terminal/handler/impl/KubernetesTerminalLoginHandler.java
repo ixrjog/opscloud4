@@ -79,7 +79,14 @@ public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMe
         return Joiner.on("#").join(pod.getName(), container.getName());
     }
 
-    // 日志
+    /**
+     * 日志
+     * @param kubernetes
+     * @param terminalSession
+     * @param kubernetesResource
+     * @param pod
+     * @param container
+     */
     private void processLog(KubernetesConfig.Kubernetes kubernetes, TerminalSession terminalSession,
                             KubernetesResource kubernetesResource, KubernetesResource.Pod pod, KubernetesResource.Container container) {
         RemoteInvokeHandler.openKubernetesLog(
@@ -94,7 +101,13 @@ public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMe
         );
     }
 
-    // 终端
+    /**
+     * 终端
+     * @param kubernetes
+     * @param terminalSession
+     * @param pod
+     * @param container
+     */
     private void processTerminal(KubernetesConfig.Kubernetes kubernetes, TerminalSession terminalSession, KubernetesResource.Pod pod, KubernetesResource.Container container) {
         RemoteInvokeHandler.openKubernetesTerminal(
                 terminalSession.getSessionId(),

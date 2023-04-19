@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListServerParam {
+public class QueryServerParam {
 
     private String sessionId;
     private String username;

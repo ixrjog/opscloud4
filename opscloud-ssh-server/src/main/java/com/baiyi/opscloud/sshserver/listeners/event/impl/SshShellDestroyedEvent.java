@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshserver.listeners.event.impl;
 
+import com.baiyi.opscloud.sshserver.commands.custom.context.SessionCommandContext;
 import com.baiyi.opscloud.sshserver.listeners.SshShellEvent;
 import com.baiyi.opscloud.sshserver.listeners.SshShellEventType;
 import com.baiyi.opscloud.sshserver.listeners.event.AbstractSshShellEvent;
@@ -26,6 +27,7 @@ public class SshShellDestroyedEvent extends AbstractSshShellEvent {
      */
     @Override
     public void handle(SshShellEvent event) {
+        SessionCommandContext.remove();
         closeTerminalSession(event);
     }
 

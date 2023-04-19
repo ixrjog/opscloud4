@@ -35,6 +35,7 @@ public class NoticeManager {
         String CREATE_IAM_USER = "CREATE_IAM_USER";
         String TICKET_APPROVE = "TICKET_APPROVE";
         String TICKET_END = "TICKET_END";
+        String AWS_IAM_UPDATE_LOGIN_PROFILE = "AWS_IAM_UPDATE_LOGIN_PROFILE";
     }
 
     /**

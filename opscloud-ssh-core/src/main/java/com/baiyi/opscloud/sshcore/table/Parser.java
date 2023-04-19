@@ -8,4 +8,5 @@ import java.io.IOException;
 public interface Parser {
 
     PrettyTable parse(final String text) throws IOException;
+
 }

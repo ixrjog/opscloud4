@@ -3,10 +3,11 @@ package com.baiyi.opscloud.sshserver.commands.custom.server;
 
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.sshserver.SshShellProperties;
-import com.baiyi.opscloud.sshserver.aop.annotation.SettingContextSessionUser;
 import com.baiyi.opscloud.sshserver.aop.annotation.ScreenClear;
+import com.baiyi.opscloud.sshserver.aop.annotation.SettingContextSessionUser;
 import com.baiyi.opscloud.sshserver.commands.SshShellComponent;
-import com.baiyi.opscloud.sshserver.commands.custom.server.param.ListServerParam;
+import com.baiyi.opscloud.sshserver.commands.custom.context.SessionCommandContext;
+import com.baiyi.opscloud.sshserver.commands.custom.server.param.QueryServerParam;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
@@ -37,12 +38,52 @@ public class ServerListCommand extends BaseServerCommand {
                 .queryIp(ip)
                 .page(1)
                 .build();
-        ListServerParam param = ListServerParam.builder()
+        QueryServerParam param = QueryServerParam.builder()
                 .sessionId(sessionId)
                 .username(sshShellHelper.getSshSession().getUsername())
                 .queryParam(pageQuery)
                 .build();
-        doListServer(param);
+        queryServer(param);
+    }
+
+    @SuppressWarnings("SpringShellCommandInspection")
+    @ScreenClear
+    @SettingContextSessionUser(invokeAdmin = true)
+    @ShellMethod(value = "List server info on the before page.", key = "b")
+    public void beforePage() {
+        String sessionId = buildSessionId();
+        ServerParam.UserPermissionServerPageQuery pageQuery = SessionCommandContext.getServerQuery();
+        if (pageQuery != null) {
+            pageQuery.setPage(pageQuery.getPage() > 1 ? pageQuery.getPage() - 1 : pageQuery.getPage());
+            QueryServerParam queryServerParam = QueryServerParam.builder()
+                    .sessionId(sessionId)
+                    .username(sshShellHelper.getSshSession().getUsername())
+                    .queryParam(pageQuery)
+                    .build();
+            queryServer(queryServerParam);
+        } else {
+            list("", "");
+        }
+    }
+
+    @SuppressWarnings("SpringShellCommandInspection")
+    @ScreenClear
+    @SettingContextSessionUser(invokeAdmin = true)
+    @ShellMethod(value = "List server info on the next page.", key = "n")
+    public void nextPage() {
+        String sessionId = buildSessionId();
+        ServerParam.UserPermissionServerPageQuery pageQuery = SessionCommandContext.getServerQuery();
+        if (pageQuery != null) {
+            pageQuery.setPage(pageQuery.getPage() + 1);
+            QueryServerParam queryServerParam = QueryServerParam.builder()
+                    .sessionId(sessionId)
+                    .username(sshShellHelper.getSshSession().getUsername())
+                    .queryParam(pageQuery)
+                    .build();
+            queryServer(queryServerParam);
+        } else {
+            list("", "");
+        }
     }
 
 }

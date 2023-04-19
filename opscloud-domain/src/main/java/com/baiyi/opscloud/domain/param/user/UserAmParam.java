@@ -57,4 +57,26 @@ public class UserAmParam {
         private String policyType;
         private String policyArn; // IAM专用
     }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema
+    public static class UpdateLoginProfile implements DsInstanceVO.IInstance {
+
+        @Schema(description = "数据源实例UUID")
+        private String instanceUuid;
+
+        @Schema(description = "数据源实例ID")
+        private Integer instanceId;
+
+        @Schema(description = "用户名")
+        private String username;
+
+        @Schema(description = "密码")
+        private String password;
+
+    }
+
 }

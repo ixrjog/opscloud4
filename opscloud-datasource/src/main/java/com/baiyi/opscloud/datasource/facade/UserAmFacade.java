@@ -67,4 +67,9 @@ public class UserAmFacade {
         return CONTEXT.get(instance.getInstanceType());
     }
 
+    public void updateLoginProfile(UserAmParam.UpdateLoginProfile updateLoginProfile){
+        IAccessManagementProcessor xamProcessor = getAmProcessorByInstanceUuid(updateLoginProfile.getInstanceUuid());
+        xamProcessor.updateLoginProfile(updateLoginProfile);
+    }
+
 }

@@ -11,6 +11,7 @@ import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.workorder.query.impl.base.BaseTicketEntryQuery;
 
 import jakarta.annotation.Resource;
+
 import java.util.List;
 
 /**
@@ -42,8 +43,7 @@ public abstract class DatasourceAssetExtendedTicketEntryQuery extends BaseTicket
                 .businessId(entry.getId())
                 .content(JSONUtil.writeValueAsString(entry))
                 .comment(entry.getDescription())
-                .entry(entry)
-                .build();
+                .entry(entry).build();
     }
 
 }
