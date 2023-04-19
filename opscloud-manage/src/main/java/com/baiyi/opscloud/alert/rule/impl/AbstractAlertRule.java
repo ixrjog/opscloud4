@@ -13,14 +13,13 @@ import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
-import jakarta.annotation.Resource;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @Author 修远
@@ -62,13 +61,15 @@ public abstract class AbstractAlertRule implements IRule, IInstanceType {
         }
         List<AlertRuleMatchExpression> matchExpressions = alertRuleMatchExpressions.stream()
                 .sorted(Comparator.comparing(AlertRuleMatchExpression::getWeight).reversed())
-                .collect(Collectors.toList());
+                .toList();
         for (AlertRuleMatchExpression item : matchExpressions) {
             if (evaluate(asset, item)) {
-                if (!failureDeadline(asset, item))
+                if (!failureDeadline(asset, item)) {
                     break;
-                if (silence(asset, item))
+                }
+                if (silence(asset, item)) {
                     break;
+                }
                 execute(converterContext(asset, item));
                 break;
             }

@@ -18,4 +18,5 @@ public interface IRule {
     Boolean silence(DsAssetVO.Asset asset, AlertRuleMatchExpression matchExpression);
 
     void execute(AlertContext context);
+    
 }

@@ -10,14 +10,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class NotifyFactory {
 
-    private static final Map<String, INotify> context = new ConcurrentHashMap<>();
+    private static final Map<String, INotify> CONTEXT = new ConcurrentHashMap<>();
 
     public static INotify getNotifyActivity(String key) {
-        return context.get(key);
+        return CONTEXT.get(key);
     }
 
     public static void register(INotify bean) {
-        context.put(bean.getKey(), bean);
+        CONTEXT.put(bean.getKey(), bean);
     }
 
 }
