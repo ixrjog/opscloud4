@@ -3,7 +3,7 @@ package com.baiyi.opscloud.leo;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoRule;
-import com.baiyi.opscloud.leo.interceptor.rule.RuleHelper;
+import com.baiyi.opscloud.leo.interceptor.rule.RuleValidator;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.leo.LeoRuleService;
 import org.assertj.core.util.Lists;
@@ -20,7 +20,7 @@ import java.util.List;
 public class LeoRuleTest extends BaseUnit {
 
     @Resource
-    private RuleHelper ruleHelper;
+    private RuleValidator ruleValidator;
 
     @Resource
     private LeoRuleService leoRuleService;
@@ -34,7 +34,7 @@ public class LeoRuleTest extends BaseUnit {
         List<LeoRule> rules = Lists.newArrayList(leoRuleService.getById(7));
         LeoJob leoJob = leoJobService.getById(4);
         for (LeoRule rule : rules) {
-            ruleHelper.verifyRule(leoJob, rule);
+            ruleValidator.verify(leoJob, rule);
         }
 
     }

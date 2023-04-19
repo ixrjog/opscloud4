@@ -27,13 +27,13 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class RuleHelper {
+public class RuleValidator {
 
     private final EnvService envService;
 
     private final SimpleTagFacade simpleTagFacade;
 
-    public void verifyRule(LeoJob leoJob, LeoRule rule) {
+    public void verify(LeoJob leoJob, LeoRule rule) {
         LeoRuleModel.RuleConfig ruleConfig = LeoRuleModel.load(rule);
         // 标签校验
         boolean hitTagRule = checkRuleWithTag(leoJob, ruleConfig);

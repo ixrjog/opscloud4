@@ -11,7 +11,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoRuleModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.leo.exception.LeoInterceptorException;
-import com.baiyi.opscloud.leo.interceptor.rule.RuleHelper;
+import com.baiyi.opscloud.leo.interceptor.rule.RuleValidator;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
@@ -56,7 +56,7 @@ public class LeoExecuteJobInterceptorHandler {
 
     private final EnvService envService;
 
-    private final RuleHelper ruleHelper;
+    private final RuleValidator ruleValidator;
 
     /**
      * 部署并发控制
@@ -170,7 +170,7 @@ public class LeoExecuteJobInterceptorHandler {
             if (!CollectionUtils.isEmpty(envs)) {
                 if (envs.stream().anyMatch(e -> e.equalsIgnoreCase(env.getEnvName()))) {
                     try {
-                        ruleHelper.verifyRule(leoJob, rule);
+                        ruleValidator.verify(leoJob, rule);
                     } catch (LeoInterceptorException e) {
                         throw new LeoInterceptorException("当前规则禁执行: {}！", rule.getName());
                     }
