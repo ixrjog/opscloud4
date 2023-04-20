@@ -1,12 +1,27 @@
 package com.baiyi.opscloud.datasource.kubernetes.pre;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
+import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesServiceDriver;
 import com.baiyi.opscloud.datasource.kubernetes.driver.NewKubernetesDeploymentDriver;
+import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
+import com.baiyi.opscloud.domain.generator.opscloud.Application;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
+import com.baiyi.opscloud.facade.application.ApplicationFacade;
+import com.baiyi.opscloud.service.application.ApplicationService;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.EnvVar;
+import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,10 +31,19 @@ import java.util.Optional;
  * @Date 2023/3/30 16:12
  * @Version 1.0
  */
+@Slf4j
 public class KubernetesPreTest extends BaseKubernetesTest {
 
     private final static String NAMESPACE = "pre";
 
+    @Resource
+    private DsInstanceAssetService dsInstanceAssetService;
+    @Resource
+    private ApplicationService applicationService;
+    @Resource
+    private ApplicationFacade applicationFacade;
+
+    @Test
     void update() {
         KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_PROD);
         List<Deployment> deploymentList = NewKubernetesDeploymentDriver.list(kubernetesConfig.getKubernetes(), NAMESPACE);
@@ -148,4 +172,52 @@ public class KubernetesPreTest extends BaseKubernetesTest {
 
     }
 
+    @Test
+    void createPreDept() {
+        KubernetesConfig prodConfig = getConfigById(KubernetesClusterConfigs.EKS_PROD);
+
+        List<Deployment> deploymentList = NewKubernetesDeploymentDriver.list(prodConfig.getKubernetes(), NAMESPACE);
+        KubernetesConfig preConfig = getConfigById(KubernetesClusterConfigs.EKS_PRE);
+        deploymentList.forEach(deployment -> {
+            NewKubernetesDeploymentDriver.create(preConfig.getKubernetes(), NAMESPACE, deployment);
+        });
+    }
+
+    @Test
+    void createPreService() {
+        KubernetesConfig prodConfig = getConfigById(KubernetesClusterConfigs.EKS_PROD);
+        List<Service> serviceList = KubernetesServiceDriver.list(prodConfig.getKubernetes(), NAMESPACE);
+        KubernetesConfig preConfig = getConfigById(KubernetesClusterConfigs.EKS_PRE);
+        serviceList.forEach(service -> {
+            service.getMetadata().setUid(null);
+            service.getMetadata().setResourceVersion(null);
+            service.getSpec().setClusterIP(null);
+            service.getSpec().setClusterIPs(null);
+            KubernetesServiceDriver.create(preConfig.getKubernetes(), service);
+        });
+    }
+
+
+    @Test
+    void bindPreRes() {
+        List<DatasourceInstanceAsset> assetList = dsInstanceAssetService.listByInstanceAssetType("3592e35e387f45adac441878cebdf219", DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name());
+        assetList.forEach(a -> {
+            Application application = applicationService.getByName(a.getName());
+            ApplicationResourceVO.Resource resource = ApplicationResourceVO.Resource.builder()
+                    .applicationId(application.getId())
+                    .businessId(a.getId())
+                    .businessType(BusinessTypeEnum.ASSET.getType())
+                    .checked(false)
+                    .comment(a.getAssetId())
+                    .name(a.getAssetId())
+                    .resourceType(ApplicationResTypeEnum.KUBERNETES_DEPLOYMENT.name())
+                    .virtualResource(false)
+                    .build();
+            try {
+                applicationFacade.bindApplicationResource(resource);
+            } catch (OCException exception) {
+                log.info("应用已绑定，{}", a.getName());
+            }
+        });
+    }
 }
