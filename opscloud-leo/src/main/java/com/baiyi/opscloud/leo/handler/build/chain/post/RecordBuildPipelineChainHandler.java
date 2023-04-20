@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
-import com.baiyi.opscloud.leo.handler.build.BaseBuildHandler;
+import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
 import com.baiyi.opscloud.leo.converter.JenkinsPipelineConverter;
 import com.baiyi.opscloud.leo.domain.model.JenkinsPipeline;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class RecordBuildPipelineChainHandler extends BaseBuildHandler {
+public class RecordBuildPipelineChainHandler extends BaseBuildChainHandler {
 
     @Resource
     private BlueRestDriver blueRestDriver;

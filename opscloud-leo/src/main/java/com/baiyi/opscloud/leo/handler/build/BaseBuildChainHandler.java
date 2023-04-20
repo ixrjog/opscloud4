@@ -26,7 +26,7 @@ import java.util.Optional;
  * @Date 2022/11/14 17:06
  * @Version 1.0
  */
-public abstract class BaseBuildHandler {
+public abstract class BaseBuildChainHandler {
 
     public static final String RESULT_ERROR = "ERROR";
 
@@ -48,19 +48,19 @@ public abstract class BaseBuildHandler {
     @Resource
     private UserService userService;
 
-    private BaseBuildHandler next;
+    private BaseBuildChainHandler next;
 
     protected JenkinsConfig getJenkinsConfigWithUuid(String uuid) {
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(uuid);
         return dsConfigHelper.build(dsConfig, JenkinsConfig.class);
     }
 
-    public BaseBuildHandler setNextHandler(BaseBuildHandler next) {
+    public BaseBuildChainHandler setNextHandler(BaseBuildChainHandler next) {
         this.next = next;
         return this.next;
     }
 
-    public BaseBuildHandler getNext() {
+    public BaseBuildChainHandler getNext() {
         return next;
     }
 
@@ -70,12 +70,15 @@ public abstract class BaseBuildHandler {
         } catch (LeoBuildException e) {
             // 记录日志
             logHelper.error(leoBuild, e.getMessage());
-            leoBuild.setBuildResult(RESULT_ERROR);
-            leoBuild.setEndTime(new Date());
-            leoBuild.setIsFinish(true);
-            leoBuild.setBuildStatus(e.getMessage());
-            leoBuild.setIsActive(false);
-            save(leoBuild);
+            LeoBuild saveLeoBuild =LeoBuild.builder()
+                    .id(leoBuild.getId())
+                    .buildResult(RESULT_ERROR)
+                    .endTime(new Date())
+                    .isFinish(true)
+                    .buildStatus(e.getMessage())
+                    .isActive(false)
+                    .build();
+            save(saveLeoBuild);
             throw e;
         }
         if (getNext() != null) {
@@ -105,7 +108,7 @@ public abstract class BaseBuildHandler {
                 .map(LeoBuildModel.BuildConfig::getBuild)
                 .map(LeoBuildModel.Build::getNotify)
                 .map(LeoBaseModel.Notify::getName)
-                .orElseThrow(() -> new LeoBuildException("发送消息失败: DingtalkRobot未配置！"));
+                .orElseThrow(() -> new LeoBuildException("发送消息失败: Dingtalk Robot未配置！"));
 
         DatasourceInstance dsInstance = leoRobotHelper.getRobotInstance(dingtalkRobot);
         MessageTemplate messageTemplate = msgTemplateService.getByUniqueKey(messageKey, "DINGTALK_ROBOT", "markdown");

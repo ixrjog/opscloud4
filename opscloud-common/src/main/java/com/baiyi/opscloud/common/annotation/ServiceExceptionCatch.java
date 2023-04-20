@@ -14,6 +14,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface ServiceExceptionCatch {
 
-    String message() default "主键冲突";
+    String message() default "Primary Key conflict";
 
 }

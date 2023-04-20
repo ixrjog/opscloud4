@@ -6,7 +6,7 @@ import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
 import com.baiyi.opscloud.datasource.jenkins.helper.JenkinsVersion;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.leo.handler.build.BaseBuildHandler;
+import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
 import com.baiyi.opscloud.leo.handler.build.helper.LeoJenkinsInstanceHelper;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
@@ -31,7 +31,7 @@ import java.util.Random;
  */
 @Slf4j
 @Component
-public class ElectInstanceChainHandler extends BaseBuildHandler {
+public class ElectInstanceChainHandler extends BaseBuildChainHandler {
 
     @Resource
     private LeoJenkinsInstanceHelper leoJenkinsInstanceHelper;

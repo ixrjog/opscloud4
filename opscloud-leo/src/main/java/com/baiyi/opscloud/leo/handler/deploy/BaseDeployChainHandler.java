@@ -17,7 +17,7 @@ import java.util.Date;
  * @Date 2022/12/5 19:55
  * @Version 1.0
  */
-public abstract class BaseDeployHandler {
+public abstract class BaseDeployChainHandler {
 
     public static final String RESULT_ERROR = "ERROR";
 
@@ -30,19 +30,19 @@ public abstract class BaseDeployHandler {
     @Resource
     protected LeoDeployService deployService;
 
-    private BaseDeployHandler next;
+    private BaseDeployChainHandler next;
 
     protected KubernetesConfig getKubernetesConfigWithUuid(String uuid) {
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(uuid);
         return dsConfigHelper.build(dsConfig, KubernetesConfig.class);
     }
 
-    public BaseDeployHandler setNextHandler(BaseDeployHandler next) {
+    public BaseDeployChainHandler setNextHandler(BaseDeployChainHandler next) {
         this.next = next;
         return this.next;
     }
 
-    public BaseDeployHandler getNext() {
+    public BaseDeployChainHandler getNext() {
         return next;
     }
 

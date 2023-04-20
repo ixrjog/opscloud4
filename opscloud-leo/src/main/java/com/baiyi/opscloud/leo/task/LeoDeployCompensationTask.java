@@ -2,7 +2,7 @@ package com.baiyi.opscloud.leo.task;
 
 import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
-import com.baiyi.opscloud.leo.handler.deploy.BaseDeployHandler;
+import com.baiyi.opscloud.leo.handler.deploy.BaseDeployChainHandler;
 import com.baiyi.opscloud.leo.helper.DeployingLogHelper;
 import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
@@ -39,7 +39,7 @@ public class LeoDeployCompensationTask {
             if (!heartbeatHelper.isLive(LeoHeartbeatHelper.HeartbeatTypes.DEPLOY, leoDeploy.getId())) {
                 LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                         .id(leoDeploy.getId())
-                        .deployResult(BaseDeployHandler.RESULT_ERROR)
+                        .deployResult(BaseDeployChainHandler.RESULT_ERROR)
                         .endTime(new Date())
                         .isFinish(true)
                         .isActive(false)

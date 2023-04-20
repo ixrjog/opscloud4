@@ -3,7 +3,7 @@ package com.baiyi.opscloud.leo.supervisor;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
-import com.baiyi.opscloud.leo.handler.deploy.BaseDeployHandler;
+import com.baiyi.opscloud.leo.handler.deploy.BaseDeployChainHandler;
 import com.baiyi.opscloud.leo.handler.deploy.LeoPostDeployHandler;
 import com.baiyi.opscloud.leo.domain.model.DeployStop;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
@@ -89,7 +89,7 @@ public class DeployingSupervisor implements ISupervisor {
                 logHelper.warn(this.leoDeploy, "{}手动停止任务", deployStop.getUsername());
                 LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                         .id(leoDeploy.getId())
-                        .deployResult(BaseDeployHandler.RESULT_ERROR)
+                        .deployResult(BaseDeployChainHandler.RESULT_ERROR)
                         .endTime(new Date())
                         .isFinish(true)
                         .isActive(false)

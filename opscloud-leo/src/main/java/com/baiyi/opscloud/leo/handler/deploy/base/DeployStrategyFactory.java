@@ -18,22 +18,22 @@ public class DeployStrategyFactory {
     private DeployStrategyFactory() {
     }
 
-    static Map<String, Map<String, BaseDeployStrategy>> context = new ConcurrentHashMap<>();
+    static final Map<String, Map<String, BaseDeployStrategy>> CONTEXT = new ConcurrentHashMap<>();
 
     public static BaseDeployStrategy getStrategy(String step, String type) {
-        if (context.containsKey(step)) {
-            return context.get(step).get(type);
+        if (CONTEXT.containsKey(step)) {
+            return CONTEXT.get(step).get(type);
         }
         throw new LeoDeployException("部署类型不正确: step={}, deployType={}", step, type);
     }
 
     public static void register(BaseDeployStrategy bean) {
-        if (context.containsKey(bean.getStep())) {
-            context.get(bean.getStep()).put(bean.getDeployType(), bean);
+        if (CONTEXT.containsKey(bean.getStep())) {
+            CONTEXT.get(bean.getStep()).put(bean.getDeployType(), bean);
         } else {
             Map<String, BaseDeployStrategy> strategyMap = Maps.newHashMap();
             strategyMap.put(bean.getDeployType(), bean);
-            context.put(bean.getStep(), strategyMap);
+            CONTEXT.put(bean.getStep(), strategyMap);
         }
         log.debug("DeployStrategyFactory Registered: step={}, deployType={}", bean.getStep(), bean.getDeployType());
     }

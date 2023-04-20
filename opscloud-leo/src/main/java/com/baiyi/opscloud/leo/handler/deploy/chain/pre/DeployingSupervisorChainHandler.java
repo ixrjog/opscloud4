@@ -2,7 +2,7 @@ package com.baiyi.opscloud.leo.handler.deploy.chain.pre;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
-import com.baiyi.opscloud.leo.handler.deploy.BaseDeployHandler;
+import com.baiyi.opscloud.leo.handler.deploy.BaseDeployChainHandler;
 import com.baiyi.opscloud.leo.handler.deploy.LeoPostDeployHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
@@ -22,7 +22,7 @@ import jakarta.annotation.Resource;
  */
 @Slf4j
 @Component
-public class DeployingSupervisorChainHandler extends BaseDeployHandler {
+public class DeployingSupervisorChainHandler extends BaseDeployChainHandler {
 
     @Resource
     private LeoPostDeployHandler leoPostDeployHandler;

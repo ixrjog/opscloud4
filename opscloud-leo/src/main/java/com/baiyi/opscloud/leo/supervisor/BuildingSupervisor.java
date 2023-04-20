@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Date;
 
-import static com.baiyi.opscloud.leo.handler.build.BaseBuildHandler.RESULT_ERROR;
+import static com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler.RESULT_ERROR;
 
 /**
  * 构建事件循环

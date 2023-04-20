@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.leo.handler.deploy.chain.pre;
 
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
-import com.baiyi.opscloud.leo.handler.deploy.BaseDeployHandler;
+import com.baiyi.opscloud.leo.handler.deploy.BaseDeployChainHandler;
 import com.baiyi.opscloud.leo.handler.deploy.base.BaseDeployStrategy;
 import com.baiyi.opscloud.leo.handler.deploy.base.DeployStrategyFactory;
 import com.baiyi.opscloud.leo.handler.deploy.base.IDeployStep;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class DoDeployChainHandler extends BaseDeployHandler implements IDeployStep {
+public class DoDeployChainHandler extends BaseDeployChainHandler implements IDeployStep {
 
     /**
      * 执行部署

@@ -60,6 +60,7 @@ public class LeoBuildModel {
         private LeoBaseModel.Jenkins jenkins;
         private LeoBaseModel.Notify notify;
         private String comment;
+        private String type;
 
         @Schema(description = "字典")
         private Map<String, String> dict;

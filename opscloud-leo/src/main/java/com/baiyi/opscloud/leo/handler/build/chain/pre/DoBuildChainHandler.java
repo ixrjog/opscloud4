@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsJobDriver;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
-import com.baiyi.opscloud.leo.handler.build.BaseBuildHandler;
+import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
 import com.baiyi.opscloud.leo.handler.build.helper.ApplicationTagsHelper;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class DoBuildChainHandler extends BaseBuildHandler {
+public class DoBuildChainHandler extends BaseBuildChainHandler {
 
     @Resource
     private LeoJobService jobService;

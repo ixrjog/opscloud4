@@ -2,7 +2,7 @@ package com.baiyi.opscloud.leo.handler.build.chain.pre;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.leo.handler.build.BaseBuildHandler;
+import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
 import com.baiyi.opscloud.leo.handler.build.LeoPostBuildHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
@@ -22,7 +22,7 @@ import jakarta.annotation.Resource;
  */
 @Slf4j
 @Component
-public class BuildingSupervisorChainHandler extends BaseBuildHandler {
+public class BuildingSupervisorChainHandler extends BaseBuildChainHandler {
 
     @Resource
     private LeoPostBuildHandler leoPostBuildHandler;

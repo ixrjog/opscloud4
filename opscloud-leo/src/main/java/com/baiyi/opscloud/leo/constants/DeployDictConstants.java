@@ -18,11 +18,11 @@ public enum DeployDictConstants {
     DISPLAY_NAME("displayName")
     ;
 
-
     @Getter
     private final String key;
 
     DeployDictConstants(String key) {
         this.key = key;
     }
+
 }

@@ -7,7 +7,7 @@ import com.baiyi.opscloud.datasource.jenkins.model.JobWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.leo.handler.build.BaseBuildHandler;
+import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
@@ -30,7 +30,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
-public class DeleteHistoricalBuildJobChainHandler extends BaseBuildHandler {
+public class DeleteHistoricalBuildJobChainHandler extends BaseBuildChainHandler {
 
     @Resource
     private LeoJobService jobService;

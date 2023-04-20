@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.leo.handler.build.chain.pre;
 
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.leo.handler.build.BaseBuildHandler;
+import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.google.common.collect.Maps;
@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class StartBuildNotificationChainHandler extends BaseBuildHandler {
+public class StartBuildNotificationChainHandler extends BaseBuildChainHandler {
 
     private static final String LEO_BUILD_START = "LEO_BUILD_START";
 
