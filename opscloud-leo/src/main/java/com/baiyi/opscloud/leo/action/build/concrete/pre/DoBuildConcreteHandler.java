@@ -171,7 +171,7 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
                 .map(LeoBuildModel.BuildConfig::getBuild)
                 .map(LeoBuildModel.Build::getGitLab)
                 .map(LeoBaseModel.GitLab::getProject)
-                .orElseThrow(() -> new LeoBuildException("执行构建任务错误: 未指定GitLab项目配置！"));
+                .orElseThrow(() -> new LeoBuildException("未指定配置: build->gitLab->project"));
 
         fillGitLabProjectSshUrl(application, gitLabProject);
 
@@ -189,7 +189,7 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
                     .map(LeoJobModel.Job::getCr)
                     .map(LeoJobModel.CR::getInstance)
                     .map(LeoJobModel.CRInstance::getUrl)
-                    .orElseThrow(() -> new LeoBuildException("执行构建任务错误: 未指定RegistryUrl配置！"));
+                    .orElseThrow(() -> new LeoBuildException("未指定配置: job->cr->instance->url"));
             dict.put(BuildDictConstants.REGISTRY_URL.getKey(), registryUrl);
         }
         dict.put(BuildDictConstants.ENV.getKey(), envName);
@@ -212,7 +212,7 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
                     .map(LeoJobModel.Job::getCr)
                     .map(LeoJobModel.CR::getRepo)
                     .map(LeoJobModel.Repo::getName)
-                    .orElseThrow(() -> new LeoBuildException("执行构建任务错误: 未指定gitLab->project配置！"));
+                    .orElseThrow(() -> new LeoBuildException("未指定配置: job->gitLab->project"));
         }
         dict.put(BuildDictConstants.PROJECT.getKey(), project);
 
@@ -241,7 +241,7 @@ public class DoBuildConcreteHandler extends BaseBuildHandler {
         }
         List<ApplicationResource> resources = applicationResourceService.queryByApplication(application.getId(), DsAssetTypeConstants.GITLAB_PROJECT.name());
         if (CollectionUtils.isEmpty(resources) || resources.size() > 1) {
-            throw new LeoBuildException("执行构建任务错误: 未指定gitLab->project->sshUrl配置！");
+            throw new LeoBuildException("未指定配置: gitLab->project->sshUrl");
         }
         gitLabProject.setSshUrl(resources.get(0).getName());
     }

@@ -39,18 +39,18 @@ public class EcrImageDelegate {
         try {
             List<ImageDetail> imageDetails = amazonEcrImageDriver.describeImages(crRegionId, dsConfig.getAws(), crRegistryId, repositoryName, imageTag);
             if (CollectionUtils.isEmpty(imageDetails)) {
-                log.warn("查询AWS-ECR镜像列表为空: regionId={}, registryId={}, repositoryName={}", crRegionId, crRegistryId, repositoryName);
-                throw new LeoBuildException("查询AWS-ECR镜像列表为空: regionId={}, registryId={}, repositoryName={}", crRegionId, crRegistryId, repositoryName);
+                log.warn("查询AWS-ECR镜像列表为空 regionId={}, registryId={}, repositoryName={} ", crRegionId, crRegistryId, repositoryName);
+                throw new LeoBuildException("查询AWS-ECR镜像列表为空 regionId={}, registryId={}, repositoryName={}", crRegionId, crRegistryId, repositoryName);
             }
             imageDetails.stream()
                     .filter(imageDetail -> filterWithImageTag(imageDetail, imageTag))
                     .findFirst()
                     .orElseThrow(() ->
-                            new LeoBuildException("查询AWS-ECR镜像未找到对应的标签: imageTag={}", imageTag)
+                            new LeoBuildException("查询AWS-ECR镜像未找到对应的标签{}", imageTag)
                     );
         } catch (Exception e) {
-            log.error("查询AWS-ECR镜像错误: {}", e.getMessage());
-            throw new LeoBuildException("查询AWS-ECR镜像错误: {}", e.getMessage());
+            log.warn("校验AWS-ECR镜像失败: {}", e.getMessage());
+            throw new LeoBuildException("校验AWS-ECR镜像失败: {}", e.getMessage());
         }
     }
 
