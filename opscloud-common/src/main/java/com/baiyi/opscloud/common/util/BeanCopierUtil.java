@@ -43,7 +43,8 @@ public class BeanCopierUtil {
 
         T targetObject;
         try {
-            targetObject = targetClass.newInstance();
+            // targetObject = targetClass.newInstance();
+            targetObject = targetClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new OCException(e.getMessage());
         }
@@ -70,7 +71,8 @@ public class BeanCopierUtil {
 
             T targetObject;
             try {
-                targetObject = targetClass.newInstance();
+                // targetObject = targetClass.newInstance();
+                targetObject = targetClass.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
