@@ -9,7 +9,7 @@ import com.baiyi.opscloud.datasource.jenkins.model.BuildWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.model.JobWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.leo.action.build.LeoPostBuildHandler;
+import com.baiyi.opscloud.leo.handler.build.LeoPostBuildHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
 import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Date;
 
-import static com.baiyi.opscloud.leo.action.build.BaseBuildHandler.RESULT_ERROR;
+import static com.baiyi.opscloud.leo.handler.build.BaseBuildHandler.RESULT_ERROR;
 
 /**
  * 构建事件循环

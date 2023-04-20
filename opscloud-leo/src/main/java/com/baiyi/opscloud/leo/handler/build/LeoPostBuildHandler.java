@@ -1,0 +1,55 @@
+package com.baiyi.opscloud.leo.handler.build;
+
+import com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
+import com.baiyi.opscloud.leo.handler.build.chain.post.EndBuildNotificationChainHandler;
+import com.baiyi.opscloud.leo.handler.build.chain.post.RecordBuildPipelineChainHandler;
+import com.baiyi.opscloud.leo.handler.build.chain.post.VerifyKubernetesImageChainHandler;
+import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
+
+/**
+ * @Author baiyi
+ * @Date 2022/11/17 10:24
+ * @Version 1.0
+ */
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class LeoPostBuildHandler implements InitializingBean {
+
+    /**
+     * 验证 Kubernetes Image
+     */
+    private final VerifyKubernetesImageChainHandler verifyKubernetesImageChainHandler;
+
+    /**
+     * 构建结束通知
+     */
+    private final EndBuildNotificationChainHandler endBuildNotificationChainHandler;
+
+    /**
+     * 记录流水线日志
+     */
+    private final RecordBuildPipelineChainHandler recordBuildPipelineChainHandler;
+
+    @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
+    public void handleBuild(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
+        /*
+          使用责任链设计模式解耦代码
+         */
+        verifyKubernetesImageChainHandler.handleRequest(leoBuild, buildConfig);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        verifyKubernetesImageChainHandler
+                .setNextHandler(endBuildNotificationChainHandler)
+                .setNextHandler(recordBuildPipelineChainHandler);
+    }
+
+}
