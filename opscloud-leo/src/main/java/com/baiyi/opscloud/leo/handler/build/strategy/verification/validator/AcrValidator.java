@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.leo.handler.build.chain.post.validator;
+package com.baiyi.opscloud.leo.handler.build.strategy.verification.validator;
 
 import com.aliyuncs.cr.model.v20181201.GetRepoTagResponse;
 import com.aliyuncs.exceptions.ClientException;
@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.acr.driver.AliyunAcrImageDriver;
 import com.baiyi.opscloud.datasource.aliyun.acr.driver.AliyunAcrRepositoryDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.leo.handler.build.chain.post.validator.base.BaseCrValidator;
+import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.base.BaseCrValidator;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
@@ -49,7 +49,7 @@ public class AcrValidator extends BaseCrValidator<AliyunConfig> {
         Optional.of(cr)
                 .map(LeoJobModel.CR::getInstance)
                 .map(LeoJobModel.CRInstance::getId)
-                .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job.cr.instance.id"));
+                .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job->cr->instance->id"));
     }
 
     @Override

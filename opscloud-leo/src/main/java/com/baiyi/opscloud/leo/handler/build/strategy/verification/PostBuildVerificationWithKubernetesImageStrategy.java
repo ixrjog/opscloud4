@@ -1,32 +1,34 @@
-package com.baiyi.opscloud.leo.handler.build.chain.post;
+package com.baiyi.opscloud.leo.handler.build.strategy.verification;
 
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildImage;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
-import com.baiyi.opscloud.leo.handler.build.chain.post.validator.base.BaseCrValidator;
-import com.baiyi.opscloud.leo.handler.build.chain.post.validator.factory.CrValidatorFactory;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
+import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.base.BaseCrValidator;
+import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.factory.CrValidatorFactory;
+import com.baiyi.opscloud.leo.handler.build.strategy.verification.base.BasePostBuildVerificationStrategy;
 import com.baiyi.opscloud.service.leo.LeoBuildImageService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.Map;
 import java.util.Optional;
 
 /**
  * @Author baiyi
- * @Date 2022/11/17 16:11
+ * @Date 2023/4/20 14:45
  * @Version 1.0
  */
 @Slf4j
 @Component
-public class VerifyKubernetesImageChainHandler extends BaseBuildChainHandler {
+public class PostBuildVerificationWithKubernetesImageStrategy extends BasePostBuildVerificationStrategy {
+
+    public static final String KUBERNETES_IMAGE = "kubernetes-image";
 
     @Resource
     private LeoJobService leoJobService;
@@ -34,7 +36,10 @@ public class VerifyKubernetesImageChainHandler extends BaseBuildChainHandler {
     @Resource
     private LeoBuildImageService leoBuildImageService;
 
-    private static final String KUBERNETES_IMAGE = "kubernetes-image";
+    @Override
+    public String getBuildType() {
+        return KUBERNETES_IMAGE;
+    }
 
     /**
      * 验证 Kubernetes Image
@@ -42,27 +47,19 @@ public class VerifyKubernetesImageChainHandler extends BaseBuildChainHandler {
      * @param leoBuild
      * @param buildConfig
      */
+    @SuppressWarnings("rawtypes")
     @Override
     protected void handle(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
         LeoJob leoJob = leoJobService.getById(leoBuild.getJobId());
         LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob.getJobConfig());
-        final String buildType = Optional.ofNullable(jobConfig)
-                .map(LeoJobModel.JobConfig::getJob)
-                .map(LeoJobModel.Job::getBuild)
-                .map(LeoJobModel.Build::getType)
-                .orElse(KUBERNETES_IMAGE);
-        if (!KUBERNETES_IMAGE.equalsIgnoreCase(buildType)) {
-            return;
-        }
-
         final LeoJobModel.CR cr = Optional.ofNullable(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getCr)
-                .orElseThrow(() -> new LeoBuildException("任务CR配置不存在无法验证镜像是否推送成功！"));
+                .orElseThrow(() -> new LeoBuildException("任务CR配置不存在无法验证镜像是否推送成功: job->cr"));
 
         final String crType = Optional.of(cr)
                 .map(LeoJobModel.CR::getType)
-                .orElseThrow(() -> new LeoBuildException("任务CR类型配置不存在无法验证镜像是否推送成功！"));
+                .orElseThrow(() -> new LeoBuildException("任务CR类型配置不存在无法验证镜像是否推送成功: job->cr->type"));
 
         BaseCrValidator crValidator = CrValidatorFactory.getValidatorByCrType(crType);
         if (crValidator == null) {

@@ -10,6 +10,10 @@ import com.baiyi.opscloud.leo.handler.build.base.IBuildStep;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
+import static com.baiyi.opscloud.leo.handler.build.strategy.verification.PostBuildVerificationWithKubernetesImageStrategy.KUBERNETES_IMAGE;
+
 /**
  * @Author baiyi
  * @Date 2023/4/20 10:49
@@ -27,7 +31,12 @@ public class PostBuildVerificationChainHandler extends BaseBuildChainHandler imp
      */
     @Override
     protected void handle(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
-        BaseBuildStrategy buildStrategy = BuildStrategyFactory.getStrategy(getStep(), buildConfig.getBuild().getType());
+        // 获取buildType
+        final String buildType = Optional.ofNullable(buildConfig)
+                .map(LeoBuildModel.BuildConfig::getBuild)
+                .map(LeoBuildModel.Build::getType)
+                .orElse(KUBERNETES_IMAGE);
+        BaseBuildStrategy buildStrategy = BuildStrategyFactory.getStrategy(getStep(), buildType);
         // 基于策略模式实现
         buildStrategy.handleRequest(leoBuild, buildConfig);
     }

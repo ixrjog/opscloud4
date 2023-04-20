@@ -60,6 +60,7 @@ public class LeoBuildModel {
         private LeoBaseModel.Jenkins jenkins;
         private LeoBaseModel.Notify notify;
         private String comment;
+        @Schema(description = "构建类型: kubernetes-image, maven-deploy")
         private String type;
 
         @Schema(description = "字典")

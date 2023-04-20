@@ -1,11 +1,11 @@
-package com.baiyi.opscloud.leo.handler.build.chain.post.validator;
+package com.baiyi.opscloud.leo.handler.build.strategy.verification.validator;
 
 import com.amazonaws.services.ecr.model.Repository;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.datasource.aws.ecr.driver.AmazonEcrRepositoryDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.leo.handler.build.chain.post.validator.base.BaseCrValidator;
-import com.baiyi.opscloud.leo.handler.build.chain.post.validator.delegate.EcrImageDelegate;
+import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.base.BaseCrValidator;
+import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.delegate.EcrImageDelegate;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component;
 import jakarta.annotation.Resource;
 import java.util.Map;
 import java.util.Optional;
-
-import static com.baiyi.opscloud.leo.handler.build.chain.post.validator.base.BaseCrValidator.CrTypes.ECR;
 
 /**
  * @Author baiyi
@@ -37,7 +35,7 @@ public class EcrValidator extends BaseCrValidator<AwsConfig> {
 
     @Override
     public String getCrType() {
-        return ECR;
+        return CrTypes.ECR;
     }
 
     @Override

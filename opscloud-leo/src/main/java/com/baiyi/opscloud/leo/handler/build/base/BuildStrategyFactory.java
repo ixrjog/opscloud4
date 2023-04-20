@@ -37,4 +37,5 @@ public class BuildStrategyFactory {
         }
         log.debug("BuildStrategyFactory Registered: step={}, buildType={}", bean.getStep(), bean.getBuildType());
     }
+
 }
