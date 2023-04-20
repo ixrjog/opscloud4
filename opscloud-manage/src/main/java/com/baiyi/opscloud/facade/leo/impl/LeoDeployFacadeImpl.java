@@ -277,7 +277,6 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         if (labels.containsKey(WORKLOAD_SELECTOR_NAME)) {
             final String workloadSelector = labels.get(WORKLOAD_SELECTOR_NAME).replace(oldName, newName);
             try {
-
                 if (Optional.of(deployment)
                         .map(Deployment::getMetadata)
                         .map(ObjectMeta::getLabels)
