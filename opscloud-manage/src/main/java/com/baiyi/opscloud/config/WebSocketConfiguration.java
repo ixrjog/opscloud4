@@ -49,11 +49,11 @@ public class WebSocketConfiguration implements ServletContextInitializer {
         // 102400
         servletContext.setInitParameter("org.apache.tomcat.websocket.textBufferSize", "20480");
         servletContext.setInitParameter("org.apache.tomcat.websocket.binaryBufferSize", "20480");
-        /**
+        /*
          * 线程池的核心容量大小
          */
         servletContext.setInitParameter("org.apache.tomcat.websocket.executorCoreSize", "30");
-        /**
+        /*
          * 线程池的最大容量大小
          */
         servletContext.setInitParameter("org.apache.tomcat.websocket.executorMaxSize", "400");

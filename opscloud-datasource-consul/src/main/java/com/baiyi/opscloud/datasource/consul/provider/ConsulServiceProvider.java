@@ -59,7 +59,6 @@ public class ConsulServiceProvider extends BaseAssetProvider<ConsulService.Servi
                         .stream()
                         .peek(e -> e.setDc(dc))
                         .toList();
-
                 services.addAll(ss);
             } catch (Exception e) {
                 log.error(e.getMessage());
@@ -79,10 +78,7 @@ public class ConsulServiceProvider extends BaseAssetProvider<ConsulService.Servi
         if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
         }
-        if (!preAsset.getIsActive().equals(asset.getIsActive())) {
-            return false;
-        }
-        return true;
+        return preAsset.getIsActive().equals(asset.getIsActive());
     }
 
     @Override

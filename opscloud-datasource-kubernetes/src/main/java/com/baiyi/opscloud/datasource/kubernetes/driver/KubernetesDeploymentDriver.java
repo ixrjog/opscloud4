@@ -160,7 +160,6 @@ public class KubernetesDeploymentDriver {
         }
     }
 
-
     public static Deployment update(KubernetesConfig.Kubernetes kubernetes, Deployment deployment) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.apps()
