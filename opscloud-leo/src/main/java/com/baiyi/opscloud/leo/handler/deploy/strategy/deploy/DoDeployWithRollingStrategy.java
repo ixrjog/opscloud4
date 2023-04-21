@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.leo.handler.deploy.strategy.deploy;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.datasource.kubernetes.driver.NewKubernetesDeploymentDriver;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.leo.handler.deploy.strategy.deploy.base.DoDeployStrategy;
@@ -64,7 +64,7 @@ public class DoDeployWithRollingStrategy extends DoDeployStrategy {
             deployment.getSpec().setReplicas(replicas + 1);
         }
         try {
-            NewKubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), namespace, deployment);
+            KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), namespace, deployment);
             LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                     .id(leoDeploy.getId())
                     .startTime(new Date())

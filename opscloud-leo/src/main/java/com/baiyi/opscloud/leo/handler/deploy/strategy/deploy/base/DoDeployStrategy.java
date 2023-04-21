@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.leo.handler.deploy.strategy.deploy.base;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.datasource.kubernetes.driver.NewKubernetesDeploymentDriver;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.leo.handler.deploy.base.BaseDeployStrategy;
@@ -39,7 +39,7 @@ public abstract class DoDeployStrategy extends BaseDeployStrategy {
         final String namespace = kubernetes.getDeployment().getNamespace();
         final String deploymentName = kubernetes.getDeployment().getName();
         KubernetesConfig kubernetesConfig = getKubernetesConfigWithUuid(instanceUuid);
-        Deployment deployment = NewKubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(),
+        Deployment deployment = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(),
                 namespace,
                 deploymentName);
         if (deployment == null) {

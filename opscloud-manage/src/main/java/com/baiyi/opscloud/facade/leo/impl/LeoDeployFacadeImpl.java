@@ -7,7 +7,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
-import com.baiyi.opscloud.datasource.kubernetes.driver.NewKubernetesDeploymentDriver;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
@@ -224,7 +224,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         if (deploymentName.equals(cloneDeployDeployment.getDeploymentName())) {
             throw new LeoDeployException("原无状态与克隆的无状态名称相同!");
         }
-        Deployment deployment = NewKubernetesDeploymentDriver.get(
+        Deployment deployment = KubernetesDeploymentDriver.get(
                 kubernetesConfig.getKubernetes(),
                 namespace,
                 deploymentName);
@@ -235,7 +235,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         preUpdateDeployment(deployment, deploymentName, cloneDeployDeployment.getDeploymentName(), cloneDeployDeployment.getReplicas());
         // 创建无状态
         try {
-            NewKubernetesDeploymentDriver.create(kubernetesConfig.getKubernetes(), namespace, deployment);
+            KubernetesDeploymentDriver.create(kubernetesConfig.getKubernetes(), namespace, deployment);
         } catch (Exception e) {
             throw new LeoDeployException("克隆无状态错误: {}", e.getMessage());
         }

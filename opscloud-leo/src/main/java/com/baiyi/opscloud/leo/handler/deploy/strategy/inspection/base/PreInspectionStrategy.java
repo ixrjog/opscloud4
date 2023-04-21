@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.leo.handler.deploy.strategy.inspection.base;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.datasource.kubernetes.driver.NewKubernetesDeploymentDriver;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
@@ -77,7 +77,7 @@ public abstract class PreInspectionStrategy extends BaseDeployStrategy {
                 .build();
 
         KubernetesConfig kubernetesConfig = getKubernetesConfigWithUuid(dsInstance.getUuid());
-        Deployment deployment = NewKubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(),
+        Deployment deployment = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(),
                 kubernetesNamespace,
                 deploymentName);
 

@@ -25,7 +25,7 @@ import java.util.Optional;
  * @Version 1.0
  */
 @Slf4j
-public class NewKubernetesDeploymentDriver {
+public class KubernetesDeploymentDriver {
 
     public static final String REDEPLOY_TIMESTAMP = "redeploy-timestamp";
 

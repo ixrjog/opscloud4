@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.kubernetes.arms;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
-import com.baiyi.opscloud.datasource.kubernetes.driver.NewKubernetesDeploymentDriver;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import io.fabric8.kubernetes.api.model.Container;
@@ -34,7 +34,7 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
         List<Application> applications = applicationService.queryAll();
         for (Application application : applications) {
             String appName = application.getName();
-            Deployment deployment = NewKubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), "test", appName);
+            Deployment deployment = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), "test", appName);
             if (deployment == null) continue;
 
 
@@ -73,7 +73,7 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
                     print("设置错误  deployment.getSpec().getTemplate().getSpec().setTerminationGracePeriodSeconds(40L)");
                 }
 
-                NewKubernetesDeploymentDriver.create(kubernetesConfig.getKubernetes(), "test", deployment);
+                KubernetesDeploymentDriver.create(kubernetesConfig.getKubernetes(), "test", deployment);
                 print("---------------------------------------------------------------------------");
                 print("应用名称: " + appName);
                 print("---------------------------------------------------------------------------");
@@ -89,7 +89,7 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
         List<Application> applications = applicationService.queryAll();
         for (Application application : applications) {
             String appName = application.getName();
-            Deployment deployment = NewKubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), "test", appName);
+            Deployment deployment = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), "test", appName);
             if (deployment == null) continue;
 
             for (int i = 0; i < deployment.getSpec().getTemplate().getSpec().getContainers().size(); i++) {
@@ -129,7 +129,7 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
                 }
                 optionalContainer.get().getEnv().clear();
                 optionalContainer.get().setEnv(newEnvVars);
-                NewKubernetesDeploymentDriver.create(kubernetesConfig.getKubernetes(), "test", deployment);
+                KubernetesDeploymentDriver.create(kubernetesConfig.getKubernetes(), "test", deployment);
                 print("---------------------------------------------------------------------------");
                 print("应用名称: " + appName);
                 print("---------------------------------------------------------------------------");
@@ -143,7 +143,7 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
     void adot2Test() {
         KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_TEST);
             String appName = "airtime-product";
-            Deployment deployment = NewKubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), "test", appName);
+            Deployment deployment = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), "test", appName);
             if (deployment == null) return;
 
             for (Container container : deployment.getSpec().getTemplate().getSpec().getContainers()) {
@@ -182,7 +182,7 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
                 }
 
                 optionalContainer.get().setEnv(newEnvVars);
-                NewKubernetesDeploymentDriver.create(kubernetesConfig.getKubernetes(), "test", deployment);
+                KubernetesDeploymentDriver.create(kubernetesConfig.getKubernetes(), "test", deployment);
                 print("---------------------------------------------------------------------------");
                 print("应用名称: " + appName);
                 print("---------------------------------------------------------------------------");

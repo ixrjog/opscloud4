@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.kubernetes.xray;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
-import com.baiyi.opscloud.datasource.kubernetes.driver.NewKubernetesDeploymentDriver;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
@@ -73,7 +73,7 @@ public class KubernetesProdXRayTest extends BaseKubernetesTest {
          */
         final String armsAppName = appName + "-" + envName;
 
-        Deployment deployment = NewKubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), NAMESPACE, deploymentName);
+        Deployment deployment = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), NAMESPACE, deploymentName);
         if (deployment == null) return;
         /*
          * 移除X-Ray容器
@@ -135,7 +135,7 @@ public class KubernetesProdXRayTest extends BaseKubernetesTest {
         /*
          * 更新 Deployment
          */
-        NewKubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), NAMESPACE, deployment);
+        KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), NAMESPACE, deployment);
         print("---------------------------------------------------------------------------");
         print("应用名称: " + appName);
         print("---------------------------------------------------------------------------");

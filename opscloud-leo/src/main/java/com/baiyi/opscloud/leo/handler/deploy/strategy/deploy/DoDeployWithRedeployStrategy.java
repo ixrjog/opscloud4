@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.leo.handler.deploy.strategy.deploy;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.datasource.kubernetes.driver.NewKubernetesDeploymentDriver;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.leo.handler.deploy.strategy.deploy.base.DoDeployStrategy;
@@ -39,7 +39,7 @@ public class DoDeployWithRedeployStrategy extends DoDeployStrategy {
                 .orElseThrow(() -> new LeoDeployException("Kubernetes配置不存在！"));
 
         try {
-            NewKubernetesDeploymentDriver.redeploy(kubernetesConfig.getKubernetes(), deployment);
+            KubernetesDeploymentDriver.redeploy(kubernetesConfig.getKubernetes(), deployment);
             LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                     .id(leoDeploy.getId())
                     .startTime(new Date())
