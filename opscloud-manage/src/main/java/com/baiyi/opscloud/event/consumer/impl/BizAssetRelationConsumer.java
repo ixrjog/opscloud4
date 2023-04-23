@@ -20,7 +20,7 @@ public class BizAssetRelationConsumer extends AbstractEventConsumer<BusinessAsse
 
     @Override
     public String getEventType() {
-        return BusinessTypeEnum.BUSINESS_ASSET_RELATION.getName();
+        return BusinessTypeEnum.BUSINESS_ASSET_RELATION.name();
     }
 
     @Override
