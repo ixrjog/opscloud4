@@ -172,6 +172,8 @@ public class WorkOrderTicketVO {
     }
 
     @EqualsAndHashCode(callSuper = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     @Data
     @Schema

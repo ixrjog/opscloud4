@@ -3,7 +3,7 @@ package com.baiyi.opscloud.other;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
-import com.baiyi.opscloud.workorder.verify.QueueValidator;
+import com.baiyi.opscloud.workorder.validator.QueueValidator;
 import com.google.common.collect.Maps;
 import jakarta.annotation.Resource;
 import jakarta.validation.*;

@@ -9,7 +9,7 @@ import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.kubernetes.converter.DeploymentAssetConverter;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesNamespaceDriver;
-import com.baiyi.opscloud.datasource.kubernetes.driver.NewKubernetesDeploymentDriver;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -69,7 +69,7 @@ public class KubernetesDeploymentProvider extends AbstractAssetRelationProvider<
         List<Namespace> namespaces = KubernetesNamespaceDriver.list(buildConfig(dsInstanceContext.getDsConfig()));
         List<Deployment> entities = Lists.newArrayList();
         namespaces.forEach(e ->
-                entities.addAll(NewKubernetesDeploymentDriver.list(kubernetes, e.getMetadata().getName()))
+                entities.addAll(KubernetesDeploymentDriver.list(kubernetes, e.getMetadata().getName()))
         );
         return entities;
     }
@@ -77,7 +77,7 @@ public class KubernetesDeploymentProvider extends AbstractAssetRelationProvider<
     @Override
     protected List<Deployment> listEntities(DsInstanceContext dsInstanceContext, Namespace target) {
         KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
-        return NewKubernetesDeploymentDriver.list(kubernetes, target.getMetadata().getName());
+        return KubernetesDeploymentDriver.list(kubernetes, target.getMetadata().getName());
     }
 
     @Override

@@ -17,4 +17,5 @@ public interface ITerminalAuditHandler {
     void handle(String message, Session session);
 
     String getState();
+
 }

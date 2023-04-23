@@ -17,29 +17,16 @@ import java.io.OutputStream;
 @Slf4j
 public class WatchKubernetesSshOutputTask extends AbstractSshChannelOutputTask {
 
-    private OutputStream channelOutput;
+    private final OutputStream channelOutput;
 
-//    private PrintWriter printWriter;
-//
-//    public WatchKubernetesSshOutputTask(SessionOutput sessionOutput, ByteArrayOutputStream byteArrayOutputStream, PrintWriter printWriter) {
-//        setSessionOutput(sessionOutput);
-//        setOutputStream(byteArrayOutputStream);
-//        this.printWriter = printWriter;
-//    }
-
-    public WatchKubernetesSshOutputTask(SessionOutput sessionOutput, ByteArrayOutputStream baos, OutputStream channelOutput) {
+    public WatchKubernetesSshOutputTask(SessionOutput sessionOutput, ByteArrayOutputStream byteArrayOutputStream, OutputStream channelOutput) {
         setSessionOutput(sessionOutput);
-        setOutputStream(baos);
+        setOutputStream(byteArrayOutputStream);
         this.channelOutput = channelOutput;
     }
 
     @Override
     public void write(char[] buff, int off, int len) throws IOException {
-//        if (printWriter != null) {
-//            this.printWriter.write(buff, off, len);
-//            this.printWriter.flush();
-//            return;
-//        }
         char[] outBuff = ArrayUtil.sub(buff, 0, len);
         this.channelOutput.write(toBytes(outBuff));
     }

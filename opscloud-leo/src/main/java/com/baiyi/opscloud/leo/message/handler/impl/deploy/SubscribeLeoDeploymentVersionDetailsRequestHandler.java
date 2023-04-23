@@ -3,7 +3,7 @@ package com.baiyi.opscloud.leo.message.handler.impl.deploy;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
-import com.baiyi.opscloud.datasource.kubernetes.driver.NewKubernetesDeploymentDriver;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeploymentVersionDetailsRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
@@ -110,7 +110,7 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
             }
             try {
                 KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
-                Deployment deployment = NewKubernetesDeploymentDriver.get(
+                Deployment deployment = KubernetesDeploymentDriver.get(
                         kubernetesConfig.getKubernetes(),
                         // namespace
                         asset.getAssetKey2(),

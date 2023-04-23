@@ -23,6 +23,7 @@
         <!-- https://github.com/fabric8io/kubernetes-client -->
         <!-- https://mvnrepository.com/artifact/io.fabric8/kubernetes-client -->
         <!-- 5.12.4/6.5.1 -->
+        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>io.fabric8</groupId>
             <artifactId>kubernetes-client</artifactId>

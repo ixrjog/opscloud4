@@ -13,14 +13,14 @@ public class EventConsumerFactory {
     private EventConsumerFactory() {
     }
 
-    static private final Map<String, IEventConsumer> context = new ConcurrentHashMap<>();
+    static private final Map<String, IEventConsumer> CONTEXT = new ConcurrentHashMap<>();
 
     public static IEventConsumer getConsumer(String eventType) {
-        return context.get(eventType);
+        return CONTEXT.get(eventType);
     }
 
     public static void register(IEventConsumer bean) {
-        context.put(bean.getEventType(), bean);
+        CONTEXT.put(bean.getEventType(), bean);
     }
 
 }

@@ -7,6 +7,10 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
 public enum BuildResult {
+
+    /**
+     * 构建结果
+     */
     FAILURE, UNSTABLE, REBUILDING, BUILDING,
     /**
      * This means a job was already running and has been aborted.

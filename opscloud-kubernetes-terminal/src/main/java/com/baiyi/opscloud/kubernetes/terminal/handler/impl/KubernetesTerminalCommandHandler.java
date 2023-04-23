@@ -12,8 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.apache.commons.lang3.StringUtils;
 import jakarta.websocket.Session;
+
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -55,8 +57,8 @@ public class KubernetesTerminalCommandHandler extends AbstractKubernetesTerminal
             return;
         }
         try {
-            OutputStream out =   kubernetesSession.getExecWatch().getInput();
-            out.write(cmd.getBytes());
+            OutputStream out = kubernetesSession.getExecWatch().getInput();
+            out.write(cmd.getBytes(StandardCharsets.UTF_8));
             out.flush();
         } catch (IOException e) {
             log.error(e.getMessage());

@@ -15,7 +15,7 @@ import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
-import com.baiyi.opscloud.leo.action.build.LeoBuildHandler;
+import com.baiyi.opscloud.leo.handler.build.LeoBuildHandler;
 import com.baiyi.opscloud.leo.aop.annotation.LeoBuildInterceptor;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
@@ -52,6 +52,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.baiyi.opscloud.leo.handler.build.strategy.verification.PostBuildVerificationWithKubernetesImageStrategy.KUBERNETES_IMAGE;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -141,9 +142,16 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                         .build()
         );
 
+        final String buildType = Optional.of(jobConfig)
+                .map(LeoJobModel.JobConfig::getJob)
+                .map(LeoJobModel.Job::getBuild)
+                .map(LeoJobModel.Build::getType)
+                .orElse(KUBERNETES_IMAGE);
+
         Map<String, String> dict = Maps.newHashMap();
         dict.put(BuildDictConstants.BRANCH.getKey(), doBuild.getBranch());
         LeoBuildModel.Build build = LeoBuildModel.Build.builder()
+                .type(buildType)
                 .dict(dict)
                 .tags(tags)
                 .gitLab(gitLab)
@@ -202,9 +210,9 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         try {
             logHelper.info(leoBuild, "用户 {} 停止构建任务", SessionUtil.getUsername());
             JenkinsPipeline.Step step = blueRestDriver.stopPipeline(jenkinsConfig.getJenkins(), leoBuild.getBuildJobName(), String.valueOf(1));
-            logHelper.info(leoBuild, "用户停止构建任务: {}", JSONUtil.writeValueAsString(step));
+            logHelper.info(leoBuild, "停止构建任务: {}", JSONUtil.writeValueAsString(step));
         } catch (Exception e) {
-            logHelper.error(leoBuild, "用户停止构建任务失败: {}", e.getMessage());
+            logHelper.error(leoBuild, "停止构建任务失败: {}", e.getMessage());
         }
     }
 

@@ -23,7 +23,9 @@ public class AmazonIdentityManagementUserDriver {
 
     public static final boolean NO_PASSWORD_RESET_REQUIRED = false;
 
-    // https://docs.aws.amazon.com/zh_cn/IAM/latest/APIReference/API_ListEntitiesForPolicy.html
+    /**
+     * https://docs.aws.amazon.com/zh_cn/IAM/latest/APIReference/API_ListEntitiesForPolicy.html
+     */
     private interface EntityFilter {
         String USER = "User";
         String ROLE = "Role";
@@ -42,7 +44,9 @@ public class AmazonIdentityManagementUserDriver {
      *
      * @param config
      */
-    public IamUser.User createUser(AwsConfig.Aws config, com.baiyi.opscloud.domain.generator.opscloud.User user, boolean createLoginProfile) {
+    public IamUser.User createUser(AwsConfig.Aws config,
+                                   com.baiyi.opscloud.domain.generator.opscloud.User user,
+                                   boolean createLoginProfile) {
         CreateUserRequest request = new CreateUserRequest();
         request.setUserName(user.getUsername());
         CreateUserResult result = buildAmazonIdentityManagement(config).createUser(request);
@@ -57,6 +61,26 @@ public class AmazonIdentityManagementUserDriver {
     }
 
     /**
+     * 更新用户登录配置文件 https://docs.aws.amazon.com/zh_cn/IAM/latest/APIReference/API_UpdateLoginProfile.html
+     *
+     * @param config
+     * @param user
+     * @param passwordResetRequired
+     * @return RequestId
+     */
+    public String updateLoginProfile(AwsConfig.Aws config,
+                                      com.baiyi.opscloud.domain.generator.opscloud.User user,
+                                      String password,
+                                      boolean passwordResetRequired) {
+        UpdateLoginProfileRequest request = new UpdateLoginProfileRequest();
+        request.setUserName(user.getUsername());
+        request.setPassword(password);
+        request.setPasswordResetRequired(passwordResetRequired);
+        UpdateLoginProfileResult result = buildAmazonIdentityManagement(config).updateLoginProfile(request);
+        return result.getSdkResponseMetadata().getRequestId();
+    }
+
+    /**
      * https://docs.aws.amazon.com/zh_cn/IAM/latest/APIReference/API_CreateLoginProfile.html
      *
      * @param config
@@ -64,7 +88,10 @@ public class AmazonIdentityManagementUserDriver {
      * @param passwordResetRequired
      * @return
      */
-    private LoginProfile createLoginProfile(AwsConfig.Aws config, com.baiyi.opscloud.domain.generator.opscloud.User user, boolean passwordResetRequired) {
+    @SuppressWarnings("ALL")
+    private LoginProfile createLoginProfile(AwsConfig.Aws config,
+                                            com.baiyi.opscloud.domain.generator.opscloud.User user,
+                                            boolean passwordResetRequired) {
         CreateLoginProfileRequest request = new CreateLoginProfileRequest();
         request.setUserName(user.getUsername());
         request.setPassword(user.getPassword());

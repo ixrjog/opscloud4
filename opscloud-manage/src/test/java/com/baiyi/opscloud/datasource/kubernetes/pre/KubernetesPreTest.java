@@ -4,7 +4,6 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesServiceDriver;
-import com.baiyi.opscloud.datasource.kubernetes.driver.NewKubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -14,6 +13,7 @@ import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.facade.application.ApplicationFacade;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.Service;
@@ -46,7 +46,7 @@ public class KubernetesPreTest extends BaseKubernetesTest {
     @Test
     void update() {
         KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_PROD);
-        List<Deployment> deploymentList = NewKubernetesDeploymentDriver.list(kubernetesConfig.getKubernetes(), NAMESPACE);
+        List<Deployment> deploymentList = KubernetesDeploymentDriver.list(kubernetesConfig.getKubernetes(), NAMESPACE);
         for (int i = 0; i < deploymentList.size(); i++) {
             // index namespace name
             String appName = deploymentList.get(i).getMetadata().getName();
@@ -72,7 +72,7 @@ public class KubernetesPreTest extends BaseKubernetesTest {
                 args.add("-client=0.0.0.0");
                 args.add("-ui");
                 container.setArgs(args);
-                NewKubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), NAMESPACE, deployment);
+                KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), NAMESPACE, deployment);
             } else {
                 print("consul-agent不存在");
             }
@@ -94,7 +94,7 @@ public class KubernetesPreTest extends BaseKubernetesTest {
          */
         final String armsAppName = appName + "-prod";
 
-        Deployment deployment = NewKubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), NAMESPACE, deploymentName);
+        Deployment deployment = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), NAMESPACE, deploymentName);
         if (deployment == null) return;
         /**
          * 移除X-Ray容器
@@ -165,7 +165,7 @@ public class KubernetesPreTest extends BaseKubernetesTest {
         /**
          * 更新 Deployment
          */
-        NewKubernetesDeploymentDriver.create(kubernetesConfig.getKubernetes(), NAMESPACE, deployment);
+        KubernetesDeploymentDriver.create(kubernetesConfig.getKubernetes(), NAMESPACE, deployment);
         print("---------------------------------------------------------------------------");
         print("应用名称: " + appName);
         print("---------------------------------------------------------------------------");
@@ -176,10 +176,10 @@ public class KubernetesPreTest extends BaseKubernetesTest {
     void createPreDept() {
         KubernetesConfig prodConfig = getConfigById(KubernetesClusterConfigs.EKS_PROD);
 
-        List<Deployment> deploymentList = NewKubernetesDeploymentDriver.list(prodConfig.getKubernetes(), NAMESPACE);
+        List<Deployment> deploymentList = KubernetesDeploymentDriver.list(prodConfig.getKubernetes(), NAMESPACE);
         KubernetesConfig preConfig = getConfigById(KubernetesClusterConfigs.EKS_PRE);
         deploymentList.forEach(deployment -> {
-            NewKubernetesDeploymentDriver.create(preConfig.getKubernetes(), NAMESPACE, deployment);
+            KubernetesDeploymentDriver.create(preConfig.getKubernetes(), NAMESPACE, deployment);
         });
     }
 

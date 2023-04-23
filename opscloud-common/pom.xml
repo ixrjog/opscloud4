@@ -23,6 +23,7 @@
             <artifactId>opscloud-otp</artifactId>
         </dependency>
 
+        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>

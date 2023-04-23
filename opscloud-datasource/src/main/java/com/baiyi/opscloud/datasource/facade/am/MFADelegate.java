@@ -29,12 +29,11 @@ public class MFADelegate {
 
     private final AmazonIdentityManagementMFADriver amazonIMMFADriver;
 
-    private final ThreadLocal<Boolean> firstExecution = new ThreadLocal<>();
-
+    @SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
     @Retryable(retryFor = RetryException.class, maxAttempts = 5, backoff = @Backoff(delay = 3000))
     public void enableMFADevice(AwsConfig.Aws config, User user, VirtualMFADevice vMFADevice) throws RetryException {
-        setFlag();
         try {
+            NewTimeUtil.sleep(3L);
             log.info("尝试启用IAM虚拟MFA: username={}, serialNumber={}", user.getUsername(), vMFADevice.getSerialNumber());
             String secretKeyStr = new String(vMFADevice.getBase32StringSeed().array());
             SecretKey key = OtpUtil.toKey(secretKeyStr);
@@ -44,16 +43,6 @@ public class MFADelegate {
         } catch (Exception e) {
             log.error("启用虚拟MFA设备失败: {}", e.getMessage());
             throw new RetryException(e.getMessage());
-        }
-    }
-
-    /**
-     * 首次执行延迟3秒！
-     */
-    private void setFlag() {
-        if (firstExecution.get() == null) {
-            firstExecution.set(Boolean.FALSE);
-            NewTimeUtil.sleep(3L);
         }
     }
 

@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.controller.socket;
 
-import com.baiyi.opscloud.guacamole.tunnel.BaseGuacamoleTunnel;
+import com.baiyi.opscloud.controller.socket.base.SimpleAuthentication;
 import jakarta.websocket.server.ServerEndpoint;
+import org.apache.guacamole.GuacamoleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,21 +13,22 @@ import org.springframework.stereotype.Component;
  */
 @ServerEndpoint(value = "/api/ws/guacamole/tunnel", subprotocols = "guacamole")
 @Component
-public final class GuacamoleController extends BaseGuacamoleTunnel {
-//
-//    private static SimpleAuthentication simpleAuthentication;
-//
-//    @Autowired
-//    public void setSimpleAuthentication(SimpleAuthentication simpleAuthentication) {
-//        GuacamoleController.simpleAuthentication = simpleAuthentication;
-//    }
-//
-//    /**
-//     * @param session
-//     * @param endpointConfig
-//     * @return
-//     * @throws GuacamoleException
-//     */
+public final class GuacamoleController  {
+
+    // extends BaseGuacamoleTunnel
+    private static SimpleAuthentication simpleAuthentication;
+
+    @Autowired
+    public void setSimpleAuthentication(SimpleAuthentication simpleAuthentication) {
+        GuacamoleController.simpleAuthentication = simpleAuthentication;
+    }
+
+    /**
+     * @param session
+     * @param endpointConfig
+     * @return
+     * @throws GuacamoleException
+     */
 //    @Override
 //    protected GuacamoleTunnel createTunnel(Session session, EndpointConfig endpointConfig) throws GuacamoleException {
 //        Map<String, List<String>> parameterMap = session.getRequestParameterMap();

@@ -18,7 +18,6 @@ public final class JsonParser implements Parser {
 
     @Override
     public PrettyTable parse(String text) throws IOException {
-
         ObjectMapper om = new ObjectMapper();
         JsonNode root = om.readTree(text);
 
@@ -49,6 +48,7 @@ public final class JsonParser implements Parser {
      * @param field
      * @return
      */
+    @SuppressWarnings("AlibabaSwitchStatement")
     private static Object toStr(final Map.Entry<String, JsonNode> field) {
         JsonNode value = field.getValue();
         switch (value.getNodeType()) {

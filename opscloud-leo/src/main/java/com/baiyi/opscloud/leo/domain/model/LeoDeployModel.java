@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO;
 import com.baiyi.opscloud.leo.domain.model.base.YamlDump;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
 import com.google.common.collect.Lists;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -59,17 +60,17 @@ public class LeoDeployModel {
         private String comment;
         // Kubernetes
         private LeoBaseModel.Kubernetes kubernetes;
-        // 字典
+        @Schema(description = "字典")
         private Map<String, String> dict;
-        // 通知
+        @Schema(description = "通知")
         private LeoBaseModel.Notify notify;
-        // 部署类型
+        @Schema(description = "部署类型")
         private String deployType;
-        // 部署版本1
+        @Schema(description = "部署版本1")
         private DeployVersion deployVersion1;
-        // 部署版本2
+        @Schema(description = "部署版本2")
         private DeployVersion deployVersion2;
-        // 构建标签
+        @Schema(description = "构建标签")
         private List<String> tags;
     }
 

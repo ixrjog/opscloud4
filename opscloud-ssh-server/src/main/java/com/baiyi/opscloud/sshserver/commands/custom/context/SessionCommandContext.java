@@ -22,17 +22,15 @@ public class SessionCommandContext {
         return ID_MAPPER.get();
     }
 
-
-    private static final ThreadLocal<ServerParam.UserPermissionServerPageQuery> serverQuery = new ThreadLocal<>();
+    private static final ThreadLocal<ServerParam.UserPermissionServerPageQuery> SERVER_QUERY = new ThreadLocal<>();
 
     public static void setServerQuery(ServerParam.UserPermissionServerPageQuery param) {
-        serverQuery.set(param);
+        SERVER_QUERY.set(param);
     }
 
     public static ServerParam.UserPermissionServerPageQuery getServerQuery() {
-        return serverQuery.get();
+        return SERVER_QUERY.get();
     }
-
 
     private static final ThreadLocal<Map<Integer, PodContext>> POD_MAPPER = new ThreadLocal<>();
 
@@ -40,7 +38,14 @@ public class SessionCommandContext {
         return POD_MAPPER.get();
     }
 
-    public static void setPodMapper(Map<Integer, PodContext> param) { POD_MAPPER.set(param);
+    public static void setPodMapper(Map<Integer, PodContext> param) {
+        POD_MAPPER.set(param);
+    }
+
+    public static void remove() {
+        ID_MAPPER.remove();
+        SERVER_QUERY.remove();
+        POD_MAPPER.remove();
     }
 
 }

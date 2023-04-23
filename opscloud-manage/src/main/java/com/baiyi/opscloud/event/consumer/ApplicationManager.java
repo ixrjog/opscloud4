@@ -48,7 +48,9 @@ public class ApplicationManager implements IManager<BaseBusiness.IBusiness> {
 
     private void handle(BaseBusiness.IBusiness businessResource){
         Application application = applicationService.getById(businessResource.getBusinessId());
-        if (application == null) return;
+        if (application == null) {
+            return;
+        }
         applicationAlertFacade.refreshCache(application.getName());
     }
 

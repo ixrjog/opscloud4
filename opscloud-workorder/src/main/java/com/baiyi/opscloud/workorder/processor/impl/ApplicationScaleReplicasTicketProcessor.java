@@ -2,7 +2,7 @@ package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.datasource.kubernetes.driver.NewKubernetesDeploymentDriver;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesDeploymentException;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
@@ -39,7 +39,7 @@ public class ApplicationScaleReplicasTicketProcessor
     protected void processHandle(WorkOrderTicketEntry ticketEntry, ApplicationScaleReplicasEntry.KubernetesDeployment entry) throws TicketProcessException {
         KubernetesConfig.Kubernetes config = getDsConfig(ticketEntry, KubernetesConfig.class).getKubernetes();
         try {
-            NewKubernetesDeploymentDriver.scale(config, entry.getNamespace(), entry.getDeploymentName(), entry.getScaleReplicas());
+            KubernetesDeploymentDriver.scale(config, entry.getNamespace(), entry.getDeploymentName(), entry.getScaleReplicas());
             log.info("工单扩容应用副本: instanceUuid={}, entry={}", ticketEntry.getInstanceUuid(), entry);
         } catch (KubernetesDeploymentException e) {
             throw new TicketProcessException("工单扩容应用副本失败: {}", e.getMessage());
@@ -81,7 +81,7 @@ public class ApplicationScaleReplicasTicketProcessor
             throw new TicketVerifyException("校验工单条目失败: 未指定扩容后副本数！");
         }
 
-        int replicas = Optional.ofNullable(NewKubernetesDeploymentDriver.get(config, entry.getNamespace(), entry.getDeploymentName()))
+        int replicas = Optional.ofNullable(KubernetesDeploymentDriver.get(config, entry.getNamespace(), entry.getDeploymentName()))
                 .map(Deployment::getSpec)
                 .map(DeploymentSpec::getReplicas)
                 .orElseThrow(() -> new TicketVerifyException("校验工单条目失败: 无法获取当前副本数！"));
@@ -110,7 +110,7 @@ public class ApplicationScaleReplicasTicketProcessor
         processHandle(ticketEntry, entry);
         KubernetesConfig.Kubernetes config = getDsConfig(ticketEntry, KubernetesConfig.class).getKubernetes();
         try {
-            Deployment deployment = NewKubernetesDeploymentDriver.get(config, entry.getNamespace(), entry.getDeploymentName());
+            Deployment deployment = KubernetesDeploymentDriver.get(config, entry.getNamespace(), entry.getDeploymentName());
             dsInstanceFacade.pullAsset(ticketEntry.getInstanceUuid(), getAssetType(), deployment);
         } catch (Exception e) {
             throw new TicketProcessException("应用副本扩容失败: {}", e.getMessage());

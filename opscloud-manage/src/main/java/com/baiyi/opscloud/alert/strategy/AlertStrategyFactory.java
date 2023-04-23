@@ -10,15 +10,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AlertStrategyFactory {
 
-    private static final Map<String, IAlertStrategy> context = new ConcurrentHashMap<>();
+    private static final Map<String, IAlertStrategy> CONTEXT = new ConcurrentHashMap<>();
 
     public static IAlertStrategy getAlertActivity(String alertSeverity) {
-        return context.get(alertSeverity);
+        return CONTEXT.get(alertSeverity);
     }
 
     public static void register(IAlertStrategy bean) {
-        context.put(bean.getAlertSeverity(), bean);
+        CONTEXT.put(bean.getAlertSeverity(), bean);
     }
-
 
 }

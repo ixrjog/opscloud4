@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.domain.notice.message;
 
 import com.baiyi.opscloud.domain.notice.INoticeMessage;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +20,7 @@ public class CreateIamUserMessage implements INoticeMessage {
 
     private String awsName;
     private String loginUrl;
-    // 账户ID
+    @Schema(description = "账户ID")
     private String accountId;
     private String username;
     private String password;

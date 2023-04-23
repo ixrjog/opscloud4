@@ -42,7 +42,7 @@ public class LeoJobResponsePacker {
         job.setBuildSize(leoBuildService.countWithJobId(job.getId()));
 
         // 最后构建信息
-        List<LeoBuildVO.LatestBuildInfo> latestBuilds = leoBuildService.queryLatestBuildWithJobId(job.getId(), 5).stream().map(lb ->
+        List<LeoBuildVO.LatestBuildInfo> latestBuilds = leoBuildService.queryLatestBuildWithJobId(job.getId(), 3).stream().map(lb ->
                 LeoBuildVO.LatestBuildInfo.builder()
                         .buildId(lb.getId())
                         .buildNumber(lb.getBuildNumber())

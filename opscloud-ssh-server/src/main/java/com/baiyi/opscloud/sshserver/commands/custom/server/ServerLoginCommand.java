@@ -77,7 +77,7 @@ public class ServerLoginCommand extends BaseServerCommand {
     @SuppressWarnings("SpringShellCommandInspection")
     @ScreenClear
     @SettingContextSessionUser(invokeAdmin = true)
-    @ShellMethod(key = {COMMAND_SERVER_LOGIN, "login", "open"}, value = "Login to the server to execute the shell")
+    @ShellMethod(key = {COMMAND_SERVER_LOGIN, "login", "open"}, value = "Login to the server.")
     public void login(@ShellOption(help = "ID", defaultValue = "1") int id,
                       @ShellOption(help = "Account", defaultValue = "") String account,
                       @ShellOption(value = {"-A", "--admin"}, help = "Admin") boolean admin) {
@@ -101,14 +101,11 @@ public class ServerLoginCommand extends BaseServerCommand {
             TerminalUtil.enterRawMode(terminal);
             // 无延迟
             out.setNoDelay(true);
-            // 计时
-            // Instant inst1 = Instant.now();
             Size size = terminal.getSize();
             try {
                 while (true) {
                     if (isClosed(sessionId, instanceId)) {
                         NewTimeUtil.millisecondsSleep(150L);
-                        // printLogout("Exit login, session duration %s/s", inst1);
                         break;
                     }
                     doResize(size, terminal, sessionId, instanceId);

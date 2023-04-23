@@ -11,11 +11,10 @@ import com.baiyi.opscloud.workorder.processor.factory.WorkOrderTicketProcessorFa
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractUserGroupPermissionExtendedAbstractUserPermission;
 import com.baiyi.opscloud.workorder.query.impl.base.BaseTicketEntryQuery;
 import com.google.common.collect.Lists;
-
 import jakarta.annotation.Resource;
+
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -40,7 +39,7 @@ public abstract class UserGroupExtendedTicketEntryQuery extends BaseTicketEntryQ
                     .map(this::getEntryByName)
                     // 过滤不允许工单申请的用户组（角色）
                     .filter(UserGroup::getAllowOrder)
-                    .collect(Collectors.toList())
+                    .toList()
             );
         }
         return entries;
