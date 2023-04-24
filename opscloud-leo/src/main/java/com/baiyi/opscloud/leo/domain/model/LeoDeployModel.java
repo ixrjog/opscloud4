@@ -80,7 +80,7 @@ public class LeoDeployModel {
     @NoArgsConstructor
     public static class DeployVersion {
 
-        // 未知的版本
+        @Schema(description = "未知的版本")
         public static final DeployVersion UNKNOWN = DeployVersion.builder().build();
 
         // 构建ID

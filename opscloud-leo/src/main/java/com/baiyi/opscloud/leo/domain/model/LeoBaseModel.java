@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.leo.domain.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -58,6 +59,26 @@ public class LeoBaseModel {
     }
 
     @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema(description = "构件仓库配置")
+    public static class Nexus {
+        private LeoBaseModel.DsInstance instance;
+        private String repository;
+        private NexusComponent component;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema(description = "构件仓库-组件")
+    public static class NexusComponent {
+        private String group;
+        private String name;
+        private String version;
+    }
+
+    @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
@@ -83,8 +104,7 @@ public class LeoBaseModel {
         private String namespace;
         private String name;
         private Container container;
-
-        // 副本数
+        @Schema(description = "副本数")
         private Integer replicas;
     }
 

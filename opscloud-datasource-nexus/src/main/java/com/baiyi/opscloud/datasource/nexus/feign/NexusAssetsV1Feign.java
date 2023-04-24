@@ -14,10 +14,19 @@ public interface NexusAssetsV1Feign {
 
     @RequestLine("GET /service/rest/v1/assets?repository={repository}")
     @Headers({"accept: application/json", "Authorization: Basic {authBasic}"})
-    NexusAsset.Assets listAssets(@Param("authBasic") String authBasic, @Param("repository") String repository);
+    NexusAsset.Assets listAssets(@Param("authBasic") String authBasic,
+                                 @Param("repository") String repository);
 
     @RequestLine("GET /service/rest/v1/assets?repository={repository}&continuationToken={continuationToken}")
     @Headers({"accept: application/json", "Authorization: Basic {authBasic}"})
-    NexusAsset.Assets listAssets(@Param("authBasic") String authBasic, @Param("repository") String repository, @Param("continuationToken") String continuationToken);
+    NexusAsset.Assets listAssets(@Param("authBasic") String authBasic,
+                                 @Param("repository") String repository,
+                                 @Param("continuationToken") String continuationToken);
+
+
+    @RequestLine("GET /service/rest/v1/assets/{id}")
+    @Headers({"accept: application/json", "Authorization: Basic {authBasic}"})
+    NexusAsset.Assets get(@Param("authBasic") String authBasic,
+                                 @Param("id") String id);
 
 }

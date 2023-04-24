@@ -109,30 +109,25 @@ public class LeoJobModel {
         private Boolean enabled;
     }
 
-    /**
-     * 容器注册表
-     */
     @Builder
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @Schema(description = "容器注册表")
     public static class CR {
-        /**
-         * ACR ECR
-         */
+
+        @Schema(description = "容器注册表类型: ACR、ECR")
         private String type;
         private CRInstance instance;
         private Cloud cloud;
         private Repo repo;
     }
 
-    /**
-     * 容器注册表
-     */
     @Builder
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @Schema(description = "容器注册表实例")
     public static class CRInstance {
         private String regionId;
         private String id;

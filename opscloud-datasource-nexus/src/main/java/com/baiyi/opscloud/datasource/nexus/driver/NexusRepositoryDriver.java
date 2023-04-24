@@ -17,6 +17,7 @@ import java.util.List;
  * @Date 2021/10/15 1:45 下午
  * @Version 1.0
  */
+@SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
 @Slf4j
 @Component
 public class NexusRepositoryDriver {

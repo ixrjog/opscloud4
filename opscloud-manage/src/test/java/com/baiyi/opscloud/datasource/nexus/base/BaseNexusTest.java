@@ -22,7 +22,8 @@ public class BaseNexusTest extends BaseUnit {
     private DsConfigHelper dsFactory;
 
     protected NexusConfig getConfig() {
-        DatasourceConfig datasourceConfig = dsConfigService.getById(12);
+        // nexus.transspay.net
+        DatasourceConfig datasourceConfig = dsConfigService.getById(75);
         return dsFactory.build(datasourceConfig, NexusConfig.class);
     }
 }

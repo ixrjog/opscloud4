@@ -3,6 +3,7 @@ package com.baiyi.opscloud.leo.domain.model;
 import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoTemplate;
 import com.google.gson.JsonSyntaxException;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -58,9 +59,9 @@ public class LeoTemplateModel {
     public static class Template {
         private Jenkins jenkins;
         private String name;
-        // 任务目录
+        @Schema(description = "任务目录")
         private String folder;
-        // 模板任务完整URL
+        @Schema(description = "模板任务完整URL")
         private String url;
         private String type;
         private String version;

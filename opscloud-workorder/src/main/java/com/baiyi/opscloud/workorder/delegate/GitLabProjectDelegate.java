@@ -25,7 +25,7 @@ public class GitLabProjectDelegate {
         try {
             GitLabProjectDriver.addMember(gitlab, projectId, userId, accessLevel);
         } catch (GitLabApiException e) {
-            // "{\"message\":{\"access_level\":[\"is not included in the list"
+            //   "{"message":{"access_level":["is not included in the list"
             if (e.getMessage().contains("is not included in the list")) {
                 throw new TicketProcessException("Gitlab新增项目成员错误: 不支持授权 {} 角色", accessLevel.name());
             }

@@ -6,6 +6,7 @@ import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoRule;
 import com.baiyi.opscloud.domain.vo.leo.LeoRuleVO;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -68,7 +69,7 @@ public class LeoRuleModel {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Rule {
-
+        @Schema(description = "规则表达式")
         private Expression expression;
         private List<String> tags;
         private List<String> envs;
@@ -79,6 +80,7 @@ public class LeoRuleModel {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @Schema(description = "规则表达式")
     public static class Expression {
 
         private String type;
@@ -113,9 +115,9 @@ public class LeoRuleModel {
 
         public boolean parse() {
             boolean hitBegin = this.nowDate.after(this.beginDate);
-            log.info("开始时间: hitBeginTime={}", hitBegin);
+            log.debug("开始时间: hitBeginTime={}", hitBegin);
             boolean hitEnd = this.nowDate.before(this.endDate);
-            log.info("结束时间: hitEndTime={}", hitEnd);
+            log.debug("结束时间: hitEndTime={}", hitEnd);
             return hitBegin && hitEnd;
         }
 
@@ -147,9 +149,9 @@ public class LeoRuleModel {
 
         public boolean parse() {
             boolean hitBegin = this.nowDate.after(this.beginDate);
-            log.info("开始时间: hitBeginTime={}", hitBegin);
+            log.debug("开始时间: hitBeginTime={}", hitBegin);
             boolean hitEnd = this.nowDate.before(this.endDate);
-            log.info("结束时间: hitEndTime={}", hitEnd);
+            log.debug("结束时间: hitEndTime={}", hitEnd);
             return hitBegin && hitEnd;
         }
 

@@ -56,8 +56,14 @@ public class LeoBuildModel {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Build {
+
+        @Schema(description = "gitLab配置")
         private LeoBaseModel.GitLab gitLab;
+        @Schema(description = "jenkins配置")
         private LeoBaseModel.Jenkins jenkins;
+        @Schema(description = "nexus配置")
+        private LeoBaseModel.Nexus nexus;
+
         private LeoBaseModel.Notify notify;
         private String comment;
         @Schema(description = "构建类型: kubernetes-image, maven-deploy")
