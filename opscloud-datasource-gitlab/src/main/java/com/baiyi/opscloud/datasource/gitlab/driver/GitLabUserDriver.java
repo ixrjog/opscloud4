@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.gitlab.driver;
 
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
-import com.baiyi.opscloud.datasource.gitlab.factory.GitLabApiFactory;
+import com.baiyi.opscloud.datasource.gitlab.client.GitLabApiBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
@@ -35,7 +35,7 @@ public class GitLabUserDriver {
      * @throws GitLabApiException
      */
     public static List<User> findUsers(GitLabConfig.Gitlab gitlab, String emailOrUsername) throws GitLabApiException {
-        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+        try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             return gitLabApi.getUserApi().findUsers(emailOrUsername);
         } catch (GitLabApiException e) {
             log.error(e.getMessage());
@@ -52,7 +52,7 @@ public class GitLabUserDriver {
      * @throws GitLabApiException
      */
     public static User getUser(GitLabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
-        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+        try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             return gitLabApi.getUserApi().getUser(userId);
         } catch (GitLabApiException e) {
             log.error(e.getMessage());
@@ -68,7 +68,7 @@ public class GitLabUserDriver {
      * @throws GitLabApiException
      */
     public static List<User> getUsers(GitLabConfig.Gitlab gitlab) throws GitLabApiException {
-        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+        try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             return gitLabApi.getUserApi().getUsers();
         } catch (GitLabApiException e) {
             log.error(e.getMessage());
@@ -78,7 +78,7 @@ public class GitLabUserDriver {
 
 
     public static List<Membership> getUserMemberships(GitLabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
-        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+        try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             return gitLabApi.getUserApi().getMemberships(userId);
         } catch (GitLabApiException e) {
             log.error(e.getMessage());
@@ -95,7 +95,7 @@ public class GitLabUserDriver {
      * @throws GitLabApiException
      */
     public static void updateUser(GitLabConfig.Gitlab gitlab, Long userId, File avatarFile) throws GitLabApiException {
-        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+        try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             gitLabApi.getUserApi().setUserAvatar(userId, avatarFile);
         } catch (GitLabApiException e) {
             log.error(e.getMessage());
@@ -111,7 +111,7 @@ public class GitLabUserDriver {
      * @throws GitLabApiException
      */
     public static void blockUser(GitLabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
-        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+        try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             gitLabApi.getUserApi().blockUser(userId);
         } catch (GitLabApiException e) {
             log.error(e.getMessage());
@@ -127,7 +127,7 @@ public class GitLabUserDriver {
      * @throws GitLabApiException
      */
     public static void unblockUser(GitLabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
-        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+        try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             gitLabApi.getUserApi().unblockUser(userId);
         } catch (GitLabApiException e) {
             log.error(e.getMessage());
@@ -136,16 +136,12 @@ public class GitLabUserDriver {
     }
 
     public static User createUser(GitLabConfig.Gitlab gitlab, User user, String password) throws GitLabApiException {
-        try (GitLabApi gitLabApi = buildAPI(gitlab)) {
+        try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             return gitLabApi.getUserApi().createUser(user, password, false);
         } catch (GitLabApiException e) {
             log.error(e.getMessage());
             throw e;
         }
-    }
-
-    private static GitLabApi buildAPI(GitLabConfig.Gitlab gitlab) {
-        return GitLabApiFactory.buildGitLabApi(gitlab);
     }
 
 }

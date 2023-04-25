@@ -5,7 +5,6 @@ import com.baiyi.opscloud.domain.param.leo.request.ILeoRequestParam;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * @Author baiyi
@@ -14,7 +13,6 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class LeoContinuousDeliveryResponse<T> implements ILeoRequestParam {
 

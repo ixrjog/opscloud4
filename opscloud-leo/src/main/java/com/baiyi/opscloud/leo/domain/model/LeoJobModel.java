@@ -80,8 +80,42 @@ public class LeoJobModel {
     @NoArgsConstructor
     public static class Build {
         private Version version;
+        private BuildTools tools;
+        private BuildProject project;
         private String type;
         private LeoBaseModel.Notify notify;
+    }
+
+    @Builder
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema(description = "构建项目配置")
+    public static class BuildProject {
+        @Schema(description = "组")
+        private String   groupId;
+        @Schema(description = "组件")
+        private String  artifactId;
+    }
+
+    @Builder
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema(description = "构建工具")
+    public static class BuildTools {
+        private BuildToolsVersion version;
+        @Schema(description = "工具类型: gradle、maven")
+        private String type;
+    }
+
+    @Builder
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema(description = "获取版本信息的文件")
+    public static class BuildToolsVersion {
+        private String file;
     }
 
     @Builder
@@ -115,7 +149,6 @@ public class LeoJobModel {
     @NoArgsConstructor
     @Schema(description = "容器注册表")
     public static class CR {
-
         @Schema(description = "容器注册表类型: ACR、ECR")
         private String type;
         private CRInstance instance;

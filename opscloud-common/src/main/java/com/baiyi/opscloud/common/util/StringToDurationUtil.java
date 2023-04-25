@@ -1,11 +1,9 @@
 package com.baiyi.opscloud.common.util;
 
-import com.google.common.collect.Maps;
 import org.springframework.util.Assert;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,16 +23,7 @@ public class StringToDurationUtil {
     }
 
     static {
-        Map<String, ChronoUnit> units = Maps.newHashMap();
-        units.put("us", ChronoUnit.MICROS);
-        units.put("ns", ChronoUnit.NANOS);
-        units.put("ms", ChronoUnit.MILLIS);
-        units.put("s", ChronoUnit.SECONDS);
-        units.put("m", ChronoUnit.MINUTES);
-        units.put("h", ChronoUnit.HOURS);
-        units.put("d", ChronoUnit.DAYS);
-        units.put("", ChronoUnit.MILLIS);
-        UNITS = Collections.unmodifiableMap(units);
+        UNITS = Map.of("us", ChronoUnit.MICROS, "ns", ChronoUnit.NANOS, "ms", ChronoUnit.MILLIS, "s", ChronoUnit.SECONDS, "m", ChronoUnit.MINUTES, "h", ChronoUnit.HOURS, "d", ChronoUnit.DAYS, "", ChronoUnit.MILLIS);
     }
 
     public static Duration parse(String source) {

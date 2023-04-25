@@ -80,7 +80,7 @@ public class BuildingSupervisor implements ISupervisor {
                     Build build = jobWithDetails.details().getLastBuild();
                     if (build.equals(Build.BUILD_HAS_NEVER_RUN)) {
 
-                        NewTimeUtil.sleep(SLEEP_SECONDS);
+                        sleep();
                         continue;
                     }
                     if (build.equals(Build.BUILD_HAS_BEEN_CANCELLED)) {
@@ -99,7 +99,7 @@ public class BuildingSupervisor implements ISupervisor {
                 // 查询构建结果
                 BuildWithDetails buildWithDetails = this.build.details();
                 if (buildWithDetails.isBuilding()) {
-                    NewTimeUtil.sleep(SLEEP_SECONDS);
+                    sleep();
                 } else {
                     // 任务正常完成
                     LeoBuild saveLeoBuild = LeoBuild.builder()
@@ -130,6 +130,10 @@ public class BuildingSupervisor implements ISupervisor {
 
     private void setHeartbeat() {
         heartbeatHelper.setHeartbeat(LeoHeartbeatHelper.HeartbeatTypes.BUILD, leoBuild.getId());
+    }
+
+    private void sleep() {
+        NewTimeUtil.sleep(SLEEP_SECONDS);
     }
 
     private void postBuildHandle() {

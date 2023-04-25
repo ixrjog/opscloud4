@@ -105,7 +105,7 @@ public class QueryLeoBuildConsoleStreamRequestHandler extends BaseLeoContinuousD
         try {
             session.getBasicRemote().sendText(response.toString());
             session.close();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 

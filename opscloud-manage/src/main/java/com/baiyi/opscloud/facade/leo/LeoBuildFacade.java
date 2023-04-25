@@ -37,6 +37,8 @@ public interface LeoBuildFacade {
      */
     LeoBuildVO.BranchOptions getBuildBranchOptions(LeoBuildParam.GetBuildBranchOptions getOptions);
 
+    LeoBuildVO.MavenPublishInfo getBuildMavenPublishInfo(LeoBuildParam.GetBuildMavenPublishInfo getBuildMavenPublishInfo);
+
     LeoBuildVO.BranchOptions createBuildBranch(LeoBuildParam.CreateBuildBranch createBuildBranch);
 
     void updateLeoBuild(LeoBuildParam.UpdateBuild updateBuild);

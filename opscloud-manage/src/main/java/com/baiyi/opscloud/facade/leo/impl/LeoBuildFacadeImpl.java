@@ -7,6 +7,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.datasource.gitlab.driver.GitLabRepositoryDriver;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -15,7 +16,6 @@ import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
-import com.baiyi.opscloud.leo.handler.build.LeoBuildHandler;
 import com.baiyi.opscloud.leo.aop.annotation.LeoBuildInterceptor;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
@@ -26,8 +26,10 @@ import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.driver.BlueRestDriver;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
+import com.baiyi.opscloud.leo.handler.build.LeoBuildHandler;
 import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
 import com.baiyi.opscloud.leo.packer.LeoBuildResponsePacker;
+import com.baiyi.opscloud.leo.parser.MavenPublishParser;
 import com.baiyi.opscloud.leo.util.JobUtil;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
@@ -42,11 +44,14 @@ import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Commit;
+import org.gitlab4j.api.models.RepositoryFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -255,6 +260,35 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
         GitLabConfig gitLabConfig = dsConfigHelper.build(dsConfig, GitLabConfig.class);
         return gitLabRepoDelegate.generatorGitLabBranchOptions(gitLabConfig.getGitlab(), projectId, openTag);
+    }
+
+    @Override
+    public LeoBuildVO.MavenPublishInfo getBuildMavenPublishInfo(LeoBuildParam.GetBuildMavenPublishInfo getBuildMavenPublishInfo) {
+        LeoJob leoJob = jobService.getById(getBuildMavenPublishInfo.getJobId());
+        if (leoJob == null) {
+            throw new LeoBuildException("任务配置不存在: jobId={}", getBuildMavenPublishInfo.getJobId());
+        }
+        DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, getBuildMavenPublishInfo.getSshUrl());
+        final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
+        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
+        GitLabConfig gitLabConfig = dsConfigHelper.build(dsConfig, GitLabConfig.class);
+
+        final String filePath = Optional.of(getBuildMavenPublishInfo)
+                .map(LeoBuildParam.GetBuildMavenPublishInfo::getTools)
+                .map(LeoBuildParam.BuildTools::getVersion)
+                .map(LeoBuildParam.BuildToolsVersion::getFile)
+                .orElseThrow(() -> new LeoBuildException("配置不存在: build->tools->version->file"));
+        try {
+            RepositoryFile repositoryFile = GitLabRepositoryDriver.getRepositoryFile(
+                    gitLabConfig.getGitlab(),
+                    projectId,
+                    filePath,
+                    getBuildMavenPublishInfo.getRef());
+            String content = new String(Base64.getDecoder().decode(repositoryFile.getContent()));
+            return MavenPublishParser.parse(getBuildMavenPublishInfo.getTools(), content);
+        } catch (GitLabApiException ignored) {
+        }
+        return LeoBuildVO.MavenPublishInfo.EMPTY_INFO;
     }
 
     @Override

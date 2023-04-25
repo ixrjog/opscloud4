@@ -22,7 +22,7 @@ public class BaseGitLabApiUnit extends BaseUnit {
 
     protected GitLabConfig getConfig() {
         // config_gitlab.chuanyinet.com
-        return dsConfigHelper.build(dsConfigHelper.getConfigById(3), GitLabConfig.class);
+        return dsConfigHelper.build(dsConfigHelper.getConfigById(26), GitLabConfig.class);
     }
 
 }

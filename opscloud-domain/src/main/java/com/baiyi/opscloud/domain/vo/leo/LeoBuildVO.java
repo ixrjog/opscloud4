@@ -118,6 +118,26 @@ public class LeoBuildVO {
 
     @Data
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema
+    public static class MavenPublishInfo implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = 1L;
+
+        public static final MavenPublishInfo EMPTY_INFO = MavenPublishInfo.builder().build();
+
+        private String artifactId;
+
+        private String groupId;
+
+        private String version;
+
+    }
+
+    @Data
+    @Builder
     @Schema
     public static class Option implements Serializable {
 

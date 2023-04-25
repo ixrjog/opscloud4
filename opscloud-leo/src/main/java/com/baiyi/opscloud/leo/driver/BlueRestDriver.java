@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
  * @Date 2022/11/25 18:02
  * @Version 1.0
  */
+@SuppressWarnings("ALL")
 @Slf4j
 @Component
 public class BlueRestDriver {

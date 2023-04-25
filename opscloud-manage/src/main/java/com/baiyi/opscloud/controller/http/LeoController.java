@@ -175,6 +175,12 @@ public class LeoController {
         return new HttpResult<>(buildFacade.getBuildBranchOptions(getOptions));
     }
 
+    @Operation(summary = "查询MavenPublish信息")
+    @PostMapping(value = "/build/maven/publish/get", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<LeoBuildVO.MavenPublishInfo> getBuildMavenPublishInfo(@RequestBody @Valid LeoBuildParam.GetBuildMavenPublishInfo getBuildMavenPublishInfo) {
+        return new HttpResult<>(buildFacade.getBuildMavenPublishInfo(getBuildMavenPublishInfo));
+    }
+
     @Operation(summary = "创建默认分支")
     @PostMapping(value = "/build/branch/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<LeoBuildVO.BranchOptions> createBuildBranch(@RequestBody @Valid LeoBuildParam.CreateBuildBranch createBuildBranch) {
