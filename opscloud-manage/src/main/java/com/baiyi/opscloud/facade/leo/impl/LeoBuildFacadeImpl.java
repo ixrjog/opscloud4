@@ -20,6 +20,8 @@ import com.baiyi.opscloud.leo.aop.annotation.LeoBuildInterceptor;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.delegate.GitLabRepoDelegate;
+import com.baiyi.opscloud.leo.dict.IBuildDictProvider;
+import com.baiyi.opscloud.leo.dict.factory.BuildDictFactory;
 import com.baiyi.opscloud.leo.domain.model.JenkinsPipeline;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
@@ -40,7 +42,6 @@ import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -112,23 +113,23 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         }
 
         final LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob.getJobConfig());
-
+        // 校验标签
         List<String> tags = ofNullable(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getTags)
                 .orElseThrow(() -> new LeoBuildException("任务标签配置不存在: jobId={}", doBuild.getJobId()));
-
+        // 校验gitLab
         LeoBaseModel.GitLab gitLab = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getGitLab)
                 .orElseThrow(() -> new LeoBuildException("任务GitLab配置不存在: jobId={}", doBuild.getJobId()));
-
+        // 通知配置
         LeoBaseModel.Notify notify = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getBuild)
                 .map(LeoJobModel.Build::getNotify)
                 .orElse(LeoBaseModel.Notify.EMPTY_NOTIFY);
-
+        // 参数
         List<LeoBaseModel.Parameter> jobParameters = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getParameters)
@@ -146,15 +147,16 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                         .webUrl(commit.getWebUrl())
                         .build()
         );
-
+        // 构建类型
         final String buildType = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getBuild)
                 .map(LeoJobModel.Build::getType)
                 .orElse(KUBERNETES_IMAGE);
 
-        Map<String, String> dict = Maps.newHashMap();
-        dict.put(BuildDictConstants.BRANCH.getKey(), doBuild.getBranch());
+        // 生产字典
+        Map<String, String> dict = buildDict(doBuild, buildType);
+
         LeoBuildModel.Build build = LeoBuildModel.Build.builder()
                 .type(buildType)
                 .dict(dict)
@@ -192,6 +194,14 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .build();
         buildService.add(leoBuild);
         handleBuild(leoBuild, buildConfig);
+    }
+
+    private Map<String, String> buildDict(LeoBuildParam.DoBuild doBuild, String buildType) {
+        IBuildDictProvider buildDictProvider = BuildDictFactory.getProvider(buildType);
+        if (buildDictProvider == null) {
+            throw new LeoBuildException("构建类型不正确: buildType={}", buildType);
+        }
+        return buildDictProvider.produce(doBuild);
     }
 
     @Override

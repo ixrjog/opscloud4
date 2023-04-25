@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PostBuildVerificationWithMavenPublishStrategy extends BasePostBuildVerificationStrategy {
 
-    private static final String MAVEN_PUBLISH = "maven-publish";
+    public static final String MAVEN_PUBLISH = "maven-publish";
 
     @Override
     public String getBuildType() {
