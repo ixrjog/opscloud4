@@ -59,10 +59,14 @@ public class LeoBaseModel {
     }
 
     @Data
+    @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     @Schema(description = "构件仓库配置")
     public static class Nexus {
+
+        public static final Nexus EMPTY = Nexus.builder().build();
+
         private LeoBaseModel.DsInstance instance;
         private String repository;
         private NexusComponent component;

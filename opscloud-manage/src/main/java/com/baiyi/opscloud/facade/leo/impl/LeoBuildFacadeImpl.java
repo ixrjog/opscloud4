@@ -18,6 +18,7 @@ import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
 import com.baiyi.opscloud.leo.aop.annotation.LeoBuildInterceptor;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
+import com.baiyi.opscloud.leo.constants.BuildTypeConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.delegate.GitLabRepoDelegate;
 import com.baiyi.opscloud.leo.dict.IBuildDictProvider;
@@ -58,7 +59,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.baiyi.opscloud.leo.handler.build.strategy.verification.PostBuildVerificationWithKubernetesImageStrategy.KUBERNETES_IMAGE;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -123,6 +123,11 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getGitLab)
                 .orElseThrow(() -> new LeoBuildException("任务GitLab配置不存在: jobId={}", doBuild.getJobId()));
+        // 可选nexus
+        LeoBaseModel.Nexus nexus = Optional.of(jobConfig)
+                .map(LeoJobModel.JobConfig::getJob)
+                .map(LeoJobModel.Job::getNexus)
+                .orElse(LeoBaseModel.Nexus.EMPTY);
         // 通知配置
         LeoBaseModel.Notify notify = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
@@ -152,7 +157,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getBuild)
                 .map(LeoJobModel.Build::getType)
-                .orElse(KUBERNETES_IMAGE);
+                .orElse(BuildTypeConstants.KUBERNETES_IMAGE);
 
         // 生产字典
         Map<String, String> dict = buildDict(doBuild, buildType);
@@ -162,6 +167,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .dict(dict)
                 .tags(tags)
                 .gitLab(gitLab)
+                .nexus(nexus)
                 .notify(notify)
                 .parameters(jobParameters)
                 .build();

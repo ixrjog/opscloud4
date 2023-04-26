@@ -10,6 +10,8 @@ public enum BuildStepConstants {
     /**
      * 构建后校验
      */
-    POST_BUILD_VERIFICATION
+    POST_BUILD_VERIFICATION,
+
+    DO_BUILD;
 
 }

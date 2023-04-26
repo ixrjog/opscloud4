@@ -4,12 +4,13 @@ import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildImage;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
+import com.baiyi.opscloud.leo.constants.BuildTypeConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
+import com.baiyi.opscloud.leo.handler.build.strategy.verification.base.BasePostBuildVerificationStrategy;
 import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.base.BaseCrValidator;
 import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.factory.CrValidatorFactory;
-import com.baiyi.opscloud.leo.handler.build.strategy.verification.base.BasePostBuildVerificationStrategy;
 import com.baiyi.opscloud.service.leo.LeoBuildImageService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import jakarta.annotation.Resource;
@@ -28,8 +29,6 @@ import java.util.Optional;
 @Component
 public class PostBuildVerificationWithKubernetesImageStrategy extends BasePostBuildVerificationStrategy {
 
-    public static final String KUBERNETES_IMAGE = "kubernetes-image";
-
     @Resource
     private LeoJobService leoJobService;
 
@@ -38,7 +37,7 @@ public class PostBuildVerificationWithKubernetesImageStrategy extends BasePostBu
 
     @Override
     public String getBuildType() {
-        return KUBERNETES_IMAGE;
+        return BuildTypeConstants.KUBERNETES_IMAGE;
     }
 
     /**

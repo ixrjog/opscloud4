@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.leo.dict.impl;
 
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
+import com.baiyi.opscloud.leo.constants.BuildTypeConstants;
 import com.baiyi.opscloud.leo.constants.MavenPublishConstants;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import lombok.extern.slf4j.Slf4j;
@@ -8,8 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-
-import static com.baiyi.opscloud.leo.handler.build.strategy.verification.PostBuildVerificationWithMavenPublishStrategy.MAVEN_PUBLISH;
 
 /**
  * @Author baiyi
@@ -22,7 +21,7 @@ public class MavenPublishBuildDictProvider extends BaseBuildDictProvider {
 
     @Override
     public String getBuildType() {
-        return MAVEN_PUBLISH;
+        return BuildTypeConstants.MAVEN_PUBLISH;
     }
 
     @Override
