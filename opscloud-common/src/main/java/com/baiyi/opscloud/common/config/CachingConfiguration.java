@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
  * @Date 2020/1/13 2:31 下午
  * @Version 1.0
  */
+@SuppressWarnings({"AlibabaConstantFieldShouldBeUpperCase"})
 @Configuration
 @EnableCaching
 public class CachingConfiguration extends CachingConfigurerSupport {

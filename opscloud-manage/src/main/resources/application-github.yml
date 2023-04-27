@@ -52,3 +52,18 @@ jasypt:
     algorithm: PBEWithMD5AndDES
     iv-generator-classname: 'org.jasypt.iv.NoIvGenerator'
     password: '1^Z!NxcB4s!0Sxz&URokZ6DdZnNn#acO#ELjM&kvun^LV!yCB%ec*^NJ%5xvCGlJ6&SHGtKN#Gs!fK%lq8aQYpfLlwkFrvQrcp1VzYGt74vdVcMmUk73%HCrOV07IZw0'
+
+task:
+  pool:
+    core:
+      coreSize: 50
+      maxSize: 50
+    leo:
+      coreSize: 100
+      maxSize: 100
+    st:
+      coreSize: 60
+      maxSize: 60
+    kt:
+      coreSize: 60
+      maxSize: 60
