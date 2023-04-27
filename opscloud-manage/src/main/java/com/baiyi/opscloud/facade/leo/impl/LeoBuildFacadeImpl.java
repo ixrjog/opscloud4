@@ -300,8 +300,13 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                     projectId,
                     filePath,
                     getBuildMavenPublishInfo.getRef());
-            String content = new String(Base64.getDecoder().decode(repositoryFile.getContent()));
-            return MavenPublishParser.parse(getBuildMavenPublishInfo.getTools(), content);
+            final String content = new String(Base64.getDecoder().decode(repositoryFile.getContent()));
+            LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob);
+            final LeoBaseModel.Nexus nexus = Optional.ofNullable(jobConfig)
+                    .map(LeoJobModel.JobConfig::getJob)
+                    .map(LeoJobModel.Job::getNexus)
+                    .orElseThrow(() -> new LeoBuildException("配置不存在: job->nexus"));
+            return MavenPublishParser.parse(getBuildMavenPublishInfo.getTools(), nexus, content);
         } catch (GitLabApiException ignored) {
         }
         return LeoBuildVO.MavenPublishInfo.EMPTY_INFO;

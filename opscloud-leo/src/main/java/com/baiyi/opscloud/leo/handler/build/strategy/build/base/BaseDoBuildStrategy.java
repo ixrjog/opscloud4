@@ -186,7 +186,7 @@ public abstract class BaseDoBuildStrategy extends BaseBuildStrategy {
                 .map(LeoBuildModel.BuildConfig::getBuild)
                 .map(LeoBuildModel.Build::getGitLab)
                 .map(LeoBaseModel.GitLab::getProject)
-                .orElseThrow(() -> new LeoBuildException("未指定配置: build->gitLab->project"));
+                .orElseThrow(() -> new LeoBuildException("配置不存在: build->gitLab->project"));
 
         fillGitLabProjectSshUrl(application, gitLabProject);
 
@@ -217,7 +217,7 @@ public abstract class BaseDoBuildStrategy extends BaseBuildStrategy {
                     .map(LeoJobModel.Job::getCr)
                     .map(LeoJobModel.CR::getRepo)
                     .map(LeoJobModel.Repo::getName)
-                    .orElseThrow(() -> new LeoBuildException("未指定配置: job->gitLab->project"));
+                    .orElseThrow(() -> new LeoBuildException("配置不存在: job->gitLab->project"));
         }
         dict.put(BuildDictConstants.PROJECT.getKey(), project);
         return dict;
@@ -233,7 +233,7 @@ public abstract class BaseDoBuildStrategy extends BaseBuildStrategy {
         }
         List<ApplicationResource> resources = applicationResourceService.queryByApplication(application.getId(), DsAssetTypeConstants.GITLAB_PROJECT.name());
         if (CollectionUtils.isEmpty(resources) || resources.size() > 1) {
-            throw new LeoBuildException("未指定配置: gitLab->project->sshUrl");
+            throw new LeoBuildException("配置不存在: gitLab->project->sshUrl");
         }
         gitLabProject.setSshUrl(resources.get(0).getName());
     }
