@@ -70,16 +70,10 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
         if (datasourceInstanceAsset == null) {
             return;
         }
-        String namespace = datasourceInstanceAsset.getAssetKey2();
-        String deployment = datasourceInstanceAsset.getAssetKey();
+        final String namespace = datasourceInstanceAsset.getAssetKey2();
+        final String deployment = datasourceInstanceAsset.getAssetKey();
 
-        DsAssetVO.Asset asset = BeanCopierUtil.copyProperties(datasourceInstanceAsset, DsAssetVO.Asset.class);
-        if (DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name().equals(asset.getAssetType())) {
-            Map<String, String> properties = propertyService.queryByAssetId(asset.getId())
-                    .stream().collect(Collectors.toMap(DatasourceInstanceAssetProperty::getName, DatasourceInstanceAssetProperty::getValue, (k1, k2) -> k1));
-            asset.setProperties(properties);
-        }
-        resource.setAsset(asset);
+        resource.setAsset(getAsset(datasourceInstanceAsset));
         try {
             DatasourceInstance dsInstance = dsInstanceService.getByUuid(datasourceInstanceAsset.getInstanceUuid());
             if (dsInstance != null) {
@@ -108,6 +102,17 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
         applicationResourceInstancePacker.wrap(resource);
     }
 
+    private DsAssetVO.Asset getAsset(DatasourceInstanceAsset datasourceInstanceAsset){
+        DsAssetVO.Asset asset = BeanCopierUtil.copyProperties(datasourceInstanceAsset, DsAssetVO.Asset.class);
+        if (DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name().equals(asset.getAssetType())) {
+            Map<String, String> properties = propertyService.queryByAssetId(asset.getId())
+                    .stream()
+                    .collect(Collectors.toMap(DatasourceInstanceAssetProperty::getName, DatasourceInstanceAssetProperty::getValue, (k1, k2) -> k1));
+            asset.setProperties(properties);
+        }
+        return asset;
+    }
+
     public void wrapProperties(ApplicationResourceVO.Resource resource) {
         if (resource.getBusinessType() != BusinessTypeEnum.ASSET.getType()) {
             return;
@@ -130,10 +135,10 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
         }
         Set<Integer> tagIdSet = Sets.newHashSet();
         assetRelations.stream().map(e ->
-                assetService.getById(e.getTargetAssetId())).map(targetAsset -> businessTagService.queryByBusiness(SimpleBusiness.builder()
-                .businessType(BusinessTypeEnum.ASSET.getType())
-                .businessId(targetAsset.getId())
-                .build()))
+                        assetService.getById(e.getTargetAssetId())).map(targetAsset -> businessTagService.queryByBusiness(SimpleBusiness.builder()
+                        .businessType(BusinessTypeEnum.ASSET.getType())
+                        .businessId(targetAsset.getId())
+                        .build()))
                 .filter(businessTags -> !CollectionUtils.isEmpty(businessTags))
                 .forEach(businessTags -> businessTags.forEach(t -> tagIdSet.add(t.getTagId())));
         return tagIdSet.stream().map(tagId ->

@@ -3,7 +3,7 @@ package com.baiyi.opscloud.leo.handler.deploy.strategy.inspection;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildImage;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
-import com.baiyi.opscloud.leo.handler.deploy.strategy.inspection.base.PreInspectionStrategy;
+import com.baiyi.opscloud.leo.handler.deploy.strategy.inspection.base.BasePreInspectionStrategy;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
@@ -25,7 +25,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
-public class PreInspectionWithRollingStrategy extends PreInspectionStrategy {
+public class PreInspectionWithRollingStrategy extends BasePreInspectionStrategy {
 
     /**
      * 预检查

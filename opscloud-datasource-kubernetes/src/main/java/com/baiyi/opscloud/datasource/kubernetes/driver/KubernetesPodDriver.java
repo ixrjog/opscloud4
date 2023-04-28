@@ -111,7 +111,10 @@ public class KubernetesPodDriver {
         }
     }
 
-    public static String getLog(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, String container) {
+    public static String getLog(KubernetesConfig.Kubernetes kubernetes,
+                                String namespace,
+                                String name,
+                                String container) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.pods()
                     .inNamespace(namespace)
@@ -124,7 +127,12 @@ public class KubernetesPodDriver {
         }
     }
 
-    public static LogWatch getLogWatch(KubernetesConfig.Kubernetes kubernetes, String namespace, String podName, String containerName, Integer lines, OutputStream outputStream) {
+    public static LogWatch getLogWatch(KubernetesConfig.Kubernetes kubernetes,
+                                       String namespace,
+                                       String podName,
+                                       String containerName,
+                                       Integer lines,
+                                       OutputStream outputStream) {
         return MyKubernetesClientBuilder.build(kubernetes)
                 .pods()
                 .inNamespace(namespace)
@@ -136,6 +144,7 @@ public class KubernetesPodDriver {
 
     /**
      * 执行sh
+     *
      * @param kubernetes
      * @param namespace
      * @param podName

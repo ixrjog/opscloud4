@@ -54,18 +54,3 @@ jasypt:
   encryptor:
     algorithm: PBEWithMD5AndDES
     iv-generator-classname: 'org.jasypt.iv.NoIvGenerator'
-
-task:
-  pool:
-    core:
-      coreSize: 50
-      maxSize: 50
-    leo:
-      coreSize: 100
-      maxSize: 100
-    st:
-      coreSize: 60
-      maxSize: 60
-    kt:
-      coreSize: 60
-      maxSize: 60

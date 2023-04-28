@@ -1,11 +1,8 @@
 package com.baiyi.opscloud.common.config;
 
-import com.baiyi.opscloud.common.config.properties.TaskPoolConfigurationProperties;
-import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -18,11 +15,7 @@ import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskP
  * @Version 1.0
  */
 @Configuration
-@Component
 public class ThreadPoolTaskConfiguration {
-
-    @Resource
-    private TaskPoolConfigurationProperties taskPoolConfigurationProperties;
 
     public interface TaskPools {
         String CORE = "coreExecutor";
@@ -47,8 +40,8 @@ public class ThreadPoolTaskConfiguration {
     @Bean(name = CORE)
     public ThreadPoolTaskExecutor coreExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(taskPoolConfigurationProperties.getCore().getCoreSize());
-        executor.setMaxPoolSize(taskPoolConfigurationProperties.getCore().getMaxSize());
+        executor.setCorePoolSize(50);
+        executor.setMaxPoolSize(50);
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix(THREAD_NAME_PREFIX);
@@ -66,8 +59,8 @@ public class ThreadPoolTaskConfiguration {
     @Bean(name = LEO)
     public ThreadPoolTaskExecutor leoExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(taskPoolConfigurationProperties.getLeo().getCoreSize());
-        executor.setMaxPoolSize(taskPoolConfigurationProperties.getLeo().getMaxSize());
+        executor.setCorePoolSize(100);
+        executor.setMaxPoolSize(200);
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix("leo-exec-");
@@ -85,8 +78,8 @@ public class ThreadPoolTaskConfiguration {
     @Bean(name = SERVER_TERMINAL)
     public ThreadPoolTaskExecutor serverTerminalExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(taskPoolConfigurationProperties.getSt().getCoreSize());
-        executor.setMaxPoolSize(taskPoolConfigurationProperties.getSt().getMaxSize());
+        executor.setCorePoolSize(60);
+        executor.setMaxPoolSize(60);
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix("st-exec-");
@@ -104,8 +97,8 @@ public class ThreadPoolTaskConfiguration {
     @Bean(name = KUBERNETES_TERMINAL)
     public ThreadPoolTaskExecutor kubernetesTerminalExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(taskPoolConfigurationProperties.getKt().getCoreSize());
-        executor.setMaxPoolSize(taskPoolConfigurationProperties.getKt().getMaxSize());
+        executor.setCorePoolSize(60);
+        executor.setMaxPoolSize(60);
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix("kt-exec-");

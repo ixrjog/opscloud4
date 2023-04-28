@@ -5,7 +5,7 @@ import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildImage;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO;
-import com.baiyi.opscloud.leo.handler.deploy.strategy.inspection.base.PreInspectionStrategy;
+import com.baiyi.opscloud.leo.handler.deploy.strategy.inspection.base.BasePreInspectionStrategy;
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class PreInspectionWithRedeployStrategy extends PreInspectionStrategy {
+public class PreInspectionWithRedeployStrategy extends BasePreInspectionStrategy {
 
     @Resource
     private PodDetailsHelper podDetailsHelper;
