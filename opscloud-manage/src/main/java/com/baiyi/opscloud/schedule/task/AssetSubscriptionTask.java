@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.schedule.task;
 
-import com.baiyi.opscloud.common.annotation.TaskWatch;
+import com.baiyi.opscloud.common.annotation.WatchTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.helper.TopicHelper;
 import com.baiyi.opscloud.config.condition.EnvCondition;
@@ -63,7 +63,7 @@ public class AssetSubscriptionTask {
      * it may be executed again and the results will be unpredictable (more processes will hold the lock).
      */
     @SchedulerLock(name = "asset_subscription_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
-    @TaskWatch(name = "Asset subscription")
+    @WatchTask(name = "Asset subscription")
     public void run() {
         if (receive() == null) {
             return;

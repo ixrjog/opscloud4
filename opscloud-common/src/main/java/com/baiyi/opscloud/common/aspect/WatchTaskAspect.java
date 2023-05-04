@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.common.aspect;
 
-import com.baiyi.opscloud.common.annotation.TaskWatch;
+import com.baiyi.opscloud.common.annotation.WatchTask;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -23,9 +23,9 @@ import org.springframework.util.StopWatch;
 @Component
 @RequiredArgsConstructor
 @Order(-1)
-public class TaskWatchAspect {
+public class WatchTaskAspect {
 
-    @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.TaskWatch)")
+    @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.WatchTask)")
     public void annotationPoint() {
     }
 
@@ -33,9 +33,9 @@ public class TaskWatchAspect {
     public void doBefore(JoinPoint joinPoint) throws Throwable {
     }
 
-    @Around("@annotation(taskWatch)")
-    public Object around(ProceedingJoinPoint joinPoint, TaskWatch taskWatch) throws Throwable {
-        final String taskName = taskWatch.name();
+    @Around("@annotation(watchTask)")
+    public Object around(ProceedingJoinPoint joinPoint, WatchTask watchTask) throws Throwable {
+        final String taskName = watchTask.name();
         StopWatch stopWatch = new StopWatch();
         stopWatch.start(taskName);
         log.info("Task {} start", taskName);

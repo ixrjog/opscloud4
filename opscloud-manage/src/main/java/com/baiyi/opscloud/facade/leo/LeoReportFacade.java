@@ -11,4 +11,6 @@ public interface LeoReportFacade {
 
     LeoReportVO.LeoReport statLeoReport();
 
+    LeoReportVO.LeoProdReport statLeoProdReport();
+
 }

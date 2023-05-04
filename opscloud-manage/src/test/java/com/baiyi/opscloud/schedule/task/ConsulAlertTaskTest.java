@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.schedule.task;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.annotation.TaskWatch;
+import com.baiyi.opscloud.common.annotation.WatchTask;
 import com.baiyi.opscloud.facade.task.ConsulAlertFacade;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +17,7 @@ class ConsulAlertTaskTest extends BaseUnit {
     @Resource
     private ConsulAlertFacade consulAlertFacade;
 
-    @TaskWatch(name = "测试任务")
+    @WatchTask(name = "测试任务")
     @Test
     void testTask() {
         consulAlertFacade.ruleEvaluate();

@@ -43,6 +43,46 @@ public class ReportVO {
         private Integer value2;
     }
 
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema
+    public static class DailyReport implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = -1L;
+
+//        public static void put(MonthlyReport monthlyReport, String name, List<Report> reports) {
+//            if (CollectionUtils.isEmpty(reports)) {
+//                return;
+//            }
+//            Map<String, Report> reportMap = reports.stream().collect(Collectors.toMap(ReportVO.Report::getCName, a -> a, (k1, k2) -> k1));
+//            List<Integer> values = monthlyReport.getDateCat().stream().map(s -> reportMap.containsKey(s) ? reportMap.get(s).getValue() : Integer.valueOf(0)).collect(Collectors.toList());
+//            monthlyReport.getValueMap().put(name, values);
+//        }
+
+        public DailyReport put(String name, List<Report> reports) {
+            if (CollectionUtils.isEmpty(reports)) {
+                return this;
+            }
+            Map<String, Report> reportMap = reports.stream().collect(Collectors.toMap(ReportVO.Report::getCName, a -> a, (k1, k2) -> k1));
+            List<Integer> values = this.dateCat.stream().map(s -> reportMap.containsKey(s) ? reportMap.get(s).getValue() : Integer.valueOf(0)).collect(Collectors.toList());
+            this.valueMap.put(name, values);
+            return this;
+        }
+
+        @Schema(description = "日期")
+        private List<String> dateCat;
+
+        @Schema(description = "日统计数据")
+        @Builder.Default
+        private Map<String, List<Integer>> valueMap = Maps.newHashMap();
+
+    }
+
+
     /**
      * 月报表（堆叠柱形图）
      */

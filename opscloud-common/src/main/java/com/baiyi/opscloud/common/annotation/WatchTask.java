@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface TaskWatch {
+public @interface WatchTask {
 
     /**
      * 任务名称

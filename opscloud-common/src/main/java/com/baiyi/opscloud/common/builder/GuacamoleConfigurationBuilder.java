@@ -24,4 +24,5 @@ public class GuacamoleConfigurationBuilder {
     public SimpleDict build() {
         return guacamoleConfigurationDict;
     }
+
 }

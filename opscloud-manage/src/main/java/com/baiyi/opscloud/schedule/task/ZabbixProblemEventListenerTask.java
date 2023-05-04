@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.schedule.task;
 
-import com.baiyi.opscloud.common.annotation.TaskWatch;
+import com.baiyi.opscloud.common.annotation.WatchTask;
 import com.baiyi.opscloud.config.condition.EnvCondition;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.event.IEventHandler;
@@ -25,7 +25,7 @@ public class ZabbixProblemEventListenerTask {
     @InstanceHealth
     @Scheduled(initialDelay = 8000, fixedRate = 120 * 1000)
     @SchedulerLock(name = "zabbix_problem_event_listener_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
-    @TaskWatch(name = "Listen for zabbix problems")
+    @WatchTask(name = "Listen for zabbix problems")
     public void run() {
         IEventHandler iEventProcess = EventFactory.getByEventType(EventTypeEnum.ZABBIX_PROBLEM);
         if (iEventProcess != null) {

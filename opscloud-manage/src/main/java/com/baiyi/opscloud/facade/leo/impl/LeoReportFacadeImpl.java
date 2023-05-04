@@ -99,4 +99,17 @@ public class LeoReportFacadeImpl implements LeoReportFacade {
         ).collect(Collectors.toList());
     }
 
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10M, key = "'opscloud.v4.report#statLeoProdReport'")
+    @Override
+    public LeoReportVO.LeoProdReport statLeoProdReport() {
+        List<ReportVO.Report> reports = deployService.statLast30Days();
+        ReportVO.DailyReport dailyReport = ReportVO.DailyReport.builder()
+                .dateCat(reports.stream().map(ReportVO.Report::getCName).collect(Collectors.toList()))
+                .build()
+                .put("DEPLOY", reports);
+        return LeoReportVO.LeoProdReport.builder()
+                .continuousDeliveryReport(dailyReport)
+                .build();
+    }
+
 }

@@ -42,6 +42,19 @@
         order by `c_name`
     </select>
 
+    <select id="statLast30Days" resultMap="ReportResultMap">
+        select date_format(a0.create_time, '%m-%d') as `c_name`, sum(1) as `value`
+        from leo_deploy a0
+                 join leo_job a1 on a0.job_id = a1.id
+        where a1.env_type = 4
+          and a0.version_name is not null
+          and a0.deploy_result = 'SUCCESS'
+          and a0.create_time between date_sub(now(), interval 30 day)
+            and now()
+        group by `c_name`
+        order by `c_name`
+    </select>
+
     <select id="getMaxDeployNumberWithJobId" resultType="java.lang.Integer">
         select max(deploy_number)
         from leo_deploy
