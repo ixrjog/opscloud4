@@ -5,6 +5,8 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 /**
  * @Author baiyi
  * @Date 2022/1/7 1:23 PM
@@ -14,6 +16,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class TicketProcessException extends BaseException {
 
+    @Serial
     private static final long serialVersionUID = -9089909260424309939L;
 
     private final Integer code = 702;

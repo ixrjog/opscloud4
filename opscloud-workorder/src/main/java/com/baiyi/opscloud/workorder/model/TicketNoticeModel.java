@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class TicketNoticeModel implements INoticeMessage {
     @NoArgsConstructor
     public static class ApproveNoticeMessage implements Serializable, INoticeMessage {
 
+        @Serial
         private static final long serialVersionUID = 4084295468928250597L;
 
         /**

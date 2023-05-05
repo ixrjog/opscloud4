@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2022/1/11 3:47 PM
  * @Version 1.0
  */
+@SuppressWarnings("rawtypes")
 @Slf4j
 public class WorkOrderTicketEntryQueryFactory {
 
