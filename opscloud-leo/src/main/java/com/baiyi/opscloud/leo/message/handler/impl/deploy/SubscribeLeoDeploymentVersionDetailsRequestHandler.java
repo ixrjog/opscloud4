@@ -27,6 +27,7 @@ import org.springframework.util.CollectionUtils;
 
 import jakarta.annotation.Resource;
 import jakarta.websocket.Session;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +95,7 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
             jobVersionDelegate.wrap(jobVersion);
             jobVersions.add(jobVersion);
         }
-        LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
+        LeoContinuousDeliveryResponse<List<LeoJobVersionVO.JobVersion>> response = LeoContinuousDeliveryResponse.<List<LeoJobVersionVO.JobVersion>>builder()
                 .body(jobVersions)
                 .messageType(getMessageType())
                 .build();

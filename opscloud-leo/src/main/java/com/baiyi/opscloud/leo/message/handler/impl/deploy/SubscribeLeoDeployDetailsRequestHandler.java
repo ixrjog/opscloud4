@@ -6,11 +6,11 @@ import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO;
 import com.baiyi.opscloud.leo.message.handler.base.BaseLeoContinuousDeliveryRequestHandler;
 import com.baiyi.opscloud.leo.util.SnapshotStash;
+import jakarta.annotation.Resource;
+import jakarta.websocket.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
-import jakarta.websocket.Session;
 import java.io.IOException;
 
 /**
@@ -33,19 +33,19 @@ public class SubscribeLeoDeployDetailsRequestHandler extends BaseLeoContinuousDe
     @Override
     public void handleRequest(String sessionId, Session session, String message) throws IOException {
         SubscribeLeoDeployDetailsRequestParam param = toRequestParam(message);
-        LeoContinuousDeliveryResponse response;
+        LeoContinuousDeliveryResponse<LeoDeployingVO.Deploying> response;
         if (snapshotStash.isExist(param.getDeployId())) {
             LeoDeployingVO.Deploying deploying = snapshotStash.get(param.getDeployId());
             // 结束订阅
             if (Boolean.TRUE.equals(deploying.getIsFinish())) {
                 unsubscribe(sessionId);
             }
-            response = LeoContinuousDeliveryResponse.builder()
+            response = LeoContinuousDeliveryResponse.<LeoDeployingVO.Deploying>builder()
                     .body(deploying)
                     .messageType(getMessageType())
                     .build();
         } else {
-            response = LeoContinuousDeliveryResponse.builder()
+            response = LeoContinuousDeliveryResponse.<LeoDeployingVO.Deploying>builder()
                     .body(LeoDeployingVO.Deploying.builder().build())
                     .messageType(getMessageType())
                     .build();

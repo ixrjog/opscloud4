@@ -47,10 +47,11 @@
         </dependency>
 
         <!--   模版引擎  http://ibeetl.com/guide/#/beetl/basic -->
+        <!-- https://mvnrepository.com/artifact/com.ibeetl/beetl -->
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.1.8.RELEASE</version>
+            <version>3.15.4.RELEASE</version>
         </dependency>
 
         <!-- Shedlock 分布式任务锁 -->
