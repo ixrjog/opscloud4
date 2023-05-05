@@ -34,7 +34,7 @@ public abstract class AbstractDsAssetExtendedBaseTicketProcessor<T, C extends Ba
     protected DsConfigHelper dsConfigHelper;
 
     @Resource
-    protected DsInstanceFacade dsInstanceFacade;
+    protected DsInstanceFacade<T> dsInstanceFacade;
 
     @Resource
     private WorkOrderTicketService workOrderTicketService;

@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.Resource;
+
 import java.util.List;
 
 /**
@@ -42,8 +43,8 @@ public class EmployeeResignEntryQuery extends BaseTicketEntryQuery<User> {
     }
 
     @Override
-    protected WorkOrderTicketVO.Entry toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, User entry) {
-        return WorkOrderTicketVO.Entry.builder()
+    protected WorkOrderTicketVO.Entry<User> toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, User entry) {
+        return WorkOrderTicketVO.Entry.<User>builder()
                 .workOrderTicketId(entryQuery.getWorkOrderTicketId())
                 .name(toName(entry))
                 .entryKey(entry.getUsername())

@@ -23,7 +23,7 @@ import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployVO;
 import com.baiyi.opscloud.facade.application.ApplicationFacade;
 import com.baiyi.opscloud.facade.leo.LeoDeployFacade;
-import com.baiyi.opscloud.leo.handler.deploy.LeoDeployHandler;
+import com.baiyi.opscloud.facade.sys.SimpleEnvFacade;
 import com.baiyi.opscloud.leo.aop.annotation.LeoDeployInterceptor;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.delegate.LeoBuildDeploymentDelegate;
@@ -31,6 +31,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
+import com.baiyi.opscloud.leo.handler.deploy.LeoDeployHandler;
 import com.baiyi.opscloud.leo.interceptor.LeoExecuteJobInterceptorHandler;
 import com.baiyi.opscloud.leo.packer.LeoDeployResponsePacker;
 import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
@@ -40,6 +41,7 @@ import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.google.common.collect.Maps;
+import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.LabelSelector;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.PodTemplateSpec;
@@ -92,6 +94,8 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     private final DsInstanceFacade<Deployment> dsInstanceFacade;
 
     private final ApplicationFacade applicationFacade;
+
+    private final SimpleEnvFacade simpleEnvFacade;
 
     @Override
     @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType")
@@ -273,6 +277,14 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .map(Deployment::getMetadata)
                 .map(ObjectMeta::getLabels)
                 .orElse(Maps.newHashMap());
+
+        // 2023/5/5 修改Template Container name
+        final String projectName = simpleEnvFacade.removeEnvSuffix(oldName);
+        Optional<Container> optionalContainer = deployment.getSpec().getTemplate().getSpec().getContainers()
+                .stream()
+                .filter(c -> c.getName().startsWith(projectName))
+                .findFirst();
+        optionalContainer.ifPresent(container -> container.setName(newName));
 
         if (labels.containsKey(WORKLOAD_SELECTOR_NAME)) {
             final String workloadSelector = labels.get(WORKLOAD_SELECTOR_NAME).replace(oldName, newName);

@@ -21,7 +21,7 @@ import java.util.Set;
  * @Date 2022/1/11 5:19 PM
  * @Version 1.0
  */
-public abstract class UserGroupExtendedTicketEntryQuery extends BaseTicketEntryQuery<UserGroup> {
+public abstract class BaseUserGroupExtendedTicketEntryQuery extends BaseTicketEntryQuery<UserGroup> {
 
     @Resource
     private UserGroupService userGroupService;
@@ -50,8 +50,8 @@ public abstract class UserGroupExtendedTicketEntryQuery extends BaseTicketEntryQ
     }
 
     @Override
-    protected WorkOrderTicketVO.Entry toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, UserGroup entry) {
-        return WorkOrderTicketVO.Entry.builder()
+    protected WorkOrderTicketVO.Entry<UserGroup> toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, UserGroup entry) {
+        return WorkOrderTicketVO.Entry.<UserGroup>builder()
                 .workOrderTicketId(entryQuery.getWorkOrderTicketId())
                 .name(entry.getName())
                 .entryKey(entry.getName())

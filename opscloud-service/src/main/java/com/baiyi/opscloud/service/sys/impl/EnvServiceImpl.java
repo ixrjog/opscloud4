@@ -33,6 +33,14 @@ public class EnvServiceImpl implements EnvService {
     }
 
     @Override
+    public List<Env> queryAllActive() {
+        Example example = new Example(Env.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isActive", true);
+        return envMapper.selectByExample(example);
+    }
+
+    @Override
     public void add(Env env) {
         envMapper.insert(env);
     }

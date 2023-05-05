@@ -13,6 +13,7 @@ import com.baiyi.opscloud.workorder.query.impl.base.BaseTicketEntryQuery;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.Resource;
+
 import java.util.List;
 
 /**
@@ -40,8 +41,8 @@ public class ServerGroupEntryQuery extends BaseTicketEntryQuery<ServerGroup> {
     }
 
     @Override
-    protected WorkOrderTicketVO.Entry toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, ServerGroup entry) {
-        return WorkOrderTicketVO.Entry.builder()
+    protected WorkOrderTicketVO.Entry<ServerGroup> toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, ServerGroup entry) {
+        return WorkOrderTicketVO.Entry.<ServerGroup>builder()
                 .workOrderTicketId(entryQuery.getWorkOrderTicketId())
                 .name(entry.getName())
                 .entryKey(entry.getName())

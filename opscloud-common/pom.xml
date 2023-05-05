@@ -50,7 +50,7 @@
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.14.1.RELEASE</version>
+            <version>3.1.8.RELEASE</version>
         </dependency>
 
         <!-- Shedlock 分布式任务锁 -->

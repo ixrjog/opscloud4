@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
-import com.baiyi.opscloud.workorder.query.impl.extended.DatasourceAssetExtendedTicketEntryQuery;
+import com.baiyi.opscloud.workorder.query.impl.extended.BaseDsAssetExtendedTicketEntryQuery;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class SnsSubscriptionEntryQuery extends DatasourceAssetExtendedTicketEntryQuery {
+public class SnsSubscriptionEntryQuery extends BaseDsAssetExtendedTicketEntryQuery {
 
     @Override
     protected DsAssetParam.AssetPageQuery getAssetQueryParam(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
@@ -38,8 +38,8 @@ public class SnsSubscriptionEntryQuery extends DatasourceAssetExtendedTicketEntr
     }
 
     @Override
-    protected WorkOrderTicketVO.Entry toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, DatasourceInstanceAsset entry) {
-        return WorkOrderTicketVO.Entry.builder()
+    protected WorkOrderTicketVO.Entry<DatasourceInstanceAsset> toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, DatasourceInstanceAsset entry) {
+        return WorkOrderTicketVO.Entry.<DatasourceInstanceAsset>builder()
                 .workOrderTicketId(entryQuery.getWorkOrderTicketId())
                 .name(entry.getName())
                 .entryKey(entry.getKind())

@@ -2,6 +2,7 @@ package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
+import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesDeploymentException;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
@@ -16,6 +17,7 @@ import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExten
 import com.baiyi.opscloud.workorder.query.impl.ApplicationScaleReplicasEntryQuery;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentSpec;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -34,6 +36,9 @@ public class ApplicationScaleReplicasTicketProcessor
         extends AbstractDsAssetExtendedBaseTicketProcessor<ApplicationScaleReplicasEntry.KubernetesDeployment, KubernetesConfig> {
 
     private static final String SCALE_REPLICAS = "scaleReplicas";
+
+    @Resource
+    protected DsInstanceFacade<Deployment> dsInstanceFacade;
 
     @Override
     protected void processHandle(WorkOrderTicketEntry ticketEntry, ApplicationScaleReplicasEntry.KubernetesDeployment entry) throws TicketProcessException {

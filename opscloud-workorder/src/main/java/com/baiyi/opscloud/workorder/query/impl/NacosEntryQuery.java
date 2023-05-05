@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
-import com.baiyi.opscloud.workorder.query.impl.extended.DatasourceAssetExtendedTicketEntryQuery;
+import com.baiyi.opscloud.workorder.query.impl.extended.BaseDsAssetExtendedTicketEntryQuery;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class NacosEntryQuery extends DatasourceAssetExtendedTicketEntryQuery {
+public class NacosEntryQuery extends BaseDsAssetExtendedTicketEntryQuery {
 
     @Override
     protected DsAssetParam.AssetPageQuery getAssetQueryParam(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
@@ -30,8 +30,8 @@ public class NacosEntryQuery extends DatasourceAssetExtendedTicketEntryQuery {
     }
 
     @Override
-    protected WorkOrderTicketVO.Entry toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, DatasourceInstanceAsset entry) {
-        WorkOrderTicketVO.Entry ticketEntry = super.toEntry(entryQuery, entry);
+    protected WorkOrderTicketVO.Entry<DatasourceInstanceAsset> toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, DatasourceInstanceAsset entry) {
+        WorkOrderTicketVO.Entry<DatasourceInstanceAsset> ticketEntry = super.toEntry(entryQuery, entry);
         ticketEntry.setComment("Nacos开发者权限");
         return ticketEntry;
     }
