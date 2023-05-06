@@ -18,8 +18,7 @@ public interface LeoJobService {
 
     DataTable<LeoJob> queryJobPage(SubscribeLeoJobRequestParam pageQuery);
 
-    @Deprecated
-    List<LeoJob> queryJobWithSubscribe(Integer applicationId, Integer envType);
+    List<LeoJob> queryJob(Integer applicationId, Integer envType);
 
     List<LeoJob> queryJobWithSubscribe(Integer applicationId, Integer envType, String buildType);
 

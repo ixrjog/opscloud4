@@ -95,7 +95,7 @@ public class QueryLeoBuildConsoleStreamRequestHandler extends BaseLeoContinuousD
     }
 
     private void sendErrorMsgAndCloseSession(Integer buildId, String msg, Session session) {
-        LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
+        LeoContinuousDeliveryResponse<JenkinsConsoleLog.Log> response = LeoContinuousDeliveryResponse.<JenkinsConsoleLog.Log>builder()
                 .body(JenkinsConsoleLog.Log.builder()
                         .buildId(buildId)
                         .log(msg)

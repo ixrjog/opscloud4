@@ -9,12 +9,12 @@ import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 import com.baiyi.opscloud.facade.leo.LeoJobFacade;
 import com.baiyi.opscloud.facade.leo.tags.LeoTagHelper;
-import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.base.BaseCrValidator;
-import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.factory.CrValidatorFactory;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.domain.model.LeoTemplateModel;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
+import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.base.BaseCrValidator;
+import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.factory.CrValidatorFactory;
 import com.baiyi.opscloud.packer.leo.LeoJobPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
@@ -213,6 +213,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
         log.info("升级模板版本: jobId={}, templateVersion={}", leoJob.getId(), templateVersion);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public void createCrRepositoryWithLeoJobId(int jobId) {
         LeoJob leoJob = jobService.getById(jobId);
@@ -293,7 +294,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
 
         for (LeoJob srcJob : srcJobs) {
             // 校验任务
-            if (CollectionUtils.isEmpty(jobService.queryJobWithSubscribe(destApplication.getId(), srcJob.getEnvType()))) {
+            if (CollectionUtils.isEmpty(jobService.queryJob(destApplication.getId(), srcJob.getEnvType()))) {
                 Env env = envService.getByEnvType(srcJob.getEnvType());
 
                 final String name = Joiner.on("-").join(destApplication.getName(), env.getEnvName());

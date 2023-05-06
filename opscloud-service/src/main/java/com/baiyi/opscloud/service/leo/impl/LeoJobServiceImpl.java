@@ -46,7 +46,7 @@ public class LeoJobServiceImpl implements LeoJobService {
     }
 
     @Override
-    public List<LeoJob> queryJobWithSubscribe(Integer applicationId, Integer envType) {
+    public List<LeoJob> queryJob(Integer applicationId, Integer envType) {
         Example example = new Example(LeoJob.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("applicationId", applicationId)
