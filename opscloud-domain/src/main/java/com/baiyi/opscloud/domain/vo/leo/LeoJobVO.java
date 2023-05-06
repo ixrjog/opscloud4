@@ -64,6 +64,9 @@ public class LeoJobVO {
         @Schema(description = "任务Key(不可变名称)")
         private String jobKey;
 
+        @Schema(description = "构建类型")
+        private String buildType;
+
         @Schema(description = "模板版本")
         private String templateVersion;
 

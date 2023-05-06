@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.baiyi.opscloud.leo.constants.BuildTypeConstants.KUBERNETES_IMAGE;
+
 /**
  * 订阅无状态版本详情
  *
@@ -79,7 +81,7 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
     @Override
     public void handleRequest(String sessionId, Session session, String message) throws IOException {
         SubscribeLeoDeploymentVersionDetailsRequestParam queryParam = toRequestParam(message);
-        List<LeoJob> jobs = jobService.queryJobWithApplicationIdAndEnvType(queryParam.getApplicationId(), queryParam.getEnvType());
+        List<LeoJob> jobs = jobService.queryJobWithSubscribe(queryParam.getApplicationId(), queryParam.getEnvType(), KUBERNETES_IMAGE);
         Application application = applicationService.getById(queryParam.getApplicationId());
         if (CollectionUtils.isEmpty(jobs)) {
             return;

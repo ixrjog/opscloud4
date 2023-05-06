@@ -19,6 +19,7 @@ import java.util.List;
  * @Date 2022/11/4 14:38
  * @Version 1.0
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 @RequiredArgsConstructor
 public class LeoJobServiceImpl implements LeoJobService {
@@ -45,12 +46,23 @@ public class LeoJobServiceImpl implements LeoJobService {
     }
 
     @Override
-    public List<LeoJob> queryJobWithApplicationIdAndEnvType(Integer applicationId, Integer envType) {
+    public List<LeoJob> queryJobWithSubscribe(Integer applicationId, Integer envType) {
         Example example = new Example(LeoJob.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("applicationId", applicationId)
                 .andEqualTo("envType", envType)
                 .andEqualTo("isActive", true);
+        return leoJobMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<LeoJob> queryJobWithSubscribe(Integer applicationId, Integer envType, String buildType) {
+        Example example = new Example(LeoJob.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("applicationId", applicationId)
+                .andEqualTo("envType", envType)
+                .andEqualTo("isActive", true)
+                .andEqualTo("buildType", buildType);
         return leoJobMapper.selectByExample(example);
     }
 

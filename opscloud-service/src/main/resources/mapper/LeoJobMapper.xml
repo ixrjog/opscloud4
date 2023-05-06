@@ -10,6 +10,7 @@
     <result column="application_id" jdbcType="INTEGER" property="applicationId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="job_key" jdbcType="VARCHAR" property="jobKey" />
+    <result column="build_type" jdbcType="VARCHAR" property="buildType" />
     <result column="branch" jdbcType="VARCHAR" property="branch" />
     <result column="env_type" jdbcType="INTEGER" property="envType" />
     <result column="build_number" jdbcType="INTEGER" property="buildNumber" />
@@ -26,31 +27,34 @@
   </resultMap>
 
   <select id="queryPageByParam" parameterType="com.baiyi.opscloud.domain.param.leo.LeoJobParam$JobPageQuery" resultMap="BaseResultMap">
-    select a0.* from leo_job a0
-    <if test="tagId != null and tagId &gt; 0">
-      join business_tag a1 on a0.id = a1.business_id
-    </if>
-    <where>
+      select a0.* from leo_job a0
       <if test="tagId != null and tagId &gt; 0">
-        a1.business_type = #{businessType} and a1.tag_id = #{tagId}
+          join business_tag a1 on a0.id = a1.business_id
       </if>
-      <if test="isActive != null">
-        and a0.is_active = #{isActive}
-      </if>
-      <if test="applicationId != null and applicationId &gt; 0">
-        and a0.application_id = #{applicationId}
-      </if>
-      <if test="templateId != null and templateId &gt; 0">
-        and a0.template_id = #{templateId}
-      </if>
-      <if test="envType != null">
-        and a0.env_type = #{envType}
-      </if>
-      <if test="queryName != null and queryName != ''">
-        and a0.name like "%" #{queryName} "%"
-      </if>
-    </where>
-    order by id desc
+      <where>
+          <if test="tagId != null and tagId &gt; 0">
+              a1.business_type = #{businessType} and a1.tag_id = #{tagId}
+          </if>
+          <if test="isActive != null">
+              and a0.is_active = #{isActive}
+          </if>
+          <if test="buildType != null">
+              and a0.build_type = #{buildType}
+          </if>
+          <if test="applicationId != null and applicationId &gt; 0">
+              and a0.application_id = #{applicationId}
+          </if>
+          <if test="templateId != null and templateId &gt; 0">
+              and a0.template_id = #{templateId}
+          </if>
+          <if test="envType != null">
+              and a0.env_type = #{envType}
+          </if>
+          <if test="queryName != null and queryName != ''">
+              and a0.name like "%" #{queryName} "%"
+          </if>
+      </where>
+      order by id desc
   </select>
 
 </mapper>

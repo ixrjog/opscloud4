@@ -39,6 +39,9 @@ public class LeoJobParam {
         @Schema(description = "有效")
         private Boolean isActive;
 
+        @Schema(description = "构建类型")
+        private String buildType;
+
         @Schema(description = "标签ID")
         private Integer tagId;
 

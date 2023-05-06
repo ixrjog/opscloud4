@@ -180,7 +180,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     @Override
     public DataTable<LeoDeployVO.Deploy> queryLeoJobDeployPage(LeoJobParam.JobDeployPageQuery pageQuery) {
-        List<LeoJob> leoJobs = jobService.queryJobWithApplicationIdAndEnvType(pageQuery.getApplicationId(), pageQuery.getEnvType());
+        List<LeoJob> leoJobs = jobService.queryJobWithSubscribe(pageQuery.getApplicationId(), pageQuery.getEnvType());
         if (CollectionUtils.isEmpty(leoJobs)) {
             return DataTable.EMPTY;
         }
