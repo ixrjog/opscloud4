@@ -18,6 +18,7 @@ import java.util.Map;
  * @Date 2021/7/6 5:40 下午
  * @Since 1.0
  */
+@SuppressWarnings("rawtypes")
 @Aspect
 @Component
 public class EnablePullChildAspect {

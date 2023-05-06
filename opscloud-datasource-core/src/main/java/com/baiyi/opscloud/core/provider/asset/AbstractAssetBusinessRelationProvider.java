@@ -33,6 +33,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.SCAN_ASSET
  * @Date 2021/8/2 2:00 下午
  * @Version 1.0
  */
+@SuppressWarnings("rawtypes")
 @Slf4j
 public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAssetProvider<T> implements IAssetBusinessRelation {
 

@@ -147,8 +147,8 @@ public class SshShellRunnable
                         .parser(lineReader.getParser())
                         .build();
 
-                // 删除不可见字符
-                lineReader.unsetOpt(LineReader.Option.BRACKETED_PASTE);
+                // 删除不可见字符, 可能会卡顿
+                // lineReader.unsetOpt(LineReader.Option.BRACKETED_PASTE);
 
                 Object authenticationObject = session.getSession().getIoSession().getAttribute(
                         SshShellSecurityAuthenticationProvider.AUTHENTICATION_ATTRIBUTE);

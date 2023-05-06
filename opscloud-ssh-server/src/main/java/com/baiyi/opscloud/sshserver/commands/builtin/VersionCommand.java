@@ -38,7 +38,7 @@ public class VersionCommand extends AbstractCommand implements Version.Command {
     @SuppressWarnings("SpringShellCommandInspection")
     @ShellMethod(key = COMMAND_VERSION, value = "Show version info")
     public void version() {
-        sshShellHelper.print("Spring Boot 3.0.5, Spring Shell 3.0.1");
+        sshShellHelper.print("Spring Boot 3.0.6, Spring Shell 3.0.2");
     }
 
 }

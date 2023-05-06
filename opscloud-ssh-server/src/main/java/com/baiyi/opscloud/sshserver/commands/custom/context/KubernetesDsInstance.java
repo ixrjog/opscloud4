@@ -21,4 +21,5 @@ public class KubernetesDsInstance {
     private DatasourceInstance dsInstance;
 
     private KubernetesConfig kubernetesDsInstanceConfig;
+
 }

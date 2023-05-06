@@ -8,6 +8,7 @@ import com.baiyi.opscloud.leo.handler.deploy.strategy.deploy.base.DoDeployStrate
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
+import io.fabric8.kubernetes.api.model.apps.DeploymentSpec;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +38,16 @@ public class DoDeployWithRedeployStrategy extends DoDeployStrategy {
                 .map(LeoDeployModel.DeployConfig::getDeploy)
                 .map(LeoDeployModel.Deploy::getKubernetes)
                 .orElseThrow(() -> new LeoDeployException("Kubernetes配置不存在！"));
+
+        final int replicas = Optional.of(deployment)
+                .map(Deployment::getSpec)
+                .map(DeploymentSpec::getReplicas)
+                .orElseThrow(() -> new LeoDeployException("读取副本数错误！"));
+
+        // 校验副本数
+        if (replicas == 0) {
+            deployment.getSpec().setReplicas(1);
+        }
 
         try {
             KubernetesDeploymentDriver.redeploy(kubernetesConfig.getKubernetes(), deployment);
