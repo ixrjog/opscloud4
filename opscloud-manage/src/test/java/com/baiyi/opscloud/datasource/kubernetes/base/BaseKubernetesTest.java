@@ -25,6 +25,7 @@ public class BaseKubernetesTest extends BaseUnit {
         int ACK_DEV = 6;
         int ACK_DAILY = 10;
         int ACK_GRAY = 13;
+        int ACK_PRE = 13;
         int ACK_PROD = 14;
 
     }
