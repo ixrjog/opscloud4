@@ -2,6 +2,8 @@ package com.baiyi.opscloud.leo.handler.build.chain.post;
 
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.param.leo.LeoDeployParam;
+import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
+import com.baiyi.opscloud.leo.delegate.LeoBuildDeploymentDelegate;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
@@ -10,6 +12,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -25,6 +28,9 @@ public class AutoDeployChainHandler extends BaseBuildChainHandler {
 
     @Resource
     private AutoDeployEventPublisher autoDeployEventPublisher;
+
+    @Resource
+    private LeoBuildDeploymentDelegate leoBuildDeploymentDelegate;
 
     /**
      * 记录流水线
@@ -49,6 +55,11 @@ public class AutoDeployChainHandler extends BaseBuildChainHandler {
             return;
         }
 
+        if (!checkAsset(leoBuild, autoDeploy.getAssetId())) {
+            logHelper.info(leoBuild, "构建后执行自动部署错误: assetId校验失败");
+            return;
+        }
+
         LeoDeployParam.DoAutoDeploy doAutoDeploy = LeoDeployParam.DoAutoDeploy.builder()
                 .assetId(autoDeploy.getAssetId())
                 .jobId(leoBuild.getJobId())
@@ -59,6 +70,12 @@ public class AutoDeployChainHandler extends BaseBuildChainHandler {
         logHelper.info(leoBuild, "构建后执行自动部署");
         // 发布事件
         autoDeployEventPublisher.publish(doAutoDeploy);
+    }
+
+    private boolean checkAsset(LeoBuild leoBuild, Integer assetId) {
+        List<ApplicationResourceVO.BaseResource> resources = leoBuildDeploymentDelegate.queryLeoBuildDeployment(leoBuild.getJobId());
+
+        return resources.stream().anyMatch(r -> assetId.equals(r.getBusinessId()));
     }
 
 }
