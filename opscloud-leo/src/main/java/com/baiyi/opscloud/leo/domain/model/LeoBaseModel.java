@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.leo.domain.model;
 
+import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -70,6 +71,29 @@ public class LeoBaseModel {
         private LeoBaseModel.DsInstance instance;
         private String repository;
         private NexusComponent component;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema(description = "自动部署配置")
+    public static class AutoDeploy {
+
+        public static final AutoDeploy EMPTY = AutoDeploy.builder().build();
+
+        @Schema(description = "资产ID:Kubernetes Deployment")
+        private Integer assetId;
+
+        private Integer jobId;
+
+        public boolean isEmpty() {
+            return this.assetId == null || this.assetId == 0;
+        }
+
+        @Builder.Default
+        private String deployType = DeployTypeConstants.ROLLING.name();
+
     }
 
     @Data

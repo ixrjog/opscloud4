@@ -64,6 +64,9 @@ public class LeoBuildModel {
         @Schema(description = "nexus配置")
         private LeoBaseModel.Nexus nexus;
 
+        @Schema(description = "自动部署配置")
+        private LeoBaseModel.AutoDeploy autoDeploy;
+
         private LeoBaseModel.Notify notify;
         private String comment;
         @Schema(description = "构建类型: kubernetes-image, maven-deploy")

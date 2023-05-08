@@ -43,6 +43,12 @@ public class LeoBuildParam {
         @Schema(description = "版本说明")
         private String versionDesc;
 
+        @Schema(description = "自动部署")
+        private Boolean autoDeploy;
+
+        @Schema(description = "Deployment资产ID，启用autoDeploy此参数不能未空")
+        private Integer assetId;
+
     }
 
     @Data
@@ -71,15 +77,19 @@ public class LeoBuildParam {
     @AllArgsConstructor
     @Schema
     public static class GetBuildMavenPublishInfo {
+
         @Min(value = 0, message = "关联任务ID不能为空")
         @Schema(description = "关联任务ID")
         private Integer jobId;
+
         @NotEmpty(message = "必须指定项目SshURL")
         @Schema(description = "项目SshURL")
         private String sshUrl;
+
         @NotEmpty(message = "必须指定Ref")
         @Schema(description = "Ref: branch or tag")
         private String ref;
+
         @Schema(description = "构建工具")
         private BuildTools tools;
     }
@@ -88,7 +98,9 @@ public class LeoBuildParam {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class BuildTools {
+
         private BuildToolsVersion version;
+
         @Schema(description = "工具类型: gradle、maven")
         private String type;
     }
@@ -106,15 +118,19 @@ public class LeoBuildParam {
     @AllArgsConstructor
     @Schema
     public static class CreateBuildBranch {
+
         @Min(value = 0, message = "关联任务ID不能为空")
         @Schema(description = "关联任务ID")
         private Integer jobId;
+
         @NotEmpty(message = "必须指定项目SshURL")
         @Schema(description = "项目SshURL")
         private String sshUrl;
+
         @NotEmpty(message = "必须指定从哪个分支创建")
         @Schema(description = "从这个分支创建")
         private String ref;
+
     }
 
     @Data
@@ -123,16 +139,21 @@ public class LeoBuildParam {
     @AllArgsConstructor
     @Schema
     public static class UpdateBuild {
+
         @Min(value = 0, message = "构建ID不能为空")
         @Schema(description = "构建ID")
         private Integer id;
+
         @NotEmpty(message = "版本名称不能为空")
         @Schema(description = "版本名称")
         private String versionName;
+
         @Schema(description = "版本描述")
         private String versionDesc;
+
         @Schema(description = "有效")
         private Boolean isActive;
+
     }
 
 }

@@ -26,6 +26,7 @@ import java.util.Objects;
  * @Date 2021/8/17 6:07 下午
  * @Version 1.0
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 @Aspect
 @Component
 @RequiredArgsConstructor
@@ -78,13 +79,13 @@ public class EventPublisherAspect {
 
     private void publishEventWithParam(Object message, String action) {
         if (message instanceof BaseBusiness.IBusiness) {
-            BaseBusiness.IBusiness ib = (BaseBusiness.IBusiness) message;
-            Object body = getBody(ib);
+            BaseBusiness.IBusiness business = (BaseBusiness.IBusiness) message;
+            Object body = getBody(business);
             if (body == null) {
                 return;
             }
             SimpleEvent simpleEvent = SimpleEvent.builder()
-                    .eventType(Objects.requireNonNull(BusinessTypeEnum.getByType(ib.getBusinessType())).name())
+                    .eventType(Objects.requireNonNull(BusinessTypeEnum.getByType(business.getBusinessType())).name())
                     .action(action)
                     .body(body)
                     .build();

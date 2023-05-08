@@ -4,10 +4,8 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 /**
  * @Author baiyi
@@ -17,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class LeoDeployParam {
 
     @Data
-    @Builder
+    @SuperBuilder(toBuilder = true)
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema
@@ -36,6 +34,41 @@ public class LeoDeployParam {
 
         @Schema(description = "部署类型")
         private String deployType;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(description = "自动部署")
+    public static class DoAutoDeploy {
+
+        @Schema(description = "执行用户")
+        private String username;
+
+        @Min(value = 0, message = "关联任务ID不能为空")
+        @Schema(description = "关联任务ID")
+        private Integer jobId;
+
+        @Schema(description = "构建ID")
+        private Integer buildId;
+
+        @Min(value = 0, message = "Deployment资产ID不能为空")
+        @Schema(description = "Deployment资产ID")
+        private Integer assetId;
+
+        @Schema(description = "部署类型")
+        private String deployType;
+
+        public DoDeploy toDoDeploy(){
+            return DoDeploy.builder()
+                    .assetId(assetId)
+                    .buildId(buildId)
+                    .jobId(jobId)
+                    .deployType(deployType)
+                    .build();
+        }
 
     }
 
@@ -108,6 +141,7 @@ public class LeoDeployParam {
         @NotNull(message = "副本数量不能为空")
         @Schema(description = "副本数量")
         private Integer replicas;
+
     }
 
 }

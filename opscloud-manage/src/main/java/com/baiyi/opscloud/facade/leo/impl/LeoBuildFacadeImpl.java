@@ -162,12 +162,24 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         // 生产字典
         Map<String, String> dict = buildDict(doBuild, buildType);
 
+        // AutoDeploy
+        LeoBaseModel.AutoDeploy autoDeploy;
+        if (doBuild.getAutoDeploy()) {
+            autoDeploy = LeoBaseModel.AutoDeploy.builder()
+                    .assetId(doBuild.getAssetId())
+                    .jobId(leoJob.getId())
+                    .build();
+        } else {
+            autoDeploy = LeoBaseModel.AutoDeploy.EMPTY;
+        }
+
         LeoBuildModel.Build build = LeoBuildModel.Build.builder()
                 .type(buildType)
                 .dict(dict)
                 .tags(tags)
                 .gitLab(gitLab)
                 .nexus(nexus)
+                .autoDeploy(autoDeploy)
                 .notify(notify)
                 .parameters(jobParameters)
                 .build();

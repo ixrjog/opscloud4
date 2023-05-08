@@ -16,7 +16,17 @@ import java.util.List;
  */
 public interface LeoDeployFacade {
 
+    /**
+     * 部署
+     * @param doDeploy
+     */
     void doDeploy(LeoDeployParam.DoDeploy doDeploy);
+
+    /**
+     * 构建后自动部署接口，内部调用
+     * @param doDeploy
+     */
+    void doAutoDeploy(LeoDeployParam.DoAutoDeploy doDeploy);
 
     List<ApplicationResourceVO.BaseResource> queryLeoBuildDeployment(LeoDeployParam.QueryDeployDeployment queryDeployDeployment);
 

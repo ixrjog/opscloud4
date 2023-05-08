@@ -8,8 +8,8 @@ import com.baiyi.opscloud.common.event.NoticeEvent;
  * @Date 2021/8/17 6:58 下午
  * @Version 1.0
  */
-public interface IEventConsumer extends IEventType {
+public interface IEventConsumer<T> extends IEventType {
 
-    void onMessage(NoticeEvent noticeEvent);
+    void onMessage(NoticeEvent<T> noticeEvent);
 
 }

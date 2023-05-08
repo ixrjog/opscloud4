@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.leo.impl;
 
+import com.baiyi.opscloud.common.annotation.SetSessionUsername;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.common.redis.RedisUtil;
@@ -142,6 +143,18 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .build();
         deployService.add(newLeoDeploy);
         handleDeploy(newLeoDeploy, deployConfig);
+    }
+
+    /**
+     * 构建后自动部署接口，内部调用
+     *
+     * @param doDeploy
+     */
+    @Override
+    @SetSessionUsername(usernameSpEL = "#doDeploy.username")
+    @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType")
+    public void doAutoDeploy(LeoDeployParam.DoAutoDeploy doDeploy) {
+        this.doDeploy(doDeploy.toDoDeploy());
     }
 
     /**

@@ -17,15 +17,15 @@ import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskP
  */
 @Slf4j
 @Component
-public class NoticeListener implements ApplicationListener<NoticeEvent> {
+public class NoticeListener<T> implements ApplicationListener<NoticeEvent<T>> {
 
     @Override
     @Async(value = CORE)
-    public void onApplicationEvent(NoticeEvent noticeEvent) {
+    public void onApplicationEvent(NoticeEvent<T> noticeEvent) {
         log.info("监听事件: eventType={}, action={}", noticeEvent.getMessage().getEventType(), noticeEvent.getMessage().getAction());
         IEventConsumer iEventConsumer = EventConsumerFactory.getConsumer(noticeEvent.getMessage().getEventType());
         if (iEventConsumer == null) {
-            log.info("当前事件没有Consumer");
+            log.debug("当前事件没有Consumer");
             return;
         }
         iEventConsumer.onMessage(noticeEvent);

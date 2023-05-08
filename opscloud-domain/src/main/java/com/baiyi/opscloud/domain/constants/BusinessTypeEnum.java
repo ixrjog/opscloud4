@@ -12,6 +12,9 @@ import java.util.Arrays;
 @Getter
 public enum BusinessTypeEnum {
 
+    /**
+     * 业务类型
+     */
     COMMON(0, "通用"),
     SERVER(1, "服务器", true),
     SERVERGROUP(2, "服务器组", true),
@@ -25,7 +28,8 @@ public enum BusinessTypeEnum {
     LEO_JOB(21, "持续交付作业"),
     USER_PERMISSION(100, "用户授权"),
     BUSINESS_ASSET_RELATION(101, "业务资产关系"),
-    WORK_EVENT(102, "工作事件");
+    WORK_EVENT(102, "工作事件"),
+    LEO_AUTO_DEPLOY(103, "持续交付自动部署");
 
     private final String name;
     private final int type;

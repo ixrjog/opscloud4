@@ -31,7 +31,7 @@ public class ServerEventConsumer extends AbstractEventConsumer<Server> {
     }
 
     @Override
-    protected void preHandle(NoticeEvent noticeEvent) {
+    protected void preHandle(NoticeEvent<Server> noticeEvent) {
         Server eventData = toEventData(noticeEvent.getMessage());
         serverGroupingAlgorithm.evictGrouping(eventData.getServerGroupId());
         serverGroupingAlgorithm.evictIntactGrouping(eventData.getServerGroupId(), true);
@@ -42,19 +42,19 @@ public class ServerEventConsumer extends AbstractEventConsumer<Server> {
     }
 
     @Override
-    protected void onCreatedMessage(NoticeEvent noticeEvent) {
+    protected void onCreatedMessage(NoticeEvent<Server> noticeEvent) {
         Server eventData = toEventData(noticeEvent.getMessage());
         dsServerManager.create(eventData);
     }
 
     @Override
-    protected void onUpdatedMessage(NoticeEvent noticeEvent) {
+    protected void onUpdatedMessage(NoticeEvent<Server> noticeEvent) {
         Server eventData = toEventData(noticeEvent.getMessage());
         dsServerManager.update(eventData);
     }
 
     @Override
-    protected void onDeletedMessage(NoticeEvent noticeEvent) {
+    protected void onDeletedMessage(NoticeEvent<Server> noticeEvent) {
         Server eventData = toEventData(noticeEvent.getMessage());
         dsServerManager.delete(eventData);
     }

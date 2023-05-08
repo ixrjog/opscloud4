@@ -18,14 +18,14 @@ import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskP
  * @Date 2021/8/17 7:02 下午
  * @Version 1.0
  */
-public abstract class AbstractEventConsumer<T> implements IEventConsumer, InitializingBean {
+public abstract class AbstractEventConsumer<T> implements IEventConsumer<T>, InitializingBean {
 
     @Resource
     protected TopicHelper topicHelper;
 
     @Override
     @Async(value = CORE)
-    public void onMessage(NoticeEvent noticeEvent) {
+    public void onMessage(NoticeEvent<T> noticeEvent) {
         // 预处理
         preHandle(noticeEvent);
         String action = noticeEvent.getMessage().getAction();
@@ -34,7 +34,7 @@ public abstract class AbstractEventConsumer<T> implements IEventConsumer, Initia
         postHandle(noticeEvent);
     }
 
-    private void messageRoute(NoticeEvent noticeEvent, String action) {
+    private void messageRoute(NoticeEvent<T> noticeEvent, String action) {
         if (EventActionTypeEnum.CREATE.name().equals(action)) {
             onCreatedMessage(noticeEvent);
             return;
@@ -50,15 +50,16 @@ public abstract class AbstractEventConsumer<T> implements IEventConsumer, Initia
 
     /**
      * chuang
+     *
      * @param noticeEvent
      */
-    protected void onCreatedMessage(NoticeEvent noticeEvent) {
+    protected void onCreatedMessage(NoticeEvent<T> noticeEvent) {
     }
 
-    protected void onUpdatedMessage(NoticeEvent noticeEvent) {
+    protected void onUpdatedMessage(NoticeEvent<T> noticeEvent) {
     }
 
-    protected void onDeletedMessage(NoticeEvent noticeEvent) {
+    protected void onDeletedMessage(NoticeEvent<T> noticeEvent) {
     }
 
     /**
@@ -66,7 +67,7 @@ public abstract class AbstractEventConsumer<T> implements IEventConsumer, Initia
      *
      * @param noticeEvent
      */
-    protected void preHandle(NoticeEvent noticeEvent) {
+    protected void preHandle(NoticeEvent<T> noticeEvent) {
     }
 
     /**
@@ -74,7 +75,7 @@ public abstract class AbstractEventConsumer<T> implements IEventConsumer, Initia
      *
      * @param noticeEvent
      */
-    protected void postHandle(NoticeEvent noticeEvent) {
+    protected void postHandle(NoticeEvent<T> noticeEvent) {
     }
 
     protected T toEventData(IEvent<T> event) {
