@@ -3,6 +3,7 @@ package com.baiyi.opscloud.domain.param.leo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,6 +45,7 @@ public class LeoBuildParam {
         private String versionDesc;
 
         @Schema(description = "自动部署")
+        @NotNull(message = "必须指定是否自动部署参数")
         private Boolean autoDeploy;
 
         @Schema(description = "Deployment资产ID，启用autoDeploy此参数不能未空")

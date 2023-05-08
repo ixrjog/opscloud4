@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
@@ -152,6 +153,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                         .webUrl(commit.getWebUrl())
                         .build()
         );
+        
         // 构建类型
         final String buildType = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
@@ -165,6 +167,9 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         // AutoDeploy
         LeoBaseModel.AutoDeploy autoDeploy;
         if (doBuild.getAutoDeploy()) {
+            if (IdUtil.isEmpty(doBuild.getAssetId())) {
+                throw new LeoBuildException("启用构建后自动部署未指定资产ID参数！");
+            }
             autoDeploy = LeoBaseModel.AutoDeploy.builder()
                     .assetId(doBuild.getAssetId())
                     .jobId(leoJob.getId())
