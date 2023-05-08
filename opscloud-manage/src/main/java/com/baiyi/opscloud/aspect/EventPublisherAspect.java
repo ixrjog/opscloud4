@@ -77,15 +77,16 @@ public class EventPublisherAspect {
         return result;
     }
 
+    @SuppressWarnings("PatternVariableCanBeUsed")
     private void publishEventWithParam(Object message, String action) {
         if (message instanceof BaseBusiness.IBusiness) {
-            BaseBusiness.IBusiness business = (BaseBusiness.IBusiness) message;
-            Object body = getBody(business);
+            BaseBusiness.IBusiness ib = (BaseBusiness.IBusiness) message;
+            Object body = getBody(ib);
             if (body == null) {
                 return;
             }
             SimpleEvent simpleEvent = SimpleEvent.builder()
-                    .eventType(Objects.requireNonNull(BusinessTypeEnum.getByType(business.getBusinessType())).name())
+                    .eventType(Objects.requireNonNull(BusinessTypeEnum.getByType(ib.getBusinessType())).name())
                     .action(action)
                     .body(body)
                     .build();
