@@ -75,5 +75,4 @@ public class AnsibleArgumentsBuilder {
         return commandLine;
     }
 
-
 }
