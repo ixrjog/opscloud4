@@ -98,6 +98,8 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     private final SimpleEnvFacade simpleEnvFacade;
 
+    private final AutoDeployHelper autoDeployHelper;
+
     @Override
     @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType")
     public void doDeploy(LeoDeployParam.DoDeploy doDeploy) {
@@ -142,6 +144,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .ocInstance(OcInstance.OC_INSTANCE)
                 .build();
         deployService.add(newLeoDeploy);
+        autoDeployHelper.labeling(doDeploy,BusinessTypeEnum.LEO_DEPLOY.getType(), newLeoDeploy.getId());
         handleDeploy(newLeoDeploy, deployConfig);
     }
 

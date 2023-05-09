@@ -19,7 +19,7 @@ public class LeoDeployParam {
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema
-    public static class DoDeploy {
+    public static class DoDeploy implements LeoBuildParam.IAutoDeploy {
 
         @Min(value = 0, message = "关联任务ID不能为空")
         @Schema(description = "关联任务ID")
@@ -34,6 +34,9 @@ public class LeoDeployParam {
 
         @Schema(description = "部署类型")
         private String deployType;
+
+        @Schema(description = "自动部署")
+        private Boolean autoDeploy;
 
     }
 
@@ -61,12 +64,13 @@ public class LeoDeployParam {
         @Schema(description = "部署类型")
         private String deployType;
 
-        public DoDeploy toDoDeploy(){
+        public DoDeploy toDoDeploy() {
             return DoDeploy.builder()
                     .assetId(assetId)
                     .buildId(buildId)
                     .jobId(jobId)
                     .deployType(deployType)
+                    .autoDeploy(true)
                     .build();
         }
 

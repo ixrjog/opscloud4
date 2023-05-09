@@ -18,12 +18,22 @@ import java.util.Map;
  */
 public class LeoBuildParam {
 
+    public interface IAutoDeploy {
+
+        /**
+         * 自动部署
+         * @return
+         */
+        Boolean getAutoDeploy();
+
+    }
+
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema
-    public static class DoBuild {
+    public static class DoBuild implements IAutoDeploy {
 
         @Min(value = 0, message = "关联任务ID不能为空")
         @Schema(description = "关联任务ID")

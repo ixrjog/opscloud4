@@ -45,4 +45,5 @@ public class BusinessTag implements BaseBusiness.IBusiness {
 
     @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
+
 }

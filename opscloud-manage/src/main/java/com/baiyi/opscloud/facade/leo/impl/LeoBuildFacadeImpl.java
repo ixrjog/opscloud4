@@ -100,6 +100,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     private final LeoBuildResponsePacker leoBuildResponsePacker;
 
+    private final AutoDeployHelper autoDeployHelper;
+
     @Override
     @LeoBuildInterceptor(jobIdSpEL = "#doBuild.jobId")
     public void doBuild(LeoBuildParam.DoBuild doBuild) {
@@ -216,6 +218,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .ocInstance(OcInstance.OC_INSTANCE)
                 .build();
         buildService.add(leoBuild);
+        autoDeployHelper.labeling(doBuild, BusinessTypeEnum.LEO_BUILD.getType(), leoBuild.getId());
         handleBuild(leoBuild, buildConfig);
     }
 

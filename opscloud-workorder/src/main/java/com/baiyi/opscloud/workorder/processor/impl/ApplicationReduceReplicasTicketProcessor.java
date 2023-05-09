@@ -5,6 +5,7 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesDeploymentException;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
@@ -120,6 +121,11 @@ public class ApplicationReduceReplicasTicketProcessor
         } catch (Exception e) {
             throw new TicketProcessException("应用副本缩容失败: {}", e.getMessage());
         }
+    }
+
+    @Override
+    public String getAssetType() {
+        return DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name();
     }
 
 }

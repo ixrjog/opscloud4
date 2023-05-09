@@ -17,6 +17,7 @@ import java.util.List;
  * @Date 2021/5/20 11:12 上午
  * @Version 1.0
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 @RequiredArgsConstructor
 public class BusinessTagServiceImpl implements BusinessTagService {

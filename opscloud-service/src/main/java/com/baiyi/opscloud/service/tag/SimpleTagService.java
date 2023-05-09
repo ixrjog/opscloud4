@@ -7,9 +7,26 @@ package com.baiyi.opscloud.service.tag;
  */
 public interface SimpleTagService {
 
+    /**
+     * 检查业务是否有标签
+     * @param tagKey
+     * @param businessType
+     * @param businessId
+     * @param isConstraint
+     * @return
+     */
     boolean hasBusinessTag(String tagKey, Integer businessType, Integer businessId, boolean isConstraint);
 
     default boolean hasBusinessTag(String tagKey, Integer businessType, Integer businessId) {
         return hasBusinessTag(tagKey, businessType, businessId, true);
     }
+
+    /**
+     * 打标签
+     * @param tagKey
+     * @param businessType
+     * @param businessId
+     */
+    void labeling(String tagKey, Integer businessType, Integer businessId);
+
 }

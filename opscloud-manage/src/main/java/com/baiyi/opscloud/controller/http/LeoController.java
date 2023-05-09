@@ -205,6 +205,7 @@ public class LeoController {
     @Operation(summary = "执行部署")
     @PostMapping(value = "/deploy/do", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> doLeoDeploy(@RequestBody @Valid LeoDeployParam.DoDeploy doDeploy) {
+        doDeploy.setAutoDeploy(false);
         deployFacade.doDeploy(doDeploy);
         return HttpResult.SUCCESS;
     }

@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.domain.vo.leo;
 
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.ReadableTime;
+import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -24,10 +27,20 @@ public class LeoDeployVO {
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema
-    public static class Deploy implements Serializable, ReadableTime.IAgo, ReadableTime.IRuntime {
+    public static class Deploy implements Serializable, ReadableTime.IAgo, ReadableTime.IRuntime, TagVO.ITags {
 
         @Serial
         private static final long serialVersionUID = -6080138223431460692L;
+
+        // ITags
+        @Override
+        public Integer getBusinessId() {
+            return this.id;
+        }
+
+        private final Integer businessType = BusinessTypeEnum.LEO_DEPLOY.getType();
+
+        private List<TagVO.Tag> tags;
 
         @Schema(description = "以前")
         private String ago;

@@ -24,4 +24,6 @@ public class Global {
 
     public static final String ADMIN = "ADMIN";
 
+    public static final String AUTO_DEPLOY = "AutoDeploy";
+
 }

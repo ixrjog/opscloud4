@@ -2,6 +2,7 @@ package com.baiyi.opscloud.leo.packer;
 
 import com.baiyi.opscloud.common.annotation.AgoWrapper;
 import com.baiyi.opscloud.common.annotation.RuntimeWrapper;
+import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildImage;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
@@ -30,6 +31,7 @@ public class LeoBuildResponsePacker {
 
     @AgoWrapper(extend = true)
     @RuntimeWrapper(extend = true)
+    @TagsWrapper(extend = true)
     public void wrap(LeoBuildVO.Build build) {
         LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.load(build.getBuildConfig());
         build.setBuildDetails(buildConfig);

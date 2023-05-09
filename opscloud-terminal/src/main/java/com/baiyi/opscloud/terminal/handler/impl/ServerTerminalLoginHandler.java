@@ -33,7 +33,7 @@ import jakarta.websocket.Session;
 public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<ServerMessage.Login> {
 
     @Resource
-    private SuperAdminInterceptor sAInterceptor;
+    private SuperAdminInterceptor superAdminInterceptor;
 
     @Resource
     private ServerService serverService;
@@ -54,7 +54,7 @@ public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<Se
             for (ServerNode serverNode : loginMessage.getServerNodes()) {
                 coreExecutor.submit(() -> {
                     log.info("Login server: instanceId={}", serverNode.getInstanceId());
-                    sAInterceptor.interceptLoginServer(serverNode.getId());
+                    superAdminInterceptor.interceptLoginServer(serverNode.getId());
                     HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverNode, loginMessage);
                     Server server = serverService.getById(serverNode.getId());
                     RemoteInvokeHandler.openWebTerminal(terminalSession.getSessionId(), serverNode.getInstanceId(), hostSystem);

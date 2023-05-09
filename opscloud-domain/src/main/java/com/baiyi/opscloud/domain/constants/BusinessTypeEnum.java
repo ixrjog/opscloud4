@@ -29,7 +29,9 @@ public enum BusinessTypeEnum {
     USER_PERMISSION(100, "用户授权"),
     BUSINESS_ASSET_RELATION(101, "业务资产关系"),
     WORK_EVENT(102, "工作事件"),
-    LEO_AUTO_DEPLOY(103, "持续交付自动部署");
+    LEO_AUTO_DEPLOY(103, "持续交付自动部署"),
+    LEO_BUILD(104, "持续交付构建"),
+    LEO_DEPLOY(105, "持续交付部署");
 
     private final String name;
     private final int type;

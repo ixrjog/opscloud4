@@ -26,5 +26,5 @@ public class TaskStatus {
     private String taskStatus = ServerTaskStatusEnum.FINALIZED.name();
 
     private String taskResult;
-    
+
 }

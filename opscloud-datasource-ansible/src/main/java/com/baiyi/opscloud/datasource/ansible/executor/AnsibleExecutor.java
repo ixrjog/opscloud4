@@ -18,7 +18,9 @@ import java.io.ByteArrayOutputStream;
 @Slf4j
 public class AnsibleExecutor {
 
-    // 100 分钟
+    /**
+     * 100 分钟
+     */
     public static final long MAX_TIMEOUT = NewTimeUtil.MINUTE_TIME * 100;
 
     /**
