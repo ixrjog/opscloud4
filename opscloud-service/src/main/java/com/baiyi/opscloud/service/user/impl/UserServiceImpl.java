@@ -34,6 +34,7 @@ import java.util.List;
  * @Date 2021/5/14 10:27 上午
  * @Version 1.0
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Slf4j
 @BusinessType(BusinessTypeEnum.USER)
 @Service

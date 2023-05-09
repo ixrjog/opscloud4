@@ -153,7 +153,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                         .webUrl(commit.getWebUrl())
                         .build()
         );
-        
+
         // 构建类型
         final String buildType = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)

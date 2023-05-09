@@ -36,7 +36,7 @@
                 a1.business_type = #{businessType} and a1.tag_id = #{tagId}
             </if>
             <if test="queryName != null and queryName != ''">
-                ( username like "%" #{queryName} "%"
+                and ( username like "%" #{queryName} "%"
                 or name like "%" #{queryName} "%"
                 or display_name like "%" #{queryName} "%"
                 or email like "%" #{queryName} "%"
@@ -114,7 +114,7 @@
             is_active = true
             <if test="queryName != null and queryName != ''">
             and ( username like "%" #{queryName} "%"
-                or name like "%" #{queryName} "%"
+                or `name` like "%" #{queryName} "%"
                 or display_name like "%" #{queryName} "%"
                 or email like "%" #{queryName} "%"
                 or phone like "%" #{queryName} "%"
