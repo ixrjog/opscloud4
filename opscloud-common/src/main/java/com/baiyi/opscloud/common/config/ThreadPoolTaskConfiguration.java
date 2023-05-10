@@ -35,13 +35,13 @@ public class ThreadPoolTaskConfiguration {
     /**
      * 线程池名前缀
      */
-    private static final String THREAD_NAME_PREFIX = "async-exec-";
+    private static final String THREAD_NAME_PREFIX = "core-exec-";
 
     @Bean(name = CORE)
     public ThreadPoolTaskExecutor coreExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(50);
-        executor.setMaxPoolSize(50);
+        executor.setCorePoolSize(200);
+        executor.setMaxPoolSize(400);
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix(THREAD_NAME_PREFIX);
@@ -59,8 +59,8 @@ public class ThreadPoolTaskConfiguration {
     @Bean(name = LEO)
     public ThreadPoolTaskExecutor leoExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(100);
-        executor.setMaxPoolSize(200);
+        executor.setCorePoolSize(300);
+        executor.setMaxPoolSize(500);
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix("leo-exec-");
@@ -78,8 +78,8 @@ public class ThreadPoolTaskConfiguration {
     @Bean(name = SERVER_TERMINAL)
     public ThreadPoolTaskExecutor serverTerminalExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(60);
-        executor.setMaxPoolSize(60);
+        executor.setCorePoolSize(100);
+        executor.setMaxPoolSize(150);
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix("st-exec-");
@@ -97,8 +97,8 @@ public class ThreadPoolTaskConfiguration {
     @Bean(name = KUBERNETES_TERMINAL)
     public ThreadPoolTaskExecutor kubernetesTerminalExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(60);
-        executor.setMaxPoolSize(60);
+        executor.setCorePoolSize(100);
+        executor.setMaxPoolSize(150);
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix("kt-exec-");
