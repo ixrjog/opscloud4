@@ -22,9 +22,10 @@ public @interface SetSessionUsername {
 
     /**
      * 强制（即使有当前会话有用户标示也强行修改）
+     * 线程池执行必须重写会话
      *
      * @return
      */
-    boolean force() default false;
+    boolean force() default true;
 
 }

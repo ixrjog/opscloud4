@@ -5,6 +5,7 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsRocketMqGroupDriver;
 import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsRocketMqGroup;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import jakarta.annotation.Resource;
+
 import java.util.List;
 
 /**
@@ -96,6 +98,11 @@ public class OnsGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
         } catch (ClientException e) {
             throw new TicketProcessException("GID创建失败: GID={}", entry.getGroupId());
         }
+    }
+
+    @Override
+    public String getAssetType() {
+        return DsAssetTypeConstants.ONS_ROCKETMQ_GROUP.name();
     }
 
 }

@@ -144,7 +144,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .ocInstance(OcInstance.OC_INSTANCE)
                 .build();
         deployService.add(newLeoDeploy);
-        autoDeployHelper.labeling(doDeploy,BusinessTypeEnum.LEO_DEPLOY.getType(), newLeoDeploy.getId());
+        autoDeployHelper.labeling(doDeploy, BusinessTypeEnum.LEO_DEPLOY.getType(), newLeoDeploy.getId());
         handleDeploy(newLeoDeploy, deployConfig);
     }
 
@@ -154,7 +154,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
      * @param doDeploy
      */
     @Override
-    @SetSessionUsername(usernameSpEL = "#doDeploy.username")
+    @SetSessionUsername(usernameSpEL = "#doDeploy.username", force = true)
     @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType")
     public void doAutoDeploy(LeoDeployParam.DoAutoDeploy doDeploy) {
         this.doDeploy(doDeploy.toDoDeploy());
