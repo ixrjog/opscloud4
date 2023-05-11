@@ -45,7 +45,7 @@ public class ServerGroupTicketProcessor extends AbstractUserPermissionExtendedBa
 
     @Override
     public void update(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
-        updateHandle(ticketEntry);
+        handleUpdate(ticketEntry);
     }
 
     @Override

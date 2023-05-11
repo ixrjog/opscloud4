@@ -27,6 +27,8 @@ public @interface LeoDeployInterceptor {
 
     String deployTypeSpEL() default "";
 
+    String buildIdSpEL() default "";
+
     /**
      * 任务锁
      *

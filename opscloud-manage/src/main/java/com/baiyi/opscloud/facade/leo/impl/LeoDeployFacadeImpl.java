@@ -101,7 +101,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     private final AutoDeployHelper autoDeployHelper;
 
     @Override
-    @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType")
+    @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType", buildIdSpEL = "#doDeploy.buildId")
     public void doDeploy(LeoDeployParam.DoDeploy doDeploy) {
         // 执行部署任务
         LeoJob leoJob = jobService.getById(doDeploy.getJobId());
@@ -154,8 +154,8 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
      * @param doDeploy
      */
     @Override
-    @SetSessionUsername(usernameSpEL = "#doDeploy.username", force = true)
-    @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType")
+    @SetSessionUsername(usernameSpEL = "#doDeploy.username")
+    @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType", buildIdSpEL = "#doDeploy.buildId")
     public void doAutoDeploy(LeoDeployParam.DoAutoDeploy doDeploy) {
         this.doDeploy(doDeploy.toDoDeploy());
     }
