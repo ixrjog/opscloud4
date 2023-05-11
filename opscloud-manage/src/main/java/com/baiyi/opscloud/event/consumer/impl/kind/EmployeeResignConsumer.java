@@ -43,7 +43,6 @@ public class EmployeeResignConsumer {
 
     private final WorkOrderTicketFacade workOrderTicketFacade;
 
-    // 设置会话用户为我（userId = 1）
     @SetSessionUser
     public void consume(BusinessAssetRelation eventData) {
         User user = userService.getById(eventData.getBusinessId());
