@@ -27,6 +27,9 @@ public class WorkOrderLeoDeployHelper {
     private static final String KEY = "oc4:v0:workorder:leo:deploy:buildId=%s";
 
     public boolean hasKey(Integer buildId) {
+        if (buildId == 0) {
+            return false;
+        }
         return redisUtil.hasKey(getKey(buildId));
     }
 
@@ -34,7 +37,7 @@ public class WorkOrderLeoDeployHelper {
         return (WorkOrderLeoDeployToken) redisUtil.get(getKey(buildId));
     }
 
-    public void set( WorkOrderLeoDeployToken token) {
+    public void set(WorkOrderLeoDeployToken token) {
         redisUtil.set(getKey(token.getBuildId()), token, CACHE_MAX_TIME);
     }
 

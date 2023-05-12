@@ -18,20 +18,21 @@
         <module>opscloud-datasource-aliyun</module>
         <module>opscloud-datasource-aliyun-core</module>
         <module>opscloud-datasource-aliyun-ecs</module>
-        <module>opscloud-datasource-gitlab</module>
-        <module>opscloud-datasource-zabbix</module>
-        <module>opscloud-datasource-ansible</module>
-        <module>opscloud-datasource-kubernetes</module>
-        <module>opscloud-datasource-jenkins</module>
         <module>opscloud-datasource-aliyun-ram</module>
-        <module>opscloud-kubernetes-terminal</module>
-        <module>opscloud-terminal-audit</module>
-        <module>opscloud-event</module>
         <module>opscloud-datasource-aliyun-log</module>
         <module>opscloud-datasource-aliyun-rds</module>
         <module>opscloud-datasource-aliyun-ons</module>
         <module>opscloud-datasource-aliyun-redis</module>
         <module>opscloud-datasource-aliyun-domain</module>
+        <module>opscloud-datasource-aliyun-devops</module>
+        <module>opscloud-datasource-gitlab</module>
+        <module>opscloud-datasource-zabbix</module>
+        <module>opscloud-datasource-ansible</module>
+        <module>opscloud-datasource-kubernetes</module>
+        <module>opscloud-datasource-jenkins</module>
+        <module>opscloud-kubernetes-terminal</module>
+        <module>opscloud-terminal-audit</module>
+        <module>opscloud-event</module>
         <module>opscloud-datasource-tencent-exmail</module>
         <module>opscloud-datasource-nexus</module>
         <module>opscloud-workorder</module>
@@ -388,6 +389,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-aliyun-acr</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aliyun-devops</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

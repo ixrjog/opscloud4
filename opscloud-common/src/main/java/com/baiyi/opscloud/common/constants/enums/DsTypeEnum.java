@@ -46,7 +46,8 @@ public enum DsTypeEnum {
     /**
      * 领先互联
      */
-    LXHL(53, "LXHL");
+    LXHL(53, "LXHL"),
+    ALIYUN_DEVOPS(54, "ALIYUN_DEVOPS"),;
 
     private final int type;
 

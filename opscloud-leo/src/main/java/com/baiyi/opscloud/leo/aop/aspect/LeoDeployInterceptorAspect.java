@@ -80,14 +80,9 @@ public class LeoDeployInterceptorAspect {
         Expression buildIdExpression = expressionParser.parseExpression(leoDeployInterceptor.buildIdSpEL());
         Object buildIdParam = buildIdExpression.getValue(context);
 
-        Integer buildId;
+        Integer buildId = 0;
         if (buildIdParam instanceof Integer) {
             buildId = (Integer) buildIdParam;
-            if (IdUtil.isEmpty(buildId)) {
-                throw new LeoJobException("构建ID不存在！");
-            }
-        } else {
-            throw new LeoJobException("构建ID类型不正确！");
         }
 
         // 并发校验
