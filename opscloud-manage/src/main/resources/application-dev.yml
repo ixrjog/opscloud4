@@ -33,11 +33,11 @@ spring:
         - dev
   data:
     redis:
-      # host: ENC(hOL0LX7EFVBNlLXqSaZV2rYKC2vcPGJ7)
-      host: r-d7obmf3lmgs0hpph5n.redis.eu-west-1.rds.aliyuncs.com
+      host: ENC(hOL0LX7EFVBNlLXqSaZV2rYKC2vcPGJ7)
+#      host: r-d7obmf3lmgs0hpph5n.redis.eu-west-1.rds.aliyuncs.com
       port: 6379
-      # password: ENC(5w2StO4dbBR/gLwjK0uuomVfN5vORxJn3GW5nPsIucDgD7TvGnMfVw==)
-      password: ENC(o6UKSKlETx2g13HH0nsWttoQSvW0+OF/7/DcHo2lc0FOlf03x8jzTgB1khTUODtXRMzG2/PK8uQ=)
+      password: ENC(5w2StO4dbBR/gLwjK0uuomVfN5vORxJn3GW5nPsIucDgD7TvGnMfVw==)
+#      password: ENC(o6UKSKlETx2g13HH0nsWttoQSvW0+OF/7/DcHo2lc0FOlf03x8jzTgB1khTUODtXRMzG2/PK8uQ=)
       jedis:
         pool:
           max-wait: 5000
