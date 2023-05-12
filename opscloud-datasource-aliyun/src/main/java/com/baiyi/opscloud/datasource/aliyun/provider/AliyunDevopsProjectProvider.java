@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.datasource.aliyun.provider;
 
 import com.aliyun.sdk.service.devops20210625.models.ListProjectsResponseBody;
+import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunDevopsConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_DEVOPS_PROJECT;
+
 /**
  * @Author baiyi
  * @Date 2023/5/12 09:36
@@ -33,7 +36,7 @@ public class AliyunDevopsProjectProvider extends AbstractAssetBusinessRelationPr
 
     @Override
     @EnablePullChild(type = DsAssetTypeConstants.ALIYUN_DEVOPS_PROJECT)
-    //@SingleTask(name = PULL_ALIYUN_DEVOPS_PROJECT, lockTime = "5m")
+    @SingleTask(name = PULL_ALIYUN_DEVOPS_PROJECT, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
