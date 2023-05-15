@@ -7,31 +7,31 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
+ * MeterSphere数据配置
+ *
  * @Author baiyi
- * @Date 2021/10/12 3:07 下午
+ * @Date 2023/5/15 11:18
  * @Version 1.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TencentExmailConfig extends BaseDsConfig {
+public class MeterSphereConfig extends BaseDsConfig {
 
-    private Tencent tencent;
+    private MeterSphere meterSphere;
 
     @Data
     @NoArgsConstructor
     @Schema
-    public static class Tencent {
-        private Exmail exmail;
+    public static class MeterSphere {
+        private Hook hook;
     }
 
     @Data
     @NoArgsConstructor
     @Schema
-    public static class Exmail {
-        private String apiUrl;
-        private String corpId;
-        private String name;
-        private String corpSecret;
+    public static class Hook {
+        private String buildUrl;
+        private String deployUrl;
     }
 
 }

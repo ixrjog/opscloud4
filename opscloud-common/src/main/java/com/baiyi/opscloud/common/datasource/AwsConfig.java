@@ -13,8 +13,8 @@ import java.util.Set;
  * @Date 2021/10/21 4:35 下午
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class AwsConfig extends BaseDsConfig {
 
     private Aws aws;

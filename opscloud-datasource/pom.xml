@@ -103,6 +103,11 @@
             <artifactId>opscloud-datasource-lxhl</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-metersphere</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

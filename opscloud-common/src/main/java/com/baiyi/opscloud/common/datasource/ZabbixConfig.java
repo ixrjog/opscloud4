@@ -13,8 +13,8 @@ import java.util.List;
  * @Date 2021/6/22 1:38 下午
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class ZabbixConfig extends BaseDsConfig {
 
     private Zabbix zabbix;

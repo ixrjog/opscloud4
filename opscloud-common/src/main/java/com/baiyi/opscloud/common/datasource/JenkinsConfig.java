@@ -14,8 +14,8 @@ import java.util.Set;
  * @Date 2021/7/1 1:51 下午
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class JenkinsConfig extends BaseDsConfig {
 
     private Jenkins jenkins;

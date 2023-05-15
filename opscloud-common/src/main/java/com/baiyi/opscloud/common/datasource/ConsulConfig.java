@@ -14,8 +14,8 @@ import java.util.List;
  * @Date 2022/7/14 14:25
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class ConsulConfig extends BaseDsConfig {
 
     private Consul consul;

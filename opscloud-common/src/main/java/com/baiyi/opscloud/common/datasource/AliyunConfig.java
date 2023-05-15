@@ -12,17 +12,19 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Aliyun数据配置
  * @Author baiyi
  * @Date 2021/6/17 3:54 下午
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class AliyunConfig extends BaseDsConfig {
 
-    // signin.aliyun.com
-    // private static final String RAM_LOGIN_URL = "https://signin.${VERSION}.com/${COMPANY}.onaliyun.com/login.htm";
-
+    /**
+     * signin.aliyun.com
+     * private static final String RAM_LOGIN_URL = "https://signin.${VERSION}.com/${COMPANY}.onaliyun.com/login.htm";
+     */
     private static final String RAM_LOGIN_URL = "https://signin.%s.com/%s.onaliyun.com/login.htm";
 
     public static final String DMS_ENDPOINT = "dms-enterprise.aliyuncs.com";

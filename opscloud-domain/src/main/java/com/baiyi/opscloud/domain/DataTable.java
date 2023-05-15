@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 
+@SuppressWarnings("rawtypes")
 @Schema
 @Data
 public class DataTable<T> {
