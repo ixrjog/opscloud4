@@ -1,11 +1,11 @@
 package com.baiyi.opscloud.leo.aop.aspect;
 
-import com.baiyi.opscloud.common.helper.WorkOrderLeoDeployHelper;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.leo.aop.annotation.LeoDeployInterceptor;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
+import com.baiyi.opscloud.leo.helper.LeoDeployPassCheck;
 import com.baiyi.opscloud.leo.interceptor.LeoExecuteJobInterceptorHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +43,7 @@ public class LeoDeployInterceptorAspect {
 
     private final LeoExecuteJobInterceptorHandler executeJobInterceptorHandler;
 
-    private final WorkOrderLeoDeployHelper workOrderLeoDeployHelper;
+    private final LeoDeployPassCheck leoDeployPassCheck;
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.leo.aop.annotation.LeoDeployInterceptor)")
     public void annotationPoint() {
@@ -95,7 +95,7 @@ public class LeoDeployInterceptorAspect {
             // 权限校验
             executeJobInterceptorHandler.verifyAuthorization(jobId);
             // 工单校验
-            if (!workOrderLeoDeployHelper.hasKey(buildId)) {
+            if (!leoDeployPassCheck.checkPass(buildId)) {
                 // 规则校验
                 // deployType Expression 解析表达式并获取SpEL的值
                 Expression deployTypeExpression = expressionParser.parseExpression(leoDeployInterceptor.deployTypeSpEL());

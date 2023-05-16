@@ -63,8 +63,12 @@ public class LeoHook {
         @Serial
         private static final long serialVersionUID = -1L;
         private String appName;
+        @Schema(description = "主键")
         private Integer id;
+        @Schema(description = "项目ID")
         private Integer projectId;
+        @Schema(description = "环境名称")
+        private String envName;
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date gmtModified;
     }

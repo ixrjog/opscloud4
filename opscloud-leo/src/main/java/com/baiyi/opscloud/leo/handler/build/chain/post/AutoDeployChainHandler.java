@@ -39,7 +39,6 @@ public class AutoDeployChainHandler extends BaseBuildChainHandler {
      * @param buildConfig
      */
     @Override
-
     protected void handle(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
         if (!leoBuild.getIsActive()) {
             log.debug("无效的构建，不执行自动部署");
@@ -74,7 +73,6 @@ public class AutoDeployChainHandler extends BaseBuildChainHandler {
 
     private boolean checkAsset(LeoBuild leoBuild, Integer assetId) {
         List<ApplicationResourceVO.BaseResource> resources = leoBuildDeploymentDelegate.queryLeoBuildDeployment(leoBuild.getJobId());
-
         return resources.stream().anyMatch(r -> assetId.equals(r.getBusinessId()));
     }
 

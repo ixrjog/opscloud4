@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.kubernetes.terminal.handler.impl;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
+import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalMessageHandlerFactory;
 import com.baiyi.opscloud.kubernetes.terminal.handler.AbstractKubernetesTerminalMessageHandler;
@@ -36,7 +37,7 @@ public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMe
     }
 
     @Autowired
-    private ThreadPoolTaskExecutor coreExecutor;
+    private ThreadPoolTaskExecutor kubernetesTerminalExecutor;
 
     /**
      * 登录
@@ -51,11 +52,13 @@ public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMe
     @Override
     public void handle(String message, Session session, TerminalSession terminalSession) {
         try {
+            String username = SessionUtil.getUsername();
             KubernetesMessage.Login loginMessage = toMessage(message);
             heartbeat(terminalSession.getSessionId());
             KubernetesResource kubernetesResource = loginMessage.getData();
             kubernetesResource.getPods().forEach(pod ->
-                    pod.getContainers().forEach(container -> coreExecutor.submit(() -> {
+                    pod.getContainers().forEach(container -> kubernetesTerminalExecutor.submit(() -> {
+                        SessionUtil.setUsername(username);
                         log.info("初始化容器终端: sessionType={}, container={}", loginMessage.getSessionType(), container.getName());
                         KubernetesConfig kubernetesDsInstanceConfig = buildConfig(kubernetesResource);
                         if (loginMessage.getSessionType().equals(SessionType.CONTAINER_LOG)) {
@@ -81,6 +84,7 @@ public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMe
 
     /**
      * 日志
+     *
      * @param kubernetes
      * @param terminalSession
      * @param kubernetesResource
@@ -103,6 +107,7 @@ public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMe
 
     /**
      * 终端
+     *
      * @param kubernetes
      * @param terminalSession
      * @param pod
