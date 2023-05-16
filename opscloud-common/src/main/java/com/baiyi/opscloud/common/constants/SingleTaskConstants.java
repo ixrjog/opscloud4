@@ -92,4 +92,6 @@ public interface SingleTaskConstants {
 
     String CONSUL_ALERT_TASK = "CONSUL_ALERT_TASK";
 
+    String PULL_METER_SPHERE_BUILD_HOOK = "PULL_METER_SPHERE_BUILD_HOOK";
+
 }

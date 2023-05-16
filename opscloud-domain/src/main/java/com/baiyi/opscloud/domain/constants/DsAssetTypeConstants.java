@@ -96,6 +96,9 @@ public enum DsAssetTypeConstants {
 
     CONSUL_SERVICE,
 
-    HUAWEICLOUD_ECS;
+    HUAWEICLOUD_ECS,
+
+    METER_SPHERE_BUILD_HOOK,
+    METER_SPHERE_DEPLOY_HOOK;
 
 }

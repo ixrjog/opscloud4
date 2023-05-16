@@ -13,6 +13,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
 import jakarta.websocket.Session;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
@@ -126,6 +127,7 @@ public class JenkinsJobDriver {
 
     /**
      * 输出日志到会话
+     *
      * @param sessionId
      * @param buildId
      * @param buildWithDetails
@@ -141,7 +143,7 @@ public class JenkinsJobDriver {
             public void onData(String newLogChunk) {
                 try {
                     if (session.isOpen()) {
-                        LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
+                        LeoContinuousDeliveryResponse<JenkinsConsoleLog.Log> response = LeoContinuousDeliveryResponse.<JenkinsConsoleLog.Log>builder()
                                 .body(JenkinsConsoleLog.Log.builder()
                                         .buildId(buildId)
                                         .log(newLogChunk)

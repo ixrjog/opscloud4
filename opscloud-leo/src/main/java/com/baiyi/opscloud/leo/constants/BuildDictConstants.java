@@ -27,7 +27,7 @@ public enum BuildDictConstants {
     COMMIT_ID("commitId"),
     SSH_URL("sshUrl"),
     JOB_BUILD_NUMBER("jobBuildNumber"),
-    REGISTRY_URL("registryUrl")
+    REGISTRY_URL("registryUrl"),
     ;
 
     @Getter

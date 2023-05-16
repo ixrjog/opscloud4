@@ -2,10 +2,7 @@ package com.baiyi.opscloud.domain.hook.leo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
@@ -31,7 +28,12 @@ public class LeoHook {
         private static final long serialVersionUID = -1L;
         private User user;
         private GitLab gitLab;
+        @Schema(description = "任务名称")
+        private String name;
         private final String type = "BUILD";
+        @Schema(description = "构建类型")
+        private String buildType;
+
     }
 
     @EqualsAndHashCode(callSuper = true)
@@ -45,8 +47,12 @@ public class LeoHook {
         private static final long serialVersionUID = -1L;
         private User user;
         private Integer buildId;
+        @Schema(description = "任务名称")
+        private String name;
         private List<Pod> pods;
         private final String type = "DEPLOY";
+        @Schema(description = "部署类型")
+        private String deployType;
     }
 
     @Data
@@ -64,6 +70,7 @@ public class LeoHook {
     }
 
     @Data
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema(description = "Leo持续交付构建GitLab信息")
@@ -87,6 +94,7 @@ public class LeoHook {
     }
 
     @Data
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema(description = "Leo持续交付构建Commit信息")
@@ -98,6 +106,7 @@ public class LeoHook {
     }
 
     @Data
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema(description = "Leo持续交付执行用户信息")
