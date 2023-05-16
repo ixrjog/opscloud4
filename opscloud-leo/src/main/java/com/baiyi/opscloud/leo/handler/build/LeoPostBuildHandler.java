@@ -36,10 +36,8 @@ public class LeoPostBuildHandler implements InitializingBean {
     private final RecordBuildPipelineChainHandler recordBuildPipelineChainHandler;
 
     /**
-     * 构建后自动部署
+     * 构建最后处理
      */
-    private final AutoDeployChainHandler autoDeployChainHandler;
-
     private final BuildFinalProcessingChainHandler buildFinalProcessingChainHandler;
 
     @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
@@ -55,7 +53,6 @@ public class LeoPostBuildHandler implements InitializingBean {
         postBuildVerificationChainHandler
                 .setNextHandler(endBuildNotificationChainHandler)
                 .setNextHandler(recordBuildPipelineChainHandler)
-                .setNextHandler(autoDeployChainHandler)
                 .setNextHandler(buildFinalProcessingChainHandler);
     }
 
