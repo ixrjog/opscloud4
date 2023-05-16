@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.leo.impl;
 
+import com.baiyi.opscloud.common.annotation.SetSessionUsername;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.common.redis.RedisUtil;
@@ -23,7 +24,7 @@ import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployVO;
 import com.baiyi.opscloud.facade.application.ApplicationFacade;
 import com.baiyi.opscloud.facade.leo.LeoDeployFacade;
-import com.baiyi.opscloud.leo.handler.deploy.LeoDeployHandler;
+import com.baiyi.opscloud.facade.sys.SimpleEnvFacade;
 import com.baiyi.opscloud.leo.aop.annotation.LeoDeployInterceptor;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.delegate.LeoBuildDeploymentDelegate;
@@ -31,6 +32,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
+import com.baiyi.opscloud.leo.handler.deploy.LeoDeployHandler;
 import com.baiyi.opscloud.leo.interceptor.LeoExecuteJobInterceptorHandler;
 import com.baiyi.opscloud.leo.packer.LeoDeployResponsePacker;
 import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
@@ -40,6 +42,7 @@ import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.google.common.collect.Maps;
+import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.LabelSelector;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.PodTemplateSpec;
@@ -93,8 +96,12 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     private final ApplicationFacade applicationFacade;
 
+    private final SimpleEnvFacade simpleEnvFacade;
+
+    private final AutoDeployHelper autoDeployHelper;
+
     @Override
-    @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType")
+    @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType", buildIdSpEL = "#doDeploy.buildId")
     public void doDeploy(LeoDeployParam.DoDeploy doDeploy) {
         // 执行部署任务
         LeoJob leoJob = jobService.getById(doDeploy.getJobId());
@@ -137,7 +144,20 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .ocInstance(OcInstance.OC_INSTANCE)
                 .build();
         deployService.add(newLeoDeploy);
+        autoDeployHelper.labeling(doDeploy, BusinessTypeEnum.LEO_DEPLOY.getType(), newLeoDeploy.getId());
         handleDeploy(newLeoDeploy, deployConfig);
+    }
+
+    /**
+     * 构建后自动部署接口，内部调用
+     *
+     * @param doDeploy
+     */
+    @Override
+    @SetSessionUsername(usernameSpEL = "#doDeploy.username")
+    @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType", buildIdSpEL = "#doDeploy.buildId")
+    public void doAutoDeploy(LeoDeployParam.DoAutoDeploy doDeploy) {
+        this.doDeploy(doDeploy.toDoDeploy());
     }
 
     /**
@@ -176,7 +196,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     @Override
     public DataTable<LeoDeployVO.Deploy> queryLeoJobDeployPage(LeoJobParam.JobDeployPageQuery pageQuery) {
-        List<LeoJob> leoJobs = jobService.queryJobWithApplicationIdAndEnvType(pageQuery.getApplicationId(), pageQuery.getEnvType());
+        List<LeoJob> leoJobs = jobService.queryJob(pageQuery.getApplicationId(), pageQuery.getEnvType());
         if (CollectionUtils.isEmpty(leoJobs)) {
             return DataTable.EMPTY;
         }
@@ -273,6 +293,14 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .map(Deployment::getMetadata)
                 .map(ObjectMeta::getLabels)
                 .orElse(Maps.newHashMap());
+
+        // 2023/5/5 修改Template Container name
+        final String projectName = simpleEnvFacade.removeEnvSuffix(oldName);
+        Optional<Container> optionalContainer = deployment.getSpec().getTemplate().getSpec().getContainers()
+                .stream()
+                .filter(c -> c.getName().startsWith(projectName))
+                .findFirst();
+        optionalContainer.ifPresent(container -> container.setName(newName));
 
         if (labels.containsKey(WORKLOAD_SELECTOR_NAME)) {
             final String workloadSelector = labels.get(WORKLOAD_SELECTOR_NAME).replace(oldName, newName);

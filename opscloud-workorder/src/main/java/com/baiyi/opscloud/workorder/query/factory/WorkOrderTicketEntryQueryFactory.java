@@ -11,17 +11,18 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2022/1/11 3:47 PM
  * @Version 1.0
  */
+@SuppressWarnings("rawtypes")
 @Slf4j
 public class WorkOrderTicketEntryQueryFactory {
 
-    private static final Map<String, ITicketEntryQuery> context = new ConcurrentHashMap<>();
+    private static final Map<String, ITicketEntryQuery> CONTEXT = new ConcurrentHashMap<>();
 
     public static ITicketEntryQuery getByKey(String key) {
-        return context.get(key);
+        return CONTEXT.get(key);
     }
 
     public static void register(ITicketEntryQuery bean) {
-        context.put(bean.getKey(), bean);
+        CONTEXT.put(bean.getKey(), bean);
         log.debug("WorkOrderTicketEntryQueryFactory Registered: key={}, beanName={}", bean.getKey(), bean.getClass().getSimpleName());
     }
 

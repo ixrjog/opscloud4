@@ -9,12 +9,12 @@ import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 import com.baiyi.opscloud.facade.leo.LeoJobFacade;
 import com.baiyi.opscloud.facade.leo.tags.LeoTagHelper;
-import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.base.BaseCrValidator;
-import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.factory.CrValidatorFactory;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.domain.model.LeoTemplateModel;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
+import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.base.BaseCrValidator;
+import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.factory.CrValidatorFactory;
 import com.baiyi.opscloud.packer.leo.LeoJobPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
@@ -31,6 +31,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.baiyi.opscloud.leo.constants.BuildTypeConstants.KUBERNETES_IMAGE;
 
 
 /**
@@ -77,6 +79,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
     @Override
     public void addLeoJob(LeoJobParam.AddJob addJob) {
         LeoJobModel.JobConfig jobConfig = LeoJobModel.load(addJob.getJobConfig());
+
         Optional.ofNullable(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .orElseThrow(() -> new LeoJobException("缺少任务配置！"));
@@ -85,18 +88,38 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
         if (leoTemplate == null) {
             throw new LeoJobException("任务模板配置不正确！");
         }
+
+        LeoJob leoJob = BeanCopierUtil.copyProperties(addJob, LeoJob.class);
         LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(leoTemplate.getTemplateConfig());
-        String templateVersion = Optional.ofNullable(templateConfig)
+        final String templateVersion = Optional.ofNullable(templateConfig)
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getVersion)
                 .orElse("0.0.0");
-        LeoJob leoJob = BeanCopierUtil.copyProperties(addJob, LeoJob.class);
-        // JobKey转大写
+
+        fillLeoJob(leoJob, jobConfig);
+        // jobKey转大写
         leoJob.setJobKey(leoJob.getJobKey().toUpperCase());
-        leoJob.setTemplateVersion(templateVersion);
         leoJob.setTemplateContent(leoTemplate.getTemplateContent());
+        leoJob.setTemplateVersion(templateVersion);
         jobService.add(leoJob);
         updateTagsWithLeoJob(leoJob, jobConfig);
+    }
+
+    private void fillLeoJob(LeoJob leoJob, LeoJobModel.JobConfig jobConfig) {
+        final String branch = Optional.of(jobConfig)
+                .map(LeoJobModel.JobConfig::getJob)
+                .map(LeoJobModel.Job::getGitLab)
+                .map(LeoBaseModel.GitLab::getProject)
+                .map(LeoBaseModel.GitLabProject::getBranch)
+                .orElse("");
+
+        leoJob.setBranch(branch);
+        final String buildType = Optional.of(jobConfig)
+                .map(LeoJobModel.JobConfig::getJob)
+                .map(LeoJobModel.Job::getBuild)
+                .map(LeoJobModel.Build::getType)
+                .orElse(KUBERNETES_IMAGE);
+        leoJob.setBuildType(buildType);
     }
 
     /**
@@ -127,12 +150,6 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .orElse("0.0.0");
         LeoJobModel.JobConfig jobConfig = LeoJobModel.load(updateJob.getJobConfig());
 
-        final String branch = Optional.ofNullable(jobConfig)
-                .map(LeoJobModel.JobConfig::getJob)
-                .map(LeoJobModel.Job::getGitLab)
-                .map(LeoBaseModel.GitLab::getProject)
-                .map(LeoBaseModel.GitLabProject::getBranch)
-                .orElse(updateJob.getBranch());
         LeoJob leoJob = jobService.getById(updateJob.getId());
         boolean isUpdateTemplate = !leoJob.getTemplateId().equals(updateJob.getTemplateId());
 
@@ -142,7 +159,6 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .parentId(updateJob.getParentId())
                 .applicationId(updateJob.getApplicationId())
                 .envType(updateJob.getEnvType())
-                .branch(branch)
                 .jobConfig(updateJob.getJobConfig())
                 .templateId(updateJob.getTemplateId())
                 .templateVersion(isUpdateTemplate ? "-" : templateVersion)
@@ -152,6 +168,8 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .isActive(updateJob.getIsActive())
                 .comment(updateJob.getComment())
                 .build();
+        fillLeoJob(saveLeoJob, jobConfig);
+
         jobService.updateByPrimaryKeySelective(saveLeoJob);
         if (isUpdateTemplate) {
             // 变更模板
@@ -195,6 +213,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
         log.info("升级模板版本: jobId={}, templateVersion={}", leoJob.getId(), templateVersion);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public void createCrRepositoryWithLeoJobId(int jobId) {
         LeoJob leoJob = jobService.getById(jobId);
@@ -275,7 +294,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
 
         for (LeoJob srcJob : srcJobs) {
             // 校验任务
-            if (CollectionUtils.isEmpty(jobService.queryJobWithApplicationIdAndEnvType(destApplication.getId(), srcJob.getEnvType()))) {
+            if (CollectionUtils.isEmpty(jobService.queryJob(destApplication.getId(), srcJob.getEnvType()))) {
                 Env env = envService.getByEnvType(srcJob.getEnvType());
 
                 final String name = Joiner.on("-").join(destApplication.getName(), env.getEnvName());

@@ -19,7 +19,7 @@ import java.util.List;
  * @Date 2022/1/11 6:21 PM
  * @Version 1.0
  */
-public abstract class DatasourceAssetExtendedTicketEntryQuery extends BaseTicketEntryQuery<DatasourceInstanceAsset> {
+public abstract class BaseDsAssetExtendedTicketEntryQuery extends BaseTicketEntryQuery<DatasourceInstanceAsset> {
 
     @Resource
     private DsInstanceAssetService dsInstanceAssetService;
@@ -34,8 +34,8 @@ public abstract class DatasourceAssetExtendedTicketEntryQuery extends BaseTicket
     abstract protected DsAssetParam.AssetPageQuery getAssetQueryParam(WorkOrderTicketEntryParam.EntryQuery entryQuery);
 
     @Override
-    protected WorkOrderTicketVO.Entry toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, DatasourceInstanceAsset entry) {
-        return WorkOrderTicketVO.Entry.builder()
+    protected WorkOrderTicketVO.Entry<DatasourceInstanceAsset> toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, DatasourceInstanceAsset entry) {
+        return WorkOrderTicketVO.Entry.<DatasourceInstanceAsset>builder()
                 .workOrderTicketId(entryQuery.getWorkOrderTicketId())
                 .name(entry.getName())
                 .entryKey(entry.getName())

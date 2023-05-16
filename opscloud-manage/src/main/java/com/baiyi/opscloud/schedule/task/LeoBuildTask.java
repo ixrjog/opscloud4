@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.schedule.task;
 
-import com.baiyi.opscloud.common.annotation.TaskWatch;
+import com.baiyi.opscloud.common.annotation.WatchTask;
 import com.baiyi.opscloud.config.condition.EnvCondition;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.leo.task.LeoBuildCompensationTask;
@@ -25,7 +25,7 @@ public class LeoBuildTask {
 
     @InstanceHealth
     @Scheduled(initialDelay = 30000, fixedRate = 180 * 1000)
-    @TaskWatch(name = "Leo build compensate")
+    @WatchTask(name = "Leo build compensate")
     public void run() {
         buildCompensationTask.handleTask();
     }

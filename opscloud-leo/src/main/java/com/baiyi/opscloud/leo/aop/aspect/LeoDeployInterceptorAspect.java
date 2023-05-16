@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.leo.aop.aspect;
 
+import com.baiyi.opscloud.common.helper.WorkOrderLeoDeployHelper;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
@@ -42,6 +43,8 @@ public class LeoDeployInterceptorAspect {
 
     private final LeoExecuteJobInterceptorHandler executeJobInterceptorHandler;
 
+    private final WorkOrderLeoDeployHelper workOrderLeoDeployHelper;
+
     @Pointcut(value = "@annotation(com.baiyi.opscloud.leo.aop.annotation.LeoDeployInterceptor)")
     public void annotationPoint() {
     }
@@ -63,20 +66,37 @@ public class LeoDeployInterceptorAspect {
         // jobId Expression 解析表达式并获取SpEL的值
         Expression jobIdExpression = expressionParser.parseExpression(leoDeployInterceptor.jobIdSpEL());
         Object jobIdParam = jobIdExpression.getValue(context);
+
+        int jobId;
         if (jobIdParam instanceof Integer) {
-            int jobId = (Integer) jobIdParam;
+            jobId = (Integer) jobIdParam;
             if (IdUtil.isEmpty(jobId)) {
                 throw new LeoJobException("任务ID不存在！");
             }
-            // 并发校验
-            if (leoDeployInterceptor.lock()) {
-                executeJobInterceptorHandler.tryLockWithDeploy(jobId);
-            }
-            if (executeJobInterceptorHandler.isAdmin(SessionUtil.getUsername())) {
-                log.debug("管理员操作，跳过验证");
-            } else {
-                // 权限校验
-                executeJobInterceptorHandler.verifyAuthorization(jobId);
+        } else {
+            throw new LeoJobException("任务ID类型不正确！");
+        }
+
+        Expression buildIdExpression = expressionParser.parseExpression(leoDeployInterceptor.buildIdSpEL());
+        Object buildIdParam = buildIdExpression.getValue(context);
+
+        Integer buildId = 0;
+        if (buildIdParam instanceof Integer) {
+            buildId = (Integer) buildIdParam;
+        }
+
+        // 并发校验
+        if (leoDeployInterceptor.lock()) {
+            executeJobInterceptorHandler.tryLockWithDeploy(jobId);
+        }
+        if (executeJobInterceptorHandler.isAdmin(SessionUtil.getUsername())) {
+            log.debug("管理员操作，跳过验证");
+        } else {
+            // 权限校验
+            executeJobInterceptorHandler.verifyAuthorization(jobId);
+            // 工单校验
+            if (!workOrderLeoDeployHelper.hasKey(buildId)) {
+                // 规则校验
                 // deployType Expression 解析表达式并获取SpEL的值
                 Expression deployTypeExpression = expressionParser.parseExpression(leoDeployInterceptor.deployTypeSpEL());
                 Object deployTypeParam = deployTypeExpression.getValue(context);
@@ -89,9 +109,8 @@ public class LeoDeployInterceptorAspect {
                     throw new LeoJobException("DeployType类型不正确！");
                 }
             }
-        } else {
-            throw new LeoJobException("任务ID类型不正确！");
         }
+
         return joinPoint.proceed();
     }
 

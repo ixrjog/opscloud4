@@ -53,6 +53,13 @@ public enum ErrorEnum {
     APPLICATION_RES_NOT_EXIST(10001, "应用资源不存在！"),
     APPLICATION_RES_IS_NOT_EMPTY(10001, "应用资源不为空！"),
 
+    // ----------------------- 项目 -----------------------
+    PROJECT_NOT_EXIST(10001, "项目不存在！"),
+    PROJECT_ALREADY_EXIST(10001, "项目已存在！"),
+    PROJECT_RES_ALREADY_EXIST(10001, "项目资源已存在！"),
+    PROJECT_RES_NOT_EXIST(10001, "项目资源不存在！"),
+    PROJECT_IS_NOT_EMPTY(10001, "项目资源不为空！"),
+
     // ----------------------- 资产 -----------------------
     ASSET_NOT_EXIST(10001, "资产不存在！"),
 

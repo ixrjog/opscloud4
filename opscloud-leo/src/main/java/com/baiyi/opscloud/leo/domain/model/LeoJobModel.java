@@ -56,6 +56,7 @@ public class LeoJobModel {
     @NoArgsConstructor
     public static class Job {
         private LeoBaseModel.GitLab gitLab;
+        private LeoBaseModel.Nexus nexus;
         private String name;
         private Build build;
         private Deploy deploy;

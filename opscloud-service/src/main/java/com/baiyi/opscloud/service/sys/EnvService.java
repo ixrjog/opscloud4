@@ -15,6 +15,8 @@ public interface EnvService {
 
     List<Env> queryAll();
 
+    List<Env> queryAllActive();
+
     void add(Env env);
 
     void update(Env env);

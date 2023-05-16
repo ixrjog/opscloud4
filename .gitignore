@@ -43,3 +43,6 @@ application-local.yml
 
 ### VS Code ###
 .vscode/
+
+### OSSUtil
+.ossutil_checkpoint

@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2021/6/18 11:06 上午
  * @Version 1.0
  */
+@SuppressWarnings("rawtypes")
 @Slf4j
 public class AssetProviderFactory {
 
@@ -50,4 +51,5 @@ public class AssetProviderFactory {
         }
         log.debug("AssetProviderFactory Registered: beanName={}, instanceType={}, assetType={}", bean.getClass().getSimpleName(), bean.getInstanceType(), bean.getAssetType());
     }
+
 }

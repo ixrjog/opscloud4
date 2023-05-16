@@ -30,4 +30,5 @@ public class Authentication {
     public String toAuthentication() {
         return Joiner.on(" ").join(AUTHENTICATION, this.token);
     }
+
 }

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import jakarta.annotation.Resource;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -89,8 +90,8 @@ public class ApplicationScaleReplicasEntryQuery extends BaseTicketEntryQuery<App
     }
 
     @Override
-    protected WorkOrderTicketVO.Entry toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, ApplicationScaleReplicasEntry.KubernetesDeployment entry) {
-        return WorkOrderTicketVO.Entry.builder()
+    protected WorkOrderTicketVO.Entry<ApplicationScaleReplicasEntry.KubernetesDeployment> toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, ApplicationScaleReplicasEntry.KubernetesDeployment entry) {
+        return WorkOrderTicketVO.Entry.<ApplicationScaleReplicasEntry.KubernetesDeployment>builder()
                 .workOrderTicketId(entryQuery.getWorkOrderTicketId())
                 .name(entry.getName())
                 .entryKey(entry.getDeploymentName())

@@ -84,4 +84,10 @@ public class ReportController {
         return new HttpResult<>(leoReportFacade.statLeoReport());
     }
 
+    @Operation(summary = "查询Leo生产报表")
+    @GetMapping(value = "/leo/prod/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<LeoReportVO.LeoProdReport> getLeoProdReport() {
+        return new HttpResult<>(leoReportFacade.statLeoProdReport());
+    }
+
 }

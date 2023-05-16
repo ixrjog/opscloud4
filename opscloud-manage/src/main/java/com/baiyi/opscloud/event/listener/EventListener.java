@@ -17,18 +17,17 @@ import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskP
  */
 @Slf4j
 @Component
-public class NoticeListener implements ApplicationListener<NoticeEvent> {
+public class EventListener<T> implements ApplicationListener<NoticeEvent<T>> {
 
+    @SuppressWarnings("unchecked")
     @Override
     @Async(value = CORE)
-    public void onApplicationEvent(NoticeEvent noticeEvent) {
-        log.info("监听事件: eventType={}, action={}", noticeEvent.getMessage().getEventType(), noticeEvent.getMessage().getAction());
-        IEventConsumer iEventConsumer = EventConsumerFactory.getConsumer(noticeEvent.getMessage().getEventType());
-        if (iEventConsumer == null) {
-            log.info("当前事件没有Consumer");
-            return;
+    public void onApplicationEvent(NoticeEvent<T> noticeEvent) {
+        log.debug("监听事件: eventType={}, action={}", noticeEvent.getMessage().getEventType(), noticeEvent.getMessage().getAction());
+        IEventConsumer<T> consumer = EventConsumerFactory.getConsumer(noticeEvent.getMessage().getEventType());
+        if (consumer != null) {
+            consumer.onMessage(noticeEvent);
         }
-        iEventConsumer.onMessage(noticeEvent);
     }
 
 }

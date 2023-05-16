@@ -2,7 +2,7 @@ package com.baiyi.opscloud.leo.handler.deploy.strategy.inspection;
 
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
-import com.baiyi.opscloud.leo.handler.deploy.strategy.inspection.base.PreInspectionStrategy;
+import com.baiyi.opscloud.leo.handler.deploy.strategy.inspection.base.BasePreInspectionStrategy;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
@@ -21,7 +21,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
-public class PreInspectionWithOfflineStrategy extends PreInspectionStrategy {
+public class PreInspectionWithOfflineStrategy extends BasePreInspectionStrategy {
 
 
     /**

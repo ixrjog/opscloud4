@@ -6,6 +6,7 @@ import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.ons.constants.OnsMessageTypeConstants;
 import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsRocketMqTopicDriver;
 import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsRocketMqTopic;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
@@ -100,5 +101,10 @@ public class OnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
             throw new TicketProcessException("Topic创建失败: Topic={}", entry.getTopic());
         }
     }
-}
 
+    @Override
+    public String getAssetType() {
+        return DsAssetTypeConstants.ONS_ROCKETMQ_TOPIC.name();
+    }
+
+}

@@ -18,6 +18,7 @@ public class DatasourceProviderException extends BaseException {
 
     @Serial
     private static final long serialVersionUID = -2938977933351653100L;
+
     private final Integer code = 20000;
 
     public DatasourceProviderException(String message) {

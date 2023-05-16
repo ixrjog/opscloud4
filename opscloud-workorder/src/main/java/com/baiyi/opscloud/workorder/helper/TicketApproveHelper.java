@@ -23,6 +23,7 @@ import java.util.Optional;
 
 /**
  * 工单审批助手
+ *
  * @Author baiyi
  * @Date 2022/1/19 9:40 AM
  * @Version 1.0
@@ -52,7 +53,7 @@ public class TicketApproveHelper {
             return;
         }
         // 设置默认值
-        iApprover.setIsApprover(false); 
+        iApprover.setIsApprover(false);
         // 不在审批中
         if (!OrderTicketPhaseCodeConstants.TOAUDIT.name().equals(workOrderTicket.getTicketPhase())) {
             return;
@@ -71,9 +72,9 @@ public class TicketApproveHelper {
             }
             WorkflowVO.Node node = nodeMap.get(ticketNode.getNodeName());
             List<User> users = userService.queryByTagKeys(node.getTags());
-            Optional<User> userOptional= users
+            Optional<User> userOptional = users
                     .stream()
-                    .filter(u-> username.equals(u.getUsername()) )
+                    .filter(u -> username.equals(u.getUsername()))
                     .findFirst();
             iApprover.setIsApprover(userOptional.isPresent());
         }

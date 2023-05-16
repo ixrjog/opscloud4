@@ -33,7 +33,7 @@ public class UserPermissionEventConsumer extends AbstractEventConsumer<UserPermi
     }
 
     @Override
-    protected void onCreatedMessage(NoticeEvent noticeEvent) {
+    protected void onCreatedMessage(NoticeEvent<UserPermission> noticeEvent) {
         UserPermission eventData = toEventData(noticeEvent.getMessage());
         if (eventData.getBusinessType() == BusinessTypeEnum.USERGROUP.getType()) {
             dsAccountGroupManager.grant(userService.getById(eventData.getUserId()), eventData);
@@ -50,7 +50,7 @@ public class UserPermissionEventConsumer extends AbstractEventConsumer<UserPermi
     }
 
     @Override
-    protected void onDeletedMessage(NoticeEvent noticeEvent) {
+    protected void onDeletedMessage(NoticeEvent<UserPermission> noticeEvent) {
         UserPermission eventData = toEventData(noticeEvent.getMessage());
         if (eventData.getBusinessType() == BusinessTypeEnum.USERGROUP.getType()) {
             dsAccountGroupManager.revoke(userService.getById(eventData.getUserId()), eventData);

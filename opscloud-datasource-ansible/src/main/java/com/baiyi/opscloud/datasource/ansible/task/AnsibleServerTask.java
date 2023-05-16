@@ -61,7 +61,7 @@ public class AnsibleServerTask implements Runnable {
 
     private void watching(TaskExecutor taskExecutor, DefaultExecuteResultHandler resultHandler) throws InterruptedException {
         // 启动时间
-        Long startTaskTime = System.currentTimeMillis();
+        long startTaskTime = System.currentTimeMillis();
         while (true) {
             // 等待执行
             resultHandler.waitFor(NewTimeUtil.SECOND_TIME);

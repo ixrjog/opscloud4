@@ -132,12 +132,12 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     @Override
     public void updateApplication(ApplicationVO.Application application) {
         if (applicationService.getById(application.getId()) == null) {
-            throw new OCException(ErrorEnum.APPLICATION_ALREADY_EXIST);
+            throw new OCException(ErrorEnum.APPLICATION_NOT_EXIST);
         }
-        Application saveApplication = BeanCopierUtil.copyProperties(application, Application.class);
-        if (StringUtils.isNotBlank(application.getApplicationKey())) {
-            saveApplication.setApplicationKey(application.getApplicationKey().replaceAll(" ", "").toUpperCase());
-        }
+//        Application saveApplication = BeanCopierUtil.copyProperties(application, Application.class);
+//        if (StringUtils.isNotBlank(application.getApplicationKey())) {
+//            saveApplication.setApplicationKey(application.getApplicationKey().replaceAll(" ", "").toUpperCase());
+//        }
         applicationService.update(BeanCopierUtil.copyProperties(application, Application.class));
     }
 

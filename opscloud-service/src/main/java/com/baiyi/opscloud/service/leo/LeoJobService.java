@@ -18,7 +18,9 @@ public interface LeoJobService {
 
     DataTable<LeoJob> queryJobPage(SubscribeLeoJobRequestParam pageQuery);
 
-    List<LeoJob> queryJobWithApplicationIdAndEnvType(Integer applicationId, Integer envType);
+    List<LeoJob> queryJob(Integer applicationId, Integer envType);
+
+    List<LeoJob> queryJobWithSubscribe(Integer applicationId, Integer envType, String buildType);
 
     List<LeoJob> queryJobWithApplicationId(Integer applicationId);
 
@@ -40,6 +42,7 @@ public interface LeoJobService {
 
     /**
      * 查询可升级的作业
+     *
      * @param templateId
      * @param templateVersion
      * @return

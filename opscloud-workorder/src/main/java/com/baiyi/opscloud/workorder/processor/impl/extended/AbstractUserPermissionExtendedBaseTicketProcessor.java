@@ -54,7 +54,7 @@ public abstract class AbstractUserPermissionExtendedBaseTicketProcessor<T> exten
      *
      * @param ticketEntry
      */
-    protected void updateHandle(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
+    protected void handleUpdate(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
         WorkOrderTicket ticket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
         if (!OrderTicketPhaseCodeConstants.NEW.name().equals(ticket.getTicketPhase())) {
             throw new TicketProcessException("工单进度不是新建，无法更新配置条目！");

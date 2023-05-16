@@ -27,7 +27,7 @@ import java.util.Optional;
  * @Date 2022/12/12 20:37
  * @Version 1.0
  */
-public abstract class PreInspectionStrategy extends BaseDeployStrategy {
+public abstract class BasePreInspectionStrategy extends BaseDeployStrategy {
 
     @Resource
     private DsInstanceAssetService assetService;

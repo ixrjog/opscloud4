@@ -12,7 +12,7 @@ import java.io.Serial;
  * @Version 1.0
  */
 @Slf4j
-public class NoticeEvent extends ApplicationEvent {
+public class NoticeEvent<T> extends ApplicationEvent {
 
     @Serial
     private static final long serialVersionUID = 3500050498451084883L;
@@ -20,9 +20,9 @@ public class NoticeEvent extends ApplicationEvent {
      * 接受信息
      */
     @Getter
-    private final IEvent message;
+    private final IEvent<T> message;
 
-    public NoticeEvent(IEvent message) {
+    public NoticeEvent(IEvent<T> message) {
         super(message);
         this.message = message;
         log.info("新事件通知: message={}", message);

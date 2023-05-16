@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
+
 import java.io.IOException;
 import java.util.UUID;
 
@@ -68,12 +69,7 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
     public void onClose() {
     }
 
-    /**
-     * 收到客户端消息后调用的方法
-     * Session session
-     *
-     * @param message 客户端发送过来的消息
-     */
+
     @OnMessage(maxMessageSize = 1024)
     public void onMessage(String message, Session session) {
         if (!session.isOpen() || StringUtils.isEmpty(message)) {
@@ -86,7 +82,8 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
             try {
                 hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));
             } catch (AuthenticationException e) {
-                LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
+                LeoContinuousDeliveryResponse<String> response = LeoContinuousDeliveryResponse.<String>builder()
+                        .body("")
                         .messageType(LeoRequestType.AUTHENTICATION_FAILURE.name())
                         .build();
                 sendToSession(session, response);
@@ -103,7 +100,7 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
         return requestParam.getMessageType();
     }
 
-    protected void sendToSession(Session session, LeoContinuousDeliveryResponse response) {
+    protected void sendToSession(Session session, LeoContinuousDeliveryResponse<String> response) {
         try {
             if (session.isOpen()) {
                 session.getBasicRemote().sendText(response.toString());

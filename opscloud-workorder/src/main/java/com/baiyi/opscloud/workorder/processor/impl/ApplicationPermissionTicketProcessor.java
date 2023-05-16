@@ -38,7 +38,7 @@ public class ApplicationPermissionTicketProcessor extends AbstractUserPermission
 
     @Override
     public void update(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
-        updateHandle(ticketEntry);
+        handleUpdate(ticketEntry);
     }
 
     @Override

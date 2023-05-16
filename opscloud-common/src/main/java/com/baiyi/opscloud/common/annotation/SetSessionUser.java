@@ -27,6 +27,6 @@ public @interface SetSessionUser {
      *
      * @return
      */
-    boolean force() default false;
+    boolean force() default true;
 
 }

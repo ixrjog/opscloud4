@@ -47,7 +47,7 @@ public class SubscribeLeoDeployRequestHandler extends BaseLeoContinuousDeliveryR
     @Override
     public void handleRequest(String sessionId, Session session, String message) throws IOException {
         SubscribeLeoDeployRequestParam queryParam = toRequestParam(message);
-        List<Integer> jobIds = leoJobService.queryJobWithApplicationIdAndEnvType(queryParam.getApplicationId(), queryParam.getEnvType())
+        List<Integer> jobIds = leoJobService.queryJob(queryParam.getApplicationId(), queryParam.getEnvType())
                 .stream()
                 .map(LeoJob::getId)
                 .collect(Collectors.toList());

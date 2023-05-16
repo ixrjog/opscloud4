@@ -56,4 +56,5 @@ public class AnsiblePlaybookArgumentsBuilder {
                 ).collect(Collectors.toList())
         );
     }
+
 }

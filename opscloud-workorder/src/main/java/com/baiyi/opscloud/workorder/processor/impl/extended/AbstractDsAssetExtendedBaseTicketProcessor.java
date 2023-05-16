@@ -25,7 +25,8 @@ import jakarta.annotation.Resource;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractDsAssetExtendedBaseTicketProcessor<T, C extends BaseDsConfig> extends BaseTicketProcessor<T> implements IInstanceType, IAssetType {
+public abstract class AbstractDsAssetExtendedBaseTicketProcessor<T, C extends BaseDsConfig> extends BaseTicketProcessor<T>
+        implements IInstanceType, IAssetType {
 
     @Resource
     protected DsInstanceAssetService dsInstanceAssetService;
@@ -34,7 +35,7 @@ public abstract class AbstractDsAssetExtendedBaseTicketProcessor<T, C extends Ba
     protected DsConfigHelper dsConfigHelper;
 
     @Resource
-    protected DsInstanceFacade dsInstanceFacade;
+    protected DsInstanceFacade<T> dsInstanceFacade;
 
     @Resource
     private WorkOrderTicketService workOrderTicketService;

@@ -23,4 +23,5 @@ public interface BusinessTagService {
     int countByBusinessTag(BusinessTag businessTag);
 
     int countByTagId(Integer tagId);
+
 }

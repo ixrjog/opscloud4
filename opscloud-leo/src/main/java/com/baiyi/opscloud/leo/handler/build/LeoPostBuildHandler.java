@@ -3,6 +3,7 @@ package com.baiyi.opscloud.leo.handler.build;
 import com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
+import com.baiyi.opscloud.leo.handler.build.chain.post.AutoDeployChainHandler;
 import com.baiyi.opscloud.leo.handler.build.chain.post.EndBuildNotificationChainHandler;
 import com.baiyi.opscloud.leo.handler.build.chain.post.PostBuildVerificationChainHandler;
 import com.baiyi.opscloud.leo.handler.build.chain.post.RecordBuildPipelineChainHandler;
@@ -23,11 +24,6 @@ import org.springframework.stereotype.Component;
 public class LeoPostBuildHandler implements InitializingBean {
 
     /**
-     * 验证 Kubernetes Image
-     */
-   // private final VerifyKubernetesImageChainHandler verifyKubernetesImageChainHandler;
-
-    /**
      * 构建结束后校验
      */
     private final PostBuildVerificationChainHandler postBuildVerificationChainHandler;
@@ -42,6 +38,11 @@ public class LeoPostBuildHandler implements InitializingBean {
      */
     private final RecordBuildPipelineChainHandler recordBuildPipelineChainHandler;
 
+    /**
+     * 构建后自动部署
+     */
+    private final AutoDeployChainHandler autoDeployChainHandler;
+
     @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
     public void handleBuild(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
         /*
@@ -54,7 +55,8 @@ public class LeoPostBuildHandler implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         postBuildVerificationChainHandler
                 .setNextHandler(endBuildNotificationChainHandler)
-                .setNextHandler(recordBuildPipelineChainHandler);
+                .setNextHandler(recordBuildPipelineChainHandler)
+                .setNextHandler(autoDeployChainHandler);
     }
 
 }

@@ -59,6 +59,9 @@ public class LeoJob implements Serializable, BaseBusiness.IBusiness {
     @Column(name = "job_key")
     private String jobKey;
 
+    @Column(name = "build_type")
+    private String buildType;
+
     /**
      * 默认分支
      */

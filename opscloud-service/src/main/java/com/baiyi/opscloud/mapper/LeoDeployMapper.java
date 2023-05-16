@@ -12,6 +12,12 @@ public interface LeoDeployMapper extends Mapper<LeoDeploy> {
 
     List<ReportVO.Report> statByMonth();
 
+    /**
+     * 统计最近30天生产环境变更
+     * @return
+     */
+    List<ReportVO.Report> statLast30Days();
+
     List<ReportVO.Report> statByEnvName();
 
 }

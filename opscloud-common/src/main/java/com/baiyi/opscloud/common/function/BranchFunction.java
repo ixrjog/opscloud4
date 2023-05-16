@@ -7,7 +7,7 @@ package com.baiyi.opscloud.common.function;
  */
 
 @FunctionalInterface
-public interface BranchFunction<T extends Object> {
+public interface BranchFunction {
 
     /**
      * 分支操作

@@ -89,8 +89,8 @@ public class ApplicationReduceReplicasEntryQuery extends BaseTicketEntryQuery<Ap
     }
 
     @Override
-    protected WorkOrderTicketVO.Entry toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, ApplicationReduceReplicasEntry.KubernetesDeployment entry) {
-        return WorkOrderTicketVO.Entry.builder()
+    protected WorkOrderTicketVO.Entry<ApplicationReduceReplicasEntry.KubernetesDeployment> toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, ApplicationReduceReplicasEntry.KubernetesDeployment entry) {
+        return WorkOrderTicketVO.Entry.<ApplicationReduceReplicasEntry.KubernetesDeployment>builder()
                 .workOrderTicketId(entryQuery.getWorkOrderTicketId())
                 .name(entry.getName())
                 .entryKey(entry.getDeploymentName())

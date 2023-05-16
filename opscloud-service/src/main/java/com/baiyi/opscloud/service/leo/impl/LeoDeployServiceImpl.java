@@ -21,6 +21,7 @@ import java.util.List;
  * @Date 2022/12/5 18:02
  * @Version 1.0
  */
+@SuppressWarnings({"resource", "rawtypes"})
 @Service
 @RequiredArgsConstructor
 public class LeoDeployServiceImpl implements LeoDeployService {
@@ -121,6 +122,11 @@ public class LeoDeployServiceImpl implements LeoDeployService {
     @Override
     public List<ReportVO.Report> statByMonth() {
         return deployMapper.statByMonth();
+    }
+
+    @Override
+    public List<ReportVO.Report> statLast30Days() {
+        return deployMapper.statLast30Days();
     }
 
     @Override

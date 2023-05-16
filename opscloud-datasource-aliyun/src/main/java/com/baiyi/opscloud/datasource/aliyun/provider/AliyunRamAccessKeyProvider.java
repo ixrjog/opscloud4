@@ -27,7 +27,6 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
  * @Date 2021/7/8 2:46 下午
  * @Since 1.0
  */
-
 @Component
 @ChildProvider(parentType = DsAssetTypeConstants.RAM_USER)
 public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<AccessKey.Key> {

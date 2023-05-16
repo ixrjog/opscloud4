@@ -44,6 +44,8 @@ public interface LeoDeployService {
 
     List<ReportVO.Report> statByMonth();
 
+    List<ReportVO.Report> statLast30Days();
+
     int countWithReport();
 
     void deleteById(Integer id);

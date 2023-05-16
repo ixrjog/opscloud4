@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
  * @Date 2022/1/11 2:13 PM
  * @Version 1.0
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 @Slf4j
 @Component
 @RequiredArgsConstructor

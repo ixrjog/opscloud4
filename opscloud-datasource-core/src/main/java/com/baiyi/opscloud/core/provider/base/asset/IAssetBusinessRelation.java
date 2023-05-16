@@ -20,4 +20,5 @@ public interface IAssetBusinessRelation {
      * @param asset
      */
     void scan(DsAssetVO.Asset asset);
+
 }

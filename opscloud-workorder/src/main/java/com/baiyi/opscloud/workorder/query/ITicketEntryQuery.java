@@ -26,4 +26,5 @@ public interface ITicketEntryQuery<T> {
      * @return
      */
     String getKey();
+
 }

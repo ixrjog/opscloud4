@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.domain.vo.leo;
 
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.ReadableTime;
+import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.collect.Lists;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,10 +29,20 @@ public class LeoBuildVO {
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema
-    public static class Build implements Serializable, ReadableTime.IAgo, ReadableTime.IRuntime {
+    public static class Build implements Serializable, ReadableTime.IAgo, ReadableTime.IRuntime, TagVO.ITags {
 
         @Serial
         private static final long serialVersionUID = -697201191162725310L;
+
+        // ITags
+        @Override
+        public Integer getBusinessId() {
+            return this.id;
+        }
+
+        private final Integer businessType = BusinessTypeEnum.LEO_BUILD.getType();
+
+        private List<TagVO.Tag> tags;
 
         @Schema(description = "构建详情")
         private Object buildDetails;
@@ -78,6 +90,7 @@ public class LeoBuildVO {
         public Date getAgoTime() {
             return Objects.requireNonNullElseGet(this.startTime, Date::new);
         }
+
     }
 
     /**

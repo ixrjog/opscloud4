@@ -16,6 +16,7 @@ import java.io.IOException;
  * @Date 2022/11/23 16:11
  * @Version 1.0
  */
+@SuppressWarnings("rawtypes")
 @Slf4j
 public abstract class BaseLeoContinuousDeliveryRequestHandler<T> implements ILeoContinuousDeliveryRequestHandler, InitializingBean {
 
@@ -31,7 +32,7 @@ public abstract class BaseLeoContinuousDeliveryRequestHandler<T> implements ILeo
 
     protected void sendToSession(Session session, DataTable body) throws IOException {
         if (session.isOpen()) {
-            LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
+            LeoContinuousDeliveryResponse<DataTable> response = LeoContinuousDeliveryResponse.<DataTable>builder()
                     .body(body)
                     .messageType(getMessageType())
                     .build();

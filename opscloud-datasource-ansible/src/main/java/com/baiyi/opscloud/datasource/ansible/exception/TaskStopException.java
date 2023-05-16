@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.datasource.ansible.exception;
 
+import java.io.Serial;
+
 /**
  * @Author baiyi
  * @Date 2020/4/17 7:43 下午
@@ -7,12 +9,14 @@ package com.baiyi.opscloud.datasource.ansible.exception;
  */
 public class TaskStopException extends RuntimeException {
 
-    private final static String message = "Task cancelled";
+    @Serial
     private static final long serialVersionUID = -2575786728049685346L;
+
+    private final static String MESSAGE = "Task cancelled";
 
     public TaskStopException(){
         //父类构造方法
-        super(message);
+        super(MESSAGE);
     }
 
 }

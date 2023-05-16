@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.param.leo.request;
 
 import com.baiyi.opscloud.domain.param.SuperPageParam;
 import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,9 +15,14 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class SubscribeLeoJobRequestParam extends SuperPageParam implements ILeoRequestParam {
 
+    @Schema(description = "应用ID")
     private Integer applicationId;
 
+    @Schema(description = "环境类型")
     private Integer envType;
+
+    @Schema(description = "构建类型")
+    private String buildType;
 
     private final Boolean extend = true;
 

@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
@@ -18,6 +19,7 @@ import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
 import com.baiyi.opscloud.leo.aop.annotation.LeoBuildInterceptor;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
+import com.baiyi.opscloud.leo.constants.BuildTypeConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.delegate.GitLabRepoDelegate;
 import com.baiyi.opscloud.leo.dict.IBuildDictProvider;
@@ -58,7 +60,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.baiyi.opscloud.leo.handler.build.strategy.verification.PostBuildVerificationWithKubernetesImageStrategy.KUBERNETES_IMAGE;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -99,6 +100,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     private final LeoBuildResponsePacker leoBuildResponsePacker;
 
+    private final AutoDeployHelper autoDeployHelper;
+
     @Override
     @LeoBuildInterceptor(jobIdSpEL = "#doBuild.jobId")
     public void doBuild(LeoBuildParam.DoBuild doBuild) {
@@ -123,6 +126,11 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getGitLab)
                 .orElseThrow(() -> new LeoBuildException("任务GitLab配置不存在: jobId={}", doBuild.getJobId()));
+        // 可选nexus
+        LeoBaseModel.Nexus nexus = Optional.of(jobConfig)
+                .map(LeoJobModel.JobConfig::getJob)
+                .map(LeoJobModel.Job::getNexus)
+                .orElse(LeoBaseModel.Nexus.EMPTY);
         // 通知配置
         LeoBaseModel.Notify notify = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
@@ -147,21 +155,38 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                         .webUrl(commit.getWebUrl())
                         .build()
         );
+
         // 构建类型
         final String buildType = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getBuild)
                 .map(LeoJobModel.Build::getType)
-                .orElse(KUBERNETES_IMAGE);
+                .orElse(BuildTypeConstants.KUBERNETES_IMAGE);
 
         // 生产字典
         Map<String, String> dict = buildDict(doBuild, buildType);
+
+        // AutoDeploy
+        LeoBaseModel.AutoDeploy autoDeploy;
+        if (doBuild.getAutoDeploy()) {
+            if (IdUtil.isEmpty(doBuild.getAssetId())) {
+                throw new LeoBuildException("启用构建后自动部署未指定资产ID参数！");
+            }
+            autoDeploy = LeoBaseModel.AutoDeploy.builder()
+                    .assetId(doBuild.getAssetId())
+                    .jobId(leoJob.getId())
+                    .build();
+        } else {
+            autoDeploy = LeoBaseModel.AutoDeploy.EMPTY;
+        }
 
         LeoBuildModel.Build build = LeoBuildModel.Build.builder()
                 .type(buildType)
                 .dict(dict)
                 .tags(tags)
                 .gitLab(gitLab)
+                .nexus(nexus)
+                .autoDeploy(autoDeploy)
                 .notify(notify)
                 .parameters(jobParameters)
                 .build();
@@ -193,6 +218,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .ocInstance(OcInstance.OC_INSTANCE)
                 .build();
         buildService.add(leoBuild);
+        autoDeployHelper.labeling(doBuild, BusinessTypeEnum.LEO_BUILD.getType(), leoBuild.getId());
         handleBuild(leoBuild, buildConfig);
     }
 
@@ -294,8 +320,13 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                     projectId,
                     filePath,
                     getBuildMavenPublishInfo.getRef());
-            String content = new String(Base64.getDecoder().decode(repositoryFile.getContent()));
-            return MavenPublishParser.parse(getBuildMavenPublishInfo.getTools(), content);
+            final String content = new String(Base64.getDecoder().decode(repositoryFile.getContent()));
+            LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob);
+            final LeoBaseModel.Nexus nexus = Optional.ofNullable(jobConfig)
+                    .map(LeoJobModel.JobConfig::getJob)
+                    .map(LeoJobModel.Job::getNexus)
+                    .orElseThrow(() -> new LeoBuildException("配置不存在: job->nexus"));
+            return MavenPublishParser.parse(getBuildMavenPublishInfo.getTools(), nexus, content);
         } catch (GitLabApiException ignored) {
         }
         return LeoBuildVO.MavenPublishInfo.EMPTY_INFO;

@@ -26,6 +26,7 @@ import java.util.Objects;
  * @Date 2021/8/17 6:07 下午
  * @Version 1.0
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 @Aspect
 @Component
 @RequiredArgsConstructor
@@ -76,6 +77,7 @@ public class EventPublisherAspect {
         return result;
     }
 
+    @SuppressWarnings("PatternVariableCanBeUsed")
     private void publishEventWithParam(Object message, String action) {
         if (message instanceof BaseBusiness.IBusiness) {
             BaseBusiness.IBusiness ib = (BaseBusiness.IBusiness) message;

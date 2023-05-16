@@ -40,14 +40,23 @@ public class LeoReportVO {
 
         private List<ReportVO.Report> deployWithEnvReport;
 
-//        @Schema(description = "构建月报表")
-//        private MonthReport buildMonthReport;
-//
-//        @Schema(description = "部署月报表")
-//        private MonthReport deployMonthReport;
-
         @Schema(description = "Jenkins实例")
         private List<LeoJenkinsInstance> instances;
+
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema
+    public static class LeoProdReport implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = 1L;
+
+        @Schema(description = "持续交付报表")
+        private ReportVO.DailyReport continuousDeliveryReport;
 
     }
 

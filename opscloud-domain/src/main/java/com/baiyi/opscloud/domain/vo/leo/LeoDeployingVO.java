@@ -37,6 +37,7 @@ public class LeoDeployingVO {
     @Schema
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Deploying implements Serializable {
+
         @Serial
         private static final long serialVersionUID = -2373193776064021868L;
         private String deployType;
@@ -125,12 +126,14 @@ public class LeoDeployingVO {
     @AllArgsConstructor
     @Schema
     @JsonIgnoreProperties(ignoreUnknown = true)
+    @SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
     public static class PodDetails implements Serializable, ReadableTime.IAgo {
 
         @Serial
         private static final long serialVersionUID = 6072373268821025901L;
 
         private Map<String, String> conditions;
+
         private String podIP;
         private String hostIP;
         private String phase;

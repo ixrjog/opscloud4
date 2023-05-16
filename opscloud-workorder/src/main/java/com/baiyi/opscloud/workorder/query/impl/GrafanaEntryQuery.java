@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.workorder.query.impl;
 
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
-import com.baiyi.opscloud.workorder.query.impl.extended.UserGroupExtendedTicketEntryQuery;
+import com.baiyi.opscloud.workorder.query.impl.extended.BaseUserGroupExtendedTicketEntryQuery;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class GrafanaEntryQuery extends UserGroupExtendedTicketEntryQuery {
+public class GrafanaEntryQuery extends BaseUserGroupExtendedTicketEntryQuery {
 
     @Override
     public String getKey() {

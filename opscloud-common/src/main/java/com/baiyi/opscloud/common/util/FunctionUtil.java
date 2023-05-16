@@ -2,6 +2,7 @@ package com.baiyi.opscloud.common.util;
 
 import com.baiyi.opscloud.common.function.BranchFunction;
 import com.baiyi.opscloud.common.function.ThrowBaseExceptionFunction;
+import com.baiyi.opscloud.common.function.TrueFunction;
 
 /**
  * @Author 修远
@@ -30,4 +31,12 @@ public class FunctionUtil {
         };
     }
 
+    public static TrueFunction trueFunction(boolean b) {
+
+        return (trueHandle) -> {
+            if (b) {
+                trueHandle.run();
+            }
+        };
+    }
 }
