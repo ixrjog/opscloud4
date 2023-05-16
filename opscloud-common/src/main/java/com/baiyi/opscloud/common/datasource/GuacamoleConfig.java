@@ -13,8 +13,8 @@ import java.util.List;
  * @Date 2022/1/4 6:11 PM
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class GuacamoleConfig extends BaseDsConfig {
 
     private static final int DEF_PORT = 4822;

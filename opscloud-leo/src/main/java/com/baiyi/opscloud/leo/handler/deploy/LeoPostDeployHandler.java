@@ -2,16 +2,15 @@ package com.baiyi.opscloud.leo.handler.deploy;
 
 import com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
-import com.baiyi.opscloud.leo.handler.deploy.chain.post.EndDeployNotificationChainHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
+import com.baiyi.opscloud.leo.handler.deploy.chain.post.DeployFinalProcessingChainHandler;
+import com.baiyi.opscloud.leo.handler.deploy.chain.post.EndDeployNotificationChainHandler;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-
-import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -28,8 +27,12 @@ public class LeoPostDeployHandler implements InitializingBean {
     /**
      * 结束部署通知
      */
-    @Resource
-    private EndDeployNotificationChainHandler endDeployNotificationChainHandler;
+    private final EndDeployNotificationChainHandler endDeployNotificationChainHandler;
+
+    /**
+     * 最终处理
+     */
+    private final DeployFinalProcessingChainHandler deployFinalProcessingChainHandler;
 
     @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
     public void handleDeploy(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
@@ -41,6 +44,10 @@ public class LeoPostDeployHandler implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        /*
+         * 装配
+         */
+        endDeployNotificationChainHandler.setNextHandler(deployFinalProcessingChainHandler);
     }
 
 }

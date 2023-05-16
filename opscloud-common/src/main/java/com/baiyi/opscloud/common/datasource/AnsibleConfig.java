@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
  * @Date 2021/6/22 5:13 下午
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class AnsibleConfig extends BaseDsConfig {
 
     private Ansible ansible;

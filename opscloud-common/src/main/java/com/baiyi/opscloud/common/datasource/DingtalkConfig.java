@@ -13,8 +13,8 @@ import java.util.Set;
  * @Date 2021/11/29 3:25 下午
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class DingtalkConfig extends BaseDsConfig {
 
     private Dingtalk dingtalk;

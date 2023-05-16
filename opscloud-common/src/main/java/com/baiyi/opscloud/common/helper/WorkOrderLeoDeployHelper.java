@@ -24,7 +24,7 @@ public class WorkOrderLeoDeployHelper {
 
     private final RedisUtil redisUtil;
 
-    private static final String KEY = "oc4:v0:workorder:leo:deploy:buildId=%s";
+    private static final String KEY = "OC4:V0:WORKORDER:LEO:DEPLOY:BID:%s";
 
     public boolean hasKey(Integer buildId) {
         if (buildId == 0) {

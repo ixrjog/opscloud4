@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
  * @Date 2021/6/21 4:57 下午
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class GitLabConfig extends BaseDsConfig {
 
     private Gitlab gitlab;

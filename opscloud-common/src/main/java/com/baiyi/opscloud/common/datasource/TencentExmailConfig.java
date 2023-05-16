@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
  * @Date 2021/10/12 3:07 下午
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class TencentExmailConfig extends BaseDsConfig {
 
     private Tencent tencent;

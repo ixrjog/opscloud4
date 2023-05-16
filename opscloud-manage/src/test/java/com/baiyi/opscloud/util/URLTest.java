@@ -21,11 +21,11 @@ public class URLTest extends BaseUnit {
     void paseURL() {
         try {
             URL url = new URL("https://static-legacy.dingtalk.com/media/lQDPDhvVtvtbMfPNA8LNA8CwHt7eHxEhYoQDLtLPsEC3AA_960_962.jpg");
-
             print("host=" + url.getHost());
             print("path=" + url.getPath());
             print("query=" + url.getQuery());
             print("file=" + url.getFile());
+            print("protocol=" +url.getProtocol());
             print(url);
         } catch (MalformedURLException e) {
             print(e.getMessage());

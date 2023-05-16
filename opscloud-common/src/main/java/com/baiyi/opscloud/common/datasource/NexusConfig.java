@@ -13,8 +13,8 @@ import java.util.List;
  * @Date 2021/8/5 5:47 下午
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class NexusConfig extends BaseDsConfig {
 
     private Nexus nexus;

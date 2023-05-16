@@ -13,8 +13,8 @@ import java.util.List;
  * @Date 2021/6/24 4:46 下午
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class KubernetesConfig extends BaseDsConfig {
 
     private Kubernetes kubernetes;

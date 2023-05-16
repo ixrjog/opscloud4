@@ -60,6 +60,7 @@
         <module>opscloud-datasource-google-cloud-core</module>
         <module>opscloud-datasource-google-cloud-iam</module>
         <module>opscloud-datasource-google-cloud</module>
+        <module>opscloud-datasource-metersphere</module>
     </modules>
 
     <parent>
@@ -557,6 +558,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-lxhl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-metersphere</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

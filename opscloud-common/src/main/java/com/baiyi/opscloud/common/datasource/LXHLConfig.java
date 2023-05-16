@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
  * @Date 2022/8/31 6:13 PM
  * @Since 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class LXHLConfig extends BaseDsConfig {
 
     private Account account;

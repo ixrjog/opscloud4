@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
  * @Date 2021/5/17 1:34 下午
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class LdapConfig extends BaseDsConfig {
 
     private Ldap ldap;

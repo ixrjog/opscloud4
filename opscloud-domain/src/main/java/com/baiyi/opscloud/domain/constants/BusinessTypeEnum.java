@@ -32,7 +32,10 @@ public enum BusinessTypeEnum {
     LEO_AUTO_DEPLOY(103, "持续交付自动部署"),
     LEO_BUILD(104, "持续交付构建"),
     LEO_DEPLOY(105, "持续交付部署"),
-    PROJECT(106, "项目");
+    METER_SPHERE_BUILD_HOOK(106, "MeterSphere构建通知"),
+    METER_SPHERE_DEPLOY_HOOK(107, "MeterSphere部署通知"),
+    PROJECT(108, "项目");
+
 
     private final String name;
     private final int type;

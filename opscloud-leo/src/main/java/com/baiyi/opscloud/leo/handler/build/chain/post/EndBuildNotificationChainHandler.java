@@ -1,10 +1,13 @@
 package com.baiyi.opscloud.leo.handler.build.chain.post;
 
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
+import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
+import com.baiyi.opscloud.service.leo.LeoJobService;
+import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.collect.Maps;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +23,12 @@ import java.util.Map;
 public class EndBuildNotificationChainHandler extends BaseBuildChainHandler {
 
     private static final String LEO_BUILD_END = "LEO_BUILD_END";
+
+    @Resource
+    private UserService userService;
+
+    @Resource
+    private LeoJobService leoJobService;
 
     /**
      * 构建结束通知

@@ -3,10 +3,7 @@ package com.baiyi.opscloud.leo.handler.build;
 import com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
-import com.baiyi.opscloud.leo.handler.build.chain.post.AutoDeployChainHandler;
-import com.baiyi.opscloud.leo.handler.build.chain.post.EndBuildNotificationChainHandler;
-import com.baiyi.opscloud.leo.handler.build.chain.post.PostBuildVerificationChainHandler;
-import com.baiyi.opscloud.leo.handler.build.chain.post.RecordBuildPipelineChainHandler;
+import com.baiyi.opscloud.leo.handler.build.chain.post.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -39,9 +36,9 @@ public class LeoPostBuildHandler implements InitializingBean {
     private final RecordBuildPipelineChainHandler recordBuildPipelineChainHandler;
 
     /**
-     * 构建后自动部署
+     * 构建最后处理
      */
-    private final AutoDeployChainHandler autoDeployChainHandler;
+    private final BuildFinalProcessingChainHandler buildFinalProcessingChainHandler;
 
     @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
     public void handleBuild(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
@@ -56,7 +53,7 @@ public class LeoPostBuildHandler implements InitializingBean {
         postBuildVerificationChainHandler
                 .setNextHandler(endBuildNotificationChainHandler)
                 .setNextHandler(recordBuildPipelineChainHandler)
-                .setNextHandler(autoDeployChainHandler);
+                .setNextHandler(buildFinalProcessingChainHandler);
     }
 
 }

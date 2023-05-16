@@ -13,8 +13,8 @@ import java.util.Set;
  * @Date 2022/7/7 14:20
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class HuaweicloudConfig extends BaseDsConfig {
 
     private Huaweicloud huaweicloud;

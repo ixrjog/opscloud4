@@ -17,6 +17,7 @@ import java.util.List;
  * @Date 2022/1/5 10:53 AM
  * @Version 1.0
  */
+@SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
 @Component
 public class JenkinsUserDriver {
 

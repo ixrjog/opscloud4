@@ -15,8 +15,8 @@ import java.util.Map;
  * @Date 2021/11/11 3:23 下午
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class NacosConfig extends BaseDsConfig {
 
     private Nacos nacos;
