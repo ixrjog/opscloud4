@@ -10,22 +10,24 @@ import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Project;
 import com.baiyi.opscloud.domain.generator.opscloud.ProjectResource;
 import com.baiyi.opscloud.domain.param.project.ProjectParam;
-import com.baiyi.opscloud.domain.vo.project.ProjectResourceVO;
+import com.baiyi.opscloud.domain.param.project.ProjectResourceParam;
 import com.baiyi.opscloud.domain.vo.project.ProjectVO;
 import com.baiyi.opscloud.facade.project.ProjectFacade;
 import com.baiyi.opscloud.service.project.ProjectResourceService;
 import com.baiyi.opscloud.service.project.ProjectService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Author 修远
  * @Date 2023/5/15 5:44 PM
  * @Since 1.0
  */
-
+@Slf4j
 @Component
 @RequiredArgsConstructor
 @BusinessType(BusinessTypeEnum.PROJECT)
@@ -48,7 +50,8 @@ public class ProjectFacadeImpl implements ProjectFacade {
     }
 
     @Override
-    public void addProject(ProjectVO.Project project) {
+    public void addProject(ProjectParam.AddProject project) {
+        // TODO replace 需要放在前面，判空再判断是否冲突
         FunctionUtil.isTure(projectService.getByKey(project.getProjectKey()) != null)
                 .throwBaseException(new OCException(ErrorEnum.PROJECT_ALREADY_EXIST));
         Project newProject = BeanCopierUtil.copyProperties(project, Project.class);
@@ -59,29 +62,32 @@ public class ProjectFacadeImpl implements ProjectFacade {
     }
 
     @Override
-    public void updateProject(ProjectVO.Project project) {
-        FunctionUtil.isTure(projectService.getByKey(project.getProjectKey()) != null)
-                .throwBaseException(new OCException(ErrorEnum.PROJECT_NOT_EXIST));
-        projectService.update(BeanCopierUtil.copyProperties(project, Project.class));
+    public void updateProject(ProjectParam.UpdateProject project) {
+        projectService.updateByPrimaryKeySelective(BeanCopierUtil.copyProperties(project, Project.class));
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteProject(Integer id) {
         FunctionUtil.isTure(!CollectionUtils.isEmpty(projectResourceService.queryByApplication(id)))
-                .throwBaseException(new OCException(ErrorEnum.APPLICATION_RES_IS_NOT_EMPTY));
+                .throwBaseException(new OCException(ErrorEnum.PROJECT_RES_IS_NOT_EMPTY));
+        // TODO 解除所有资源
+
+        // 再删除项目
         projectService.deleteById(id);
     }
 
     @Override
-    public void bindProjectResource(ProjectResourceVO.Resource resource) {
-        FunctionUtil.isTure(projectResourceService.getByUniqueKey(resource.getProjectId(), resource.getBusinessType(), resource.getBusinessId()) != null)
+    public void bindResource(ProjectResourceParam.Resource resource) {
+        FunctionUtil.isTure(projectResourceService.getByProjectResource(resource) != null)
                 .throwBaseException(new OCException(ErrorEnum.PROJECT_RES_ALREADY_EXIST));
         ProjectResource res = BeanCopierUtil.copyProperties(resource, ProjectResource.class);
         projectResourceService.add(res);
     }
 
     @Override
-    public void unbindProjectResource(Integer id) {
+    public void unbindResource(Integer id) {
         projectResourceService.deleteById(id);
     }
+
 }

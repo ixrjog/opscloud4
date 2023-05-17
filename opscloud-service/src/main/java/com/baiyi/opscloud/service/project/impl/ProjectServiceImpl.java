@@ -15,6 +15,7 @@ import tk.mybatis.mapper.entity.Example;
  * @Since 1.0
  */
 
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
@@ -53,6 +54,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public void updateByPrimaryKeySelective(Project project) {
+        projectMapper.updateByPrimaryKeySelective(project);
+    }
+
+    @Override
     public void deleteById(Integer id) {
         projectMapper.deleteByPrimaryKey(id);
     }
@@ -61,4 +67,5 @@ public class ProjectServiceImpl implements ProjectService {
     public DataTable<Project> queryPageByParam(ProjectParam.ProjectPageQuery pageQuery) {
         return null;
     }
+
 }

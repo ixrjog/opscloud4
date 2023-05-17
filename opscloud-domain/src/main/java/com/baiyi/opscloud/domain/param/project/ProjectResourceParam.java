@@ -1,24 +1,23 @@
-package com.baiyi.opscloud.domain.vo.project;
+package com.baiyi.opscloud.domain.param.project;
 
-import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.base.BaseProjectResource;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 /**
- * @Author 修远
- * @Date 2023/5/15 6:41 PM
- * @Since 1.0
+ * @Author baiyi
+ * @Date 2023/5/17 16:41
+ * @Version 1.0
  */
-public class ProjectResourceVO {
+public class ProjectResourceParam {
 
-    @EqualsAndHashCode(callSuper = true)
     @Builder
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
     @Schema
-    public static class Resource extends BaseVO {
+    public static class Resource implements BaseProjectResource.IProjectResource {
 
         @Schema(description = "主键", example = "1")
         private Integer id;

@@ -21,7 +21,10 @@ public interface ProjectService {
 
     void update(Project project);
 
+    void updateByPrimaryKeySelective(Project project);
+
     void deleteById(Integer id);
 
     DataTable<Project> queryPageByParam(ProjectParam.ProjectPageQuery pageQuery);
+
 }

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
+import com.baiyi.opscloud.domain.base.BaseProjectResource;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -7,7 +8,7 @@ import java.util.Date;
 
 @Data
 @Table(name = "project_resource")
-public class ProjectResource {
+public class ProjectResource implements BaseProjectResource.IProjectResource {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

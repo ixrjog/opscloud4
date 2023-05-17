@@ -16,6 +16,54 @@ import lombok.experimental.SuperBuilder;
  */
 public class ProjectParam {
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema
+    public static class AddProject {
+
+        private Integer id;
+
+        @Schema(description = "项目名称")
+        private String name;
+
+        @Schema(description = "项目Key")
+        private String projectKey;
+
+        @Schema(description = "项目类型")
+        private Integer projectType;
+
+        @Schema(description = "有效")
+        private Boolean isActive;
+
+        @Schema(description = "描述")
+        private String comment;
+
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema
+    public static class UpdateProject {
+
+        private Integer id;
+
+        @Schema(description = "项目名称")
+        private String name;
+
+        @Schema(description = "项目类型")
+        private Integer projectType;
+
+        @Schema(description = "有效")
+        private Boolean isActive;
+
+        @Schema(description = "描述")
+        private String comment;
+
+
+    }
+
     @SuperBuilder(toBuilder = true)
     @Data
     @EqualsAndHashCode(callSuper = true)
@@ -34,4 +82,5 @@ public class ProjectParam {
         private Boolean extend;
 
     }
+
 }

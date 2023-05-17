@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.service.project;
 
+import com.baiyi.opscloud.domain.base.BaseProjectResource;
 import com.baiyi.opscloud.domain.generator.opscloud.ProjectResource;
 
 import java.util.List;
@@ -22,5 +23,9 @@ public interface ProjectResourceService {
     List<ProjectResource> queryByApplication(Integer projectId);
 
     ProjectResource getByUniqueKey(Integer projectId, Integer businessType, Integer businessId);
+
+    default ProjectResource getByProjectResource(BaseProjectResource.IProjectResource resource) {
+        return getByUniqueKey(resource.getProjectId(), resource.getBusinessType(), resource.getBusinessId());
+    }
 
 }
