@@ -23,7 +23,7 @@ public class KubernetesProdOneTest extends BaseKubernetesTest {
 
     @Test
     void bTest() {
-        oneTest("ng-mtn-channel", "ng-mtn-channel-1");
+        oneTest("flutterwave", "flutterwave-canary");
     }
 
     /**

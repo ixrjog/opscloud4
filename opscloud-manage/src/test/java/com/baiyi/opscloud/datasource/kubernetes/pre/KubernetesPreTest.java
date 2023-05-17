@@ -3,6 +3,7 @@ package com.baiyi.opscloud.datasource.kubernetes.pre;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesServiceDriver;
 import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
@@ -13,10 +14,7 @@ import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.facade.application.ApplicationFacade;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
-import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
-import io.fabric8.kubernetes.api.model.Container;
-import io.fabric8.kubernetes.api.model.EnvVar;
-import io.fabric8.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -175,7 +173,6 @@ public class KubernetesPreTest extends BaseKubernetesTest {
     @Test
     void createPreDept() {
         KubernetesConfig prodConfig = getConfigById(KubernetesClusterConfigs.EKS_PROD);
-
         List<Deployment> deploymentList = KubernetesDeploymentDriver.list(prodConfig.getKubernetes(), NAMESPACE);
         KubernetesConfig preConfig = getConfigById(KubernetesClusterConfigs.EKS_PRE);
         deploymentList.forEach(deployment -> {
@@ -217,6 +214,93 @@ public class KubernetesPreTest extends BaseKubernetesTest {
                 applicationFacade.bindApplicationResource(resource);
             } catch (OCException exception) {
                 log.info("应用已绑定，{}", a.getName());
+            }
+        });
+    }
+
+    @Test
+    void updatePreDept() {
+        KubernetesConfig preConfig = getConfigById(KubernetesClusterConfigs.EKS_PRE);
+        List<Deployment> deploymentList = KubernetesDeploymentDriver.list(preConfig.getKubernetes(), NAMESPACE);
+        Deployment accountDeployment = KubernetesDeploymentDriver.get(preConfig.getKubernetes(), NAMESPACE, "account");
+        ResourceRequirements resourceRequirements = accountDeployment.getSpec().getTemplate().getSpec().getContainers().get(1).getResources();
+        deploymentList.forEach(deployment -> {
+            String appName = deployment.getMetadata().getName();
+            Optional<Container> optionalContainer =
+                    deployment.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith(appName)).findFirst();
+            if (optionalContainer.isPresent()) {
+                Container container = optionalContainer.get();
+                // resource
+                container.setResources(resourceRequirements);
+                // terminationGracePeriodSeconds
+                deployment.getSpec().getTemplate().getSpec().setTerminationGracePeriodSeconds(45L);
+                // env
+                List<EnvVar> envVars = container.getEnv();
+                // JAVA_OPTS
+                Optional<EnvVar> jvmEnv = envVars.stream().filter(env -> env.getName().equals("JAVA_OPTS")).findFirst();
+                jvmEnv.ifPresent(envVar -> envVar.setValue("-Xms512M -Xmx2048M -Xmn1024M -XX:MetaspaceSize=128M -XX:MaxMetaspaceSize=256M -Xss256K -XX:+HeapDumpOnOutOfMemoryError -XX:+PrintGCDateStamps -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=80"));
+                // JAVA_JVM_AGENT
+                Optional<EnvVar> javaAgentEnv = envVars.stream().filter(env -> env.getName().equals("JAVA_JVM_AGENT")).findFirst();
+                javaAgentEnv.ifPresent(envVar -> {
+                    envVar.setValue(" ");
+                    envVar.setValueFrom(null);
+                });
+                // APP_NAME
+                if (envVars.stream().noneMatch(env -> env.getName().equals("APP_NAME"))) {
+                    EnvVar appNameEnvVar = new EnvVar("APP_NAME", deployment.getMetadata().getLabels().get("app"), null);
+                    envVars.add(0, appNameEnvVar);
+                }
+
+                KubernetesDeploymentDriver.update(preConfig.getKubernetes(), NAMESPACE, deployment);
+            } else {
+                print(deployment.getMetadata().getName());
+            }
+        });
+    }
+
+    @Test
+    void updateAckPreDept() {
+        KubernetesConfig grayConfig = getConfigById(KubernetesClusterConfigs.ACK_GRAY);
+        Deployment srcDeployment = KubernetesDeploymentDriver.get(grayConfig.getKubernetes(), "gray", "mgw-core-aliyun-gray");
+        ResourceRequirements resourceRequirements = srcDeployment.getSpec().getTemplate().getSpec().getContainers().get(0).getResources();
+
+
+        Probe startupProbe = srcDeployment.getSpec().getTemplate().getSpec().getContainers().get(0).getStartupProbe();
+        Probe livenessProbe = srcDeployment.getSpec().getTemplate().getSpec().getContainers().get(0).getLivenessProbe();
+        Probe readinessProbe = srcDeployment.getSpec().getTemplate().getSpec().getContainers().get(0).getReadinessProbe();
+
+        List<Deployment> deploymentList = KubernetesDeploymentDriver.list(grayConfig.getKubernetes(), "pre");
+        deploymentList.forEach(deployment -> {
+            String appName = deployment.getMetadata().getName();
+            Optional<Container> optionalContainer =
+                    deployment.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith(appName)).findFirst();
+            if (optionalContainer.isPresent()) {
+                Container container = optionalContainer.get();
+                // resource
+                container.setResources(resourceRequirements);
+                // terminationGracePeriodSeconds
+                deployment.getSpec().getTemplate().getSpec().setTerminationGracePeriodSeconds(45L);
+                // replicas
+                if (deployment.getSpec().getReplicas() != 0) {
+                    deployment.getSpec().setReplicas(1);
+                }
+                // probe
+                container.setLivenessProbe(livenessProbe);
+                container.setReadinessProbe(readinessProbe);
+                container.setStartupProbe(startupProbe);
+                // env
+                List<EnvVar> envVars = container.getEnv();
+                // JAVA_OPTS
+                Optional<EnvVar> jvmEnv = envVars.stream().filter(env -> env.getName().equals("JAVA_OPTS")).findFirst();
+                jvmEnv.ifPresent(envVar -> envVar.setValue("-Xms512M -Xmx2048M -Xmn1024M -XX:MetaspaceSize=128M -XX:MaxMetaspaceSize=256M -Xss256K -XX:+HeapDumpOnOutOfMemoryError -XX:+PrintGCDateStamps -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=80"));
+                // APP_NAME
+                if (envVars.stream().noneMatch(env -> env.getName().equals("APP_NAME"))) {
+                    EnvVar appNameEnvVar = new EnvVar("APP_NAME", deployment.getMetadata().getLabels().get("app"), null);
+                    envVars.add(0, appNameEnvVar);
+                }
+                KubernetesDeploymentDriver.update(grayConfig.getKubernetes(), "pre", deployment);
+            } else {
+                print(deployment.getMetadata().getName());
             }
         });
     }

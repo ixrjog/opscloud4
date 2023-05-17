@@ -18,6 +18,7 @@ public class GitLabNotifyParam {
     /**
      * https://gitlab.xxx.com/help/system_hooks/system_hooks.md
      */
+    @SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
     @Builder
     @Data
     @AllArgsConstructor

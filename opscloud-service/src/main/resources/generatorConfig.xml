@@ -94,7 +94,7 @@
         <!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
         <!--        </table>-->
 
-        <table tableName="sys_document_zone">
+        <table tableName="project_resource">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 

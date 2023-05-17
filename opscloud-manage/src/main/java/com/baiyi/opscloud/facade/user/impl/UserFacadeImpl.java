@@ -190,9 +190,11 @@ public class UserFacadeImpl implements UserFacade {
         User checkUser = userService.getById(updateUser.getId());
         if (!checkUser.getUsername().equals(SessionUtil.getUsername())) {
             int accessLevel = userPermissionFacade.getUserAccessLevel(SessionUtil.getUsername());
-            if (accessLevel < AccessLevel.OPS.getLevel()) {
-                throw new OCException("权限不足: 需要管理员才能修改其他用户信息!");
-            }
+            FunctionUtil.isTure(accessLevel < AccessLevel.OPS.getLevel())
+                    .throwBaseException(new OCException("权限不足: 需要管理员才能修改其他用户信息!"));
+//            if (accessLevel < AccessLevel.OPS.getLevel()) {
+//                throw new OCException("权限不足: 需要管理员才能修改其他用户信息!");
+//            }
         }
         User preUpdateUser = UserConverter.toDO(updateUser);
         updateUser.setUsername(checkUser.getUsername());
@@ -202,15 +204,19 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public void setUserActive(String username) {
         User user = userService.getByUsername(username);
-        if (user.getIsActive()) {
-            userService.setInactive(user);
-        } else {
-            userService.setActive(user);
-        }
+        FunctionUtil.isTureOrFalse(user.getIsActive())
+                .trueOrFalseHandle(() -> userService.setInactive(user)
+                        , () -> userService.setActive(user));
+//        if (user.getIsActive()) {
+//            userService.setInactive(user);
+//        } else {
+//            userService.setActive(user);
+//        }
     }
 
     /**
      * 撤销用户的所有授权信息
+     *
      * @param id
      */
     @RevokeUserPermission
@@ -221,9 +227,11 @@ public class UserFacadeImpl implements UserFacade {
         if (user == null) {
             return;
         }
-        if (user.getIsActive()) {
-            throw new OCException("当前用户为活跃状态不能删除！");
-        }
+        FunctionUtil.isTure(user.getIsActive())
+                .throwBaseException(new OCException("当前用户为活跃状态不能删除！"));
+//        if (user.getIsActive()) {
+//            throw new OCException("当前用户为活跃状态不能删除！");
+//        }
         userService.delete(user);
     }
 
@@ -308,9 +316,11 @@ public class UserFacadeImpl implements UserFacade {
     public UserVO.UserMFA resetUserMFA() {
         String username = SessionUtil.getUsername();
         User user = userService.getByUsername(username);
-        if (user.getForceMfa()) {
-            throw new OCException("MFA无法重置: 管理员强制启用!");
-        }
+        FunctionUtil.isTure(user.getForceMfa())
+                .throwBaseException(new OCException("MFA无法重置: 管理员强制启用!"));
+//        if (user.getForceMfa()) {
+//            throw new OCException("MFA无法重置: 管理员强制启用!");
+//        }
         if (user.getMfa()) {
             User userMfa = User.builder()
                     .id(user.getId())
@@ -331,9 +341,11 @@ public class UserFacadeImpl implements UserFacade {
     public UserVO.UserMFA bindUserMFA(String otp) {
         String username = SessionUtil.getUsername();
         User user = userService.getByUsername(username);
-        if (user.getMfa()) {
-            throw new OCException("MFA无法绑定: 重复操作!");
-        }
+        FunctionUtil.isTure(user.getMfa())
+                .throwBaseException(new OCException("MFA无法绑定: 重复操作!"));
+//        if (user.getMfa()) {
+//            throw new OCException("MFA无法绑定: 重复操作!");
+//        }
         mfaAuthHelper.verify(user, LoginParam.Login.builder().otp(otp).build());
         user.setMfa(true);
         userService.updateMfa(user);
