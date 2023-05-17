@@ -15,6 +15,7 @@ import java.util.List;
  * @Since 1.0
  */
 
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 @RequiredArgsConstructor
 public class ProjectResourceServiceImpl implements ProjectResourceService {
@@ -42,7 +43,7 @@ public class ProjectResourceServiceImpl implements ProjectResourceService {
     }
 
     @Override
-    public List<ProjectResource> queryByApplication(Integer projectId) {
+    public List<ProjectResource> queryByProjectId(Integer projectId) {
         Example example = new Example(ProjectResource.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("projectId", projectId);

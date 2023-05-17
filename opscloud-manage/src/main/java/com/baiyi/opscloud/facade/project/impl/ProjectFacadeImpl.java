@@ -17,10 +17,12 @@ import com.baiyi.opscloud.service.project.ProjectResourceService;
 import com.baiyi.opscloud.service.project.ProjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @Author 修远
@@ -51,13 +53,15 @@ public class ProjectFacadeImpl implements ProjectFacade {
 
     @Override
     public void addProject(ProjectParam.AddProject project) {
-        // TODO replace 需要放在前面，判空再判断是否冲突
+        project.setProjectKey(project.getProjectKey().replaceAll(" ", "").toUpperCase());
+        if (StringUtils.isBlank(project.getProjectKey())) {
+            throw new OCException(ErrorEnum.PROJECT_KEY_CANNOT_BE_EMPTY);
+        }
+        FunctionUtil.isTure(StringUtils.isBlank(project.getProjectKey()))
+                .throwBaseException(new OCException(ErrorEnum.PROJECT_KEY_CANNOT_BE_EMPTY));
         FunctionUtil.isTure(projectService.getByKey(project.getProjectKey()) != null)
                 .throwBaseException(new OCException(ErrorEnum.PROJECT_ALREADY_EXIST));
         Project newProject = BeanCopierUtil.copyProperties(project, Project.class);
-        FunctionUtil.trueFunction(StringUtils.isNotBlank(project.getProjectKey()))
-                .trueHandle(() ->
-                        newProject.setProjectKey(project.getProjectKey().replaceAll(" ", "").toUpperCase()));
         projectService.add(newProject);
     }
 
@@ -68,13 +72,21 @@ public class ProjectFacadeImpl implements ProjectFacade {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteProject(Integer id) {
-        FunctionUtil.isTure(!CollectionUtils.isEmpty(projectResourceService.queryByApplication(id)))
-                .throwBaseException(new OCException(ErrorEnum.PROJECT_RES_IS_NOT_EMPTY));
-        // TODO 解除所有资源
-
+    public void deleteProjectAndUnbindAllResource(Integer projectId) {
+        // 解除所有资源
+        List<ProjectResource> resources = projectResourceService.queryByProjectId(projectId);
+        for (ProjectResource resource : resources) {
+            this.unbindResource(resource.getId());
+        }
         // 再删除项目
-        projectService.deleteById(id);
+        projectService.deleteById(projectId);
+    }
+
+    @Override
+    public void deleteProject(Integer projectId) {
+        FunctionUtil.isTure(!CollectionUtils.isEmpty(projectResourceService.queryByProjectId(projectId)))
+                .throwBaseException(new OCException(ErrorEnum.PROJECT_RES_IS_NOT_EMPTY));
+        projectService.deleteById(projectId);
     }
 
     @Override

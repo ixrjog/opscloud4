@@ -15,7 +15,7 @@ public class FunctionUtil {
 
         return (baseException) -> {
             if (b) {
-                throw baseException;
+                 throw baseException;
             }
         };
     }

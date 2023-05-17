@@ -55,6 +55,7 @@ public enum ErrorEnum {
 
     // ----------------------- 项目 -----------------------
     PROJECT_NOT_EXIST(10001, "项目不存在！"),
+    PROJECT_KEY_CANNOT_BE_EMPTY(10001, "项目Key不能为空！"),
     PROJECT_ALREADY_EXIST(10001, "项目已存在！"),
     PROJECT_RES_ALREADY_EXIST(10001, "项目资源已存在！"),
     PROJECT_RES_IS_NOT_EMPTY(10001, "项目资源不为空！"),

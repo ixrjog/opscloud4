@@ -20,7 +20,7 @@ public interface ProjectResourceService {
 
     void deleteById(Integer id);
 
-    List<ProjectResource> queryByApplication(Integer projectId);
+    List<ProjectResource> queryByProjectId(Integer projectId);
 
     ProjectResource getByUniqueKey(Integer projectId, Integer businessType, Integer businessId);
 

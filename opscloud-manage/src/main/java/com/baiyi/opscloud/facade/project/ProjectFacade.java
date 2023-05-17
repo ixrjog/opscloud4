@@ -20,7 +20,17 @@ public interface ProjectFacade extends IProjectResource {
 
     void updateProject(ProjectParam.UpdateProject project);
 
-    void deleteProject(Integer id);
+    /**
+     * 删除项目
+     * @param projectId
+     */
+    void deleteProject(Integer projectId);
+
+    /**
+     * 解除资源绑定并删除项目
+     * @param projectId
+     */
+    void deleteProjectAndUnbindAllResource(Integer projectId);
 
     void bindResource(ProjectResourceParam.Resource resource);
 
