@@ -137,6 +137,9 @@ public class LeoBuild {
     @Column(name = "oc_instance")
     private String ocInstance;
 
+    @Column(name = "ticket_id")
+    private Integer ticketId;
+
     /**
      * 描述
      */

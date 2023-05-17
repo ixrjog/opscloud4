@@ -85,6 +85,8 @@ public class LeoBuildVO {
         private String buildConfig;
         private Boolean isActive;
         private String comment;
+        @Schema(description = "工单ID,默认值0")
+        private Integer ticketId;
 
         @Override
         public Date getAgoTime() {

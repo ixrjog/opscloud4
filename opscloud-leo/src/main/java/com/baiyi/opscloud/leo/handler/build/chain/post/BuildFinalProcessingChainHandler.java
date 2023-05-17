@@ -136,6 +136,7 @@ public class BuildFinalProcessingChainHandler extends BaseBuildChainHandler {
                     .envName(dict.getOrDefault(BuildDictConstants.ENV.getKey(), ""))
                     .buildType(leoJob.getBuildType())
                     .appName(dict.getOrDefault(BuildDictConstants.APPLICATION_NAME.getKey(), ""))
+                    .appId(leoBuild.getApplicationId())
                     .gitLab(gitLab)
                     .user(user)
                     .projectId(-1)

@@ -27,6 +27,7 @@
         <result column="build_config" jdbcType="LONGVARCHAR" property="buildConfig"/>
         <result column="is_active" jdbcType="BIT" property="isActive" />
         <result column="oc_instance" jdbcType="VARCHAR" property="ocInstance"/>
+        <result column="ticket_id" jdbcType="INTEGER" property="ticketId"/>
         <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
     </resultMap>
 

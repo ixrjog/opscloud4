@@ -1,9 +1,11 @@
 package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.baiyi.opscloud.common.helper.WorkOrderLeoDeployHelper;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.domain.model.WorkOrderLeoDeployToken;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
+import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.entry.ApplicationDeployEntry;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
@@ -23,6 +25,9 @@ public class ApplicationDeployTicketProcessor extends BaseTicketProcessor<Applic
     @Resource
     private WorkOrderLeoDeployHelper workOrderLeoDeployHelper;
 
+    @Resource
+    private LeoBuildService leoBuildService;
+
     @Override
     public String getKey() {
         return WorkOrderKeyConstants.APPLICATION_DEPLOY.name();
@@ -30,12 +35,19 @@ public class ApplicationDeployTicketProcessor extends BaseTicketProcessor<Applic
 
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, ApplicationDeployEntry.LeoBuildVersion entry) throws TicketProcessException {
+        int buildId = entry.getId();
         WorkOrderLeoDeployToken token = WorkOrderLeoDeployToken.builder()
-                .buildId(entry.getId())
+                .buildId(buildId)
                 .applicationId(entry.getApplicationId())
                 .build();
         // 设置令牌，@LeoDeployInterceptor 拦截器注解中使用
         workOrderLeoDeployHelper.set(token);
+        // 多次工单申请也只记录最后一次工单ID
+        LeoBuild saveLeoBuild = LeoBuild.builder()
+                .id(buildId)
+                .ticketId(ticketEntry.getWorkOrderTicketId())
+                .build();
+        leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
     }
 
     @Override

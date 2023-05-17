@@ -63,6 +63,7 @@ import java.util.stream.Collectors;
  * @Date 2022/12/5 14:31
  * @Version 1.0
  */
+@SuppressWarnings("unchecked")
 @Slf4j
 @Service
 @RequiredArgsConstructor

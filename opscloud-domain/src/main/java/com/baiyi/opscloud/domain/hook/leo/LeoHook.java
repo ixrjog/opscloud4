@@ -62,7 +62,10 @@ public class LeoHook {
     public static class BaseLeoHook implements Serializable {
         @Serial
         private static final long serialVersionUID = -1L;
+        @Schema(description = "应用名")
         private String appName;
+        @Schema(description = "应用ID")
+        private Integer appId;
         @Schema(description = "主键")
         private Integer id;
         @Schema(description = "项目ID")

@@ -81,6 +81,7 @@ public class DeployFinalProcessingChainHandler extends BaseDeployChainHandler {
                     .envName(dict.getOrDefault(BuildDictConstants.ENV.getKey(), ""))
                     .deployType(deployType)
                     .appName(dict.getOrDefault(BuildDictConstants.APPLICATION_NAME.getKey(), ""))
+                    .appId(leoDeploy.getApplicationId())
                     .user(user)
                     .projectId(-1)
                     .pods(null)
