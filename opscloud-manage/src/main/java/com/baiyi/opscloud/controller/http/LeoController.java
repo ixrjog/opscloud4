@@ -139,7 +139,7 @@ public class LeoController {
     public HttpResult<DataTable<LeoBuildVO.Build>> queryLeoJobBuildPage(@RequestBody @Valid LeoJobParam.JobBuildPageQuery pageQuery) {
         return new HttpResult<>(buildFacade.queryLeoJobBuildPage(pageQuery));
     }
-    
+
     @Operation(summary = "分页查询我的构建任务")
     @PostMapping(value = "/job/my/build/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<LeoBuildVO.Build>> queryMyLeoJobBuildPage(@RequestBody @Valid SubscribeLeoBuildRequestParam pageQuery) {
