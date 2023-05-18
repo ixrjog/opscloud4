@@ -38,6 +38,9 @@ public class LeoDeployParam {
         @Schema(description = "自动部署")
         private Boolean autoDeploy;
 
+        @Schema(description = "项目ID")
+        private Integer projectId;
+
     }
 
     @Data
@@ -64,6 +67,9 @@ public class LeoDeployParam {
         @Schema(description = "部署类型")
         private String deployType;
 
+        @Schema(description = "项目ID")
+        private Integer projectId;
+
         public DoDeploy toDoDeploy() {
             return DoDeploy.builder()
                     .assetId(assetId)
@@ -71,6 +77,7 @@ public class LeoDeployParam {
                     .jobId(jobId)
                     .deployType(deployType)
                     .autoDeploy(true)
+                    .projectId(projectId)
                     .build();
         }
 

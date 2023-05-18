@@ -26,6 +26,7 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="deploy_config" jdbcType="LONGVARCHAR" property="deployConfig"/>
         <result column="oc_instance" jdbcType="VARCHAR" property="ocInstance"/>
+        <result column="project_id" jdbcType="INTEGER" property="projectId"/>
         <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
     </resultMap>
 

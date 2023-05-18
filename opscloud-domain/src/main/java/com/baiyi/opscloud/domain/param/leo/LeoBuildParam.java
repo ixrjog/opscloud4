@@ -61,6 +61,9 @@ public class LeoBuildParam {
         @Schema(description = "Deployment资产ID，启用autoDeploy此参数不能未空")
         private Integer assetId;
 
+        @Schema(description = "项目ID")
+        private Integer projectId;
+
     }
 
     @Data
