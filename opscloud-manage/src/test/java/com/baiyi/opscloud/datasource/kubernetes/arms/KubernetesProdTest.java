@@ -1,15 +1,25 @@
 package com.baiyi.opscloud.datasource.kubernetes.arms;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
+import com.baiyi.opscloud.common.util.FunctionUtil;
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
+import com.baiyi.opscloud.domain.generator.opscloud.Application;
+import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
+import com.baiyi.opscloud.service.application.ApplicationResourceService;
+import com.baiyi.opscloud.service.application.ApplicationService;
+import com.google.common.base.Joiner;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
+import jakarta.annotation.Resource;
+import org.apache.logging.log4j.util.Strings;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -21,108 +31,91 @@ public class KubernetesProdTest extends BaseKubernetesTest {
 
     private final static String NAMESPACE = "prod";
 
+    private final static String RESOURCE_TYPE = DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name();
+
+    @Resource
+    private ApplicationService applicationService;
+
+    @Resource
+    private ApplicationResourceService applicationResourceService;
+
     /**
-     *  nibss, pay-route, ng-channel
+     * nibss, pay-route, ng-channel
      */
 
     @Test
     void bTest() {
-        List<String> apps = Lists.newArrayList(
-                "channel-center"
-        );
-        for (String app : apps) {
-            oneTest(app);
-        }
-    }
 
-    /**
-     * 单个Deployment(Canary) 启用ARMS
-     */
+        boolean onlyCanary = true;
 
-    private void oneTest(String appName) {
         KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_PROD);
 
-        final String deploymentName = appName;
-        /*
-         * ARMS中应用的名称
-         */
-        final String armsAppName = appName + "-prod";
+        List<String> appNames = Lists.newArrayList(
+                "leo-demo"
+        );
+        appNames.forEach(appName -> {
+            Application application = applicationService.getByName(appName);
+            List<ApplicationResource> applicationResourceList = applicationResourceService.queryByApplication(application.getId(), RESOURCE_TYPE);
+            List<ApplicationResource> prodResList = applicationResourceList.stream().filter(applicationResource ->
+                    applicationResource.getName().startsWith(Joiner.on(":").join(NAMESPACE, appName))
+            ).toList();
+            prodResList.forEach(applicationResource -> {
+                String name = applicationResource.getName().split(":")[1];
+                FunctionUtil.isTureOrFalse(applicationResource.getName().endsWith("-canary"))
+                        .trueOrFalseHandle(
+                                () -> ackOne(kubernetesConfig, appName, name, appName + "-canary"),
+                                () -> {
+                                    FunctionUtil.trueFunction(!onlyCanary)
+                                            .trueHandle(
+                                                    () -> ackOne(kubernetesConfig, appName, name, appName + "-prod")
+                                            );
+                                }
+                        );
+            });
+        });
+    }
+
+    private void ackOne(KubernetesConfig kubernetesConfig, String appName, String deploymentName, String armsName) {
 
         Deployment deployment = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), NAMESPACE, deploymentName);
         if (deployment == null) return;
         /*
-         * 移除X-Ray容器
-         */
-        for (int i = 0; i < deployment.getSpec().getTemplate().getSpec().getContainers().size(); i++) {
-            if (deployment.getSpec().getTemplate().getSpec().getContainers().get(i).getName().equals("adot-collector")) {
-                deployment.getSpec().getTemplate().getSpec().getContainers().remove(i);
-                break;
-            }
-        }
-
-        /*
          * 查询应用容器
          */
-        Optional<Container> optionalContainer = deployment.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith(appName)).findFirst();
-        if (optionalContainer.isEmpty()) {
-            print("未找到容器: 退出");
-            return;
+        Optional<Container> optionalContainer =
+                deployment.getSpec().getTemplate().getSpec().getContainers().stream()
+                        .filter(c -> c.getName().startsWith(appName)).findFirst();
+
+        if (optionalContainer.isPresent()) {
+            Container container = optionalContainer.get();
+            // terminationGracePeriodSeconds
+            deployment.getSpec().getTemplate().getSpec().setTerminationGracePeriodSeconds(45L);
+            // labels
+            Map<String, String> labels = deployment.getSpec().getTemplate().getMetadata().getLabels();
+            if (!labels.containsKey("armsPilotAutoEnable")) {
+                labels.put("armsPilotAutoEnable", "on");
+            }
+            if (!labels.containsKey("armsPilotCreateAppName")) {
+                labels.put("armsPilotCreateAppName", armsName);
+            }
+            deployment.getSpec().getTemplate().getMetadata().setLabels(labels);
+            // env
+            List<EnvVar> envVars = container.getEnv();
+            // APP_NAME
+            if (envVars.stream().noneMatch(env -> env.getName().equals("APP_NAME"))) {
+                EnvVar appNameEnvVar = new EnvVar("APP_NAME", deployment.getMetadata().getLabels().get("app"), null);
+                envVars.add(0, appNameEnvVar);
+            }
+            if (envVars.stream().noneMatch(env -> env.getName().equals("GROUP"))) {
+                EnvVar appNameEnvVar = new EnvVar("GROUP", armsName, null);
+                envVars.add(0, appNameEnvVar);
+            }
+            Optional<EnvVar> agentEnv = envVars.stream().filter(env -> env.getName().equals("JAVA_JVM_AGENT")).findFirst();
+            agentEnv.ifPresent(envVar -> envVar.setValue(Strings.EMPTY));
+            KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), NAMESPACE, deployment);
+        } else {
+            print(deployment.getMetadata().getName());
         }
-
-        List<EnvVar> srcEnvVars = optionalContainer.get().getEnv();
-        List<EnvVar> newEnvVars = Lists.newArrayList();
-
-        /*
-         * 设置环境变量 $APP_NAME
-         */
-        EnvVar appNameEnvVar = new EnvVar("APP_NAME", armsAppName, null);
-        newEnvVars.add(appNameEnvVar);
-
-        for (EnvVar srcEnvVar : srcEnvVars) {
-            /*
-             * 下线X-Ray
-             */
-            if (srcEnvVar.getName().equals("JAVA_TOOL_OPTIONS")) {
-                continue;
-            }
-            if (srcEnvVar.getName().equals("OTEL_TRACES_SAMPLER")) {
-                continue;
-            }
-            if (srcEnvVar.getName().equals("OTEL_TRACES_SAMPLER_ARG")) {
-                continue;
-            }
-            if (srcEnvVar.getName().equals("OTEL_OTLP_ENDPOINT")) {
-                continue;
-            }
-            if (srcEnvVar.getName().equals("OTEL_RESOURCE")) {
-                continue;
-            }
-            if (srcEnvVar.getName().equals("OTEL_RESOURCE_ATTRIBUTES")) {
-                continue;
-            }
-            if (srcEnvVar.getName().equals("APP_NAME")) {
-                continue;
-            }
-            /*
-             * 启用ARMS
-             */
-            if (srcEnvVar.getName().equals("JAVA_JVM_AGENT")) {
-                srcEnvVar.setValue("-javaagent:/jmx_prometheus_javaagent-0.16.1.jar=9999:/prometheus-jmx-config.yaml -javaagent:/arms-agent/arms-bootstrap-1.7.0-SNAPSHOT.jar -Darms.licenseKey=ib04e3ad3a@2a60bfc4abfe2d0 -Darms.appName=$(APP_NAME)");
-            }
-            newEnvVars.add(srcEnvVar);
-        }
-        optionalContainer.get().getEnv().clear();
-        /*
-         * 重新设置环境变量
-         */
-        optionalContainer.get().setEnv(newEnvVars);
-        /*
-         * 更新 Deployment
-         */
-        KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), NAMESPACE, deployment);
-        print("---------------------------------------------------------------------------");
-        print("应用名称: " + appName);
-        print("---------------------------------------------------------------------------");
 
     }
 

@@ -22,8 +22,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-
 /**
  * @Author 修远
  * @Date 2023/5/15 5:44 PM
@@ -54,9 +52,8 @@ public class ProjectFacadeImpl implements ProjectFacade {
     @Override
     public void addProject(ProjectParam.AddProject project) {
         project.setProjectKey(project.getProjectKey().replaceAll(" ", "").toUpperCase());
-        if (StringUtils.isBlank(project.getProjectKey())) {
-            throw new OCException(ErrorEnum.PROJECT_KEY_CANNOT_BE_EMPTY);
-        }
+        FunctionUtil.isNullOrEmpty(project.getProjectKey())
+                .throwBaseException(new OCException(ErrorEnum.PROJECT_KEY_CANNOT_BE_EMPTY));
         FunctionUtil.isTure(StringUtils.isBlank(project.getProjectKey()))
                 .throwBaseException(new OCException(ErrorEnum.PROJECT_KEY_CANNOT_BE_EMPTY));
         FunctionUtil.isTure(projectService.getByKey(project.getProjectKey()) != null)
@@ -74,10 +71,8 @@ public class ProjectFacadeImpl implements ProjectFacade {
     @Transactional(rollbackFor = Exception.class)
     public void deleteProjectAndUnbindAllResource(Integer projectId) {
         // 解除所有资源
-        List<ProjectResource> resources = projectResourceService.queryByProjectId(projectId);
-        for (ProjectResource resource : resources) {
-            this.unbindResource(resource.getId());
-        }
+        projectResourceService.queryByProjectId(projectId)
+                .forEach(resource -> this.unbindResource(resource.getId()));
         // 再删除项目
         projectService.deleteById(projectId);
     }
