@@ -3,6 +3,7 @@ package com.baiyi.opscloud.common.util;
 import com.baiyi.opscloud.common.function.BranchFunction;
 import com.baiyi.opscloud.common.function.ThrowBaseExceptionFunction;
 import com.baiyi.opscloud.common.function.TrueFunction;
+import com.google.common.base.Strings;
 
 /**
  * @Author 修远
@@ -12,16 +13,22 @@ import com.baiyi.opscloud.common.function.TrueFunction;
 public class FunctionUtil {
 
     public static ThrowBaseExceptionFunction isTure(boolean b) {
-
         return (baseException) -> {
             if (b) {
-                 throw baseException;
+                throw baseException;
+            }
+        };
+    }
+
+    public static ThrowBaseExceptionFunction isNullOrEmpty(String s) {
+        return (baseException) -> {
+            if (Strings.isNullOrEmpty(s)) {
+                throw baseException;
             }
         };
     }
 
     public static BranchFunction isTureOrFalse(boolean b) {
-
         return (trueHandle, falseHandle) -> {
             if (b) {
                 trueHandle.run();
@@ -32,11 +39,12 @@ public class FunctionUtil {
     }
 
     public static TrueFunction trueFunction(boolean b) {
-
         return (trueHandle) -> {
             if (b) {
                 trueHandle.run();
             }
         };
     }
+
+
 }
