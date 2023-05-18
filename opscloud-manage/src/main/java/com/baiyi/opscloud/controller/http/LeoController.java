@@ -3,6 +3,10 @@ package com.baiyi.opscloud.controller.http;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.leo.*;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeploymentVersionDetailsRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoJobRequestParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.leo.*;
 import com.baiyi.opscloud.facade.leo.*;
@@ -99,6 +103,12 @@ public class LeoController {
         return new HttpResult<>(jobFacade.queryLeoJobPage(pageQuery));
     }
 
+    @Operation(summary = "构建页面分页查询我的任务列表")
+    @PostMapping(value = "/job/my/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<LeoJobVO.Job>> queryMyLeoJobPage(@RequestBody @Valid SubscribeLeoJobRequestParam pageQuery) {
+        return new HttpResult<>(jobFacade.queryMyLeoJobPage(pageQuery));
+    }
+
     @Operation(summary = "新增任务")
     @PostMapping(value = "/job/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> addLeoJob(@RequestBody @Valid LeoJobParam.AddJob addJob) {
@@ -133,10 +143,29 @@ public class LeoController {
         return new HttpResult<>(buildFacade.queryLeoJobBuildPage(pageQuery));
     }
 
+    @Deprecated
+    @Operation(summary = "分页查询我的构建任务")
+    @PostMapping(value = "/job/my/build/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<LeoBuildVO.Build>> queryMyLeoJobBuildPage(@RequestBody @Valid SubscribeLeoBuildRequestParam pageQuery) {
+        return new HttpResult<>(buildFacade.queryMyLeoJobBuildPage(pageQuery));
+    }
+
     @Operation(summary = "分页查询任务部署历史")
     @PostMapping(value = "/job/deploy/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<LeoDeployVO.Deploy>> queryLeoJobDeployPage(@RequestBody @Valid LeoJobParam.JobDeployPageQuery pageQuery) {
         return new HttpResult<>(deployFacade.queryLeoJobDeployPage(pageQuery));
+    }
+
+    @Operation(summary = "分页查询我的部署")
+    @PostMapping(value = "/job/my/deploy/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<LeoDeployVO.Deploy>> queryMyLeoJobDeployPage(@RequestBody @Valid SubscribeLeoDeployRequestParam pageQuery) {
+        return new HttpResult<>(deployFacade.queryMyLeoJobDeployPage(pageQuery));
+    }
+
+    @Operation(summary = "查询我的Deployment版本详情")
+    @PostMapping(value = "/job/my/deployment/version/details/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<LeoJobVersionVO.JobVersion>> queryMyLeoJobVersion(@RequestBody @Valid SubscribeLeoDeploymentVersionDetailsRequestParam queryParam) {
+        return new HttpResult<>(deployFacade.queryMyLeoJobVersion(queryParam));
     }
 
     @Operation(summary = "创建CR仓库")

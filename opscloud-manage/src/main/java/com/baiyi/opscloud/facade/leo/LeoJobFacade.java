@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoTemplate;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoJobRequestParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 
 /**
@@ -14,6 +15,8 @@ import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 public interface LeoJobFacade {
 
     DataTable<LeoJobVO.Job> queryLeoJobPage(LeoJobParam.JobPageQuery pageQuery);
+
+    DataTable<LeoJobVO.Job> queryMyLeoJobPage(SubscribeLeoJobRequestParam pageQuery);
 
     void addLeoJob(LeoJobParam.AddJob addJob);
 
@@ -28,6 +31,7 @@ public interface LeoJobFacade {
 
     /**
      * 升级任务模板内容(内部使用)
+     *
      * @param leoJob
      * @param leoTemplate
      * @param templateVersion

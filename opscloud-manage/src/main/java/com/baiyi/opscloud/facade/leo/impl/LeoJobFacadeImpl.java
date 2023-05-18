@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoJobRequestParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 import com.baiyi.opscloud.facade.leo.LeoJobFacade;
 import com.baiyi.opscloud.facade.leo.tags.LeoTagHelper;
@@ -15,6 +16,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoTemplateModel;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
 import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.base.BaseCrValidator;
 import com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.factory.CrValidatorFactory;
+import com.baiyi.opscloud.leo.message.handler.impl.build.SubscribeLeoJobRequestHandler;
 import com.baiyi.opscloud.packer.leo.LeoJobPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
@@ -67,6 +69,8 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
 
     private final EnvService envService;
 
+    private final SubscribeLeoJobRequestHandler subscribeLeoJobRequestHandler;
+
     @Override
     public DataTable<LeoJobVO.Job> queryLeoJobPage(LeoJobParam.JobPageQuery pageQuery) {
         DataTable<LeoJob> table = jobService.queryJobPage(pageQuery);
@@ -74,6 +78,11 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 .peek(e -> jobPacker.wrap(e, pageQuery))
                 .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
+    }
+
+    @Override
+    public DataTable<LeoJobVO.Job> queryMyLeoJobPage(SubscribeLeoJobRequestParam pageQuery) {
+        return subscribeLeoJobRequestHandler.queryLeoJobPage(pageQuery);
     }
 
     @Override

@@ -93,6 +93,27 @@ public class LeoJobParam {
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema
+    public static class MyJobBuildPageQuery extends SuperPageParam implements IExtend {
+
+        @Schema(description = "名称")
+        private String queryName;
+
+        @Schema(description = "应用ID")
+        private Integer applicationId;
+
+        @Schema(description = "环境类型")
+        private Integer envType;
+
+        private Boolean extend;
+
+    }
+
+    @Data
+    @SuperBuilder(toBuilder = true)
+    @EqualsAndHashCode(callSuper = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema
     public static class JobDeployPageQuery extends SuperPageParam implements IExtend {
 
         @Schema(description = "名称")

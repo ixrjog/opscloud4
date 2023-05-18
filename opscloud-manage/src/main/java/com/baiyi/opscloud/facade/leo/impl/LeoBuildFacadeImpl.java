@@ -15,6 +15,7 @@ import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
 import com.baiyi.opscloud.leo.aop.annotation.LeoBuildInterceptor;
@@ -32,6 +33,7 @@ import com.baiyi.opscloud.leo.driver.BlueRestDriver;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.leo.handler.build.LeoBuildHandler;
 import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
+import com.baiyi.opscloud.leo.message.handler.impl.build.SubscribeLeoBuildRequestHandler;
 import com.baiyi.opscloud.leo.packer.LeoBuildResponsePacker;
 import com.baiyi.opscloud.leo.parser.MavenPublishParser;
 import com.baiyi.opscloud.leo.util.JobUtil;
@@ -101,6 +103,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
     private final LeoBuildResponsePacker leoBuildResponsePacker;
 
     private final AutoDeployHelper autoDeployHelper;
+
+    private final SubscribeLeoBuildRequestHandler subscribeLeoBuildRequestHandler;
 
     @Override
     @LeoBuildInterceptor(jobIdSpEL = "#doBuild.jobId")
@@ -417,6 +421,11 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .peek(leoBuildResponsePacker::wrap)
                 .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
+    }
+
+    @Override
+    public DataTable<LeoBuildVO.Build> queryMyLeoJobBuildPage(SubscribeLeoBuildRequestParam pageQuery) {
+       return subscribeLeoBuildRequestHandler.queryLeoBuildPage(pageQuery);
     }
 
     @Override

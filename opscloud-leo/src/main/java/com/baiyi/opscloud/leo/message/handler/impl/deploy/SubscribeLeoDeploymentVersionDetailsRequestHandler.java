@@ -21,18 +21,14 @@ import com.baiyi.opscloud.service.leo.LeoBuildImageService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
+import jakarta.annotation.Resource;
+import jakarta.websocket.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import jakarta.annotation.Resource;
-import jakarta.websocket.Session;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.leo.constants.BuildTypeConstants.KUBERNETES_IMAGE;
@@ -81,10 +77,22 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
     @Override
     public void handleRequest(String sessionId, Session session, String message) throws IOException {
         SubscribeLeoDeploymentVersionDetailsRequestParam queryParam = toRequestParam(message);
+        List<LeoJobVersionVO.JobVersion> jobVersions = queryLeoJobVersion( queryParam);
+        if (CollectionUtils.isEmpty(jobVersions)) {
+            return;
+        }
+        LeoContinuousDeliveryResponse<List<LeoJobVersionVO.JobVersion>> response = LeoContinuousDeliveryResponse.<List<LeoJobVersionVO.JobVersion>>builder()
+                .body(jobVersions)
+                .messageType(getMessageType())
+                .build();
+        sendToSession(session, response);
+    }
+
+    public List<LeoJobVersionVO.JobVersion> queryLeoJobVersion(SubscribeLeoDeploymentVersionDetailsRequestParam queryParam) {
         List<LeoJob> jobs = jobService.queryJobWithSubscribe(queryParam.getApplicationId(), queryParam.getEnvType(), KUBERNETES_IMAGE);
         Application application = applicationService.getById(queryParam.getApplicationId());
         if (CollectionUtils.isEmpty(jobs)) {
-            return;
+            return Collections.emptyList();
         }
         List<LeoJobVersionVO.JobVersion> jobVersions = new ArrayList<>(jobs.size());
         for (LeoJob job : jobs) {
@@ -97,11 +105,7 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
             jobVersionDelegate.wrap(jobVersion);
             jobVersions.add(jobVersion);
         }
-        LeoContinuousDeliveryResponse<List<LeoJobVersionVO.JobVersion>> response = LeoContinuousDeliveryResponse.<List<LeoJobVersionVO.JobVersion>>builder()
-                .body(jobVersions)
-                .messageType(getMessageType())
-                .build();
-        sendToSession(session, response);
+        return jobVersions;
     }
 
     private List<LeoJobVersionVO.DeploymentVersion> generateDeploymentVersions(Application application, int jobId) {

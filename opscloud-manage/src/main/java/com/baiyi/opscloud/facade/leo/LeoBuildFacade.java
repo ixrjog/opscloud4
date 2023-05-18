@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.leo;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 
 import java.util.List;
@@ -45,8 +46,11 @@ public interface LeoBuildFacade {
 
     DataTable<LeoBuildVO.Build> queryLeoJobBuildPage(LeoJobParam.JobBuildPageQuery pageQuery);
 
+    DataTable<LeoBuildVO.Build> queryMyLeoJobBuildPage(SubscribeLeoBuildRequestParam pageQuery);
+
     /**
      * 查询最近的构建
+     *
      * @param size
      * @return
      */
