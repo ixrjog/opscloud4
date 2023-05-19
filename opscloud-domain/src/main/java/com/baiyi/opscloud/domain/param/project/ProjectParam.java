@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.param.project;
 
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -80,6 +81,32 @@ public class ProjectParam {
 
         @Schema(description = "展开")
         private Boolean extend;
+
+    }
+
+    @SuperBuilder(toBuilder = true)
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema
+    public static class ResProjectPageQuery extends SuperPageParam implements BaseBusiness.IBusiness, IExtend {
+
+        @Schema(description = "项目名称")
+        private String queryName;
+
+        @Schema(description = "业务ID")
+        private Integer businessId;
+
+        @Schema(description = "业务类型")
+        private Integer businessType;
+
+        @Schema(description = "资源类型",example = "ProjectResTypeEnum.APPLICATION.name()")
+        private String resourceType;
+
+        @Schema(description = "展开")
+        private Boolean extend;
+
 
     }
 

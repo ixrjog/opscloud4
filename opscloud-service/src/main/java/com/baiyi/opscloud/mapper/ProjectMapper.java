@@ -9,4 +9,7 @@ import java.util.List;
 public interface ProjectMapper extends Mapper<Project> {
 
     List<Project> queryProjectByParam(ProjectParam.ProjectPageQuery pageQuery);
+
+    List<Project> queryResProjectByParam(ProjectParam.ResProjectPageQuery pageQuery);
+
 }
