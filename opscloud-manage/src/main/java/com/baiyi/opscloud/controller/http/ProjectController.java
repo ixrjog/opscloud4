@@ -25,9 +25,9 @@ public class ProjectController {
 
     private final ProjectFacade projectFacade;
 
-    @Operation(summary = "分页查询Leo任务关联的项目")
+    @Operation(summary = "分页查询资源关联的项目")
     @PostMapping(value = "/res/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<ProjectVO.Project>> queryLeoJobProjectPage(@RequestBody @Valid ProjectParam.ResProjectPageQuery pageQuery) {
+    public HttpResult<DataTable<ProjectVO.Project>> queryResProjectPage(@RequestBody @Valid ProjectParam.ResProjectPageQuery pageQuery) {
         return new HttpResult<>(projectFacade.queryResProjectPage(pageQuery));
     }
 
