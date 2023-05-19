@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.leo.impl;
 
+import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.facade.leo.LeoChartFacade;
@@ -10,6 +11,7 @@ import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -35,9 +37,9 @@ public class LeoChartFacadeImpl implements LeoChartFacade {
     private final LeoJobService leoJobService;
 
     @Override
-    //@Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, unless = "#result == null")
     public Map<String, Integer> getKeywords() {
-        return test();
+        return prod();
     }
 
     private Map<String, Integer> test(){

@@ -14,6 +14,13 @@ public interface ProjectFacade extends IProjectResource {
 
     DataTable<ProjectVO.Project> queryProjectPage(ProjectParam.ProjectPageQuery pageQuery);
 
+    /**
+     * 按资源查询项目
+     * @param pageQuery
+     * @return
+     */
+    DataTable<ProjectVO.Project> queryResProjectPage(ProjectParam.ResProjectPageQuery pageQuery);
+
     ProjectVO.Project getProjectById(Integer id);
 
     void addProject(ProjectParam.AddProject project);
@@ -22,12 +29,14 @@ public interface ProjectFacade extends IProjectResource {
 
     /**
      * 删除项目
+     *
      * @param projectId
      */
     void deleteProject(Integer projectId);
 
     /**
      * 解除资源绑定并删除项目
+     *
      * @param projectId
      */
     void deleteProjectAndUnbindAllResource(Integer projectId);

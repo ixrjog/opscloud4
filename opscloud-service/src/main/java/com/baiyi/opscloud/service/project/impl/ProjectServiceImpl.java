@@ -19,7 +19,7 @@ import java.util.List;
  * @Since 1.0
  */
 
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+@SuppressWarnings({"SpringJavaInjectionPointsAutowiringInspection", "rawtypes", "resource"})
 @Service
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
@@ -71,6 +71,13 @@ public class ProjectServiceImpl implements ProjectService {
     public DataTable<Project> queryPageByParam(ProjectParam.ProjectPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<Project> data = projectMapper.queryProjectByParam(pageQuery);
+        return new DataTable<>(data, page.getTotal());
+    }
+
+    @Override
+    public DataTable<Project> queryPageByParam(ProjectParam.ResProjectPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<Project> data = projectMapper.queryResProjectByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
 

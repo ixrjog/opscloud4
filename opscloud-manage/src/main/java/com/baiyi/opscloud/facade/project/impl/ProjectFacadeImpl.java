@@ -56,6 +56,12 @@ public class ProjectFacadeImpl implements ProjectFacade {
     }
 
     @Override
+    public DataTable<ProjectVO.Project> queryResProjectPage(ProjectParam.ResProjectPageQuery pageQuery) {
+        DataTable<Project> dataTable = projectService.queryPageByParam(pageQuery);
+        return null;
+    }
+
+    @Override
     public ProjectVO.Project getProjectById(Integer id) {
         Project project = projectService.getById(id);
         FunctionUtil.isNull(project)

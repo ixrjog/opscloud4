@@ -35,4 +35,14 @@
         order by replace( a0.name, #{queryName}, '' ), a0.create_time
     </select>
 
+    <select id="queryResProjectByParam"
+            parameterType="com.baiyi.opscloud.domain.param.project.ProjectParam$ResProjectPageQuery"
+            resultMap="BaseResultMap">
+        select * from project
+        where id in (select project_id
+                     from project_resource
+                     where resource_type = #{resouceType}
+                       and business_id = #{businessId})
+    </select>
+
 </mapper>

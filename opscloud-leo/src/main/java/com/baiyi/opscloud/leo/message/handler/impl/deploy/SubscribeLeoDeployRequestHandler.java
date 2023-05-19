@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
  * @Date 2022/12/6 19:49
  * @Version 1.0
  */
+@SuppressWarnings("unchecked")
 @Slf4j
 @Component
 public class SubscribeLeoDeployRequestHandler extends BaseLeoContinuousDeliveryRequestHandler<SubscribeLeoDeployRequestParam> {
@@ -47,20 +48,20 @@ public class SubscribeLeoDeployRequestHandler extends BaseLeoContinuousDeliveryR
     @Override
     public void handleRequest(String sessionId, Session session, String message) throws IOException {
         SubscribeLeoDeployRequestParam queryParam = toRequestParam(message);
+        DataTable<LeoDeployVO.Deploy> dataTable = queryLeoDeployPage(queryParam);
+        sendToSession(session, dataTable);
+    }
+
+    public DataTable<LeoDeployVO.Deploy> queryLeoDeployPage(SubscribeLeoDeployRequestParam queryParam) {
         List<Integer> jobIds = leoJobService.queryJob(queryParam.getApplicationId(), queryParam.getEnvType())
                 .stream()
                 .map(LeoJob::getId)
                 .collect(Collectors.toList());
         if (CollectionUtils.isEmpty(jobIds)){
-            return;
+            return DataTable.EMPTY;
         }
         queryParam.setJobIds(jobIds);
-        DataTable<LeoDeployVO.Deploy> dataTable = queryLeoDeployPage(queryParam);
-        sendToSession(session, dataTable);
-    }
-
-    public DataTable<LeoDeployVO.Deploy> queryLeoDeployPage(SubscribeLeoDeployRequestParam pageQuery) {
-        DataTable<LeoDeploy> table = leoDeployService.queryDeployPage(pageQuery);
+        DataTable<LeoDeploy> table = leoDeployService.queryDeployPage(queryParam);
         List<LeoDeployVO.Deploy> data = BeanCopierUtil.copyListProperties(table.getData(), LeoDeployVO.Deploy.class).stream()
                 .peek(leoDeployResponsePacker::wrap)
                 .collect(Collectors.toList());

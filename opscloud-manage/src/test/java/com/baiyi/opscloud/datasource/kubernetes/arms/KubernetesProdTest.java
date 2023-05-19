@@ -51,7 +51,7 @@ public class KubernetesProdTest extends BaseKubernetesTest {
         KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_PROD);
 
         List<String> appNames = Lists.newArrayList(
-                "leo-demo"
+                "sms"
         );
         appNames.forEach(appName -> {
             Application application = applicationService.getByName(appName);

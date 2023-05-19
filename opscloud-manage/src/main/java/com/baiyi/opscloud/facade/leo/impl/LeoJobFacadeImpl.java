@@ -313,9 +313,12 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 LeoJobModel.JobConfig jobConfig = LeoJobModel.load(config);
 
                 // 修改GitLab project
-                jobConfig.getJob().getGitLab().getProject()
-                        .setSshUrl(resources.get(0).getName());
-
+                Optional<LeoBaseModel.GitLabProject> optionalProject = Optional.of(jobConfig)
+                        .map(LeoJobModel.JobConfig::getJob)
+                        .map(LeoJobModel.Job::getGitLab)
+                        .map(LeoBaseModel.GitLab::getProject);
+                optionalProject.ifPresent(gitLabProject -> gitLabProject.setSshUrl(resources.get(0).getName()));
+                
                 LeoJob cloneLeoJob = LeoJob.builder()
                         .parentId(0)
                         .applicationId(destApplication.getId())
@@ -328,6 +331,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                         .templateId(srcJob.getTemplateId())
                         .templateVersion(srcJob.getTemplateVersion())
                         .templateContent(srcJob.getTemplateContent())
+                        .buildType(srcJob.getBuildType())
                         .hide(false)
                         .isActive(true)
                         .build();

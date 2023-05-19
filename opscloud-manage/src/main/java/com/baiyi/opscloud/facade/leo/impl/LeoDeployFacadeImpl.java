@@ -119,15 +119,41 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
         LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob.getJobConfig());
         // 部署通知
-        LeoBaseModel.Notify notify = Optional.ofNullable(jobConfig).map(LeoJobModel.JobConfig::getJob).map(LeoJobModel.Job::getDeploy).map(LeoJobModel.Deploy::getNotify).orElseThrow(() -> new LeoDeployException("部署通知配置不存在！"));
+        LeoBaseModel.Notify notify = Optional.ofNullable(jobConfig)
+                .map(LeoJobModel.JobConfig::getJob)
+                .map(LeoJobModel.Job::getDeploy)
+                .map(LeoJobModel.Deploy::getNotify)
+                .orElseThrow(() -> new LeoDeployException("部署通知配置不存在！"));
 
-        LeoBaseModel.Kubernetes kubernetes = LeoBaseModel.Kubernetes.builder().assetId(doDeploy.getAssetId()).build();
+        LeoBaseModel.Kubernetes kubernetes = LeoBaseModel.Kubernetes.builder()
+                .assetId(doDeploy.getAssetId())
+                .build();
 
-        LeoDeployModel.Deploy deploy = LeoDeployModel.Deploy.builder().deployType(doDeploy.getDeployType()).notify(notify).kubernetes(kubernetes).build();
+        LeoDeployModel.Deploy deploy = LeoDeployModel.Deploy.builder()
+                .deployType(doDeploy.getDeployType())
+                .notify(notify)
+                .kubernetes(kubernetes)
+                .build();
 
-        LeoDeployModel.DeployConfig deployConfig = LeoDeployModel.DeployConfig.builder().deploy(deploy).build();
+        LeoDeployModel.DeployConfig deployConfig = LeoDeployModel.DeployConfig.builder()
+                .deploy(deploy)
+                .build();
 
-        LeoDeploy newLeoDeploy = LeoDeploy.builder().applicationId(leoJob.getApplicationId()).jobId(leoJob.getId()).jobName(leoJob.getName()).buildId(doDeploy.getBuildId() == null ? 0 : doDeploy.getBuildId()).deployNumber(deployNumber).deployConfig(deployConfig.dump()).executionType(ExecutionTypeConstants.USER).username(SessionUtil.getUsername()).isFinish(false).isActive(true).isRollback(false).ocInstance(OcInstance.OC_INSTANCE).build();
+        LeoDeploy newLeoDeploy = LeoDeploy.builder()
+                .applicationId(leoJob.getApplicationId())
+                .jobId(leoJob.getId())
+                .jobName(leoJob.getName())
+                .buildId(doDeploy.getBuildId() == null ? 0 : doDeploy.getBuildId())
+                .deployNumber(deployNumber)
+                .deployConfig(deployConfig.dump())
+                .executionType(ExecutionTypeConstants.USER)
+                .username(SessionUtil.getUsername())
+                .isFinish(false)
+                .isActive(true)
+                .isRollback(false)
+                .ocInstance(OcInstance.OC_INSTANCE)
+                .projectId(doDeploy.getProjectId() == null ? 0 : doDeploy.getProjectId())
+                .build();
         deployService.add(newLeoDeploy);
         autoDeployHelper.labeling(doDeploy, BusinessTypeEnum.LEO_DEPLOY.getType(), newLeoDeploy.getId());
         handleDeploy(newLeoDeploy, deployConfig);
