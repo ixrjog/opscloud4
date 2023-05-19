@@ -9,10 +9,13 @@ import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Project;
 import com.baiyi.opscloud.domain.generator.opscloud.ProjectResource;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
+import com.baiyi.opscloud.domain.param.SimpleRelation;
 import com.baiyi.opscloud.domain.param.project.ProjectParam;
 import com.baiyi.opscloud.domain.param.project.ProjectResourceParam;
 import com.baiyi.opscloud.domain.vo.project.ProjectVO;
 import com.baiyi.opscloud.facade.project.ProjectFacade;
+import com.baiyi.opscloud.packer.project.ProjectPacker;
 import com.baiyi.opscloud.service.project.ProjectResourceService;
 import com.baiyi.opscloud.service.project.ProjectService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author 修远
@@ -37,16 +43,26 @@ public class ProjectFacadeImpl implements ProjectFacade {
 
     private final ProjectResourceService projectResourceService;
 
+    private final ProjectPacker projectPacker;
+
     @Override
     public DataTable<ProjectVO.Project> queryProjectPage(ProjectParam.ProjectPageQuery pageQuery) {
-        DataTable<Project> dataTable = projectService.queryPageByParam(pageQuery);
-        return null;
+        DataTable<Project> table = projectService.queryPageByParam(pageQuery);
+        List<ProjectVO.Project> data = BeanCopierUtil.copyListProperties(table.getData(), ProjectVO.Project.class)
+                .stream()
+                .peek(e -> projectPacker.wrap(e, pageQuery, pageQuery))
+                .collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override
     public ProjectVO.Project getProjectById(Integer id) {
         Project project = projectService.getById(id);
-        return null;
+        FunctionUtil.isNull(project)
+                .throwBaseException(new OCException(ErrorEnum.APPLICATION_NOT_EXIST));
+        ProjectVO.Project vo = BeanCopierUtil.copyProperties(project, ProjectVO.Project.class);
+        projectPacker.wrap(vo, SimpleExtend.EXTEND, SimpleRelation.RELATION);
+        return vo;
     }
 
     @Override
@@ -71,7 +87,7 @@ public class ProjectFacadeImpl implements ProjectFacade {
     @Transactional(rollbackFor = Exception.class)
     public void deleteProjectAndUnbindAllResource(Integer projectId) {
         // 解除所有资源
-        projectResourceService.queryByProjectId(projectId)
+        projectResourceService.listByProjectId(projectId)
                 .forEach(resource -> this.unbindResource(resource.getId()));
         // 再删除项目
         projectService.deleteById(projectId);
@@ -79,7 +95,7 @@ public class ProjectFacadeImpl implements ProjectFacade {
 
     @Override
     public void deleteProject(Integer projectId) {
-        FunctionUtil.isTure(!CollectionUtils.isEmpty(projectResourceService.queryByProjectId(projectId)))
+        FunctionUtil.isTure(!CollectionUtils.isEmpty(projectResourceService.listByProjectId(projectId)))
                 .throwBaseException(new OCException(ErrorEnum.PROJECT_RES_IS_NOT_EMPTY));
         projectService.deleteById(projectId);
     }

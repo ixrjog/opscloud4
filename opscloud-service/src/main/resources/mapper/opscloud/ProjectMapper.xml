@@ -15,7 +15,6 @@
         <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
     </resultMap>
 
-
     <select id="queryProjectByParam"
             parameterType="com.baiyi.opscloud.domain.param.project.ProjectParam$ProjectPageQuery"
             resultMap="BaseResultMap">

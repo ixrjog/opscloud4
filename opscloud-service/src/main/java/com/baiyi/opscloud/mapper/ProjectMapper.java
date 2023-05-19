@@ -8,5 +8,12 @@ import java.util.List;
 
 public interface ProjectMapper extends Mapper<Project> {
 
+
+    /**
+     *  模式
+     * @param pageQuery
+     * @return
+     */
     List<Project> queryProjectByParam(ProjectParam.ProjectPageQuery pageQuery);
+
 }

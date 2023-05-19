@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.function.BranchFunction;
 import com.baiyi.opscloud.common.function.ThrowBaseExceptionFunction;
 import com.baiyi.opscloud.common.function.TrueFunction;
 import com.google.common.base.Strings;
+import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * @Author 修远
@@ -23,6 +24,14 @@ public class FunctionUtil {
     public static ThrowBaseExceptionFunction isNullOrEmpty(String s) {
         return (baseException) -> {
             if (Strings.isNullOrEmpty(s)) {
+                throw baseException;
+            }
+        };
+    }
+
+    public static ThrowBaseExceptionFunction isNull(Object o) {
+        return (baseException) -> {
+            if (ObjectUtils.isEmpty(o)) {
                 throw baseException;
             }
         };

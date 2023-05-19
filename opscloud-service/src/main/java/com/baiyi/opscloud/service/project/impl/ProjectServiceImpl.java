@@ -5,9 +5,13 @@ import com.baiyi.opscloud.domain.generator.opscloud.Project;
 import com.baiyi.opscloud.domain.param.project.ProjectParam;
 import com.baiyi.opscloud.mapper.ProjectMapper;
 import com.baiyi.opscloud.service.project.ProjectService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
+
+import java.util.List;
 
 /**
  * @Author 修远
@@ -65,7 +69,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public DataTable<Project> queryPageByParam(ProjectParam.ProjectPageQuery pageQuery) {
-        return null;
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<Project> data = projectMapper.queryProjectByParam(pageQuery);
+        return new DataTable<>(data, page.getTotal());
     }
 
 }
