@@ -25,7 +25,7 @@ public class SshShellStartedEvent extends AbstractSshShellEvent {
     @Value("${ssh.shell.version}")
     private String version;
 
-    private static final String WELCOME = "Dear %s, Welcome to SSH-Server %s %s \n";
+    private static final String WELCOME = "Dear %s, Welcome to SSH-Server<%s>@%s \n";
 
     @Override
     public String getEventType() {

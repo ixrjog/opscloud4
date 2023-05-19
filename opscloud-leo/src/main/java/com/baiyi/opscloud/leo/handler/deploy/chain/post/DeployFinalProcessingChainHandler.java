@@ -83,7 +83,7 @@ public class DeployFinalProcessingChainHandler extends BaseDeployChainHandler {
                     .appName(dict.getOrDefault(BuildDictConstants.APPLICATION_NAME.getKey(), ""))
                     .appId(leoDeploy.getApplicationId())
                     .user(user)
-                    .projectId(-1)
+                    .projectId(leoDeploy.getProjectId())
                     .pods(null)
                     .gmtModified(leoDeploy.getEndTime())
                     .build();
