@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.facade.project;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.project.ProjectResourceParam;
+import com.baiyi.opscloud.domain.vo.project.ProjectResourceVO;
 
 /**
  * @Author baiyi
@@ -8,6 +10,9 @@ import com.baiyi.opscloud.domain.param.project.ProjectResourceParam;
  * @Version 1.0
  */
 public interface IProjectResource {
+
+
+    DataTable<ProjectResourceVO.Resource> previewProjectResourcePage(ProjectResourceParam.ResourcePageQuery pageQuery);
 
     /**
      * 绑定资源

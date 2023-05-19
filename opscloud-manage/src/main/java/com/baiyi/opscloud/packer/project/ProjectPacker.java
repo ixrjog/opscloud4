@@ -49,22 +49,24 @@ public class ProjectPacker implements IWrapperRelation<ProjectVO.Project> {
             return;
         }
         List<ProjectResourceVO.Resource> assetList = Lists.newArrayList();
-        List<Application> applicationList = Lists.newArrayList();
+        List<ProjectResourceVO.Resource> applicationList = Lists.newArrayList();
         List<ProjectResource> projectResourceList = projectResourceService.listByProjectId(project.getId());
-        projectResourceList.stream().peek(res -> {
-            FunctionUtil.isTureOrFalse(res.getBusinessType() == BusinessTypeEnum.ASSET.getType())
-                    .trueOrFalseHandle(
-                            () -> {
-                                ProjectResourceVO.Resource resource = BeanCopierUtil.copyProperties(res, ProjectResourceVO.Resource.class);
-                                resourcePacker.wrap(resource, iExtend, iRelation);
-                                assetList.add(resource);
-                            },
-                            () -> {
-                                Application application = applicationService.getById(res.getBusinessId());
-                                applicationList.add(application);
-                            }
-                    );
-        });
+        projectResourceList.forEach(res ->
+                FunctionUtil.isTureOrFalse(res.getBusinessType() == BusinessTypeEnum.ASSET.getType())
+                        .trueOrFalseHandle(
+                                () -> {
+                                    ProjectResourceVO.Resource resource = BeanCopierUtil.copyProperties(res, ProjectResourceVO.Resource.class);
+                                    resourcePacker.wrap(resource, iExtend, iRelation);
+                                    assetList.add(resource);
+                                },
+                                () -> {
+                                    Application application = applicationService.getById(res.getBusinessId());
+                                    ProjectResourceVO.Resource resource = BeanCopierUtil.copyProperties(res, ProjectResourceVO.Resource.class);
+                                    resource.setApplication(application);
+                                    applicationList.add(resource);
+                                }
+                        )
+        );
         Map<String, List<ProjectResourceVO.Resource>> resourcesMap = assetList.stream()
                 .collect(Collectors.groupingBy(ProjectResourceVO.Resource::getResourceType));
         project.setResourceMap(resourcesMap);

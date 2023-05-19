@@ -54,8 +54,8 @@ public class ProjectParam {
         @Schema(description = "项目名称")
         private String name;
 
-        @Schema(description = "项目类型")
-        private Integer projectType;
+        @Schema(description = "项目Key")
+        private String projectKey;
 
         @Schema(description = "有效")
         private Boolean isActive;
@@ -72,7 +72,7 @@ public class ProjectParam {
     @AllArgsConstructor
     @NoArgsConstructor
     @Schema
-    public static class ProjectPageQuery extends SuperPageParam implements IExtend, IRelation {
+    public static class ProjectPageQuery extends SuperPageParam implements IExtend {
 
         @Schema(description = "项目名称")
         private String queryName;
@@ -82,9 +82,6 @@ public class ProjectParam {
 
         @Schema(description = "展开")
         private Boolean extend;
-
-        @Schema(description = "展示资产关系")
-        private Boolean relation;
 
     }
 
