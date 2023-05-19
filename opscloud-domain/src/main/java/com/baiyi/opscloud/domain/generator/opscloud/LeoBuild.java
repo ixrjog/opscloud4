@@ -140,6 +140,9 @@ public class LeoBuild {
     @Column(name = "ticket_id")
     private Integer ticketId;
 
+    @Column(name = "project_id")
+    private Integer projectId;
+
     /**
      * 描述
      */

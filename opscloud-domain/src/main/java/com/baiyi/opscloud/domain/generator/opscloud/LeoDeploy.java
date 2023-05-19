@@ -134,6 +134,9 @@ public class LeoDeploy {
     @Column(name = "oc_instance")
     private String ocInstance;
 
+    @Column(name = "project_id")
+    private Integer projectId;
+
     /**
      * 描述
      */

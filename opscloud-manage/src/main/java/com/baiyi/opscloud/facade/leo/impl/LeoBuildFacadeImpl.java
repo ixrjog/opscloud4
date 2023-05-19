@@ -221,6 +221,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .username(SessionUtil.getUsername())
                 .buildConfig(buildConfig.dump())
                 .ocInstance(OcInstance.OC_INSTANCE)
+                .projectId(doBuild.getProjectId() == null ? 0 : doBuild.getProjectId())
                 .build();
         buildService.add(leoBuild);
         autoDeployHelper.labeling(doBuild, BusinessTypeEnum.LEO_BUILD.getType(), leoBuild.getId());
@@ -425,7 +426,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     @Override
     public DataTable<LeoBuildVO.Build> queryMyLeoJobBuildPage(SubscribeLeoBuildRequestParam pageQuery) {
-       return subscribeLeoBuildRequestHandler.queryLeoBuildPage(pageQuery);
+        return subscribeLeoBuildRequestHandler.queryLeoBuildPage(pageQuery);
     }
 
     @Override

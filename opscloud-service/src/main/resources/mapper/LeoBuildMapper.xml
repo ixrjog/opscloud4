@@ -28,6 +28,7 @@
         <result column="is_active" jdbcType="BIT" property="isActive" />
         <result column="oc_instance" jdbcType="VARCHAR" property="ocInstance"/>
         <result column="ticket_id" jdbcType="INTEGER" property="ticketId"/>
+        <result column="project_id" jdbcType="INTEGER" property="projectId"/>
         <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
     </resultMap>
 
