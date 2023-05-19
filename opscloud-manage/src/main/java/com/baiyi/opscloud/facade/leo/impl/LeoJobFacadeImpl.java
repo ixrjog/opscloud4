@@ -328,6 +328,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                         .templateId(srcJob.getTemplateId())
                         .templateVersion(srcJob.getTemplateVersion())
                         .templateContent(srcJob.getTemplateContent())
+                        .buildType(srcJob.getBuildType())
                         .hide(false)
                         .isActive(true)
                         .build();
