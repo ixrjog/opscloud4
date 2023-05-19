@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.domain.vo.project;
 
+import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -42,6 +44,10 @@ public class ProjectResourceVO {
         private Integer businessType;
 
         private String comment;
+
+        private DsAssetVO.Asset asset;
+
+        private Application application;
 
     }
 

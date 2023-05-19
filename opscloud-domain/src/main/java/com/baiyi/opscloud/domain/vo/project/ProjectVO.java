@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.domain.vo.project;
 
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
 import com.baiyi.opscloud.domain.vo.business.IBusinessPermissionUser;
@@ -74,6 +75,9 @@ public class ProjectVO {
         private Boolean isActive;
 
         private UserPermissionVO.UserPermission userPermission;
+
+        private List<Application> applicationList;
+
 
     }
 }

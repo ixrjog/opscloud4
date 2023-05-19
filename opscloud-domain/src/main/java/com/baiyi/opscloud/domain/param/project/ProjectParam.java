@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.param.project;
 
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.param.IRelation;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -71,7 +72,7 @@ public class ProjectParam {
     @AllArgsConstructor
     @NoArgsConstructor
     @Schema
-    public static class ProjectPageQuery extends SuperPageParam implements IExtend {
+    public static class ProjectPageQuery extends SuperPageParam implements IExtend, IRelation {
 
         @Schema(description = "项目名称")
         private String queryName;
@@ -81,6 +82,32 @@ public class ProjectParam {
 
         @Schema(description = "展开")
         private Boolean extend;
+
+        @Schema(description = "展示资产关系")
+        private Boolean relation;
+
+    }
+
+
+    @SuperBuilder(toBuilder = true)
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema
+    public static class ProjectApplication extends SuperPageParam implements IExtend, IRelation {
+
+        @Schema(description = "项目名称")
+        private String queryName;
+
+        @Schema(description = "应用ID")
+        private Integer applicationId;
+
+        @Schema(description = "展开")
+        private Boolean extend;
+
+        @Schema(description = "展示资产关系")
+        private Boolean relation;
 
     }
 

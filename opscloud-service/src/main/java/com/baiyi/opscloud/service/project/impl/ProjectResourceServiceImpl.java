@@ -43,7 +43,7 @@ public class ProjectResourceServiceImpl implements ProjectResourceService {
     }
 
     @Override
-    public List<ProjectResource> queryByProjectId(Integer projectId) {
+    public List<ProjectResource> listByProjectId(Integer projectId) {
         Example example = new Example(ProjectResource.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("projectId", projectId);
