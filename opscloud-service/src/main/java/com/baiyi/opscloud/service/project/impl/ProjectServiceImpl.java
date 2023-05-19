@@ -75,7 +75,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public DataTable<Project> queryPageByParam(ProjectParam.ResProjectPageQuery pageQuery) {
+    public DataTable<Project> queryResPageByParam(ProjectParam.ResProjectPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<Project> data = projectMapper.queryResProjectByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());

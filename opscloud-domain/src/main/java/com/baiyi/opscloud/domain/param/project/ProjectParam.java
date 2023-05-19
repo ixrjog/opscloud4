@@ -128,12 +128,11 @@ public class ProjectParam {
         @Schema(description = "业务类型")
         private Integer businessType;
 
-        @Schema(description = "资源类型",example = "ProjectResTypeEnum.APPLICATION.name()")
+        @Schema(description = "资源类型", example = "ProjectResTypeEnum.APPLICATION.name()")
         private String resourceType;
 
         @Schema(description = "展开")
         private Boolean extend;
-
 
     }
 
