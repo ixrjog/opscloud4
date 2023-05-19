@@ -30,5 +30,4 @@ public class AppResQueryFactory {
         log.debug("AppResQueryFactory Registered: beanName={}, resourceType={}, businessType={}",
                 bean.getClass().getSimpleName(), bean.getAppResType(), bean.getBusinessType());
     }
-
 }

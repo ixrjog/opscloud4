@@ -13,8 +13,11 @@ import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.SimpleRelation;
 import com.baiyi.opscloud.domain.param.project.ProjectParam;
 import com.baiyi.opscloud.domain.param.project.ProjectResourceParam;
+import com.baiyi.opscloud.domain.vo.project.ProjectResourceVO;
 import com.baiyi.opscloud.domain.vo.project.ProjectVO;
 import com.baiyi.opscloud.facade.project.ProjectFacade;
+import com.baiyi.opscloud.factory.resource.IProjectResQuery;
+import com.baiyi.opscloud.factory.resource.ProjectResQueryFactory;
 import com.baiyi.opscloud.packer.project.ProjectPacker;
 import com.baiyi.opscloud.service.project.ProjectResourceService;
 import com.baiyi.opscloud.service.project.ProjectService;
@@ -104,6 +107,14 @@ public class ProjectFacadeImpl implements ProjectFacade {
         FunctionUtil.isTure(!CollectionUtils.isEmpty(projectResourceService.listByProjectId(projectId)))
                 .throwBaseException(new OCException(ErrorEnum.PROJECT_RES_IS_NOT_EMPTY));
         projectService.deleteById(projectId);
+    }
+
+    @Override
+    public DataTable<ProjectResourceVO.Resource> previewProjectResourcePage(ProjectResourceParam.ResourcePageQuery pageQuery) {
+        IProjectResQuery resQuery = ProjectResQueryFactory.getProjectResQuery(pageQuery.getProjectResType(), pageQuery.getBusinessType());
+        FunctionUtil.isNull(resQuery)
+                .throwBaseException(new OCException("无法预览应用资源，未找到对应的方法！"));
+        return resQuery.queryResourcePage(pageQuery);
     }
 
     @Override

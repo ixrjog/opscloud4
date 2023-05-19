@@ -13,6 +13,8 @@ public enum ProjectResTypeEnum {
     /**
      * 项目资源
      */
-    APPLICATION
+    ALIYUN_DEVOPS_WORKITEM,
+    ALIYUN_DEVOPS_SPRINT,
+    ALIYUN_DEVOPS_PROJECT
 
 }
