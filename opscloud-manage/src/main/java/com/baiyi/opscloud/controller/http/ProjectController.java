@@ -41,7 +41,6 @@ public class ProjectController {
         return new HttpResult<>(projectFacade.queryResProjectPage(pageQuery));
     }
 
-
     @Operation(summary = "分页查询项目列表")
     @PostMapping(value = "/page/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<ProjectVO.Project>> queryProjectPage(@RequestBody @Valid ProjectParam.ProjectPageQuery pageQuery) {

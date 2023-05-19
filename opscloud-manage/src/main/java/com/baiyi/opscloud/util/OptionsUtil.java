@@ -49,9 +49,7 @@ public class OptionsUtil {
     }
 
     public static OptionsVO.Options toProjectBusinessTypeOptions() {
-        List<OptionsVO.Option> optionList = Lists.newArrayList(
-                        BusinessTypeEnum.ASSET,
-                        BusinessTypeEnum.ASSET)
+        List<OptionsVO.Option> optionList = Lists.newArrayList(BusinessTypeEnum.ASSET)
                 .stream().map(e -> OptionsVO.Option.builder()
                         .label(e.getName())
                         .value(e.getType())

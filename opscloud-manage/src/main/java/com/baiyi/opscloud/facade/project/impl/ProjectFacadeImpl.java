@@ -53,7 +53,7 @@ public class ProjectFacadeImpl implements ProjectFacade {
         DataTable<Project> table = projectService.queryPageByParam(pageQuery);
         List<ProjectVO.Project> data = BeanCopierUtil.copyListProperties(table.getData(), ProjectVO.Project.class)
                 .stream()
-                .peek(e -> projectPacker.wrap(e, pageQuery, pageQuery))
+                .peek(e -> projectPacker.wrap(e, pageQuery, SimpleRelation.RELATION))
                 .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
