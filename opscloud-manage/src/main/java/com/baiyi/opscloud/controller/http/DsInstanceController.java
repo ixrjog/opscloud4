@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
  * @Date 2021/6/11 10:10 上午
  * @Version 1.0
  */
+@SuppressWarnings("rawtypes")
 @RestController
 @RequestMapping("/api/datasource/instance")
 @Tag(name = "数据源实例")
@@ -57,6 +58,13 @@ public class DsInstanceController {
     @DeleteMapping(value = "/asset/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteAssetById(@RequestParam @Valid int id) {
         assetFacade.deleteAssetByAssetId(id);
+        return HttpResult.SUCCESS;
+    }
+
+    @Operation(summary = "删除数据源实例下指定类型的所有资产")
+    @DeleteMapping(value = "/asset/type/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteAssetByType(@RequestParam @Valid int instanceId, @RequestParam @Valid String assetType) {
+        assetFacade.deleteAssetByType(instanceId, assetType);
         return HttpResult.SUCCESS;
     }
 

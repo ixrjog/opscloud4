@@ -16,13 +16,21 @@ public interface DsInstanceAssetFacade {
     DataTable<DsAssetVO.Asset> queryAssetPage(DsAssetParam.AssetPageQuery pageQuery);
 
     /**
-     *  查询用户密钥
+     * 查询用户密钥
+     *
      * @param username
      * @return
      */
     List<DsAssetVO.Asset> querySshKeyAssets(String username);
 
     void deleteAssetByAssetId(int assetId);
+
+    /**
+     * 删除数据源实例下指定类型的所有资产
+     * @param instanceId
+     * @param assetType
+     */
+    void deleteAssetByType(int instanceId, String assetType);
 
     void setAssetActiveByAssetId(int assetId);
 
