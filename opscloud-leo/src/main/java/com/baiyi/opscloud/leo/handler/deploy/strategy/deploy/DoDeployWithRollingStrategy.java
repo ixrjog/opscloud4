@@ -4,11 +4,12 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
-import com.baiyi.opscloud.leo.handler.deploy.strategy.deploy.base.DoDeployStrategy;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
+import com.baiyi.opscloud.leo.handler.deploy.strategy.deploy.base.DoDeployStrategy;
 import io.fabric8.kubernetes.api.model.Container;
+import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentSpec;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,8 @@ public class DoDeployWithRollingStrategy extends DoDeployStrategy {
     public String getDeployType() {
         return DeployTypeConstants.ROLLING.name();
     }
+
+    private static final String OC_BUILD_ID = "OC_BUILD_ID";
 
     @Override
     protected void doDeploy(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig, KubernetesConfig kubernetesConfig, Deployment deployment) {
@@ -63,6 +66,8 @@ public class DoDeployWithRollingStrategy extends DoDeployStrategy {
              */
             deployment.getSpec().setReplicas(replicas + 1);
         }
+        // Env写入buildId
+        writeEnv(container, leoDeploy.getBuildId());
         try {
             KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), namespace, deployment);
             LeoDeploy saveLeoDeploy = LeoDeploy.builder()
@@ -75,6 +80,18 @@ public class DoDeployWithRollingStrategy extends DoDeployStrategy {
         } catch (Exception e) {
             throw new LeoDeployException(e.getMessage());
         }
+    }
+
+    private void writeEnv(Container container, int buildId) {
+        EnvVar buildIdEnvVar = new EnvVar(OC_BUILD_ID, String.valueOf(buildId), null);
+        for (int i = 0; i < container.getEnv().size(); i++) {
+            EnvVar envVar = container.getEnv().get(i);
+            if (envVar.getName().equals(OC_BUILD_ID)) {
+                container.getEnv().set(i, buildIdEnvVar);
+                return;
+            }
+        }
+        container.getEnv().add(buildIdEnvVar);
     }
 
 }
