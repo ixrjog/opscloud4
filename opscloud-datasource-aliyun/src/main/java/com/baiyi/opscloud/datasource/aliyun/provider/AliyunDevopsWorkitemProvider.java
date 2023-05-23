@@ -6,6 +6,7 @@ import com.baiyi.opscloud.common.datasource.AliyunDevopsConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
+import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetChildProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.aliyun.converter.DevopsAssetConverter;
@@ -27,7 +28,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-@ChildProvider(parentType = DsAssetTypeConstants.ALIYUN_DEVOPS_SPRINT)
+@ChildProvider(parentType = DsAssetTypeConstants.ALIYUN_DEVOPS_PROJECT)
 public class AliyunDevopsWorkitemProvider extends AbstractAssetChildProvider<ListWorkitemsResponseBody.Workitems> {
 
     @Resource
@@ -35,6 +36,7 @@ public class AliyunDevopsWorkitemProvider extends AbstractAssetChildProvider<Lis
 
     @Override
     //@SingleTask(name = PULL_ALIYUN_DEVOPS_WORKITEM)
+    @EnablePullChild(type = DsAssetTypeConstants.ALIYUN_DEVOPS_SPRINT)
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -62,8 +64,8 @@ public class AliyunDevopsWorkitemProvider extends AbstractAssetChildProvider<Lis
         AliyunDevopsConfig.Devops devops = buildConfig(dsInstanceContext.getDsConfig());
         List<ListWorkitemsResponseBody.Workitems> entities = Lists.newArrayList();
         //  asset.getAssetKey() 是 ProjectId
-        entities.addAll(AliyunDevopsWorkitemsDriver.listWorkitems(devops.getRegionId(), devops, asset.getAssetKey(), "Project", "Req"));
-        entities.addAll(AliyunDevopsWorkitemsDriver.listWorkitems(devops.getRegionId(), devops, asset.getAssetKey(), "Project", "Task"));
+        entities.addAll(AliyunDevopsWorkitemsDriver.listWorkitems(devops.getRegionId(), devops, asset.getAssetId(), "Project", "Req"));
+        entities.addAll(AliyunDevopsWorkitemsDriver.listWorkitems(devops.getRegionId(), devops, asset.getAssetId(), "Project", "Task"));
         return entities;
     }
 

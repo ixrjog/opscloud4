@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import jakarta.annotation.Resource;
 import jakarta.websocket.Session;
+
 import java.io.IOException;
 
 /**
@@ -36,7 +37,7 @@ public abstract class BaseKubernetesDeploymentRequestHandler<T> implements IKube
 
     protected void sendToSession(Session session, AuthenticationException e) throws IOException {
         if (session.isOpen()) {
-            KubernetesDeploymentResponse response = KubernetesDeploymentResponse.builder()
+            KubernetesDeploymentResponse<String> response = KubernetesDeploymentResponse.<String>builder()
                     .body(e.getMessage())
                     .messageType(AUTHENTICATION_FAILURE)
                     .build();
@@ -46,7 +47,7 @@ public abstract class BaseKubernetesDeploymentRequestHandler<T> implements IKube
 
     protected void sendToSession(Session session, T body) throws IOException {
         if (session.isOpen()) {
-            KubernetesDeploymentResponse response = KubernetesDeploymentResponse.builder()
+            KubernetesDeploymentResponse<T> response = KubernetesDeploymentResponse.<T>builder()
                     .body(body)
                     .messageType(getMessageType())
                     .build();
