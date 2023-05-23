@@ -10,6 +10,9 @@ import lombok.Getter;
 @Getter
 public enum ApplicationResTypeEnum {
 
+    /**
+     * 应用资源
+     */
     SERVER,
     SERVERGROUP,
     KUBERNETES_DEPLOYMENT,

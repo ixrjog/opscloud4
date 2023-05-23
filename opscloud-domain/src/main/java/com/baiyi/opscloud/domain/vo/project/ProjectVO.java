@@ -75,5 +75,8 @@ public class ProjectVO {
 
         private UserPermissionVO.UserPermission userPermission;
 
+        private List<ProjectResourceVO.Resource> applicationList;
+
+
     }
 }

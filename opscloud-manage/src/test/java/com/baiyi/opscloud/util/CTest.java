@@ -25,7 +25,6 @@ public class CTest extends BaseUnit {
     void funTest() {
         try {
             FunctionUtil.isTure(false).throwBaseException(new OCException("工具类测试-false"));
-
             FunctionUtil.isTure(true).throwBaseException(new OCException("工具类测试-true"));
         } catch (OCException ocException) {
             print(ocException.getMessage());
