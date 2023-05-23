@@ -91,6 +91,9 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
         if (pageQuery.getIsActive() != null) {
             criteria.andEqualTo("isActive", pageQuery.getIsActive());
         }
+        if (pageQuery.getParentId() != null) {
+            criteria.andEqualTo("parentId", pageQuery.getParentId());
+        }
         if (StringUtils.isNotBlank(pageQuery.getRegionId())) {
             criteria.andEqualTo("regionId", pageQuery.getRegionId());
         }

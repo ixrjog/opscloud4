@@ -80,6 +80,8 @@ public class ProjectResourceParam {
         @Schema(description = "展开")
         private Boolean extend;
 
+        private Integer parentId;
+
     }
 
 }

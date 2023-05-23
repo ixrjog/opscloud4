@@ -34,6 +34,7 @@ public class AbstractProjectResQueryWithAsset extends AbstractProjectResQuery {
                 .instanceUuid(pageQuery.getInstanceUuid())
                 .assetType(pageQuery.getProjectResType())
                 .queryName(pageQuery.getQueryName())
+                .parentId(pageQuery.getParentId())
                 .isActive(true)
                 .build();
         query.setPage(pageQuery.getPage());
