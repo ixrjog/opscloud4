@@ -163,7 +163,7 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
                                 .build())
                 .stream()
                 .map(e -> tagService.getById(e.getTagId()))
-                .collect(Collectors.toList());
+                .toList();
         List<WorkRole> workRoles = Lists.newArrayList();
         if (!CollectionUtils.isEmpty(tags)) {
             tags.forEach(tag -> {

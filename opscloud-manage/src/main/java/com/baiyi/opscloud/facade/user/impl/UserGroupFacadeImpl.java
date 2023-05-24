@@ -80,8 +80,8 @@ public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermis
     }
 
     @Override
-    @TagClear// 清除标签
-    @AssetBusinessUnbindRelation(type = BusinessTypeEnum.USERGROUP) // 解除资产绑定
+    @TagClear
+    @AssetBusinessUnbindRelation(type = BusinessTypeEnum.USERGROUP)
     public void deleteUserGroupById(Integer id) {
         // 检查组成员
         UserPermission userPermission = UserPermission.builder()

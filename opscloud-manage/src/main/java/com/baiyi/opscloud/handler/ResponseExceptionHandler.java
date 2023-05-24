@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
+@SuppressWarnings("rawtypes")
 @Slf4j
 @RestControllerAdvice
 public class ResponseExceptionHandler {

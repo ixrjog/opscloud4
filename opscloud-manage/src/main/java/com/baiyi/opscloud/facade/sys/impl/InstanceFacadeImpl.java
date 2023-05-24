@@ -40,7 +40,7 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
 
     private final RegisteredInstancePacker registeredInstancePacker;
 
-    private static final InetAddress inetAddress = getInetAddress();
+    private static final InetAddress INET_ADDRESS = getInetAddress();
 
     public interface HealthStatus {
         String OK = "OK";
@@ -91,10 +91,10 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
 
     @Override
     public InstanceVO.Health checkHealth() {
-        if (InstanceFacadeImpl.inetAddress == null) {
+        if (InstanceFacadeImpl.INET_ADDRESS == null) {
             return buildHealthWithStatus(HealthStatus.ERROR);
         }
-        Instance instance = instanceService.getByHostIp(InstanceFacadeImpl.inetAddress.getHostAddress());
+        Instance instance = instanceService.getByHostIp(InstanceFacadeImpl.INET_ADDRESS.getHostAddress());
         if (instance == null) {
             return buildHealthWithStatus(HealthStatus.ERROR);
         }

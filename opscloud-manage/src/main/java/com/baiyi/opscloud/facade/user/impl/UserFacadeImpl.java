@@ -124,7 +124,9 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public void syncUserPermissionGroupForAsset() {
         List<User> users = userService.queryAll();
-        if (CollectionUtils.isEmpty(users)) return;
+        if (CollectionUtils.isEmpty(users)) {
+            return;
+        }
         users.forEach(u -> {
             log.info("同步用户 {}", u.getUsername());
             DatasourceInstanceAsset query = DatasourceInstanceAsset.builder()
@@ -133,14 +135,14 @@ public class UserFacadeImpl implements UserFacade {
                     .isActive(true)
                     .build();
             List<DatasourceInstanceAsset> userAssets = dsInstanceAssetService.queryAssetByAssetParam(query);
-            if (CollectionUtils.isEmpty(userAssets)) return;
+            if (CollectionUtils.isEmpty(userAssets)) {
+                return;
+            }
             userAssets.forEach(a -> {
                 DsAssetVO.Asset asset = BeanCopierUtil.copyProperties(a, DsAssetVO.Asset.class);
                 dsAssetPacker.wrap(asset, SimpleExtend.EXTEND, SimpleRelation.RELATION);
                 if (asset.getChildren().containsKey(DsAssetTypeConstants.GROUP.name())) {
-                    /**
-                     * GROUP存在
-                     */
+                    // GROUP存在
                     asset.getChildren().get(DsAssetTypeConstants.GROUP.name()).forEach(g ->
                             userPermissionUserGroup(u, g.getAssetId()));
                 }
@@ -192,9 +194,6 @@ public class UserFacadeImpl implements UserFacade {
             int accessLevel = userPermissionFacade.getUserAccessLevel(SessionUtil.getUsername());
             FunctionUtil.isTure(accessLevel < AccessLevel.OPS.getLevel())
                     .throwBaseException(new OCException("权限不足: 需要管理员才能修改其他用户信息!"));
-//            if (accessLevel < AccessLevel.OPS.getLevel()) {
-//                throw new OCException("权限不足: 需要管理员才能修改其他用户信息!");
-//            }
         }
         User preUpdateUser = UserConverter.toDO(updateUser);
         updateUser.setUsername(checkUser.getUsername());
@@ -207,11 +206,6 @@ public class UserFacadeImpl implements UserFacade {
         FunctionUtil.isTureOrFalse(user.getIsActive())
                 .trueOrFalseHandle(() -> userService.setInactive(user)
                         , () -> userService.setActive(user));
-//        if (user.getIsActive()) {
-//            userService.setInactive(user);
-//        } else {
-//            userService.setActive(user);
-//        }
     }
 
     /**
@@ -229,9 +223,6 @@ public class UserFacadeImpl implements UserFacade {
         }
         FunctionUtil.isTure(user.getIsActive())
                 .throwBaseException(new OCException("当前用户为活跃状态不能删除！"));
-//        if (user.getIsActive()) {
-//            throw new OCException("当前用户为活跃状态不能删除！");
-//        }
         userService.delete(user);
     }
 
@@ -318,9 +309,6 @@ public class UserFacadeImpl implements UserFacade {
         User user = userService.getByUsername(username);
         FunctionUtil.isTure(user.getForceMfa())
                 .throwBaseException(new OCException("MFA无法重置: 管理员强制启用!"));
-//        if (user.getForceMfa()) {
-//            throw new OCException("MFA无法重置: 管理员强制启用!");
-//        }
         if (user.getMfa()) {
             User userMfa = User.builder()
                     .id(user.getId())
@@ -343,9 +331,6 @@ public class UserFacadeImpl implements UserFacade {
         User user = userService.getByUsername(username);
         FunctionUtil.isTure(user.getMfa())
                 .throwBaseException(new OCException("MFA无法绑定: 重复操作!"));
-//        if (user.getMfa()) {
-//            throw new OCException("MFA无法绑定: 重复操作!");
-//        }
         mfaAuthHelper.verify(user, LoginParam.Login.builder().otp(otp).build());
         user.setMfa(true);
         userService.updateMfa(user);

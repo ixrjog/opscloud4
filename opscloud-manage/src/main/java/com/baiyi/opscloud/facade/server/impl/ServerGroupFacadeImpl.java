@@ -199,7 +199,7 @@ public class ServerGroupFacadeImpl extends AbstractAppResQuery implements Server
         List<ServerGroup> groups = serverGroupService.queryUserServerGroupTreeByParam(queryParam)
                 .stream()
                 .filter(g -> serverService.countByServerGroupId(g.getId()) != 0)
-                .collect(Collectors.toList());
+                .toList();
 
         List<ServerTreeVO.Tree> treeList = Lists.newArrayList();
         AtomicInteger treeSize = new AtomicInteger();
