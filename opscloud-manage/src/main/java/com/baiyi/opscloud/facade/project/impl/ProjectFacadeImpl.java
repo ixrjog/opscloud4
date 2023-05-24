@@ -60,8 +60,12 @@ public class ProjectFacadeImpl implements ProjectFacade {
 
     @Override
     public DataTable<ProjectVO.Project> queryResProjectPage(ProjectParam.ResProjectPageQuery pageQuery) {
-        DataTable<Project> dataTable = projectService.queryPageByParam(pageQuery);
-        return null;
+        DataTable<Project> table = projectService.queryResPageByParam(pageQuery);
+        List<ProjectVO.Project> data = BeanCopierUtil.copyListProperties(table.getData(), ProjectVO.Project.class)
+                .stream()
+                .peek(e -> projectPacker.wrap(e, pageQuery, SimpleRelation.NOT_RELATION))
+                .collect(Collectors.toList());
+        return new DataTable<>(data, table.getTotalNum());
     }
 
     @Override

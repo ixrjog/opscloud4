@@ -27,6 +27,6 @@ public interface ProjectService {
 
     DataTable<Project> queryPageByParam(ProjectParam.ProjectPageQuery pageQuery);
 
-    DataTable<Project> queryPageByParam(ProjectParam.ResProjectPageQuery pageQuery);
+    DataTable<Project> queryResPageByParam(ProjectParam.ResProjectPageQuery pageQuery);
 
 }

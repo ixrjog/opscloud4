@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import jakarta.websocket.Session;
+
 import java.io.IOException;
 
 /**
@@ -32,18 +33,22 @@ public class KubernetesDeploymentQueryRequestHandler extends BaseKubernetesDeplo
     @Override
     public void handleRequest(String sessionId, Session session, String message) throws IOException {
         KubernetesDeploymentMessage kubernetesDeploymentMessage = new GsonBuilder().create().fromJson(message, KubernetesDeploymentMessage.class);
+        try {
+            String username = handleAuth(kubernetesDeploymentMessage.getToken());
+            ApplicationVO.Kubernetes kubernetes = getBody(kubernetesDeploymentMessage, username);
+            sendToSession(session, kubernetes);
+        } catch (AuthenticationException e) {
+            sendToSession(session, e);
+        }
+    }
+
+    public ApplicationVO.Kubernetes getBody(KubernetesDeploymentMessage kubernetesDeploymentMessage, String username) {
         ApplicationParam.GetApplicationKubernetes getApplicationKubernetes = ApplicationParam.GetApplicationKubernetes.builder()
                 .applicationId(kubernetesDeploymentMessage.getApplicationId())
                 .envType(kubernetesDeploymentMessage.getEnvType())
                 .extend(true)
                 .build();
-        try {
-            String username = handleAuth(kubernetesDeploymentMessage.getToken());
-            ApplicationVO.Kubernetes kubernetes = kubernetesFacade.getApplicationKubernetes(getApplicationKubernetes, username);
-            sendToSession(session, kubernetes);
-        } catch (AuthenticationException e) {
-            sendToSession(session, e);
-        }
+        return kubernetesFacade.getApplicationKubernetes(getApplicationKubernetes, username);
     }
 
 }

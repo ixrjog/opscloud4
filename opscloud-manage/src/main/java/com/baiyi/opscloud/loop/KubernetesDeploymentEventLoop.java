@@ -42,7 +42,7 @@ public class KubernetesDeploymentEventLoop implements Runnable {
                     IKubernetesDeploymentRequestHandler handler = KubernetesDeploymentMessageHandlerFactory.getHandlerByMessageType(kubernetesDeploymentMessage.getMessageType());
                     if (handler != null) {
                         handler.handleRequest(this.sessionId, session, message);
-                        NewTimeUtil.sleep(5L);
+                        NewTimeUtil.sleep(10L);
                     }
                 }
             } catch (Exception e) {

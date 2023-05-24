@@ -139,7 +139,7 @@ public class BuildFinalProcessingChainHandler extends BaseBuildChainHandler {
                     .appId(leoBuild.getApplicationId())
                     .gitLab(gitLab)
                     .user(user)
-                    .projectId(-1)
+                    .projectId(leoBuild.getProjectId())
                     .gmtModified(leoBuild.getEndTime())
                     .build();
 
