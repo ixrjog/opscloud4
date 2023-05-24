@@ -8,7 +8,10 @@
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="project_key" jdbcType="VARCHAR" property="projectKey"/>
-        <result column="project_type" jdbcType="INTEGER" property="projectType"/>
+        <result column="project_type" jdbcType="VARCHAR" property="projectType"/>
+        <result column="project_status" jdbcType="VARCHAR" property="projectStatus"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
         <result column="is_active" jdbcType="BIT" property="isActive"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
@@ -24,22 +27,29 @@
         </if>
         <where>
             <if test="tagId != null and tagId > 0">
-                a1.business_type = 106 and a1.tag_id = #{tagId}
+                a1.business_type = #{businessType} and a1.tag_id = #{tagId}
+            </if>
+            <if test="projectType != null and projectType != ''">
+                a0.project_type = #{projectType}
+            </if>
+            <if test="projectStatus != null and projectStatus != ''">
+                a0.project_status = #{projectStatus}
             </if>
             <if test="queryName != null and queryName != ''">
                 and ( a0.name like "%" #{queryName} "%"
-                or a0.project_key like "%" #{queryName} "%"
                 or a0.comment like "%" #{queryName} "%" )
             </if>
         </where>
-        order by replace( a0.name, #{queryName}, '' ), a0.create_time
+        order by replace( a0.name, #{queryName}, '' ), a0.id desc
     </select>
 
     <select id="queryResProjectByParam"
             parameterType="com.baiyi.opscloud.domain.param.project.ProjectParam$ResProjectPageQuery"
             resultMap="BaseResultMap">
-        select * from project where id in ( select project_id from project_resource
-             where resource_type = #{resourceType}  and business_id = #{businessId} )
+        select * from project
+            where is_active = 1 and id in ( select project_id from project_resource
+              where resource_type = #{resourceType}  and business_id = #{businessId} )
+        order by id desc
     </select>
 
 </mapper>

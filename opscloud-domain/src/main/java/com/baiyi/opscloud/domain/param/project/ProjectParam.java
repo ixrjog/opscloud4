@@ -1,15 +1,20 @@
 package com.baiyi.opscloud.domain.param.project;
 
 import com.baiyi.opscloud.domain.base.BaseBusiness;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.IRelation;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.Date;
 
 /**
  * @Author 修远
@@ -24,16 +29,24 @@ public class ProjectParam {
     @Schema
     public static class AddProject {
 
-        private Integer id;
-
         @Schema(description = "项目名称")
+        @NotBlank(message = "必须指定项目名称")
         private String name;
 
-        @Schema(description = "项目Key")
-        private String projectKey;
-
         @Schema(description = "项目类型")
-        private Integer projectType;
+        @NotBlank(message = "必须指定项目类型")
+        private String projectType;
+
+        @Schema(description = "项目状态")
+        @NotBlank(message = "必须指定项目状态")
+        private String projectStatus;
+
+        @Schema(description = "开始时间")
+        @NotNull(message = "必须指定项目开始时间")
+        private Date startTime;
+
+        @Schema(description = "结束时间")
+        private Date endTime;
 
         @Schema(description = "有效")
         private Boolean isActive;
@@ -54,15 +67,23 @@ public class ProjectParam {
         @Schema(description = "项目名称")
         private String name;
 
-        @Schema(description = "项目Key")
-        private String projectKey;
+        @Schema(description = "项目类型")
+        private String projectType;
+
+        @Schema(description = "项目状态")
+        private String projectStatus;
+
+        @Schema(description = "开始时间")
+        private Date startTime;
+
+        @Schema(description = "结束时间")
+        private Date endTime;
 
         @Schema(description = "有效")
         private Boolean isActive;
 
         @Schema(description = "描述")
         private String comment;
-
 
     }
 
@@ -80,8 +101,16 @@ public class ProjectParam {
         @Schema(description = "标签ID")
         private Integer tagId;
 
+        @Schema(description = "项目类型")
+        private String projectType;
+
+        @Schema(description = "项目状态")
+        private String projectStatus;
+
         @Schema(description = "展开")
         private Boolean extend;
+
+        private final int businessType = BusinessTypeEnum.PROJECT.getType();
 
     }
 

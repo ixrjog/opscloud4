@@ -7,12 +7,14 @@ import com.baiyi.opscloud.domain.vo.business.IBusinessPermissionUser;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +65,19 @@ public class ProjectVO {
         @Schema(description = "项目关键字")
         private String projectKey;
 
-        private Integer projectType;
+        @Schema(description = "项目类型")
+        private String projectType;
+
+        @Schema(description = "项目状态")
+        private String projectStatus;
+
+        @Schema(description = "开始时间")
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+        private Date startTime;
+
+        @Schema(description = "结束时间")
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+        private Date endTime;
 
         @Schema(description = "描述")
         private String comment;
@@ -76,7 +90,6 @@ public class ProjectVO {
         private UserPermissionVO.UserPermission userPermission;
 
         private List<ProjectResourceVO.Resource> applicationList;
-
 
     }
 }

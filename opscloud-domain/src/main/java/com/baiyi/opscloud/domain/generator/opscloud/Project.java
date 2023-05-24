@@ -29,7 +29,19 @@ public class Project {
      * 项目类型
      */
     @Column(name = "project_type")
-    private Integer projectType;
+    private String projectType;
+
+    /**
+     * 项目状态
+     */
+    @Column(name = "project_status")
+    private String projectStatus;
+
+    @Column(name = "start_time")
+    private Date startTime;
+
+    @Column(name = "end_time")
+    private Date endTime;
 
     /**
      * 有效

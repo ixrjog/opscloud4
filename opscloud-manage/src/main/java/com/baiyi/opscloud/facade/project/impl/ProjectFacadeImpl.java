@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.project.impl;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.FunctionUtil;
+import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
@@ -23,7 +24,6 @@ import com.baiyi.opscloud.service.project.ProjectResourceService;
 import com.baiyi.opscloud.service.project.ProjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -80,14 +80,8 @@ public class ProjectFacadeImpl implements ProjectFacade {
 
     @Override
     public void addProject(ProjectParam.AddProject project) {
-        project.setProjectKey(project.getProjectKey().replaceAll(" ", "").toUpperCase());
-        FunctionUtil.isNullOrEmpty(project.getProjectKey())
-                .throwBaseException(new OCException(ErrorEnum.PROJECT_KEY_CANNOT_BE_EMPTY));
-        FunctionUtil.isTure(StringUtils.isBlank(project.getProjectKey()))
-                .throwBaseException(new OCException(ErrorEnum.PROJECT_KEY_CANNOT_BE_EMPTY));
-        FunctionUtil.isTure(projectService.getByKey(project.getProjectKey()) != null)
-                .throwBaseException(new OCException(ErrorEnum.PROJECT_ALREADY_EXIST));
         Project newProject = BeanCopierUtil.copyProperties(project, Project.class);
+        newProject.setProjectKey(IdUtil.buildUUID());
         projectService.add(newProject);
     }
 
