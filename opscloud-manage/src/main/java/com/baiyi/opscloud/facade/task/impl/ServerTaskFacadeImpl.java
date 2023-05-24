@@ -3,9 +3,9 @@ package com.baiyi.opscloud.facade.task.impl;
 import com.baiyi.opscloud.common.base.ServerTaskStatusEnum;
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.exception.common.OCException;
-import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
+import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
@@ -30,18 +30,18 @@ import com.baiyi.opscloud.service.task.ServerTaskMemberService;
 import com.baiyi.opscloud.service.task.ServerTaskService;
 import com.baiyi.opscloud.util.PlaybookUtil;
 import com.google.common.collect.Lists;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import jakarta.annotation.Resource;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
@@ -73,8 +73,8 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     @Resource
     private ServerTaskPacker serverTaskPacker;
 
-//    @Autowired
-//    private ThreadPoolTaskExecutor coreExecutor;
+    @Autowired
+    private ThreadPoolTaskExecutor coreExecutor;
 
     private static final int MAX_EXECUTING = 10;
 
@@ -132,30 +132,28 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                 .inventory(SystemEnvUtil.renderEnvHome(ansible.getInventoryHost()))
                 .build();
 
-        ExecutorService fixedThreadPool = Executors.newFixedThreadPool(MAX_EXECUTING);
+        // ExecutorService fixedThreadPool = Executors.newFixedThreadPool(MAX_EXECUTING);
         // 使用迭代器遍历并执行所有服务器任务
         Iterator<ServerTaskMember> iter = members.iterator();
-        try {
-            while (iter.hasNext()) {
-                // 查询当前执行中的任务是否达到最大并发
-                if (serverTaskMemberService.countByTaskStatus(serverTask.getId(), ServerTaskStatusEnum.EXECUTING.name()) < MAX_EXECUTING) {
-                    ServerTaskMember serverTaskMember = iter.next();
-                    iter.remove();
-                    args.setHosts(serverTaskMember.getManageIp());
-                    CommandLine commandLine = AnsiblePlaybookArgumentsBuilder.build(ansible, args);
-                    AnsibleServerTask ansibleServerTask = new AnsibleServerTask(serverTask.getTaskUuid(),
-                            serverTaskMember,
-                            commandLine,
-                            serverTaskMemberService,
-                            taskLogStorehouse);
-                    // 执行任务
-                    fixedThreadPool.execute(ansibleServerTask);
-                }
-                NewTimeUtil.sleep(5L);
+
+        while (iter.hasNext()) {
+            // 查询当前执行中的任务是否达到最大并发
+            if (serverTaskMemberService.countByTaskStatus(serverTask.getId(), ServerTaskStatusEnum.EXECUTING.name()) < MAX_EXECUTING) {
+                ServerTaskMember serverTaskMember = iter.next();
+                iter.remove();
+                args.setHosts(serverTaskMember.getManageIp());
+                CommandLine commandLine = AnsiblePlaybookArgumentsBuilder.build(ansible, args);
+                AnsibleServerTask ansibleServerTask = new AnsibleServerTask(serverTask.getTaskUuid(),
+                        serverTaskMember,
+                        commandLine,
+                        serverTaskMemberService,
+                        taskLogStorehouse);
+                // 执行任务
+                coreExecutor.execute(ansibleServerTask);
             }
-        } finally {
-            fixedThreadPool.shutdown();
+            NewTimeUtil.sleep(5L);
         }
+
         traceEndOfTask(serverTask);
     }
 
