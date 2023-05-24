@@ -118,7 +118,7 @@ public class BuildFinalProcessingChainHandler extends BaseBuildChainHandler {
                     .build();
 
             LeoHook.Commit commit = LeoHook.Commit.builder()
-                    .id(dict.getOrDefault(BuildDictConstants.COMMIT_ID.getKey(), ""))
+                    .id(dict.getOrDefault(BuildDictConstants.COMMIT.getKey(), ""))
                     .build();
 
             LeoHook.GitLab gitLab = LeoHook.GitLab.builder()
