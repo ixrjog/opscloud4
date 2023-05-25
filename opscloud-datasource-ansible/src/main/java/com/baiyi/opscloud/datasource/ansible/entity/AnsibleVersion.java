@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
@@ -25,9 +26,12 @@ public class AnsibleVersion {
     @Data
     public static class Version implements IToAsset {
 
-        private String version; // 版本
-        private String executableLocation; // 执行位置
-        private String details; // 详情
+        @Schema(description = "版本")
+        private String version;
+        @Schema(description = "执行位置")
+        private String executableLocation;
+        @Schema(description = "详情")
+        private String details;
         private String type;
 
         @Override

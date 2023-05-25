@@ -129,4 +129,5 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
     public void afterPropertiesSet() {
         AssetProviderFactory.register(ansibleHostsProvider);
     }
+
 }
