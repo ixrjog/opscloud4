@@ -41,10 +41,10 @@ spring:
       # password: ENC(o6UKSKlETx2g13HH0nsWttoQSvW0+OF/7/DcHo2lc0FOlf03x8jzTgB1khTUODtXRMzG2/PK8uQ=)
       jedis:
         pool:
-          max-wait: 5000
+          max-wait: 10000
           max-idle: 20
           max-active: 100
-          min-idle: 0
+          min-idle: 5
   datasource:
     url: jdbc:mysql://172.19.0.128:3306/opscloud4-prod?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: opscloud4
