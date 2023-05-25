@@ -31,4 +31,5 @@ public class ExecResult {
     public boolean isSuccess() {
         return exitCode == 0;
     }
+
 }
