@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author baiyi
@@ -14,13 +15,14 @@ public class LeoHookResult {
 
     @Data
     @Builder
+    @NoArgsConstructor
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Result {
 
         public static final Result ERROR =  Result.builder().build();
 
-        private Object body;
+        private String body;
 
         @Builder.Default
         private boolean success = false;

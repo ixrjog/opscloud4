@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.service.project.impl;
 
+import com.baiyi.opscloud.common.annotation.ServiceExceptionCatch;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Project;
 import com.baiyi.opscloud.domain.param.project.ProjectParam;
@@ -48,11 +49,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    @ServiceExceptionCatch(message = "新增项目错误: 请确认项目名是否冲突!")
     public void add(Project project) {
         projectMapper.insert(project);
     }
 
     @Override
+    @ServiceExceptionCatch(message = "更新项目错误: 请确认项目名是否冲突!")
     public void update(Project project) {
         projectMapper.updateByPrimaryKey(project);
     }

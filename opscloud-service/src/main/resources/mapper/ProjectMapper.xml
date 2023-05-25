@@ -40,7 +40,7 @@
                 or a0.comment like "%" #{queryName} "%" )
             </if>
         </where>
-        order by replace( a0.name, #{queryName}, '' ), a0.id desc
+        order by a0.id desc, replace( a0.name, #{queryName}, '' )
     </select>
 
     <select id="queryResProjectByParam"
