@@ -8,6 +8,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.leo.handler.deploy.strategy.deploy.base.DoDeployStrategy;
+import com.google.common.collect.Lists;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -84,14 +86,10 @@ public class DoDeployWithRollingStrategy extends DoDeployStrategy {
 
     private void writeEnv(Container container, int buildId) {
         EnvVar buildIdEnvVar = new EnvVar(OC_BUILD_ID, String.valueOf(buildId), null);
-        for (int i = 0; i < container.getEnv().size(); i++) {
-            EnvVar envVar = container.getEnv().get(i);
-            if (envVar.getName().equals(OC_BUILD_ID)) {
-                container.getEnv().set(i, buildIdEnvVar);
-                return;
-            }
-        }
-        container.getEnv().add(buildIdEnvVar);
+        List<EnvVar> newEnvVars = Lists.newArrayList(buildIdEnvVar);
+        container.getEnv().stream().filter(envVar -> !envVar.getName().equals(OC_BUILD_ID)).forEach(newEnvVars::add);
+        container.getEnv().clear();
+        container.setEnv(newEnvVars);
     }
 
 }
