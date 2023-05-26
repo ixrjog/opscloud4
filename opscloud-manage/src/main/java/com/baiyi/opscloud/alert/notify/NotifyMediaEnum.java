@@ -8,6 +8,9 @@ package com.baiyi.opscloud.alert.notify;
 
 public enum NotifyMediaEnum {
 
+    /**
+     * 类型
+     */
     VMS, DINGTALK, SMS
 
 }

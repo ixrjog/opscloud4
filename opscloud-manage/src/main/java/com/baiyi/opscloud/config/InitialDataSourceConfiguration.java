@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.config;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -8,6 +9,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
 import jakarta.annotation.Resource;
+
 import javax.sql.DataSource;
 
 
@@ -25,7 +27,7 @@ public class InitialDataSourceConfiguration implements ApplicationContextAware {
     private ConfigurableApplicationContext configurableApplicationContext;
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
         try {
             DataSource dataSource = applicationContext.getBean("dataSource", DataSource.class);
             dataSource.getConnection().close();

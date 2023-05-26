@@ -10,6 +10,9 @@ import lombok.Getter;
 @Getter
 public enum NotifyStatusEnum {
 
+    /**
+     * 通知
+     */
     CALL_OK("用户接听"),
     CALL_ERR("用户未接听");
 
