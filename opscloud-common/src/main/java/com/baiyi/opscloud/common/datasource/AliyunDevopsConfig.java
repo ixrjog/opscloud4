@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2023/5/12 10:23
@@ -27,7 +29,23 @@ public class AliyunDevopsConfig extends BaseDsConfig {
         @Schema(description = "组织架构ID")
         private String organizationId;
         private String regionId;
+        private SyncOptions syncOptions;
 
+    }
+
+    @Data
+    @NoArgsConstructor
+    @Schema(description = "同步配置")
+    public static class SyncOptions {
+        private Workitem workitem;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @Schema(description = "工作项")
+    public static class Workitem {
+        @Schema(description = "类别")
+        private List<String> categories;
     }
 
 }

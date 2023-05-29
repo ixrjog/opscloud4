@@ -1,7 +1,8 @@
 spring:
   application:
     name: opscloud
-    version: 4.4.6
+    version: 4.4.7
+
 #  web:
 #    resources:
 #      static-locations: classpath:/static/
