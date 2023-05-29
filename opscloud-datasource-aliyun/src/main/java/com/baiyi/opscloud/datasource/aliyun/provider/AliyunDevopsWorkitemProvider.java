@@ -19,8 +19,11 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.collect.Lists;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Author baiyi
@@ -64,8 +67,20 @@ public class AliyunDevopsWorkitemProvider extends AbstractAssetChildProvider<Lis
         AliyunDevopsConfig.Devops devops = buildConfig(dsInstanceContext.getDsConfig());
         List<ListWorkitemsResponseBody.Workitems> entities = Lists.newArrayList();
         //  asset.getAssetKey() 是 ProjectId
-        entities.addAll(AliyunDevopsWorkitemsDriver.listWorkitems(devops.getRegionId(), devops, asset.getAssetId(), "Project", "Req"));
-        entities.addAll(AliyunDevopsWorkitemsDriver.listWorkitems(devops.getRegionId(), devops, asset.getAssetId(), "Project", "Task"));
+
+        List<String> categories = Optional.of(devops)
+                .map(AliyunDevopsConfig.Devops::getSyncOptions)
+                .map(AliyunDevopsConfig.SyncOptions::getWorkitem)
+                .map(AliyunDevopsConfig.Workitem::getCategories)
+                .orElse(Collections.emptyList());
+
+        if (CollectionUtils.isEmpty(categories)) {
+            return entities;
+        }
+
+        categories.forEach(category ->
+                entities.addAll(AliyunDevopsWorkitemsDriver.listWorkitems(devops.getRegionId(), devops, asset.getAssetId(), "Project", category))
+        );
         return entities;
     }
 
