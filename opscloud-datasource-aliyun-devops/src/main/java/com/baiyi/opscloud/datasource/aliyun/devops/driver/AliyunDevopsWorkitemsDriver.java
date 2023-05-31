@@ -36,7 +36,7 @@ public class AliyunDevopsWorkitemsDriver {
                                                                           String spaceType,
                                                                           String category) {
         List<ListWorkitemsResponseBody.Workitems> result = Lists.newArrayList();
-        try (AsyncClient client = AliyunDevopsClient.buildClient(regionId, devops)) {
+        try (AsyncClient client = AliyunDevopsClient.buildAsyncClient(regionId, devops)) {
             ListWorkitemsRequest request = ListWorkitemsRequest.builder()
                     .spaceIdentifier(spaceIdentifier)
                     .organizationId(devops.getOrganizationId())

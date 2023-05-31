@@ -47,7 +47,7 @@ public class GitLabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTic
 
     @Override
     protected void processHandle(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
-        GitLabConfig.Gitlab config = getDsConfig(ticketEntry, GitLabConfig.class).getGitlab();
+        GitLabConfig.GitLab config = getDsConfig(ticketEntry, GitLabConfig.class).getGitlab();
         WorkOrderTicket ticket = getTicketById(ticketEntry.getWorkOrderTicketId());
         String username = ticket.getUsername();
         String role = ticketEntry.getRole();
@@ -75,7 +75,7 @@ public class GitLabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTic
         }
     }
 
-    private User getOrCreateUser(GitLabConfig.Gitlab config, String username) {
+    private User getOrCreateUser(GitLabConfig.GitLab config, String username) {
         List<User> gitlabUsers = gitlabUserDelegate.findUsers(config, username);
         Optional<User> optionalGitlabUser = gitlabUsers.stream().filter(e -> e.getUsername().equals(username)).findFirst();
         return optionalGitlabUser.orElseGet(() -> gitlabUserDelegate.createUser(config, username));

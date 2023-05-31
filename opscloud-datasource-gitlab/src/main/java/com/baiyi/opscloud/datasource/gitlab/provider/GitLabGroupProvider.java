@@ -44,7 +44,7 @@ public class GitLabGroupProvider extends AbstractAssetRelationProvider<Group, Pr
         return DsTypeEnum.GITLAB.name();
     }
 
-    private GitLabConfig.Gitlab buildConfig(DatasourceConfig dsConfig) {
+    private GitLabConfig.GitLab buildConfig(DatasourceConfig dsConfig) {
         return dsConfigHelper.build(dsConfig, GitLabConfig.class).getGitlab();
     }
 

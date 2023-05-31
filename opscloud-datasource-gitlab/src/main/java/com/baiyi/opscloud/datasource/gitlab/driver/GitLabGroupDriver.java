@@ -31,7 +31,7 @@ public class GitLabGroupDriver {
      * @return
      * @throws GitLabApiException
      */
-    public static List<Member> getMembersWithGroupId(GitLabConfig.Gitlab gitlab, Long groupId) throws GitLabApiException {
+    public static List<Member> getMembersWithGroupId(GitLabConfig.GitLab gitlab, Long groupId) throws GitLabApiException {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             Pager<Member> memberPager = gitLabApi.getGroupApi().getMembers(groupId, ITEMS_PER_PAGE);
             return memberPager.all();
@@ -48,7 +48,7 @@ public class GitLabGroupDriver {
      * @return
      * @throws GitLabApiException
      */
-    public static List<Project> getProjectsWithGroupId(GitLabConfig.Gitlab gitlab, Long groupId) throws GitLabApiException {
+    public static List<Project> getProjectsWithGroupId(GitLabConfig.GitLab gitlab, Long groupId) throws GitLabApiException {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             Pager<Project> projectPager = gitLabApi.getGroupApi().getProjects(groupId, ITEMS_PER_PAGE);
             return projectPager.all();
@@ -67,7 +67,7 @@ public class GitLabGroupDriver {
      * @param accessLevel
      * @throws GitLabApiException
      */
-    public static void updateMember(GitLabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
+    public static void updateMember(GitLabConfig.GitLab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             gitLabApi.getGroupApi().updateMember(groupId, userId, accessLevel);
         } catch (GitLabApiException e) {
@@ -85,7 +85,7 @@ public class GitLabGroupDriver {
      * @param accessLevel
      * @throws GitLabApiException
      */
-    public static void addMember(GitLabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
+    public static void addMember(GitLabConfig.GitLab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws GitLabApiException {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             gitLabApi.getGroupApi().addMember(groupId, userId, accessLevel);
         } catch (GitLabApiException e) {
@@ -101,7 +101,7 @@ public class GitLabGroupDriver {
      * @return
      * @throws GitLabApiException
      */
-    public static List<Group> getGroups(GitLabConfig.Gitlab gitlab) throws GitLabApiException {
+    public static List<Group> getGroups(GitLabConfig.GitLab gitlab) throws GitLabApiException {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             return gitLabApi.getGroupApi().getGroups();
         } catch (GitLabApiException e) {

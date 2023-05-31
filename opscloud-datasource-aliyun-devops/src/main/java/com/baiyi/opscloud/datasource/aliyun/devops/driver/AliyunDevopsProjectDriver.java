@@ -32,7 +32,7 @@ public class AliyunDevopsProjectDriver {
      */
     public static List<ListProjectsResponseBody.Projects> listProjects(String regionId, AliyunDevopsConfig.Devops devops) {
         List<ListProjectsResponseBody.Projects> result = Lists.newArrayList();
-        try (AsyncClient client = AliyunDevopsClient.buildClient(regionId, devops)) {
+        try (AsyncClient client = AliyunDevopsClient.buildAsyncClient(regionId, devops)) {
             ListProjectsRequest listProjectsRequest = ListProjectsRequest.builder()
                     .organizationId(devops.getOrganizationId())
                     .category("Project")

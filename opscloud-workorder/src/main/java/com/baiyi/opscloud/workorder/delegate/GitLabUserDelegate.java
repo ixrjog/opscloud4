@@ -28,7 +28,7 @@ public class GitLabUserDelegate {
     private final StringEncryptor stringEncryptor;
 
     @Retryable(retryFor = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public List<User> findUsers(GitLabConfig.Gitlab gitlab, String emailOrUsername) throws TicketProcessException {
+    public List<User> findUsers(GitLabConfig.GitLab gitlab, String emailOrUsername) throws TicketProcessException {
         try {
             return GitLabUserDriver.findUsers(gitlab, emailOrUsername);
         } catch (GitLabApiException e) {
@@ -37,7 +37,7 @@ public class GitLabUserDelegate {
     }
 
     @Retryable(retryFor = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public User createUser(GitLabConfig.Gitlab gitlab, String username) throws TicketProcessException {
+    public User createUser(GitLabConfig.GitLab gitlab, String username) throws TicketProcessException {
         com.baiyi.opscloud.domain.generator.opscloud.User ocUser = userService.getByUsername(username);
         User user = new User()
                 .withUsername(username)

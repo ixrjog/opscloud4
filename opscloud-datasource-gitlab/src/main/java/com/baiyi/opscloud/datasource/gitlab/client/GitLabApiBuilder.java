@@ -14,7 +14,7 @@ public class GitLabApiBuilder {
     private GitLabApiBuilder() {
     }
 
-    public static GitLabApi build(GitLabConfig.Gitlab gitlab) {
+    public static GitLabApi build(GitLabConfig.GitLab gitlab) {
         return GitLabApiFactory.buildGitLabApi(gitlab);
     }
 

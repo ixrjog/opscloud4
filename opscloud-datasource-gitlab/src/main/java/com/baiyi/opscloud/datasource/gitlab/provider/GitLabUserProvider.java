@@ -54,13 +54,13 @@ public class GitLabUserProvider extends AbstractAssetRelationProvider<User, SshK
         return DsAssetTypeConstants.GITLAB_SSHKEY.name();
     }
 
-    private GitLabConfig.Gitlab buildConfig(DatasourceConfig dsConfig) {
+    private GitLabConfig.GitLab buildConfig(DatasourceConfig dsConfig) {
         return dsConfigHelper.build(dsConfig, GitLabConfig.class).getGitlab();
     }
 
     @Override
     protected List<User> listEntities(DsInstanceContext dsInstanceContext, SshKey target) {
-        GitLabConfig.Gitlab gitlab = buildConfig(dsInstanceContext.getDsConfig());
+        GitLabConfig.GitLab gitlab = buildConfig(dsInstanceContext.getDsConfig());
         try {
             return Lists.newArrayList(GitLabUserDriver.getUser(gitlab, target.getUserId()));
         } catch (GitLabApiException e) {

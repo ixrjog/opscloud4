@@ -34,7 +34,7 @@ public class GitLabUserDriver {
      * @return
      * @throws GitLabApiException
      */
-    public static List<User> findUsers(GitLabConfig.Gitlab gitlab, String emailOrUsername) throws GitLabApiException {
+    public static List<User> findUsers(GitLabConfig.GitLab gitlab, String emailOrUsername) throws GitLabApiException {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             return gitLabApi.getUserApi().findUsers(emailOrUsername);
         } catch (GitLabApiException e) {
@@ -51,7 +51,7 @@ public class GitLabUserDriver {
      * @return
      * @throws GitLabApiException
      */
-    public static User getUser(GitLabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
+    public static User getUser(GitLabConfig.GitLab gitlab, Long userId) throws GitLabApiException {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             return gitLabApi.getUserApi().getUser(userId);
         } catch (GitLabApiException e) {
@@ -67,7 +67,7 @@ public class GitLabUserDriver {
      * @return
      * @throws GitLabApiException
      */
-    public static List<User> getUsers(GitLabConfig.Gitlab gitlab) throws GitLabApiException {
+    public static List<User> getUsers(GitLabConfig.GitLab gitlab) throws GitLabApiException {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             return gitLabApi.getUserApi().getUsers();
         } catch (GitLabApiException e) {
@@ -77,7 +77,7 @@ public class GitLabUserDriver {
     }
 
 
-    public static List<Membership> getUserMemberships(GitLabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
+    public static List<Membership> getUserMemberships(GitLabConfig.GitLab gitlab, Long userId) throws GitLabApiException {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             return gitLabApi.getUserApi().getMemberships(userId);
         } catch (GitLabApiException e) {
@@ -94,7 +94,7 @@ public class GitLabUserDriver {
      * @param avatarFile
      * @throws GitLabApiException
      */
-    public static void updateUser(GitLabConfig.Gitlab gitlab, Long userId, File avatarFile) throws GitLabApiException {
+    public static void updateUser(GitLabConfig.GitLab gitlab, Long userId, File avatarFile) throws GitLabApiException {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             gitLabApi.getUserApi().setUserAvatar(userId, avatarFile);
         } catch (GitLabApiException e) {
@@ -110,7 +110,7 @@ public class GitLabUserDriver {
      * @param userId
      * @throws GitLabApiException
      */
-    public static void blockUser(GitLabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
+    public static void blockUser(GitLabConfig.GitLab gitlab, Long userId) throws GitLabApiException {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             gitLabApi.getUserApi().blockUser(userId);
         } catch (GitLabApiException e) {
@@ -126,7 +126,7 @@ public class GitLabUserDriver {
      * @param userId
      * @throws GitLabApiException
      */
-    public static void unblockUser(GitLabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
+    public static void unblockUser(GitLabConfig.GitLab gitlab, Long userId) throws GitLabApiException {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             gitLabApi.getUserApi().unblockUser(userId);
         } catch (GitLabApiException e) {
@@ -135,7 +135,7 @@ public class GitLabUserDriver {
         }
     }
 
-    public static User createUser(GitLabConfig.Gitlab gitlab, User user, String password) throws GitLabApiException {
+    public static User createUser(GitLabConfig.GitLab gitlab, User user, String password) throws GitLabApiException {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             return gitLabApi.getUserApi().createUser(user, password, false);
         } catch (GitLabApiException e) {

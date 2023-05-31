@@ -23,7 +23,7 @@ import java.util.List;
 public class GitLabGroupDelegate {
 
     @Retryable(retryFor = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public void addMember(GitLabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
+    public void addMember(GitLabConfig.GitLab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
         try {
             GitLabGroupDriver.addMember(gitlab, groupId, userId, accessLevel);
         } catch (GitLabApiException e) {
@@ -33,7 +33,7 @@ public class GitLabGroupDelegate {
     }
 
     @Retryable(retryFor = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public void updateMember(GitLabConfig.Gitlab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
+    public void updateMember(GitLabConfig.GitLab gitlab, Long groupId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
         try {
             GitLabGroupDriver.updateMember(gitlab, groupId, userId, accessLevel);
         } catch (GitLabApiException e) {
@@ -43,7 +43,7 @@ public class GitLabGroupDelegate {
     }
 
     @Retryable(retryFor = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public List<Member> getMembers(GitLabConfig.Gitlab gitlab, Integer groupId) throws TicketProcessException {
+    public List<Member> getMembers(GitLabConfig.GitLab gitlab, Integer groupId) throws TicketProcessException {
         try {
             return GitLabGroupDriver.getMembersWithGroupId(gitlab, groupId.longValue());
         } catch (GitLabApiException e) {

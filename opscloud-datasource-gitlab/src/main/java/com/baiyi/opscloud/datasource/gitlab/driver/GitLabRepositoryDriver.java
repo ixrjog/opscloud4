@@ -27,7 +27,7 @@ public class GitLabRepositoryDriver {
      * @return
      * @throws GitLabApiException
      */
-    public static RepositoryFile getRepositoryFile(GitLabConfig.Gitlab gitlab, Long projectId, String filePath, String ref) throws GitLabApiException {
+    public static RepositoryFile getRepositoryFile(GitLabConfig.GitLab gitlab, Long projectId, String filePath, String ref) throws GitLabApiException {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             return gitLabApi.getRepositoryFileApi().getFile(projectId, filePath, ref);
         } catch (GitLabApiException e) {
@@ -36,7 +36,7 @@ public class GitLabRepositoryDriver {
         }
     }
 
-    public static Optional<RepositoryFile> getRepositoryOptionalFile(GitLabConfig.Gitlab gitlab, Long projectId, String filePath, String ref) {
+    public static Optional<RepositoryFile> getRepositoryOptionalFile(GitLabConfig.GitLab gitlab, Long projectId, String filePath, String ref) {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             return gitLabApi.getRepositoryFileApi().getOptionalFileInfo(projectId, filePath, ref);
         }catch (Exception e){

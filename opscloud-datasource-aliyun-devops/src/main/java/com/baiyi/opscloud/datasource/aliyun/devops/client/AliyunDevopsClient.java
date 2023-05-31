@@ -18,7 +18,7 @@ public class AliyunDevopsClient {
 
     public static final String MAX_RESULTS_S = String.valueOf(MAX_RESULTS);
 
-    public static AsyncClient buildClient(String regionId, AliyunDevopsConfig.Devops devops) {
+    public static AsyncClient buildAsyncClient(String regionId, AliyunDevopsConfig.Devops devops) {
         StaticCredentialProvider provider = StaticCredentialProvider.create(Credential.builder()
                 .accessKeyId(devops.getAccount().getAccessKeyId())
                 .accessKeySecret(devops.getAccount().getSecret())
@@ -29,16 +29,19 @@ public class AliyunDevopsClient {
             region = regionId;
         }
 
+        //.serviceConfiguration(Configuration.create()) // Service-level configuration
+        // Client-level configuration rewrite, can set Endpoint, Http request parameters, etc.
+        ClientOverrideConfiguration clientOverrideConfiguration = ClientOverrideConfiguration.create()
+                .setEndpointOverride("devops.cn-hangzhou.aliyuncs.com");
+        //.setConnectTimeout(Duration.ofSeconds(30))
+
         return AsyncClient.builder()
                 // Region ID
                 .region(region)
                 //.httpClient(httpClient) // Use the configured HttpClient, otherwise use the default HttpClient (Apache HttpClient)
                 .credentialsProvider(provider)
-                //.serviceConfiguration(Configuration.create()) // Service-level configuration
-                // Client-level configuration rewrite, can set Endpoint, Http request parameters, etc.
-                .overrideConfiguration(ClientOverrideConfiguration.create().setEndpointOverride("devops.cn-hangzhou.aliyuncs.com")
-                        //.setConnectTimeout(Duration.ofSeconds(30))
-                ).build();
+                .overrideConfiguration(clientOverrideConfiguration)
+                .build();
     }
 
 }

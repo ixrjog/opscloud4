@@ -39,6 +39,12 @@ public class GitLabTest extends BaseUnit {
         gitlabUserDelegate.createUser(gitlabDsInstanceConfig.getGitlab(), "xiuyuan");
     }
 
+    @Test
+    public void testConfig() {
+        DatasourceConfig datasourceConfig = dsConfigService.getById(79);
+        GitLabConfig c = dsFactory.build(datasourceConfig, GitLabConfig.class);
+        print(c);
+    }
 
 
 }

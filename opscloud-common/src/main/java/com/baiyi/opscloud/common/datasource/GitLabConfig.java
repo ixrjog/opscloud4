@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Author baiyi
  * @Date 2021/6/21 4:57 下午
@@ -15,16 +18,18 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class GitLabConfig extends BaseDsConfig {
 
-    private Gitlab gitlab;
+    private GitLab gitlab;
 
     @Data
     @NoArgsConstructor
     @Schema
-    public static class Gitlab {
+    public static class GitLab {
+
         private Api api;
         private String url;
         private String token;
         private SystemHooks systemHooks;
+        private Map<String, List<String>> gitFlow;
 
     }
 

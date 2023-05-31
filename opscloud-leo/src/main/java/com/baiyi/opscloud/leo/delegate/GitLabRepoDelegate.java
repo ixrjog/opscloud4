@@ -44,7 +44,7 @@ public class GitLabRepoDelegate {
      * @return
      */
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10S, key = "'url_' + #gitlab.url + '_projectId_' + #projectId + '_openTag_' + #openTag")
-    public LeoBuildVO.BranchOptions generatorGitLabBranchOptions(GitLabConfig.Gitlab gitlab, Long projectId, boolean openTag) {
+    public LeoBuildVO.BranchOptions generatorGitLabBranchOptions(GitLabConfig.GitLab gitlab, Long projectId, boolean openTag) {
         List<LeoBuildVO.Option> options = Lists.newArrayList();
         try {
             // Branches option
@@ -66,7 +66,7 @@ public class GitLabRepoDelegate {
         }
     }
 
-    public LeoBuildVO.BranchOptions createGitLabBranch(GitLabConfig.Gitlab gitlab, Long projectId, String ref) {
+    public LeoBuildVO.BranchOptions createGitLabBranch(GitLabConfig.GitLab gitlab, Long projectId, String ref) {
         for (String branch : DEF_BRANCHES) {
             try {
                 GitLabProjectDriver.createBranch(gitlab, projectId, branch, ref);
@@ -77,7 +77,7 @@ public class GitLabRepoDelegate {
         return generatorGitLabBranchOptions(gitlab, projectId, false);
     }
 
-    public Commit getBranchOrTagCommit(GitLabConfig.Gitlab gitlab, Long projectId, String branchNameOrTagName) {
+    public Commit getBranchOrTagCommit(GitLabConfig.GitLab gitlab, Long projectId, String branchNameOrTagName) {
         try {
             Optional<Branch> optionalBranch = GitLabProjectDriver.getBranchWithProjectIdAndBranchName(gitlab, projectId, branchNameOrTagName);
             if (optionalBranch.isPresent()) {

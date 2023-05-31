@@ -21,7 +21,7 @@ import java.util.List;
 public class GitLabProjectDelegate {
 
     @Retryable(retryFor = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public void addProjectMember(GitLabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
+    public void addProjectMember(GitLabConfig.GitLab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
         try {
             GitLabProjectDriver.addMember(gitlab, projectId, userId, accessLevel);
         } catch (GitLabApiException e) {
@@ -42,7 +42,7 @@ public class GitLabProjectDelegate {
      * @throws TicketProcessException
      */
     @Retryable(retryFor = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public List<Member> getProjectMembers(GitLabConfig.Gitlab gitlab, Long projectId) throws TicketProcessException {
+    public List<Member> getProjectMembers(GitLabConfig.GitLab gitlab, Long projectId) throws TicketProcessException {
         try {
             return GitLabProjectDriver.getMembersWithProjectId(gitlab, projectId);
         } catch (GitLabApiException e) {
@@ -51,7 +51,7 @@ public class GitLabProjectDelegate {
     }
 
     @Retryable(retryFor = TicketProcessException.class, maxAttempts = 2, backoff = @Backoff(delay = 2000, multiplier = 1.5))
-    public void updateProjectMember(GitLabConfig.Gitlab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
+    public void updateProjectMember(GitLabConfig.GitLab gitlab, Long projectId, Long userId, AccessLevel accessLevel) throws TicketProcessException {
         try {
             GitLabProjectDriver.updateMember(gitlab, projectId, userId, accessLevel);
         } catch (GitLabApiException e) {

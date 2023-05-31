@@ -25,7 +25,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GitLabAccountHandler extends AbstractAccountHandler {
 
-    protected static ThreadLocal<GitLabConfig.Gitlab> configContext = new ThreadLocal<>();
+    protected static ThreadLocal<GitLabConfig.GitLab> configContext = new ThreadLocal<>();
 
     @Override
     protected void initialConfig(DatasourceConfig dsConfig) {

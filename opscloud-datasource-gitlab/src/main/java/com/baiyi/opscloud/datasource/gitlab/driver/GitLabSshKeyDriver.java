@@ -25,7 +25,7 @@ public class GitLabSshKeyDriver {
      * @return
      * @throws GitLabApiException
      */
-    public static List<SshKey> getSshKeysWithUserId(GitLabConfig.Gitlab gitlab, Long userId) throws GitLabApiException {
+    public static List<SshKey> getSshKeysWithUserId(GitLabConfig.GitLab gitlab, Long userId) throws GitLabApiException {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             return gitLabApi.getUserApi().getSshKeys(userId);
         } catch (GitLabApiException e) {

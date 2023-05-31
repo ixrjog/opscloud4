@@ -69,7 +69,7 @@ public class GitlabFacade extends BaseManager {
             DatasourceConfig datasourceConfig = dsConfigService.getById(i.getConfigId());
             GitLabConfig gitlabDsInstanceConfig = dsConfigHelper.build(datasourceConfig, GitLabConfig.class);
             Optional<String> tokenOptional = Optional.ofNullable(gitlabDsInstanceConfig.getGitlab())
-                    .map(GitLabConfig.Gitlab::getSystemHooks)
+                    .map(GitLabConfig.GitLab::getSystemHooks)
                     .map(GitLabConfig.SystemHooks::getToken);
             return tokenOptional.filter(s -> GitLabTokenUtil.getToken().equals(s))
                     .isPresent();
