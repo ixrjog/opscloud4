@@ -23,11 +23,12 @@ public class AliyunDevopsWorkitemsDriver {
 
     /**
      * 查询工作空间
+     *
      * @param regionId
      * @param devops
      * @param spaceIdentifier 项目ID
-     * @param spaceType Project
-     * @param category 工作项大类型，需求为Req，缺陷为Bug，任务为Task，风险为Risk
+     * @param spaceType       Project
+     * @param category        工作项大类型，需求为Req，缺陷为Bug，任务为Task，风险为Risk
      * @return
      */
     public static List<ListWorkitemsResponseBody.Workitems> listWorkitems(String regionId, AliyunDevopsConfig.Devops devops,
@@ -35,8 +36,7 @@ public class AliyunDevopsWorkitemsDriver {
                                                                           String spaceType,
                                                                           String category) {
         List<ListWorkitemsResponseBody.Workitems> result = Lists.newArrayList();
-        try {
-            AsyncClient client = AliyunDevopsClient.buildClient(regionId, devops);
+        try (AsyncClient client = AliyunDevopsClient.buildClient(regionId, devops)) {
             ListWorkitemsRequest request = ListWorkitemsRequest.builder()
                     .spaceIdentifier(spaceIdentifier)
                     .organizationId(devops.getOrganizationId())
@@ -60,7 +60,6 @@ public class AliyunDevopsWorkitemsDriver {
                             .build();
                 }
             }
-            client.close();
         } catch (Exception ignored) {
         }
         return result;

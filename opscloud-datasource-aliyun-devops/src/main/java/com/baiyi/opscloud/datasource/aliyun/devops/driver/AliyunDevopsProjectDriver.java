@@ -27,13 +27,12 @@ public class AliyunDevopsProjectDriver {
      * https://next.api.aliyun.com/api/devops/2021-06-25/ListProjects?spm=a2c4g.460498.0.i0&tab=DEMO
      *
      * @param regionId
-     * @param devop
+     * @param devops
      * @return
      */
     public static List<ListProjectsResponseBody.Projects> listProjects(String regionId, AliyunDevopsConfig.Devops devops) {
         List<ListProjectsResponseBody.Projects> result = Lists.newArrayList();
-        try {
-            AsyncClient client = AliyunDevopsClient.buildClient(regionId, devops);
+        try (AsyncClient client = AliyunDevopsClient.buildClient(regionId, devops)) {
             ListProjectsRequest listProjectsRequest = ListProjectsRequest.builder()
                     .organizationId(devops.getOrganizationId())
                     .category("Project")
@@ -53,7 +52,6 @@ public class AliyunDevopsProjectDriver {
                             .build();
                 }
             }
-            client.close();
         } catch (Exception ignored) {
         }
         return result;

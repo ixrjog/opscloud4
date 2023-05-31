@@ -61,6 +61,7 @@
         <module>opscloud-datasource-google-cloud-iam</module>
         <module>opscloud-datasource-google-cloud</module>
         <module>opscloud-datasource-metersphere</module>
+        <module>opscloud-datasource-apollo</module>
     </modules>
 
     <parent>
@@ -564,6 +565,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-metersphere</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-apollo</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

@@ -94,4 +94,5 @@ public interface SingleTaskConstants {
 
     String PULL_METER_SPHERE_BUILD_HOOK = "PULL_METER_SPHERE_BUILD_HOOK";
 
+    String PULL_APOLLO_APP = "PULL_APOLLO_APP";
 }

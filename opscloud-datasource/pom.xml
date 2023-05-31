@@ -108,6 +108,11 @@
             <artifactId>opscloud-datasource-metersphere</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-apollo</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

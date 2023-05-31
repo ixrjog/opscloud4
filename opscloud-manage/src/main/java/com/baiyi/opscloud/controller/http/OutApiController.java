@@ -1,16 +1,15 @@
 package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
+import com.baiyi.opscloud.domain.param.apollo.ApolloParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam;
+import com.baiyi.opscloud.facade.apollo.ApolloFacade;
 import com.baiyi.opscloud.facade.workorder.WorkOrderTicketFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author baiyi
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version 1.0
  */
 
+@SuppressWarnings("rawtypes")
 @RestController
 @RequestMapping("/api/out")
 @Tag(name = "外部API")
@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class OutApiController {
 
     private final WorkOrderTicketFacade workOrderTicketFacade;
+
+    private final ApolloFacade apolloFacade;
 
     @Operation(summary = "审批工单票据")
     @GetMapping(value = "/ticket/approve", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,6 +38,12 @@ public class OutApiController {
                 .token(token)
                 .build();
         return workOrderTicketFacade.approveTicket(outApproveTicket);
+    }
+
+    @Operation(summary = "Apollo发布拦截")
+    @PostMapping(value = "/apollo/release/intercept", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult interceptRelease(@RequestBody ApolloParam.ReleaseEvent releaseEvent) {
+        return apolloFacade.interceptRelease(releaseEvent);
     }
 
 }

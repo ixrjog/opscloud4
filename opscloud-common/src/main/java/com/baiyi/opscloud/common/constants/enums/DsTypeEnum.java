@@ -48,8 +48,8 @@ public enum DsTypeEnum {
      */
     LXHL(53, "LXHL"),
     ALIYUN_DEVOPS(54, "ALIYUN_DEVOPS"),
-    METER_SPHERE(55,"METER_SPHERE")
-    ;
+    METER_SPHERE(55, "METER_SPHERE"),
+    APOLLO(56, "APOLLO");
 
     private final int type;
 

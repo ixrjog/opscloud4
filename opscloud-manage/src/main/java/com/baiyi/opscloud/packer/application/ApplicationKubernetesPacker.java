@@ -50,9 +50,7 @@ public class ApplicationKubernetesPacker {
                     if (e.getName().startsWith(env.getEnvName() + ":")) {
                         return true;
                     }
-                    /**
-                     * 环境标准化后以下代码可以删除
-                     */
+                    // TODO 环境标准化后以下代码可以删除
                     if (env.getEnvName().equals("dev")) {
                         return e.getName().startsWith("ci:");
                     }

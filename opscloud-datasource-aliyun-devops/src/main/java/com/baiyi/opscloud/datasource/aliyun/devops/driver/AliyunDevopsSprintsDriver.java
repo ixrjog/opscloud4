@@ -30,8 +30,8 @@ public class AliyunDevopsSprintsDriver {
      */
     public static List<ListSprintsResponseBody.Sprints> listSprints(String regionId, AliyunDevopsConfig.Devops devops) {
         List<ListSprintsResponseBody.Sprints> result = Lists.newArrayList();
-        try {
-            AsyncClient client = AliyunDevopsClient.buildClient(regionId, devops);
+        try (AsyncClient client = AliyunDevopsClient.buildClient(regionId, devops)) {
+
             ListSprintsRequest request = ListSprintsRequest.builder()
                     .maxResults(MAX_RESULTS)
                     .organizationId(devops.getOrganizationId())
@@ -49,7 +49,6 @@ public class AliyunDevopsSprintsDriver {
                             .build();
                 }
             }
-            client.close();
         } catch (Exception ignored) {
         }
         return result;
@@ -65,8 +64,8 @@ public class AliyunDevopsSprintsDriver {
      */
     public static List<ListSprintsResponseBody.Sprints> listSprints(String regionId, AliyunDevopsConfig.Devops devops, String spaceType, String spaceIdentifier) {
         List<ListSprintsResponseBody.Sprints> result = Lists.newArrayList();
-        try {
-            AsyncClient client = AliyunDevopsClient.buildClient(regionId, devops);
+        try(AsyncClient client = AliyunDevopsClient.buildClient(regionId, devops)) {
+
             ListSprintsRequest request = ListSprintsRequest.builder()
                     .organizationId(devops.getOrganizationId())
                     .spaceType(spaceType)
@@ -88,7 +87,6 @@ public class AliyunDevopsSprintsDriver {
                             .build();
                 }
             }
-            client.close();
         } catch (Exception ignored) {
         }
         return result;

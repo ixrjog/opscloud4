@@ -38,6 +38,7 @@ public class LeoBaseModel {
     public static class GitLab {
         private LeoBaseModel.DsInstance instance;
         private GitLabProject project;
+        private GitFlow gitFlow;
     }
 
     @Data
@@ -57,6 +58,14 @@ public class LeoBaseModel {
         private String id;
         private String message;
         private String webUrl;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class GitFlow {
+        private Boolean enabled;
     }
 
     @Data
