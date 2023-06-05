@@ -11,6 +11,11 @@ public interface IRuleExpression {
 
     String getType();
 
+    /**
+     * 解析
+     * @param expression
+     * @return
+     */
     boolean parse(LeoRuleModel.Expression expression);
 
     String toDisplayName(LeoRuleModel.Expression expression);

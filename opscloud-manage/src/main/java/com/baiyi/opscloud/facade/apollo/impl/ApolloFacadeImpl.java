@@ -49,16 +49,21 @@ public class ApolloFacadeImpl implements ApolloFacade {
 
         ApolloConfig.Apollo apolloConfig = optionalConfig.get().getApollo();
 
+        // 需要拦截的环境
         List<String> envs = Optional.of(apolloConfig)
                 .map(ApolloConfig.Apollo::getPortal)
                 .map(ApolloConfig.Portal::getRelease)
                 .map(ApolloConfig.Release::getInterceptor)
                 .map(ApolloConfig.Interceptor::getEnvs)
                 .orElse(Collections.emptyList());
+        // 环境配置不存在
         if (CollectionUtils.isEmpty(envs)) {
             log.debug("Interceptor environment configuration is empty");
             return HttpResult.SUCCESS;
         }
+        // TODO 白名单规则校验
+
+
 
         return HttpResult.SUCCESS;
 
