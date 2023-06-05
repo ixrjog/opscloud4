@@ -61,4 +61,6 @@ public interface LeoDeployService {
      */
     int countByProjectId(int projectId);
 
+    Integer countByEnvProjectId(Integer projectId, Integer envType);
+
 }

@@ -17,6 +17,7 @@ import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.project.ProjectResourceService;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -74,7 +75,11 @@ public class ProjectPacker implements IWrapperRelation<ProjectVO.Project> {
                 .collect(Collectors.groupingBy(ProjectResourceVO.Resource::getResourceType));
         project.setResourceMap(resourcesMap);
         project.setApplicationList(applicationList);
+        // 部署次数
         project.setDeployCount(leoDeployService.countByProjectId(project.getId()));
+        Map<String, Integer> envDeployCount = Maps.newHashMap();
+        envDeployCount.put("prod",leoDeployService.countByEnvProjectId(project.getId(),4));
+        project.setEnvDeployCount( envDeployCount);
         businessPermissionUserPacker.wrap(project);
     }
 

@@ -71,4 +71,10 @@
         order by a1.env_type
     </select>
 
+    <select id="countByEnvProjectId" resultType="java.lang.Integer">
+        select count(*)
+        from leo_deploy a0 join leo_job a1 on a0.job_id = a1.id
+        where a0.project_id = #{projectId} and a1.env_type = #{envType}
+    </select>
+
 </mapper>

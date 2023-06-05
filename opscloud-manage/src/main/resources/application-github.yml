@@ -52,4 +52,5 @@ jasypt:
   encryptor:
     algorithm: PBEWithMD5AndDES
     iv-generator-classname: 'org.jasypt.iv.NoIvGenerator'
+    # 开源版本默认密钥, 可修改
     password: '1^Z!NxcB4s!0Sxz&URokZ6DdZnNn#acO#ELjM&kvun^LV!yCB%ec*^NJ%5xvCGlJ6&SHGtKN#Gs!fK%lq8aQYpfLlwkFrvQrcp1VzYGt74vdVcMmUk73%HCrOV07IZw0'

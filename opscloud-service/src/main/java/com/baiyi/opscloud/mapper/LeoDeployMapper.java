@@ -14,10 +14,13 @@ public interface LeoDeployMapper extends Mapper<LeoDeploy> {
 
     /**
      * 统计最近30天生产环境变更
+     *
      * @return
      */
     List<ReportVO.Report> statLast30Days();
 
     List<ReportVO.Report> statByEnvName();
+
+    Integer countByEnvProjectId(Integer projectId, Integer envType);
 
 }
