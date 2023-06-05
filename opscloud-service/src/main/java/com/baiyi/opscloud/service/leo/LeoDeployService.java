@@ -54,4 +54,11 @@ public interface LeoDeployService {
 
     List<LeoDeploy> queryLatestLeoDeploy(int size);
 
+    /**
+     * 按项目统计
+     * @param projectId
+     * @return
+     */
+    int countByProjectId(int projectId);
+
 }

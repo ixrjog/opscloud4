@@ -156,4 +156,14 @@ public class LeoDeployServiceImpl implements LeoDeployService {
         return deployMapper.selectByExample(example);
     }
 
+    @Override
+    public int countByProjectId(int projectId) {
+        Example example = new Example(LeoDeploy.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("projectId", projectId)
+                .andEqualTo("isActive", true)
+                .andEqualTo("isFinish", true);
+        return deployMapper.selectCountByExample(example);
+    }
+
 }

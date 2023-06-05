@@ -14,6 +14,7 @@ import com.baiyi.opscloud.domain.vo.project.ProjectVO;
 import com.baiyi.opscloud.packer.IWrapperRelation;
 import com.baiyi.opscloud.packer.business.BusinessPermissionUserPacker;
 import com.baiyi.opscloud.service.application.ApplicationService;
+import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.project.ProjectResourceService;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,8 @@ public class ProjectPacker implements IWrapperRelation<ProjectVO.Project> {
     private final ProjectResourceService projectResourceService;
 
     private final ApplicationService applicationService;
+
+    private final LeoDeployService leoDeployService;
 
     @Override
     @TagsWrapper
@@ -71,6 +74,7 @@ public class ProjectPacker implements IWrapperRelation<ProjectVO.Project> {
                 .collect(Collectors.groupingBy(ProjectResourceVO.Resource::getResourceType));
         project.setResourceMap(resourcesMap);
         project.setApplicationList(applicationList);
+        project.setDeployCount(leoDeployService.countByProjectId(project.getId()));
         businessPermissionUserPacker.wrap(project);
     }
 
