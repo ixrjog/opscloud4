@@ -35,6 +35,8 @@ public enum WorkOrderKeyConstants {
     APPLICATION_SCALE_REPLICAS,
     APPLICATION_REDUCE_REPLICAS,
     // 发布
-    APPLICATION_DEPLOY
+    APPLICATION_DEPLOY,
+    // 新应用
+    NEW_APPLICATION
 
 }

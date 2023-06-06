@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.workorder.impl;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -189,6 +190,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
 
     /**
      * 验证工单完整性
+     *
      * @param workOrderTicket
      */
     private void verifyTicket(WorkOrderTicket workOrderTicket) {
@@ -293,6 +295,9 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
 
     @Override
     public void addTicketEntry(WorkOrderTicketEntryParam.TicketEntry ticketEntry) {
+        if (IdUtil.isEmpty(ticketEntry.getWorkOrderTicketId())) {
+            throw new TicketException("新增工单条目错误: 对象为空！");
+        }
         WorkOrderTicket workOrderTicket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
         if (!SessionUtil.equalsUsername(workOrderTicket.getUsername())) {
             throw new TicketException("不合法的请求: 只有工单创建人才能新增条目！");
