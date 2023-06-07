@@ -18,23 +18,20 @@
             <artifactId>opscloud-datasource-core</artifactId>
         </dependency>
 
-        <!-- 6.0.0版本兼容有问题 -->
-
         <!-- https://github.com/fabric8io/kubernetes-client -->
         <!-- https://mvnrepository.com/artifact/io.fabric8/kubernetes-client -->
-        <!-- 5.12.4/6.5.1 -->
         <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>io.fabric8</groupId>
             <artifactId>kubernetes-client</artifactId>
-            <version>6.7.0</version>
+            <version>6.7.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.fabric8/kubernetes-model -->
         <dependency>
             <groupId>io.fabric8</groupId>
             <artifactId>kubernetes-model</artifactId>
-            <version>6.7.0</version>
+            <version>6.7.1</version>
         </dependency>
 
     </dependencies>
