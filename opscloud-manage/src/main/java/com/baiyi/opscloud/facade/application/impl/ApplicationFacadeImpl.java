@@ -161,7 +161,7 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
 
     @Override
     public void unbindApplicationResource(Integer id) {
-        applicationResourceService.delete(id);
+        applicationResourceService.deleteById(id);
     }
 
     @Override

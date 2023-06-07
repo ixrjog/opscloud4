@@ -36,7 +36,7 @@ public class AliyunDevopsProjectProvider extends AbstractAssetBusinessRelationPr
 
     @Override
     @EnablePullChild(type = DsAssetTypeConstants.ALIYUN_DEVOPS_PROJECT)
-    @SingleTask(name = PULL_ALIYUN_DEVOPS_PROJECT, lockTime = "5m")
+    @SingleTask(name = PULL_ALIYUN_DEVOPS_PROJECT, lockTime = "10m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

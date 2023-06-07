@@ -17,7 +17,7 @@ public interface ApplicationResourceService {
 
     void update(ApplicationResource applicationResource);
 
-    void delete(Integer id);
+    void deleteById(Integer id);
 
     List<ApplicationResource> queryByApplication(Integer applicationId);
 

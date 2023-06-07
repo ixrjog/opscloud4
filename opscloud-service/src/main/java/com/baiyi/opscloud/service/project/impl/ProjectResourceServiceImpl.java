@@ -59,4 +59,14 @@ public class ProjectResourceServiceImpl implements ProjectResourceService {
                 .andEqualTo("businessId", businessId);
         return projectResourceMapper.selectOneByExample(example);
     }
+
+    @Override
+    public List<ProjectResource> queryByBusiness(Integer businessType, Integer businessId){
+        Example example = new Example(ProjectResource.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("businessType", businessType)
+                .andEqualTo("businessId", businessId);
+        return projectResourceMapper.selectByExample(example);
+    }
+
 }

@@ -14,6 +14,7 @@ import java.util.List;
  * @Date 2021/7/13 9:30 上午
  * @Version 1.0
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 @RequiredArgsConstructor
 public class ApplicationResourceServiceImpl implements ApplicationResourceService {
@@ -36,7 +37,7 @@ public class ApplicationResourceServiceImpl implements ApplicationResourceServic
     }
 
     @Override
-    public void delete(Integer id) {
+    public void deleteById(Integer id) {
         applicationResourceMapper.deleteByPrimaryKey(id);
     }
 

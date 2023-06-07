@@ -44,11 +44,8 @@ public class NewApplicationEntryQuery extends BaseTicketEntryQuery<NewApplicatio
 
         DataTable<DatasourceInstanceAsset> dataTable = dsInstanceAssetService.queryPageByParam(pageQuery);
 
-        return dataTable.getData().stream().map(e -> {
-            NewApplicationEntry.NewApplication entry = BeanCopierUtil.copyProperties(e, NewApplicationEntry.NewApplication.class);
-                    entry.setLevelTag("B3");
-                    return entry;
-                }
+        return dataTable.getData().stream().map(e ->
+           BeanCopierUtil.copyProperties(e, NewApplicationEntry.NewApplication.class)
         ).collect(Collectors.toList());
     }
 

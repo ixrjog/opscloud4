@@ -8,6 +8,7 @@ import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
+import com.baiyi.opscloud.service.project.ProjectResourceService;
 import com.baiyi.opscloud.service.template.BusinessTemplateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +40,8 @@ public class SimpleDsAssetFacadeImpl implements SimpleDsAssetFacade {
 
     private final BusinessTemplateService businessTemplateService;
 
+    private final ProjectResourceService projectResourceService;
+
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void deleteAssetById(Integer id) {
@@ -63,13 +66,15 @@ public class SimpleDsAssetFacadeImpl implements SimpleDsAssetFacade {
                 dsInstanceAssetPropertyService.deleteById(e.getId());
             }
         }
-        List<ApplicationResource> resourceList = applicationResourceService.queryByBusiness(BusinessTypeEnum.ASSET.getType(), id);
-        if (!CollectionUtils.isEmpty(resourceList)) {
-            for (ApplicationResource e : resourceList) {
+
+        List<ApplicationResource> applicationResourceList = applicationResourceService.queryByBusiness(BusinessTypeEnum.ASSET.getType(), id);
+        if (!CollectionUtils.isEmpty(applicationResourceList)) {
+            for (ApplicationResource e : applicationResourceList) {
                 log.info("删除应用绑定关系: applicationResourceId={}", e.getId());
-                applicationResourceService.delete(e.getId());
+                applicationResourceService.deleteById(e.getId());
             }
         }
+
         List<DatasourceInstanceAsset> assetList = dsInstanceAssetService.listByParentId(id);
         if (!CollectionUtils.isEmpty(assetList)) {
             for (DatasourceInstanceAsset e : assetList) {
@@ -77,6 +82,7 @@ public class SimpleDsAssetFacadeImpl implements SimpleDsAssetFacade {
                 deleteAssetById(e.getId());
             }
         }
+
         List<BusinessTemplate> businessTemplates = businessTemplateService.queryByBusinessId(id);
         if (!CollectionUtils.isEmpty(businessTemplates)) {
             for (BusinessTemplate e : businessTemplates) {
@@ -85,6 +91,15 @@ public class SimpleDsAssetFacadeImpl implements SimpleDsAssetFacade {
                 businessTemplateService.update(e);
             }
         }
+
+        List<ProjectResource> projectResourceList = projectResourceService.queryByBusiness(BusinessTypeEnum.ASSET.getType(), id);
+        if (!CollectionUtils.isEmpty(projectResourceList)) {
+            for (ProjectResource e : projectResourceList) {
+                log.info("删除项目绑定关系: projectResourceId={}", e.getId());
+                projectResourceService.deleteById(e.getId());
+            }
+        }
+
         log.info("删除资产: assetId={}", id);
         dsInstanceAssetService.deleteById(id);
     }
