@@ -11,27 +11,28 @@ import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetPermissionExtendedBaseTicketProcessor;
+import com.baiyi.opscloud.workorder.util.AwsPasswordUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
 
+/**
+ * @Author baiyi
+ * @Date 2023/6/7 11:12
+ * @Version 1.0
+ */
 @Slf4j
 @Component
-public class AwsIamUpdateLoginProfileTicketProcessor extends AbstractDsAssetPermissionExtendedBaseTicketProcessor {
+public class AliyunRamUpdateLoginProfileTicketProcessor  extends AbstractDsAssetPermissionExtendedBaseTicketProcessor {
 
     @Resource
     private UserAmFacade userAmFacade;
 
-    @Resource
-    private StringEncryptor stringEncryptor;
-
-
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
         User createUser = queryCreateUser(ticketEntry);
-        // 使用OC账户密码
-        String newPassword = stringEncryptor.decrypt(createUser.getPassword());
+        String newPassword = AwsPasswordUtil.generatorRandomPassword();
+
         UserAmParam.UpdateLoginProfile updateLoginProfile = UserAmParam.UpdateLoginProfile.builder()
                 .instanceUuid(ticketEntry.getInstanceUuid())
                 .username(createUser.getUsername())
@@ -53,12 +54,12 @@ public class AwsIamUpdateLoginProfileTicketProcessor extends AbstractDsAssetPerm
 
     @Override
     public String getKey() {
-        return WorkOrderKeyConstants.AWS_IAM_UPDATE_LOGIN_PROFILE.name();
+        return WorkOrderKeyConstants.ALIYUN_RAM_UPDATE_LOGIN_PROFILE.name();
     }
 
     @Override
     public String getInstanceType() {
-        return DsTypeEnum.AWS.name();
+        return DsTypeEnum.ALIYUN.name();
     }
 
 }

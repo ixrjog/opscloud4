@@ -36,6 +36,7 @@ public class NoticeManager {
         String TICKET_APPROVE = "TICKET_APPROVE";
         String TICKET_END = "TICKET_END";
         String AWS_IAM_UPDATE_LOGIN_PROFILE = "AWS_IAM_UPDATE_LOGIN_PROFILE";
+        String ALIYUN_RAM_UPDATE_LOGIN_PROFILE = "ALIYUN_RAM_UPDATE_LOGIN_PROFILE";
     }
 
     /**
