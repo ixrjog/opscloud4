@@ -1,12 +1,16 @@
 package com.baiyi.opscloud.datasource.aws.s3.driver;
 
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
+import com.amazonaws.services.s3.model.S3Object;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.datasource.aws.s3.service.AmazonS3Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.InputStream;
 
 /**
  * @Author 修远
@@ -19,9 +23,31 @@ import java.io.File;
 public class AmazonS3Driver {
 
     //https://github.com/awsdocs/aws-doc-sdk-examples/blob/main/java/example_code/s3/src/main/java/aws/example/s3/PutObject.java
-    public void putObject(String regionId, AwsConfig.Aws config, String bucketName, String keyName, File file) {
+
+    /**
+     * @return String versionId
+     */
+    public String putObject(String regionId, AwsConfig.Aws config, String bucketName, String keyName, File file) {
         PutObjectResult result = AmazonS3Service.buildAmazonS3(regionId, config)
                 .putObject(bucketName, keyName, file);
-        log.error(result.getContentMd5());
+        return result.getVersionId();
     }
+
+    public String putObject(String regionId, AwsConfig.Aws config, String bucketName, String keyName, InputStream inputStream, ObjectMetadata metadata) {
+        PutObjectResult result = AmazonS3Service.buildAmazonS3(regionId, config)
+                .putObject(bucketName, keyName, inputStream, metadata);
+        return result.getVersionId();
+    }
+
+    public S3Object getObject(String regionId, AwsConfig.Aws config, String bucketName, String keyName) {
+        return AmazonS3Service.buildAmazonS3(regionId, config)
+                .getObject(bucketName, keyName);
+    }
+
+    public S3Object getObject(String regionId, AwsConfig.Aws config, String bucketName, String key, String versionId) {
+        GetObjectRequest request = new GetObjectRequest(bucketName, key, versionId);
+        return AmazonS3Service.buildAmazonS3(regionId, config)
+                .getObject(request);
+    }
+
 }

@@ -17,6 +17,8 @@ public class BaseAwsTest extends BaseUnit {
 
     protected static final String DEFAULT_DSINSTANCE_UUID = "9877af2fa97f48faa34608531df354d2";
 
+    protected static final String DEFAULT_REGION_ID = "eu-west-1";
+
     @Resource
     private DsConfigHelper dsConfigHelper;
 
