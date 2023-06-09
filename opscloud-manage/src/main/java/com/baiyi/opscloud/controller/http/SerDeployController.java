@@ -5,10 +5,8 @@ import com.baiyi.opscloud.facade.ser.SerDeployFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -21,14 +19,15 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/ser/")
 @Tag(name = "ser包发布管理")
 @RequiredArgsConstructor
+@Slf4j
 public class SerDeployController {
 
     private final SerDeployFacade serDeployFacade;
 
     @Operation(summary = "ser包上传")
     @PostMapping(value = "/upload")
-    public HttpResult<Boolean> uploadFile(@RequestBody MultipartFile file) {
-        serDeployFacade.uploadFile(file);
+    public HttpResult<Boolean> uploadFile(@RequestBody MultipartFile file, @RequestHeader("x-task-uuid") String taskUuid) {
+        serDeployFacade.uploadFile(file, taskUuid);
         return HttpResult.SUCCESS;
     }
 

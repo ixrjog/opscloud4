@@ -9,6 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface SerDeployFacade {
 
-    void uploadFile(MultipartFile file);
+    void uploadFile(MultipartFile file, String taskUuid);
 
 }

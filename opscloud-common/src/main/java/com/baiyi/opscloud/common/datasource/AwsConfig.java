@@ -27,6 +27,7 @@ public class AwsConfig extends BaseDsConfig {
         private String regionId;
         private Set<String> regionIds; // 可用区
         private Ec2 ec2;
+        private SerDeploy serDeploy;
     }
 
     @Data
@@ -49,6 +50,15 @@ public class AwsConfig extends BaseDsConfig {
     public static class Ec2 {
 
         private String instances;
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @Schema
+    public static class SerDeploy {
+
+        private String bucketName;
 
     }
 
