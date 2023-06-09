@@ -48,7 +48,7 @@ public class AliyunDevopsSprintProvider extends AbstractAssetChildProvider<ListS
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        return preAsset.getIsActive().equals(asset.getIsActive());
+        return true;
     }
 
     @Override

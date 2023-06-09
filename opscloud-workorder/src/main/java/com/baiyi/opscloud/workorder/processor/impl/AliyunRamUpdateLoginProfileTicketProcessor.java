@@ -11,7 +11,7 @@ import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetPermissionExtendedBaseTicketProcessor;
-import com.baiyi.opscloud.workorder.util.AwsPasswordUtil;
+import com.baiyi.opscloud.workorder.util.AmPasswordUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -28,10 +28,17 @@ public class AliyunRamUpdateLoginProfileTicketProcessor  extends AbstractDsAsset
     @Resource
     private UserAmFacade userAmFacade;
 
+//    @Resource
+//    private StringEncryptor stringEncryptor;
+
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
         User createUser = queryCreateUser(ticketEntry);
-        String newPassword = AwsPasswordUtil.generatorRandomPassword();
+
+        // 使用OC账户密码
+        // String newPassword = stringEncryptor.decrypt(createUser.getPassword());
+
+        String newPassword = AmPasswordUtil.generatorRandomPassword();
 
         UserAmParam.UpdateLoginProfile updateLoginProfile = UserAmParam.UpdateLoginProfile.builder()
                 .instanceUuid(ticketEntry.getInstanceUuid())

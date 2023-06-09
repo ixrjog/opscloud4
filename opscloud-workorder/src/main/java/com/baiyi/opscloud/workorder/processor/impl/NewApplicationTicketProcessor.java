@@ -63,6 +63,12 @@ public class NewApplicationTicketProcessor extends BaseTicketProcessor<NewApplic
                 .build();
         applicationService.add(application);
 
+        User user = queryCreateUser(ticketEntry);
+        // 后处理
+        postProcess(application, entry, user);
+    }
+
+    private void postProcess(Application application, NewApplicationEntry.NewApplication entry, User user) {
         // 打应用级别标签
         Tag tag = tagService.getByTagKey(entry.getLevelTag());
         if (tag != null) {
@@ -95,7 +101,6 @@ public class NewApplicationTicketProcessor extends BaseTicketProcessor<NewApplic
         }
 
         // 用户授权
-        User user = queryCreateUser(ticketEntry);
         if (user != null) {
             UserPermission userPermission = UserPermission.builder()
                     .userId(user.getId())

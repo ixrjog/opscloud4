@@ -162,6 +162,7 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
         return dsConfigHelper.build(config, AliyunConfig.class).getAliyun();
     }
 
+    @Override
     public void updateLoginProfile(UserAmParam.UpdateLoginProfile updateLoginProfile) {
         AliyunConfig.Aliyun config = buildConfig(updateLoginProfile.getInstanceUuid());
         User user = userService.getByUsername(updateLoginProfile.getUsername());
