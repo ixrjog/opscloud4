@@ -43,12 +43,6 @@ public class SerDeployTaskItem {
     private String itemBucketName;
 
     /**
-     * item下载链接
-     */
-    @Column(name = "item_url")
-    private String itemUrl;
-
-    /**
      * item md5
      */
     @Column(name = "item_md5")
@@ -58,7 +52,7 @@ public class SerDeployTaskItem {
      * item 大小
      */
     @Column(name = "item_size")
-    private Integer itemSize;
+    private Long itemSize;
 
     /**
      * 发布人

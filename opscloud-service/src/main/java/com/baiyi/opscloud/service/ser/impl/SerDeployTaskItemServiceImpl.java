@@ -39,4 +39,12 @@ public class SerDeployTaskItemServiceImpl implements SerDeployTaskItemService {
         return serDeployTaskItemMapper.selectByExample(example);
     }
 
+    @Override
+    public SerDeployTaskItem getByTaskIdAndItemName(Integer serDeployTaskId, String itemName) {
+        Example example = new Example(SerDeployTaskItem.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("serDeployTaskId", serDeployTaskId);
+        criteria.andEqualTo("itemName", itemName);
+        return serDeployTaskItemMapper.selectOneByExample(example);
+    }
 }

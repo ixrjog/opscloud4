@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.facade.ser.SerDeployFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +27,10 @@ public class SerDeployController {
 
     @Operation(summary = "ser包上传")
     @PostMapping(value = "/upload")
-    public HttpResult<Boolean> uploadFile(@RequestBody MultipartFile file, @RequestHeader("x-task-uuid") String taskUuid) {
+    public HttpResult<Boolean> uploadFile(@RequestBody MultipartFile file,
+                                          @RequestHeader("x-task-uuid") @NotNull(message = "缺少任务id") String taskUuid) {
         serDeployFacade.uploadFile(file, taskUuid);
         return HttpResult.SUCCESS;
     }
-
-
-
 
 }

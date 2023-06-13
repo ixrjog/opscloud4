@@ -5,12 +5,15 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.FunctionUtil;
+import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.core.InstanceHelper;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.aws.s3.driver.AmazonS3Driver;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.SerDeployTask;
+import com.baiyi.opscloud.domain.generator.opscloud.SerDeployTaskItem;
 import com.baiyi.opscloud.domain.param.ser.SerDeployParam;
 import com.baiyi.opscloud.domain.vo.ser.SerDeployVO;
 import com.baiyi.opscloud.facade.ser.SerDeployFacade;
@@ -23,6 +26,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -73,9 +77,31 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
             try {
                 InputStream inputStream = file.getInputStream();
                 String keyName = Joiner.on("/").join(taskUuid, file.getOriginalFilename());
-                String versionId = amazonS3Driver.putObject(DEFAULT_REGION_ID, awsConfig, awsConfig.getSerDeploy().getBucketName(), keyName, inputStream, new ObjectMetadata());
-                S3Object s3Object = amazonS3Driver.getObject(DEFAULT_REGION_ID, awsConfig, awsConfig.getSerDeploy().getBucketName(), keyName, versionId);
+                String bucketName = awsConfig.getSerDeploy().getBucketName();
+                String versionId = amazonS3Driver.putObject(DEFAULT_REGION_ID, awsConfig, bucketName, keyName, inputStream, new ObjectMetadata());
+                S3Object s3Object = amazonS3Driver.getObject(DEFAULT_REGION_ID, awsConfig, bucketName, keyName, versionId);
+                SerDeployTask serDeployTask = serDeployTaskService.getByUuid(taskUuid);
 
+                SerDeployTaskItem serDeployTaskItem = SerDeployTaskItem.builder()
+                        .serDeployTaskId(serDeployTask.getId())
+                        .itemName(file.getOriginalFilename())
+                        .itemKey(keyName)
+                        .itemBucketName(bucketName)
+                        .itemMd5(s3Object.getObjectMetadata().getContentMD5())
+                        .itemSize(s3Object.getObjectMetadata().getContentLength())
+                        .deployUsername(SessionUtil.getUsername())
+                        .build();
+
+                SerDeployTaskItem item = serDeployTaskItemService.getByTaskIdAndItemName(serDeployTask.getId(), file.getOriginalFilename());
+
+                FunctionUtil.isTureOrFalse(ObjectUtils.isEmpty(item))
+                        .trueOrFalseHandle(
+                                () -> serDeployTaskItemService.add(serDeployTaskItem),
+                                () -> {
+                                    serDeployTaskItem.setId(item.getId());
+                                    serDeployTaskItemService.update(serDeployTaskItem);
+                                }
+                        );
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

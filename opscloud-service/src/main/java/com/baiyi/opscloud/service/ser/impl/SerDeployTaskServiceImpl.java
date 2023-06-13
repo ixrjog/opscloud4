@@ -40,6 +40,14 @@ public class SerDeployTaskServiceImpl implements SerDeployTaskService {
     }
 
     @Override
+    public SerDeployTask getByUuid(String taskUuid) {
+        Example example = new Example(SerDeployTask.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("taskUuid", taskUuid);
+        return serDeployTaskMapper.selectOneByExample(example);
+    }
+
+    @Override
     public DataTable<SerDeployTask> queryPageByParam(SerDeployParam.TaskPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(SerDeployTask.class);
