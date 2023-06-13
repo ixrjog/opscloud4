@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.baiyi.opscloud.mapper.SerDeployTaskItemMapper">
-  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.SerDeployTaskItem">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="ser_deploy_task_id" jdbcType="INTEGER" property="serDeployTaskId" />
-    <result column="item_name" jdbcType="VARCHAR" property="itemName" />
-    <result column="item_key" jdbcType="VARCHAR" property="itemKey" />
-    <result column="item_bucket_name" jdbcType="VARCHAR" property="itemBucketName" />
-    <result column="item_url" jdbcType="VARCHAR" property="itemUrl" />
-    <result column="item_md5" jdbcType="VARCHAR" property="itemMd5" />
-    <result column="item_size" jdbcType="INTEGER" property="itemSize" />
-    <result column="deploy_username" jdbcType="VARCHAR" property="deployUsername" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.SerDeployTaskItem">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="ser_deploy_task_id" jdbcType="INTEGER" property="serDeployTaskId"/>
+        <result column="item_name" jdbcType="VARCHAR" property="itemName"/>
+        <result column="item_key" jdbcType="VARCHAR" property="itemKey"/>
+        <result column="item_bucket_name" jdbcType="VARCHAR" property="itemBucketName"/>
+        <result column="item_url" jdbcType="VARCHAR" property="itemUrl"/>
+        <result column="item_md5" jdbcType="VARCHAR" property="itemMd5"/>
+        <result column="item_size" jdbcType="INTEGER" property="itemSize"/>
+        <result column="deploy_username" jdbcType="VARCHAR" property="deployUsername"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
 </mapper>

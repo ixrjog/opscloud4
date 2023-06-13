@@ -1,12 +1,18 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Data
 @Table(name = "ser_deploy_task_item")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class SerDeployTaskItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

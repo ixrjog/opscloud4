@@ -5,6 +5,9 @@ import com.baiyi.opscloud.mapper.SerDeployTaskItemMapper;
 import com.baiyi.opscloud.service.ser.SerDeployTaskItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
+
+import java.util.List;
 
 /**
  * @Author 修远
@@ -27,4 +30,13 @@ public class SerDeployTaskItemServiceImpl implements SerDeployTaskItemService {
     public void update(SerDeployTaskItem serDeployTaskItem) {
         serDeployTaskItemMapper.updateByPrimaryKey(serDeployTaskItem);
     }
+
+    @Override
+    public List<SerDeployTaskItem> listBySerDeployTaskId(Integer serDeployTaskId) {
+        Example example = new Example(SerDeployTaskItem.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("serDeployTaskId", serDeployTaskId);
+        return serDeployTaskItemMapper.selectByExample(example);
+    }
+
 }

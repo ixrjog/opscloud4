@@ -1,5 +1,8 @@
 package com.baiyi.opscloud.facade.ser;
 
+import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.param.ser.SerDeployParam;
+import com.baiyi.opscloud.domain.vo.ser.SerDeployVO;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -8,6 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
  * @Since 1.0
  */
 public interface SerDeployFacade {
+
+
+    DataTable<SerDeployVO.Task> queryProjectPage(SerDeployParam.TaskPageQuery pageQuery);
 
     void uploadFile(MultipartFile file, String taskUuid);
 

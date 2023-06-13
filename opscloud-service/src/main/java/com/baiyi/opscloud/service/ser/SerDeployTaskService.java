@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.ser;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.SerDeployTask;
+import com.baiyi.opscloud.domain.param.ser.SerDeployParam;
 
 /**
  * @Author 修远
@@ -12,4 +14,8 @@ public interface SerDeployTaskService {
     void add(SerDeployTask serDeployTask);
 
     void update(SerDeployTask serDeployTask);
+
+    SerDeployTask getById(Integer id);
+
+    DataTable<SerDeployTask> queryPageByParam(SerDeployParam.TaskPageQuery pageQuery);
 }

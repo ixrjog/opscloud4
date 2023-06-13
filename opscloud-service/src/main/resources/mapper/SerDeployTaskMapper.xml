@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.baiyi.opscloud.mapper.SerDeployTaskMapper">
-  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.SerDeployTask">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="application_id" jdbcType="INTEGER" property="applicationId" />
-    <result column="task_uuid" jdbcType="CHAR" property="taskUuid" />
-    <result column="task_name" jdbcType="VARCHAR" property="taskName" />
-    <result column="task_desc" jdbcType="VARCHAR" property="taskDesc" />
-    <result column="is_active" jdbcType="BIT" property="isActive" />
-    <result column="task_status" jdbcType="VARCHAR" property="taskStatus" />
-    <result column="task_result" jdbcType="VARCHAR" property="taskResult" />
-    <result column="is_finish" jdbcType="BIT" property="isFinish" />
-    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
-    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.SerDeployTask">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="application_id" jdbcType="INTEGER" property="applicationId"/>
+        <result column="task_uuid" jdbcType="CHAR" property="taskUuid"/>
+        <result column="task_name" jdbcType="VARCHAR" property="taskName"/>
+        <result column="task_desc" jdbcType="VARCHAR" property="taskDesc"/>
+        <result column="is_active" jdbcType="BIT" property="isActive"/>
+        <result column="is_finish" jdbcType="BIT" property="isFinish"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
 </mapper>

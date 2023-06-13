@@ -1,13 +1,19 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Data
-@Table(name = "ser_deploy_task_log")
-public class SerDeployTaskLog {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "ser_deploy_subtask")
+public class SerDeploySubtask {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -19,10 +25,34 @@ public class SerDeployTaskLog {
     private Integer serDeployTaskId;
 
     /**
-     * 日志类型
+     * 环境类型
      */
-    @Column(name = "log_type")
-    private String logType;
+    @Column(name = "env_type")
+    private Integer envType;
+
+    /**
+     * 任务状态
+     */
+    @Column(name = "task_status")
+    private String taskStatus;
+
+    /**
+     * 任务结果
+     */
+    @Column(name = "task_result")
+    private String taskResult;
+
+    /**
+     * 开始时间
+     */
+    @Column(name = "start_time")
+    private Date startTime;
+
+    /**
+     * 结束时间
+     */
+    @Column(name = "end_time")
+    private Date endTime;
 
     /**
      * 创建时间

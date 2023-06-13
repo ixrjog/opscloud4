@@ -74,9 +74,9 @@
             , sum(if(a0.work_order_id = #{workOrderId}, 1, 0)) as `value`
         </if>
         from work_order_ticket a0
-                 join work_order a1 on a1.id = a0.work_order_id
+        join work_order a1 on a1.id = a0.work_order_id
         where a0.ticket_phase = 'SUCCESS'
-          and a0.end_time is not null
+        and a0.end_time is not null
         group by `c_name`
         order by `c_name`;
     </select>
