@@ -2,4 +2,3 @@
 
 # upload oss
 ossutil -c ~/.ossutilconfig cp -f -u ./opscloud-manage/target/opscloud-manage-prod.jar oss://opscloud4-res/package/
-

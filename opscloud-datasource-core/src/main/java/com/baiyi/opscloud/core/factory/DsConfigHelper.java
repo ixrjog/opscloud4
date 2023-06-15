@@ -60,7 +60,9 @@ public class DsConfigHelper {
                 propsYml = templateUtil.renderTemplate(propsYml, credential);
             }
         }
-        return DsUtil.toDsConfig(propsYml, targetClass);
+        T baseDsConfig = DsUtil.toDsConfig(propsYml, targetClass);
+        baseDsConfig.setConfigId(datasourceConfig.getId());
+        return baseDsConfig;
     }
 
     public KubernetesConfig buildKubernetesConfig(String instanceUuid) {

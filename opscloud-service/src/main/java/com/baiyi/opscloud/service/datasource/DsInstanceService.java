@@ -22,6 +22,8 @@ public interface DsInstanceService {
 
     List<DatasourceInstance> listByInstanceType(String instanceType);
 
+    DatasourceInstance getByConfigId(Integer configId);
+
     void add(DatasourceInstance datasourceInstance);
 
     void update(DatasourceInstance datasourceInstance);

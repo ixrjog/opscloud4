@@ -5,6 +5,7 @@ import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.domain.model.WorkOrderLeoDeployToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.helpers.MessageFormatter;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,7 +25,7 @@ public class WorkOrderLeoDeployHelper {
 
     private final RedisUtil redisUtil;
 
-    private static final String KEY = "OC4:V0:WORKORDER:LEO:DEPLOY:BID:%s";
+    private static final String KEY = "OC4:V0:WORKORDER:LEO:DEPLOY:BID:{}";
 
     public boolean hasKey(Integer buildId) {
         if (buildId == 0) {
@@ -42,7 +43,7 @@ public class WorkOrderLeoDeployHelper {
     }
 
     private String getKey(Integer buildId) {
-        return String.format(KEY, buildId);
+        return MessageFormatter.format(KEY, buildId).getMessage();
     }
 
 }

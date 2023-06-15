@@ -38,6 +38,10 @@ public enum WorkOrderKeyConstants {
     // 发布
     APPLICATION_DEPLOY,
     // 新应用
-    NEW_APPLICATION
+    NEW_APPLICATION,
+    // 配置发布
+    APOLLO_RELEASE,
+    // Ser发布
+    SER_DEPLOY
 
 }

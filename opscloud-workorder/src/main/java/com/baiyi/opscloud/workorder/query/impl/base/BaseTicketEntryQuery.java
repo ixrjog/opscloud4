@@ -1,9 +1,13 @@
 package com.baiyi.opscloud.workorder.query.impl.base;
 
+import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
+import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.workorder.query.ITicketEntryQuery;
 import com.baiyi.opscloud.workorder.query.factory.WorkOrderTicketEntryQueryFactory;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -17,6 +21,9 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public abstract class BaseTicketEntryQuery<T> implements ITicketEntryQuery<T>, InitializingBean {
+
+    @Resource
+    private UserService userService;
 
     @Override
     public List<WorkOrderTicketVO.Entry<T>> query(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
@@ -52,6 +59,10 @@ public abstract class BaseTicketEntryQuery<T> implements ITicketEntryQuery<T>, I
     @Override
     public void afterPropertiesSet() throws Exception {
         WorkOrderTicketEntryQueryFactory.register(this);
+    }
+
+    protected User getUser() {
+        return userService.getByUsername(SessionUtil.getUsername());
     }
 
 }

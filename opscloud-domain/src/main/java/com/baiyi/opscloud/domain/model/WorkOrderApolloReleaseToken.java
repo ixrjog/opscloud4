@@ -10,19 +10,19 @@ import java.io.Serializable;
 
 /**
  * @Author baiyi
- * @Date 2023/5/11 15:11
+ * @Date 2023/6/13 17:58
  * @Version 1.0
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WorkOrderLeoDeployToken implements Serializable {
+public class WorkOrderApolloReleaseToken implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -1L;
 
-    private Integer buildId;
+    private Integer ticketId;
 
     private Integer applicationId;
 

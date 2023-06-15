@@ -103,6 +103,7 @@ public enum DsAssetTypeConstants {
 
     APOLLO_APP,
     APOLLO_CLUSTER,
-    APOLLO_NAMESPACE
+    APOLLO_NAMESPACE,
+    APOLLO_INTERCEPT_RELEASE
 
 }
