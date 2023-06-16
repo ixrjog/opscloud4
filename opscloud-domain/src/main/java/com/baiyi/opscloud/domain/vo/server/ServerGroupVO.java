@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
+import com.baiyi.opscloud.domain.vo.business.IBusinessPermissionUser;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
@@ -42,12 +43,17 @@ public class ServerGroupVO {
             UserVO.IUserPermission,
             IAllowOrder,
             BusinessPropertyVO.IBusinessProperty,
-            BusinessAssetRelationVO.IBusinessAssetRelation, // 资产与业务对象绑定关系
+            // 资产与业务对象绑定关系
+            BusinessAssetRelationVO.IBusinessAssetRelation,
             BusinessDocumentVO.IBusinessDocument,
+            IBusinessPermissionUser,
             Serializable {
 
         @Serial
         private static final long serialVersionUID = 5059407999240740609L;
+
+        @Schema(description = "授权用户")
+        private List<UserVO.User> users;
 
         private final Integer businessType = BusinessTypeEnum.SERVERGROUP.getType();
 
