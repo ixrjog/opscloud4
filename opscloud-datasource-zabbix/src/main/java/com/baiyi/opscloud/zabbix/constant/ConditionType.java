@@ -7,7 +7,7 @@ import lombok.Getter;
  * @Date 2021/2/1 11:22 上午
  * @Version 1.0
  */
-public enum Conditiontype {
+public enum ConditionType {
     /**
      * Type of condition.
      * <p>
@@ -57,7 +57,7 @@ public enum Conditiontype {
     @Getter
     private final int type;
 
-    Conditiontype(int type) {
+    ConditionType(int type) {
         this.type = type;
     }
 

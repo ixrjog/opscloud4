@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.zabbix;
 
 import com.baiyi.opscloud.zabbix.v5.param.ZabbixActionParam;
-import com.baiyi.opscloud.zabbix.constant.Conditiontype;
+import com.baiyi.opscloud.zabbix.constant.ConditionType;
 import com.baiyi.opscloud.zabbix.constant.OperatorType;
 import com.google.common.collect.Lists;
 
@@ -18,7 +18,7 @@ public class ConditionsBuilder {
 
     private static final ZabbixActionParam.Condition conditionA = ZabbixActionParam.Condition.builder()
             // 4 - trigger severity;
-            .conditiontype(Conditiontype.TRIGGER_SEVERITY.getType())
+            .conditiontype(ConditionType.TRIGGER_SEVERITY.getType())
             // 5 - is greater than or equals;
             .operator(OperatorType.IS_GREATER_THAN_OR_EQUALS.getType())
             .value("4")
@@ -34,7 +34,7 @@ public class ConditionsBuilder {
     private static ZabbixActionParam.Condition buildConditionB(String groupid) {
         return ZabbixActionParam.Condition.builder()
                 // 0 - host group;
-                .conditiontype(Conditiontype.HOST_GROUP.getType())
+                .conditiontype(ConditionType.HOST_GROUP.getType())
                 // 0 - (default) equals;
                 .operator(OperatorType.EQUALS.getType())
                 .value(groupid)
@@ -47,7 +47,7 @@ public class ConditionsBuilder {
      */
     private static final ZabbixActionParam.Condition conditionC = ZabbixActionParam.Condition.builder()
             // 26 - event tag value.
-            .conditiontype(Conditiontype.EVENT_TAG_VALUE.getType())
+            .conditiontype(ConditionType.EVENT_TAG_VALUE.getType())
             // 0 - (default) equals;
             .operator(OperatorType.EQUALS.getType())
             .value(ENV_PROD)
