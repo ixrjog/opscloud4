@@ -2,7 +2,10 @@ logging:
   level:
     # swagger 警告日志忽略
     io.swagger.models.parameters.AbstractSerializableParameter: error
+    org.springframework: warn
     io.fabric8.kubernetes.client.utils.HttpClientUtils: error
+    # devops.aliyun.com
+    com.aliyun.sdk.gateway.pop: error
 log:
   file:
     path: ${HOME}/logs
