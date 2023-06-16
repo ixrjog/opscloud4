@@ -1,9 +1,9 @@
 package com.baiyi.opscloud.workorder.processor.impl;
 
-import com.baiyi.opscloud.common.helper.WorkOrderLeoDeployHelper;
+import com.baiyi.opscloud.common.helper.order.WorkOrderLeoDeployHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
-import com.baiyi.opscloud.domain.model.WorkOrderLeoDeployToken;
+import com.baiyi.opscloud.domain.model.WorkOrderToken;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
@@ -36,12 +36,12 @@ public class ApplicationDeployTicketProcessor extends BaseTicketProcessor<Applic
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, ApplicationDeployEntry.LeoBuildVersion entry) throws TicketProcessException {
         int buildId = entry.getId();
-        WorkOrderLeoDeployToken token = WorkOrderLeoDeployToken.builder()
+        WorkOrderToken.LeoDeployToken token = WorkOrderToken.LeoDeployToken.builder()
                 .buildId(buildId)
                 .applicationId(entry.getApplicationId())
                 .build();
         // 设置令牌，@LeoDeployInterceptor 拦截器注解中使用
-        workOrderLeoDeployHelper.set(token);
+        workOrderLeoDeployHelper.setToken(token);
         // 多次工单申请也只记录最后一次工单ID
         LeoBuild saveLeoBuild = LeoBuild.builder()
                 .id(buildId)

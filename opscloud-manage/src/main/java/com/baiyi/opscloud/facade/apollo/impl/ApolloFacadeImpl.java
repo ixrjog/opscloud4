@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade.apollo.impl;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ApolloConfig;
-import com.baiyi.opscloud.common.helper.WorkOrderApolloReleaseHelper;
+import com.baiyi.opscloud.common.helper.order.WorkOrderApolloReleaseHelper;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.apollo.entity.InterceptRelease;
 import com.baiyi.opscloud.datasource.apollo.provider.ApolloInterceptReleaseProvider;
@@ -11,7 +11,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoRule;
-import com.baiyi.opscloud.domain.model.WorkOrderApolloReleaseToken;
+import com.baiyi.opscloud.domain.model.WorkOrderToken;
 import com.baiyi.opscloud.domain.param.apollo.ApolloParam;
 import com.baiyi.opscloud.facade.apollo.ApolloFacade;
 import com.baiyi.opscloud.facade.apollo.ApolloRuleValidator;
@@ -101,7 +101,7 @@ public class ApolloFacadeImpl implements ApolloFacade {
 
         // 白名单规则校验
         if (workOrderApolloReleaseHelper.hasKey(application.getId())) {
-            WorkOrderApolloReleaseToken token = workOrderApolloReleaseHelper.get(application.getId());
+            WorkOrderToken.ApolloReleaseToken token = workOrderApolloReleaseHelper.getToken(application.getId());
             recordAsset(apolloConfig, releaseEvent, token.getTicketId());
             return HttpResult.SUCCESS;
         }

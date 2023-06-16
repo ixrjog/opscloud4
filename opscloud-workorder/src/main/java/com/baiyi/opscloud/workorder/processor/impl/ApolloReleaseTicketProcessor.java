@@ -1,9 +1,9 @@
 package com.baiyi.opscloud.workorder.processor.impl;
 
-import com.baiyi.opscloud.common.helper.WorkOrderApolloReleaseHelper;
+import com.baiyi.opscloud.common.helper.order.WorkOrderApolloReleaseHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
-import com.baiyi.opscloud.domain.model.WorkOrderApolloReleaseToken;
+import com.baiyi.opscloud.domain.model.WorkOrderToken;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
@@ -30,12 +30,12 @@ public class ApolloReleaseTicketProcessor extends BaseTicketProcessor<Applicatio
 
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, Application entry) throws TicketProcessException {
-        WorkOrderApolloReleaseToken token = WorkOrderApolloReleaseToken.builder()
+        WorkOrderToken.ApolloReleaseToken token = WorkOrderToken.ApolloReleaseToken.builder()
                 .ticketId(ticketEntry.getWorkOrderTicketId())
                 .applicationId(entry.getId())
                 .build();
         // 设置令牌，ApolloFacade 中使用
-        workOrderApolloReleaseHelper.set(token);
+        workOrderApolloReleaseHelper.setToken(token);
     }
 
     @Override
