@@ -21,7 +21,7 @@ import java.util.List;
  * @Date 2022/12/5 18:02
  * @Version 1.0
  */
-@SuppressWarnings({"resource", "rawtypes"})
+@SuppressWarnings({"resource", "rawtypes", "SpringJavaInjectionPointsAutowiringInspection"})
 @Service
 @RequiredArgsConstructor
 public class LeoDeployServiceImpl implements LeoDeployService {
@@ -154,6 +154,21 @@ public class LeoDeployServiceImpl implements LeoDeployService {
         Example example = new Example(LeoDeploy.class);
         example.setOrderByClause("id desc");
         return deployMapper.selectByExample(example);
+    }
+
+    @Override
+    public int countByProjectId(int projectId) {
+        Example example = new Example(LeoDeploy.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("projectId", projectId)
+                .andEqualTo("isActive", true)
+                .andEqualTo("isFinish", true);
+        return deployMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public Integer countByEnvProjectId(Integer projectId, Integer envType) {
+        return deployMapper.countByEnvProjectId(projectId, envType);
     }
 
 }

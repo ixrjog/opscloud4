@@ -66,6 +66,14 @@ public class DsInstanceServiceImpl implements DsInstanceService {
     }
 
     @Override
+    public DatasourceInstance getByConfigId(Integer configId) {
+        Example example = new Example(DatasourceInstance.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("configId", configId);
+        return dsInstanceMapper.selectOneByExample(example);
+    }
+
+    @Override
     public void add(DatasourceInstance datasourceInstance) {
         dsInstanceMapper.insert(datasourceInstance);
     }

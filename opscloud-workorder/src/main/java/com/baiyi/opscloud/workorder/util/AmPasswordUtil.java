@@ -13,9 +13,9 @@ import java.util.Random;
  * @Version 1.0
  */
 @SuppressWarnings("SpellCheckingInspection")
-public class AwsPasswordUtil {
+public class AmPasswordUtil {
 
-    private AwsPasswordUtil(){}
+    private AmPasswordUtil(){}
 
     private static final int PASSWORD_LENGTH = 8;
 

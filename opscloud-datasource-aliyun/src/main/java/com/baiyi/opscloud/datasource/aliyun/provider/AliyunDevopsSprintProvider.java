@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.datasource.aliyun.provider;
 
 import com.aliyun.sdk.service.devops20210625.models.ListSprintsResponseBody;
+import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunDevopsConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_DEVOPS_SPRINT;
+
 /**
  * @Author baiyi
  * @Date 2023/5/12 10:30
@@ -33,7 +36,7 @@ public class AliyunDevopsSprintProvider extends AbstractAssetChildProvider<ListS
     private AliyunDevopsSprintProvider aliyunDevopsSprintProvider;
 
     @Override
-    //@SingleTask(name = PULL_ALIYUN_DEVOPS_SPRINT)
+    @SingleTask(name = PULL_ALIYUN_DEVOPS_SPRINT, lockTime = "10m")
     @EnablePullChild(type = DsAssetTypeConstants.ALIYUN_DEVOPS_SPRINT)
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
@@ -45,7 +48,7 @@ public class AliyunDevopsSprintProvider extends AbstractAssetChildProvider<ListS
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        return preAsset.getIsActive().equals(asset.getIsActive());
+        return true;
     }
 
     @Override

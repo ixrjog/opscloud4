@@ -13,6 +13,7 @@ public enum WorkOrderKeyConstants {
     RAM_POLICY,
     IAM_POLICY,
     AWS_IAM_UPDATE_LOGIN_PROFILE,
+    ALIYUN_RAM_UPDATE_LOGIN_PROFILE,
     ONS_ROCKETMQ_TOPIC,
     ONS_ROCKETMQ_GROUP,
     SQS,
@@ -35,6 +36,12 @@ public enum WorkOrderKeyConstants {
     APPLICATION_SCALE_REPLICAS,
     APPLICATION_REDUCE_REPLICAS,
     // 发布
-    APPLICATION_DEPLOY
+    APPLICATION_DEPLOY,
+    // 新应用
+    NEW_APPLICATION,
+    // 配置发布
+    APOLLO_RELEASE,
+    // Ser发布
+    SER_DEPLOY
 
 }

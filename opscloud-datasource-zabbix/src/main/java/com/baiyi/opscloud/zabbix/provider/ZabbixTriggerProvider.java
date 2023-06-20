@@ -55,7 +55,6 @@ public class ZabbixTriggerProvider extends AbstractAssetRelationProvider<ZabbixT
         return zabbixV5TriggerDriver.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
-
     @Override
     @SingleTask(name = PULL_ZABBIX_TRIGGER, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {

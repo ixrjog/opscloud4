@@ -43,7 +43,7 @@ public class GitLabRepoDelegate {
      * @param openTag
      * @return
      */
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10S, key = "'url_' + #gitlab.url + '_projectId_' + #projectId + '_openTag_' + #openTag")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10S, key = "'URL:' + #gitlab.url + '&PID:' + #projectId + '&TAG:' + #openTag")
     public LeoBuildVO.BranchOptions generatorGitLabBranchOptions(GitLabConfig.GitLab gitlab, Long projectId, boolean openTag) {
         List<LeoBuildVO.Option> options = Lists.newArrayList();
         try {
@@ -61,7 +61,7 @@ public class GitLabRepoDelegate {
                     .options(options)
                     .build();
         } catch (GitLabApiException e) {
-            log.warn("查询GitLab branches tags: url={}, projectId={}, {}", gitlab.getUrl(), projectId, e.getMessage());
+            log.warn("query gitLab branches or tags: url={}, projectId={}, {}", gitlab.getUrl(), projectId, e.getMessage());
             return LeoBuildVO.BranchOptions.EMPTY_OPTIONS;
         }
     }
@@ -71,7 +71,7 @@ public class GitLabRepoDelegate {
             try {
                 GitLabProjectDriver.createBranch(gitlab, projectId, branch, ref);
             } catch (GitLabApiException e) {
-                log.warn("创建GitLab分支错误: url={}, projectId={}, branch={}, ref={}, {}", gitlab.getUrl(), projectId, branch, ref, e.getMessage());
+                log.warn("create gitLab branch err: url={}, projectId={}, branch={}, ref={}, {}", gitlab.getUrl(), projectId, branch, ref, e.getMessage());
             }
         }
         return generatorGitLabBranchOptions(gitlab, projectId, false);
@@ -91,7 +91,7 @@ public class GitLabRepoDelegate {
         } catch (GitLabApiException e) {
             log.error(e.getMessage());
         }
-        throw new LeoBuildException("查询构建分支Commit错误: gitLab={}, projectId={}, branchOrTag={}", gitlab.getUrl(), projectId, branchNameOrTagName);
+        throw new LeoBuildException("query build branch commit err: gitLab={}, projectId={}, branchOrTag={}", gitlab.getUrl(), projectId, branchNameOrTagName);
     }
 
 }

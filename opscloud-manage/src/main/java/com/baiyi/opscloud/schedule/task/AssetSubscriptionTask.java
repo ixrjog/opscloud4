@@ -2,7 +2,7 @@ package com.baiyi.opscloud.schedule.task;
 
 import com.baiyi.opscloud.common.annotation.WatchTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.common.helper.TopicHelper;
+import com.baiyi.opscloud.common.helper.topic.TopicHelper;
 import com.baiyi.opscloud.config.condition.EnvCondition;
 import com.baiyi.opscloud.datasource.ansible.provider.AnsibleHostsProvider;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;

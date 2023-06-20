@@ -35,7 +35,7 @@ public class DingtalkAppMessageConsumer extends AbstractMessageConsumer<Dingtalk
                 return asset;
             }
         }
-        throw new OCException("发送消息失败: 用户未绑定钉钉用户无法查找对应userid！username=" + user.getUsername());
+        throw new OCException("发送消息失败: 用户未绑定钉钉用户无法查找对应userid！username={}", user.getUsername());
     }
 
     @Override

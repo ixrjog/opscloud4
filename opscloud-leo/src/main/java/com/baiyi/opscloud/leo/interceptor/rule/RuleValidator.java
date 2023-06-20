@@ -24,9 +24,9 @@ import java.util.Optional;
  * @Date 2022/12/29 19:40
  * @Version 1.0
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class RuleValidator {
 
     private final EnvService envService;
@@ -39,15 +39,15 @@ public class RuleValidator {
         boolean hitTagRule = checkRuleWithTag(leoJob, ruleConfig);
         // 环境校验
         boolean hitEnvRule = checkRuleWithEnv(leoJob, ruleConfig);
-        // 环境校验
-        boolean hitExpressionRule = checkRuleWithExpression(leoJob, ruleConfig);
         // 时间表达式校验
+        boolean hitExpressionRule = checkRuleWithExpression(ruleConfig);
+        // 返回结果
         if (hitTagRule && hitEnvRule && hitExpressionRule) {
             throw new LeoInterceptorException("拦截器命中规则阻止任务执行: ruleId={}", rule.getId());
         }
     }
 
-    private boolean checkRuleWithExpression(LeoJob leoJob, LeoRuleModel.RuleConfig ruleConfig) {
+    public boolean checkRuleWithExpression(LeoRuleModel.RuleConfig ruleConfig) {
         LeoRuleModel.Expression expression = Optional.ofNullable(ruleConfig)
                 .map(LeoRuleModel.RuleConfig::getRule)
                 .map(LeoRuleModel.Rule::getExpression)

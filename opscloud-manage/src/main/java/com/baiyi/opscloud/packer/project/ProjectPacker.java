@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.packer.project;
 
 import com.baiyi.opscloud.common.annotation.BizDocWrapper;
+import com.baiyi.opscloud.common.annotation.BizUserWrapper;
 import com.baiyi.opscloud.common.annotation.TagsWrapper;
+import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.FunctionUtil;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
@@ -12,10 +14,11 @@ import com.baiyi.opscloud.domain.param.IRelation;
 import com.baiyi.opscloud.domain.vo.project.ProjectResourceVO;
 import com.baiyi.opscloud.domain.vo.project.ProjectVO;
 import com.baiyi.opscloud.packer.IWrapperRelation;
-import com.baiyi.opscloud.packer.business.BusinessPermissionUserPacker;
 import com.baiyi.opscloud.service.application.ApplicationService;
+import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.project.ProjectResourceService;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -33,17 +36,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProjectPacker implements IWrapperRelation<ProjectVO.Project> {
 
-    private final BusinessPermissionUserPacker businessPermissionUserPacker;
-
     private final ProjectResourcePacker resourcePacker;
 
     private final ProjectResourceService projectResourceService;
 
     private final ApplicationService applicationService;
 
+    private final LeoDeployService leoDeployService;
+
     @Override
     @TagsWrapper
     @BizDocWrapper
+    @BizUserWrapper
     public void wrap(ProjectVO.Project project, IExtend iExtend, IRelation iRelation) {
         if (!iExtend.getExtend()) {
             return;
@@ -71,7 +75,11 @@ public class ProjectPacker implements IWrapperRelation<ProjectVO.Project> {
                 .collect(Collectors.groupingBy(ProjectResourceVO.Resource::getResourceType));
         project.setResourceMap(resourcesMap);
         project.setApplicationList(applicationList);
-        businessPermissionUserPacker.wrap(project);
+        // 部署次数
+        project.setDeployCount(leoDeployService.countByProjectId(project.getId()));
+        Map<String, Integer> envDeployCount = Maps.newHashMap();
+        envDeployCount.put(Global.ENV_PROD,leoDeployService.countByEnvProjectId(project.getId(),4));
+        project.setEnvDeployCount( envDeployCount);
     }
 
 }

@@ -23,6 +23,10 @@ public class AmazonEksProvider {
 
     private static AmazonEksHelper amazonEksHelper;
 
+    public static final String KUBERNETES_REQUEST_TIMEOUT_SYSTEM_PROPERTY = "kubernetes.request.timeout";
+    public static final String KUBERNETES_WEBSOCKET_TIMEOUT_SYSTEM_PROPERTY = "kubernetes.websocket.timeout";
+    public static final String KUBERNETES_CONNECTION_TIMEOUT_SYSTEM_PROPERTY = "kubernetes.connection.timeout";
+
     @Autowired
     public void setAmazonEksHelper(AmazonEksHelper amazonEksHelper) {
         AmazonEksProvider.amazonEksHelper = amazonEksHelper;
@@ -68,11 +72,11 @@ public class AmazonEksProvider {
      * @param kubernetes
      */
     private static void preSet(KubernetesConfig.Kubernetes kubernetes) {
-        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_REQUEST_TIMEOUT_SYSTEM_PROPERTY,
+        System.setProperty(KUBERNETES_REQUEST_TIMEOUT_SYSTEM_PROPERTY,
                 String.valueOf(MyKubernetesClientBuilder.Values.REQUEST_TIMEOUT));
-        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_WEBSOCKET_TIMEOUT_SYSTEM_PROPERTY,
+        System.setProperty(KUBERNETES_WEBSOCKET_TIMEOUT_SYSTEM_PROPERTY,
                 String.valueOf(MyKubernetesClientBuilder.Values.WEBSOCKET_TIMEOUT));
-        System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_CONNECTION_TIMEOUT_SYSTEM_PROPERTY,
+        System.setProperty(KUBERNETES_CONNECTION_TIMEOUT_SYSTEM_PROPERTY,
                 String.valueOf(MyKubernetesClientBuilder.Values.CONNECTION_TIMEOUT));
     }
 

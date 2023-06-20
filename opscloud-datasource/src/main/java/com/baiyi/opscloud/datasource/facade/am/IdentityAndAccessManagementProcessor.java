@@ -173,7 +173,6 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
                 .password(updateLoginProfile.getPassword())
                 .build();
         noticeManager.sendMessage(user, NoticeManager.MsgKeys.AWS_IAM_UPDATE_LOGIN_PROFILE, message);
-
     }
 
     private AwsConfig.Aws buildConfig(String instanceUuid) {

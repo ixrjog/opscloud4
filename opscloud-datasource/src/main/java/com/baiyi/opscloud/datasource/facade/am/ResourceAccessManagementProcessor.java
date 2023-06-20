@@ -15,6 +15,7 @@ import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.notice.message.CreateRamUserMessage;
+import com.baiyi.opscloud.domain.notice.message.UpdateRamLoginProfileMessage;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.param.user.UserAmParam;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
@@ -23,8 +24,11 @@ import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import static com.baiyi.opscloud.datasource.aliyun.ram.driver.AliyunRamUserDriver.NO_PASSWORD_RESET_REQUIRED;
+
 /**
  * Aliyun RAM
+ *
  * @Author baiyi
  * @Date 2022/2/10 6:46 PM
  * @Version 1.0
@@ -114,7 +118,7 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
         AliyunConfig.Aliyun aliyun = buildConfig(revokePolicy.getInstanceUuid());
         try {
             RamUser.User ramUser = aliyunRamUserDriver.getUser(aliyun.getRegionId(), aliyun, revokePolicy.getUsername());
-            //    throw new CommonRuntimeException("RAM用户撤销授权策略错误：RAM账户不存在！");
+            //   throw new CommonRuntimeException("RAM用户撤销授权策略错误：RAM账户不存在！");
             if (ramUser != null) {
                 RamPolicy.Policy ramPolicy = BeanCopierUtil.copyProperties(revokePolicy.getPolicy(), RamPolicy.Policy.class);
                 //    throw new CommonRuntimeException("RAM用户撤销授权策略错误： 未授权当前策略！");
@@ -158,8 +162,22 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
         return dsConfigHelper.build(config, AliyunConfig.class).getAliyun();
     }
 
-    public void updateLoginProfile(UserAmParam.UpdateLoginProfile updateLoginProfile){
-        throw new OCException("不支持此操作！");
+    @Override
+    public void updateLoginProfile(UserAmParam.UpdateLoginProfile updateLoginProfile) {
+        AliyunConfig.Aliyun config = buildConfig(updateLoginProfile.getInstanceUuid());
+        User user = userService.getByUsername(updateLoginProfile.getUsername());
+        try {
+            aliyunRamUserDriver.updateLoginProfile(config, user, updateLoginProfile.getPassword(), NO_PASSWORD_RESET_REQUIRED);
+            UpdateRamLoginProfileMessage message = UpdateRamLoginProfileMessage.builder()
+                    .aliyunName(config.getAccount().getName())
+                    .loginUrl(config.getAccount().getLoginUrl(config.getVersion()))
+                    .username(updateLoginProfile.getUsername())
+                    .password(updateLoginProfile.getPassword())
+                    .build();
+            noticeManager.sendMessage(user, NoticeManager.MsgKeys.ALIYUN_RAM_UPDATE_LOGIN_PROFILE, message);
+        } catch (ClientException e) {
+            throw new OCException("更新RAM用户登录配置错误: {}", e.getMessage());
+        }
     }
 
 }

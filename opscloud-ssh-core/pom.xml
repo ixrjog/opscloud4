@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.springframework.shell</groupId>
             <artifactId>spring-shell-starter</artifactId>
-            <version>3.0.3</version>
+            <version>3.0.4</version>
         </dependency>
 
         <dependency>
@@ -58,11 +58,11 @@
             <version>2.4.0</version>
         </dependency>
 
-        <!-- http://hutool.cn/docs/#/ -->
+        <!-- http://hutool.cn -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.18</version>
+            <version>5.8.19</version>
         </dependency>
 
     </dependencies>

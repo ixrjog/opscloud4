@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.packer;
 
 import com.baiyi.opscloud.common.annotation.BizDocWrapper;
+import com.baiyi.opscloud.common.annotation.BizUserWrapper;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 public class ServerGroupPackerDelegate {
 
     @BizDocWrapper
+    @BizUserWrapper
     public void wrap(ServerGroupVO.ServerGroup serverGroup, IExtend iExtend) {
     }
 

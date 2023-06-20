@@ -51,14 +51,14 @@ public class DsController {
 
     @Operation(summary = "新增数据源配置")
     @PostMapping(value = "/config/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addDsConfig(@RequestBody @Valid DsConfigVO.DsConfig dsConfig) {
+    public HttpResult<Boolean> addDsConfig(@RequestBody @Valid DsInstanceParam.AddDsConfig dsConfig) {
         datasourceFacade.addDsConfig(dsConfig);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "更新数据源配置")
     @PutMapping(value = "/config/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateDsConfig(@RequestBody @Valid DsConfigVO.DsConfig dsConfig) {
+    public HttpResult<Boolean> updateDsConfig(@RequestBody @Valid DsInstanceParam.UpdateDsConfig dsConfig) {
         datasourceFacade.updateDsConfig(dsConfig);
         return HttpResult.SUCCESS;
     }

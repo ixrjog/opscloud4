@@ -16,4 +16,8 @@ public class BaseDsConfig {
     private String url;
     private Map<String, String> props;
 
+    private Integer instanceId;
+
+    private Integer configId;
+
 }

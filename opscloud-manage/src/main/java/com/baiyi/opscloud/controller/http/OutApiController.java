@@ -40,7 +40,7 @@ public class OutApiController {
         return workOrderTicketFacade.approveTicket(outApproveTicket);
     }
 
-    @Operation(summary = "Apollo发布拦截")
+    @Operation(summary = "Apollo配置发布拦截器")
     @PostMapping(value = "/apollo/release/intercept", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult interceptRelease(@RequestBody ApolloParam.ReleaseEvent releaseEvent) {
         return apolloFacade.interceptRelease(releaseEvent);

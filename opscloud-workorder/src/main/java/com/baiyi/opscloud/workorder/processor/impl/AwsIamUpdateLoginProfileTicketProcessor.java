@@ -11,11 +11,10 @@ import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetPermissionExtendedBaseTicketProcessor;
-import com.baiyi.opscloud.workorder.util.AwsPasswordUtil;
+import com.baiyi.opscloud.workorder.util.AmPasswordUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
 
 @Slf4j
 @Component
@@ -27,8 +26,7 @@ public class AwsIamUpdateLoginProfileTicketProcessor extends AbstractDsAssetPerm
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
         User createUser = queryCreateUser(ticketEntry);
-        String newPassword = AwsPasswordUtil.generatorRandomPassword();
-
+        String newPassword = AmPasswordUtil.generatorRandomPassword();
         UserAmParam.UpdateLoginProfile updateLoginProfile = UserAmParam.UpdateLoginProfile.builder()
                 .instanceUuid(ticketEntry.getInstanceUuid())
                 .username(createUser.getUsername())
@@ -36,9 +34,8 @@ public class AwsIamUpdateLoginProfileTicketProcessor extends AbstractDsAssetPerm
                 .build();
         try {
             userAmFacade.updateLoginProfile(updateLoginProfile);
-
         } catch (Exception e) {
-            throw new TicketProcessException("工单更新用户登录配置密码失败: {}", e.getMessage());
+            throw new TicketProcessException("工单更新用户登录配置失败: {}", e.getMessage());
         }
     }
 

@@ -8,7 +8,6 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetBusinessRelationProvider;
-import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.aliyun.converter.DevopsAssetConverter;
 import com.baiyi.opscloud.datasource.aliyun.devops.driver.AliyunDevopsProjectDriver;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
@@ -36,7 +35,7 @@ public class AliyunDevopsProjectProvider extends AbstractAssetBusinessRelationPr
 
     @Override
     @EnablePullChild(type = DsAssetTypeConstants.ALIYUN_DEVOPS_PROJECT)
-    @SingleTask(name = PULL_ALIYUN_DEVOPS_PROJECT, lockTime = "5m")
+    @SingleTask(name = PULL_ALIYUN_DEVOPS_PROJECT, lockTime = "10m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -47,15 +46,6 @@ public class AliyunDevopsProjectProvider extends AbstractAssetBusinessRelationPr
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
-            return false;
-        }
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
-            return false;
-        }
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
-            return false;
-        }
         return true;
     }
 

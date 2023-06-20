@@ -71,8 +71,6 @@ public class SerDeployVO {
 
         private String itemBucketName;
 
-        private String itemUrl;
-
         private String itemMd5;
 
         private String itemSize;

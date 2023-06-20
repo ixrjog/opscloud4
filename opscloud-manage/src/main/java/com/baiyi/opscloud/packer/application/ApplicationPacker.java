@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.packer.application;
 
 import com.baiyi.opscloud.common.annotation.BizDocWrapper;
+import com.baiyi.opscloud.common.annotation.BizUserWrapper;
 import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -9,7 +10,6 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
 import com.baiyi.opscloud.packer.IWrapper;
-import com.baiyi.opscloud.packer.business.BusinessPermissionUserPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -29,8 +29,6 @@ public class ApplicationPacker implements IWrapper<ApplicationVO.Application> {
 
     private final ApplicationResourceService applicationResourceService;
 
-    private final BusinessPermissionUserPacker businessPermissionUserPacker;
-
     private final ApplicationResourcePacker resourcePacker;
 
     private final ApplicationResourceDsInstancePacker applicationResourceInstancePacker;
@@ -38,6 +36,7 @@ public class ApplicationPacker implements IWrapper<ApplicationVO.Application> {
     @Override
     @TagsWrapper
     @BizDocWrapper
+    @BizUserWrapper
     public void wrap(ApplicationVO.Application application, IExtend iExtend) {
         if (!iExtend.getExtend()) {
             return;
@@ -50,7 +49,6 @@ public class ApplicationPacker implements IWrapper<ApplicationVO.Application> {
         Map<String, List<ApplicationResourceVO.Resource>> resourcesMap = resources.stream()
                 .collect(Collectors.groupingBy(ApplicationResourceVO.Resource::getResourceType));
         application.setResourceMap(resourcesMap);
-        businessPermissionUserPacker.wrap(application);
     }
 
     /**

@@ -54,6 +54,12 @@ public class ProjectVO {
         @Schema(description = "业务文档")
         private BusinessDocumentVO.Document document;
 
+        @Schema(description = "部署总数")
+        private Integer deployCount;
+
+        @Schema(description = "环境部署次数")
+        private Map<String, Integer> envDeployCount;
+
         @Schema(description = "主键", example = "1")
         private Integer id;
 

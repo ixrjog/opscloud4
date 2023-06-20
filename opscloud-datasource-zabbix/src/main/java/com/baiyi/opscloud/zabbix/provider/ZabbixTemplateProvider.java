@@ -55,7 +55,6 @@ public class ZabbixTemplateProvider extends AbstractAssetRelationProvider<Zabbix
         return zabbixV5TemplateDriver.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
-
     @Override
     @SingleTask(name = PULL_ZABBIX_TEMPLATE, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {

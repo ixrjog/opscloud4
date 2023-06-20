@@ -53,7 +53,7 @@ public class AliyunRamUserDriver {
             }
             return BeanCopierUtil.copyProperties(createUser, RamUser.User.class);
         } catch (ClientException e) {
-            throw new OCException("创建RAM用户错误: " + e.getMessage());
+            throw new OCException("创建RAM用户错误: {}", e.getMessage());
         }
     }
 
@@ -249,6 +249,28 @@ public class AliyunRamUserDriver {
         } catch (ClientException e) {
             log.error(e.getMessage());
         }
+    }
+
+    /**
+     * 更新RAM用户登录配置
+     *
+     * @param aliyun
+     * @param user
+     * @param password
+     * @param passwordResetRequired
+     * @return
+     * @throws ClientException
+     */
+    public String updateLoginProfile(AliyunConfig.Aliyun aliyun,
+                                     com.baiyi.opscloud.domain.generator.opscloud.User user,
+                                     String password,
+                                     boolean passwordResetRequired) throws ClientException {
+        UpdateLoginProfileRequest request = new UpdateLoginProfileRequest();
+        request.setUserName(user.getUsername());
+        request.setPassword(password);
+        request.setPasswordResetRequired(passwordResetRequired);
+        UpdateLoginProfileResponse response = aliyunClient.getAcsResponse(aliyun.getRegionId(), aliyun, request);
+        return response.getRequestId();
     }
 
 }

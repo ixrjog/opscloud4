@@ -29,7 +29,7 @@ public class GitLabConfig extends BaseDsConfig {
         private String url;
         private String token;
         private SystemHooks systemHooks;
-        private Map<String, List<String>> gitFlow;
+        private GitFlow gitFlow;
 
     }
 
@@ -49,6 +49,17 @@ public class GitLabConfig extends BaseDsConfig {
     @Schema
     public static class SystemHooks {
         private String token;  // 回调token
+    }
+
+    @Data
+    @NoArgsConstructor
+    @Schema
+    public static class GitFlow {
+
+        private Boolean enabled;
+        @Schema(description = "环境分支限制")
+        private Map<String, List<String>> filter;
+
     }
 
 }

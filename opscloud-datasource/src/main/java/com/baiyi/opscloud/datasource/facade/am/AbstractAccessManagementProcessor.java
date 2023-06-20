@@ -11,17 +11,17 @@ import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.user.UserAmParam;
 import com.baiyi.opscloud.service.user.UserService;
+import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.InitializingBean;
-
-import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi
  * @Date 2022/2/10 6:44 PM
  * @Version 1.0
  */
+@SuppressWarnings({"AlibabaLowerCamelCaseVariableNaming", "rawtypes"})
 public abstract class AbstractAccessManagementProcessor implements IAccessManagementProcessor, InitializingBean {
 
     public final static boolean CREATE_LOGIN_PROFILE = true;

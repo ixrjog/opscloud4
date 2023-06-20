@@ -27,7 +27,6 @@ public class ZabbixHostTargetTriggerProvider extends AbstractZabbixHostProvider<
     protected List<com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost.Host> listEntities(DsInstanceContext dsInstanceContext, ZabbixTrigger.Trigger target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
         return zabbixV5HostDrive.listByTrigger(zabbix, target);
-
     }
 
     @Override

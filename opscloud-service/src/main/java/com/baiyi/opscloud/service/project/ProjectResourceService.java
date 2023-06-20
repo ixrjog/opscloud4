@@ -28,4 +28,6 @@ public interface ProjectResourceService {
         return getByUniqueKey(resource.getProjectId(), resource.getBusinessType(), resource.getBusinessId());
     }
 
+    List<ProjectResource> queryByBusiness(Integer businessType, Integer businessId);
+
 }
