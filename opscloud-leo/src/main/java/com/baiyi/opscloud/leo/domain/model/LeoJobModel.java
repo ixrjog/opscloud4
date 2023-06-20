@@ -55,11 +55,16 @@ public class LeoJobModel {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Job {
+        @Schema(description = "gitLab配置")
         private LeoBaseModel.GitLab gitLab;
+        @Schema(description = "nexus配置")
         private LeoBaseModel.Nexus nexus;
         private String name;
+        @Schema(description = "构建配置")
         private Build build;
+        @Schema(description = "部署配置")
         private Deploy deploy;
+        @Schema(description = "容器注册表配置")
         private CR cr;
 
         @Schema(description = "代码扫描 <不支持>")

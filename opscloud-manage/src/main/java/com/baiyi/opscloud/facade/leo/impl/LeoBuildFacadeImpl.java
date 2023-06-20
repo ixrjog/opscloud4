@@ -16,6 +16,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
+import com.baiyi.opscloud.domain.util.GitFlowUtil;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
 import com.baiyi.opscloud.leo.aop.annotation.LeoBuildInterceptor;
@@ -287,21 +288,67 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
     /**
      * 用户查询构建分支选项
      *
-     * @param getOptions
+     * @param options
      * @return
      */
     @Override
-    public LeoBuildVO.BranchOptions getBuildBranchOptions(LeoBuildParam.GetBuildBranchOptions getOptions) {
-        LeoJob leoJob = jobService.getById(getOptions.getJobId());
+    public LeoBuildVO.BranchOptions getBuildBranchOptions(LeoBuildParam.GetBuildBranchOptions options) {
+        LeoJob leoJob = jobService.getById(options.getJobId());
         if (leoJob == null) {
-            throw new LeoBuildException("任务配置不存在: jobId={}", getOptions.getJobId());
+            throw new LeoBuildException("任务配置不存在: jobId={}", options.getJobId());
         }
-        DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, getOptions.getSshUrl());
+
+        DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, options.getSshUrl());
         final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
-        final boolean openTag = getOptions.getOpenTag() != null && getOptions.getOpenTag();
+        final boolean openTag = options.getOpenTag() != null && options.getOpenTag();
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
         GitLabConfig gitLabConfig = dsConfigHelper.build(dsConfig, GitLabConfig.class);
-        return gitLabRepoDelegate.generatorGitLabBranchOptions(gitLabConfig.getGitlab(), projectId, openTag);
+        LeoBuildVO.BranchOptions branchOptions = gitLabRepoDelegate.generatorGitLabBranchOptions(gitLabConfig.getGitlab(), projectId, openTag);
+        // gitFlow 分支管控
+        final boolean gitFlow = getGitFlow(leoJob, gitLabConfig);
+        return filterGitFlow(branchOptions, leoJob, gitLabConfig, gitFlow);
+    }
+
+
+    private boolean getGitFlow(LeoJob leoJob, GitLabConfig gitLabConfig) {
+        LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob);
+        // 判断是否启用gitFlow
+        boolean gitFlow = Optional.of(jobConfig)
+                .map(LeoJobModel.JobConfig::getJob)
+                .map(LeoJobModel.Job::getGitLab)
+                .map(LeoBaseModel.GitLab::getGitFlow)
+                .map(LeoBaseModel.GitFlow::getEnabled)
+                .orElse(false);
+        if (gitFlow) {
+            gitFlow = Optional.of(gitLabConfig.getGitlab())
+                    .map(GitLabConfig.GitLab::getGitFlow)
+                    .map(GitLabConfig.GitFlow::getEnabled)
+                    .orElse(false);
+        }
+        return gitFlow;
+    }
+
+    private LeoBuildVO.BranchOptions filterGitFlow(LeoBuildVO.BranchOptions branchOptions, LeoJob leoJob, GitLabConfig gitLabConfig, boolean gitFlow) {
+        if (!gitFlow) {
+            return branchOptions;
+        }
+        Map<String, List<String>> filter = Optional.of(gitLabConfig.getGitlab())
+                .map(GitLabConfig.GitLab::getGitFlow)
+                .map(GitLabConfig.GitFlow::getFilter)
+                .orElseThrow(() -> new LeoBuildException("gitLab 实例配置启用 gitFlow 但未配置 filter 过滤条件"));
+
+        Env env = envService.getByEnvType(leoJob.getEnvType());
+        List<String> envFilter;
+        if (filter.containsKey(env.getEnvName())) {
+            envFilter = filter.get(env.getEnvName());
+        } else {
+            if (filter.containsKey("default")) {
+                envFilter = filter.get("default");
+            } else {
+                envFilter = Lists.newArrayList("*");
+            }
+        }
+        return GitFlowUtil.filter(branchOptions, envFilter);
     }
 
     @Override

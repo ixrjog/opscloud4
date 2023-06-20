@@ -27,13 +27,13 @@
         <dependency>
             <groupId>com.huaweicloud.sdk</groupId>
             <artifactId>huaweicloud-sdk-vpc</artifactId>
-            <version>3.1.43</version>
+            <version>3.1.44</version>
         </dependency>
 
         <dependency>
             <groupId>com.huaweicloud.sdk</groupId>
             <artifactId>huaweicloud-sdk-ecs</artifactId>
-            <version>3.1.43</version>
+            <version>3.1.44</version>
         </dependency>
 
     </dependencies>

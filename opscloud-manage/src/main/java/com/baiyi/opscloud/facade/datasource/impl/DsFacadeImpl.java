@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.datasource.impl;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
+import com.baiyi.opscloud.datasource.packer.DsInstancePacker;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -12,7 +13,6 @@ import com.baiyi.opscloud.domain.vo.datasource.DsConfigVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.facade.datasource.DsFacade;
 import com.baiyi.opscloud.packer.datasource.DsConfigPacker;
-import com.baiyi.opscloud.datasource.packer.DsInstancePacker;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import lombok.RequiredArgsConstructor;
@@ -51,14 +51,14 @@ public class DsFacadeImpl implements DsFacade {
     }
 
     @Override
-    public void addDsConfig(DsConfigVO.DsConfig dsConfig) {
+    public void addDsConfig(DsInstanceParam.AddDsConfig dsConfig) {
         DatasourceConfig datasourceConfig = BeanCopierUtil.copyProperties(dsConfig, DatasourceConfig.class);
         datasourceConfig.setUuid(IdUtil.buildUUID());
         dsConfigService.add(datasourceConfig);
     }
 
     @Override
-    public void updateDsConfig(DsConfigVO.DsConfig dsConfig) {
+    public void updateDsConfig(DsInstanceParam.UpdateDsConfig dsConfig) {
         dsConfigService.update(BeanCopierUtil.copyProperties(dsConfig, DatasourceConfig.class));
     }
 

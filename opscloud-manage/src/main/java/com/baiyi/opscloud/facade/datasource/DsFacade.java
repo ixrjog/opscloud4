@@ -19,9 +19,9 @@ public interface DsFacade {
 
     DataTable<DsConfigVO.DsConfig> queryDsConfigPage(DsConfigParam.DsConfigPageQuery pageQuery);
 
-    void addDsConfig(DsConfigVO.DsConfig dsConfig);
+    void addDsConfig(DsInstanceParam.AddDsConfig dsConfig);
 
-    void updateDsConfig(DsConfigVO.DsConfig dsConfig);
+    void updateDsConfig(DsInstanceParam.UpdateDsConfig dsConfig);
 
     List<DsInstanceVO.Instance> queryDsInstance(DsInstanceParam.DsInstanceQuery query);
 

@@ -16,6 +16,43 @@ import lombok.NoArgsConstructor;
 public class DsInstanceParam {
 
     @Data
+    @NoArgsConstructor
+    @Schema
+    public static class AddDsConfig  {
+
+        private Integer id;
+        private String name;
+        private Integer dsType;
+        private String version;
+        private String kind;
+        private Boolean isActive;
+        private Integer credentialId;
+        private String dsUrl;
+        private String propsYml;
+        private String comment;
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @Schema
+    public static class UpdateDsConfig  {
+
+        private Integer id;
+        private String name;
+        private String uuid;
+        private Integer dsType;
+        private String version;
+        private String kind;
+        private Boolean isActive;
+        private Integer credentialId;
+        private String dsUrl;
+        private String propsYml;
+        private String comment;
+
+    }
+
+    @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
