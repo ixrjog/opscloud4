@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.application.impl;
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.FunctionUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -11,6 +12,7 @@ import com.baiyi.opscloud.domain.annotation.TagClear;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
+import com.baiyi.opscloud.domain.generator.opscloud.Tag;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
 import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
@@ -28,6 +30,7 @@ import com.baiyi.opscloud.packer.user.UserPermissionPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
+import com.baiyi.opscloud.service.tag.TagService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
@@ -61,8 +64,16 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
 
     private final UserPermissionPacker userPermissionPacker;
 
+    private final TagService tagService;
+
     @Override
     public DataTable<ApplicationVO.Application> queryApplicationPage(ApplicationParam.ApplicationPageQuery pageQuery) {
+        if (pageQuery.getTagId() == null && StringUtils.isNotBlank(pageQuery.getTagKey())) {
+            Tag tag = tagService.getByTagKey(pageQuery.getTagKey());
+            FunctionUtil.isNull(tag)
+                    .throwBaseException(new OCException("Tag 标签不存在"));
+            pageQuery.setTagId(tag.getId());
+        }
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
         List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class)
                 .stream()
@@ -134,10 +145,6 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
         if (applicationService.getById(application.getId()) == null) {
             throw new OCException(ErrorEnum.APPLICATION_NOT_EXIST);
         }
-//        Application saveApplication = BeanCopierUtil.copyProperties(application, Application.class);
-//        if (StringUtils.isNotBlank(application.getApplicationKey())) {
-//            saveApplication.setApplicationKey(application.getApplicationKey().replaceAll(" ", "").toUpperCase());
-//        }
         applicationService.update(BeanCopierUtil.copyProperties(application, Application.class));
     }
 

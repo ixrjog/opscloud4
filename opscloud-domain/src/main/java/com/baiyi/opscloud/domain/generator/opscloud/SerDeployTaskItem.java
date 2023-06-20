@@ -9,10 +9,10 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Data
-@Table(name = "ser_deploy_task_item")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "ser_deploy_task_item")
 public class SerDeployTaskItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,7 +52,7 @@ public class SerDeployTaskItem {
      * item 大小
      */
     @Column(name = "item_size")
-    private Long itemSize;
+    private String itemSize;
 
     /**
      * 发布人

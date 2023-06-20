@@ -1,9 +1,6 @@
 package com.baiyi.opscloud.datasource.aws.s3.driver;
 
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectResult;
-import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.*;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.datasource.aws.s3.service.AmazonS3Service;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +45,12 @@ public class AmazonS3Driver {
         GetObjectRequest request = new GetObjectRequest(bucketName, key, versionId);
         return AmazonS3Service.buildAmazonS3(regionId, config)
                 .getObject(request);
+    }
+
+    public void deleteObject(String regionId, AwsConfig.Aws config, String bucketName, String key) {
+        DeleteObjectRequest request = new DeleteObjectRequest(bucketName, key);
+        AmazonS3Service.buildAmazonS3(regionId, config)
+                .deleteObject(request);
     }
 
 }

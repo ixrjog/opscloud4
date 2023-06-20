@@ -49,7 +49,9 @@ public enum DsTypeEnum {
     LXHL(53, "LXHL"),
     ALIYUN_DEVOPS(54, "ALIYUN_DEVOPS"),
     METER_SPHERE(55, "METER_SPHERE"),
-    APOLLO(56, "APOLLO");
+    APOLLO(56, "APOLLO"),
+    SER_DEPLOY(57, "SER_DEPLOY"),
+    ;
 
     private final int type;
 

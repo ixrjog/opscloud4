@@ -15,6 +15,10 @@ public interface SerDeployTaskItemService {
 
     void update(SerDeployTaskItem serDeployTaskItem);
 
+    SerDeployTaskItem getById(Integer id);
+
+    void deleteById(Integer id);
+
     List<SerDeployTaskItem> listBySerDeployTaskId(Integer serDeployTaskId);
 
     SerDeployTaskItem getByTaskIdAndItemName(Integer serDeployTaskId, String itemName);

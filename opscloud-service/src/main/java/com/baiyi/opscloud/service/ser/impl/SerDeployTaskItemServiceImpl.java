@@ -32,6 +32,16 @@ public class SerDeployTaskItemServiceImpl implements SerDeployTaskItemService {
     }
 
     @Override
+    public SerDeployTaskItem getById(Integer id) {
+        return serDeployTaskItemMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        serDeployTaskItemMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
     public List<SerDeployTaskItem> listBySerDeployTaskId(Integer serDeployTaskId) {
         Example example = new Example(SerDeployTaskItem.class);
         Example.Criteria criteria = example.createCriteria();

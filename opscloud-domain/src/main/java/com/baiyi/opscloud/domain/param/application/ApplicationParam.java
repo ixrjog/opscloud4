@@ -30,6 +30,9 @@ public class ApplicationParam {
         @Schema(description = "标签ID")
         private Integer tagId;
 
+        @Schema(description = "当标签ID为空才能生效")
+        private String tagKey;
+
         @Schema(description = "展开")
         private Boolean extend;
 

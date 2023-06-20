@@ -47,6 +47,7 @@ public class SerDeployTaskPacker implements IWrapper<SerDeployVO.Task> {
                     return itemVO;
                 }).toList();
         vo.setTaskItemList(taskItemList);
+        vo.setTaskItemSize(taskItemList.size());
         List<SerDeployVO.SubTask> subTaskList = serDeploySubtaskService.listBySerDeployTaskId(vo.getId()).stream()
                 .map(subtask -> {
                     SerDeployVO.SubTask subTaskVO = BeanCopierUtil.copyProperties(subtask, SerDeployVO.SubTask.class);
@@ -54,5 +55,6 @@ public class SerDeployTaskPacker implements IWrapper<SerDeployVO.Task> {
                     return subTaskVO;
                 }).toList();
         vo.setSubTaskList(subTaskList);
+        vo.setSubTaskSize(subTaskList.size());
     }
 }

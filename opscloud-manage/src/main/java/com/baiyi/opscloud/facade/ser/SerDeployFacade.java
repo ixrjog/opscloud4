@@ -12,9 +12,17 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface SerDeployFacade {
 
+    DataTable<SerDeployVO.Task> querySerDeployTaskPage(SerDeployParam.TaskPageQuery pageQuery);
 
-    DataTable<SerDeployVO.Task> queryProjectPage(SerDeployParam.TaskPageQuery pageQuery);
+    SerDeployVO.Task getSerDeployTaskByUuid(SerDeployParam.QueryByUuid param);
 
     void uploadFile(MultipartFile file, String taskUuid);
+
+    void addSerDeployTask(SerDeployParam.AddTask addTask);
+
+    void updateSerDeployTask(SerDeployParam.UpdateTask updateTask);
+
+    void deleteSerDeployTaskItem(Integer id);
+
 
 }

@@ -15,6 +15,8 @@ public interface SerDeployTaskService {
 
     void update(SerDeployTask serDeployTask);
 
+    void updateKeySelective(SerDeployTask serDeployTask);
+
     SerDeployTask getById(Integer id);
 
     SerDeployTask getByUuid(String taskUuid);

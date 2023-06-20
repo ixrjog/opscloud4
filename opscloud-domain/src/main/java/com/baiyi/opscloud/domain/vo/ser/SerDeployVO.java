@@ -45,7 +45,11 @@ public class SerDeployVO {
 
         private List<TaskItem> taskItemList;
 
+        private Integer taskItemSize;
+
         private List<SubTask> subTaskList;
+
+        private Integer subTaskSize;
 
     }
 
@@ -71,7 +75,7 @@ public class SerDeployVO {
 
         private String itemMd5;
 
-        private Integer itemSize;
+        private String itemSize;
 
         private String deployUsername;
 
