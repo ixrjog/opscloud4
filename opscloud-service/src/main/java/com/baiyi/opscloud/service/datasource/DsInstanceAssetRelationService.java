@@ -19,6 +19,8 @@ public interface DsInstanceAssetRelationService {
 
     List<DatasourceInstanceAssetRelation> queryTargetAsset(String instanceUuid, Integer sourceAssetId);
 
+    List<DatasourceInstanceAssetRelation> queryTargetAsset(Integer sourceAssetId);
+
     /**
      * 按资产id查询双向关系
      *

@@ -40,6 +40,7 @@ import com.baiyi.opscloud.leo.parser.MavenPublishParser;
 import com.baiyi.opscloud.leo.util.JobUtil;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.leo.LeoBuildImageService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
@@ -106,6 +107,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
     private final AutoDeployHelper autoDeployHelper;
 
     private final SubscribeLeoBuildRequestHandler subscribeLeoBuildRequestHandler;
+
+    private final DsInstanceAssetRelationService dsInstanceAssetRelationService;
 
     @Override
     @LeoBuildInterceptor(jobIdSpEL = "#doBuild.jobId")
@@ -450,16 +453,39 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
      * @return
      */
     private DatasourceInstanceAsset getGitLabProjectAssetWithLeoJobAndSshUrl(LeoJob leoJob, String sshUrl) {
-        ApplicationResource resource = applicationResourceService.queryByApplication(
+        Optional<ApplicationResource> optionalResource = applicationResourceService.queryByApplication(
                         leoJob.getApplicationId(),
                         DsAssetTypeConstants.GITLAB_PROJECT.name(),
                         BusinessTypeEnum.ASSET.getType())
                 .stream()
                 .filter(e -> e.getName().equals(sshUrl))
-                .findFirst()
-                // 未找到资产抛出异常
-                .orElseThrow(() -> new LeoBuildException("GitLab项目不存在: applicationId={}, sshUrl={}", leoJob.getApplicationId(), sshUrl));
-        return assetService.getById(resource.getBusinessId());
+                .findFirst();
+
+        if (optionalResource.isPresent()) {
+            return assetService.getById(optionalResource.get().getBusinessId());
+        } else {
+            return getGitLabProjectAssetWithGroup(leoJob.getApplicationId(), sshUrl);
+        }
+    }
+
+    private DatasourceInstanceAsset getGitLabProjectAssetWithGroup(int applicationId, String sshUrl) {
+        // 查询所有的 gitLab group
+        List<ApplicationResource> resources = applicationResourceService.queryByApplication(
+                applicationId,
+                DsAssetTypeConstants.GITLAB_GROUP.name(),
+                BusinessTypeEnum.ASSET.getType());
+        if (!CollectionUtils.isEmpty(resources)) {
+            for (ApplicationResource resource : resources) {
+                List<DatasourceInstanceAssetRelation> assetRelations = dsInstanceAssetRelationService.queryTargetAsset(resource.getBusinessId());
+                for (DatasourceInstanceAssetRelation assetRelation : assetRelations) {
+                    DatasourceInstanceAsset asset = assetService.getById(assetRelation.getTargetAssetId());
+                    if (sshUrl.equals(asset.getAssetKey())) {
+                        return asset;
+                    }
+                }
+            }
+        }
+        throw new LeoBuildException("GitLab项目不存在: applicationId={}, sshUrl={}", applicationId, sshUrl);
     }
 
     @Override
