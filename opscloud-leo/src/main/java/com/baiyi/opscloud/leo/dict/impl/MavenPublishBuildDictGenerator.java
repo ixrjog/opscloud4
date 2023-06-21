@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class MavenPublishBuildDictProvider extends BaseBuildDictProvider {
+public class MavenPublishBuildDictGenerator extends BaseBuildDictGenerator {
 
     @Override
     public String getBuildType() {

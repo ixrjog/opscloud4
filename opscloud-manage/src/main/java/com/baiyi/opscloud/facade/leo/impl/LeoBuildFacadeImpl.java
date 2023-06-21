@@ -24,8 +24,8 @@ import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.constants.BuildTypeConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.delegate.GitLabRepoDelegate;
-import com.baiyi.opscloud.leo.dict.IBuildDictProvider;
-import com.baiyi.opscloud.leo.dict.factory.BuildDictFactory;
+import com.baiyi.opscloud.leo.dict.IBuildDictGenerator;
+import com.baiyi.opscloud.leo.dict.factory.BuildDictGeneratorFactory;
 import com.baiyi.opscloud.leo.domain.model.JenkinsPipeline;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
@@ -151,6 +151,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .map(LeoJobModel.Job::getParameters)
                 .orElse(Lists.newArrayList());
 
+        // gitLab commit信息
         DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, gitLab.getProject().getSshUrl());
         final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
@@ -172,7 +173,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .orElse(BuildTypeConstants.KUBERNETES_IMAGE);
 
         // 生产字典
-        Map<String, String> dict = buildDict(doBuild, buildType);
+        Map<String, String> dict = generateDict(doBuild, buildType);
 
         // AutoDeploy
         LeoBaseModel.AutoDeploy autoDeploy;
@@ -232,12 +233,12 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         handleBuild(leoBuild, buildConfig);
     }
 
-    private Map<String, String> buildDict(LeoBuildParam.DoBuild doBuild, String buildType) {
-        IBuildDictProvider buildDictProvider = BuildDictFactory.getProvider(buildType);
-        if (buildDictProvider == null) {
+    private Map<String, String> generateDict(LeoBuildParam.DoBuild doBuild, String buildType) {
+        IBuildDictGenerator buildDictGenerator = BuildDictGeneratorFactory.getGenerator(buildType);
+        if (buildDictGenerator == null) {
             throw new LeoBuildException("构建类型不正确: buildType={}", buildType);
         }
-        return buildDictProvider.produce(doBuild);
+        return buildDictGenerator.generate(doBuild);
     }
 
     @Override
@@ -311,7 +312,6 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         final boolean gitFlow = getGitFlow(leoJob, gitLabConfig);
         return filterGitFlow(branchOptions, leoJob, gitLabConfig, gitFlow);
     }
-
 
     private boolean getGitFlow(LeoJob leoJob, GitLabConfig gitLabConfig) {
         LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob);

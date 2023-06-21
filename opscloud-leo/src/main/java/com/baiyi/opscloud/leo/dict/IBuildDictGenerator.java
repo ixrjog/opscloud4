@@ -9,7 +9,7 @@ import java.util.Map;
  * @Date 2023/4/25 11:33
  * @Version 1.0
  */
-public interface IBuildDictProvider {
+public interface IBuildDictGenerator {
 
     /**
      * 构建类型
@@ -22,6 +22,6 @@ public interface IBuildDictProvider {
      * @param doBuild
      * @return
      */
-    Map<String, String> produce(LeoBuildParam.DoBuild doBuild);
+    Map<String, String> generate(LeoBuildParam.DoBuild doBuild);
 
 }
