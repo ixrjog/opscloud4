@@ -6,9 +6,11 @@ import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoJobRequestParam;
 import com.baiyi.opscloud.mapper.LeoJobMapper;
 import com.baiyi.opscloud.service.leo.LeoJobService;
+import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -38,6 +40,9 @@ public class LeoJobServiceImpl implements LeoJobService {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(LeoJob.class);
         Example.Criteria criteria = example.createCriteria();
+        if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
+            criteria.andLike("name", SQLUtil.toLike(pageQuery.getQueryName()));
+        }
         criteria.andEqualTo("applicationId", pageQuery.getApplicationId())
                 .andEqualTo("envType", pageQuery.getEnvType())
                 .andEqualTo("isActive", true);

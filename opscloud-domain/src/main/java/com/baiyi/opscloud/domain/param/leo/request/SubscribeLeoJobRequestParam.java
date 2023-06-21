@@ -18,6 +18,9 @@ public class SubscribeLeoJobRequestParam extends SuperPageParam implements ILeoR
     @Schema(description = "应用ID")
     private Integer applicationId;
 
+    @Schema(description = "查询名称")
+    private String queryName;
+
     @Schema(description = "环境类型")
     private Integer envType;
 

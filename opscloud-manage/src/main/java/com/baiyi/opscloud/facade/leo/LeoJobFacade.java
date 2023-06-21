@@ -16,6 +16,11 @@ public interface LeoJobFacade {
 
     DataTable<LeoJobVO.Job> queryLeoJobPage(LeoJobParam.JobPageQuery pageQuery);
 
+    /**
+     * Leo build页面查询我的任务
+     * @param pageQuery
+     * @return
+     */
     DataTable<LeoJobVO.Job> queryMyLeoJobPage(SubscribeLeoJobRequestParam pageQuery);
 
     void addLeoJob(LeoJobParam.AddJob addJob);
