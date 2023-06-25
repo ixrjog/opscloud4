@@ -46,6 +46,11 @@ public class AliyunDevopsWorkitemProvider extends AbstractAssetChildProvider<Lis
         doPull(dsInstanceId);
     }
 
+    @Override
+    protected boolean executeMode() {
+        return Model.INCREMENT;
+    }
+
     private AliyunDevopsConfig.Devops buildConfig(DatasourceConfig dsConfig) {
         return dsConfigHelper.build(dsConfig, AliyunDevopsConfig.class).getDevops();
     }

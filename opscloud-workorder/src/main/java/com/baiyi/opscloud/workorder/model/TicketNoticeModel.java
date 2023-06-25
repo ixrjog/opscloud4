@@ -55,6 +55,7 @@ public class TicketNoticeModel implements INoticeMessage {
     @NoArgsConstructor
     public static class EndNoticeMessage implements Serializable, INoticeMessage {
 
+        @Serial
         private static final long serialVersionUID = -4873558376848220544L;
 
         private Integer ticketId; // 工单ID

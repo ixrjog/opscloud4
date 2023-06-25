@@ -17,6 +17,7 @@ import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExten
 import com.google.common.base.Joiner;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -69,11 +70,11 @@ public class NacosTicketProcessor extends AbstractDsAssetExtendedBaseTicketProce
         createNacosUser(config, nacosUsername);
         try {
             NacosUser.AuthRoleResponse authRoleResponse = nacosAuthDrive.authRole(config, nacosUsername, ticketEntry.getName());
-            if (authRoleResponse.getCode() != 200) {
+            if (authRoleResponse.getCode() != HttpStatus.SC_OK) {
                 throw new TicketProcessException("工单配置Nacos失败: {}", authRoleResponse.getMessage());
             }
         } catch (FeignException e) {
-            if (e.status() == 500) {
+            if (e.status() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 log.info("Nacos授权角色接口500错误: 可能是重复申请导致的！");
             } else {
                 throw new TicketProcessException("工单配置Nacos失败: {}", e.getMessage());

@@ -47,6 +47,11 @@ public class AliyunDevopsSprintProvider extends AbstractAssetChildProvider<ListS
     }
 
     @Override
+    protected boolean executeMode() {
+        return Model.INCREMENT;
+    }
+
+    @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
         return true;
     }

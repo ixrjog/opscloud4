@@ -45,6 +45,11 @@ public class AliyunDevopsProjectProvider extends AbstractAssetBusinessRelationPr
     }
 
     @Override
+    protected boolean executeMode() {
+        return Model.INCREMENT;
+    }
+
+    @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
         return true;
     }

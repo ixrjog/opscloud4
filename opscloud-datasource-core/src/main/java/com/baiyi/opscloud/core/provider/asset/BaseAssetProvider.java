@@ -14,9 +14,11 @@ import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.sys.CredentialService;
 import com.google.common.collect.Sets;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.InitializingBean;
 
 import jakarta.annotation.Resource;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,8 +46,10 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     protected DsConfigHelper dsConfigHelper;
 
     public interface Model {
-        boolean INCREMENT = false; // 增量模式: 不删除旧数据
-        boolean SYNC = true;       // 同步模式: 删除旧数据
+        @Schema(description = "增量模式: 不删除旧数据")
+        boolean INCREMENT = false;
+        @Schema(description = "同步模式: 删除旧数据")
+        boolean SYNC = true;
     }
 
     protected boolean executeMode() {
@@ -54,6 +58,7 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
 
     /**
      * 查询【资产】实体
+     *
      * @param dsInstanceContext
      * @return
      */
