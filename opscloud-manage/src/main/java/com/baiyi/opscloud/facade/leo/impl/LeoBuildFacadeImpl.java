@@ -172,7 +172,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .map(LeoJobModel.Build::getType)
                 .orElse(BuildTypeConstants.KUBERNETES_IMAGE);
 
-        // 生产字典
+        // 生成字典
         Map<String, String> dict = generateDict(doBuild, buildType);
 
         // AutoDeploy
@@ -229,6 +229,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .projectId(doBuild.getProjectId() == null ? 0 : doBuild.getProjectId())
                 .build();
         buildService.add(leoBuild);
+        // 打标签
         autoDeployHelper.labeling(doBuild, BusinessTypeEnum.LEO_BUILD.getType(), leoBuild.getId());
         handleBuild(leoBuild, buildConfig);
     }

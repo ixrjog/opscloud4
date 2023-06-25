@@ -72,6 +72,7 @@ public class ElectInstanceChainHandler extends BaseBuildChainHandler {
         }
 
         DatasourceInstance activeInstance = getOneInstance(activeInstances);
+
         LeoBaseModel.DsInstance dsInstance = LeoBaseModel.DsInstance.builder()
                 .name(activeInstance.getInstanceName())
                 .uuid(activeInstance.getUuid())
@@ -81,7 +82,9 @@ public class ElectInstanceChainHandler extends BaseBuildChainHandler {
                 .instance(dsInstance)
                 .build();
 
-        buildConfig.getBuild().setJenkins(jenkins);
+        buildConfig.getBuild()
+                .setJenkins(jenkins);
+
         LeoBuild saveLeoBuild = LeoBuild.builder()
                 .id(leoBuild.getId())
                 .buildStatus("选举实例阶段: 成功")
