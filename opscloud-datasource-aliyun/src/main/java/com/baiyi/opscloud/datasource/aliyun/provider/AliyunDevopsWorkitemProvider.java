@@ -7,7 +7,6 @@ import com.baiyi.opscloud.common.datasource.AliyunDevopsConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
-import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetChildProvider;
 import com.baiyi.opscloud.datasource.aliyun.converter.DevopsAssetConverter;
 import com.baiyi.opscloud.datasource.aliyun.devops.driver.AliyunDevopsWorkitemsDriver;
@@ -41,7 +40,7 @@ public class AliyunDevopsWorkitemProvider extends AbstractAssetChildProvider<Lis
 
     @Override
     @SingleTask(name = PULL_ALIYUN_DEVOPS_WORKITEM, lockTime = "10m")
-    @EnablePullChild(type = DsAssetTypeConstants.ALIYUN_DEVOPS_SPRINT)
+    //@EnablePullChild(type = DsAssetTypeConstants.ALIYUN_DEVOPS_SPRINT)
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
