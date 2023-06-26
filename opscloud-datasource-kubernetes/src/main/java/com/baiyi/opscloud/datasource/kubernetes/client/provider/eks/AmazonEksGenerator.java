@@ -30,7 +30,7 @@ import java.util.Date;
  */
 @Slf4j
 @Component
-public class AmazonEksHelper {
+public class AmazonEksGenerator {
 
     /**
      * https://docs.aws.amazon.com/zh_cn/zh_cn/sdk-for-java/v1/developer-guide/prog-services-sts.html
