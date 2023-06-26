@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.datasource.aliyun.provider;
 
 import com.aliyun.sdk.service.devops20210625.models.ListWorkitemsResponseBody;
-import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunDevopsConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
@@ -24,8 +23,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_DEVOPS_WORKITEM;
-
 /**
  * @Author baiyi
  * @Date 2023/5/12 10:59
@@ -39,15 +36,8 @@ public class AliyunDevopsWorkitemProvider extends AbstractAssetChildProvider<Lis
     private AliyunDevopsWorkitemProvider aliyunDevopsWorkitemProvider;
 
     @Override
-    @SingleTask(name = PULL_ALIYUN_DEVOPS_WORKITEM, lockTime = "10m")
-    //@EnablePullChild(type = DsAssetTypeConstants.ALIYUN_DEVOPS_SPRINT)
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
-    }
-
-    @Override
-    protected boolean executeMode() {
-        return Model.INCREMENT;
     }
 
     private AliyunDevopsConfig.Devops buildConfig(DatasourceConfig dsConfig) {
@@ -64,7 +54,6 @@ public class AliyunDevopsWorkitemProvider extends AbstractAssetChildProvider<Lis
         AliyunDevopsConfig.Devops devops = buildConfig(dsInstanceContext.getDsConfig());
         List<ListWorkitemsResponseBody.Workitems> entities = Lists.newArrayList();
         //  asset.getAssetKey() 是 ProjectId
-
         List<String> categories = Optional.of(devops)
                 .map(AliyunDevopsConfig.Devops::getSyncOptions)
                 .map(AliyunDevopsConfig.SyncOptions::getWorkitem)
@@ -74,7 +63,6 @@ public class AliyunDevopsWorkitemProvider extends AbstractAssetChildProvider<Lis
         if (CollectionUtils.isEmpty(categories)) {
             return entities;
         }
-
         categories.forEach(category ->
                 entities.addAll(AliyunDevopsWorkitemsDriver.listWorkitems(devops.getRegionId(), devops, asset.getAssetId(), "Project", category))
         );

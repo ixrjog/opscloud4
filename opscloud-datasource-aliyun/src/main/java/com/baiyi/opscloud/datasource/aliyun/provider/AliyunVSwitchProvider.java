@@ -64,7 +64,7 @@ public class AliyunVSwitchProvider extends AbstractAssetChildProvider<DescribeVS
     @Override
     protected List<DescribeVSwitchesResponse.VSwitch> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        return aliyunVpcDriver.listVSwitches(asset.getRegionId(), aliyun, asset);
+        return aliyunVpcDriver.listVSwitches(asset.getRegionId(), aliyun, asset.getAssetId());
     }
 
     @Override
