@@ -38,7 +38,7 @@
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>dms_enterprise20181101</artifactId>
-            <version>1.47.0</version>
+            <version>1.48.0</version>
         </dependency>
 
     </dependencies>

@@ -9,9 +9,7 @@ import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 import java.util.Map;
@@ -27,13 +25,11 @@ public class ApplicationVO {
     @Data
     @NoArgsConstructor
     @Schema
-    public static class Kubernetes extends BaseVO implements
-            IBusinessPermissionUser,
-            BusinessDocumentVO.IBusinessDocument,
-            UserVO.IUserPermission,
-            TagVO.ITags {
+    public static class Kubernetes extends BaseVO implements IBusinessPermissionUser, BusinessDocumentVO.IBusinessDocument, UserVO.IUserPermission, TagVO.ITags {
 
         private final Integer businessType = BusinessTypeEnum.APPLICATION.getType();
+
+        private ArmsTraceApp armsTraceApp;
 
         @Override
         public Integer getBusinessId() {
@@ -75,15 +71,21 @@ public class ApplicationVO {
 
     }
 
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class ArmsTraceApp {
+        @Schema(description = "是否显示")
+        private boolean show;
+
+        private String homeUrl;
+    }
+
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
     @Schema
-    public static class Application extends BaseVO implements
-            IBusinessPermissionUser,
-            BusinessDocumentVO.IBusinessDocument,
-            UserVO.IUserPermission,
-            TagVO.ITags {
+    public static class Application extends BaseVO implements IBusinessPermissionUser, BusinessDocumentVO.IBusinessDocument, UserVO.IUserPermission, TagVO.ITags {
 
         private final Integer businessType = BusinessTypeEnum.APPLICATION.getType();
 

@@ -73,6 +73,11 @@
             <artifactId>opscloud-datasource-aliyun-devops</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-aliyun-arms</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>
