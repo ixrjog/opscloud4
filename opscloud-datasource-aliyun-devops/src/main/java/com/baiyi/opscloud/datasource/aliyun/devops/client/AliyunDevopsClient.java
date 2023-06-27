@@ -14,6 +14,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class AliyunDevopsClient {
 
+    private static final String DEVOPS_ENDPOINT = "devops.cn-hangzhou.aliyuncs.com";
+
     public static final Long MAX_RESULTS = 200L;
 
     public static final String MAX_RESULTS_S = String.valueOf(MAX_RESULTS);
@@ -32,7 +34,7 @@ public class AliyunDevopsClient {
         //.serviceConfiguration(Configuration.create()) // Service-level configuration
         // Client-level configuration rewrite, can set Endpoint, Http request parameters, etc.
         ClientOverrideConfiguration clientOverrideConfiguration = ClientOverrideConfiguration.create()
-                .setEndpointOverride("devops.cn-hangzhou.aliyuncs.com");
+                .setEndpointOverride(DEVOPS_ENDPOINT);
         //.setConnectTimeout(Duration.ofSeconds(30))
 
         return AsyncClient.builder()

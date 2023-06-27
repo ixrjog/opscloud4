@@ -51,6 +51,7 @@ public enum DsTypeEnum {
     METER_SPHERE(55, "METER_SPHERE"),
     APOLLO(56, "APOLLO"),
     SER_DEPLOY(57, "SER_DEPLOY"),
+    ALIYUN_ARMS(58,"ALIYUN_ARMS"),
     ;
 
     private final int type;
