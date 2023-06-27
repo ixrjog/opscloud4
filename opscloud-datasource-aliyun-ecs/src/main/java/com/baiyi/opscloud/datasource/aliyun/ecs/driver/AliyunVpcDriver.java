@@ -7,7 +7,6 @@ import com.aliyuncs.ecs.model.v20140526.DescribeVpcsResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,13 +49,35 @@ public class AliyunVpcDriver {
         return vpcs;
     }
 
-    public List<DescribeVSwitchesResponse.VSwitch> listVSwitches(String regionId, AliyunConfig.Aliyun aliyun, DatasourceInstanceAsset asset) {
+//    private List<DescribeVSwitchesResponse.VSwitch> listVSwitches(String regionId, AliyunConfig.Aliyun aliyun, DatasourceInstanceAsset asset) {
+//        List<DescribeVSwitchesResponse.VSwitch> vSwitches = Lists.newArrayList();
+//        try {
+//            DescribeVSwitchesRequest describe = new DescribeVSwitchesRequest();
+//            describe.setSysRegionId(regionId);
+//            describe.setPageSize(PAGE_SIZE);
+//            describe.setVpcId(asset.getAssetId());
+//            int size = PAGE_SIZE;
+//            int pageNumber = 1;
+//            while (PAGE_SIZE <= size) {
+//                describe.setPageNumber(pageNumber);
+//                DescribeVSwitchesResponse response = aliyunClient.getAcsResponse(regionId, aliyun, describe);
+//                vSwitches.addAll(response.getVSwitches());
+//                size = response.getVSwitches().size();
+//                pageNumber++;
+//            }
+//        } catch (ClientException e) {
+//            log.error(e.getMessage());
+//        }
+//        return vSwitches;
+//    }
+
+    public List<DescribeVSwitchesResponse.VSwitch> listVSwitches(String regionId, AliyunConfig.Aliyun aliyun, String vpcId) {
         List<DescribeVSwitchesResponse.VSwitch> vSwitches = Lists.newArrayList();
         try {
             DescribeVSwitchesRequest describe = new DescribeVSwitchesRequest();
             describe.setSysRegionId(regionId);
             describe.setPageSize(PAGE_SIZE);
-            describe.setVpcId(asset.getAssetId());
+            describe.setVpcId(vpcId);
             int size = PAGE_SIZE;
             int pageNumber = 1;
             while (PAGE_SIZE <= size) {

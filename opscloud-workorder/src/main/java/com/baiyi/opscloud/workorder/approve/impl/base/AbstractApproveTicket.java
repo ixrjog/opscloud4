@@ -52,7 +52,7 @@ public abstract class AbstractApproveTicket implements ITicketApprove, Initializ
                 .build();
         ticketApproveHelper.wrap(simpleApprover, ticket);
         if (!simpleApprover.getIsApprover()) {
-            throw new TicketException("禁止操作: 非当前审批人!");
+            throw new TicketException("非当前审批人禁止操作!");
         }
         if (StringUtils.isEmpty(ticketNode.getUsername())) {
             // 审批人

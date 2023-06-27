@@ -52,6 +52,7 @@ public class DeleteHistoricalBuildJobChainHandler extends BaseBuildChainHandler 
      * @param leoBuild
      * @param buildConfig
      */
+    @SuppressWarnings("ConstantValue")
     @Override
     protected void handle(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
         LeoJob leoJob = jobService.getById(leoBuild.getJobId());

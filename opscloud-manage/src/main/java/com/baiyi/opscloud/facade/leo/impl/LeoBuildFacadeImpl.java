@@ -24,8 +24,8 @@ import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.constants.BuildTypeConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
 import com.baiyi.opscloud.leo.delegate.GitLabRepoDelegate;
-import com.baiyi.opscloud.leo.dict.IBuildDictProvider;
-import com.baiyi.opscloud.leo.dict.factory.BuildDictFactory;
+import com.baiyi.opscloud.leo.dict.IBuildDictGenerator;
+import com.baiyi.opscloud.leo.dict.factory.BuildDictGeneratorFactory;
 import com.baiyi.opscloud.leo.domain.model.JenkinsPipeline;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
@@ -40,6 +40,7 @@ import com.baiyi.opscloud.leo.parser.MavenPublishParser;
 import com.baiyi.opscloud.leo.util.JobUtil;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.leo.LeoBuildImageService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
@@ -107,6 +108,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     private final SubscribeLeoBuildRequestHandler subscribeLeoBuildRequestHandler;
 
+    private final DsInstanceAssetRelationService dsInstanceAssetRelationService;
+
     @Override
     @LeoBuildInterceptor(jobIdSpEL = "#doBuild.jobId")
     public void doBuild(LeoBuildParam.DoBuild doBuild) {
@@ -148,6 +151,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .map(LeoJobModel.Job::getParameters)
                 .orElse(Lists.newArrayList());
 
+        // gitLab commit信息
         DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, gitLab.getProject().getSshUrl());
         final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
@@ -168,8 +172,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .map(LeoJobModel.Build::getType)
                 .orElse(BuildTypeConstants.KUBERNETES_IMAGE);
 
-        // 生产字典
-        Map<String, String> dict = buildDict(doBuild, buildType);
+        // 生成字典
+        Map<String, String> dict = generateDict(doBuild, buildType);
 
         // AutoDeploy
         LeoBaseModel.AutoDeploy autoDeploy;
@@ -225,16 +229,17 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .projectId(doBuild.getProjectId() == null ? 0 : doBuild.getProjectId())
                 .build();
         buildService.add(leoBuild);
+        // 打标签
         autoDeployHelper.labeling(doBuild, BusinessTypeEnum.LEO_BUILD.getType(), leoBuild.getId());
         handleBuild(leoBuild, buildConfig);
     }
 
-    private Map<String, String> buildDict(LeoBuildParam.DoBuild doBuild, String buildType) {
-        IBuildDictProvider buildDictProvider = BuildDictFactory.getProvider(buildType);
-        if (buildDictProvider == null) {
+    private Map<String, String> generateDict(LeoBuildParam.DoBuild doBuild, String buildType) {
+        IBuildDictGenerator buildDictGenerator = BuildDictGeneratorFactory.getGenerator(buildType);
+        if (buildDictGenerator == null) {
             throw new LeoBuildException("构建类型不正确: buildType={}", buildType);
         }
-        return buildDictProvider.produce(doBuild);
+        return buildDictGenerator.generate(doBuild);
     }
 
     @Override
@@ -308,7 +313,6 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         final boolean gitFlow = getGitFlow(leoJob, gitLabConfig);
         return filterGitFlow(branchOptions, leoJob, gitLabConfig, gitFlow);
     }
-
 
     private boolean getGitFlow(LeoJob leoJob, GitLabConfig gitLabConfig) {
         LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob);
@@ -450,16 +454,39 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
      * @return
      */
     private DatasourceInstanceAsset getGitLabProjectAssetWithLeoJobAndSshUrl(LeoJob leoJob, String sshUrl) {
-        ApplicationResource resource = applicationResourceService.queryByApplication(
+        Optional<ApplicationResource> optionalResource = applicationResourceService.queryByApplication(
                         leoJob.getApplicationId(),
                         DsAssetTypeConstants.GITLAB_PROJECT.name(),
                         BusinessTypeEnum.ASSET.getType())
                 .stream()
                 .filter(e -> e.getName().equals(sshUrl))
-                .findFirst()
-                // 未找到资产抛出异常
-                .orElseThrow(() -> new LeoBuildException("GitLab项目不存在: applicationId={}, sshUrl={}", leoJob.getApplicationId(), sshUrl));
-        return assetService.getById(resource.getBusinessId());
+                .findFirst();
+
+        if (optionalResource.isPresent()) {
+            return assetService.getById(optionalResource.get().getBusinessId());
+        } else {
+            return getGitLabProjectAssetWithGroup(leoJob.getApplicationId(), sshUrl);
+        }
+    }
+
+    private DatasourceInstanceAsset getGitLabProjectAssetWithGroup(int applicationId, String sshUrl) {
+        // 查询所有的 gitLab group
+        List<ApplicationResource> resources = applicationResourceService.queryByApplication(
+                applicationId,
+                DsAssetTypeConstants.GITLAB_GROUP.name(),
+                BusinessTypeEnum.ASSET.getType());
+        if (!CollectionUtils.isEmpty(resources)) {
+            for (ApplicationResource resource : resources) {
+                List<DatasourceInstanceAssetRelation> assetRelations = dsInstanceAssetRelationService.queryTargetAsset(resource.getBusinessId());
+                for (DatasourceInstanceAssetRelation assetRelation : assetRelations) {
+                    DatasourceInstanceAsset asset = assetService.getById(assetRelation.getTargetAssetId());
+                    if (sshUrl.equals(asset.getAssetKey())) {
+                        return asset;
+                    }
+                }
+            }
+        }
+        throw new LeoBuildException("GitLab项目不存在: applicationId={}, sshUrl={}", applicationId, sshUrl);
     }
 
     @Override

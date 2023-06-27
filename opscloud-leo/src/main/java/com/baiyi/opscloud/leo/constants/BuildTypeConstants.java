@@ -9,6 +9,8 @@ public interface BuildTypeConstants {
 
     String MAVEN_PUBLISH = "maven-publish";
 
+    String FRONT_END = "front-end";
+
     String KUBERNETES_IMAGE = "kubernetes-image";
 
 }

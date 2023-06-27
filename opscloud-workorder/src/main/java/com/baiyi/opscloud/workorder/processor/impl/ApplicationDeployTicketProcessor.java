@@ -57,7 +57,6 @@ public class ApplicationDeployTicketProcessor extends BaseTicketProcessor<Applic
 
     @Override
     protected void handleVerify(WorkOrderTicketEntryParam.TicketEntry ticketEntry) throws TicketVerifyException {
-
     }
 
 }

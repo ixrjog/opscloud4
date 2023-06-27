@@ -74,7 +74,7 @@ public class AgreeApproveTicket extends AbstractApproveTicket {
 
     private void processing(WorkOrderTicket ticket) {
         WorkOrder workOrder = workOrderService.getById(ticket.getWorkOrderId());
-        ITicketProcessor iTicketProcessor = WorkOrderTicketProcessorFactory.getByKey(workOrder.getWorkOrderKey());
+        ITicketProcessor<?> iTicketProcessor = WorkOrderTicketProcessorFactory.getByKey(workOrder.getWorkOrderKey());
         List<WorkOrderTicketEntry> entries = queryTicketEntries(ticket);
         // 执行所有工单条目
         entries.forEach(iTicketProcessor::process);

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class KubernetesImageBuildDictProvider extends BaseBuildDictProvider {
+public class KubernetesImageBuildDictGenerator extends BaseBuildDictGenerator {
 
     @Override
     public String getBuildType() {

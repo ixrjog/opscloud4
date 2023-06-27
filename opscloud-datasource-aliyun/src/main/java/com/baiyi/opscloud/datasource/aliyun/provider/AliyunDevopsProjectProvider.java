@@ -7,7 +7,7 @@ import com.baiyi.opscloud.common.datasource.AliyunDevopsConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
-import com.baiyi.opscloud.core.provider.asset.AbstractAssetBusinessRelationProvider;
+import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.datasource.aliyun.converter.DevopsAssetConverter;
 import com.baiyi.opscloud.datasource.aliyun.devops.driver.AliyunDevopsProjectDriver;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
@@ -28,7 +28,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
  * @Version 1.0
  */
 @Component
-public class AliyunDevopsProjectProvider extends AbstractAssetBusinessRelationProvider<ListProjectsResponseBody.Projects> {
+public class AliyunDevopsProjectProvider extends BaseAssetProvider<ListProjectsResponseBody.Projects> {
 
     @Resource
     private AliyunDevopsProjectProvider aliyunDevopsProjectProvider;
@@ -42,6 +42,11 @@ public class AliyunDevopsProjectProvider extends AbstractAssetBusinessRelationPr
 
     private AliyunDevopsConfig.Devops buildConfig(DatasourceConfig dsConfig) {
         return dsConfigHelper.build(dsConfig, AliyunDevopsConfig.class).getDevops();
+    }
+
+    @Override
+    protected boolean executeMode() {
+        return Model.INCREMENT;
     }
 
     @Override

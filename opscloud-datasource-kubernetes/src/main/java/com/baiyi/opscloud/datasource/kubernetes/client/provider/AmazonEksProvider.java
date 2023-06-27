@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.kubernetes.client.provider;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.MyKubernetesClientBuilder;
-import com.baiyi.opscloud.datasource.kubernetes.client.provider.eks.AmazonEksHelper;
+import com.baiyi.opscloud.datasource.kubernetes.client.provider.eks.AmazonEksGenerator;
 import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientBuilder;
@@ -21,15 +21,15 @@ import java.net.URISyntaxException;
 @Component
 public class AmazonEksProvider {
 
-    private static AmazonEksHelper amazonEksHelper;
+    private static AmazonEksGenerator amazonEksGenerator;
 
     public static final String KUBERNETES_REQUEST_TIMEOUT_SYSTEM_PROPERTY = "kubernetes.request.timeout";
     public static final String KUBERNETES_WEBSOCKET_TIMEOUT_SYSTEM_PROPERTY = "kubernetes.websocket.timeout";
     public static final String KUBERNETES_CONNECTION_TIMEOUT_SYSTEM_PROPERTY = "kubernetes.connection.timeout";
 
     @Autowired
-    public void setAmazonEksHelper(AmazonEksHelper amazonEksHelper) {
-        AmazonEksProvider.amazonEksHelper = amazonEksHelper;
+    public void setAmazonEksHelper(AmazonEksGenerator amazonEksGenerator) {
+        AmazonEksProvider.amazonEksGenerator = amazonEksGenerator;
     }
 
     /**
@@ -39,7 +39,7 @@ public class AmazonEksProvider {
      * @return
      */
     public static KubernetesClient buildClientWithProvider(KubernetesConfig.Kubernetes kubernetes) throws URISyntaxException {
-        String token = amazonEksHelper.generateEksToken(kubernetes.getAmazonEks());
+        String token = amazonEksGenerator.generateEksToken(kubernetes.getAmazonEks());
         preSet(kubernetes);
         return build(kubernetes.getAmazonEks().getUrl(), token);
     }

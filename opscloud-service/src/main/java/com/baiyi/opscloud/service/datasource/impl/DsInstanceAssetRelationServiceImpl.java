@@ -56,6 +56,14 @@ public class DsInstanceAssetRelationServiceImpl implements DsInstanceAssetRelati
     }
 
     @Override
+    public List<DatasourceInstanceAssetRelation> queryTargetAsset(Integer sourceAssetId) {
+        Example example = new Example(DatasourceInstanceAssetRelation.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("sourceAssetId", sourceAssetId);
+        return dsInstanceAssetRelationMapper.selectByExample(example);
+    }
+
+    @Override
     public List<DatasourceInstanceAssetRelation> queryByAssetId(Integer assetId) {
         Example example = new Example(DatasourceInstanceAssetRelation.class);
         Example.Criteria criteria = example.createCriteria();

@@ -18,10 +18,11 @@
             <artifactId>opscloud-common</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/tk.mybatis/mapper-spring-boot-starter -->
         <dependency>
             <groupId>tk.mybatis</groupId>
             <artifactId>mapper-spring-boot-starter</artifactId>
-            <version>4.2.2</version>
+            <version>4.2.3</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>

@@ -58,7 +58,7 @@ public class LeoBuildParam {
         @NotNull(message = "必须指定是否自动部署参数")
         private Boolean autoDeploy;
 
-        @Schema(description = "Deployment资产ID，启用autoDeploy此参数不能未空")
+        @Schema(description = "Deployment资产ID，若启用autoDeploy则必须指定参数")
         private Integer assetId;
 
         @Schema(description = "项目ID")
