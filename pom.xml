@@ -62,6 +62,7 @@
         <module>opscloud-datasource-google-cloud</module>
         <module>opscloud-datasource-metersphere</module>
         <module>opscloud-datasource-apollo</module>
+        <module>opscloud-datasource-aliyun-arms</module>
     </modules>
 
     <parent>
@@ -397,6 +398,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-aliyun-devops</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aliyun-arms</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
