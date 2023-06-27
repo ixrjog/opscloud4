@@ -111,4 +111,32 @@ public class SerDeployParam {
         private Boolean isFinish;
 
     }
+
+    @Data
+    @Schema
+    public static class AddSubTask {
+
+        @Schema(description = "任务ID")
+        @NotNull(message = "任务ID不能为空")
+        private Integer serDeployTaskId;
+
+        @Schema(description = "应用ID")
+        @NotNull(message = "应用不能为空")
+        private Integer applicationId;
+
+        @Schema(description = "环境类型")
+        @NotNull(message = "环境类型不能为空")
+        private Integer envType;
+
+    }
+
+    @Data
+    @Schema
+    public static class DeploySubTask {
+
+        @Schema(description = "子任务ID")
+        @NotNull(message = "子任务ID不能为空")
+        private Integer serDeploySubTaskId;
+
+    }
 }

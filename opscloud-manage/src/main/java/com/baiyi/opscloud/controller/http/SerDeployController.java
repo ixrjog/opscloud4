@@ -30,10 +30,10 @@ public class SerDeployController {
 
     private final SerDeployFacade serDeployFacade;
 
-    @Operation(summary = "ser包上传")
+    @Operation(summary = "Ser 包上传")
     @PostMapping(value = "/upload")
     public HttpResult<Boolean> uploadFile(@RequestBody MultipartFile file,
-                                          @RequestHeader("x-task-uuid") @NotNull(message = "缺少任务id") String taskUuid) {
+                                          @RequestHeader("x-task-uuid") @NotNull(message = "缺少任务ID") String taskUuid) {
         serDeployFacade.uploadFile(file, taskUuid);
         return HttpResult.SUCCESS;
     }
@@ -71,5 +71,18 @@ public class SerDeployController {
         return HttpResult.SUCCESS;
     }
 
+    @Operation(summary = "新增 Ser 包发布子任务")
+    @PostMapping(value = "/subtask/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> addSerDeploySubTask(@RequestBody @Valid SerDeployParam.AddSubTask addSubTask) {
+        serDeployFacade.addSerDeploySubTask(addSubTask);
+        return HttpResult.SUCCESS;
+    }
+
+    @Operation(summary = "Ser 包子任务发布")
+    @PostMapping(value = "/subtask/deploy", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deploySubTask(@RequestBody @Valid SerDeployParam.DeploySubTask deploySubTask) {
+        serDeployFacade.deploySubTask(deploySubTask);
+        return HttpResult.SUCCESS;
+    }
 
 }

@@ -32,10 +32,24 @@ public class SerDeploySubtaskServiceImpl implements SerDeploySubtaskService {
     }
 
     @Override
+    public SerDeploySubtask getById(Integer id) {
+        return serDeploySubtaskMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public List<SerDeploySubtask> listBySerDeployTaskId(Integer serDeployTaskId) {
         Example example = new Example(SerDeploySubtask.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("serDeployTaskId", serDeployTaskId);
         return serDeploySubtaskMapper.selectByExample(example);
+    }
+
+    @Override
+    public SerDeploySubtask getByTaskIdAndEnvType(Integer serDeployTaskId, Integer envType) {
+        Example example = new Example(SerDeploySubtask.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("serDeployTaskId", serDeployTaskId)
+                .andEqualTo("envType", envType);
+        return serDeploySubtaskMapper.selectOneByExample(example);
     }
 }

@@ -37,6 +37,14 @@ public class FunctionUtil {
         };
     }
 
+    public static ThrowBaseExceptionFunction isNotNull(Object o) {
+        return (baseException) -> {
+            if (ObjectUtils.isNotEmpty(o)) {
+                throw baseException;
+            }
+        };
+    }
+
     public static BranchFunction isTureOrFalse(boolean b) {
         return (trueHandle, falseHandle) -> {
             if (b) {

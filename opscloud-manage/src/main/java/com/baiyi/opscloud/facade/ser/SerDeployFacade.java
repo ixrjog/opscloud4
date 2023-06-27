@@ -24,5 +24,8 @@ public interface SerDeployFacade {
 
     void deleteSerDeployTaskItem(Integer id);
 
+    void addSerDeploySubTask(SerDeployParam.AddSubTask addSubTask);
+
+    void deploySubTask(SerDeployParam.DeploySubTask deploySubTask);
 
 }

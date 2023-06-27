@@ -15,6 +15,11 @@ public interface SerDeploySubtaskService {
 
     void update(SerDeploySubtask serDeploySubtask);
 
+    SerDeploySubtask getById(Integer id);
+
     List<SerDeploySubtask> listBySerDeployTaskId(Integer serDeployTaskId);
 
+    SerDeploySubtask getByTaskIdAndEnvType(Integer serDeployTaskId, Integer envType);
+
 }
+

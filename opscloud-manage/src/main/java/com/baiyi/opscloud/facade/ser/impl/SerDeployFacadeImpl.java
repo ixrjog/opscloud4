@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.ser.impl;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
+import com.baiyi.opscloud.common.constants.SerDeploySubTaskStatus;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.common.datasource.SerDeployConfig;
@@ -49,15 +50,10 @@ import java.util.stream.Collectors;
 public class SerDeployFacadeImpl implements SerDeployFacade {
 
     private final DsConfigHelper dsConfigHelper;
-
     private final SerDeployTaskService serDeployTaskService;
-
     private final SerDeployTaskItemService serDeployTaskItemService;
-
     private final SerDeploySubtaskService serDeploySubtaskService;
-
     private final AmazonS3Driver amazonS3Driver;
-
     private final SerDeployTaskPacker serDeployTaskPacker;
 
     private final static String S3_OBJECT_MD5_KEY = "ETag";
@@ -65,8 +61,8 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
     private final static String S3_OBJECT_RANGES_KEY = "Accept-Ranges";
 
 
-    private AwsConfig getAWSConfig(String InstanceUuid) {
-        return dsConfigHelper.build(dsConfigHelper.getConfigByInstanceUuid(InstanceUuid), AwsConfig.class);
+    private AwsConfig getAwsConfig(String instanceUuid) {
+        return dsConfigHelper.build(dsConfigHelper.getConfigByInstanceUuid(instanceUuid), AwsConfig.class);
     }
 
     private SerDeployConfig getSerDeployConfig() {
@@ -75,17 +71,17 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
 
     @Override
     public void uploadFile(MultipartFile file, String taskUuid) {
+        SerDeployTask serDeployTask = serDeployTaskService.getByUuid(taskUuid);
+        if (!CollectionUtils.isEmpty(serDeploySubtaskService.listBySerDeployTaskId(serDeployTask.getId()))) {
+            return;
+        }
         SerDeployConfig serDeployConfig = getSerDeployConfig();
-        AwsConfig.Aws awsConfig = getAWSConfig(serDeployConfig.getSerDeployInstance().getInstanceUuid()).getAws();
-        try {
-            InputStream inputStream = file.getInputStream();
+        AwsConfig.Aws awsConfig = getAwsConfig(serDeployConfig.getSerDeployInstance().getInstanceUuid()).getAws();
+        try (InputStream inputStream = file.getInputStream()) {
             String keyName = Joiner.on("/").join(taskUuid, file.getOriginalFilename());
             String bucketName = serDeployConfig.getSerDeployInstance().getBucketName();
             String versionId = amazonS3Driver.putObject(serDeployConfig.getSerDeployInstance().getRegionId(), awsConfig, bucketName, keyName, inputStream, new ObjectMetadata());
             S3Object s3Object = amazonS3Driver.getObject(serDeployConfig.getSerDeployInstance().getRegionId(), awsConfig, bucketName, keyName, versionId);
-            SerDeployTask serDeployTask = serDeployTaskService.getByUuid(taskUuid);
-
-
             String itemSize = Joiner.on(" ")
                     .join(s3Object.getObjectMetadata().getRawMetadata().get(S3_OBJECT_LENGTH_KEY),
                             s3Object.getObjectMetadata().getRawMetadata().get(S3_OBJECT_RANGES_KEY));
@@ -98,9 +94,7 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
                     .itemSize(itemSize)
                     .deployUsername(SessionUtil.getUsername())
                     .build();
-
             SerDeployTaskItem item = serDeployTaskItemService.getByTaskIdAndItemName(serDeployTask.getId(), file.getOriginalFilename());
-
             FunctionUtil.isTureOrFalse(ObjectUtils.isEmpty(item))
                     .trueOrFalseHandle(
                             () -> serDeployTaskItemService.add(serDeployTaskItem),
@@ -140,7 +134,7 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
                 .applicationId(addTask.getApplicationId())
                 .taskUuid(IdUtil.buildUUID())
                 .taskName(addTask.getTaskName())
-                .taskDesc(addTask.getTaskName())
+                .taskDesc(addTask.getTaskDesc())
                 .isActive(addTask.getIsActive())
                 .isFinish(addTask.getIsFinish())
                 .build();
@@ -165,8 +159,33 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
         FunctionUtil.isTure(!CollectionUtils.isEmpty(subtaskList))
                 .throwBaseException(new OCException("当前Item 项已被发布过，无法删除"));
         SerDeployConfig serDeployConfig = getSerDeployConfig();
-        AwsConfig.Aws awsConfig = getAWSConfig(serDeployConfig.getSerDeployInstance().getInstanceUuid()).getAws();
+        AwsConfig.Aws awsConfig = getAwsConfig(serDeployConfig.getSerDeployInstance().getInstanceUuid()).getAws();
         amazonS3Driver.deleteObject(serDeployConfig.getSerDeployInstance().getRegionId(), awsConfig, item.getItemBucketName(), item.getItemKey());
         serDeployTaskItemService.deleteById(id);
+    }
+
+    @Override
+    public void addSerDeploySubTask(SerDeployParam.AddSubTask addSubTask) {
+        FunctionUtil.isTure(CollectionUtils.isEmpty(serDeployTaskItemService.listBySerDeployTaskId(addSubTask.getSerDeployTaskId())))
+                .throwBaseException(new OCException("当前任务无关联的 Ser 包"));
+        SerDeploySubtask serDeploySubtask = serDeploySubtaskService.getByTaskIdAndEnvType(addSubTask.getSerDeployTaskId(), addSubTask.getEnvType());
+        FunctionUtil.isNotNull(serDeploySubtask)
+                .throwBaseException(new OCException("当前环境子任务已存在"));
+        SerDeploySubtask subTask = SerDeploySubtask.builder()
+                .serDeployTaskId(addSubTask.getSerDeployTaskId())
+                .envType(addSubTask.getEnvType())
+                .taskStatus(SerDeploySubTaskStatus.CREATE)
+                .build();
+        serDeploySubtaskService.add(subTask);
+    }
+
+    @Override
+    public void deploySubTask(SerDeployParam.DeploySubTask deploySubTask) {
+        SerDeploySubtask subtask = serDeploySubtaskService.getById(deploySubTask.getSerDeploySubTaskId());
+        FunctionUtil.isNull(subtask)
+                .throwBaseException(new OCException("当前子任务不存在"));
+        subtask.setTaskStatus(SerDeploySubTaskStatus.RUNNING);
+        serDeploySubtaskService.update(subtask);
+        // todo 调用发布
     }
 }
