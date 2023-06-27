@@ -31,6 +31,8 @@ public class ApplicationKubernetesPacker {
 
     private final EnvService envService;
 
+    private final ApplicationArmsPacker applicationArmsPacker;
+
     @TagsWrapper(extend = true)
     @BizDocWrapper(extend = true)
     public void wrap(ApplicationVO.Kubernetes kubernetes, int envType) {
@@ -42,6 +44,8 @@ public class ApplicationKubernetesPacker {
                 .peek(resourcePacker::wrap)
                 .collect(Collectors.toList());
         kubernetes.setResources(data);
+        // ARMS
+        applicationArmsPacker.warp(env,kubernetes);
     }
 
     private List<ApplicationResource> getResources(int applicationId, Env env) {

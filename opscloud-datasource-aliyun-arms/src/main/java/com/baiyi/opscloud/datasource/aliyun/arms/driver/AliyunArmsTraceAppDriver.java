@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
  * @Date 2023/6/27 10:14
  * @Version 1.0
  */
-public class AliyunArmsAppDriver {
+public class AliyunArmsTraceAppDriver {
 
     public static List<ListTraceAppsResponseBody.TraceApps> listTraceApps(String regionId, AliyunArmsConfig.Arms arms) {
         List<ListTraceAppsResponseBody.TraceApps> result = Lists.newArrayList();

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Aliyun ARMS 数据配置
+ *
  * @Author baiyi
  * @Date 2023/6/27 09:42
  * @Version 1.0
@@ -28,7 +29,16 @@ public class AliyunArmsConfig extends BaseDsConfig {
         private String regionId;
         @Schema(description = "接入点默认杭州, https://help.aliyun.com/document_detail/441765.html?spm=a2c4g.441908.0.0.8800710dLdFZHW")
         private String endpoint;
+        @Schema(description = "控制台链接")
+        private Url url;
 
+    }
+
+    @Data
+    @NoArgsConstructor
+    @Schema
+    public static class Url {
+        private String home;
     }
 
 }
