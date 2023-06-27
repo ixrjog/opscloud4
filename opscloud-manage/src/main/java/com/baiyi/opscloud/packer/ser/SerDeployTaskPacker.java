@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.packer.ser;
 
+import com.baiyi.opscloud.common.annotation.AgoWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.param.IExtend;
@@ -34,6 +35,7 @@ public class SerDeployTaskPacker implements IWrapper<SerDeployVO.Task> {
     private final ApplicationService applicationService;
 
     @Override
+    @AgoWrapper
     public void wrap(SerDeployVO.Task vo, IExtend iExtend) {
         if (!iExtend.getExtend()) {
             return;

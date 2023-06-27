@@ -4,12 +4,14 @@ import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @Author 修远
@@ -87,7 +89,7 @@ public class SerDeployVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @Schema
-    public static class SubTask extends BaseVO {
+    public static class SubTask extends BaseVO implements ReadableTime.IAgo, ReadableTime.IRuntime {
 
         private Integer id;
 
@@ -110,7 +112,18 @@ public class SerDeployVO {
         private String requestContent;
 
         private String responseContent;
-    }
 
+        @Schema(description = "以前")
+        private String ago;
+
+        @Schema(description = "运行时长")
+        private String runtime;
+
+        @Override
+        public Date getAgoTime() {
+            return Objects.requireNonNullElseGet(this.startTime, Date::new);
+        }
+
+    }
 
 }

@@ -195,7 +195,9 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     @Override
     public List<LeoBuildVO.Build> queryLeoDeployVersion(LeoDeployParam.QueryDeployVersion queryBuildVersion) {
         List<LeoBuild> builds = buildService.queryBuildVersion(queryBuildVersion);
-        return BeanCopierUtil.copyListProperties(builds, LeoBuildVO.Build.class).stream().peek(e -> buildVersionPacker.wrap(e, queryBuildVersion)).collect(Collectors.toList());
+        return BeanCopierUtil.copyListProperties(builds, LeoBuildVO.Build.class).stream()
+                .peek(e -> buildVersionPacker.wrap(e, queryBuildVersion))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -212,7 +214,9 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         List<Integer> jobIds = leoJobs.stream().map(LeoJob::getId).collect(Collectors.toList());
         pageQuery.setJobIds(jobIds);
         DataTable<LeoDeploy> table = deployService.queryDeployPage(pageQuery);
-        List<LeoDeployVO.Deploy> data = BeanCopierUtil.copyListProperties(table.getData(), LeoDeployVO.Deploy.class).stream().peek(deployResponsePacker::wrap).collect(Collectors.toList());
+        List<LeoDeployVO.Deploy> data = BeanCopierUtil.copyListProperties(table.getData(), LeoDeployVO.Deploy.class).stream()
+                .peek(deployResponsePacker::wrap)
+                .collect(Collectors.toList());
         return new DataTable<>(data, table.getTotalNum());
     }
 
@@ -276,7 +280,16 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         List<DatasourceInstanceAsset> assets = dsInstanceFacade.pullAsset(asset.getInstanceUuid(), DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name(), deployment);
         // 绑定资产到应用
         assets.forEach(a -> {
-            ApplicationResourceVO.Resource resource = ApplicationResourceVO.Resource.builder().applicationId(leoJob.getApplicationId()).businessId(a.getId()).businessType(BusinessTypeEnum.ASSET.getType()).checked(false).comment(a.getAssetId()).name(a.getAssetId()).resourceType(ApplicationResTypeEnum.KUBERNETES_DEPLOYMENT.name()).virtualResource(false).build();
+            ApplicationResourceVO.Resource resource = ApplicationResourceVO.Resource.builder()
+                    .applicationId(leoJob.getApplicationId())
+                    .businessId(a.getId())
+                    .businessType(BusinessTypeEnum.ASSET.getType())
+                    .checked(false)
+                    .comment(a.getAssetId())
+                    .name(a.getAssetId())
+                    .resourceType(ApplicationResTypeEnum.KUBERNETES_DEPLOYMENT.name())
+                    .virtualResource(false)
+                    .build();
             applicationFacade.bindApplicationResource(resource);
         });
     }
@@ -288,11 +301,16 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         deployment.getSpec().getTemplate().getMetadata().getLabels().put("group", newName);
 
         // 更新 Labels
-        Map<String, String> labels = Optional.of(deployment).map(Deployment::getMetadata).map(ObjectMeta::getLabels).orElse(Maps.newHashMap());
+        Map<String, String> labels = Optional.of(deployment)
+                .map(Deployment::getMetadata)
+                .map(ObjectMeta::getLabels)
+                .orElse(Maps.newHashMap());
 
         // 2023/5/5 修改Template Container name
         final String projectName = simpleEnvFacade.removeEnvSuffix(oldName);
-        Optional<Container> optionalContainer = deployment.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith(projectName)).findFirst();
+        Optional<Container> optionalContainer = deployment.getSpec().getTemplate().getSpec().getContainers().stream()
+                .filter(c -> c.getName().startsWith(projectName))
+                .findFirst();
         optionalContainer.ifPresent(container -> container.setName(newName));
 
         if (labels.containsKey(WORKLOAD_SELECTOR_NAME)) {
@@ -302,11 +320,22 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                     deployment.getMetadata().getLabels().put(WORKLOAD_SELECTOR_NAME, workloadSelector);
                 }
 
-                if (Optional.of(deployment).map(Deployment::getSpec).map(DeploymentSpec::getSelector).map(LabelSelector::getMatchLabels).orElse(Maps.newHashMap()).containsKey(WORKLOAD_SELECTOR_NAME)) {
+                if (Optional.of(deployment)
+                        .map(Deployment::getSpec)
+                        .map(DeploymentSpec::getSelector)
+                        .map(LabelSelector::getMatchLabels)
+                        .orElse(Maps.newHashMap())
+                        .containsKey(WORKLOAD_SELECTOR_NAME)) {
                     deployment.getSpec().getSelector().getMatchLabels().put(WORKLOAD_SELECTOR_NAME, workloadSelector);
                 }
 
-                if (Optional.of(deployment).map(Deployment::getSpec).map(DeploymentSpec::getTemplate).map(PodTemplateSpec::getMetadata).map(ObjectMeta::getLabels).orElse(Maps.newHashMap()).containsKey(WORKLOAD_SELECTOR_NAME)) {
+                if (Optional.of(deployment)
+                        .map(Deployment::getSpec)
+                        .map(DeploymentSpec::getTemplate)
+                        .map(PodTemplateSpec::getMetadata)
+                        .map(ObjectMeta::getLabels)
+                        .orElse(Maps.newHashMap())
+                        .containsKey(WORKLOAD_SELECTOR_NAME)) {
                     deployment.getSpec().getTemplate().getMetadata().getLabels().put(WORKLOAD_SELECTOR_NAME, workloadSelector);
                 }
             } catch (Exception e) {
@@ -318,7 +347,9 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     @Override
     public List<LeoDeployVO.Deploy> getLatestLeoDeploy(int size) {
         List<LeoDeploy> deploys = deployService.queryLatestLeoDeploy(size);
-        return BeanCopierUtil.copyListProperties(deploys, LeoDeployVO.Deploy.class).stream().peek(deployResponsePacker::wrap).collect(Collectors.toList());
+        return BeanCopierUtil.copyListProperties(deploys, LeoDeployVO.Deploy.class).stream()
+                .peek(deployResponsePacker::wrap)
+                .collect(Collectors.toList());
     }
 
 }
