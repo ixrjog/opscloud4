@@ -3,11 +3,17 @@ package com.baiyi.opscloud.domain.generator.opscloud;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @Table(name = "datasource_instance")
-public class DatasourceInstance {
+public class DatasourceInstance implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 6848520019487364982L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

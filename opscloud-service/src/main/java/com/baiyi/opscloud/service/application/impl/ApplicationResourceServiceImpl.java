@@ -89,4 +89,13 @@ public class ApplicationResourceServiceImpl implements ApplicationResourceServic
         return applicationResourceMapper.selectByExample(example);
     }
 
+    @Override
+    public List<ApplicationResource> queryByResource(String name, String resourceType) {
+        Example example = new Example(ApplicationResource.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("name", name)
+                .andEqualTo("resourceType", resourceType);
+        return applicationResourceMapper.selectByExample(example);
+    }
+
 }

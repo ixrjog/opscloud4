@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.common.base;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * @Author baiyi
  * @Date 2020/3/3 2:18 下午
@@ -24,6 +26,10 @@ public class Global {
 
     public static final String ADMIN = "ADMIN";
 
+    @Schema(description = "自动部署")
     public static final String AUTO_DEPLOY = "AutoDeploy";
+
+    @Schema(description = "自动构建")
+    public static final String AUTO_BUILD = "AutoBuild";
 
 }

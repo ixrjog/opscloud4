@@ -17,7 +17,7 @@ import jakarta.annotation.Resource;
 class GitlabFacadeTest extends BaseUnit implements InitializingBean {
 
     @Resource
-    private GitlabFacade gitlabFacade;
+    private GitLabFacade gitlabFacade;
 
     // 此Token并没有安全问题，仅用于匹配Gitlab实例
     private static final String token = "818e35c2952d716f29c831b728fa7818";

@@ -24,6 +24,8 @@ public interface LeoJobService {
 
     List<LeoJob> queryJobWithApplicationId(Integer applicationId);
 
+    List<LeoJob> queryAutoBuildJob(Integer applicationId, String branch);
+
     void add(LeoJob leoJob);
 
     void update(LeoJob leoJob);

@@ -13,15 +13,15 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class GitLabEventConsumerFactory {
 
-    private static final Map<String, IGitLabEventConsumer> context = new ConcurrentHashMap<>();
+    private static final Map<String, IGitLabEventConsumer> CONTEXT = new ConcurrentHashMap<>();
 
     public static IGitLabEventConsumer getByEventName(String eventName) {
-        return context.get(eventName);
+        return CONTEXT.get(eventName);
     }
 
     public static void register(IGitLabEventConsumer bean) {
         for (String eventName : bean.getEventNames()) {
-            context.put(eventName, bean);
+            CONTEXT.put(eventName, bean);
             log.debug("GitlabEventConsumeFactory Registered: eventName={}, beanName={}", eventName, bean.getClass().getSimpleName());
         }
     }

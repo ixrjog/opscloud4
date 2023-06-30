@@ -12,6 +12,10 @@ import java.util.List;
  */
 public interface IGitLabEventConsumer {
 
+    /**
+     * 事件名称
+     * @return
+     */
     List<String> getEventNames();
 
     /**
