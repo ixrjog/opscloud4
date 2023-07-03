@@ -10,14 +10,13 @@ import com.baiyi.opscloud.facade.event.EventFacade;
 import com.baiyi.opscloud.factory.gitlab.GitLabEventConsumerFactory;
 import com.baiyi.opscloud.factory.gitlab.GitLabEventNameEnum;
 import com.baiyi.opscloud.factory.gitlab.IGitLabEventConsumer;
-import com.baiyi.opscloud.factory.gitlab.context.GitlabEventContext;
 import com.baiyi.opscloud.factory.gitlab.converter.SystemHookConverter;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.annotation.Async;
 
-import jakarta.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +29,7 @@ import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskP
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractGitlabEventConsumer implements IGitLabEventConsumer, InitializingBean {
+public abstract class AbstractGitLabEventConsumer implements IGitLabEventConsumer, InitializingBean {
 
     @Resource
     private EventFacade eventFacade;
@@ -41,9 +40,14 @@ public abstract class AbstractGitlabEventConsumer implements IGitLabEventConsume
     @Resource
     protected SimpleDsAssetFacade simpleDsAssetFacade;
 
+    /**
+     * 获取事件枚举
+     *
+     * @return
+     */
     protected abstract GitLabEventNameEnum[] getEventNameEnums();
 
-    protected final ThreadLocal<GitlabEventContext> eventContext = ThreadLocal.withInitial(GitlabEventContext::new);
+    // protected final ThreadLocal<GitlabEventContext> eventContext = ThreadLocal.withInitial(GitlabEventContext::new);
 
     @Override
     public List<String> getEventNames() {
@@ -53,38 +57,26 @@ public abstract class AbstractGitlabEventConsumer implements IGitLabEventConsume
     @Override
     @Async(value = CORE)
     public void consumeEventV4(DatasourceInstance instance, GitLabNotifyParam.SystemHook systemHook) {
-        eventContext.get().setInstance(instance);
-        eventContext.get().setSystemHook(systemHook);
-        preHandle();
-        proceed();
-        postHandle();
+        Event event = SystemHookConverter.toEvent(instance, systemHook);
+        eventFacade.recordEvent(event);
+        process(instance, systemHook);
     }
 
     /**
      * TODO 这只是偷懒写法(全量同步)，最好重写
      */
-    protected void proceed() {
-        List<SimpleAssetProvider> providers = AssetProviderFactory.getProviders(eventContext.get().getInstance().getInstanceType(), getAssetType());
+    protected void process(DatasourceInstance instance, GitLabNotifyParam.SystemHook systemHook) {
+        List<SimpleAssetProvider<?>> providers = AssetProviderFactory.getProviders(instance.getInstanceType(), getAssetType());
         assert providers != null;
-        providers.forEach(x -> x.pullAsset(eventContext.get().getInstance().getId()));
+        providers.forEach(x -> x.pullAsset(instance.getId()));
     }
 
+    /**
+     * 资产类型
+     *
+     * @return
+     */
     protected abstract String getAssetType();
-
-    /**
-     * 预处理
-     */
-    private void preHandle() {
-        Event event = SystemHookConverter.toEvent(eventContext.get().getInstance(), eventContext.get().getSystemHook());
-        eventFacade.recordEvent(event);
-        eventContext.get().setEvent(event);
-    }
-
-    /**
-     * 后处理，这只是通用写法
-     */
-    protected void postHandle() {
-    }
 
     @Override
     public void afterPropertiesSet() throws Exception {

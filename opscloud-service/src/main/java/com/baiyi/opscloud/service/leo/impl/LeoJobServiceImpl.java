@@ -80,6 +80,15 @@ public class LeoJobServiceImpl implements LeoJobService {
     }
 
     @Override
+    public List<LeoJob> queryAutoBuildJob(Integer applicationId, String branch) {
+        Example example = new Example(LeoJob.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("applicationId", applicationId)
+                .andEqualTo("branch", branch);
+        return leoJobMapper.selectByExample(example);
+    }
+
+    @Override
     public void add(LeoJob leoJob) {
         leoJobMapper.insert(leoJob);
     }

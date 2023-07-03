@@ -29,4 +29,6 @@ public interface ApplicationResourceService {
 
     List<ApplicationResource> queryByBusiness(Integer businessType, Integer businessId);
 
+    List<ApplicationResource> queryByResource(String name,String resourceType);
+
 }

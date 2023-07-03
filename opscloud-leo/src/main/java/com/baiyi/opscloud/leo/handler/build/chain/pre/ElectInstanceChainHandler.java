@@ -6,23 +6,29 @@ import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
 import com.baiyi.opscloud.datasource.jenkins.helper.JenkinsVersion;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
-import com.baiyi.opscloud.leo.handler.build.helper.LeoJenkinsInstanceHelper;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
+import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
+import com.baiyi.opscloud.leo.handler.build.helper.LeoJenkinsInstanceHelper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.baiyi.opscloud.common.base.Global.AUTO_BUILD;
+import static com.baiyi.opscloud.common.base.Global.AUTO_DEPLOY;
 
 /**
  * @Author baiyi
@@ -32,6 +38,8 @@ import java.util.Random;
 @Slf4j
 @Component
 public class ElectInstanceChainHandler extends BaseBuildChainHandler {
+
+    private final static Set<String> FILTER_TAGS_SET = Sets.newHashSet(AUTO_BUILD, AUTO_DEPLOY);
 
     @Resource
     private LeoJenkinsInstanceHelper leoJenkinsInstanceHelper;
@@ -94,7 +102,9 @@ public class ElectInstanceChainHandler extends BaseBuildChainHandler {
         save(saveLeoBuild, "选举Jenkins实例: name={}, uuid={}", dsInstance.getName(), dsInstance.getUuid());
     }
 
-    private List<DatasourceInstance> electLeoJenkinsInstances(List<String> tags) {
+    private List<DatasourceInstance> electLeoJenkinsInstances(List<String> jobTags) {
+        // 过滤AutoBuild、AutoDeploy标签
+        List<String> tags = jobTags.stream().filter(t -> !FILTER_TAGS_SET.contains(t)).collect(Collectors.toList());
         List<DatasourceInstance> instances = leoJenkinsInstanceHelper.queryAvailableInstancesWithTags(tags);
         if (CollectionUtils.isEmpty(instances)) {
             throw new LeoBuildException("无可用的Jenkins实例: tags={}", JSONUtil.writeValueAsString(tags));

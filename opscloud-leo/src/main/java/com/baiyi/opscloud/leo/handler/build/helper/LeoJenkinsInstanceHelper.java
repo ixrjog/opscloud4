@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,7 +68,7 @@ public class LeoJenkinsInstanceHelper {
     public List<DatasourceInstance> queryAvailableInstancesWithTags(List<String> tags) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
-            throw new LeoBuildException("无可用的Jenkins实例: 实例无效或没有Leo标签！");
+            throw new LeoBuildException("无可用的Jenkins实例: 实例无效或没有 {} 标签！", getInstanceTag());
         }
         // tags为空，返回所有实例
         if (CollectionUtils.isEmpty(tags)) {
@@ -75,12 +76,13 @@ public class LeoJenkinsInstanceHelper {
         }
         return instances.stream().filter(instance -> {
             List<String> instanceTags = getInstanceTags(instance.getId());
-            return instanceTags.containsAll(tags);
+            return new HashSet<>(instanceTags).containsAll(tags);
         }).collect(Collectors.toList());
     }
 
     /**
      * 查询实例所有标签
+     *
      * @param instanceId
      * @return
      */

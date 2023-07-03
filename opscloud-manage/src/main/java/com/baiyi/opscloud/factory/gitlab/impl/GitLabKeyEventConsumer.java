@@ -16,20 +16,16 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class GitLabKeyEventConsumer extends AbstractGitlabEventConsumer {
+public class GitLabKeyEventConsumer extends AbstractGitLabEventConsumer {
 
-    private final static GitLabEventNameEnum[] eventNameEnums = {
+    private final static GitLabEventNameEnum[] EVENT_NAME_ENUMS = {
             GitLabEventNameEnum.KEY_CREATE,
             GitLabEventNameEnum.KEY_DESTROY};
 
-    /**
-     * 重写处理方法
-     */
-    @Override
-    protected void proceed() {
+    protected void process(DatasourceInstance instance, GitLabNotifyParam.SystemHook systemHook) {
         // 用户删除Key
-        if (eventContext.get().getSystemHook().getEvent_name().equals(GitLabEventNameEnum.KEY_DESTROY.name())) {
-            AssetContainer assetContainer = toAssetContainer();
+        if (GitLabEventNameEnum.KEY_DESTROY.name().equalsIgnoreCase(systemHook.getEvent_name())) {
+            AssetContainer assetContainer = toAsset(instance, systemHook);
             DatasourceInstanceAsset asset = dsInstanceAssetService.getByUniqueKey(assetContainer.getAsset());
             // 删除资产
             if (asset != null) {
@@ -37,16 +33,13 @@ public class GitLabKeyEventConsumer extends AbstractGitlabEventConsumer {
             }
         } else {
             // 用户创建新Key
-            super.proceed();
+            super.process(instance, systemHook);
         }
     }
 
-    protected AssetContainer toAssetContainer() {
-        DatasourceInstance dsInstance = eventContext.get().getInstance();
-        GitLabNotifyParam.SystemHook systemHook = eventContext.get().getSystemHook();
-
+    protected AssetContainer toAsset(DatasourceInstance instance, GitLabNotifyParam.SystemHook systemHook) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
-                .instanceUuid(dsInstance.getUuid())
+                .instanceUuid(instance.getUuid())
                 .assetId(String.valueOf(systemHook.getId()))
                 .name(systemHook.getUsername())
                 .assetKey(SSHUtil.getFingerprint(systemHook.getKey()))
@@ -62,7 +55,7 @@ public class GitLabKeyEventConsumer extends AbstractGitlabEventConsumer {
 
     @Override
     protected GitLabEventNameEnum[] getEventNameEnums() {
-        return eventNameEnums;
+        return EVENT_NAME_ENUMS;
     }
 
     @Override

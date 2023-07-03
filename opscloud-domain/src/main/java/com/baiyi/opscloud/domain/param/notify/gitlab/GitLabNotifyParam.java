@@ -13,6 +13,7 @@ import java.util.List;
  * @Date 2021/10/28 4:27 下午
  * @Version 1.0
  */
+@SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
 public class GitLabNotifyParam {
 
     /**
@@ -49,6 +50,7 @@ public class GitLabNotifyParam {
         private List<Commits> commits;
         private int total_commits_count;
         private String key;
+        private ObjectAttributes object_attributes;
     }
 
     @Data
@@ -105,6 +107,19 @@ public class GitLabNotifyParam {
     public static class Author {
         private String name;
         private String email;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @Schema
+    public static class ObjectAttributes {
+        private int id;
+        @Schema(description = "目标分支")
+        private String target_branch;
+        @Schema(description = "源分支")
+        private String source_branch;
+        private int source_project_id;
+
     }
 
 }

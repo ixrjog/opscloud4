@@ -18,13 +18,14 @@ import java.util.Map;
  */
 public class LeoBuildParam {
 
-    public interface IAutoDeploy {
+    public interface IAutoBuild {
 
         /**
          * 自动部署
+         *
          * @return
          */
-        Boolean getAutoDeploy();
+        Boolean getAutoBuild();
 
     }
 
@@ -33,7 +34,7 @@ public class LeoBuildParam {
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema
-    public static class DoBuild implements IAutoDeploy {
+    public static class DoBuild implements IAutoBuild, LeoDeployParam.IAutoDeploy {
 
         @Min(value = 0, message = "关联任务ID不能为空")
         @Schema(description = "关联任务ID")
@@ -54,6 +55,9 @@ public class LeoBuildParam {
         @Schema(description = "版本说明")
         private String versionDesc;
 
+        @Schema(description = "自动构建")
+        private Boolean autoBuild;
+
         @Schema(description = "自动部署")
         @NotNull(message = "必须指定是否自动部署参数")
         private Boolean autoDeploy;
@@ -65,6 +69,66 @@ public class LeoBuildParam {
         private Integer projectId;
 
     }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema
+    public static class DoAutoBuild {
+
+        @Schema(description = "执行用户")
+        private String username;
+
+        @Min(value = 0, message = "关联任务ID不能为空")
+        @Schema(description = "关联任务ID")
+        private Integer jobId;
+
+        @Schema(description = "分支")
+        private String branch;
+
+        @Schema(description = "COMMIT ID")
+        private String commitId;
+
+        @Schema(description = "构建参数")
+        private Map<String, String> params;
+
+        @Schema(description = "版本名称")
+        private String versionName;
+
+        @Schema(description = "版本说明")
+        private String versionDesc;
+
+        @Schema(description = "自动构建")
+        private Boolean autoBuild;
+
+        @Schema(description = "自动部署")
+        @NotNull(message = "必须指定是否自动部署参数")
+        private Boolean autoDeploy;
+
+        @Schema(description = "Deployment资产ID，若启用autoDeploy则必须指定参数")
+        private Integer assetId;
+
+        @Schema(description = "项目ID")
+        private Integer projectId;
+
+        public LeoBuildParam.DoBuild toDoBuild() {
+            return DoBuild.builder()
+                    .jobId(jobId)
+                    .branch(branch)
+                    .commitId(commitId)
+                    .params(params)
+                    .versionName(versionName)
+                    .versionDesc(versionDesc)
+                    .autoBuild(true)
+                    .autoDeploy(autoDeploy)
+                    .assetId(assetId)
+                    .projectId(projectId)
+                    .build();
+        }
+
+    }
+
 
     @Data
     @Builder

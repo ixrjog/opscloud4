@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Serial;
+
 /**
  * @Author baiyi
  * @Date 2021/9/3 2:12 下午
@@ -54,6 +56,7 @@ public class InstanceController {
      */
     @ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
     public static class ResourceInactiveException extends RuntimeException {
+        @Serial
         private static final long serialVersionUID = 5764195967750671243L;
     }
 

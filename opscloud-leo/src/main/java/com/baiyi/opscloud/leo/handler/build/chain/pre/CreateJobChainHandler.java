@@ -10,9 +10,11 @@ import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.Resource;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Date;
@@ -43,6 +45,12 @@ public class CreateJobChainHandler extends BaseBuildChainHandler {
         LeoBaseModel.DsInstance dsInstance = buildConfig.getBuild().getJenkins().getInstance();
         JenkinsConfig jenkinsConfig = getJenkinsConfigWithUuid(dsInstance.getUuid());
         LeoJob leoJob = leoJobService.getById(leoBuild.getJobId());
+        if (leoJob == null) {
+            throw new LeoBuildException("任务不存在: jobId={}", leoBuild.getJobId());
+        }
+        if (StringUtils.isBlank(leoJob.getTemplateContent())) {
+            throw new LeoBuildException("任务模板内容不存在: jobId={}", leoBuild.getJobId());
+        }
         try {
             jenkinsJobDriver.createJob(jenkinsConfig.getJenkins(), leoBuild.getBuildJobName(), leoJob.getTemplateContent());
             LeoBuild saveLeoBuild = LeoBuild.builder()

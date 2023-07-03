@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class GitLabProjectEventConsumer extends AbstractGitlabEventConsumer {
+public class GitLabProjectEventConsumer extends AbstractGitLabEventConsumer {
 
-    private final static GitLabEventNameEnum[] eventNameEnums = {
+    private final static GitLabEventNameEnum[] EVENT_NAME_ENUMS = {
             GitLabEventNameEnum.PROJECT_CREATE,
             GitLabEventNameEnum.PROJECT_DESTROY,
             GitLabEventNameEnum.PROJECT_RENAME
@@ -20,7 +20,7 @@ public class GitLabProjectEventConsumer extends AbstractGitlabEventConsumer {
 
     @Override
     protected GitLabEventNameEnum[] getEventNameEnums() {
-        return eventNameEnums;
+        return EVENT_NAME_ENUMS;
     }
 
     @Override

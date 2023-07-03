@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.datasource.instance;
 
+import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.common.util.GitLabTokenUtil;
@@ -8,13 +9,10 @@ import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
-import com.baiyi.opscloud.factory.gitlab.GitLabEventConsumerFactory;
-import com.baiyi.opscloud.factory.gitlab.IGitLabEventConsumer;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -23,13 +21,13 @@ import java.util.Optional;
 
 /**
  * @Author baiyi
- * @Date 2021/10/28 6:03 下午
+ * @Date 2023/6/29 10:55
  * @Version 1.0
  */
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GitlabFacade extends BaseManager {
+public class GitLabInstanceStore extends BaseManager {
 
     private final DsConfigService dsConfigService;
 
@@ -40,26 +38,12 @@ public class GitlabFacade extends BaseManager {
      */
     private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.GITLAB};
 
-    public void consumeEventV4(GitLabNotifyParam.SystemHook systemHook) {
-        if (StringUtils.isBlank(systemHook.getEvent_name())) {
-            // 未知的事件名称
-            return;
-        }
-        if (StringUtils.isEmpty(GitLabTokenUtil.getToken())) {
-            log.warn("未配置Gitlab SystemHooks SecretToken 无法路由消息!");
-            return;
-        }
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10M, key = "'GITLAB#INSTANCE#TOKEN:' + #token", unless = "#result == null")
+    public DatasourceInstance getGitLabInstance(String token) {
         Optional<DatasourceInstance> optional = filterInstance();
-        if (!optional.isPresent()) {
-            // 数据源配置文件未配置 SystemHooks.SecretToken
-            return;
-        }
-        IGitLabEventConsumer eventConsume = GitLabEventConsumerFactory.getByEventName(systemHook.getEvent_name());
-        if (eventConsume != null) {
-            eventConsume.consumeEventV4(optional.get(), systemHook);
-        }
+        // 数据源配置文件未配置 SystemHooks.SecretToken
+        return optional.orElse(null);
     }
-
     private Optional<DatasourceInstance> filterInstance() {
         List<DatasourceInstance> instances = super.listInstance();
         if (CollectionUtils.isEmpty(instances)) {
@@ -85,4 +69,6 @@ public class GitlabFacade extends BaseManager {
     protected String getTag() {
         return TagConstants.SYSTEM_HOOKS.getTag();
     }
+
+
 }
