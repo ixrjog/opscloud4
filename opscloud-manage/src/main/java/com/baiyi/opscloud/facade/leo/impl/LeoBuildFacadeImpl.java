@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.leo.impl;
 
+import com.baiyi.opscloud.common.annotation.SetSessionUsername;
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.instance.OcInstance;
@@ -104,7 +105,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     private final LeoBuildResponsePacker leoBuildResponsePacker;
 
-    private final AutoDeployHelper autoDeployHelper;
+    private final LabelingMachineHelper labelingMachineHelper;
 
     private final SubscribeLeoBuildRequestHandler subscribeLeoBuildRequestHandler;
 
@@ -230,8 +231,15 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .build();
         buildService.add(leoBuild);
         // 打标签
-        autoDeployHelper.labeling(doBuild, BusinessTypeEnum.LEO_BUILD.getType(), leoBuild.getId());
+        labelingMachineHelper.labeling(doBuild, BusinessTypeEnum.LEO_BUILD.getType(), leoBuild.getId());
         handleBuild(leoBuild, buildConfig);
+    }
+
+    @Override
+    @SetSessionUsername(usernameSpEL = "#doBuild.username")
+    @LeoBuildInterceptor(jobIdSpEL = "#doBuild.jobId")
+    public void doAutoBuild(LeoBuildParam.DoAutoBuild doBuild) {
+        this.doBuild(doBuild.toDoBuild());
     }
 
     private Map<String, String> generateDict(LeoBuildParam.DoBuild doBuild, String buildType) {

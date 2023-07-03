@@ -14,12 +14,23 @@ import lombok.experimental.SuperBuilder;
  */
 public class LeoDeployParam {
 
+
+    public interface IAutoDeploy {
+
+        /**
+         * 自动部署
+         * @return
+         */
+        Boolean getAutoDeploy();
+
+    }
+
     @Data
     @SuperBuilder(toBuilder = true)
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema
-    public static class DoDeploy implements LeoBuildParam.IAutoDeploy {
+    public static class DoDeploy implements IAutoDeploy {
 
         @Min(value = 0, message = "关联任务ID不能为空")
         @Schema(description = "关联任务ID")

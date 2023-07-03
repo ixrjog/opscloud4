@@ -104,7 +104,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     private final SimpleEnvFacade simpleEnvFacade;
 
-    private final AutoDeployHelper autoDeployHelper;
+    private final LabelingMachineHelper autoDeployHelper;
 
     private final SubscribeLeoDeployRequestHandler subscribeLeoDeployRequestHandler;
 

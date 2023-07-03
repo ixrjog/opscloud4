@@ -22,6 +22,8 @@ public interface LeoBuildFacade {
      */
     void doBuild(LeoBuildParam.DoBuild doBuild);
 
+    void doAutoBuild(LeoBuildParam.DoAutoBuild doBuild);
+
 
     /**
      * 停止构建
