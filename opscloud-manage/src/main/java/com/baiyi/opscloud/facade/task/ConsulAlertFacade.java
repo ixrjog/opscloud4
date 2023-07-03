@@ -126,7 +126,7 @@ public class ConsulAlertFacade extends AbstractAlertRule {
                 .eventUuid(IdUtil.buildUUID())
                 .alertName("Consul 节点异常告警")
                 .severity(matchExpression.getSeverity())
-                .message("Consul 不可用节点大于 " + matchExpression.getValues())
+                .message("Consul 不可用节点大于等于 " + matchExpression.getValues())
                 .value(String.valueOf(warningNode.size()))
                 .check(datasourceInstance.getInstanceName())
                 .source(datasourceInstance.getUuid())
