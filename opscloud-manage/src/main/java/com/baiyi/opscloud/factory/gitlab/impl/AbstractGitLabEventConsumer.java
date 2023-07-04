@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
 import com.baiyi.opscloud.facade.datasource.SimpleDsAssetFacade;
 import com.baiyi.opscloud.facade.event.EventFacade;
 import com.baiyi.opscloud.factory.gitlab.GitLabEventConsumerFactory;
-import com.baiyi.opscloud.factory.gitlab.GitLabEventNameEnum;
+import com.baiyi.opscloud.factory.gitlab.enums.GitLabEventNameEnum;
 import com.baiyi.opscloud.factory.gitlab.IGitLabEventConsumer;
 import com.baiyi.opscloud.factory.gitlab.converter.SystemHookConverter;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.factory.gitlab.impl;
 
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.baiyi.opscloud.factory.gitlab.GitLabEventNameEnum;
+import com.baiyi.opscloud.factory.gitlab.enums.GitLabEventNameEnum;
 import org.springframework.stereotype.Component;
 
 /**

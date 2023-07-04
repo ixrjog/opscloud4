@@ -22,7 +22,7 @@ public class GitLabEventConsumerFactory {
     public static void register(IGitLabEventConsumer bean) {
         for (String eventName : bean.getEventNames()) {
             CONTEXT.put(eventName, bean);
-            log.debug("GitlabEventConsumeFactory Registered: eventName={}, beanName={}", eventName, bean.getClass().getSimpleName());
+            log.debug("GitLabEventConsumeFactory Registered: eventName={}, beanName={}", eventName, bean.getClass().getSimpleName());
         }
     }
 

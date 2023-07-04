@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.baiyi.opscloud.factory.gitlab.GitLabEventNameEnum;
+import com.baiyi.opscloud.factory.gitlab.enums.GitLabEventNameEnum;
 import org.springframework.stereotype.Component;
 
 /**

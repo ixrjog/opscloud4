@@ -35,6 +35,7 @@ public class GitLabNotifyParam {
         private String before;
         private String after;
         private String ref;
+        private List<String> refs;
         // @JsonProperty("checkout_sha")
         private String checkout_sha;
         private Integer user_id;
@@ -53,7 +54,9 @@ public class GitLabNotifyParam {
         private ObjectAttributes object_attributes;
     }
 
+    @Builder
     @Data
+    @AllArgsConstructor
     @NoArgsConstructor
     @Schema
     public static class Project {

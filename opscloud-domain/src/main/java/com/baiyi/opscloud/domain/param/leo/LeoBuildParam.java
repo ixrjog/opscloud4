@@ -120,7 +120,7 @@ public class LeoBuildParam {
                     .params(params)
                     .versionName(versionName)
                     .versionDesc(versionDesc)
-                    .autoBuild(true)
+                    .autoBuild(autoBuild)
                     .autoDeploy(autoDeploy)
                     .assetId(assetId)
                     .projectId(projectId)
@@ -128,7 +128,6 @@ public class LeoBuildParam {
         }
 
     }
-
 
     @Data
     @Builder

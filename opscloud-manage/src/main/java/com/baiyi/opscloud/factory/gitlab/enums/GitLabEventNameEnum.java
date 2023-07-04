@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.factory.gitlab;
+package com.baiyi.opscloud.factory.gitlab.enums;
 
 /**
  * @Author baiyi

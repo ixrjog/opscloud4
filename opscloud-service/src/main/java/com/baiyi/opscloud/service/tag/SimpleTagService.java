@@ -12,7 +12,7 @@ public interface SimpleTagService {
      * @param tagKey
      * @param businessType
      * @param businessId
-     * @param isConstraint
+     * @param isConstraint 标签和业务对象类型必须一致
      * @return
      */
     boolean hasBusinessTag(String tagKey, Integer businessType, Integer businessId, boolean isConstraint);

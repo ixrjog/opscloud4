@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.factory.gitlab.impl;
 
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -7,7 +8,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
-import com.baiyi.opscloud.factory.gitlab.GitLabEventNameEnum;
+import com.baiyi.opscloud.factory.gitlab.enums.GitLabEventNameEnum;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
@@ -16,6 +17,7 @@ import com.baiyi.opscloud.service.tag.SimpleTagService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.base.Joiner;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -31,6 +33,7 @@ import static com.baiyi.opscloud.common.base.Global.AUTO_DEPLOY;
  * @Date 2023/6/29 13:34
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class GitLabPushEventConsumer extends AbstractGitLabEventConsumer {
 
@@ -60,11 +63,23 @@ public class GitLabPushEventConsumer extends AbstractGitLabEventConsumer {
     private final static GitLabEventNameEnum[] EVENT_NAME_ENUMS = {
             GitLabEventNameEnum.PUSH};
 
+    private String getRef(GitLabNotifyParam.SystemHook systemHook) {
+        if (StringUtils.isNotBlank(systemHook.getRef())) {
+            return systemHook.getRef();
+        }
+        return CollectionUtils.isEmpty(systemHook.getRefs()) ? "" : systemHook.getRefs().get(0);
+    }
+
     protected void process(DatasourceInstance instance, GitLabNotifyParam.SystemHook systemHook) {
-        if (!systemHook.getRef().startsWith(REFS_BRANCH_PREFIX)) {
+        log.info("gitLab systemHook with push event: {}", JSONUtil.writeValueAsString(systemHook));
+        String ref = getRef(systemHook);
+        if (StringUtils.isBlank(ref)) {
             return;
         }
-        final String branch = systemHook.getRef().replace(REFS_BRANCH_PREFIX, "");
+        if (!ref.startsWith(REFS_BRANCH_PREFIX)) {
+            return;
+        }
+        final String branch = ref.replace(REFS_BRANCH_PREFIX, "");
         final int gitLabUserId = Optional.of(systemHook)
                 .map(GitLabNotifyParam.SystemHook::getUser_id)
                 .orElse(0);
@@ -116,12 +131,12 @@ public class GitLabPushEventConsumer extends AbstractGitLabEventConsumer {
         if (CollectionUtils.isEmpty(jobs)) {
             return;
         }
-        jobs.forEach(job -> {
+        for (LeoJob job : jobs) {
             Env env = envService.getByEnvType(job.getEnvType());
             // AutoBuild
-            if (tagService.hasBusinessTag(AUTO_BUILD, BusinessTypeEnum.LEO_JOB.getType(), job.getId())) {
+            if (tagService.hasBusinessTag(AUTO_BUILD, BusinessTypeEnum.LEO_JOB.getType(), job.getId(), false)) {
                 // AutoDeploy
-                if (tagService.hasBusinessTag(AUTO_DEPLOY, BusinessTypeEnum.LEO_JOB.getType(), job.getId())) {
+                if (tagService.hasBusinessTag(AUTO_DEPLOY, BusinessTypeEnum.LEO_JOB.getType(), job.getId(), false)) {
                     Optional<ApplicationResource> optionalApplicationResource = applicationResourceService.queryByApplication(job.getApplicationId(), ApplicationResTypeEnum.KUBERNETES_DEPLOYMENT.name())
                             .stream()
                             .filter(e -> e.getName().equals(Joiner.on(":").join(env.getEnvName(), job.getName())))
@@ -129,12 +144,12 @@ public class GitLabPushEventConsumer extends AbstractGitLabEventConsumer {
                     // 找到无状态
                     if (optionalApplicationResource.isPresent()) {
                         handleBuild(job, branch, username, optionalApplicationResource.get().getBusinessId());
-                        return;
+                        continue;
                     }
                 }
                 handleBuild(job, branch, username);
             }
-        });
+        }
     }
 
     /**

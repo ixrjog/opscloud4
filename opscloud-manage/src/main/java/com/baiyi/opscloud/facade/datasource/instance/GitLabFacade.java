@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.facade.datasource.instance;
 
-import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.util.GitLabTokenUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
@@ -23,11 +22,6 @@ public class GitLabFacade {
 
     private final GitLabInstanceStore gitLabInstanceStore;
 
-    /**
-     * 支持SystemHooks标签的实例类型
-     */
-    private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.GITLAB};
-
     public void consumeEventV4(GitLabNotifyParam.SystemHook systemHook) {
         if (StringUtils.isBlank(systemHook.getEvent_name())) {
             // 未知的事件名称
@@ -42,9 +36,9 @@ public class GitLabFacade {
             // 数据源配置文件未配置 SystemHooks.SecretToken
             return;
         }
-        IGitLabEventConsumer eventConsume = GitLabEventConsumerFactory.getByEventName(systemHook.getEvent_name());
-        if (eventConsume != null) {
-            eventConsume.consumeEventV4(datasourceInstance , systemHook);
+        IGitLabEventConsumer gitLabEventConsumer = GitLabEventConsumerFactory.getByEventName(systemHook.getEvent_name());
+        if (gitLabEventConsumer != null) {
+            gitLabEventConsumer.consumeEventV4(datasourceInstance , systemHook);
         }
     }
 
