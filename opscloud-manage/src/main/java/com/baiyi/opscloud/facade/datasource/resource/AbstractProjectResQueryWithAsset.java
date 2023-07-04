@@ -34,7 +34,7 @@ public class AbstractProjectResQueryWithAsset extends AbstractProjectResQuery {
                 .instanceUuid(pageQuery.getInstanceUuid())
                 .assetType(pageQuery.getProjectResType())
                 .queryName(pageQuery.getQueryName())
-                .parentId(pageQuery.getParentId())
+                .assetKey(pageQuery.getAssetKey())
                 .isActive(true)
                 .build();
         query.setPage(pageQuery.getPage());
@@ -47,6 +47,7 @@ public class AbstractProjectResQueryWithAsset extends AbstractProjectResQuery {
     protected ProjectResourceVO.Resource toResource(DsAssetVO.Asset asset) {
         ProjectResourceParam.ResourcePageQuery pageQuery = resourceQuery.get();
         return ProjectResourceVO.Resource.builder()
+                .asset(asset)
                 // 选择项名称
                 .name(getResName(asset))
                 // 选择项说明

@@ -33,8 +33,8 @@ public class DsAssetParam {
         @Schema(description = "regionId")
         private String regionId;
 
-        @Schema(description = "regionId")
-        private Integer parentId;
+        @Schema(description = "assetKey")
+        private String assetKey;
 
         @Schema(description = "kind")
         private String kind;
