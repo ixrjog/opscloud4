@@ -89,7 +89,7 @@ public class GitLabPushEventConsumer extends AbstractGitLabEventConsumer {
 
         List<ApplicationResource> resources = applicationResourceService.queryByResource(sshUrl, ApplicationResTypeEnum.GITLAB_PROJECT.name());
         if (!CollectionUtils.isEmpty(resources)) {
-            resources.forEach(e -> handle(e, branch));
+            resources.forEach(e -> handle(e, branch, user.getUsername()));
         }
 
     }
@@ -109,7 +109,7 @@ public class GitLabPushEventConsumer extends AbstractGitLabEventConsumer {
         return null;
     }
 
-    private void handle(ApplicationResource resource, String branch) {
+    private void handle(ApplicationResource resource, String branch, String username) {
         final int applicationId = resource.getApplicationId();
         List<LeoJob> jobs = leoJobService.queryAutoBuildJob(applicationId, branch);
         // 查询标签
@@ -128,11 +128,11 @@ public class GitLabPushEventConsumer extends AbstractGitLabEventConsumer {
                             .findFirst();
                     // 找到无状态
                     if (optionalApplicationResource.isPresent()) {
-                        handleBuild(job, branch,optionalApplicationResource.get().getBusinessId());
+                        handleBuild(job, branch, username, optionalApplicationResource.get().getBusinessId());
                         return;
                     }
                 }
-                handleBuild(job, branch);
+                handleBuild(job, branch, username);
             }
         });
     }
@@ -143,13 +143,15 @@ public class GitLabPushEventConsumer extends AbstractGitLabEventConsumer {
      * @param leoJob
      * @param branch
      */
-    private void handleBuild(LeoJob leoJob, String branch) {
-        LeoBuildParam.DoBuild doBuild = LeoBuildParam.DoBuild.builder()
+    private void handleBuild(LeoJob leoJob, String branch, String username) {
+        LeoBuildParam.DoAutoBuild doAutoBuild = LeoBuildParam.DoAutoBuild.builder()
+                .username(username)
                 .jobId(leoJob.getId())
+                .autoBuild(true)
                 .autoDeploy(false)
                 .branch(branch)
                 .build();
-        leoBuildFacade.doBuild(doBuild);
+        leoBuildFacade.doAutoBuild(doAutoBuild);
     }
 
     /**
@@ -159,14 +161,16 @@ public class GitLabPushEventConsumer extends AbstractGitLabEventConsumer {
      * @param branch
      * @param deploymentAssetId
      */
-    private void handleBuild(LeoJob leoJob, String branch, int deploymentAssetId) {
-        LeoBuildParam.DoBuild doBuild = LeoBuildParam.DoBuild.builder()
+    private void handleBuild(LeoJob leoJob, String branch, String username, int deploymentAssetId) {
+        LeoBuildParam.DoAutoBuild doAutoBuild = LeoBuildParam.DoAutoBuild.builder()
+                .username(username)
                 .jobId(leoJob.getId())
+                .autoBuild(true)
                 .autoDeploy(true)
                 .assetId(deploymentAssetId)
                 .branch(branch)
                 .build();
-        leoBuildFacade.doBuild(doBuild);
+        leoBuildFacade.doAutoBuild(doAutoBuild);
     }
 
     @Override
