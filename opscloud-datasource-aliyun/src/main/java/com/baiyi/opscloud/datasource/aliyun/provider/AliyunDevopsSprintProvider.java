@@ -53,6 +53,7 @@ public class AliyunDevopsSprintProvider extends BaseAssetProvider<ListSprintsRes
     protected List<ListSprintsResponseBody.Sprints> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunDevopsConfig.Devops devops = buildConfig(dsInstanceContext.getDsConfig());
         List<ListSprintsResponseBody.Sprints> entities = Lists.newArrayList();
+        // query all project assets
         DatasourceInstanceAsset query = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstanceContext.getDsInstance().getUuid())
                 .assetType(DsAssetTypeConstants.ALIYUN_DEVOPS_PROJECT.name())
@@ -61,6 +62,7 @@ public class AliyunDevopsSprintProvider extends BaseAssetProvider<ListSprintsRes
         if (CollectionUtils.isEmpty(projectAssets)) {
             return entities;
         }
+        // projectAsset.getAssetId() 是 projectId
         projectAssets.forEach(projectAsset -> {
             entities.addAll(AliyunDevopsSprintsDriver.listSprints(devops.getRegionId(), devops, "Project", projectAsset.getAssetId()));
         });
