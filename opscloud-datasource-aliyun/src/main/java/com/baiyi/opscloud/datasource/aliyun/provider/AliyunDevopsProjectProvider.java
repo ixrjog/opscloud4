@@ -6,7 +6,6 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunDevopsConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
-import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.datasource.aliyun.converter.DevopsAssetConverter;
 import com.baiyi.opscloud.datasource.aliyun.devops.driver.AliyunDevopsProjectDriver;
@@ -34,7 +33,6 @@ public class AliyunDevopsProjectProvider extends BaseAssetProvider<ListProjectsR
     private AliyunDevopsProjectProvider aliyunDevopsProjectProvider;
 
     @Override
-    @EnablePullChild(type = DsAssetTypeConstants.ALIYUN_DEVOPS_PROJECT)
     @SingleTask(name = PULL_ALIYUN_DEVOPS_PROJECT, lockTime = "10m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
