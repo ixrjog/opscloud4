@@ -12,7 +12,7 @@
         <result column="item_bucket_name" jdbcType="VARCHAR" property="itemBucketName"/>
         <result column="item_md5" jdbcType="VARCHAR" property="itemMd5"/>
         <result column="item_size" jdbcType="VARCHAR" property="itemSize"/>
-        <result column="deploy_username" jdbcType="VARCHAR" property="deployUsername"/>
+        <result column="reload_username" jdbcType="VARCHAR" property="reloadUsername"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>

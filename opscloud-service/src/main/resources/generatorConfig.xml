@@ -94,7 +94,7 @@
         <!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
         <!--        </table>-->
 
-        <table tableName="ser_deploy_task_item">
+        <table tableName="ser_deploy_subtask_callback">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 

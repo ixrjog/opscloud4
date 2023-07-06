@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * @Author 修远
@@ -51,6 +52,12 @@ public class AmazonS3Driver {
         DeleteObjectRequest request = new DeleteObjectRequest(bucketName, key);
         AmazonS3Service.buildAmazonS3(regionId, config)
                 .deleteObject(request);
+    }
+
+    public List<S3ObjectSummary> listObjects(String regionId, AwsConfig.Aws config, String bucketName, String prefix) {
+        return AmazonS3Service.buildAmazonS3(regionId, config)
+                .listObjects(bucketName, prefix)
+                .getObjectSummaries();
     }
 
 }

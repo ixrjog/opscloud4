@@ -26,8 +26,8 @@ public class SerDeployTaskItemPacker implements IWrapper<SerDeployVO.TaskItem> {
         FunctionUtil.trueFunction(iExtend.getExtend())
                 .trueHandle(
                         () -> {
-                            User user = userService.getByUsername(vo.getDeployUsername());
-                            vo.setDeployUser(user);
+                            User user = userService.getByUsername(vo.getReloadUsername());
+                            vo.setReloadUser(user);
                         }
                 );
     }

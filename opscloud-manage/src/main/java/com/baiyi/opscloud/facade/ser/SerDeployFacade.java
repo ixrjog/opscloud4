@@ -1,9 +1,12 @@
 package com.baiyi.opscloud.facade.ser;
 
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.ser.SerDeployParam;
 import com.baiyi.opscloud.domain.vo.ser.SerDeployVO;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @Author 修远
@@ -28,4 +31,7 @@ public interface SerDeployFacade {
 
     void deploySubTask(SerDeployParam.DeploySubTask deploySubTask);
 
+    void deploySubTaskCallback(SerDeployParam.DeploySubTaskCallback callback);
+
+    List<S3ObjectSummary> queryCurrentSer(SerDeployParam.QueryCurrentSer queryCurrentSer);
 }

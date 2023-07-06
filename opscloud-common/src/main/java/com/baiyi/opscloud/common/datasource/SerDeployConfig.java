@@ -25,6 +25,11 @@ public class SerDeployConfig extends BaseDsConfig {
      */
     private Map<String, String> serDeployURI;
 
+    /**
+     * current-full-ser-files/{appName}/{envName}
+     */
+    private String currentSerPath;
+
 
     @Data
     @NoArgsConstructor

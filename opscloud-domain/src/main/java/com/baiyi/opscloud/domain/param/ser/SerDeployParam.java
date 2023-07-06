@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.param.ser;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
+import com.baiyi.opscloud.domain.param.auth.IAuthPlatform;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -139,4 +140,41 @@ public class SerDeployParam {
         private Integer serDeploySubTaskId;
 
     }
+
+    @Data
+    @Schema
+    public static class DeploySubTaskCallback implements IAuthPlatform {
+
+        @NotBlank(message = "平台名称不能为空")
+        @Schema(description = "平台名称(用于审计)")
+        public String platform;
+
+        @NotBlank(message = "平台令牌不能为空")
+        @Schema(description = "平台令牌用于鉴权")
+        public String platformToken;
+
+        @Schema(description = "子任务ID")
+        @NotNull(message = "子任务ID不能为空")
+        private Integer serDeploySubTaskId;
+
+        @Schema(description = "回调内容")
+        @NotBlank(message = "回调内容不能为空")
+        private String content;
+
+    }
+
+    @Data
+    @Schema
+    public static class QueryCurrentSer {
+
+        @Schema(description = "应用名称")
+        @NotBlank(message = "应用名称为空")
+        private String applicationName;
+
+        @Schema(description = "环境名称")
+        @NotBlank(message = "环境名称不能为空")
+        private String envName;
+
+    }
+
 }
