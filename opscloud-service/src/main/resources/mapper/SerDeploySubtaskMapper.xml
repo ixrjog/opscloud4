@@ -10,6 +10,7 @@
         <result column="env_type" jdbcType="INTEGER" property="envType"/>
         <result column="task_status" jdbcType="VARCHAR" property="taskStatus"/>
         <result column="task_result" jdbcType="VARCHAR" property="taskResult"/>
+        <result column="deploy_username" jdbcType="VARCHAR" property="deployUsername"/>
         <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
         <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>

@@ -77,9 +77,9 @@ public class SerDeployVO {
 
         private String itemSize;
 
-        private String deployUsername;
+        private String reloadUsername;
 
-        private User deployUser;
+        private User reloadUser;
 
     }
 
@@ -103,6 +103,10 @@ public class SerDeployVO {
 
         private String taskResult;
 
+        private String deployUsername;
+
+        private User deployUser;
+
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date startTime;
 
@@ -112,6 +116,8 @@ public class SerDeployVO {
         private String requestContent;
 
         private String responseContent;
+
+        private String callbackContent;
 
         @Schema(description = "以前")
         private String ago;

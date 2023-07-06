@@ -12,47 +12,17 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "ser_deploy_task")
-public class SerDeployTask {
+@Table(name = "ser_deploy_subtask_callback")
+public class SerDeploySubtaskCallback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     /**
-     * 应用ID
+     * 子任务ID
      */
-    @Column(name = "application_id")
-    private Integer applicationId;
-
-    /**
-     * 任务UUID
-     */
-    @Column(name = "task_uuid")
-    private String taskUuid;
-
-    /**
-     * 任务名称
-     */
-    @Column(name = "task_name")
-    private String taskName;
-
-    /**
-     * 任务描述
-     */
-    @Column(name = "task_desc")
-    private String taskDesc;
-
-    /**
-     * 有效
-     */
-    @Column(name = "is_active")
-    private Boolean isActive;
-
-    /**
-     * 是否已完成任务
-     */
-    @Column(name = "is_finish")
-    private Boolean isFinish;
+    @Column(name = "ser_deploy_subtask_id")
+    private Integer serDeploySubtaskId;
 
     /**
      * 创建时间
@@ -65,4 +35,10 @@ public class SerDeployTask {
      */
     @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
+
+    /**
+     * 回调内容
+     */
+    @Column(name = "callback_content")
+    private String callbackContent;
 }

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.controller.http;
 
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.ser.SerDeployParam;
@@ -14,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @Author 修远
@@ -85,4 +88,16 @@ public class SerDeployController {
         return HttpResult.SUCCESS;
     }
 
+    @Operation(summary = "Ser 包子任务发布回调")
+    @PostMapping(value = "/subtask/deploy/callback", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deploySubTaskCallback(@RequestBody @Valid SerDeployParam.DeploySubTaskCallback callback) {
+        serDeployFacade.deploySubTaskCallback(callback);
+        return HttpResult.SUCCESS;
+    }
+
+    @Operation(summary = "当前 Ser 包列表查询")
+    @PostMapping(value = "/current/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<S3ObjectSummary>> queryCurrentSer(@RequestBody @Valid SerDeployParam.QueryCurrentSer queryCurrentSer) {
+        return new HttpResult<>(serDeployFacade.queryCurrentSer(queryCurrentSer));
+    }
 }

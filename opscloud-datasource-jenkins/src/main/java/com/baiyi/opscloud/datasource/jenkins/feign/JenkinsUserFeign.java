@@ -18,7 +18,6 @@ public interface JenkinsUserFeign {
     @Headers({"Content-Type: application/json;charset=UTF-8", "Authorization: Basic {authBasic}"})
     JenkinsUser.User getUser(@Param("authBasic") String authBasic, @Param("username") String username);
 
-
     @RequestLine("GET /blue/rest/organizations/jenkins/users/")
     @Headers({"Content-Type: application/json;charset=UTF-8", "Authorization: Basic {authBasic}"})
     List<JenkinsUser.User> listUsers(@Param("authBasic") String authBasic);

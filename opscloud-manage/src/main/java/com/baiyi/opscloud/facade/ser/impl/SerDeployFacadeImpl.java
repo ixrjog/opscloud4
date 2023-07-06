@@ -2,32 +2,36 @@ package com.baiyi.opscloud.facade.ser.impl;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
-import com.baiyi.opscloud.common.constants.SerDeploySubTaskStatus;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.baiyi.opscloud.common.constants.SerDeployConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.common.datasource.SerDeployConfig;
 import com.baiyi.opscloud.common.exception.common.OCException;
-import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.FunctionUtil;
-import com.baiyi.opscloud.common.util.IdUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.feign.driver.RiskControlDriver;
+import com.baiyi.opscloud.common.feign.request.RiskControlRequest;
+import com.baiyi.opscloud.common.feign.response.MgwCoreResponse;
+import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.aws.s3.driver.AmazonS3Driver;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.opscloud.SerDeploySubtask;
-import com.baiyi.opscloud.domain.generator.opscloud.SerDeployTask;
-import com.baiyi.opscloud.domain.generator.opscloud.SerDeployTaskItem;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.ser.SerDeployParam;
 import com.baiyi.opscloud.domain.vo.ser.SerDeployVO;
+import com.baiyi.opscloud.facade.auth.PlatformAuthHelper;
 import com.baiyi.opscloud.facade.ser.SerDeployFacade;
 import com.baiyi.opscloud.packer.ser.SerDeployTaskPacker;
+import com.baiyi.opscloud.service.application.ApplicationService;
+import com.baiyi.opscloud.service.ser.SerDeploySubtaskCallbackService;
 import com.baiyi.opscloud.service.ser.SerDeploySubtaskService;
 import com.baiyi.opscloud.service.ser.SerDeployTaskItemService;
 import com.baiyi.opscloud.service.ser.SerDeployTaskService;
+import com.baiyi.opscloud.service.sys.EnvService;
 import com.google.common.base.Joiner;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.helpers.MessageFormatter;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -35,6 +39,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +60,10 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
     private final SerDeploySubtaskService serDeploySubtaskService;
     private final AmazonS3Driver amazonS3Driver;
     private final SerDeployTaskPacker serDeployTaskPacker;
+    private final EnvService envService;
+    private final ApplicationService applicationService;
+    private final PlatformAuthHelper platformAuthHelper;
+    private final SerDeploySubtaskCallbackService SerDeploySubtaskCallbackService;
 
     private final static String S3_OBJECT_MD5_KEY = "ETag";
     private final static String S3_OBJECT_LENGTH_KEY = "Content-Length";
@@ -92,7 +101,7 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
                     .itemBucketName(bucketName)
                     .itemMd5(s3Object.getObjectMetadata().getRawMetadata().get(S3_OBJECT_MD5_KEY).toString())
                     .itemSize(itemSize)
-                    .deployUsername(SessionUtil.getUsername())
+                    .reloadUsername(SessionUtil.getUsername())
                     .build();
             SerDeployTaskItem item = serDeployTaskItemService.getByTaskIdAndItemName(serDeployTask.getId(), file.getOriginalFilename());
             FunctionUtil.isTureOrFalse(ObjectUtils.isEmpty(item))
@@ -174,18 +183,94 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
         SerDeploySubtask subTask = SerDeploySubtask.builder()
                 .serDeployTaskId(addSubTask.getSerDeployTaskId())
                 .envType(addSubTask.getEnvType())
-                .taskStatus(SerDeploySubTaskStatus.CREATE)
+                .taskStatus(SerDeployConstants.SubTaskStatus.CREATE)
                 .build();
         serDeploySubtaskService.add(subTask);
     }
 
-    @Override
-    public void deploySubTask(SerDeployParam.DeploySubTask deploySubTask) {
-        SerDeploySubtask subtask = serDeploySubtaskService.getById(deploySubTask.getSerDeploySubTaskId());
+    private SerDeploySubtask validDeploySubTask(Integer serDeploySubTaskId) {
+        SerDeploySubtask subtask = serDeploySubtaskService.getById(serDeploySubTaskId);
         FunctionUtil.isNull(subtask)
                 .throwBaseException(new OCException("当前子任务不存在"));
-        subtask.setTaskStatus(SerDeploySubTaskStatus.RUNNING);
+        return subtask;
+    }
+
+    @Override
+    public void deploySubTask(SerDeployParam.DeploySubTask deploySubTask) {
+        SerDeploySubtask subtask = validDeploySubTask(deploySubTask.getSerDeploySubTaskId());
+        subtask.setDeployUsername(SessionUtil.getUsername());
         serDeploySubtaskService.update(subtask);
-        // todo 调用发布
+        try {
+            SerDeployConfig serDeployConfig = getSerDeployConfig();
+            Env env = envService.getByEnvType(subtask.getEnvType());
+            FunctionUtil.isNull(env)
+                    .throwBaseException(new OCException("选择环境不存在"));
+            String url = serDeployConfig.getSerDeployURI().get(env.getEnvName());
+            FunctionUtil.isNullOrEmpty(url)
+                    .throwBaseException(new OCException("选择环境调用 URL 未配置"));
+            SerDeployTask task = serDeployTaskService.getById(subtask.getSerDeployTaskId());
+            Application application = applicationService.getById(task.getApplicationId());
+            RiskControlRequest.SerLoader request = buildRequest(task, subtask);
+            MgwCoreResponse<?> response = RiskControlDriver.serReload(url, application.getName(), request);
+            subtask.setRequestContent(JSONUtil.writeValueAsString(request));
+            subtask.setResponseContent(JSONUtil.writeValueAsString(response));
+            if (response.isSuccess()) {
+                subtask.setTaskStatus(SerDeployConstants.SubTaskStatus.RELOADING);
+            } else {
+                subtask.setTaskStatus(SerDeployConstants.SubTaskStatus.FINISH);
+                subtask.setEndTime(new Date());
+                subtask.setTaskResult(SerDeployConstants.SubTaskResult.CALL_FAIL);
+            }
+            serDeploySubtaskService.update(subtask);
+        } catch (OCException ocException) {
+            subtask.setTaskStatus(SerDeployConstants.SubTaskStatus.FINISH);
+            subtask.setEndTime(new Date());
+            subtask.setTaskResult(SerDeployConstants.SubTaskResult.VALID_FAIL);
+            serDeploySubtaskService.update(subtask);
+            throw ocException;
+        }
+    }
+
+    private RiskControlRequest.SerLoader buildRequest(SerDeployTask task, SerDeploySubtask subtask) {
+        List<RiskControlRequest.ReloadedSer> serList = serDeployTaskItemService.listBySerDeployTaskId(task.getId()).stream()
+                .map(serDeployTaskItem ->
+                        RiskControlRequest.ReloadedSer.builder()
+                                .serName(serDeployTaskItem.getItemName())
+                                .bucketName(serDeployTaskItem.getItemBucketName())
+                                .keyName(serDeployTaskItem.getItemKey())
+                                .fileMd5(serDeployTaskItem.getItemMd5())
+                                .build()
+                ).toList();
+        return RiskControlRequest.SerLoader.builder()
+                .operator(SessionUtil.getUsername())
+                .taskNo(subtask.getId())
+                .reloadingSerList(serList)
+                .build();
+    }
+
+    @Override
+    public void deploySubTaskCallback(SerDeployParam.DeploySubTaskCallback callback) {
+        platformAuthHelper.verify(callback);
+        SerDeploySubtask subtask = validDeploySubTask(callback.getSerDeploySubTaskId());
+        SerDeploySubtaskCallback subtaskCallback = SerDeploySubtaskCallback.builder()
+                .serDeploySubtaskId(callback.getSerDeploySubTaskId())
+                .callbackContent(callback.getContent())
+                .build();
+        SerDeploySubtaskCallbackService.add(subtaskCallback);
+        if (!SerDeployConstants.SubTaskStatus.FINISH.equals(subtask.getTaskResult())) {
+            subtask.setTaskResult(SerDeployConstants.SubTaskStatus.FINISH);
+            subtask.setEndTime(new Date());
+            serDeploySubtaskService.update(subtask);
+        }
+    }
+
+    @Override
+    public List<S3ObjectSummary> queryCurrentSer(SerDeployParam.QueryCurrentSer queryCurrentSer) {
+        SerDeployConfig serDeployConfig = getSerDeployConfig();
+        AwsConfig.Aws awsConfig = getAwsConfig(serDeployConfig.getSerDeployInstance().getInstanceUuid()).getAws();
+        Object[] objects = {queryCurrentSer.getApplicationName(), queryCurrentSer.getEnvName()};
+        String prefix = MessageFormatter.arrayFormat(serDeployConfig.getCurrentSerPath(), objects).getMessage();
+        SerDeployConfig.SerDeployInstance serDeployInstance = serDeployConfig.getSerDeployInstance();
+        return amazonS3Driver.listObjects(serDeployInstance.getRegionId(), awsConfig, serDeployInstance.getBucketName(), prefix);
     }
 }
