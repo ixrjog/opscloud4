@@ -33,13 +33,13 @@ public class DeploymentAssetConverter {
     private static final String MEMORY = "memory";
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Deployment entity) {
-        String namespace = entity.getMetadata().getNamespace();
-        String name = entity.getMetadata().getName();
+        final String namespace = entity.getMetadata().getNamespace();
+        final String name = entity.getMetadata().getName();
         /*
          * 为了兼容多集群中deployment名称相同导致无法拉取资产
-         * 资产id使用联合键 namespace:deploymentName
+         * 资产id使用联合键 namespace:deployment.name
          */
-        String assetId = Joiner.on(":").join(namespace, name);
+        final String assetId = Joiner.on(":").join(namespace, name);
 
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())

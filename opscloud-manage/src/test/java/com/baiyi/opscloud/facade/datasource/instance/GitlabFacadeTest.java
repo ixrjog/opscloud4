@@ -14,7 +14,7 @@ import org.springframework.beans.factory.InitializingBean;
  * @Date 2021/10/29 2:54 下午
  * @Version 1.0
  */
-class GitlabFacadeTest extends BaseUnit implements InitializingBean {
+class gGitlabFacadeTest extends BaseUnit implements InitializingBean {
 
     @Resource
     private GitLabFacade gitlabFacade;

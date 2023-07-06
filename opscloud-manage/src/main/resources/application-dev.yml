@@ -1,3 +1,4 @@
+#file: noinspection SpringBootApplicationYaml
 logging:
   level:
     # swagger 警告日志忽略
@@ -28,6 +29,8 @@ terminal:
   audit:
     open: on
     path: ${HOME}/opscloud-data/ssh/audit
+  # 默认值 15分钟断开连接
+  timeout: 900
 
 spring:
   config:

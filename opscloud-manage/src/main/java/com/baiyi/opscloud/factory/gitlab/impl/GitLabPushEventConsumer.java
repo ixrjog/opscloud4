@@ -10,11 +10,9 @@ import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
 import com.baiyi.opscloud.factory.gitlab.enums.GitLabEventNameEnum;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
-import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.baiyi.opscloud.service.tag.SimpleTagService;
-import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.base.Joiner;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -44,12 +42,6 @@ public class GitLabPushEventConsumer extends AbstractGitLabEventConsumer {
     private LeoJobService leoJobService;
 
     @Resource
-    private DsInstanceAssetService dsInstanceAssetService;
-
-    @Resource
-    private UserService userService;
-
-    @Resource
     private LeoBuildFacade leoBuildFacade;
 
     @Resource
@@ -71,7 +63,7 @@ public class GitLabPushEventConsumer extends AbstractGitLabEventConsumer {
     }
 
     protected void process(DatasourceInstance instance, GitLabNotifyParam.SystemHook systemHook) {
-        log.info("gitLab systemHook with push event: {}", JSONUtil.writeValueAsString(systemHook));
+        log.debug("gitLab systemHook with push event: {}", JSONUtil.writeValueAsString(systemHook));
         String ref = getRef(systemHook);
         if (StringUtils.isBlank(ref)) {
             return;
@@ -87,8 +79,8 @@ public class GitLabPushEventConsumer extends AbstractGitLabEventConsumer {
         if (gitLabUserId == 0) {
             return;
         }
-        User user = getUser(instance, gitLabUserId);
-        if (user == null) {
+        Optional<User> optionalUser = getUser(instance, gitLabUserId);
+        if (optionalUser.isEmpty()) {
             // 用户不存在则不执行
             return;
         }
@@ -104,51 +96,51 @@ public class GitLabPushEventConsumer extends AbstractGitLabEventConsumer {
 
         List<ApplicationResource> resources = applicationResourceService.queryByResource(sshUrl, ApplicationResTypeEnum.GITLAB_PROJECT.name());
         if (!CollectionUtils.isEmpty(resources)) {
-            resources.forEach(e -> handle(e, branch, user.getUsername()));
+            resources.forEach(e -> process(e, branch, optionalUser.get().getUsername()));
         }
 
     }
 
-    private User getUser(DatasourceInstance instance, int gitLabUserId) {
-        DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
-                .instanceUuid(instance.getUuid())
-                .assetType(DsAssetTypeConstants.GITLAB_USER.name())
-                .assetId(String.valueOf(gitLabUserId))
-                .build();
-
-        List<DatasourceInstanceAsset> assets = dsInstanceAssetService.queryAssetByAssetParam(asset);
-        if (assets.size() == 1) {
-            String username = assets.get(0).getAssetKey();
-            return userService.getByUsername(username);
-        }
-        return null;
-    }
-
-    private void handle(ApplicationResource resource, String branch, String username) {
+    /**
+     * process with applicationRes
+     * @param resource
+     * @param branch
+     * @param username
+     */
+    private void process(ApplicationResource resource, String branch, String username) {
         final int applicationId = resource.getApplicationId();
         List<LeoJob> jobs = leoJobService.queryAutoBuildJob(applicationId, branch);
         // 查询标签
         if (CollectionUtils.isEmpty(jobs)) {
             return;
         }
-        for (LeoJob job : jobs) {
-            Env env = envService.getByEnvType(job.getEnvType());
-            // AutoBuild
-            if (tagService.hasBusinessTag(AUTO_BUILD, BusinessTypeEnum.LEO_JOB.getType(), job.getId(), false)) {
-                // AutoDeploy
-                if (tagService.hasBusinessTag(AUTO_DEPLOY, BusinessTypeEnum.LEO_JOB.getType(), job.getId(), false)) {
-                    Optional<ApplicationResource> optionalApplicationResource = applicationResourceService.queryByApplication(job.getApplicationId(), ApplicationResTypeEnum.KUBERNETES_DEPLOYMENT.name())
-                            .stream()
-                            .filter(e -> e.getName().equals(Joiner.on(":").join(env.getEnvName(), job.getName())))
-                            .findFirst();
-                    // 找到无状态
-                    if (optionalApplicationResource.isPresent()) {
-                        handleBuild(job, branch, username, optionalApplicationResource.get().getBusinessId());
-                        continue;
-                    }
+        jobs.forEach(job -> process(job, branch, username));
+    }
+
+    /**
+     * process with job
+     * @param job
+     * @param branch
+     * @param username
+     */
+    private void process(LeoJob job, String branch, String username) {
+        Env env = envService.getByEnvType(job.getEnvType());
+        // AutoBuild
+        if (tagService.hasBusinessTag(AUTO_BUILD, BusinessTypeEnum.LEO_JOB.getType(), job.getId(), false)) {
+            // AutoDeploy
+            if (tagService.hasBusinessTag(AUTO_DEPLOY, BusinessTypeEnum.LEO_JOB.getType(), job.getId(), false)) {
+                Optional<ApplicationResource> optionalApplicationResource = applicationResourceService
+                        .queryByApplication(job.getApplicationId(), ApplicationResTypeEnum.KUBERNETES_DEPLOYMENT.name())
+                        .stream()
+                        .filter(e -> e.getName().equals(Joiner.on(":").join(env.getEnvName(), job.getName())))
+                        .findFirst();
+                // 找到无状态
+                if (optionalApplicationResource.isPresent()) {
+                    handleBuild(job, branch, username, optionalApplicationResource.get().getBusinessId());
+                    return;
                 }
-                handleBuild(job, branch, username);
             }
+            handleBuild(job, branch, username);
         }
     }
 
