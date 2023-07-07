@@ -4,12 +4,15 @@ import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.FunctionUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
+import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Project;
 import com.baiyi.opscloud.domain.generator.opscloud.ProjectResource;
+import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.SimpleRelation;
 import com.baiyi.opscloud.domain.param.project.ProjectParam;
@@ -22,6 +25,8 @@ import com.baiyi.opscloud.factory.resource.ProjectResQueryFactory;
 import com.baiyi.opscloud.packer.project.ProjectPacker;
 import com.baiyi.opscloud.service.project.ProjectResourceService;
 import com.baiyi.opscloud.service.project.ProjectService;
+import com.baiyi.opscloud.service.user.UserPermissionService;
+import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -47,6 +52,10 @@ public class ProjectFacadeImpl implements ProjectFacade {
     private final ProjectResourceService projectResourceService;
 
     private final ProjectPacker projectPacker;
+
+    private final UserPermissionService userPermissionService;
+
+    private final UserService userService;
 
     @Override
     public DataTable<ProjectVO.Project> queryProjectPage(ProjectParam.ProjectPageQuery pageQuery) {
@@ -83,6 +92,18 @@ public class ProjectFacadeImpl implements ProjectFacade {
         Project newProject = BeanCopierUtil.copyProperties(project, Project.class);
         newProject.setProjectKey(IdUtil.buildUUID());
         projectService.add(newProject);
+        addProjectUserPermission(newProject);
+    }
+
+    private void addProjectUserPermission(Project project) {
+        User user = userService.getByUsername(SessionUtil.getUsername());
+        UserPermission userPermission = UserPermission.builder()
+                .userId(user.getId())
+                .businessId(project.getId())
+                .businessType(BusinessTypeEnum.PROJECT.getType())
+                .permissionRole("Admin")
+                .build();
+        userPermissionService.add(userPermission);
     }
 
     @Override
