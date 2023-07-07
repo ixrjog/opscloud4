@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.facade.ser;
 
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.ser.SerDeployParam;
 import com.baiyi.opscloud.domain.vo.ser.SerDeployVO;
@@ -33,5 +32,5 @@ public interface SerDeployFacade {
 
     void deploySubTaskCallback(SerDeployParam.DeploySubTaskCallback callback);
 
-    List<S3ObjectSummary> queryCurrentSer(SerDeployParam.QueryCurrentSer queryCurrentSer);
+    List<SerDeployVO.SerDetail> queryCurrentSer(SerDeployParam.QueryCurrentSer queryCurrentSer);
 }

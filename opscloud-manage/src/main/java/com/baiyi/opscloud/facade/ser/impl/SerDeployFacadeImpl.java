@@ -2,7 +2,6 @@ package com.baiyi.opscloud.facade.ser.impl;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.baiyi.opscloud.common.constants.SerDeployConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
@@ -31,6 +30,7 @@ import com.baiyi.opscloud.service.sys.EnvService;
 import com.google.common.base.Joiner;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.helpers.MessageFormatter;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,6 +65,7 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
     private final PlatformAuthHelper platformAuthHelper;
     private final SerDeploySubtaskCallbackService SerDeploySubtaskCallbackService;
 
+    private final static String SER_SUFFIX = ".ser";
     private final static String S3_OBJECT_MD5_KEY = "ETag";
     private final static String S3_OBJECT_LENGTH_KEY = "Content-Length";
     private final static String S3_OBJECT_RANGES_KEY = "Accept-Ranges";
@@ -211,11 +212,15 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
             SerDeployTask task = serDeployTaskService.getById(subtask.getSerDeployTaskId());
             Application application = applicationService.getById(task.getApplicationId());
             RiskControlRequest.SerLoader request = buildRequest(task, subtask);
+            subtask.setStartTime(new Date());
             MgwCoreResponse<?> response = RiskControlDriver.serReload(url, application.getName(), request);
             subtask.setRequestContent(JSONUtil.writeValueAsString(request));
             subtask.setResponseContent(JSONUtil.writeValueAsString(response));
             if (response.isSuccess()) {
+                SerDeploySubtaskCallbackService.deleteByBySerDeploySubtaskId(subtask.getId());
                 subtask.setTaskStatus(SerDeployConstants.SubTaskStatus.RELOADING);
+                subtask.setTaskResult(Strings.EMPTY);
+                subtask.setEndTime(null);
             } else {
                 subtask.setTaskStatus(SerDeployConstants.SubTaskStatus.FINISH);
                 subtask.setEndTime(new Date());
@@ -265,12 +270,21 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
     }
 
     @Override
-    public List<S3ObjectSummary> queryCurrentSer(SerDeployParam.QueryCurrentSer queryCurrentSer) {
+    public List<SerDeployVO.SerDetail> queryCurrentSer(SerDeployParam.QueryCurrentSer queryCurrentSer) {
         SerDeployConfig serDeployConfig = getSerDeployConfig();
         AwsConfig.Aws awsConfig = getAwsConfig(serDeployConfig.getSerDeployInstance().getInstanceUuid()).getAws();
         Object[] objects = {queryCurrentSer.getApplicationName(), queryCurrentSer.getEnvName()};
         String prefix = MessageFormatter.arrayFormat(serDeployConfig.getCurrentSerPath(), objects).getMessage();
         SerDeployConfig.SerDeployInstance serDeployInstance = serDeployConfig.getSerDeployInstance();
-        return amazonS3Driver.listObjects(serDeployInstance.getRegionId(), awsConfig, serDeployInstance.getBucketName(), prefix);
+        return amazonS3Driver.listObjects(serDeployInstance.getRegionId(), awsConfig, serDeployInstance.getBucketName(), prefix).stream()
+                .filter(s3ObjectSummary -> s3ObjectSummary.getKey().endsWith(SER_SUFFIX))
+                .map(s3ObjectSummary -> SerDeployVO.SerDetail.builder()
+                        .serName(s3ObjectSummary.getKey().split("/")[2])
+                        .serMd5(s3ObjectSummary.getETag())
+                        .serSize(s3ObjectSummary.getSize())
+                        .lastModified(s3ObjectSummary.getLastModified())
+                        .isLastHalfHour(System.currentTimeMillis() - s3ObjectSummary.getLastModified().getTime() < NewTimeUtil.MINUTE_TIME * 30)
+                        .build()
+                ).toList();
     }
 }

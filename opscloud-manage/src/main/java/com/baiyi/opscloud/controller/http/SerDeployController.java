@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.controller.http;
 
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.ser.SerDeployParam;
@@ -97,7 +96,7 @@ public class SerDeployController {
 
     @Operation(summary = "当前 Ser 包列表查询")
     @PostMapping(value = "/current/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<S3ObjectSummary>> queryCurrentSer(@RequestBody @Valid SerDeployParam.QueryCurrentSer queryCurrentSer) {
+    public HttpResult<List<SerDeployVO.SerDetail>> queryCurrentSer(@RequestBody @Valid SerDeployParam.QueryCurrentSer queryCurrentSer) {
         return new HttpResult<>(serDeployFacade.queryCurrentSer(queryCurrentSer));
     }
 }

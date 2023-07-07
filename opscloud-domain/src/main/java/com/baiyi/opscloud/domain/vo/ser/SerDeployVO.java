@@ -132,4 +132,24 @@ public class SerDeployVO {
 
     }
 
+    @Builder
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema
+    public static class SerDetail {
+
+        private String serName;
+
+        private String serMd5;
+
+        private Long serSize;
+
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+        private Date lastModified;
+
+        private Boolean isLastHalfHour;
+
+    }
+
 }
