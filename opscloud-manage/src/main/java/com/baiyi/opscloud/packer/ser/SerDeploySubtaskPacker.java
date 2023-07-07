@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.packer.ser;
 
+import com.baiyi.opscloud.common.annotation.AgoWrapper;
+import com.baiyi.opscloud.common.annotation.RuntimeWrapper;
 import com.baiyi.opscloud.common.util.FunctionUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.SerDeploySubtaskCallback;
@@ -34,6 +36,8 @@ public class SerDeploySubtaskPacker implements IWrapper<SerDeployVO.SubTask> {
     private final SerDeploySubtaskCallbackService serDeploySubtaskCallbackService;
 
     @Override
+    @AgoWrapper
+    @RuntimeWrapper
     public void wrap(SerDeployVO.SubTask vo, IExtend iExtend) {
         FunctionUtil.trueFunction(iExtend.getExtend())
                 .trueHandle(

@@ -14,4 +14,6 @@ public interface SerDeploySubtaskCallbackService {
     void add(SerDeploySubtaskCallback serDeploySubtaskCallback);
 
     List<SerDeploySubtaskCallback> listBySerDeploySubtaskId(Integer serDeploySubtaskId);
+
+    void deleteByBySerDeploySubtaskId(Integer serDeploySubtaskId);
 }
