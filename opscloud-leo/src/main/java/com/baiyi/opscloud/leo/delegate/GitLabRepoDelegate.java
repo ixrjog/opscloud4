@@ -33,7 +33,7 @@ public class GitLabRepoDelegate {
     /**
      * 默认创建分支（发布分支）
      */
-    public static final List<String> DEF_BRANCHES = Lists.newArrayList("dev", "daily", "pre", "gray", "master");
+    public static final List<String> DEF_BRANCHES = Lists.newArrayList("dev", "daily", "pre", "sit", "master");
 
     /**
      * 生成GitLab分支选项
