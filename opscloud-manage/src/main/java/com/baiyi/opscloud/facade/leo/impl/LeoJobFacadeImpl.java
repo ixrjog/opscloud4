@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.leo.impl;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.TemplateUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
@@ -23,6 +24,7 @@ import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.leo.*;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -318,7 +321,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                         .map(LeoJobModel.Job::getGitLab)
                         .map(LeoBaseModel.GitLab::getProject);
                 optionalProject.ifPresent(gitLabProject -> gitLabProject.setSshUrl(resources.get(0).getName()));
-                
+
                 LeoJob cloneLeoJob = LeoJob.builder()
                         .parentId(0)
                         .applicationId(destApplication.getId())
@@ -342,6 +345,67 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                 createCrRepositoryWithLeoJobId(cloneLeoJob.getId());
             }
         }
+    }
+
+    @Override
+    public void cloneOneJob(LeoJobParam.CloneOneJob cloneOneJob) {
+        LeoJob leoJob = jobService.getById(cloneOneJob.getJobId());
+        Application application = applicationService.getById(leoJob.getApplicationId());
+        Map<String, String> dict = Maps.newHashMap();
+        dict.put("applicationName", application.getName());
+        dict.put("env", envService.getByEnvType(leoJob.getEnvType()).getEnvName());
+        final String jobName = TemplateUtil.render(cloneOneJob.getJobName(), dict);
+        leoJob.setId(null);
+        leoJob.setName(jobName);
+        leoJob.setJobKey(jobName.toUpperCase());
+        LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob);
+        LeoJobModel.JobConfig jobConfigParam = LeoJobModel.load(cloneOneJob.getJobConfig());
+
+        Optional<LeoJobModel.CR> optionalCR = Optional.of(jobConfigParam)
+                .map(LeoJobModel.JobConfig::getJob)
+                .map(LeoJobModel.Job::getCr);
+        if (optionalCR.isPresent()) {
+            LeoJobModel.CR cr = optionalCR.get();
+            // type
+            Optional<String> optionalType = Optional.of(cr)
+                    .map(LeoJobModel.CR::getType);
+            optionalType.ifPresent(type -> jobConfig.getJob().getCr().setType(type));
+            // cloud
+            Optional<LeoJobModel.Cloud> optionalCloud = Optional.of(cr)
+                    .map(LeoJobModel.CR::getCloud);
+            optionalCloud.ifPresent(cloud -> jobConfig.getJob().getCr().setCloud(cloud));
+            // instance
+            Optional<LeoJobModel.CRInstance> optionalCRInstance = Optional.of(cr)
+                    .map(LeoJobModel.CR::getInstance);
+            optionalCRInstance.ifPresent(crInstance -> jobConfig.getJob().getCr().setInstance(crInstance));
+            // repo
+            Optional<LeoJobModel.Repo> optionalRepo = Optional.of(cr)
+                    .map(LeoJobModel.CR::getRepo);
+            optionalRepo.ifPresent(crInstance -> jobConfig.getJob().getCr().setRepo(optionalRepo.get()));
+        }
+        // 合并参数
+        Optional<List<LeoBaseModel.Parameter>> optionalParameters = Optional.of(jobConfigParam)
+                .map(LeoJobModel.JobConfig::getJob)
+                .map(LeoJobModel.Job::getParameters);
+        if (optionalParameters.isPresent()) {
+            List<LeoBaseModel.Parameter> parameters = optionalParameters.get();
+            Map<String, LeoBaseModel.Parameter> pMap = jobConfig.getJob().getParameters()
+                    .stream().collect(Collectors.toMap(LeoBaseModel.Parameter::getName, a -> a, (k1, k2) -> k1));
+            parameters.forEach(p -> pMap.put(p.getName(), p));
+            jobConfig.getJob().setParameters(pMap.keySet().stream().map(pMap::get).toList());
+
+        }
+        // tags
+        if (cloneOneJob.getCloneTag()) {
+            Optional<List<String>> optionalTags = Optional.of(jobConfigParam)
+                    .map(LeoJobModel.JobConfig::getJob)
+                    .map(LeoJobModel.Job::getTags);
+            optionalTags.ifPresent(tags -> jobConfig.getJob().setTags(tags));
+        }
+        leoJob.setJobConfig(jobConfig.dump());
+        jobService.add(leoJob);
+        // 更新任务Tags
+        updateTagsWithLeoJob(leoJob, jobConfig);
     }
 
 }

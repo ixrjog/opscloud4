@@ -4,13 +4,14 @@ import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
-import com.baiyi.opscloud.domain.generator.opscloud.Env;
-import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
+import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.sys.EnvService;
+import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -36,6 +37,10 @@ public class LeoBuildDeploymentDelegate {
     private final ApplicationResourceService applicationResourceService;
 
     private final EnvService envService;
+
+    private final DsInstanceAssetService dsInstanceAssetService;
+
+    private final DsInstanceService dsInstanceService;
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10S, key = "'leo#query#build#deployment#jobId=' + #jobId", unless = "#result == null")
     public List<ApplicationResourceVO.BaseResource> queryLeoBuildDeployment(int jobId) {
@@ -64,8 +69,20 @@ public class LeoBuildDeploymentDelegate {
                 return e.getName().startsWith("canary:");
             }
             return false;
+        }).toList();
+
+        // return BeanCopierUtil.copyListProperties(result, ApplicationResourceVO.BaseResource.class);
+       return result.stream().map(e->{
+            DatasourceInstance instance = getDsInstance( e.getBusinessId());
+            e.setName(Joiner.on(":").join(instance.getInstanceName(),e.getName()));
+            return BeanCopierUtil.copyProperties(e, ApplicationResourceVO.BaseResource.class);
         }).collect(Collectors.toList());
-        return BeanCopierUtil.copyListProperties(result, ApplicationResourceVO.BaseResource.class);
+
+    }
+
+    private DatasourceInstance getDsInstance(int assetId) {
+        DatasourceInstanceAsset asset = dsInstanceAssetService.getById(assetId);
+        return dsInstanceService.getByUuid(asset.getInstanceUuid());
     }
 
 }

@@ -172,10 +172,17 @@ public class LeoController {
         return HttpResult.SUCCESS;
     }
 
-    @Operation(summary = "从应用复制任务")
+    @Operation(summary = "从应用复制所有任务")
     @PostMapping(value = "/job/clone", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> cloneJob(@RequestBody @Valid LeoJobParam.CloneJob cloneJob) {
         jobFacade.cloneJob(cloneJob);
+        return HttpResult.SUCCESS;
+    }
+
+    @Operation(summary = "从任务复制任务")
+    @PostMapping(value = "/job/one/clone", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> cloneOneJob(@RequestBody @Valid LeoJobParam.CloneOneJob cloneOneJob) {
+        jobFacade.cloneOneJob(cloneOneJob);
         return HttpResult.SUCCESS;
     }
 

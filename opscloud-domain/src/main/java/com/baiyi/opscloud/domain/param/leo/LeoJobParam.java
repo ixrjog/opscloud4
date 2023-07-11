@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -274,7 +275,30 @@ public class LeoJobParam {
 
         @Min(value = 1, message = "必须指定目标应用ID")
         @Schema(description = "目标应用ID")
-        private Integer  destApplicationId;
+        private Integer destApplicationId;
+
+        @Schema(description = "克隆标签")
+        private Boolean cloneTag;
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema
+    public static class CloneOneJob {
+
+        @Min(value = 1, message = "必须指定任务ID")
+        @Schema(description = "任务ID")
+        private Integer jobId;
+
+        @NotBlank(message = "必须指定任务名称")
+        @Schema(description = "任务名称")
+        private String jobName;
+
+        @NotBlank(message = "必须指定任务配置")
+        @Schema(description = "任务配置")
+        private String jobConfig;
 
         @Schema(description = "克隆标签")
         private Boolean cloneTag;

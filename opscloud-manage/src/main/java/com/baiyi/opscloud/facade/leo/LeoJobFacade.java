@@ -18,6 +18,7 @@ public interface LeoJobFacade {
 
     /**
      * Leo build页面查询我的任务
+     *
      * @param pageQuery
      * @return
      */
@@ -48,5 +49,7 @@ public interface LeoJobFacade {
     void createCrRepositoryWithLeoJobId(int jobId);
 
     void cloneJob(LeoJobParam.CloneJob cloneJob);
+
+    void cloneOneJob(LeoJobParam.CloneOneJob cloneOneJob);
 
 }
