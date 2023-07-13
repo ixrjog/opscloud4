@@ -37,7 +37,7 @@ public class ApplicationDeployTicketProcessor extends BaseTicketProcessor<Applic
     protected void process(WorkOrderTicketEntry ticketEntry, ApplicationDeployEntry.LeoBuildVersion entry) throws TicketProcessException {
         int buildId = entry.getId();
         WorkOrderToken.LeoDeployToken token = WorkOrderToken.LeoDeployToken.builder()
-                .buildId(buildId)
+                .key(buildId)
                 .applicationId(entry.getApplicationId())
                 .build();
         // 设置令牌，@LeoDeployInterceptor 拦截器注解中使用

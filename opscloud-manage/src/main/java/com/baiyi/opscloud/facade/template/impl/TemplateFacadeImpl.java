@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.template.impl;
 
+import com.baiyi.opscloud.common.constants.TemplateKeyConstants;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.YamlUtil;
@@ -18,7 +19,7 @@ import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
 import com.baiyi.opscloud.domain.vo.template.MessageTemplateVO;
 import com.baiyi.opscloud.domain.vo.template.TemplateVO;
 import com.baiyi.opscloud.facade.template.TemplateFacade;
-import com.baiyi.opscloud.facade.template.factory.ITemplateConsume;
+import com.baiyi.opscloud.facade.template.factory.ITemplateProvider;
 import com.baiyi.opscloud.facade.template.factory.TemplateFactory;
 import com.baiyi.opscloud.packer.template.BusinessTemplatePacker;
 import com.baiyi.opscloud.packer.template.MessageTemplatePacker;
@@ -67,7 +68,6 @@ public class TemplateFacadeImpl implements TemplateFacade {
 
     private final DsInstanceAssetService dsInstanceAssetService;
 
-    private static final String TEMPLATE_KEY_DEPLOYMENT = "DEPLOYMENT";
 
     private static final String TEMPLATE_KEY_SERVICE = "SERVICE";
 
@@ -150,11 +150,11 @@ public class TemplateFacadeImpl implements TemplateFacade {
         if (template == null) {
             throw new OCException("无法创建资产: 模板不存在!");
         }
-        ITemplateConsume iTemplateConsume = TemplateFactory.getByInstanceAsset(template.getInstanceType(), template.getTemplateKey());
-        if (iTemplateConsume == null) {
+        ITemplateProvider templateProvider = TemplateFactory.getByInstanceAsset(template.getInstanceType(), template.getTemplateKey());
+        if (templateProvider == null) {
             throw new OCException("无法创建资产: 无可用的生产者!");
         }
-        return iTemplateConsume.produce(bizTemplate);
+        return templateProvider.produce(bizTemplate);
     }
 
     /**
@@ -237,7 +237,6 @@ public class TemplateFacadeImpl implements TemplateFacade {
         BusinessTemplateVO.BusinessTemplate businessTemplateVO = BeanCopierUtil.copyProperties(preBizTemplate, BusinessTemplateVO.BusinessTemplate.class);
         businessTemplatePacker.wrap(businessTemplateVO, SimpleExtend.EXTEND);
         return businessTemplateVO;
-
     }
 
     private void setName(BusinessTemplate bizTemplate) {
@@ -248,11 +247,15 @@ public class TemplateFacadeImpl implements TemplateFacade {
                 YamlVars.Vars vars = YamlUtil.loadVars(bizTemplate.getVars());
                 DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
                 KubernetesConfig.Kubernetes config = dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
-                if (TEMPLATE_KEY_DEPLOYMENT.equals(template.getTemplateKey())) {
+                if (TemplateKeyConstants.DEPLOYMENT.name().equals(template.getTemplateKey())) {
                     setName(bizTemplate, config.getDeployment().getNomenclature(), vars, env);
                     return;
                 }
-                if (TEMPLATE_KEY_SERVICE.equals(template.getTemplateKey())) {
+                if (TemplateKeyConstants.SERVICE.name().equals(template.getTemplateKey())) {
+                    setName(bizTemplate, config.getService().getNomenclature(), vars, env);
+                }
+
+                if (TemplateKeyConstants.INGRESS.name().equals(template.getTemplateKey())) {
                     setName(bizTemplate, config.getService().getNomenclature(), vars, env);
                 }
             }
@@ -266,7 +269,7 @@ public class TemplateFacadeImpl implements TemplateFacade {
                 || StringUtils.isBlank(vars.getVars().get("appName"))) {
             return;
         }
-        String name = Joiner.on("").skipNulls().join(nomenclature.getPrefix(),
+        final String name = Joiner.on("").skipNulls().join(nomenclature.getPrefix(),
                 vars.getVars().get("appName"),
                 nomenclature.getSuffix(), "-", env.getEnvName()
         );

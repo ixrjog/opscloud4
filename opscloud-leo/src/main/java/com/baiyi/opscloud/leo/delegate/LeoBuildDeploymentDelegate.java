@@ -2,6 +2,7 @@ package com.baiyi.opscloud.leo.delegate;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
@@ -11,6 +12,8 @@ import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.baiyi.opscloud.service.sys.EnvService;
+import com.baiyi.opscloud.service.tag.BusinessTagService;
+import com.baiyi.opscloud.service.tag.TagService;
 import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -42,17 +46,19 @@ public class LeoBuildDeploymentDelegate {
 
     private final DsInstanceService dsInstanceService;
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10S, key = "'leo#query#build#deployment#jobId=' + #jobId", unless = "#result == null")
+    private final BusinessTagService businessTagService;
+
+    private final TagService tagService;
+
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10S, key = "'OC4:V0:LEO:QUERY:BUILD:DEPLOYMENT:JID:' + #jobId", unless = "#result == null")
     public List<ApplicationResourceVO.BaseResource> queryLeoBuildDeployment(int jobId) {
         LeoJob leoJob = jobService.getById(jobId);
         Env env = envService.getByEnvType(leoJob.getEnvType());
-        List<ApplicationResource> resources = applicationResourceService.queryByApplication(
-                leoJob.getApplicationId(),
-                DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name(),
-                BusinessTypeEnum.ASSET.getType());
+        List<ApplicationResource> resources = applicationResourceService.queryByApplication(leoJob.getApplicationId(), DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name(), BusinessTypeEnum.ASSET.getType());
         if (CollectionUtils.isEmpty(resources)) {
             return Collections.emptyList();
         }
+        // 按环境名称过滤
         final String envName = env.getEnvName();
         List<ApplicationResource> result = resources.stream().filter(e -> {
             if (e.getName().startsWith(envName + ":")) {
@@ -71,13 +77,54 @@ public class LeoBuildDeploymentDelegate {
             return false;
         }).toList();
 
-        // return BeanCopierUtil.copyListProperties(result, ApplicationResourceVO.BaseResource.class);
-       return result.stream().map(e->{
-            DatasourceInstance instance = getDsInstance( e.getBusinessId());
-            e.setName(Joiner.on(":").join(instance.getInstanceName(),e.getName()));
+        // 按标签过滤
+        Optional<String> optionalRegionTag = getRegionTag(leoJob);
+        if (optionalRegionTag.isPresent()) {
+            result = filter(result, optionalRegionTag.get());
+        }
+
+        return result.stream().map(e -> {
+            DatasourceInstance instance = getDsInstance(e.getBusinessId());
+            e.setName(Joiner.on(":").join(instance.getInstanceName(), e.getName()));
             return BeanCopierUtil.copyProperties(e, ApplicationResourceVO.BaseResource.class);
         }).collect(Collectors.toList());
 
+    }
+
+    /**
+     * 查询任务的地域tag
+     *
+     * @param leoJob
+     * @return
+     */
+    private Optional<String> getRegionTag(LeoJob leoJob) {
+        SimpleBusiness query = SimpleBusiness.builder().businessId(leoJob.getId()).businessType(BusinessTypeEnum.LEO_JOB.getType()).build();
+        List<BusinessTag> bizTags = businessTagService.queryByBusiness(query);
+        for (BusinessTag bizTag : bizTags) {
+            Tag tag = tagService.getById(bizTag.getTagId());
+            if (tag.getTagKey().startsWith("@")) {
+                return Optional.of(tag.getTagKey());
+            }
+        }
+        return Optional.empty();
+    }
+
+    private List<ApplicationResource> filter(List<ApplicationResource> resources, String regionTag) {
+        return resources.stream().filter(r -> {
+            SimpleBusiness query = SimpleBusiness.builder().businessId(r.getBusinessId()).businessType(r.getBusinessType()).build();
+            List<BusinessTag> bizTags = businessTagService.queryByBusiness(query);
+            if (CollectionUtils.isEmpty(bizTags)) {
+                return true;
+            } else {
+                for (BusinessTag bizTag : bizTags) {
+                    Tag tag = tagService.getById(bizTag.getTagId());
+                    if (tag.getTagKey().equals(regionTag)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }).toList();
     }
 
     private DatasourceInstance getDsInstance(int assetId) {

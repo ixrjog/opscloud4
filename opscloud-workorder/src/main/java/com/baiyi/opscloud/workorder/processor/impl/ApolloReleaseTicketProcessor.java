@@ -32,7 +32,7 @@ public class ApolloReleaseTicketProcessor extends BaseTicketProcessor<Applicatio
     protected void process(WorkOrderTicketEntry ticketEntry, Application entry) throws TicketProcessException {
         WorkOrderToken.ApolloReleaseToken token = WorkOrderToken.ApolloReleaseToken.builder()
                 .ticketId(ticketEntry.getWorkOrderTicketId())
-                .applicationId(entry.getId())
+                .key(entry.getId())
                 .build();
         // 设置令牌，ApolloFacade 中使用
         workOrderApolloReleaseHelper.setToken(token);

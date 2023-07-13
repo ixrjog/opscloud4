@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,16 +29,12 @@ public class WorkOrderToken {
     public static class ApolloReleaseToken implements IWorkOrderToken, Serializable {
 
         @Serial
-        private static final long serialVersionUID = -1L;
+        private static final long serialVersionUID = 2854611198344283355L;
 
         private Integer ticketId;
 
-        private Integer applicationId;
-
-        @Override
-        public Integer getKey() {
-            return this.applicationId;
-        }
+        @Schema(description = "applicationId")
+        private Integer key;
 
     }
 
@@ -48,16 +45,12 @@ public class WorkOrderToken {
     public static class LeoDeployToken implements IWorkOrderToken, Serializable {
 
         @Serial
-        private static final long serialVersionUID = -1L;
+        private static final long serialVersionUID = -8259194390193881090L;
 
-        private Integer buildId;
+        @Schema(description = "buildId")
+        private Integer key;
 
         private Integer applicationId;
-
-        @Override
-        public Integer getKey() {
-            return this.buildId;
-        }
 
     }
 
@@ -68,16 +61,13 @@ public class WorkOrderToken {
     public static class SerDeployToken implements IWorkOrderToken, Serializable {
 
         @Serial
-        private static final long serialVersionUID = -1L;
+        private static final long serialVersionUID = 4019009610938340429L;
 
         private Integer ticketId;
 
-        private Integer applicationId;
+        @Schema(description = "applicationId")
+        private Integer key;
 
-        @Override
-        public Integer getKey() {
-            return this.applicationId;
-        }
     }
 
 }

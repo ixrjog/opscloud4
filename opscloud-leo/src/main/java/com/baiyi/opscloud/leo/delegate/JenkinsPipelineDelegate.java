@@ -33,7 +33,7 @@ public class JenkinsPipelineDelegate {
 
     private final DsConfigHelper dsConfigHelper;
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'build#pipeline#buildId=' + #build.id")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'OC4:V0:LEO:BUILD:PIPELINE:BID:' + #build.id")
     public LeoBuildVO.Pipeline getPipelineByCache(LeoBuildVO.Build build, LeoBuildModel.BuildConfig buildConfig) {
         return getPipeline(build,  buildConfig);
     }

@@ -9,7 +9,7 @@ import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
  * @Date 2021/12/7 4:11 PM
  * @Version 1.0
  */
-public interface ITemplateConsume extends IInstanceAsset {
+public interface ITemplateProvider extends IInstanceAsset {
 
     String getTemplateKey();
 

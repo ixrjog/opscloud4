@@ -26,7 +26,12 @@ public class WorkOrderApolloReleaseHelper extends BaseWorkOrderToken<WorkOrderTo
 
     @Override
     public WorkOrderToken.ApolloReleaseToken getToken(Integer applicationId) {
-        return (WorkOrderToken.ApolloReleaseToken) redisUtil.get(getKey(applicationId));
+        final String key = getKey(applicationId);
+        if (redisUtil.hasKey(key)) {
+            return (WorkOrderToken.ApolloReleaseToken) redisUtil.get(getKey(applicationId));
+        } else {
+            return null;
+        }
     }
 
     @Override

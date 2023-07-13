@@ -1,8 +1,9 @@
 package com.baiyi.opscloud.domain.vo.leo;
 
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
+import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.google.common.collect.Maps;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,12 +45,24 @@ public class LeoJobVersionVO {
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema
-    public static class DeploymentVersion implements Serializable {
+    public static class DeploymentVersion implements TagVO.ITags, Serializable {
 
         @Serial
         private static final long serialVersionUID = 1901939181360045590L;
 
         public static final DeploymentVersion EMPTY = DeploymentVersion.builder().build();
+
+        private List<TagVO.Tag> tags;
+
+        @Override
+        public Integer getBusinessId() {
+            return this.assetId;
+        }
+
+        @Override
+        public Integer getBusinessType() {
+            return BusinessTypeEnum.ASSET.getType();
+        }
 
         private DoDeployVersion doDeployVersion;
 

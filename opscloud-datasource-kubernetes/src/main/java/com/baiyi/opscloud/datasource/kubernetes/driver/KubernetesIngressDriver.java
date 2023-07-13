@@ -6,6 +6,8 @@ import io.fabric8.kubernetes.api.model.networking.v1.Ingress;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -57,19 +59,59 @@ public class KubernetesIngressDriver {
         }
     }
 
-    public static List<Ingress> create(KubernetesConfig.Kubernetes kubernetes, String namespace) {
+    public static Ingress get(KubernetesConfig.Kubernetes kubernetes, String content) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
+            Ingress ingress = toIngress(kc, content);
             return kc.network()
                     .v1()
                     .ingresses()
-                    .inNamespace(namespace)
-                    .list()
-                    .getItems();
-
+                    .inNamespace(ingress.getMetadata().getNamespace())
+                    .resource(ingress)
+                    .get();
         } catch (Exception e) {
             log.warn(e.getMessage());
             throw e;
         }
+    }
+
+    public static Ingress create(KubernetesConfig.Kubernetes kubernetes, String content) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
+            Ingress ingress = toIngress(kc, content);
+            return kc.network()
+                    .v1()
+                    .ingresses()
+                    .inNamespace(ingress.getMetadata().getNamespace())
+                    .resource(ingress)
+                    .create();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
+    }
+
+    public static Ingress update(KubernetesConfig.Kubernetes kubernetes, String content) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
+            Ingress ingress = toIngress(kc, content);
+            return kc.network()
+                    .v1()
+                    .ingresses()
+                    .inNamespace(ingress.getMetadata().getNamespace())
+                    .resource(ingress)
+                    .update();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
+    }
+
+    private static Ingress toIngress(KubernetesClient kubernetesClient, String content) {
+        InputStream is = new ByteArrayInputStream(content.getBytes());
+        return kubernetesClient
+                .network()
+                .v1()
+                .ingresses()
+                .load(is)
+                .item();
     }
 
 }

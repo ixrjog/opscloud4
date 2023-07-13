@@ -34,7 +34,7 @@ public class SerDeployTicketProcessor extends BaseTicketProcessor<Application> {
     protected void process(WorkOrderTicketEntry ticketEntry, Application entry) throws TicketProcessException {
         WorkOrderToken.SerDeployToken token = WorkOrderToken.SerDeployToken.builder()
                 .ticketId(ticketEntry.getWorkOrderTicketId())
-                .applicationId(entry.getId())
+                .key(entry.getId())
                 .build();
         // 设置令牌
         workOrderSerDeployHelper.setToken(token);

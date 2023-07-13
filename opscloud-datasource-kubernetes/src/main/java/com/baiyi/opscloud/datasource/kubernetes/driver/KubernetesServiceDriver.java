@@ -3,13 +3,14 @@ package com.baiyi.opscloud.datasource.kubernetes.driver;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.MyKubernetesClientBuilder;
 import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesException;
-import com.baiyi.opscloud.datasource.kubernetes.util.KubernetesUtil;
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.ServiceList;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
@@ -76,17 +77,64 @@ public class KubernetesServiceDriver {
         }
     }
 
+    public static Service update(KubernetesConfig.Kubernetes kubernetes, String content) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
+            Service service = toService(kc, content);
+            return update(kubernetes, service);
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
+    }
+
+    private static Service update(KubernetesConfig.Kubernetes kubernetes, Service service) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
+            return kc.services()
+                    .inNamespace(service.getMetadata().getNamespace())
+                    .resource(service)
+                    .update();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
+    }
+
+    public static Service get(KubernetesConfig.Kubernetes kubernetes, String content) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
+            Service service = toService(kc, content);
+            return get(kubernetes, service);
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
+    }
+
+    private static Service get(KubernetesConfig.Kubernetes kubernetes, Service service) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
+            return kc.services()
+                    .inNamespace(service.getMetadata().getNamespace())
+                    .resource(service)
+                    .get();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
+    }
 
     /**
      * 配置文件转换为服务资源
      *
      * @param kubernetesClient
-     * @param content     YAML
+     * @param content          YAML
      * @return
      * @throws RuntimeException
      */
     public static Service toService(KubernetesClient kubernetesClient, String content) throws KubernetesException {
-        return  KubernetesUtil.toService(kubernetesClient,content);
+        InputStream is = new ByteArrayInputStream(content.getBytes());
+        return kubernetesClient
+                .services()
+                .load(is)
+                .item();
     }
 
 }

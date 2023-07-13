@@ -14,6 +14,7 @@ import com.baiyi.opscloud.leo.delegate.LeoJobVersionDelegate;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.message.handler.base.BaseLeoContinuousDeliveryRequestHandler;
 import com.baiyi.opscloud.leo.message.util.VersionRenderer;
+import com.baiyi.opscloud.leo.packer.DeploymentVersionPacker;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
@@ -69,6 +70,9 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
     @Resource
     private DsInstanceAssetPropertyService propertyService;
 
+    @Resource
+    private DeploymentVersionPacker deploymentVersionPacker;
+
     @Override
     public String getMessageType() {
         return LeoRequestType.SUBSCRIBE_LEO_DEPLOYMENT_VERSION_DETAILS.name();
@@ -77,7 +81,7 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
     @Override
     public void handleRequest(String sessionId, Session session, String message) throws IOException {
         SubscribeLeoDeploymentVersionDetailsRequestParam queryParam = toRequestParam(message);
-        List<LeoJobVersionVO.JobVersion> jobVersions = queryLeoJobVersion( queryParam);
+        List<LeoJobVersionVO.JobVersion> jobVersions = queryLeoJobVersion(queryParam);
         if (CollectionUtils.isEmpty(jobVersions)) {
             return;
         }
@@ -109,59 +113,63 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
     }
 
     private List<LeoJobVersionVO.DeploymentVersion> generateDeploymentVersions(Application application, int jobId) {
+        // 查询任务绑定的Deployment
         List<ApplicationResourceVO.BaseResource> deploymentResources = buildDeploymentDelegate.queryLeoBuildDeployment(jobId);
         List<LeoJobVersionVO.DeploymentVersion> deploymentVersions = deploymentResources.stream().map(deploymentResource -> {
-            DatasourceInstanceAsset asset = assetService.getById(deploymentResource.getBusinessId());
-            if (asset == null) {
-                return LeoJobVersionVO.DeploymentVersion.EMPTY;
-            }
-            try {
-                KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
-                Deployment deployment = KubernetesDeploymentDriver.get(
-                        kubernetesConfig.getKubernetes(),
-                        // namespace
-                        asset.getAssetKey2(),
-                        // deploymentName
-                        asset.getAssetKey());
-                if (deployment == null) {
-                    return LeoJobVersionVO.DeploymentVersion.EMPTY;
-                }
-                Optional<Container> optionalContainer = deployment.getSpec().getTemplate().getSpec().getContainers()
-                        .stream()
-                        .filter(c -> c.getName().startsWith(application.getName()) || c.getName().contains(application.getName()))
-                        .findFirst();
+                    DatasourceInstanceAsset asset = assetService.getById(deploymentResource.getBusinessId());
+                    if (asset == null) {
+                        return LeoJobVersionVO.DeploymentVersion.EMPTY;
+                    }
+                    try {
+                        KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
+                        Deployment deployment = KubernetesDeploymentDriver.get(
+                                kubernetesConfig.getKubernetes(),
+                                // namespace
+                                asset.getAssetKey2(),
+                                // deploymentName
+                                asset.getAssetKey());
+                        if (deployment == null) {
+                            return LeoJobVersionVO.DeploymentVersion.EMPTY;
+                        }
+                        Optional<Container> optionalContainer = deployment.getSpec().getTemplate().getSpec().getContainers()
+                                .stream()
+                                .filter(c -> c.getName().startsWith(application.getName()) || c.getName().contains(application.getName()))
+                                .findFirst();
 
-                if (optionalContainer.isPresent()) {
-                    final String image = optionalContainer.get().getImage();
-                    LeoBuildImage buildImage = buildImageService.findBuildImage(jobId, image);
-                    final int replicas = deployment.getSpec().getReplicas();
+                        if (optionalContainer.isPresent()) {
+                            final String image = optionalContainer.get().getImage();
+                            LeoBuildImage buildImage = buildImageService.findBuildImage(jobId, image);
+                            final int replicas = deployment.getSpec().getReplicas();
 
-                    Map<String, String> properties = propertyService.queryByAssetId(asset.getId())
-                            .stream()
-                            .collect(Collectors.toMap(DatasourceInstanceAssetProperty::getName, DatasourceInstanceAssetProperty::getValue, (k1, k2) -> k1));
+                            Map<String, String> properties = propertyService.queryByAssetId(asset.getId())
+                                    .stream()
+                                    .collect(Collectors.toMap(DatasourceInstanceAssetProperty::getName, DatasourceInstanceAssetProperty::getValue, (k1, k2) -> k1));
 
-                    return LeoJobVersionVO.DeploymentVersion.builder()
-                            .jobId(jobId)
-                            .assetId(asset.getId())
-                            .name(deploymentResource.getName())
-                            .deploymentName(asset.getName())
-                            .buildId(buildImage != null ? buildImage.getBuildId() : -1)
-                            .image(image)
-                            .replicas(replicas)
-                            .versionName(buildImage != null ? buildImage.getVersionName() : LeoDeployModel.DeployVersion.UNKNOWN.getVersionName())
-                            .versionDesc(buildImage != null ? buildImage.getVersionDesc() : LeoDeployModel.DeployVersion.UNKNOWN.getVersionDesc())
-                            .properties(properties)
-                            .build();
-                } else {
-                    return LeoJobVersionVO.DeploymentVersion.builder()
-                            .name(deploymentResource.getName())
-                            .replicas(deployment.getSpec().getReplicas())
-                            .build();
-                }
-            } catch (Exception e) {
-                return LeoJobVersionVO.DeploymentVersion.EMPTY;
-            }
-        }).collect(Collectors.toList());
+                            return LeoJobVersionVO.DeploymentVersion.builder()
+                                    .jobId(jobId)
+                                    .assetId(asset.getId())
+                                    .name(deploymentResource.getName())
+                                    .deploymentName(asset.getName())
+                                    .buildId(buildImage != null ? buildImage.getBuildId() : -1)
+                                    .image(image)
+                                    .replicas(replicas)
+                                    .versionName(buildImage != null ? buildImage.getVersionName() : LeoDeployModel.DeployVersion.UNKNOWN.getVersionName())
+                                    .versionDesc(buildImage != null ? buildImage.getVersionDesc() : LeoDeployModel.DeployVersion.UNKNOWN.getVersionDesc())
+                                    .properties(properties)
+                                    .build();
+                        } else {
+                            return LeoJobVersionVO.DeploymentVersion.builder()
+                                    .name(deploymentResource.getName())
+                                    .replicas(deployment.getSpec().getReplicas())
+                                    .build();
+                        }
+                    } catch (Exception e) {
+                        return LeoJobVersionVO.DeploymentVersion.EMPTY;
+                    }
+                }).toList()
+                .stream()
+                .peek(e -> deploymentVersionPacker.wrap(e))
+                .toList();
         VersionRenderer.render(deploymentVersions);
         return deploymentVersions;
     }

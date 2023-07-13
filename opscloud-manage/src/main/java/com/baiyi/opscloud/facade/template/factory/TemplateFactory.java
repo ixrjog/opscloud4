@@ -15,13 +15,13 @@ public class TemplateFactory {
     private TemplateFactory() {
     }
 
-    private static final Table<String, String, ITemplateConsume> context = HashBasedTable.create();
+    private static final Table<String, String, ITemplateProvider> context = HashBasedTable.create();
 
-    public static ITemplateConsume getByInstanceAsset(String instanceType, String templateKey) {
+    public static ITemplateProvider getByInstanceAsset(String instanceType, String templateKey) {
         return context.get(instanceType, templateKey);
     }
 
-    public static void register(ITemplateConsume bean) {
+    public static void register(ITemplateProvider bean) {
         context.put(bean.getInstanceType(), bean.getTemplateKey(), bean);
         log.debug("TemplateFactory Registered: instanceType={}, templateKey={}", bean.getInstanceType(), bean.getTemplateKey());
     }

@@ -3,7 +3,6 @@ package com.baiyi.opscloud.datasource.kubernetes.driver;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.MyKubernetesClientBuilder;
 import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesDeploymentException;
-import com.baiyi.opscloud.datasource.kubernetes.util.KubernetesUtil;
 import com.google.common.collect.Maps;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.PodTemplateSpec;
@@ -14,6 +13,8 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -219,7 +220,12 @@ public class KubernetesDeploymentDriver {
     }
 
     private static Deployment toDeployment(KubernetesClient kubernetesClient, String content) {
-        return KubernetesUtil.toDeployment(kubernetesClient, content);
+        InputStream is = new ByteArrayInputStream(content.getBytes());
+        return kubernetesClient
+                .apps()
+                .deployments()
+                .load(is)
+                .item();
     }
 
 }

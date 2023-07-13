@@ -2,32 +2,38 @@ package com.baiyi.opscloud.facade.template.factory.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesServiceDriver;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesIngressDriver;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTemplate;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.baiyi.opscloud.facade.template.factory.base.AbstractTemplateConsume;
-import io.fabric8.kubernetes.api.model.Service;
+import com.baiyi.opscloud.facade.template.factory.base.AbstractTemplateProvider;
+import io.fabric8.kubernetes.api.model.networking.v1.Ingress;
 import org.springframework.stereotype.Component;
+
+import static com.baiyi.opscloud.common.constants.TemplateKeyConstants.INGRESS;
 
 /**
  * @Author baiyi
- * @Date 2021/12/7 5:07 PM
+ * @Date 2023/7/11 20:20
  * @Version 1.0
  */
 @Component
-public class KubernetesServiceTemplateConsume extends AbstractTemplateConsume<Service> {
+public class KubernetesIngressTemplateProvider extends AbstractTemplateProvider<Ingress> {
 
     @Override
-    protected Service produce(BusinessTemplate bizTemplate, String content) {
+    protected Ingress produce(BusinessTemplate bizTemplate, String content) {
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
         KubernetesConfig.Kubernetes config = dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
-        return KubernetesServiceDriver.create(config, content);
+        if (KubernetesIngressDriver.get(config, content) == null) {
+            return KubernetesIngressDriver.create(config, content);
+        } else {
+            return KubernetesIngressDriver.update(config, content);
+        }
     }
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeConstants.KUBERNETES_SERVICE.name();
+        return DsAssetTypeConstants.KUBERNETES_INGRESS.name();
     }
 
     @Override
@@ -38,6 +44,6 @@ public class KubernetesServiceTemplateConsume extends AbstractTemplateConsume<Se
 
     @Override
     public String getTemplateKey() {
-        return "SERVICE";
+        return INGRESS.name();
     }
 }

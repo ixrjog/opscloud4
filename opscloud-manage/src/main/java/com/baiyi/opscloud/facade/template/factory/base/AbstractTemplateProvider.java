@@ -1,31 +1,34 @@
 package com.baiyi.opscloud.facade.template.factory.base;
 
 import com.baiyi.opscloud.common.exception.common.OCException;
-import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.common.template.YamlVars;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.BeetlUtil;
+import com.baiyi.opscloud.common.util.TemplateUtil;
+import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTemplate;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.Template;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
-import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
-import com.baiyi.opscloud.facade.template.factory.ITemplateConsume;
+import com.baiyi.opscloud.facade.template.factory.ITemplateProvider;
 import com.baiyi.opscloud.facade.template.factory.TemplateFactory;
 import com.baiyi.opscloud.packer.template.BusinessTemplatePacker;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.baiyi.opscloud.service.template.BusinessTemplateService;
 import com.baiyi.opscloud.service.template.TemplateService;
+import com.google.common.collect.Maps;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
 
-import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -33,7 +36,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractTemplateConsume<T> implements ITemplateConsume, InitializingBean {
+public abstract class AbstractTemplateProvider<T> implements ITemplateProvider, InitializingBean {
 
     @Resource
     protected BusinessTemplateService businessTemplateService;
@@ -48,7 +51,7 @@ public abstract class AbstractTemplateConsume<T> implements ITemplateConsume, In
     protected DsConfigHelper dsConfigHelper;
 
     @Resource
-    protected DsInstanceFacade dsInstanceFacade;
+    protected DsInstanceFacade<T> dsInstanceFacade;
 
     @Resource
     protected BusinessTemplatePacker businessTemplatePacker;
@@ -64,6 +67,7 @@ public abstract class AbstractTemplateConsume<T> implements ITemplateConsume, In
 
     /**
      * 生产
+     *
      * @param bizTemplate
      * @param content
      * @return
@@ -96,9 +100,13 @@ public abstract class AbstractTemplateConsume<T> implements ITemplateConsume, In
     }
 
     private YamlVars.Vars toVars(BusinessTemplate bizTemplate) {
-        YamlVars.Vars vars = YamlUtil.loadVars(bizTemplate.getVars());
+        Env env = envService.getByEnvType(bizTemplate.getEnvType());
+        // 模板内注入 envName
+        Map<String, String> dict = Maps.newHashMap();
+        dict.put("envName", env.getEnvName());
+        String varsStr = TemplateUtil.render(bizTemplate.getVars(), dict);
+        YamlVars.Vars vars = YamlUtil.loadVars(varsStr);
         if (!vars.getVars().containsKey("envName")) {
-            Env env = envService.getByEnvType(bizTemplate.getEnvType());
             vars.getVars().put("envName", env.getEnvName());
         }
         return vars;
