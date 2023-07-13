@@ -39,6 +39,12 @@ public class KubernetesDeploymentProvider extends AbstractAssetRelationProvider<
     @Resource
     private KubernetesDeploymentProvider kubernetesDeploymentProvider;
 
+    @Resource
+    private BusinessTagService businessTagService;
+
+    @Resource
+    private TagService tagService;
+
     @Override
     @SingleTask(name = PULL_KUBERNETES_DEPLOYMENT, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
@@ -99,12 +105,6 @@ public class KubernetesDeploymentProvider extends AbstractAssetRelationProvider<
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Deployment entity) {
         return DeploymentAssetConverter.toAssetContainer(dsInstance, entity);
     }
-
-    @Resource
-    private BusinessTagService businessTagService;
-
-    @Resource
-    private TagService tagService;
 
     /**
      * 给资产打数据源实例中的地域标签
