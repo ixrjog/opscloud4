@@ -8,19 +8,22 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.kubernetes.converter.DeploymentAssetConverter;
-import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesNamespaceDriver;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
+import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesNamespaceDriver;
+import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
+import com.baiyi.opscloud.service.tag.BusinessTagService;
+import com.baiyi.opscloud.service.tag.TagService;
 import com.google.common.collect.Lists;
 import io.fabric8.kubernetes.api.model.Namespace;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
-import org.springframework.stereotype.Component;
-
 import jakarta.annotation.Resource;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
 import java.util.List;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_KUBERNETES_DEPLOYMENT;
@@ -57,10 +60,7 @@ public class KubernetesDeploymentProvider extends AbstractAssetRelationProvider<
         if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
             return false;
         }
-        if (!preAsset.getIsActive().equals(asset.getIsActive())) {
-            return false;
-        }
-        return true;
+        return preAsset.getIsActive().equals(asset.getIsActive());
     }
 
     @Override
@@ -100,10 +100,48 @@ public class KubernetesDeploymentProvider extends AbstractAssetRelationProvider<
         return DeploymentAssetConverter.toAssetContainer(dsInstance, entity);
     }
 
+    @Resource
+    private BusinessTagService businessTagService;
+
+    @Resource
+    private TagService tagService;
+
+    /**
+     * 给资产打数据源实例中的地域标签
+     *
+     * @param dsInstanceContext
+     * @param asset
+     */
+    @Override
+    protected void postEnterEntity( DatasourceInstanceAsset asset) {
+        DatasourceInstance instance = dsInstanceService.getByUuid( asset.getInstanceUuid());
+        SimpleBusiness query = SimpleBusiness.builder()
+                .businessType(BusinessTypeEnum.DATASOURCE_INSTANCE.getType())
+                .businessId(instance.getId())
+                .build();
+        List<BusinessTag> bizTags = businessTagService.queryByBusiness(query);
+        if (CollectionUtils.isEmpty(bizTags)) {
+            return;
+        }
+        for (BusinessTag bizTag : bizTags) {
+            Tag tag = tagService.getById(bizTag.getTagId());
+            if (tag.getTagKey().startsWith("@")) {
+                BusinessTag businessTag = BusinessTag.builder()
+                        .businessId(asset.getId())
+                        .businessType(BusinessTypeEnum.ASSET.getType())
+                        .tagId(tag.getId())
+                        .build();
+                if (businessTagService.countByBusinessTag(businessTag) == 0) {
+                    businessTagService.add(businessTag);
+                    break;
+                }
+            }
+        }
+    }
+
     @Override
     public String getTargetAssetKey() {
         return DsAssetTypeConstants.KUBERNETES_NAMESPACE.name();
     }
-
 
 }

@@ -15,9 +15,9 @@ import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.sys.CredentialService;
 import com.google.common.collect.Sets;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.beans.factory.InitializingBean;
-
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.util.List;
 import java.util.Map;
@@ -28,6 +28,7 @@ import java.util.Set;
  * @Date 2021/6/19 4:22 下午
  * @Version 1.0
  */
+@Slf4j
 public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider implements SimpleAssetProvider<T>, InitializingBean {
 
     @Resource
@@ -103,9 +104,17 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
         return enterAsset(toAssetContainer(dsInstanceContext.getDsInstance(), entity));
     }
 
+    /**
+     * 录入资产后处理逻辑
+     * @param asset
+     */
+    protected void postEnterEntity(DatasourceInstanceAsset asset) {
+    }
+
     protected DatasourceInstanceAsset enterAsset(AssetContainer assetContainer) {
         DatasourceInstanceAsset asset = enterAsset(assetContainer.getAsset());
         enterAssetProperties(assetContainer.getAsset().getId(), assetContainer.getProperties());
+        postEnterEntity(asset);
         return asset;
     }
 
@@ -125,7 +134,7 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
             try {
                 dsInstanceAssetService.add(preAsset);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Enter asset err: {}", e.getMessage());
             }
         } else {
             preAsset.setId(asset.getId());
