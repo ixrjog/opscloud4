@@ -4,8 +4,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
-import com.baiyi.opscloud.service.leo.LeoJobService;
-import com.baiyi.opscloud.service.user.UserService;
+import com.baiyi.opscloud.leo.handler.build.BuildMessageCenter;
 import com.google.common.collect.Maps;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +24,7 @@ public class EndBuildNotificationChainHandler extends BaseBuildChainHandler {
     private static final String LEO_BUILD_END = "LEO_BUILD_END";
 
     @Resource
-    private UserService userService;
-
-    @Resource
-    private LeoJobService leoJobService;
+    private BuildMessageCenter buildMessageCenter;
 
     /**
      * 构建结束通知
@@ -61,7 +57,7 @@ public class EndBuildNotificationChainHandler extends BaseBuildChainHandler {
         Map<String, Object> contentMap = Maps.newHashMap();
         contentMap.put("buildPhase", "构建结束");
         contentMap.put("buildResult", leoBuild.getBuildResult());
-        sendMessage(leoBuild, buildConfig, LEO_BUILD_END, contentMap);
+        buildMessageCenter.sendMessage(leoBuild, buildConfig, LEO_BUILD_END, contentMap);
     }
 
 }

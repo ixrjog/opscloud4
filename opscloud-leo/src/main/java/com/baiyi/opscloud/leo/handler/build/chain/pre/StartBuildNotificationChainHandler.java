@@ -1,10 +1,12 @@
 package com.baiyi.opscloud.leo.handler.build.chain.pre;
 
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
+import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
+import com.baiyi.opscloud.leo.handler.build.BuildMessageCenter;
 import com.google.common.collect.Maps;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,9 @@ import java.util.Map;
 public class StartBuildNotificationChainHandler extends BaseBuildChainHandler {
 
     private static final String LEO_BUILD_START = "LEO_BUILD_START";
+
+    @Resource
+    private BuildMessageCenter buildMessageCenter;
 
     /**
      * 构建开始通知
@@ -48,7 +53,7 @@ public class StartBuildNotificationChainHandler extends BaseBuildChainHandler {
     private void sendMessage(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
         Map<String, Object> contentMap = Maps.newHashMap();
         contentMap.put("buildPhase", "构建开始");
-        sendMessage(leoBuild, buildConfig, LEO_BUILD_START, contentMap);
+        buildMessageCenter.sendMessage(leoBuild, buildConfig, LEO_BUILD_START, contentMap);
     }
 
 }
