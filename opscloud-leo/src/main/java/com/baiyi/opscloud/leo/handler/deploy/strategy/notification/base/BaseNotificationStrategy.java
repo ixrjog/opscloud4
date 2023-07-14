@@ -53,7 +53,7 @@ public abstract class BaseNotificationStrategy extends BaseDeployStrategy {
         DatasourceInstance dsInstance = leoRobotHelper.getRobotInstance(dingtalkRobot);
         MessageTemplate messageTemplate = msgTemplateService.getByUniqueKey(messageKey, "DINGTALK_ROBOT", "markdown");
         if (messageTemplate == null) {
-            throw new LeoBuildException("发送消息失败: 消息模板未配置！");
+            throw new LeoBuildException("Sending message failed: message template does not exist");
         }
 
         User user = userService.getByUsername(leoDeploy.getUsername());

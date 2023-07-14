@@ -32,11 +32,11 @@ public class GradleParser {
         final String groupId = Optional.of(nexus)
                 .map(LeoBaseModel.Nexus::getComponent)
                 .map(LeoBaseModel.NexusComponent::getGroup)
-                .orElseThrow(() -> new LeoBuildException("配置不存在: nexus->component->group"));
+                .orElseThrow(() -> new LeoBuildException("Configuration does not exist: nexus->component->group"));
         final String artifactId = Optional.of(nexus)
                 .map(LeoBaseModel.Nexus::getComponent)
                 .map(LeoBaseModel.NexusComponent::getName)
-                .orElseThrow(() -> new LeoBuildException("配置不存在: nexus->component->name"));
+                .orElseThrow(() -> new LeoBuildException("Configuration does not exist: nexus->component->name"));
         String version = findVersion(content)
                 .replace("version", "")
                 .replaceAll("'", "")

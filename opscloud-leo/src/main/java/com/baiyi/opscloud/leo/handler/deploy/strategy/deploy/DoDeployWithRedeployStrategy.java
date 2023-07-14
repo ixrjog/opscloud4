@@ -42,7 +42,7 @@ public class DoDeployWithRedeployStrategy extends DoDeployStrategy {
         final int replicas = Optional.of(deployment)
                 .map(Deployment::getSpec)
                 .map(DeploymentSpec::getReplicas)
-                .orElseThrow(() -> new LeoDeployException("读取副本数错误！"));
+                .orElseThrow(() -> new LeoDeployException("Read configuration error: deployment->spec->replicas"));
 
         // 校验副本数
         if (replicas == 0) {

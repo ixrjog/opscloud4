@@ -61,7 +61,7 @@ public class DoDeployWithRollingStrategy extends DoDeployStrategy {
         final int replicas = Optional.of(deployment)
                 .map(Deployment::getSpec)
                 .map(DeploymentSpec::getReplicas)
-                .orElseThrow(() -> new LeoDeployException("读取副本数错误！"));
+                .orElseThrow(() -> new LeoDeployException("Read configuration error: deployment->spec->replicas"));
         if (replicas == 0) {
             /*
              * 为了安全考虑，副本数量+1，而不是设置为1

@@ -61,8 +61,7 @@ public class SupervisingWithRedeployStrategy extends SupervisingStrategy {
                 .map(LeoDeployModel.DeployConfig::getDeploy)
                 .map(LeoDeployModel.Deploy::getDeployVersion1)
                 .map(LeoDeployModel.DeployVersion::getPods)
-                .orElseThrow(() -> new LeoDeployException("原Pod信息不存在"));
-
+                .orElseThrow(() -> new LeoDeployException("Configuration does not exist: deploy->deployVersion1->pods"));
         /*
          * Map<String podName, LeoDeployingVO.PodDetails podDetails>
          */

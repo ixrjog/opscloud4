@@ -49,7 +49,7 @@ public class AcrValidator extends BaseCrValidator<AliyunConfig> {
         Optional.of(cr)
                 .map(LeoJobModel.CR::getInstance)
                 .map(LeoJobModel.CRInstance::getId)
-                .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job->cr->instance->id"));
+                .orElseThrow(() -> new LeoBuildException("Configuration does not exist: job->cr->instance->id"));
     }
 
     @Override

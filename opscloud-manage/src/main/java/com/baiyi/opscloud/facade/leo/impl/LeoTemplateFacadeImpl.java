@@ -84,7 +84,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getJenkins)
                 .map(LeoTemplateModel.Jenkins::getInstance)
-                .orElseThrow(() -> new LeoTemplateException("模板配置缺少Jenkins实例配置项！"));
+                .orElseThrow(() -> new LeoTemplateException("Configuration does not exist: template->jenkins->instance"));
 
         LeoBaseModel.DsInstance instance = templateConfig.getTemplate().getJenkins().getInstance();
         LeoTemplate leoTemplate = LeoTemplate.builder()
@@ -108,7 +108,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getJenkins)
                 .map(LeoTemplateModel.Jenkins::getInstance)
-                .orElseThrow(() -> new LeoTemplateException("模板配置缺少Jenkins实例配置项！"));
+                .orElseThrow(() -> new LeoTemplateException("Configuration does not exist: template->jenkins->instance"));
 
         LeoBaseModel.DsInstance instance = templateConfig.getTemplate().getJenkins().getInstance();
 
@@ -136,7 +136,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
 
         Optional.ofNullable(templateConfig)
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
-                .orElseThrow(() -> new LeoTemplateException("任务模板未配置！"));
+                .orElseThrow(() -> new LeoTemplateException("Configuration does not exist: template"));
         // https://leo-jenkins-1.chuanyinet.com/job/templates/job/tpl_test/
         String folder = Optional.of(templateConfig)
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
@@ -201,7 +201,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
         final String templateVersion = Optional.ofNullable(templateConfig)
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getVersion)
-                .orElseThrow(() -> new LeoTemplateException("模板版本未配置！"));
+                .orElseThrow(() -> new LeoTemplateException("Configuration does not exist: template->version"));
         List<LeoJob> jobs = jobService.queryUpgradeableJobs(templateId, templateVersion);
         if (CollectionUtils.isEmpty(jobs)) {
             return;

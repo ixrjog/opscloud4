@@ -97,7 +97,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
 
         Optional.ofNullable(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
-                .orElseThrow(() -> new LeoJobException("缺少任务配置！"));
+                .orElseThrow(() -> new LeoJobException("Configuration does not exist: job"));
 
         LeoTemplate leoTemplate = templateService.getById(addJob.getTemplateId());
         if (leoTemplate == null) {
@@ -201,7 +201,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
         final String templateVersion = Optional.ofNullable(templateConfig)
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getVersion)
-                .orElseThrow(() -> new LeoJobException("任务关联模板版本号配置不正确！"));
+                .orElseThrow(() -> new LeoJobException("Configuration does not exist: template->version"));
         if (templateVersion.equals(leoJob.getTemplateVersion())) {
             throw new LeoJobException("任务模板版本已是最新版本无需升级！");
         }

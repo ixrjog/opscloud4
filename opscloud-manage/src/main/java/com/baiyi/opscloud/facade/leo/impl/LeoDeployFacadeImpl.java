@@ -123,7 +123,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getDeploy)
                 .map(LeoJobModel.Deploy::getNotify)
-                .orElseThrow(() -> new LeoDeployException("Deploy notification configuration does not exist！"));
+                .orElseThrow(() -> new LeoDeployException("Configuration does not exist: job->deploy->notify"));
 
         LeoBaseModel.Kubernetes kubernetes = LeoBaseModel.Kubernetes.builder()
                 .assetId(doDeploy.getAssetId())

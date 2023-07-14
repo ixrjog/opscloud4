@@ -40,12 +40,12 @@ public class BuildMessageCenter {
                 .map(LeoBuildModel.BuildConfig::getBuild)
                 .map(LeoBuildModel.Build::getNotify)
                 .map(LeoBaseModel.Notify::getName)
-                .orElseThrow(() -> new LeoBuildException("发送消息失败: Dingtalk Robot未配置！"));
+                .orElseThrow(() -> new LeoBuildException("Configuration does not exist: build->notify->name"));
 
         DatasourceInstance dsInstance = leoRobotHelper.getRobotInstance(dingtalkRobot);
         MessageTemplate messageTemplate = msgTemplateService.getByUniqueKey(messageKey, "DINGTALK_ROBOT", "markdown");
         if (messageTemplate == null) {
-            throw new LeoBuildException("发送消息失败: 消息模板未配置！");
+            throw new LeoBuildException("Sending message failed: message template does not exist!");
         }
         User user = userService.getByUsername(leoBuild.getUsername());
 
@@ -60,7 +60,7 @@ public class BuildMessageCenter {
         try {
             return BeetlUtil.renderTemplate(messageTemplate.getMsgTemplate(), contentMap);
         } catch (IOException e) {
-            throw new LeoBuildException("渲染Dingtalk模板错误: {}", e.getMessage());
+            throw new LeoBuildException("Error in rendering message template: {}", e.getMessage());
         }
     }
 }

@@ -54,15 +54,15 @@ public class PostBuildVerificationWithKubernetesImageStrategy extends BasePostBu
         final LeoJobModel.CR cr = Optional.ofNullable(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getCr)
-                .orElseThrow(() -> new LeoBuildException("任务CR配置不存在无法验证镜像是否推送成功: job->cr"));
+                .orElseThrow(() -> new LeoBuildException("Configuration does not exist: job->cr"));
 
         final String crType = Optional.of(cr)
                 .map(LeoJobModel.CR::getType)
-                .orElseThrow(() -> new LeoBuildException("任务CR类型配置不存在无法验证镜像是否推送成功: job->cr->type"));
+                .orElseThrow(() -> new LeoBuildException("Configuration does not exist: job->cr->type"));
 
         BaseCrValidator crValidator = CrValidatorFactory.getValidatorByCrType(crType);
         if (crValidator == null) {
-            throw new LeoBuildException("任务CR类型配置不正确: crType={}", crType);
+            throw new LeoBuildException("Incorrect configuration: job->cr->type={}", crType);
         }
         try {
             // 校验

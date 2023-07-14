@@ -69,12 +69,12 @@ public class DeployingSupervisor implements ISupervisor {
     public void run() {
         LeoDeployModel.Deploy deploy = Optional.ofNullable(this.deployConfig)
                 .map(LeoDeployModel.DeployConfig::getDeploy)
-                .orElseThrow(() -> new LeoDeployException("部署配置不存在！"));
+                .orElseThrow(() -> new LeoDeployException("Configuration does not exist: deploy"));
 
         LeoBaseModel.Deployment deployment = Optional.of(deploy)
                 .map(LeoDeployModel.Deploy::getKubernetes)
                 .map(LeoBaseModel.Kubernetes::getDeployment)
-                .orElseThrow(() -> new LeoDeployException("Kubernetes配置不存在！"));
+                .orElseThrow(() -> new LeoDeployException("Configuration does not exist: deploy->kubernetes->deployment"));
         // final String containerName = deployment.getContainer().getName();
         SupervisingStrategy deployingStrategy = SupervisingStrategyFactory.getStrategyByDeployType(deploy.getDeployType());
         if (deployingStrategy == null) {

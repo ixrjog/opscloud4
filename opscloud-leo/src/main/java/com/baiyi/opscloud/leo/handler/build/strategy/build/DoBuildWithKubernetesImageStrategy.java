@@ -40,7 +40,7 @@ public class DoBuildWithKubernetesImageStrategy extends BaseDoBuildStrategy {
                     .map(LeoJobModel.Job::getCr)
                     .map(LeoJobModel.CR::getInstance)
                     .map(LeoJobModel.CRInstance::getUrl)
-                    .orElseThrow(() -> new LeoBuildException("配置不存在: job->cr->instance->url"));
+                    .orElseThrow(() -> new LeoBuildException("Configuration does not exist: job->cr->instance->url"));
             dict.put(BuildDictConstants.REGISTRY_URL.getKey(), registryUrl);
         }
         // 准备变量

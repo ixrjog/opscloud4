@@ -55,9 +55,9 @@ public abstract class BaseCrValidator<T extends BaseDsConfig> implements Initial
         Map<String, String> dict = Optional.ofNullable(buildConfig)
                 .map(LeoBuildModel.BuildConfig::getBuild)
                 .map(LeoBuildModel.Build::getDict)
-                .orElseThrow(() -> new LeoBuildException("无法获取构建字典"));
+                .orElseThrow(() -> new LeoBuildException("Configuration does not exist: build->dict"));
         if (!dict.containsKey(BuildDictConstants.IMAGE_TAG.getKey())) {
-            throw new LeoBuildException("无法从构建字典中获取镜像标签: dict->imageTag");
+            throw new LeoBuildException("Configuration does not exist: build->dict->imageTag");
         }
     }
 
@@ -71,14 +71,14 @@ public abstract class BaseCrValidator<T extends BaseDsConfig> implements Initial
     protected void preInspection(LeoJob leoJob, LeoJobModel.CR cr) {
         LeoJobModel.CRInstance crInstance = Optional.of(cr)
                 .map(LeoJobModel.CR::getInstance)
-                .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job->cr->instance"));
+                .orElseThrow(() -> new LeoBuildException("Configuration does not exist: job->cr->instance"));
         Optional.of(crInstance)
                 .map(LeoJobModel.CRInstance::getRegionId)
-                .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job->cr->instance->regionId"));
+                .orElseThrow(() -> new LeoBuildException("Configuration does not exist: job->cr->instance->regionId"));
         Optional.of(cr)
                 .map(LeoJobModel.CR::getRepo)
                 .map(LeoJobModel.Repo::getName)
-                .orElseThrow(() -> new LeoBuildException("任务配置不存在无法验证镜像是否推送成功: job->cr->repo->name"));
+                .orElseThrow(() -> new LeoBuildException("Configuration does not exist: job->cr->repo->name"));
     }
 
     public void verifyImage(LeoJob leoJob, LeoBuild leoBuild, LeoJobModel.CR cr, LeoBuildModel.BuildConfig buildConfig) {

@@ -72,7 +72,7 @@ public class PreInspectionWithRedeployStrategy extends BasePreInspectionStrategy
 
         LeoBaseModel.Kubernetes kubernetes = Optional.of(deploy)
                 .map(LeoDeployModel.Deploy::getKubernetes)
-                .orElseThrow(() -> new LeoDeployException("Kubernetes配置不存在！"));
+                .orElseThrow(() -> new LeoDeployException("Configuration does not exist: deploy->kubernetes"));
 
         final String instanceUuid = kubernetes.getInstance().getUuid();
         final String namespace = kubernetes.getDeployment().getNamespace();

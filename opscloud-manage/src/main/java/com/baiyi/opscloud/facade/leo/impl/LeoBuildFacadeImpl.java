@@ -129,12 +129,12 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         List<String> tags = ofNullable(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getTags)
-                .orElseThrow(() -> new LeoBuildException("Leo job tags configuration does not exist: jobId={}", doBuild.getJobId()));
+                .orElseThrow(() -> new LeoBuildException("Configuration does not exist: job->tags", doBuild.getJobId()));
         // 校验gitLab
         LeoBaseModel.GitLab gitLab = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getGitLab)
-                .orElseThrow(() -> new LeoBuildException("Leo job gitLab configuration does not exist: jobId={}", doBuild.getJobId()));
+                .orElseThrow(() -> new LeoBuildException("Configuration does not exist: job->gitLab", doBuild.getJobId()));
         // 可选nexus
         LeoBaseModel.Nexus nexus = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
@@ -265,7 +265,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .map(LeoBuildModel.Build::getJenkins)
                 .map(LeoBaseModel.Jenkins::getInstance)
                 .map(LeoBaseModel.DsInstance::getUuid)
-                .orElseThrow(() -> new LeoBuildException("Jenkins配置不存在！"));
+                .orElseThrow(() -> new LeoBuildException("Configuration does not exist: build->jenkins->instance->uuid"));
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(jenkinsUuid);
         JenkinsConfig jenkinsConfig = dsConfigHelper.build(dsConfig, JenkinsConfig.class);
         try {
