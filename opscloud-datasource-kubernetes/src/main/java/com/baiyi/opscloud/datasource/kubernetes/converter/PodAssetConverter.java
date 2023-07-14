@@ -11,10 +11,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import io.fabric8.kubernetes.api.model.Container;
-import io.fabric8.kubernetes.api.model.ContainerStatus;
-import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.api.model.PodCondition;
+import io.fabric8.kubernetes.api.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
@@ -58,10 +55,12 @@ public class PodAssetConverter {
                 .stream()
                 .filter(k -> !podStatusMap.get(k))
                 .findFirst();
+
         ContainerStatus containerStatus = buildContainerStatus(kubernetes, entity);
 
-
-
+        Optional<ContainerStateTerminated> optionalContainerStateTerminated = Optional.of(containerStatus)
+                .map(ContainerStatus::getState)
+                .map(ContainerState::getTerminated);
         AssetContainer assetContainer = AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
                 .paramChildren(toChildren(kubernetes, entity))
@@ -79,6 +78,7 @@ public class PodAssetConverter {
                 .paramProperty("ready", podStatusMap.get("Ready"))
                 .paramProperty("status", statusOptional.isEmpty())
                 .paramProperty("reason", entity.getStatus().getReason())
+                .paramProperty("terminating", optionalContainerStateTerminated.isPresent())
                 .build();
         assetContainer.setAgo(AgoUtil.format(startTime));
         return assetContainer;
@@ -87,7 +87,11 @@ public class PodAssetConverter {
     private static ContainerStatus buildContainerStatus(KubernetesConfig.Kubernetes kubernetes, Pod pod) {
         try {
             if (!CollectionUtils.isEmpty(pod.getStatus().getContainerStatuses())) {
-                List<ContainerStatus> containerStatusList = pod.getStatus().getContainerStatuses().stream().filter(s -> tryIgnoreName(kubernetes, s.getName())).collect(Collectors.toList());
+                List<ContainerStatus> containerStatusList = pod.getStatus()
+                        .getContainerStatuses()
+                        .stream()
+                        .filter(s -> tryIgnoreName(kubernetes, s.getName()))
+                        .toList();
                 if (!CollectionUtils.isEmpty(containerStatusList)) {
                     return containerStatusList.get(0);
                 }
