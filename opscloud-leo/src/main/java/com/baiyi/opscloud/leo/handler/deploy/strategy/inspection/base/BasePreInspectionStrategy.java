@@ -57,11 +57,11 @@ public abstract class BasePreInspectionStrategy extends BaseDeployStrategy {
 
         LeoBaseModel.Kubernetes kubernetes = Optional.ofNullable(deploy)
                 .map(LeoDeployModel.Deploy::getKubernetes)
-                .orElseThrow(() -> new LeoDeployException("Kubernetes配置不存在！"));
+                .orElseThrow(() -> new LeoDeployException("Configuration does not exist: deploy->kubernetes"));
 
         Map<String, String> dict = Optional.of(deploy)
                 .map(LeoDeployModel.Deploy::getDict)
-                .orElseThrow(() -> new LeoDeployException("字典配置不存在！"));
+                .orElseThrow(() -> new LeoDeployException("Configuration does not exist: deploy->dict"));
 
         DatasourceInstanceAsset asset = assetService.getById(kubernetes.getAssetId());
         if (asset == null) {

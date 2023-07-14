@@ -76,7 +76,7 @@ public class AcrValidator extends BaseCrValidator<AliyunConfig> {
 
     @Override
     protected void handleCreateRepository(LeoJob leoJob, LeoJobModel.CR cr, AliyunConfig dsConfig) {
-        // TODO ACR可开启主动创建
+        // TODO ACR 可开启主动创建
     }
 
     private String getCrRepoId(LeoJobModel.CR cr, LeoJob leoJob, String crRegionId, String crInstanceId, String crRepoName, AliyunConfig dsConfig, String envName) {

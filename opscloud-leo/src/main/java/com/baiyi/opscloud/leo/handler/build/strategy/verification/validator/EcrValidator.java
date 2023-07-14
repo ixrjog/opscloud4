@@ -28,7 +28,7 @@ import java.util.Optional;
 public class EcrValidator extends BaseCrValidator<AwsConfig> {
 
     @Resource
-    private AmazonEcrRepositoryDriver amazonEcrRepositoryDirver;
+    private AmazonEcrRepositoryDriver amazonEcrRepositoryDriver;
 
     @Resource
     private EcrImageDelegate ecrImageDelegate;
@@ -77,7 +77,7 @@ public class EcrValidator extends BaseCrValidator<AwsConfig> {
         // ${evnName}/${repoName}
         final String repositoryName = Joiner.on("/").join(repoNamespace, crRepoName);
         try {
-            Repository repository = amazonEcrRepositoryDirver.createRepository(crRegionId, dsConfig.getAws(), repositoryName);
+            Repository repository = amazonEcrRepositoryDriver.createRepository(crRegionId, dsConfig.getAws(), repositoryName);
         } catch (Exception e) {
             throw new LeoBuildException("创建ECR仓库错误: {}", e.getMessage());
         }
@@ -96,7 +96,7 @@ public class EcrValidator extends BaseCrValidator<AwsConfig> {
      */
     protected String getCrRegistryId(LeoJobModel.CR cr, LeoJob leoJob, String crRegionId, String repoNamespace, String repositoryName, AwsConfig dsConfig) {
         try {
-            Repository repository = amazonEcrRepositoryDirver.describeRepository(crRegionId, dsConfig.getAws(), repositoryName);
+            Repository repository = amazonEcrRepositoryDriver.describeRepository(crRegionId, dsConfig.getAws(), repositoryName);
             return Optional.ofNullable(repository)
                     .map(Repository::getRegistryId)
                     .orElseThrow(() -> new LeoBuildException("AWS-ECR RegistryId查询失败: regionId={}, repositoryName={}", crRegionId, repositoryName));

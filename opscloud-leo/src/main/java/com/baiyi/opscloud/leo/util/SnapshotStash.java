@@ -2,6 +2,7 @@ package com.baiyi.opscloud.leo.util;
 
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -32,7 +33,7 @@ public class SnapshotStash {
     }
 
     private String getKey(Integer deployId) {
-        return String.format("v20221207#deploying#id=%s", deployId);
+        return StringFormatter.format("v20221207#deploying#id={}", deployId);
     }
 
 }

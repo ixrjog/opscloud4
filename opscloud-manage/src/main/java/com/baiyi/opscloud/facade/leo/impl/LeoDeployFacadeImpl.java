@@ -123,7 +123,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getDeploy)
                 .map(LeoJobModel.Deploy::getNotify)
-                .orElseThrow(() -> new LeoDeployException("部署通知配置不存在！"));
+                .orElseThrow(() -> new LeoDeployException("Deploy notification configuration does not exist！"));
 
         LeoBaseModel.Kubernetes kubernetes = LeoBaseModel.Kubernetes.builder()
                 .assetId(doDeploy.getAssetId())
@@ -234,7 +234,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     public void stopDeploy(int deployId) {
         LeoDeploy leoDeploy = deployService.getById(deployId);
         if (leoDeploy == null) {
-            throw new LeoDeployException("部署记录不存在: deployId={}", deployId);
+            throw new LeoDeployException("Deploy record does not exist: deployId={}", deployId);
         }
         LeoJob leoJob = jobService.getById(leoDeploy.getJobId());
         final String username = SessionUtil.getUsername();
@@ -252,7 +252,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     public void cloneDeployDeployment(LeoDeployParam.CloneDeployDeployment cloneDeployDeployment) {
         LeoJob leoJob = jobService.getById(cloneDeployDeployment.getJobId());
         if (leoJob == null) {
-            throw new LeoDeployException("任务不存在: jobId={}", cloneDeployDeployment.getJobId());
+            throw new LeoDeployException("Leo job does not exist: jobId={}", cloneDeployDeployment.getJobId());
         }
 
         DatasourceInstanceAsset asset = assetService.getById(cloneDeployDeployment.getAssetId());

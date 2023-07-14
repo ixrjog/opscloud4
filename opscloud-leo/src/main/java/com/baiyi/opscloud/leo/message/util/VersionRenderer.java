@@ -55,16 +55,15 @@ public class VersionRenderer {
                     continue;
                 }
                 switch (i) {
-                    case 0:
+                    case 0 -> {
                         versionTypeMap.put(VersionTypeConstants.BLUE.name(), deploymentVersion.getBuildId());
                         deploymentVersion.setVersionType(VersionTypeConstants.BLUE.name());
-                        break;
-                    case 1:
+                    }
+                    case 1 -> {
                         versionTypeMap.put(VersionTypeConstants.GREEN.name(), deploymentVersion.getBuildId());
                         deploymentVersion.setVersionType(VersionTypeConstants.GREEN.name());
-                        break;
-                    default:
-                        deploymentVersion.setVersionType(VersionTypeConstants.OTHER.name());
+                    }
+                    default -> deploymentVersion.setVersionType(VersionTypeConstants.OTHER.name());
                 }
             }
         });

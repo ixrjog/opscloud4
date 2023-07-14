@@ -75,6 +75,8 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
 
     private final SubscribeLeoJobRequestHandler subscribeLeoJobRequestHandler;
 
+    private final static String INITIAL_VERSION = "0.0.1";
+
     @Override
     public DataTable<LeoJobVO.Job> queryLeoJobPage(LeoJobParam.JobPageQuery pageQuery) {
         DataTable<LeoJob> table = jobService.queryJobPage(pageQuery);
@@ -107,7 +109,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
         final String templateVersion = Optional.ofNullable(templateConfig)
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getVersion)
-                .orElse("0.0.0");
+                .orElse(INITIAL_VERSION);
 
         fillLeoJob(leoJob, jobConfig);
         // jobKey转大写
@@ -160,7 +162,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
         final String templateVersion = Optional.ofNullable(templateConfig)
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getVersion)
-                .orElse("0.0.0");
+                .orElse(INITIAL_VERSION);
         LeoJobModel.JobConfig jobConfig = LeoJobModel.load(updateJob.getJobConfig());
 
         LeoJob leoJob = jobService.getById(updateJob.getId());

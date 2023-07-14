@@ -61,7 +61,7 @@ public class GitLabRepoDelegate {
                     .options(options)
                     .build();
         } catch (GitLabApiException e) {
-            log.warn("query gitLab branches or tags: url={}, projectId={}, {}", gitlab.getUrl(), projectId, e.getMessage());
+            log.warn("Query gitLab branches or tags: url={}, projectId={}, {}", gitlab.getUrl(), projectId, e.getMessage());
             return LeoBuildVO.BranchOptions.EMPTY_OPTIONS;
         }
     }
@@ -71,7 +71,7 @@ public class GitLabRepoDelegate {
             try {
                 GitLabProjectDriver.createBranch(gitlab, projectId, branch, ref);
             } catch (GitLabApiException e) {
-                log.warn("create gitLab branch err: url={}, projectId={}, branch={}, ref={}, {}", gitlab.getUrl(), projectId, branch, ref, e.getMessage());
+                log.warn("Create gitLab branch err: url={}, projectId={}, branch={}, ref={}, {}", gitlab.getUrl(), projectId, branch, ref, e.getMessage());
             }
         }
         return generatorGitLabBranchOptions(gitlab, projectId, false);
@@ -91,7 +91,7 @@ public class GitLabRepoDelegate {
         } catch (GitLabApiException e) {
             log.error(e.getMessage());
         }
-        throw new LeoBuildException("query build branch commit err: gitLab={}, projectId={}, branchOrTag={}", gitlab.getUrl(), projectId, branchNameOrTagName);
+        throw new LeoBuildException("Query build branch commit err: gitLab={}, projectId={}, branchOrTag={}", gitlab.getUrl(), projectId, branchNameOrTagName);
     }
 
 }

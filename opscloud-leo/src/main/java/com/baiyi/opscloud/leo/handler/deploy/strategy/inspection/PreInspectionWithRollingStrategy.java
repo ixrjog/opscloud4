@@ -43,11 +43,11 @@ public class PreInspectionWithRollingStrategy extends BasePreInspectionStrategy 
                 .map(LeoBaseModel.Kubernetes::getDeployment)
                 .map(LeoBaseModel.Deployment::getContainer)
                 .map(LeoBaseModel.Container::getImage)
-                .orElseThrow(() -> new LeoDeployException("未找到容器image配置！"));
+                .orElseThrow(() -> new LeoDeployException("Configuration does not exist: deploy->kubernetes->deployment->container->image"));
 
         Map<String, String> dict = Optional.of(deploy)
                 .map(LeoDeployModel.Deploy::getDict)
-                .orElseThrow(() -> new LeoDeployException("字典配置不存在！"));
+                .orElseThrow(() -> new LeoDeployException("Configuration does not exist: deploy->dict"));
 
         List<LeoBuildImage> leoBuildImages = leoBuildImageService.queryImageWithJobIdAndImage(leoDeploy.getJobId(), image);
         /*

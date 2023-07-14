@@ -30,7 +30,7 @@ public class MavenPublishBuildDictGenerator extends BaseBuildDictGenerator {
         if (params.containsKey(MavenPublishConstants.ARTIFACT_ID.getParam())) {
             dict.put(MavenPublishConstants.ARTIFACT_ID.getParam(), params.get(MavenPublishConstants.ARTIFACT_ID.getParam()));
         } else {
-            throw new LeoBuildException("缺少参数: artifactId");
+            throw new LeoBuildException("Missing parameter: artifactId");
         }
         if (params.containsKey(MavenPublishConstants.GROUP_ID.getParam())) {
             dict.put(MavenPublishConstants.GROUP_ID.getParam(), params.get(MavenPublishConstants.GROUP_ID.getParam()));
@@ -38,7 +38,7 @@ public class MavenPublishBuildDictGenerator extends BaseBuildDictGenerator {
         if (StringUtils.isNotBlank(doBuild.getVersionName())) {
             dict.put(MavenPublishConstants.VERSION.getParam(), doBuild.getVersionName());
         } else {
-            throw new LeoBuildException("缺少参数: versionName");
+            throw new LeoBuildException("Missing parameter: versionName");
         }
     }
 

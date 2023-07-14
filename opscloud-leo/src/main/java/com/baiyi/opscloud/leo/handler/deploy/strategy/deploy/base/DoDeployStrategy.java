@@ -33,7 +33,7 @@ public abstract class DoDeployStrategy extends BaseDeployStrategy {
         LeoBaseModel.Kubernetes kubernetes = Optional.ofNullable(deployConfig)
                 .map(LeoDeployModel.DeployConfig::getDeploy)
                 .map(LeoDeployModel.Deploy::getKubernetes)
-                .orElseThrow(() -> new LeoDeployException("Kubernetes配置不存在！"));
+                .orElseThrow(() -> new LeoDeployException("Configuration does not exist: deploy->kubernetes"));
 
         final String instanceUuid = kubernetes.getInstance().getUuid();
         final String namespace = kubernetes.getDeployment().getNamespace();
@@ -56,7 +56,7 @@ public abstract class DoDeployStrategy extends BaseDeployStrategy {
         Map<String, String> dict = Optional.ofNullable(deployConfig)
                 .map(LeoDeployModel.DeployConfig::getDeploy)
                 .map(LeoDeployModel.Deploy::getDict)
-                .orElseThrow(() -> new LeoDeployException("部署字典不存在！"));
+                .orElseThrow(() -> new LeoDeployException("Configuration does not exist: deploy->dict"));
 
         final String deployType = deployConfig.getDeploy().getDeployType();
 

@@ -41,12 +41,12 @@ public class DoDeployWithRollingStrategy extends DoDeployStrategy {
         LeoBaseModel.Kubernetes kubernetes = Optional.ofNullable(deployConfig)
                 .map(LeoDeployModel.DeployConfig::getDeploy)
                 .map(LeoDeployModel.Deploy::getKubernetes)
-                .orElseThrow(() -> new LeoDeployException("Kubernetes配置不存在！"));
+                .orElseThrow(() -> new LeoDeployException("Configuration does not exist: deploy->kubernetes"));
 
         LeoDeployModel.DeployVersion releaseVersion = Optional.of(deployConfig)
                 .map(LeoDeployModel.DeployConfig::getDeploy)
                 .map(LeoDeployModel.Deploy::getDeployVersion2)
-                .orElseThrow(() -> new LeoDeployException("发布版本配置不存在！"));
+                .orElseThrow(() -> new LeoDeployException("Configuration does not exist: deploy->deployVersion2"));
 
         final String containerName = kubernetes.getDeployment().getContainer().getName();
         final String namespace = kubernetes.getDeployment().getNamespace();

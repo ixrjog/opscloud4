@@ -48,7 +48,7 @@ public abstract class BaseNotificationStrategy extends BaseDeployStrategy {
                 .map(LeoDeployModel.DeployConfig::getDeploy)
                 .map(LeoDeployModel.Deploy::getNotify)
                 .map(LeoBaseModel.Notify::getName)
-                .orElseThrow(() -> new LeoBuildException("发送消息失败: DingtalkRobot未配置！"));
+                .orElseThrow(() -> new LeoBuildException("Configuration does not exist: deploy->notify->name"));
 
         DatasourceInstance dsInstance = leoRobotHelper.getRobotInstance(dingtalkRobot);
         MessageTemplate messageTemplate = msgTemplateService.getByUniqueKey(messageKey, "DINGTALK_ROBOT", "markdown");

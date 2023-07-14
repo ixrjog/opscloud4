@@ -3,6 +3,7 @@ package com.baiyi.opscloud.common.aspect;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.common.util.StringToDurationUtil;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class SingleTaskAspect {
     private final RedisUtil redisUtil;
 
     private String buildKey(String taskName) {
-        return String.format("opscloud.v4.singleTask#taskName=%s", taskName);
+        return StringFormatter.format("opscloud.v4.singleTask#taskName={}", taskName);
     }
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.SingleTask)")

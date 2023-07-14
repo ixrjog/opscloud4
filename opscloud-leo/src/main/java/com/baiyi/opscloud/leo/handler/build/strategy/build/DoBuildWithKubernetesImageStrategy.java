@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.leo.handler.build.strategy.build;
 
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
@@ -55,7 +56,7 @@ public class DoBuildWithKubernetesImageStrategy extends BaseDoBuildStrategy {
         /*
          * example: aliyun-cr-uk.example.com/daily/merchant-rss:460e7585-19
          */
-        dict.put(BuildDictConstants.IMAGE.getKey(), String.format("%s/%s/%s:%s", registryUrl, envName, project, imageTag));
+        dict.put(BuildDictConstants.IMAGE.getKey(), StringFormatter.arrayFormat("{}/{}/{}:{}", registryUrl, envName, project, imageTag));
         dict.put(BuildDictConstants.IMAGE_TAG.getKey(), imageTag);
     }
 

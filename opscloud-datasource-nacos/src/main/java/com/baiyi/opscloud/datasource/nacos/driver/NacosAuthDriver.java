@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.builder.SimpleDictBuilder;
 import com.baiyi.opscloud.common.datasource.NacosConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.datasource.nacos.entity.NacosLogin;
 import com.baiyi.opscloud.datasource.nacos.entity.NacosPermission;
 import com.baiyi.opscloud.datasource.nacos.entity.NacosRole;
@@ -35,7 +36,7 @@ public class NacosAuthDriver {
     private final RedisUtil redisUtil;
 
     private String buildKey(String url) {
-        return String.format("Opscloud.V4.Nacos.AccessToken.%s", url);
+        return StringFormatter.format("Opscloud.V4.Nacos.AccessToken.{}", url);
     }
 
     private NacosAuthV1Feign buildFeign(NacosConfig.Nacos config) {

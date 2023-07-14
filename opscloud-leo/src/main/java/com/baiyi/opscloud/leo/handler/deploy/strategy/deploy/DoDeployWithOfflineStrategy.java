@@ -37,7 +37,7 @@ public class DoDeployWithOfflineStrategy extends DoDeployStrategy {
         Optional.ofNullable(deployConfig)
                 .map(LeoDeployModel.DeployConfig::getDeploy)
                 .map(LeoDeployModel.Deploy::getKubernetes)
-                .orElseThrow(() -> new LeoDeployException("Kubernetes配置不存在！"));
+                .orElseThrow(() -> new LeoDeployException("Configuration does not exist: deploy->kubernetes"));
 
         final int replicas = Optional.of(deployment)
                 .map(Deployment::getSpec)

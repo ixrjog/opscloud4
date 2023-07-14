@@ -38,7 +38,7 @@ public class JenkinsJobHelper {
                 // https://leo-jenkins-1.chuanyinet.com/job/templates/job/tpl_test/ =>
                 // https://leo-jenkins-1.chuanyinet.com/job/templates/
                 URL url = new URL(templateConfig.getTemplate().getUrl());
-                String folderUrl = Joiner.on("").skipNulls().join(url.getProtocol(), "://", url.getHost(), url.getPort() == -1 ? null : ":" + url.getPort(), "/job/", folder, "/");
+                final String folderUrl = Joiner.on("").skipNulls().join(url.getProtocol(), "://", url.getHost(), url.getPort() == -1 ? null : ":" + url.getPort(), "/job/", folder, "/");
                 FolderJob folderJob = new FolderJob(folder, folderUrl);
                 log.info("查询JobXml: jenkinsUrl={}, folderJobUrl={}, templateName={}", jenkinsConfig.getJenkins().getUrl(), folderJob.getUrl(), templateConfig.getTemplate().getName());
                 return JenkinsServerDriver.getJobXml(jenkinsConfig.getJenkins(), folderJob, templateConfig.getTemplate().getName());

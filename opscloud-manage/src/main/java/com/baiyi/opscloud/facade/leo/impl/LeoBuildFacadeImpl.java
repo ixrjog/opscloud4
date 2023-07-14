@@ -116,12 +116,12 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
     public void doBuild(LeoBuildParam.DoBuild doBuild) {
         LeoJob leoJob = jobService.getById(doBuild.getJobId());
         if (leoJob == null) {
-            throw new LeoBuildException("任务不存在: jobId={}", doBuild.getJobId());
+            throw new LeoBuildException("Leo job does not exist: jobId={}", doBuild.getJobId());
         }
 
         Application application = applicationService.getById(leoJob.getApplicationId());
         if (application == null) {
-            throw new LeoBuildException("应用不存在: jobId={}, applicationId={}", doBuild.getJobId(), leoJob.getApplicationId());
+            throw new LeoBuildException("The application does not exist: jobId={}, applicationId={}", doBuild.getJobId(), leoJob.getApplicationId());
         }
 
         final LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob.getJobConfig());
@@ -129,12 +129,12 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         List<String> tags = ofNullable(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getTags)
-                .orElseThrow(() -> new LeoBuildException("任务标签配置不存在: jobId={}", doBuild.getJobId()));
+                .orElseThrow(() -> new LeoBuildException("Leo job tags configuration does not exist: jobId={}", doBuild.getJobId()));
         // 校验gitLab
         LeoBaseModel.GitLab gitLab = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getGitLab)
-                .orElseThrow(() -> new LeoBuildException("任务GitLab配置不存在: jobId={}", doBuild.getJobId()));
+                .orElseThrow(() -> new LeoBuildException("Leo job gitLab configuration does not exist: jobId={}", doBuild.getJobId()));
         // 可选nexus
         LeoBaseModel.Nexus nexus = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
@@ -180,7 +180,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         LeoBaseModel.AutoDeploy autoDeploy;
         if (doBuild.getAutoDeploy()) {
             if (IdUtil.isEmpty(doBuild.getAssetId())) {
-                throw new LeoBuildException("启用构建后自动部署未指定资产ID参数！");
+                throw new LeoBuildException("Enable automatic deployment after building without specifying asset ID parameters！");
             }
             autoDeploy = LeoBaseModel.AutoDeploy.builder()
                     .assetId(doBuild.getAssetId())
@@ -269,7 +269,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(jenkinsUuid);
         JenkinsConfig jenkinsConfig = dsConfigHelper.build(dsConfig, JenkinsConfig.class);
         try {
-            logHelper.info(leoBuild, "用户 {} 停止构建任务", SessionUtil.getUsername());
+            logHelper.info(leoBuild, "{} 停止构建任务", SessionUtil.getUsername());
             JenkinsPipeline.Step step = blueRestDriver.stopPipeline(jenkinsConfig.getJenkins(), leoBuild.getBuildJobName(), String.valueOf(1));
             logHelper.info(leoBuild, "停止构建任务: {}", JSONUtil.writeValueAsString(step));
         } catch (Exception e) {
@@ -347,7 +347,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         Map<String, List<String>> filter = Optional.of(gitLabConfig.getGitlab())
                 .map(GitLabConfig.GitLab::getGitFlow)
                 .map(GitLabConfig.GitFlow::getFilter)
-                .orElseThrow(() -> new LeoBuildException("gitLab 实例配置启用 gitFlow 但未配置 filter 过滤条件"));
+                .orElseThrow(() -> new LeoBuildException("GitLab instance configuration enables gitFlow but does not configure filter filtering conditions"));
 
         Env env = envService.getByEnvType(leoJob.getEnvType());
         List<String> envFilter;
@@ -367,7 +367,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
     public LeoBuildVO.MavenPublishInfo getBuildMavenPublishInfo(LeoBuildParam.GetBuildMavenPublishInfo getBuildMavenPublishInfo) {
         LeoJob leoJob = jobService.getById(getBuildMavenPublishInfo.getJobId());
         if (leoJob == null) {
-            throw new LeoBuildException("任务配置不存在: jobId={}", getBuildMavenPublishInfo.getJobId());
+            throw new LeoBuildException("Configuration does not exist: jobId={}", getBuildMavenPublishInfo.getJobId());
         }
         DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, getBuildMavenPublishInfo.getSshUrl());
         final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
@@ -378,7 +378,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .map(LeoBuildParam.GetBuildMavenPublishInfo::getTools)
                 .map(LeoBuildParam.BuildTools::getVersion)
                 .map(LeoBuildParam.BuildToolsVersion::getFile)
-                .orElseThrow(() -> new LeoBuildException("配置不存在: build->tools->version->file"));
+                .orElseThrow(() -> new LeoBuildException("Configuration does not exist: build->tools->version->file"));
         try {
             RepositoryFile repositoryFile = GitLabRepositoryDriver.getRepositoryFile(
                     gitLabConfig.getGitlab(),
@@ -390,7 +390,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
             final LeoBaseModel.Nexus nexus = Optional.ofNullable(jobConfig)
                     .map(LeoJobModel.JobConfig::getJob)
                     .map(LeoJobModel.Job::getNexus)
-                    .orElseThrow(() -> new LeoBuildException("配置不存在: job->nexus"));
+                    .orElseThrow(() -> new LeoBuildException("Configuration does not exist: job->nexus"));
             return MavenPublishParser.parse(getBuildMavenPublishInfo.getTools(), nexus, content);
         } catch (GitLabApiException ignored) {
         }
@@ -401,7 +401,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
     public LeoBuildVO.BranchOptions createBuildBranch(LeoBuildParam.CreateBuildBranch createBuildBranch) {
         LeoJob leoJob = jobService.getById(createBuildBranch.getJobId());
         if (leoJob == null) {
-            throw new LeoBuildException("任务配置不存在: jobId={}", createBuildBranch.getJobId());
+            throw new LeoBuildException("Leo job configuration does not exist: jobId={}", createBuildBranch.getJobId());
         }
         DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, createBuildBranch.getSshUrl());
         final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
@@ -415,7 +415,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
     public void updateLeoBuild(LeoBuildParam.UpdateBuild updateBuild) {
         LeoBuild leoBuild = buildService.getById(updateBuild.getId());
         if (!leoBuild.getIsFinish()) {
-            throw new LeoBuildException("构建任务未结束不能修改构建详情！");
+            throw new LeoBuildException("Cannot modify build details before the build task is completed！");
         }
 
         final String versionDesc = StringUtils.isNotBlank(updateBuild.getVersionDesc()) ? updateBuild.getVersionDesc() : null;
@@ -477,6 +477,13 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         }
     }
 
+    /**
+     * 从 gitLab group 查找 project
+     *
+     * @param applicationId
+     * @param sshUrl
+     * @return
+     */
     private DatasourceInstanceAsset getGitLabProjectAssetWithGroup(int applicationId, String sshUrl) {
         // 查询所有的 gitLab group
         List<ApplicationResource> resources = applicationResourceService.queryByApplication(
@@ -494,7 +501,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 }
             }
         }
-        throw new LeoBuildException("GitLab项目不存在: applicationId={}, sshUrl={}", applicationId, sshUrl);
+        throw new LeoBuildException("GitLab project {} does not exist: applicationId={}", sshUrl, applicationId);
     }
 
     @Override

@@ -46,7 +46,7 @@ public class EcrImageDelegate {
                     .filter(imageDetail -> filterWithImageTag(imageDetail, imageTag))
                     .findFirst()
                     .orElseThrow(() ->
-                            new LeoBuildException("查询AWS-ECR镜像未找到对应的标签{}", imageTag)
+                            new LeoBuildException("查询AWS-ECR镜像未找到对应的标签 {}", imageTag)
                     );
         } catch (Exception e) {
             log.warn("校验AWS-ECR镜像失败: {}", e.getMessage());

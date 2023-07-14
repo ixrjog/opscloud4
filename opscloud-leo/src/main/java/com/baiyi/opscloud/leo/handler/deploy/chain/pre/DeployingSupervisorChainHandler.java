@@ -59,6 +59,6 @@ public class DeployingSupervisorChainHandler extends BaseDeployChainHandler {
                 .id(leoDeploy.getId())
                 .deployStatus("启动部署Supervisor阶段: 成功")
                 .build();
-        save(saveLeoDeploy, "启动部署Supervisor成功: jobId={}, deployNumber={}", leoDeploy.getId(), leoDeploy.getDeployNumber());
+        save(saveLeoDeploy, "启动部署Supervisor成功: deployId={}, deployNumber={}", leoDeploy.getId(), leoDeploy.getDeployNumber());
     }
 }
