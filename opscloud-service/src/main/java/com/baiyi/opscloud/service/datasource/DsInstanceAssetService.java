@@ -3,6 +3,9 @@ package com.baiyi.opscloud.service.datasource;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
+import com.baiyi.opscloud.domain.param.datasource.DsCustomAssetParam;
+import com.baiyi.opscloud.domain.param.report.ApolloReportParam;
+import com.baiyi.opscloud.domain.vo.base.ReportVO;
 
 import java.util.List;
 
@@ -29,6 +32,8 @@ public interface DsInstanceAssetService {
 
     DataTable<DatasourceInstanceAsset> queryPageByParam(DsAssetParam.AssetPageQuery pageQuery);
 
+    DataTable<DatasourceInstanceAsset> queryApolloAssetPageByParam(DsCustomAssetParam.ApolloReleaseAssetPageQuery pageQuery);
+
     List<String> queryInstanceAssetTypes(String instanceUuid);
 
     List<DatasourceInstanceAsset> queryAssetByAssetParam(DatasourceInstanceAsset asset);
@@ -46,5 +51,7 @@ public interface DsInstanceAssetService {
     int countByInstanceAssetType(String instanceUuid, String assetType);
 
     List<DatasourceInstanceAsset> listByParentId(Integer parentId);
+
+    List<ReportVO.Report> statApolloReleaseLast30Days(ApolloReportParam.ApolloReleaseReport apolloReleaseReport);
 
 }

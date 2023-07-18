@@ -36,6 +36,10 @@ public class ProjectResourcePacker implements IWrapperRelation<ProjectResourceVO
                     dsAssetPacker.wrap(assetVO, iExtend, iRelation);
                     vo.setAsset(assetVO);
                 });
-
     }
+
+    @Override
+    public void wrap(DsAssetVO.Asset asset, IExtend iExtend) {
+    }
+
 }

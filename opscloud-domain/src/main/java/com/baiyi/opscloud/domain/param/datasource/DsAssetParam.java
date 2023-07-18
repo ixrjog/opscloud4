@@ -24,7 +24,7 @@ public class DsAssetParam {
     public static class AssetPageQuery extends SuperPageParam implements IExtend, IRelation {
 
         @Schema(description = "实例ID")
-        @NotNull(message = "实例id不能为空")
+        @NotNull(message = "实例ID不能为空")
         private Integer instanceId;
 
         @Schema(description = "实例UUID")

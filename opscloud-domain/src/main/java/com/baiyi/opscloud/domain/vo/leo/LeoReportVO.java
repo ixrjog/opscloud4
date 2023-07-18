@@ -53,7 +53,7 @@ public class LeoReportVO {
     public static class LeoProdReport implements Serializable {
 
         @Serial
-        private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 4328652269389010137L;
 
         @Schema(description = "持续交付报表")
         private ReportVO.DailyReport continuousDeliveryReport;

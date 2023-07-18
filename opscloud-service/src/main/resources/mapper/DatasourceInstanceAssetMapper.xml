@@ -26,8 +26,14 @@
         <result column="description" jdbcType="LONGVARCHAR" property="description"/>
     </resultMap>
 
+    <resultMap id="ReportResultMap" type="com.baiyi.opscloud.domain.vo.base.ReportVO$Report">
+        <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+        <result column="value" jdbcType="INTEGER" property="value"/>
+    </resultMap>
+
     <select id="queryInstanceAssetTypes" resultType="java.lang.String">
-      select asset_type from datasource_instance_asset
+        select asset_type
+        from datasource_instance_asset
         where instance_uuid = #{instanceUuid}
         group by asset_type
     </select>
@@ -43,13 +49,55 @@
             </if>
             <if test="userId != null">
                 and id in (
-                    select business_id from application_resource where resource_type = 'KUBERNETES_DEPLOYMENT'
-                    and application_id in ( select business_id from user_permission where business_type = #{businessType}
-                    and user_id = #{userId} )
+                select business_id from application_resource where resource_type = 'KUBERNETES_DEPLOYMENT'
+                and application_id in ( select business_id from user_permission where business_type = #{businessType}
+                and user_id = #{userId} )
                 )
             </if>
         </where>
         order by create_time
+    </select>
+
+    <select id="queryApolloAssetPageByParam"
+            parameterType="com.baiyi.opscloud.domain.param.datasource.DsCustomAssetParam$ApolloReleaseAssetPageQuery"
+            resultMap="BaseResultMap">
+        select a0.* from datasource_instance_asset a0
+        <if test="isGray != null and isGray">
+            join datasource_instance_asset_property a1
+            on a0.id = a1.datasource_instance_asset_id
+            and a1.name = 'isGray' and a1.value = 'true'
+        </if>
+        <where>
+            a0.instance_uuid = #{instanceUuid}
+            and a0.asset_type = #{assetType}
+            <if test="envName != null and envName != ''">
+                and a0.asset_key = #{envName}
+            </if>
+            <if test="applicationName != null and applicationName != ''">
+                and a0.name = #{applicationName}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="statApolloReleaseLast30Days"
+            parameterType="com.baiyi.opscloud.domain.param.report.ApolloReportParam$ApolloReleaseReport"
+            resultMap="ReportResultMap">
+        select date_format(a0.create_time, '%m-%d') as `c_name`, sum(1) as `value`
+        from datasource_instance_asset a0
+        join datasource_instance_asset_property a1
+        on a0.id = a1.datasource_instance_asset_id and a1.name = 'isGray'
+        where
+        a0.instance_uuid = #{instanceUuid}
+        and a0.asset_key = #{envName}
+        <if test="applicationName != null and applicationName != ''">
+            and a0.name = #{applicationName}
+        </if>
+        and a1.value = #{gray}
+        and a0.create_time between date_sub(now(), interval 30 day)
+        and now()
+        group by `c_name`
+        order by `c_name`
     </select>
 
 </mapper>

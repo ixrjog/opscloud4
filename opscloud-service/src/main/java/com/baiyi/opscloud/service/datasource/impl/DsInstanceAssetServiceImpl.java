@@ -6,6 +6,9 @@ import com.baiyi.opscloud.domain.annotation.TagClear;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.param.datasource.DsCustomAssetParam;
+import com.baiyi.opscloud.domain.param.report.ApolloReportParam;
+import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.baiyi.opscloud.mapper.DatasourceInstanceAssetMapper;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.util.SQLUtil;
@@ -23,6 +26,7 @@ import java.util.List;
  * @Date 2021/6/17 1:41 下午
  * @Version 1.0
  */
+@SuppressWarnings("resource")
 @Service
 @BusinessType(BusinessTypeEnum.ASSET)
 @RequiredArgsConstructor
@@ -83,7 +87,7 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
 
     @Override
     public DataTable<DatasourceInstanceAsset> queryPageByParam(DsAssetParam.AssetPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<DatasourceInstanceAsset> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(DatasourceInstanceAsset.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("instanceUuid", pageQuery.getInstanceUuid())
@@ -116,8 +120,15 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
     }
 
     @Override
+    public DataTable<DatasourceInstanceAsset> queryApolloAssetPageByParam(DsCustomAssetParam.ApolloReleaseAssetPageQuery pageQuery) {
+        Page<DatasourceInstanceAsset> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<DatasourceInstanceAsset> data = dsInstanceAssetMapper.queryApolloAssetPageByParam(pageQuery);
+        return new DataTable<>(data, page.getTotal());
+    }
+
+    @Override
     public DataTable<DatasourceInstanceAsset> queryPageByParam(DsAssetParam.UserPermissionAssetPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<DatasourceInstanceAsset> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<DatasourceInstanceAsset> data = dsInstanceAssetMapper.queryUserPermissionAssetByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
@@ -191,6 +202,11 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("parentId", parentId);
         return dsInstanceAssetMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<ReportVO.Report> statApolloReleaseLast30Days(ApolloReportParam.ApolloReleaseReport apolloReleaseReport) {
+        return dsInstanceAssetMapper.statApolloReleaseLast30Days(apolloReleaseReport);
     }
 
 }

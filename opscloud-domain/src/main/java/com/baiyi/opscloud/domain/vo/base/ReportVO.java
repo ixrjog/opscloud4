@@ -43,7 +43,6 @@ public class ReportVO {
         private Integer value2;
     }
 
-
     @Data
     @Builder
     @AllArgsConstructor
@@ -52,16 +51,7 @@ public class ReportVO {
     public static class DailyReport implements Serializable {
 
         @Serial
-        private static final long serialVersionUID = -1L;
-
-//        public static void put(MonthlyReport monthlyReport, String name, List<Report> reports) {
-//            if (CollectionUtils.isEmpty(reports)) {
-//                return;
-//            }
-//            Map<String, Report> reportMap = reports.stream().collect(Collectors.toMap(ReportVO.Report::getCName, a -> a, (k1, k2) -> k1));
-//            List<Integer> values = monthlyReport.getDateCat().stream().map(s -> reportMap.containsKey(s) ? reportMap.get(s).getValue() : Integer.valueOf(0)).collect(Collectors.toList());
-//            monthlyReport.getValueMap().put(name, values);
-//        }
+        private static final long serialVersionUID = 2779962685525074177L;
 
         public DailyReport put(String name, List<Report> reports) {
             if (CollectionUtils.isEmpty(reports)) {

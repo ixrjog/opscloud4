@@ -1,21 +1,22 @@
 package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
+import com.baiyi.opscloud.domain.param.report.ApolloReportParam;
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
+import com.baiyi.opscloud.domain.vo.datasource.report.ApolloReportVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoReportVO;
 import com.baiyi.opscloud.domain.vo.terminal.TerminalReportVO;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventReportVO;
+import com.baiyi.opscloud.facade.datasource.report.ApolloReportFacade;
 import com.baiyi.opscloud.facade.leo.LeoReportFacade;
 import com.baiyi.opscloud.facade.terminal.TerminalReportFacade;
 import com.baiyi.opscloud.facade.workevent.WorkEventFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,6 +36,8 @@ public class ReportController {
     private final WorkEventFacade workEventFacade;
 
     private final LeoReportFacade leoReportFacade;
+
+    private final ApolloReportFacade apolloReportFacade;
 
     @Operation(summary = "查询终端报表")
     @GetMapping(value = "/terminal/get", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -88,6 +91,12 @@ public class ReportController {
     @GetMapping(value = "/leo/prod/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<LeoReportVO.LeoProdReport> getLeoProdReport() {
         return new HttpResult<>(leoReportFacade.statLeoProdReport());
+    }
+
+    @Operation(summary = "查询ApolloRelease报表")
+    @PostMapping(value = "/apollo/release/get", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<ApolloReportVO.ApolloReleaseReport> getApolloReleaseReport(@RequestBody @Valid ApolloReportParam.ApolloReleaseReport apolloReleaseReport) {
+        return new HttpResult<>(apolloReportFacade.getApolloReleaseReport(apolloReleaseReport));
     }
 
 }

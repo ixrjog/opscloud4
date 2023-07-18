@@ -11,6 +11,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.ProjectResource;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.IRelation;
+import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.project.ProjectResourceVO;
 import com.baiyi.opscloud.domain.vo.project.ProjectVO;
 import com.baiyi.opscloud.packer.IWrapperRelation;
@@ -80,6 +81,10 @@ public class ProjectPacker implements IWrapperRelation<ProjectVO.Project> {
         Map<String, Integer> envDeployCount = Maps.newHashMap();
         envDeployCount.put(Global.ENV_PROD,leoDeployService.countByEnvProjectId(project.getId(),4));
         project.setEnvDeployCount( envDeployCount);
+    }
+
+    @Override
+    public void wrap(DsAssetVO.Asset asset, IExtend iExtend) {
     }
 
 }

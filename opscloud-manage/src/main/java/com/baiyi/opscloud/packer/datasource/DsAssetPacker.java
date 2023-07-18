@@ -79,6 +79,24 @@ public class DsAssetPacker implements IWrapperRelation<DsAssetVO.Asset> {
         asset.setTree(wrapTree(asset));
     }
 
+    @Override
+    @TagsWrapper
+    public void wrap(DsAssetVO.Asset asset, IExtend iExtend) {
+        if (!ExtendUtil.isExtend(iExtend)) {
+            return;
+        }
+        // asset properties
+        Map<String, String> properties = dsInstanceAssetPropertyService.queryByAssetId(asset.getId())
+                .stream().collect(Collectors.toMap(DatasourceInstanceAssetProperty::getName, DatasourceInstanceAssetProperty::getValue, (k1, k2) -> k1));
+        asset.setProperties(properties);
+        // 资产可转换为业务对象
+        IAssetConverter converter = AssetConverterFactory.getConverterByAssetType(asset.getAssetType());
+        if (converter != null) {
+            asset.setConvertBusinessTypes(converter.toBusinessTypes(asset));
+        }
+        asset.setTree(wrapTree(asset));
+    }
+
     private void wrap(DsAssetVO.Asset asset, IRelation iRelation) {
         if (!iRelation.isRelation()) {
             return;

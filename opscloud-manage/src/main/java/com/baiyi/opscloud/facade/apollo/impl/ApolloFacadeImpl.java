@@ -183,7 +183,7 @@ public class ApolloFacadeImpl implements ApolloFacade {
                     try {
                         apolloRuleValidator.verify(releaseEvent, rule);
                     } catch (LeoInterceptorException e) {
-                        throw new LeoInterceptorException("当前规则禁执行: {}！", rule.getName());
+                        throw new LeoInterceptorException("当前规则禁止执行: {}！", rule.getName());
                     }
                 }
             }

@@ -2,6 +2,7 @@ package com.baiyi.opscloud.packer;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.IRelation;
+import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 
 /**
  * @Author baiyi
@@ -11,4 +12,7 @@ import com.baiyi.opscloud.domain.param.IRelation;
 public interface IWrapperRelation<T> {
 
     void wrap(T vo, IExtend iExtend, IRelation iRelation);
+
+    void wrap(DsAssetVO.Asset asset, IExtend iExtend);
+
 }
