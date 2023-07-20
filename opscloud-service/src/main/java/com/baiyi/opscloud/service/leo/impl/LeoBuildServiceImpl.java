@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.param.leo.LeoDeployParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
+import com.baiyi.opscloud.domain.param.leo.LeoMonitorParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.baiyi.opscloud.mapper.LeoBuildMapper;
@@ -209,9 +210,13 @@ public class LeoBuildServiceImpl implements LeoBuildService {
     }
 
     @Override
-    public List<LeoBuild> queryLatestLeoBuild(int size) {
-        PageHelper.startPage(1, size);
+    public List<LeoBuild> queryLatestLeoBuild(LeoMonitorParam.QueryLatestBuild queryLatestBuild) {
+        PageHelper.startPage(1, queryLatestBuild.getSize());
         Example example = new Example(LeoBuild.class);
+        if (queryLatestBuild.getIsFinish() != null) {
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("isFinish", queryLatestBuild.getIsFinish());
+        }
         example.setOrderByClause("id desc");
         return buildMapper.selectByExample(example);
     }

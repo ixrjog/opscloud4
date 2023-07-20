@@ -1,10 +1,10 @@
 package com.baiyi.opscloud.datasource.kubernetes.exception;
 
 import com.baiyi.opscloud.common.exception.BaseException;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.slf4j.helpers.MessageFormatter;
 
 import java.io.Serial;
 
@@ -27,7 +27,7 @@ public class KubernetesException extends BaseException {
     }
 
     public KubernetesException(String message, Object... var2) {
-        super(MessageFormatter.arrayFormat(message, var2).getMessage());
+        super(StringFormatter.arrayFormat(message, var2));
         setCode(code);
     }
 

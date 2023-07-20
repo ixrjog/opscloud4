@@ -3,8 +3,8 @@ package com.baiyi.opscloud.leo.helper;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
-import com.baiyi.opscloud.leo.domain.model.DeployStop;
-import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
+import com.baiyi.opscloud.leo.constants.HeartbeatTypeConstants;
+import com.baiyi.opscloud.leo.domain.model.DeployStopFlag;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,17 +18,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LeoHeartbeatHelper {
 
-    public interface HeartbeatTypes {
-        String DEPLOY = "deploy";
-        String BUILD = "build";
-    }
-
     private final LeoDeployService leoDeployService;
 
     private final RedisUtil redisUtil;
 
-    private final static String HEARTBEAT_KEY = "leo#heartbeat#{}#id={}";
+    private final static String HEARTBEAT_KEY = "OC4:V0:LEO:HEARTBEAT:{}:ID:{}";
 
+    public static final String STOP_SIGNAL = "OC4:V0:LEO:DEPLOY:STOP:SIGNAL:DID:{}";
 
     public boolean isFinish(Integer leoDeployId) {
         LeoDeploy leoDeploy = leoDeployService.getById(leoDeployId);
@@ -41,8 +37,8 @@ public class LeoHeartbeatHelper {
      * @param heartbeatType
      * @param id
      */
-    public void setHeartbeat(String heartbeatType, Integer id) {
-        redisUtil.set(StringFormatter.arrayFormat(HEARTBEAT_KEY, heartbeatType, id), true, 20L);
+    public void setHeartbeat(HeartbeatTypeConstants heartbeatType, Integer id) {
+        redisUtil.set(StringFormatter.arrayFormat(HEARTBEAT_KEY, heartbeatType.name(), id), true, 20L);
     }
 
     /**
@@ -52,19 +48,24 @@ public class LeoHeartbeatHelper {
      * @param id
      * @return
      */
-    public boolean isLive(String heartbeatType, Integer id) {
-        return redisUtil.hasKey(StringFormatter.arrayFormat(HEARTBEAT_KEY, heartbeatType, id));
+    public boolean isLive(HeartbeatTypeConstants heartbeatType, Integer id) {
+        return redisUtil.hasKey(StringFormatter.arrayFormat(HEARTBEAT_KEY, heartbeatType.name(), id));
     }
 
-    public DeployStop tryDeployStop(int deployId) {
-        final String key = StringFormatter.arrayFormat(DeployingSupervisor.STOP_SIGNAL, deployId);
+    /**
+     * 获取停止标记
+     * @param deployId
+     * @return
+     */
+    public DeployStopFlag getDeployStopFlag(int deployId) {
+        final String key = StringFormatter.format(STOP_SIGNAL, deployId);
         if (redisUtil.hasKey(key)) {
-            return DeployStop.builder()
+            return DeployStopFlag.builder()
                     .isStop(true)
                     .username((String) redisUtil.get(key))
                     .build();
         } else {
-            return DeployStop.builder().build();
+            return DeployStopFlag.NOT_STOP;
         }
     }
 

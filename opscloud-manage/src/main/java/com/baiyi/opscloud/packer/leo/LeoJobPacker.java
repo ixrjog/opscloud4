@@ -3,6 +3,7 @@ package com.baiyi.opscloud.packer.leo;
 import com.baiyi.opscloud.common.annotation.EnvWrapper;
 import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoTemplate;
 import com.baiyi.opscloud.domain.param.IExtend;
@@ -38,7 +39,7 @@ public class LeoJobPacker implements IWrapper<LeoJobVO.Job> {
 
     private final LeoTemplatePacker leoTemplatePacker;
 
-    private static final String DISPLAY_VERSION = "T%s/%s";
+    private static final String DISPLAY_VERSION = "T{}/{}";
 
     @Override
     @TagsWrapper
@@ -65,7 +66,7 @@ public class LeoJobPacker implements IWrapper<LeoJobVO.Job> {
                     verifyTemplateVersion = LeoJobVO.VerifyTemplateVersion.builder()
                             .type("warning")
                             .isIdentical(false)
-                            .displayVersion(String.format(DISPLAY_VERSION, template.getVersion(), job.getTemplateVersion()))
+                            .displayVersion(StringFormatter.arrayFormat(DISPLAY_VERSION, template.getVersion(), job.getTemplateVersion()))
                             .build();
                 }
                 job.setVerifyTemplateVersion(verifyTemplateVersion);

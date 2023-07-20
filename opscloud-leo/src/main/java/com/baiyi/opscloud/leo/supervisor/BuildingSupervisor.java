@@ -9,6 +9,7 @@ import com.baiyi.opscloud.datasource.jenkins.model.BuildWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.model.JobWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
+import com.baiyi.opscloud.leo.constants.HeartbeatTypeConstants;
 import com.baiyi.opscloud.leo.handler.build.LeoPostBuildHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
@@ -70,7 +71,6 @@ public class BuildingSupervisor implements ISupervisor {
     @Override
     public void run() {
         setHeartbeat();
-
         try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
             JobWithDetails jobWithDetails = jenkinsServer.getJob(leoBuild.getBuildJobName());
             while (true) {
@@ -79,7 +79,6 @@ public class BuildingSupervisor implements ISupervisor {
                 if (this.build == null) {
                     Build build = jobWithDetails.details().getLastBuild();
                     if (build.equals(Build.BUILD_HAS_NEVER_RUN)) {
-
                         sleep();
                         continue;
                     }
@@ -88,6 +87,7 @@ public class BuildingSupervisor implements ISupervisor {
                                 .id(leoBuild.getId())
                                 .endTime(new Date())
                                 .isFinish(true)
+                                .isActive(false)
                                 .buildResult(BuildResult.CANCELLED.name())
                                 .buildStatus("用户取消任务！")
                                 .build();
@@ -129,7 +129,7 @@ public class BuildingSupervisor implements ISupervisor {
     }
 
     private void setHeartbeat() {
-        heartbeatHelper.setHeartbeat(LeoHeartbeatHelper.HeartbeatTypes.BUILD, leoBuild.getId());
+        heartbeatHelper.setHeartbeat(HeartbeatTypeConstants.BUILD, leoBuild.getId());
     }
 
     private void sleep() {
@@ -157,7 +157,7 @@ public class BuildingSupervisor implements ISupervisor {
      * @param var2
      */
     protected void save(LeoBuild saveLeoBuild, String log, Object... var2) {
-        leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
+        save(saveLeoBuild);
         logHelper.info(saveLeoBuild, log, var2);
     }
 

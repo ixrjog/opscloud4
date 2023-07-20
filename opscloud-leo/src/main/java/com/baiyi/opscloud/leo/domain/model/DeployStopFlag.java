@@ -11,7 +11,9 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeployStop {
+public class DeployStopFlag {
+
+    public static final DeployStopFlag NOT_STOP = DeployStopFlag.builder().build();
 
     @Builder.Default
     private Boolean isStop = false;

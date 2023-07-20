@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.leo.interceptor.rule.impl;
 
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.leo.constants.RuleExpressionConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoRuleModel;
 import com.baiyi.opscloud.leo.interceptor.rule.BaseLeoRuleExpression;
@@ -74,7 +75,7 @@ public class LeoRuleWithMonthlyExpression extends BaseLeoRuleExpression {
         return hitEnd;
     }
 
-    private static final String DISPLAY_NAME = "每月封网(开始时间: 第%s天 %s, 结束时间: 第%s天 %s)";
+    private static final String DISPLAY_NAME = "每月封网(开始时间: 第{}天 {}, 结束时间: 第{}天 {})";
 
     /**
      * @param expression
@@ -83,7 +84,7 @@ public class LeoRuleWithMonthlyExpression extends BaseLeoRuleExpression {
     public String toDisplayName(LeoRuleModel.Expression expression) {
         List<String> beginArgs = getExpressionArgs(expression.getBegin());
         List<String> endArgs = getExpressionArgs(expression.getEnd());
-        return String.format(DISPLAY_NAME, beginArgs.get(0), beginArgs.get(1), endArgs.get(0), endArgs.get(1));
+        return StringFormatter.arrayFormat(DISPLAY_NAME, beginArgs.get(0), beginArgs.get(1), endArgs.get(0), endArgs.get(1));
     }
 
 }

@@ -2,6 +2,7 @@ package com.baiyi.opscloud.datasource.kubernetes;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.util.JSONUtil;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.base.SimpleBusiness;
@@ -16,6 +17,7 @@ import io.fabric8.kubernetes.api.model.apps.Deployment;
 import org.junit.jupiter.api.Test;
 
 import jakarta.annotation.Resource;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,8 +57,8 @@ public class AppCostTest extends BaseKubernetesTest {
             List<TagVO.Tag> tags = simpleTagFacade.queryTagByBusiness(sb);
             List<String> tagNames = tags.stream().map(TagVO.Tag::getTagKey).collect(Collectors.toList());
 
-            String col = "%s\t%s\t%s";
-            print(String.format(col, appName, replicas, JSONUtil.writeValueAsString(tagNames)));
+            String col = "{}\t{}\t{}";
+            print(StringFormatter.arrayFormat(col, appName, replicas, JSONUtil.writeValueAsString(tagNames)));
         }
     }
 
@@ -77,8 +79,8 @@ public class AppCostTest extends BaseKubernetesTest {
             List<TagVO.Tag> tags = simpleTagFacade.queryTagByBusiness(sb);
             List<String> tagNames = tags.stream().map(TagVO.Tag::getTagKey).collect(Collectors.toList());
 
-            String col = "%s\t%s\t%s";
-            print(String.format(col, appName, replicas, JSONUtil.writeValueAsString(tagNames)));
+            String col = "{}\t{}\t{}";
+            print(StringFormatter.arrayFormat(col, appName, replicas, JSONUtil.writeValueAsString(tagNames)));
         }
     }
 }

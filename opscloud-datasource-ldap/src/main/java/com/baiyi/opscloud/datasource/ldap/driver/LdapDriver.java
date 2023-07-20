@@ -108,7 +108,8 @@ public class LdapDriver {
         }
     }
 
-    /**z
+    /**
+     * z
      * 解除绑定
      *
      * @param dn
@@ -221,7 +222,9 @@ public class LdapDriver {
      */
     public List<LdapGroup.Group> queryGroupList(LdapConfig.Ldap ldapConfig) {
         return buildLdapTemplate(ldapConfig)
-                .search(query().where(SEARCH_KEY.OBJECTCLASS).is(ldapConfig.getGroup().getObjectClass()), new GroupAttributesMapper());
+                .search(query()
+                        .where(SEARCH_KEY.OBJECTCLASS)
+                        .is(ldapConfig.getGroup().getObjectClass()), new GroupAttributesMapper());
     }
 
     public List<String> queryGroupMember(LdapConfig.Ldap ldapConfig, String groupName) {

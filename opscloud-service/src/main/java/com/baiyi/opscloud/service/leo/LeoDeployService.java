@@ -3,6 +3,7 @@ package com.baiyi.opscloud.service.leo;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
+import com.baiyi.opscloud.domain.param.leo.LeoMonitorParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployRequestParam;
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
 
@@ -52,7 +53,7 @@ public interface LeoDeployService {
 
     List<ReportVO.Report> statByEnvName();
 
-    List<LeoDeploy> queryLatestLeoDeploy(int size);
+    List<LeoDeploy> queryLatestLeoDeploy(LeoMonitorParam.QueryLatestDeploy queryLatestDeploy);
 
     /**
      * 按项目统计

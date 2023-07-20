@@ -2,6 +2,7 @@ package com.baiyi.opscloud.packer.application;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunArmsConfig;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -13,7 +14,6 @@ import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.helpers.MessageFormatter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -78,7 +78,7 @@ public class ApplicationArmsPacker {
     }
 
     private String format(String message, Object... var2) {
-        return MessageFormatter.arrayFormat(message, var2).getMessage();
+        return StringFormatter.arrayFormat(message, var2);
     }
 
 }

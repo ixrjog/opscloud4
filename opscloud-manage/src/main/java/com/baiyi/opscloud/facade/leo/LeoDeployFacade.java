@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.leo;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.leo.LeoDeployParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
+import com.baiyi.opscloud.domain.param.leo.LeoMonitorParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeploymentVersionDetailsRequestParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
@@ -43,6 +44,8 @@ public interface LeoDeployFacade {
 
     List<LeoJobVersionVO.JobVersion> queryMyLeoJobVersion(SubscribeLeoDeploymentVersionDetailsRequestParam queryParam);
 
+    void closeDeploy(int deployId);
+
     /**
      * 停止部署(逻辑层)
      *
@@ -57,6 +60,6 @@ public interface LeoDeployFacade {
      */
     void cloneDeployDeployment(LeoDeployParam.CloneDeployDeployment cloneDeployDeployment);
 
-    List<LeoDeployVO.Deploy> getLatestLeoDeploy(int size);
+    List<LeoDeployVO.Deploy> getLatestLeoDeploy(LeoMonitorParam.QueryLatestDeploy queryLatestDeploy);
 
 }

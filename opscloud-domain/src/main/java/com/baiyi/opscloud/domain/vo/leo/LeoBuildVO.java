@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.vo.leo;
 
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.ReadableTime;
+import com.baiyi.opscloud.domain.vo.common.IHeartbeat;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.collect.Lists;
@@ -29,7 +30,7 @@ public class LeoBuildVO {
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema
-    public static class Build implements Serializable, ReadableTime.IAgo, ReadableTime.IRuntime, TagVO.ITags {
+    public static class Build implements Serializable, ReadableTime.IAgo, ReadableTime.IRuntime, TagVO.ITags, IHeartbeat {
 
         @Serial
         private static final long serialVersionUID = -697201191162725310L;
@@ -43,6 +44,9 @@ public class LeoBuildVO {
         private final Integer businessType = BusinessTypeEnum.LEO_BUILD.getType();
 
         private List<TagVO.Tag> tags;
+
+        @Schema(description = "存活")
+        private Boolean isLive;
 
         @Schema(description = "构建详情")
         private Object buildDetails;

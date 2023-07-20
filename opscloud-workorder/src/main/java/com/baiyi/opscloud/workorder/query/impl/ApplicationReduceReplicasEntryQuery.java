@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.workorder.query.impl;
 
 import com.baiyi.opscloud.common.util.JSONUtil;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -79,8 +80,8 @@ public class ApplicationReduceReplicasEntryQuery extends BaseTicketEntryQuery<Ap
     }
 
     public static String getComment(ApplicationReduceReplicasEntry.KubernetesDeployment entry) {
-        String c = "已创建%s个,总共需要%s个";
-        String desc = String.format(c, entry.getReplicas(), entry.getReduceReplicas());
+        String c = "已创建{}个,总共需要{}个";
+        String desc = StringFormatter.arrayFormat(c, entry.getReplicas(), entry.getReduceReplicas());
         if (StringUtils.isNotBlank(entry.getComment())) {
             return Joiner.on("").skipNulls().join(entry.getComment(), "(", desc, ")");
         } else {

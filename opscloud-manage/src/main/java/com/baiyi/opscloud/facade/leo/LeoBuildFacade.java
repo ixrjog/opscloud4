@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.leo;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
+import com.baiyi.opscloud.domain.param.leo.LeoMonitorParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 
@@ -24,6 +25,11 @@ public interface LeoBuildFacade {
 
     void doAutoBuild(LeoBuildParam.DoAutoBuild doBuild);
 
+    /**
+     * 关闭任务
+     * @param buildId
+     */
+    void closeBuild(int buildId);
 
     /**
      * 停止构建
@@ -56,6 +62,6 @@ public interface LeoBuildFacade {
      * @param size
      * @return
      */
-    List<LeoBuildVO.Build> getLatestLeoBuild(int size);
+    List<LeoBuildVO.Build> getLatestLeoBuild(LeoMonitorParam.QueryLatestBuild queryLatestBuild);
 
 }

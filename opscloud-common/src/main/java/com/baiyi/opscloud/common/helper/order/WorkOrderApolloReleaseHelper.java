@@ -1,10 +1,10 @@
 package com.baiyi.opscloud.common.helper.order;
 
 import com.baiyi.opscloud.common.util.NewTimeUtil;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.domain.model.WorkOrderToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.helpers.MessageFormatter;
 import org.springframework.stereotype.Component;
 
 /**
@@ -41,7 +41,7 @@ public class WorkOrderApolloReleaseHelper extends BaseWorkOrderToken<WorkOrderTo
 
     @Override
     protected String getKey(Integer id) {
-        return MessageFormatter.format(KEY, id).getMessage();
+        return StringFormatter.format(KEY, id);
     }
 
 }

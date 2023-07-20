@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.common.datasource;
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.google.common.base.Joiner;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -25,7 +26,7 @@ public class AliyunConfig extends BaseDsConfig {
      * signin.aliyun.com
      * private static final String RAM_LOGIN_URL = "https://signin.${VERSION}.com/${COMPANY}.onaliyun.com/login.htm";
      */
-    private static final String RAM_LOGIN_URL = "https://signin.%s.com/%s.onaliyun.com/login.htm";
+    private static final String RAM_LOGIN_URL = "https://signin.{}.com/{}.onaliyun.com/login.htm";
 
     public static final String DMS_ENDPOINT = "dms-enterprise.aliyuncs.com";
 
@@ -80,7 +81,7 @@ public class AliyunConfig extends BaseDsConfig {
         public String getLoginUrl(String version) {
             String aliyunVersion = StringUtils.isEmpty(version) ? "aliyun" : version;
             String aliyunCompany = StringUtils.isEmpty(this.company) ? this.uid : this.company;
-            return String.format(RAM_LOGIN_URL, aliyunVersion, aliyunCompany);
+            return StringFormatter.arrayFormat(RAM_LOGIN_URL, aliyunVersion, aliyunCompany);
         }
 
     }

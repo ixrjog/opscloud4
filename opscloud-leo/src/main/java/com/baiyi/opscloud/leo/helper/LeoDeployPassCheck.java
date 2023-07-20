@@ -3,6 +3,7 @@ package com.baiyi.opscloud.leo.helper;
 import com.baiyi.opscloud.common.helper.order.WorkOrderLeoDeployHelper;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +30,7 @@ public class LeoDeployPassCheck {
     /**
      * 历史部署信息
      */
-    private static final String KEY = "OC4:V0:LEO:DEPLOY:BID:%s";
+    private static final String KEY = "OC4:V0:LEO:DEPLOY:BID:{}";
 
     public boolean checkPass(Integer buildId) {
         if (buildId == 0) {
@@ -53,7 +54,7 @@ public class LeoDeployPassCheck {
     }
 
     private String getKey(Integer buildId) {
-        return String.format(KEY, buildId);
+        return StringFormatter.format(KEY, buildId);
     }
 
 

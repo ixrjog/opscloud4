@@ -3,7 +3,10 @@ package com.baiyi.opscloud.controller.http;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.leo.*;
-import com.baiyi.opscloud.domain.param.leo.request.*;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeploymentVersionDetailsRequestParam;
+import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoJobRequestParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.leo.*;
 import com.baiyi.opscloud.facade.leo.*;
@@ -195,6 +198,13 @@ public class LeoController {
         return HttpResult.SUCCESS;
     }
 
+    @Operation(summary = "关闭构建")
+    @PutMapping(value = "/build/close", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> closeLeoBuild(@RequestParam @Valid int buildId) {
+        buildFacade.closeBuild(buildId);
+        return HttpResult.SUCCESS;
+    }
+
     @Operation(summary = "停止构建")
     @PutMapping(value = "/build/stop", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> stopLeoBuild(@RequestParam @Valid int buildId) {
@@ -262,6 +272,13 @@ public class LeoController {
         return HttpResult.SUCCESS;
     }
 
+    @Operation(summary = "关闭部署")
+    @PutMapping(value = "/deploy/close", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> closeLeoDeploy(@RequestParam @Valid int deployId) {
+        deployFacade.closeDeploy(deployId);
+        return HttpResult.SUCCESS;
+    }
+
     @Operation(summary = "停止部署(逻辑层)")
     @PutMapping(value = "/deploy/stop", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> stopLeoDeploy(@RequestParam @Valid int deployId) {
@@ -309,15 +326,15 @@ public class LeoController {
     // Monitor
 
     @Operation(summary = "查询最近的构建详情")
-    @GetMapping(value = "/latest/build/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<LeoBuildVO.Build>> getLatestLeoBuild(@RequestParam @Valid int size) {
-        return new HttpResult<>(buildFacade.getLatestLeoBuild(size));
+    @PostMapping(value = "/latest/build/get", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<LeoBuildVO.Build>> getLatestLeoBuild(@RequestBody @Valid LeoMonitorParam.QueryLatestBuild queryLatestBuild) {
+        return new HttpResult<>(buildFacade.getLatestLeoBuild(queryLatestBuild));
     }
 
     @Operation(summary = "查询最近的部署详情")
-    @GetMapping(value = "/latest/deploy/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<LeoDeployVO.Deploy>> getLatestLeoDeploy(@RequestParam @Valid int size) {
-        return new HttpResult<>(deployFacade.getLatestLeoDeploy(size));
+    @PostMapping(value = "/latest/deploy/get", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<LeoDeployVO.Deploy>> getLatestLeoDeploy(@RequestBody @Valid LeoMonitorParam.QueryLatestDeploy queryLatestDeploy) {
+        return new HttpResult<>(deployFacade.getLatestLeoDeploy(queryLatestDeploy));
     }
 
 }

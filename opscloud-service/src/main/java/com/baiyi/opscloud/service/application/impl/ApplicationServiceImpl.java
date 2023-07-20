@@ -25,21 +25,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     private final ApplicationMapper applicationMapper;
 
-//    @Override
-//    public DataTable<Application> queryPageByParam(ApplicationParam.ApplicationPageQuery pageQuery) {
-//        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
-//        Example example = new Example(Application.class);
-//        if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
-//            Example.Criteria criteria = example.createCriteria();
-//            criteria.andLike("name", SQLUtil.toLike(pageQuery.getQueryName()));
-//            example.setOrderByClause(String.format("replace( name, '%s', '' )", pageQuery.getQueryName()));
-//        } else {
-//            example.setOrderByClause("create_time");
-//        }
-//        List<Application> data = applicationMapper.selectByExample(example);
-//        return new DataTable<>(data, page.getTotal());
-//    }
-
     @Override
     public DataTable<Application> queryPageByParam(ApplicationParam.ApplicationPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());

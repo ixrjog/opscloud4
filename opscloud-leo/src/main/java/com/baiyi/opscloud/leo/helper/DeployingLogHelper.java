@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.leo.helper;
 
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeployLog;
 import com.baiyi.opscloud.leo.constants.LogTypeConstants;
@@ -7,7 +8,6 @@ import com.baiyi.opscloud.service.leo.LeoDeployLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.event.Level;
-import org.slf4j.helpers.MessageFormatter;
 import org.springframework.stereotype.Component;
 
 /**
@@ -56,7 +56,7 @@ public class DeployingLogHelper {
                 .deployId(deployId)
                 .logLevel(level.name())
                 .logType(logType.name())
-                .log(MessageFormatter.arrayFormat(log, var2).getMessage())
+                .log(StringFormatter.arrayFormat(log, var2))
                 .build();
         logService.add(deployLog);
     }

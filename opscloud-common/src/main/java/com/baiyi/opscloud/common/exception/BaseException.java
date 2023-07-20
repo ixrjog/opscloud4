@@ -1,10 +1,10 @@
 package com.baiyi.opscloud.common.exception;
 
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.slf4j.helpers.MessageFormatter;
 
 import java.io.Serial;
 
@@ -29,7 +29,7 @@ public abstract class BaseException extends RuntimeException {
     }
 
     public BaseException(String message, Object... var2) {
-        super(MessageFormatter.arrayFormat(message, var2).getMessage());
+        super(StringFormatter.arrayFormat(message, var2));
         this.code = 10000;
     }
 

@@ -2,6 +2,7 @@ package com.baiyi.opscloud.datasource.kubernetes.pre;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.exception.common.OCException;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesServiceDriver;
@@ -49,7 +50,7 @@ public class KubernetesPreTest extends BaseKubernetesTest {
             // index namespace name
             String appName = deploymentList.get(i).getMetadata().getName();
 
-            print(String.format("%s %s %s", i, deploymentList.get(i).getMetadata().getNamespace(), appName));
+            print(StringFormatter.arrayFormat("{} {} {}", i, deploymentList.get(i).getMetadata().getNamespace(), appName));
 
             Deployment deployment = deploymentList.get(i);
             Optional<Container> optionalContainer =

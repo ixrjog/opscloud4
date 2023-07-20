@@ -4,10 +4,7 @@ import com.baiyi.opscloud.common.annotation.SetSessionUsername;
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.instance.OcInstance;
-import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.IdUtil;
-import com.baiyi.opscloud.common.util.JSONUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabRepositoryDriver;
 import com.baiyi.opscloud.domain.DataTable;
@@ -16,6 +13,7 @@ import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
+import com.baiyi.opscloud.domain.param.leo.LeoMonitorParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
 import com.baiyi.opscloud.domain.util.GitFlowUtil;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
@@ -24,6 +22,7 @@ import com.baiyi.opscloud.leo.aop.annotation.LeoBuildInterceptor;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.constants.BuildTypeConstants;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
+import com.baiyi.opscloud.leo.constants.HeartbeatTypeConstants;
 import com.baiyi.opscloud.leo.delegate.GitLabRepoDelegate;
 import com.baiyi.opscloud.leo.dict.IBuildDictGenerator;
 import com.baiyi.opscloud.leo.dict.factory.BuildDictGeneratorFactory;
@@ -35,6 +34,7 @@ import com.baiyi.opscloud.leo.driver.BlueRestDriver;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.leo.handler.build.LeoBuildHandler;
 import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
+import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
 import com.baiyi.opscloud.leo.message.handler.impl.build.SubscribeLeoBuildRequestHandler;
 import com.baiyi.opscloud.leo.packer.LeoBuildResponsePacker;
 import com.baiyi.opscloud.leo.parser.MavenPublishParser;
@@ -59,10 +59,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
@@ -110,6 +107,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
     private final SubscribeLeoBuildRequestHandler subscribeLeoBuildRequestHandler;
 
     private final DsInstanceAssetRelationService dsInstanceAssetRelationService;
+
+    private final LeoHeartbeatHelper leoHeartbeatHelper;
 
     @Override
     @LeoBuildInterceptor(jobIdSpEL = "#doBuild.jobId")
@@ -248,6 +247,29 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
             throw new LeoBuildException("构建类型不正确: buildType={}", buildType);
         }
         return buildDictGenerator.generate(doBuild);
+    }
+
+    @Override
+    public void closeBuild(int buildId) {
+        LeoBuild leoBuild = buildService.getById(buildId);
+        if (leoBuild == null) {
+            throw new LeoBuildException("构建不存在: buildId={}", buildId);
+        }
+        if (leoBuild.getIsFinish() != null && leoBuild.getIsFinish()) {
+            throw new LeoBuildException("构建任务已完成: buildId={}", buildId);
+        }
+        if (leoHeartbeatHelper.isLive(HeartbeatTypeConstants.BUILD, buildId)) {
+            throw new LeoBuildException("构建任务有心跳: buildId={}", buildId);
+        }
+        LeoBuild saveLeoBuild = LeoBuild.builder()
+                .id(buildId)
+                .buildResult("ERROR")
+                .buildStatus(StringFormatter.format("{} 关闭任务",SessionUtil.getUsername()))
+                .isActive(false)
+                .isFinish(true)
+                .endTime(new Date())
+                .build();
+        buildService.updateByPrimaryKeySelective(saveLeoBuild);
     }
 
     @Override
@@ -519,10 +541,13 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
     }
 
     @Override
-    public List<LeoBuildVO.Build> getLatestLeoBuild(int size) {
-        List<LeoBuild> builds = buildService.queryLatestLeoBuild(size);
+    public List<LeoBuildVO.Build> getLatestLeoBuild(LeoMonitorParam.QueryLatestBuild queryLatestBuild) {
+        List<LeoBuild> builds = buildService.queryLatestLeoBuild(queryLatestBuild);
         return BeanCopierUtil.copyListProperties(builds, LeoBuildVO.Build.class).stream()
-                .peek(leoBuildResponsePacker::wrap)
+                .peek(e -> {
+                    leoBuildResponsePacker.wrap(e);
+                    e.setIsLive(leoHeartbeatHelper.isLive(HeartbeatTypeConstants.BUILD, e.getId()));
+                })
                 .collect(Collectors.toList());
     }
 

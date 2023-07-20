@@ -3,6 +3,7 @@ package com.baiyi.opscloud.service.leo.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
+import com.baiyi.opscloud.domain.param.leo.LeoMonitorParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployRequestParam;
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.baiyi.opscloud.mapper.LeoDeployMapper;
@@ -149,9 +150,13 @@ public class LeoDeployServiceImpl implements LeoDeployService {
     }
 
     @Override
-    public List<LeoDeploy> queryLatestLeoDeploy(int size) {
-        PageHelper.startPage(1, size);
+    public List<LeoDeploy> queryLatestLeoDeploy(LeoMonitorParam.QueryLatestDeploy queryLatestDeploy) {
+        PageHelper.startPage(1, queryLatestDeploy.getSize());
         Example example = new Example(LeoDeploy.class);
+        if (queryLatestDeploy.getIsFinish() != null) {
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("isFinish", queryLatestDeploy.getIsFinish());
+        }
         example.setOrderByClause("id desc");
         return deployMapper.selectByExample(example);
     }

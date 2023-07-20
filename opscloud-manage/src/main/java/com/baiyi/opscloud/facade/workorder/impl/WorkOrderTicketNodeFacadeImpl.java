@@ -52,12 +52,12 @@ public class WorkOrderTicketNodeFacadeImpl implements WorkOrderTicketNodeFacade 
         List<WorkOrderTicketNode> nodes = workOrderTicketNodeService.queryByWorkOrderTicketId(workOrderTicket.getId());
         for (WorkOrderTicketNode node : nodes) {
             if (!nodeMap.containsKey(node.getNodeName())) {
-                throw new TicketVerifyException(String.format("工单验证失败: 未找到%s审批节点！", node.getNodeName()));
+                throw new TicketVerifyException("工单验证失败: 未找到 {} 审批节点！", node.getNodeName());
             }
             if (NodeTypeConstants.USER_LIST.getCode() == nodeMap.get(node.getNodeName()).getType()) {
                 // 用户必须指定
                 if (StringUtils.isEmpty(node.getUsername())) {
-                    throw new TicketVerifyException(String.format("工单验证失败: %s审批节点必须指定审批人！", node.getNodeName()));
+                    throw new TicketVerifyException("工单验证失败: {} 审批节点必须指定审批人！", node.getNodeName());
                 }
             }
         }

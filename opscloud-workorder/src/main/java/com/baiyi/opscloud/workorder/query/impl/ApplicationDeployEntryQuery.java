@@ -3,6 +3,7 @@ package com.baiyi.opscloud.workorder.query.impl;
 import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.JSONUtil;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.common.util.time.AgoUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
@@ -71,7 +72,7 @@ public class ApplicationDeployEntryQuery extends BaseTicketEntryQuery<Applicatio
     protected WorkOrderTicketVO.Entry<ApplicationDeployEntry.LeoBuildVersion> toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery,
             ApplicationDeployEntry.LeoBuildVersion entry) {
         String ago = AgoUtil.format(entry.getEndTime());
-        String buildInfo = String.format("#%s构建", entry.getBuildNumber());
+        String buildInfo = StringFormatter.format("#{}构建", entry.getBuildNumber());
         String comment = Joiner.on(" ").join(ago, buildInfo);
         return WorkOrderTicketVO.Entry.<ApplicationDeployEntry.LeoBuildVersion>builder()
                 .workOrderTicketId(entryQuery.getWorkOrderTicketId())

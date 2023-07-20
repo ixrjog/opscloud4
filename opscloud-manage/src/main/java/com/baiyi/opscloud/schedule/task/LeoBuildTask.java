@@ -2,7 +2,6 @@ package com.baiyi.opscloud.schedule.task;
 
 import com.baiyi.opscloud.common.annotation.WatchTask;
 import com.baiyi.opscloud.config.condition.EnvCondition;
-import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.leo.task.LeoBuildCompensationTask;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,7 @@ public class LeoBuildTask {
 
     private final LeoBuildCompensationTask buildCompensationTask;
 
-    @InstanceHealth
+    //@InstanceHealth
     @Scheduled(initialDelay = 30000, fixedRate = 180 * 1000)
     @WatchTask(name = "Leo build compensate")
     public void run() {

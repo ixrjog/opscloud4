@@ -2,6 +2,7 @@ package com.baiyi.opscloud.common.datasource;
 
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.google.common.base.Joiner;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -24,7 +25,7 @@ public class LdapConfig extends BaseDsConfig {
     @Schema
     public static class Ldap {
 
-        private static final String RDN = "%s=%s";
+        private static final String RDN = "{}={}";
 
         private String url;
         private String base;
@@ -33,11 +34,11 @@ public class LdapConfig extends BaseDsConfig {
         private LdapGroup group;
 
         public String buildUserDn(String username) {
-            return Joiner.on(",").skipNulls().join(String.format(RDN, user.getId(), username), user.getDn());
+            return Joiner.on(",").skipNulls().join(StringFormatter.arrayFormat(RDN, user.getId(), username), user.getDn());
         }
 
         public String buildGroupDn(String groupName) {
-            return Joiner.on(",").skipNulls().join(String.format(RDN, group.getId(), groupName), group.getDn());
+            return Joiner.on(",").skipNulls().join(StringFormatter.arrayFormat(RDN, group.getId(), groupName), group.getDn());
         }
 
     }

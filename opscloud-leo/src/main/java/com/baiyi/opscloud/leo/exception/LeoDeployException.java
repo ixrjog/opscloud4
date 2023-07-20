@@ -1,10 +1,10 @@
 package com.baiyi.opscloud.leo.exception;
 
 import com.baiyi.opscloud.common.exception.BaseException;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.slf4j.helpers.MessageFormatter;
 
 import java.io.Serial;
 
@@ -28,7 +28,7 @@ public class LeoDeployException extends BaseException {
     }
 
     public LeoDeployException(String message, Object... var2) {
-        super(MessageFormatter.arrayFormat(message, var2).getMessage());
+        super(StringFormatter.arrayFormat(message, var2));
         this.code = 43000;
     }
 

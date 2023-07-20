@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.workorder.exception;
 
+import com.baiyi.opscloud.common.util.StringFormatter;
 import lombok.EqualsAndHashCode;
-import org.slf4j.helpers.MessageFormatter;
 
 import java.io.Serial;
 
@@ -21,7 +21,7 @@ public class TicketException extends BaseTicketException {
     }
 
     public TicketException(String message, Object... var2) {
-        super(MessageFormatter.arrayFormat(message, var2).getMessage());
+        super(StringFormatter.arrayFormat(message, var2));
     }
 
 }

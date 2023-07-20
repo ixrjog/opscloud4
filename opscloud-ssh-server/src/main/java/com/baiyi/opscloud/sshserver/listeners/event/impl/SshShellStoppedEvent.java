@@ -27,7 +27,7 @@ public class SshShellStoppedEvent extends AbstractSshShellEvent {
     public void handle(SshShellEvent event) {
         SessionCommandContext.remove();
         final String username = event.getSession().getServerSession().getUsername();
-        log.info(String.format("User %s logout of the SSH-Server", username));
+        log.info("{} logout of the SSH-Server", username);
         closeTerminalSession(event);
     }
 

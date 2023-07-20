@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshserver.pagination;
 
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.google.common.base.Joiner;
@@ -46,7 +47,7 @@ public class TableFooter {
 
     }
 
-    public static final String FOOTER_STR = "页码: %s, 页长: %s, 页数: %s, 资产总数: %s, 翻页< 上一页: b 下一页: n >";
+    public static final String FOOTER_STR = "页码: {}, 页长: {}, 页数: {}, 资产总数: {}, 翻页< 上一页: b 下一页: n >";
 
     @Builder
     @Data
@@ -62,7 +63,7 @@ public class TableFooter {
             int tp = length == -1 ? 0 : (int) (totalNum - 1) / length + 1;
 
             // String f = Joiner.on(" ,").join("页码: " + page, "分页长度: " + length, "总页数: " + tp, "总数量: " + totalNum);
-            helper.print(String.format(FOOTER_STR, page, length, tp, totalNum), color);
+            helper.print(StringFormatter.arrayFormat(FOOTER_STR, page, length, tp, totalNum), color);
         }
     }
 

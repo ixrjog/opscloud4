@@ -6,6 +6,7 @@ import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamPolicy;
 import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementMFADriver;
 import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementPolicyDriver;
@@ -51,7 +52,7 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
 
     private final UserCredentialFacade userCredentialFacade;
 
-    public static final String DEF_SERIAL_NUMBER = "arn:aws:iam::%s:mfa/%s";
+    private static final String DEF_SERIAL_NUMBER = "arn:aws:iam::{}:mfa/{}";
 
     @Override
     public String getDsType() {
@@ -131,7 +132,7 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
     }
 
     private void enableMFADevice(AwsConfig.Aws config, String instanceUuid, User user) {
-        final String serialNumber = String.format(DEF_SERIAL_NUMBER, config.getAccount().getId(), user.getUsername());
+        final String serialNumber = StringFormatter.arrayFormat(DEF_SERIAL_NUMBER, config.getAccount().getId(), user.getUsername());
         try {
             amazonIMMFADriver.deleteVirtualMFADevice(config, serialNumber);
             log.debug("删除IAM虚拟MFA设备: serialNumber={}", serialNumber);

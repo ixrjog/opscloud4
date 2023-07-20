@@ -6,6 +6,7 @@ import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
@@ -19,6 +20,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.param.leo.LeoDeployParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
+import com.baiyi.opscloud.domain.param.leo.LeoMonitorParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeploymentVersionDetailsRequestParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
@@ -30,17 +32,18 @@ import com.baiyi.opscloud.facade.leo.LeoDeployFacade;
 import com.baiyi.opscloud.facade.sys.SimpleEnvFacade;
 import com.baiyi.opscloud.leo.aop.annotation.LeoDeployInterceptor;
 import com.baiyi.opscloud.leo.constants.ExecutionTypeConstants;
+import com.baiyi.opscloud.leo.constants.HeartbeatTypeConstants;
 import com.baiyi.opscloud.leo.delegate.LeoBuildDeploymentDelegate;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.leo.handler.deploy.LeoDeployHandler;
+import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
 import com.baiyi.opscloud.leo.interceptor.LeoExecuteJobInterceptorHandler;
 import com.baiyi.opscloud.leo.message.handler.impl.deploy.SubscribeLeoDeployRequestHandler;
 import com.baiyi.opscloud.leo.message.handler.impl.deploy.SubscribeLeoDeploymentVersionDetailsRequestHandler;
 import com.baiyi.opscloud.leo.packer.LeoDeployResponsePacker;
-import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
 import com.baiyi.opscloud.packer.leo.LeoBuildVersionPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
@@ -58,10 +61,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper.STOP_SIGNAL;
 
 /**
  * @Author baiyi
@@ -109,6 +115,8 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     private final SubscribeLeoDeployRequestHandler subscribeLeoDeployRequestHandler;
 
     private final SubscribeLeoDeploymentVersionDetailsRequestHandler subscribeLeoDeploymentVersionDetailsRequestHandler;
+
+    private final LeoHeartbeatHelper leoHeartbeatHelper;
 
     @Override
     @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType", buildIdSpEL = "#doDeploy.buildId")
@@ -231,6 +239,29 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     }
 
     @Override
+    public void closeDeploy(int deployId) {
+        LeoDeploy leoDeploy = deployService.getById(deployId);
+        if (leoDeploy  == null) {
+            throw new LeoDeployException("Deploy record does not exist: deployId={}", deployId);
+        }
+        if (leoDeploy.getIsFinish() != null && leoDeploy.getIsFinish()) {
+            throw new LeoDeployException("部署任务已完成: buildId={}", deployId);
+        }
+        if (leoHeartbeatHelper.isLive(HeartbeatTypeConstants.DEPLOY, deployId)) {
+            throw new LeoDeployException("部署任务有心跳: deployId={}", deployId);
+        }
+        LeoDeploy saveLeoDeploy = LeoDeploy.builder()
+                .id(deployId)
+                .deployResult("ERROR")
+                .deployStatus(StringFormatter.format("{} 关闭任务",SessionUtil.getUsername()))
+                .isActive(false)
+                .isFinish(true)
+                .endTime(new Date())
+                .build();
+        deployService.updateByPrimaryKeySelective(saveLeoDeploy);
+    }
+
+    @Override
     public void stopDeploy(int deployId) {
         LeoDeploy leoDeploy = deployService.getById(deployId);
         if (leoDeploy == null) {
@@ -245,7 +276,8 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
             executeJobInterceptorHandler.verifyAuthorization(leoJob.getId());
         }
         // 设置信号量
-        redisUtil.set(String.format(DeployingSupervisor.STOP_SIGNAL, deployId), username, 100L);
+        final String key = StringFormatter.format(STOP_SIGNAL, deployId);
+        redisUtil.set(key, username, 100L);
     }
 
     @Override
@@ -345,10 +377,13 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     }
 
     @Override
-    public List<LeoDeployVO.Deploy> getLatestLeoDeploy(int size) {
-        List<LeoDeploy> deploys = deployService.queryLatestLeoDeploy(size);
+    public List<LeoDeployVO.Deploy> getLatestLeoDeploy(LeoMonitorParam.QueryLatestDeploy queryLatestDeploy) {
+        List<LeoDeploy> deploys = deployService.queryLatestLeoDeploy(queryLatestDeploy);
         return BeanCopierUtil.copyListProperties(deploys, LeoDeployVO.Deploy.class).stream()
-                .peek(deployResponsePacker::wrap)
+                .peek(e -> {
+                    deployResponsePacker.wrap(e);
+                    e.setIsLive(leoHeartbeatHelper.isLive(HeartbeatTypeConstants.DEPLOY, e.getId()));
+                })
                 .collect(Collectors.toList());
     }
 

@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.leo.supervisor.strategy;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
@@ -91,7 +92,7 @@ public class SupervisingWithOfflineStrategy extends SupervisingStrategy {
                     .id(leoDeploy.getId())
                     .endTime(new Date())
                     .deployResult("ERROR")
-                    .deployStatus(String.format("执行部署任务阶段: 容器重启次数超过最大值 maxRestart=%s", MAX_RESTART))
+                    .deployStatus(StringFormatter.format("执行部署任务阶段: 容器重启次数超过最大值 maxRestart={}", MAX_RESTART))
                     .isFinish(true)
                     .isActive(false)
                     .build();

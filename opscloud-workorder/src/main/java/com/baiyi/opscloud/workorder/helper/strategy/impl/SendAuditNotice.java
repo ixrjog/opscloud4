@@ -3,6 +3,7 @@ package com.baiyi.opscloud.workorder.helper.strategy.impl;
 import com.baiyi.opscloud.common.config.properties.OpscloudConfigurationProperties;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.datasource.manager.base.NoticeManager;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.notice.INoticeMessage;
@@ -46,10 +47,10 @@ public class SendAuditNotice extends AbstractSendNotice {
     @Resource
     private OpscloudConfigurationProperties opscloudConfigurationProperties;
 
-    public final static String KEY_PREFIX = "Opscloud.V4.workOrder#ticketId.%s.username.%s";
+    public final static String KEY_PREFIX = "Opscloud.V4.workOrder#ticketId.{}.username.{}";
 
     public static String buildKey(Integer ticketId, String username) {
-        return String.format(KEY_PREFIX, ticketId, username);
+        return StringFormatter.arrayFormat(KEY_PREFIX, ticketId, username);
     }
 
     @Override
@@ -113,7 +114,7 @@ public class SendAuditNotice extends AbstractSendNotice {
     protected INoticeMessage buildNoticeMessage(WorkOrderTicket ticket) {
         // 工单创建者
         User user = userService.getByUsername(ticket.getUsername());
-        String userDisplayName = String.format("%s<%s>", user.getUsername(), Joiner.on(":").skipNulls().join(user.getDisplayName(), user.getName()));
+        final String userDisplayName = StringFormatter.arrayFormat("{}<{}>", user.getUsername(), Joiner.on(":").skipNulls().join(user.getDisplayName(), user.getName()));
         // 工单名称
         WorkOrder workOrder = workOrderService.getById(ticket.getWorkOrderId());
         // 工单条目

@@ -25,7 +25,7 @@ public class SshShellUnexpectedlyEvent extends AbstractSshShellEvent {
     public void handle(SshShellEvent event) {
         SessionCommandContext.remove();
         final String username = event.getSession().getServerSession().getUsername();
-        log.warn(String.format("User %s disconnects SSH-Server", username));
+        log.warn("{} disconnects SSH-Server", username);
         closeTerminalSession(event);
     }
 

@@ -31,7 +31,6 @@ import com.google.common.base.Joiner;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
-import org.slf4j.helpers.MessageFormatter;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -274,7 +273,7 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
         SerDeployConfig serDeployConfig = getSerDeployConfig();
         AwsConfig.Aws awsConfig = getAwsConfig(serDeployConfig.getSerDeployInstance().getInstanceUuid()).getAws();
         Object[] objects = {queryCurrentSer.getApplicationName(), queryCurrentSer.getEnvName()};
-        String prefix = MessageFormatter.arrayFormat(serDeployConfig.getCurrentSerPath(), objects).getMessage();
+        String prefix = StringFormatter.arrayFormat(serDeployConfig.getCurrentSerPath(), objects);
         SerDeployConfig.SerDeployInstance serDeployInstance = serDeployConfig.getSerDeployInstance();
         return amazonS3Driver.listObjects(serDeployInstance.getRegionId(), awsConfig, serDeployInstance.getBucketName(), prefix).stream()
                 .filter(s3ObjectSummary -> s3ObjectSummary.getKey().endsWith(SER_SUFFIX))

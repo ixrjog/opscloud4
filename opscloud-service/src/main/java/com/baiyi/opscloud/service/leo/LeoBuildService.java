@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.param.leo.LeoDeployParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
+import com.baiyi.opscloud.domain.param.leo.LeoMonitorParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
 
@@ -60,6 +61,6 @@ public interface LeoBuildService {
 
     void deleteById(Integer id);
 
-    List<LeoBuild> queryLatestLeoBuild(int size);
+    List<LeoBuild> queryLatestLeoBuild(LeoMonitorParam.QueryLatestBuild queryLatestBuild);
 
 }

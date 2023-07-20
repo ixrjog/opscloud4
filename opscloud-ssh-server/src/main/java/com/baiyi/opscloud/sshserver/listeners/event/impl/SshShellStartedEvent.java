@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshserver.listeners.event.impl;
 
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.listeners.SshShellEvent;
@@ -25,7 +26,7 @@ public class SshShellStartedEvent extends AbstractSshShellEvent {
     @Value("${ssh.shell.version}")
     private String version;
 
-    private static final String WELCOME = "Dear %s, Welcome to SSH-Server<%s>@%s \n";
+    private static final String WELCOME = "Dear {}, Welcome to SSH-Server<{}>@{} \n";
 
     @Override
     public String getEventType() {
@@ -37,7 +38,7 @@ public class SshShellStartedEvent extends AbstractSshShellEvent {
         openTerminalSession(event);
         final String username = event.getSession().getServerSession().getUsername();
         final String sshServerInstance = sshShellHelper.getColored(AbstractSshShellEvent.HOST_INFO.getHostname(), PromptColor.BLUE);
-        String welcome = String.format(WELCOME, username, version, sshServerInstance);
+        String welcome = StringFormatter.arrayFormat(WELCOME, username, version, sshServerInstance);
         sshShellHelper.print(welcome, PromptColor.CYAN);
     }
 

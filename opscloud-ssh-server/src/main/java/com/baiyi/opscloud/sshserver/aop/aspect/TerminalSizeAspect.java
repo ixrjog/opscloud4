@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshserver.aop.aspect;
 
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.aop.annotation.TerminalSize;
@@ -58,16 +59,16 @@ public class TerminalSizeAspect {
         Size size = terminal.getSize();
         if (terminalSize.cols() != 0) {
             if (terminalSize.cols() > size.getColumns()) {
-                message = String.format("列不能小于 %s", terminalSize.cols());
+                message = StringFormatter.format("列不能小于 {}", terminalSize.cols());
             }
         }
         if (terminalSize.rows() != 0) {
             if (terminalSize.rows() > size.getRows()) {
-                message = Joiner.on(",").skipNulls().join(message, String.format("行不能小于 %s", terminalSize.rows()));
+                message = Joiner.on(",").skipNulls().join(message, StringFormatter.format("行不能小于 {}", terminalSize.rows()));
             }
         }
         if (!StringUtils.isEmpty(message)) {
-            helper.print(String.format("请调整终端让其符合最佳显示尺寸: %s", message), PromptColor.RED);
+            helper.print(StringFormatter.format("请调整终端让其符合最佳显示尺寸: {}", message), PromptColor.RED);
             return joinPoint;
         }
         joinPoint.proceed();
