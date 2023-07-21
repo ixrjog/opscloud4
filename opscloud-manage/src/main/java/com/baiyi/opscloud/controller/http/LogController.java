@@ -47,7 +47,7 @@ public class LogController {
     @Operation(summary = "外部平台认证使用不返回Token")
     @PostMapping(value = "/platform/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<LogVO.Login> platformLogin(@RequestBody LoginParam.PlatformLogin loginParam) {
-        return new HttpResult<>(userAuthFacade.loginWithPlatform(loginParam));
+        return new HttpResult<>(userAuthFacade.platformLogin(loginParam));
     }
 
     @Operation(summary = "平台认证选项")

@@ -28,7 +28,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class MfaAuthHelper {
+public class MfaValidator {
 
     private final UserCredentialService userCredentialService;
 

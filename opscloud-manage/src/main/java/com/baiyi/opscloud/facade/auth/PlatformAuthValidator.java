@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.param.auth.IAuthPlatform;
  * @Date 2022/9/8 11:58
  * @Version 1.0
  */
-public interface PlatformAuthHelper {
+public interface PlatformAuthValidator {
 
     AuthPlatform verify(IAuthPlatform iAuthPlatform);
 

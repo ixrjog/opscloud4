@@ -30,7 +30,7 @@ import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.domain.vo.user.mfa.MfaVO;
 import com.baiyi.opscloud.facade.user.UserCredentialFacade;
-import com.baiyi.opscloud.facade.auth.mfa.MfaAuthHelper;
+import com.baiyi.opscloud.facade.auth.mfa.MfaValidator;
 import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
 import com.baiyi.opscloud.facade.user.UserFacade;
@@ -98,7 +98,7 @@ public class UserFacadeImpl implements UserFacade {
 
     private final UserCredentialService userCredentialService;
 
-    private final MfaAuthHelper mfaAuthHelper;
+    private final MfaValidator mfaAuthHelper;
 
     private final UserHandler userHandler;
 

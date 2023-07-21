@@ -26,11 +26,11 @@ public class IPUtil {
         if ("0.0.0.0/0".equals(mask) || "0.0.0.0".equals(mask)) {
             return true;
         }
-        String[] networkips = network.split("\\.");
-        int ipAddr = (Integer.parseInt(networkips[0]) << 24)
-                | (Integer.parseInt(networkips[1]) << 16)
-                | (Integer.parseInt(networkips[2]) << 8)
-                | Integer.parseInt(networkips[3]);
+        String[] networkIps = network.split("\\.");
+        int ipAddr = (Integer.parseInt(networkIps[0]) << 24)
+                | (Integer.parseInt(networkIps[1]) << 16)
+                | (Integer.parseInt(networkIps[2]) << 8)
+                | Integer.parseInt(networkIps[3]);
         int type = Integer.parseInt(mask.replaceAll(".*/", ""));
         int mask1 = 0xFFFFFFFF << (32 - type);
         String maskIp = mask.replaceAll("/.*", "");

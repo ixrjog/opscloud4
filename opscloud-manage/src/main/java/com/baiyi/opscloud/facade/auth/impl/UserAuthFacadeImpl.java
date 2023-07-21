@@ -10,10 +10,10 @@ import com.baiyi.opscloud.domain.param.auth.LoginParam;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleResourceVO;
 import com.baiyi.opscloud.domain.vo.auth.LogVO;
 import com.baiyi.opscloud.facade.auth.AuthFacade;
-import com.baiyi.opscloud.facade.auth.PlatformAuthHelper;
+import com.baiyi.opscloud.facade.auth.PlatformAuthValidator;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import com.baiyi.opscloud.facade.auth.UserTokenFacade;
-import com.baiyi.opscloud.facade.auth.mfa.MfaAuthHelper;
+import com.baiyi.opscloud.facade.auth.mfa.MfaValidator;
 import com.baiyi.opscloud.service.auth.AuthPlatformLogService;
 import com.baiyi.opscloud.service.auth.AuthResourceService;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
@@ -58,11 +58,11 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
 
     private final DsAuthManager dsAuthManager;
 
-    private final MfaAuthHelper mfaAuthHelper;
+    private final MfaValidator mfaValidator;
 
     private final AuthPlatformLogService authPlatformLogService;
 
-    private final PlatformAuthHelper platformAuthHelper;
+    private final PlatformAuthValidator platformAuthValidator;
 
     @Override
     public void verifyUserHasResourcePermissionWithToken(String token, String resourceName) {
@@ -143,9 +143,9 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
         }
         boolean bindMfa = false;
         if (user.getMfa()) {
-            mfaAuthHelper.verify(user, loginParam);
+            mfaValidator.verify(user, loginParam);
         } else {
-            bindMfa = mfaAuthHelper.tryBind(user, loginParam);
+            bindMfa = mfaValidator.tryBind(user, loginParam);
         }
         // 更新用户登录信息
         User saveUser = User.builder()
@@ -160,14 +160,14 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     }
 
     @Override
-    public LogVO.Login loginWithPlatform(LoginParam.PlatformLogin loginParam) {
-        AuthPlatform authPlatform = platformAuthHelper.verify(loginParam);
+    public LogVO.Login platformLogin(LoginParam.PlatformLogin loginParam) {
+        AuthPlatform authPlatform = platformAuthValidator.verify(loginParam);
         User user = userService.getByUsername(loginParam.getUsername());
         // 尝试使用authProvider 认证
         if (dsAuthManager.tryLogin(user, loginParam)) {
             if (user.getMfa()) {
                 try {
-                    mfaAuthHelper.verify(user, loginParam);
+                    mfaValidator.verify(user, loginParam);
                 } catch (AuthenticationException e) {
                     recordLog(authPlatform, loginParam, ErrorEnum.AUTH_USER_LOGIN_FAILURE);
                     throw new AuthenticationException(e.getMessage());

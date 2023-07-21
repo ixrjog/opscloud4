@@ -70,6 +70,7 @@ public class SingleTaskAspect {
             }
         } catch (Exception e) {
             log.warn("Execute {} task error: {}", taskName, e.getMessage());
+        } finally {
             // 解锁
             unlock(key);
         }

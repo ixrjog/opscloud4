@@ -26,7 +26,7 @@ public class JacksonUtil {
         try {
             return OBJECT_MAPPER.readValue(json, clazz);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.debug(e.getMessage());
         }
         return null;
     }
@@ -41,7 +41,7 @@ public class JacksonUtil {
         try {
             return OBJECT_MAPPER.writeValueAsString(object);
         } catch (IOException e) {
-            log.error(e.getMessage());
+            log.debug(e.getMessage());
         }
         return StringUtils.EMPTY;
     }

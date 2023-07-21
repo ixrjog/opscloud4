@@ -73,7 +73,7 @@ public class IPAddressUtil {
                     case 2:
                         var1[2] = (byte) ((int) (var2 >> 8 & 255L));
                     case 3:
-                        var1[3] = (byte) ((int) (var2 >> 0 & 255L));
+                        var1[3] = (byte) ((int) (var2 & 255L));
                     default:
                         return var1;
                 }

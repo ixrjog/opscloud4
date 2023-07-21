@@ -7,7 +7,7 @@ package com.baiyi.opscloud.common.util;
  */
 public class DingtalkUtil {
 
-    private static final String DING_WEB_HOOK = "https://oapi.dingtalk.com/robot/send?access_token=${TOKEN}";
+    private static final String DING_WEB_HOOK = "https://oapi.dingtalk.com/robot/send?access_token={}";
 
     /**
      * 钉钉机器人WebHook地址
@@ -15,7 +15,7 @@ public class DingtalkUtil {
      * @return
      */
     public static String getRobotWebHook(String token) {
-        return DING_WEB_HOOK.replace("${TOKEN}", token);
+       return StringFormatter.format(DING_WEB_HOOK,token);
     }
 
 }

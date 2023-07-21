@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
  * @Date 2021/10/12 5:53 下午
  * @Since 1.0
  */
+@Slf4j
 public class JsonNodeMapperUtil {
 
     private static <T> List<T> mapperList(JsonNode jsonNode, Class<T> tClass) {
@@ -30,7 +32,7 @@ public class JsonNodeMapperUtil {
         try {
             return mapper.readValue(jsonNode.toString(), tClass);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.debug(e.getMessage());
             return null;
         }
     }

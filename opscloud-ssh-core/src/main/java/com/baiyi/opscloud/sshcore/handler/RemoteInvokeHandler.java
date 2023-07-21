@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.sshcore.handler;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.common.exception.ssh.SshCommonException;
+import com.baiyi.opscloud.common.exception.ssh.SshException;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
@@ -146,7 +146,7 @@ public class RemoteInvokeHandler {
      * @param sessionId
      * @param hostSystem
      */
-    public static void openSSHServer(String sessionId, HostSystem hostSystem, OutputStream out) throws SshCommonException {
+    public static void openSSHServer(String sessionId, HostSystem hostSystem, OutputStream out) throws SshException {
         JSch jsch = new JSch();
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
         try {
@@ -193,7 +193,7 @@ public class RemoteInvokeHandler {
             } else {
                 hostSystem.setStatusCd(HostSystem.GENERIC_FAIL_STATUS);
             }
-            throw new SshCommonException(e.toString());
+            throw new SshException(e.toString());
         }
     }
 

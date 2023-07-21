@@ -45,8 +45,7 @@ public class PermitEmptyPasswordsAspect {
         Object[] args = joinPoint.getArgs();
         if (params != null && params.length != 0) {
             Object obj = args[0];
-            if (obj instanceof LoginParam.Login) {
-                LoginParam.Login loginParam = (LoginParam.Login) obj;
+            if (obj instanceof LoginParam.Login loginParam) {
                 User user = userService.getByUsername(loginParam.getUsername());
                 // 判断用户是否有效
                 if (user == null || !user.getIsActive()) {

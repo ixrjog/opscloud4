@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthPlatform;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.param.auth.IAuthPlatform;
-import com.baiyi.opscloud.facade.auth.PlatformAuthHelper;
+import com.baiyi.opscloud.facade.auth.PlatformAuthValidator;
 import com.baiyi.opscloud.service.auth.AuthPlatformService;
 import com.baiyi.opscloud.service.sys.CredentialService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class AuthPlatformHelperImpl implements PlatformAuthHelper {
+public class AuthPlatformHelperImpl implements PlatformAuthValidator {
 
     private final AuthPlatformService authPlatformService;
 

@@ -17,7 +17,7 @@ public class LeoDeployQuerySessionMap {
     /**
      * Map<String sessionId, Map<String messageType, String message>>
      */
-    private static Map<String, Map<String, String>> sessionQueryMap = new HashedMap<>();
+    private static final Map<String, Map<String, String>> sessionQueryMap = new HashedMap<>();
 
     public static void addSessionQueryMap(String sessionId, Map<String, String> queryMap) {
         LeoDeployQuerySessionMap.sessionQueryMap.put(sessionId, queryMap);

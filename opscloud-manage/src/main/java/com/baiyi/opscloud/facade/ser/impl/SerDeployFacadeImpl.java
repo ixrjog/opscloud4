@@ -18,7 +18,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.ser.SerDeployParam;
 import com.baiyi.opscloud.domain.vo.ser.SerDeployVO;
-import com.baiyi.opscloud.facade.auth.PlatformAuthHelper;
+import com.baiyi.opscloud.facade.auth.PlatformAuthValidator;
 import com.baiyi.opscloud.facade.ser.SerDeployFacade;
 import com.baiyi.opscloud.packer.ser.SerDeployTaskPacker;
 import com.baiyi.opscloud.service.application.ApplicationService;
@@ -61,7 +61,7 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
     private final SerDeployTaskPacker serDeployTaskPacker;
     private final EnvService envService;
     private final ApplicationService applicationService;
-    private final PlatformAuthHelper platformAuthHelper;
+    private final PlatformAuthValidator platformAuthHelper;
     private final SerDeploySubtaskCallbackService SerDeploySubtaskCallbackService;
 
     private final static String SER_SUFFIX = ".ser";

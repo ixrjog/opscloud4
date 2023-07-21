@@ -58,7 +58,7 @@ public class DesensitizeAspect {
 
     private String setNewValueForField(String value, SensitiveTypeEnum type) {
         switch (type) {
-            case MOBILE_PHONE:
+            case MOBILE_PHONE -> {
                 if (StringUtils.isEmpty(value)) {
                     return value;
                 }
@@ -67,11 +67,13 @@ public class DesensitizeAspect {
                     return sb.replace(3, 7, getSymbol(4)).toString();
                 }
                 return value;
-            case TOKEN:
+            }
+            case TOKEN -> {
                 return getSymbol(6);
-            case PASSWORD:
-            default:
+            }
+            default -> {
                 return StringUtils.EMPTY;
+            }
         }
     }
 
@@ -81,11 +83,7 @@ public class DesensitizeAspect {
      * @param number 符号个数
      */
     private String getSymbol(int number) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < number; i++) {
-            sb.append(STAR);
-        }
-        return sb.toString();
+        return STAR.repeat(Math.max(0, number));
     }
 
 }

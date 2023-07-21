@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.AuthPlatform;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.PlatformNotifyHistory;
 import com.baiyi.opscloud.domain.param.message.MessageParam;
-import com.baiyi.opscloud.facade.auth.PlatformAuthHelper;
+import com.baiyi.opscloud.facade.auth.PlatformAuthValidator;
 import com.baiyi.opscloud.facade.message.MessageFacade;
 import com.baiyi.opscloud.service.auth.PlatformNotifyHistoryService;
 import com.google.common.base.Joiner;
@@ -44,7 +44,7 @@ public class MessageFacadeImpl implements MessageFacade {
 
     private final PlatformNotifyHistoryService platformNotifyHistoryService;
 
-    private final PlatformAuthHelper platformAuthHelper;
+    private final PlatformAuthValidator platformAuthHelper;
 
     private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.LXHL};
     private static final String SIGN_NAME = "PalmPay";

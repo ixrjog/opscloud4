@@ -47,8 +47,7 @@ public class AssetBusinessRelationAspect {
         Object[] args = joinPoint.getArgs();
         if (params != null && params.length != 0) {
             Object obj = args[0];
-            if (obj instanceof BusinessAssetRelationVO.IBusinessAssetRelation) {
-                BusinessAssetRelationVO.IBusinessAssetRelation bar = (BusinessAssetRelationVO.IBusinessAssetRelation) obj;
+            if (obj instanceof BusinessAssetRelationVO.IBusinessAssetRelation bar) {
                 bindRelation(bar);
             }
         }

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.sshserver.commands.custom.server;
 
-import com.baiyi.opscloud.common.exception.ssh.SshCommonException;
+import com.baiyi.opscloud.common.exception.ssh.SshException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
@@ -118,7 +118,7 @@ public class ServerLoginCommand extends BaseServerCommand {
             } finally {
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             }
-        } catch (SshCommonException e) {
+        } catch (SshException e) {
             String msg = StringFormatter.format("SSH connection error: {}", e.getMessage());
             log.error(msg);
             sshShellHelper.print(msg, PromptColor.RED);
