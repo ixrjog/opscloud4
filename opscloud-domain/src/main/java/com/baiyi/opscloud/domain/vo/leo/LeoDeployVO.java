@@ -77,6 +77,7 @@ public class LeoDeployVO {
         private Date createTime;
         private Date updateTime;
         private String deployConfig;
+        private String ocInstance;
         private String comment;
 
         @Override

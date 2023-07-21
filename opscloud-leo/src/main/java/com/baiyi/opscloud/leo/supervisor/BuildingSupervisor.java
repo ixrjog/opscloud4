@@ -10,8 +10,9 @@ import com.baiyi.opscloud.datasource.jenkins.model.JobWithDetails;
 import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.constants.HeartbeatTypeConstants;
-import com.baiyi.opscloud.leo.handler.build.LeoPostBuildHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
+import com.baiyi.opscloud.leo.exception.LeoBuildException;
+import com.baiyi.opscloud.leo.handler.build.LeoPostBuildHandler;
 import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
 import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
 import com.baiyi.opscloud.leo.supervisor.base.ISupervisor;
@@ -35,6 +36,8 @@ import static com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler.RESULT_
 public class BuildingSupervisor implements ISupervisor {
 
     private static final int SLEEP_SECONDS = 4;
+
+    private static final long TIMEOUT = 3600000L;
 
     private final LeoBuildService leoBuildService;
 
@@ -71,11 +74,11 @@ public class BuildingSupervisor implements ISupervisor {
     @Override
     public void run() {
         setHeartbeat();
+
         try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
             JobWithDetails jobWithDetails = jenkinsServer.getJob(leoBuild.getBuildJobName());
             while (true) {
                 setHeartbeat();
-
                 if (this.build == null) {
                     Build build = jobWithDetails.details().getLastBuild();
                     if (build.equals(Build.BUILD_HAS_NEVER_RUN)) {
@@ -113,8 +116,11 @@ public class BuildingSupervisor implements ISupervisor {
                     postBuildHandle();
                     return;
                 }
+                if (tryTimeout(leoBuild)) {
+                    throw new LeoBuildException("任务超时: {}", TIMEOUT);
+                }
             }
-        } catch (URISyntaxException | IOException e) {
+        } catch (URISyntaxException | IOException | LeoBuildException e) {
             LeoBuild saveLeoBuild = LeoBuild.builder()
                     .id(leoBuild.getId())
                     .endTime(new Date())
@@ -126,6 +132,10 @@ public class BuildingSupervisor implements ISupervisor {
             save(saveLeoBuild);
             logHelper.error(leoBuild, "异常错误任务结束: {}", e.getMessage());
         }
+    }
+
+    private boolean tryTimeout(LeoBuild leoBuild) {
+        return com.baiyi.opscloud.common.util.NewTimeUtil.isTimeout(leoBuild.getStartTime().getTime(), TIMEOUT);
     }
 
     private void setHeartbeat() {

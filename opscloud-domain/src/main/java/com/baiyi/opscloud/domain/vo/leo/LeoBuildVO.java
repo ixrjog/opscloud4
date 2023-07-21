@@ -89,6 +89,7 @@ public class LeoBuildVO {
         private String buildConfig;
         private Boolean isActive;
         private String comment;
+        private String ocInstance;
         @Schema(description = "工单ID,默认值0")
         private Integer ticketId;
 
