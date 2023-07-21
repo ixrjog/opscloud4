@@ -72,11 +72,11 @@ public class WorkOrderToken {
 
         private Integer ticketId;
 
-        private Integer applicationId;
+        private Integer serDeployTaskId;
 
         @Override
         public Integer getKey() {
-            return this.applicationId;
+            return this.serDeployTaskId;
         }
     }
 

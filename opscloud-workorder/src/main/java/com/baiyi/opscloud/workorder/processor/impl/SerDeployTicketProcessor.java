@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.baiyi.opscloud.common.helper.order.WorkOrderSerDeployHelper;
-import com.baiyi.opscloud.domain.generator.opscloud.Application;
+import com.baiyi.opscloud.domain.generator.opscloud.SerDeployTask;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.domain.model.WorkOrderToken;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class SerDeployTicketProcessor extends BaseTicketProcessor<Application> {
+public class SerDeployTicketProcessor extends BaseTicketProcessor<SerDeployTask> {
 
     @Resource
     private WorkOrderSerDeployHelper workOrderSerDeployHelper;
@@ -31,18 +31,18 @@ public class SerDeployTicketProcessor extends BaseTicketProcessor<Application> {
     }
 
     @Override
-    protected void process(WorkOrderTicketEntry ticketEntry, Application entry) throws TicketProcessException {
+    protected void process(WorkOrderTicketEntry ticketEntry, SerDeployTask entry) throws TicketProcessException {
         WorkOrderToken.SerDeployToken token = WorkOrderToken.SerDeployToken.builder()
                 .ticketId(ticketEntry.getWorkOrderTicketId())
-                .applicationId(entry.getId())
+                .serDeployTaskId(entry.getId())
                 .build();
         // 设置令牌
         workOrderSerDeployHelper.setToken(token);
     }
 
     @Override
-    protected Class<Application> getEntryClassT() {
-        return Application.class;
+    protected Class<SerDeployTask> getEntryClassT() {
+        return SerDeployTask.class;
     }
 
     @Override

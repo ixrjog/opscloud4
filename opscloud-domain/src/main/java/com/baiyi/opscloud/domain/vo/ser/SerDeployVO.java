@@ -125,6 +125,8 @@ public class SerDeployVO {
         @Schema(description = "运行时长")
         private String runtime;
 
+        private Boolean ticketFlag;
+
         @Override
         public Date getAgoTime() {
             return Objects.requireNonNullElseGet(this.startTime, Date::new);

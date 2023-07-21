@@ -19,6 +19,8 @@ public interface SerDeployTaskService {
 
     SerDeployTask getById(Integer id);
 
+    SerDeployTask getByName(String taskName);
+
     SerDeployTask getByUuid(String taskUuid);
 
     DataTable<SerDeployTask> queryPageByParam(SerDeployParam.TaskPageQuery pageQuery);

@@ -44,6 +44,9 @@ public class WorkOrderTicketEntryParam {
         @Builder.Default
         private Integer length = 20;
 
+        @Schema(description = "应用ID")
+        private Integer applicationId;
+
     }
 
     @EqualsAndHashCode(callSuper = true)

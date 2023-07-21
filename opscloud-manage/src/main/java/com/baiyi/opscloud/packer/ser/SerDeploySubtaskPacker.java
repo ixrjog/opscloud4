@@ -2,6 +2,7 @@ package com.baiyi.opscloud.packer.ser;
 
 import com.baiyi.opscloud.common.annotation.AgoWrapper;
 import com.baiyi.opscloud.common.annotation.RuntimeWrapper;
+import com.baiyi.opscloud.common.helper.order.WorkOrderSerDeployHelper;
 import com.baiyi.opscloud.common.util.FunctionUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.SerDeploySubtaskCallback;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
+
 /**
  * @Author 修远
  * @Date 2023/6/12 4:10 PM
@@ -35,6 +38,8 @@ public class SerDeploySubtaskPacker implements IWrapper<SerDeployVO.SubTask> {
 
     private final SerDeploySubtaskCallbackService serDeploySubtaskCallbackService;
 
+    private final WorkOrderSerDeployHelper workOrderSerDeployHelper;
+
     @Override
     @AgoWrapper
     @RuntimeWrapper
@@ -44,6 +49,9 @@ public class SerDeploySubtaskPacker implements IWrapper<SerDeployVO.SubTask> {
                         () -> {
                             Env env = envService.getByEnvType(vo.getEnvType());
                             vo.setEnv(env);
+                            if (ENV_PROD.equals(env.getEnvName())) {
+                                vo.setTicketFlag(workOrderSerDeployHelper.hasKey(vo.getSerDeployTaskId()));
+                            }
                             if (StringUtils.isNotBlank(vo.getDeployUsername())) {
                                 User user = userService.getByUsername(vo.getDeployUsername());
                                 vo.setDeployUser(user);

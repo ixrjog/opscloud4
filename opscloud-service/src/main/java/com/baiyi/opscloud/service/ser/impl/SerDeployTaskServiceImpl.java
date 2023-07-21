@@ -47,6 +47,14 @@ public class SerDeployTaskServiceImpl implements SerDeployTaskService {
     }
 
     @Override
+    public SerDeployTask getByName(String taskName) {
+        Example example = new Example(SerDeployTask.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("taskName", taskName);
+        return serDeployTaskMapper.selectOneByExample(example);
+    }
+
+    @Override
     public SerDeployTask getByUuid(String taskUuid) {
         Example example = new Example(SerDeployTask.class);
         Example.Criteria criteria = example.createCriteria();

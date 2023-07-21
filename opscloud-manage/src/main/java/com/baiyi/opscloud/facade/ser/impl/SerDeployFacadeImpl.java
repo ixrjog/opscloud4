@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.ser.impl;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
+import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.constants.SerDeployConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
@@ -10,6 +11,7 @@ import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.feign.driver.RiskControlDriver;
 import com.baiyi.opscloud.common.feign.request.RiskControlRequest;
 import com.baiyi.opscloud.common.feign.response.MgwCoreResponse;
+import com.baiyi.opscloud.common.helper.order.WorkOrderSerDeployHelper;
 import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.aws.s3.driver.AmazonS3Driver;
@@ -22,12 +24,14 @@ import com.baiyi.opscloud.facade.auth.PlatformAuthHelper;
 import com.baiyi.opscloud.facade.ser.SerDeployFacade;
 import com.baiyi.opscloud.packer.ser.SerDeployTaskPacker;
 import com.baiyi.opscloud.service.application.ApplicationService;
+import com.baiyi.opscloud.service.auth.AuthRoleService;
 import com.baiyi.opscloud.service.ser.SerDeploySubtaskCallbackService;
 import com.baiyi.opscloud.service.ser.SerDeploySubtaskService;
 import com.baiyi.opscloud.service.ser.SerDeployTaskItemService;
 import com.baiyi.opscloud.service.ser.SerDeployTaskService;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.google.common.base.Joiner;
+import feign.FeignException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -42,6 +46,8 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
 
 /**
  * @Author 修远
@@ -64,6 +70,8 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
     private final ApplicationService applicationService;
     private final PlatformAuthHelper platformAuthHelper;
     private final SerDeploySubtaskCallbackService SerDeploySubtaskCallbackService;
+    private final WorkOrderSerDeployHelper workOrderSerDeployHelper;
+    private final AuthRoleService authRoleService;
 
     private final static String SER_SUFFIX = ".ser";
     private final static String S3_OBJECT_MD5_KEY = "ETag";
@@ -140,6 +148,8 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
 
     @Override
     public void addSerDeployTask(SerDeployParam.AddTask addTask) {
+        FunctionUtil.isNotNull(serDeployTaskService.getByName(addTask.getTaskName()))
+                .throwBaseException(new OCException("Ser 包发布名称重复"));
         SerDeployTask task = SerDeployTask.builder()
                 .applicationId(addTask.getApplicationId())
                 .taskUuid(IdUtil.buildUUID())
@@ -199,13 +209,14 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
     @Override
     public void deploySubTask(SerDeployParam.DeploySubTask deploySubTask) {
         SerDeploySubtask subtask = validDeploySubTask(deploySubTask.getSerDeploySubTaskId());
+        Env env = envService.getByEnvType(subtask.getEnvType());
+        FunctionUtil.isNull(env)
+                .throwBaseException(new OCException("选择环境不存在"));
+        envValid(subtask, env);
         subtask.setDeployUsername(SessionUtil.getUsername());
         serDeploySubtaskService.update(subtask);
         try {
             SerDeployConfig serDeployConfig = getSerDeployConfig();
-            Env env = envService.getByEnvType(subtask.getEnvType());
-            FunctionUtil.isNull(env)
-                    .throwBaseException(new OCException("选择环境不存在"));
             String url = serDeployConfig.getSerDeployURI().get(env.getEnvName());
             FunctionUtil.isNullOrEmpty(url)
                     .throwBaseException(new OCException("选择环境调用 URL 未配置"));
@@ -233,6 +244,24 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
             subtask.setTaskResult(SerDeployConstants.SubTaskResult.VALID_FAIL);
             serDeploySubtaskService.update(subtask);
             throw ocException;
+        } catch (FeignException feignException) {
+            subtask.setTaskStatus(SerDeployConstants.SubTaskStatus.FINISH);
+            subtask.setEndTime(new Date());
+            subtask.setTaskResult(SerDeployConstants.SubTaskResult.VALID_FAIL);
+            subtask.setResponseContent(feignException.getMessage());
+            serDeploySubtaskService.update(subtask);
+            throw new OCException(feignException.getMessage());
+        }
+    }
+
+    private void envValid(SerDeploySubtask subtask, Env env) {
+        int accessLevel = authRoleService.getRoleAccessLevelByUsername(SessionUtil.getUsername());
+        if (accessLevel >= AccessLevel.OPS.getLevel()) {
+            return;
+        }
+        if (ENV_PROD.equals(env.getEnvName())) {
+            FunctionUtil.isTure(!workOrderSerDeployHelper.hasKey(subtask.getSerDeployTaskId()))
+                    .throwBaseException(new OCException("生产环境请先提交工单后发布"));
         }
     }
 
@@ -262,8 +291,9 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
                 .callbackContent(callback.getContent())
                 .build();
         SerDeploySubtaskCallbackService.add(subtaskCallback);
-        if (!SerDeployConstants.SubTaskStatus.FINISH.equals(subtask.getTaskResult())) {
-            subtask.setTaskResult(SerDeployConstants.SubTaskStatus.FINISH);
+        if (!SerDeployConstants.SubTaskResult.SUCCESS.equals(subtask.getTaskResult())) {
+            subtask.setTaskStatus(SerDeployConstants.SubTaskStatus.FINISH);
+            subtask.setTaskResult(SerDeployConstants.SubTaskResult.SUCCESS);
             subtask.setEndTime(new Date());
             serDeploySubtaskService.update(subtask);
         }
