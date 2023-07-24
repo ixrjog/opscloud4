@@ -2,7 +2,7 @@ package com.baiyi.opscloud.packer.ser;
 
 import com.baiyi.opscloud.common.annotation.AgoWrapper;
 import com.baiyi.opscloud.common.annotation.RuntimeWrapper;
-import com.baiyi.opscloud.common.helper.order.WorkOrderSerDeployHelper;
+import com.baiyi.opscloud.common.holder.WorkOrderSerDeployHolder;
 import com.baiyi.opscloud.common.util.FunctionUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.SerDeploySubtaskCallback;
@@ -38,7 +38,7 @@ public class SerDeploySubtaskPacker implements IWrapper<SerDeployVO.SubTask> {
 
     private final SerDeploySubtaskCallbackService serDeploySubtaskCallbackService;
 
-    private final WorkOrderSerDeployHelper workOrderSerDeployHelper;
+    private final WorkOrderSerDeployHolder workOrderSerDeployHolder;
 
     @Override
     @AgoWrapper
@@ -50,7 +50,7 @@ public class SerDeploySubtaskPacker implements IWrapper<SerDeployVO.SubTask> {
                             Env env = envService.getByEnvType(vo.getEnvType());
                             vo.setEnv(env);
                             if (ENV_PROD.equals(env.getEnvName())) {
-                                vo.setTicketFlag(workOrderSerDeployHelper.hasKey(vo.getSerDeployTaskId()));
+                                vo.setTicketFlag(workOrderSerDeployHolder.hasKey(vo.getSerDeployTaskId()));
                             }
                             if (StringUtils.isNotBlank(vo.getDeployUsername())) {
                                 User user = userService.getByUsername(vo.getDeployUsername());

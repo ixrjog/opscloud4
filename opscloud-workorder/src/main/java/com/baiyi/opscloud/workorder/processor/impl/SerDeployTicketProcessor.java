@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.workorder.processor.impl;
 
-import com.baiyi.opscloud.common.helper.order.WorkOrderSerDeployHelper;
+import com.baiyi.opscloud.common.holder.WorkOrderSerDeployHolder;
 import com.baiyi.opscloud.domain.generator.opscloud.SerDeployTask;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketEntry;
 import com.baiyi.opscloud.domain.model.WorkOrderToken;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 public class SerDeployTicketProcessor extends BaseTicketProcessor<SerDeployTask> {
 
     @Resource
-    private WorkOrderSerDeployHelper workOrderSerDeployHelper;
+    private WorkOrderSerDeployHolder workOrderSerDeployHolder;
 
     @Override
     public String getKey() {
@@ -37,7 +37,7 @@ public class SerDeployTicketProcessor extends BaseTicketProcessor<SerDeployTask>
                 .key(entry.getId())
                 .build();
         // 设置令牌
-        workOrderSerDeployHelper.setToken(token);
+        workOrderSerDeployHolder.setToken(token);
     }
 
     @Override

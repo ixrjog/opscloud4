@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade.apollo.impl;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ApolloConfig;
-import com.baiyi.opscloud.common.helper.order.WorkOrderApolloReleaseHelper;
+import com.baiyi.opscloud.common.holder.WorkOrderApolloReleaseHolder;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.apollo.entity.InterceptRelease;
 import com.baiyi.opscloud.datasource.apollo.provider.ApolloInterceptReleaseProvider;
@@ -55,7 +55,7 @@ public class ApolloFacadeImpl implements ApolloFacade {
 
     private final DsInstanceService dsInstanceService;
 
-    private final WorkOrderApolloReleaseHelper workOrderApolloReleaseHelper;
+    private final WorkOrderApolloReleaseHolder workOrderApolloReleaseHolder;
 
     private final ApplicationService applicationService;
 
@@ -100,8 +100,8 @@ public class ApolloFacadeImpl implements ApolloFacade {
         }
 
         // 白名单规则校验
-        if (workOrderApolloReleaseHelper.hasKey(application.getId())) {
-            WorkOrderToken.ApolloReleaseToken token = workOrderApolloReleaseHelper.getToken(application.getId());
+        if (workOrderApolloReleaseHolder.hasKey(application.getId())) {
+            WorkOrderToken.ApolloReleaseToken token = workOrderApolloReleaseHolder.getToken(application.getId());
             recordAsset(apolloConfig, releaseEvent, token.getTicketId());
             return HttpResult.SUCCESS;
         }

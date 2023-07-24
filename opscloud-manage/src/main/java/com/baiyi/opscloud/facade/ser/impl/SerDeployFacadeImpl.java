@@ -11,7 +11,7 @@ import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.feign.driver.RiskControlDriver;
 import com.baiyi.opscloud.common.feign.request.RiskControlRequest;
 import com.baiyi.opscloud.common.feign.response.MgwCoreResponse;
-import com.baiyi.opscloud.common.helper.order.WorkOrderSerDeployHelper;
+import com.baiyi.opscloud.common.holder.WorkOrderSerDeployHolder;
 import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.aws.s3.driver.AmazonS3Driver;
@@ -69,7 +69,7 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
     private final ApplicationService applicationService;
     private final PlatformAuthValidator platformAuthHelper;
     private final SerDeploySubtaskCallbackService SerDeploySubtaskCallbackService;
-    private final WorkOrderSerDeployHelper workOrderSerDeployHelper;
+    private final WorkOrderSerDeployHolder workOrderSerDeployHolder;
     private final AuthRoleService authRoleService;
 
     private final static String SER_SUFFIX = ".ser";
@@ -259,7 +259,7 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
             return;
         }
         if (ENV_PROD.equals(env.getEnvName())) {
-            FunctionUtil.isTure(!workOrderSerDeployHelper.hasKey(subtask.getSerDeployTaskId()))
+            FunctionUtil.isTure(!workOrderSerDeployHolder.hasKey(subtask.getSerDeployTaskId()))
                     .throwBaseException(new OCException("生产环境请先提交工单后发布"));
         }
     }

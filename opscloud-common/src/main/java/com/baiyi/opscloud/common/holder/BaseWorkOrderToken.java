@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.common.helper.order;
+package com.baiyi.opscloud.common.holder;
 
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.domain.model.WorkOrderToken;

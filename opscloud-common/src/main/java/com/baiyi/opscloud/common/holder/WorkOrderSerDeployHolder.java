@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.common.helper.order;
+package com.baiyi.opscloud.common.holder;
 
 import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.common.util.StringFormatter;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class WorkOrderSerDeployHelper extends BaseWorkOrderToken<WorkOrderToken.SerDeployToken> {
+public class WorkOrderSerDeployHolder extends BaseWorkOrderToken<WorkOrderToken.SerDeployToken> {
 
     /**
      * 有效期 2Hour

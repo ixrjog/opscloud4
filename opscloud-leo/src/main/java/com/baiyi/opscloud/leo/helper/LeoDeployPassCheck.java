@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.leo.helper;
 
-import com.baiyi.opscloud.common.helper.order.WorkOrderLeoDeployHelper;
+import com.baiyi.opscloud.common.holder.WorkOrderLeoDeployHolder;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.common.util.StringFormatter;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LeoDeployPassCheck {
 
-    private final WorkOrderLeoDeployHelper workOrderLeoDeployHelper;
+    private final WorkOrderLeoDeployHolder workOrderLeoDeployHolder;
 
     private final RedisUtil redisUtil;
 
@@ -37,7 +37,7 @@ public class LeoDeployPassCheck {
             return false;
         }
         // 通过工单申请发布
-        if (workOrderLeoDeployHelper.hasKey(buildId)) {
+        if (workOrderLeoDeployHolder.hasKey(buildId)) {
             return true;
         }
         // 查询通行证
