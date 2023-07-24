@@ -22,11 +22,11 @@ public class WorkOrderSerDeployHelper extends BaseWorkOrderToken<WorkOrderToken.
      */
     private static final long CACHE_MAX_TIME = NewTimeUtil.HOUR_TIME / 1000 * 2;
 
-    private static final String KEY = "OC4:V0:WORKORDER:SER:DEPLOY:APPID:{}";
+    private static final String KEY = "OC4:V0:WORKORDER:SER:DEPLOY:TASK:UUID:{}";
 
     @Override
-    public WorkOrderToken.SerDeployToken getToken(Integer applicationId) {
-        return (WorkOrderToken.SerDeployToken) redisUtil.get(getKey(applicationId));
+    public WorkOrderToken.SerDeployToken getToken(Integer serDeployTaskId) {
+        return (WorkOrderToken.SerDeployToken) redisUtil.get(getKey(serDeployTaskId));
     }
 
     @Override

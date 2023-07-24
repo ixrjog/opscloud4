@@ -3,20 +3,18 @@ package com.baiyi.opscloud.workorder.query.impl;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.generator.opscloud.Application;
-import com.baiyi.opscloud.domain.generator.opscloud.Tag;
-import com.baiyi.opscloud.domain.param.application.ApplicationParam;
+import com.baiyi.opscloud.domain.generator.opscloud.SerDeployTask;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
+import com.baiyi.opscloud.domain.param.ser.SerDeployParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
-import com.baiyi.opscloud.service.application.ApplicationService;
-import com.baiyi.opscloud.service.tag.TagService;
+import com.baiyi.opscloud.service.ser.SerDeployTaskService;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.query.impl.base.BaseTicketEntryQuery;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,45 +24,36 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class SerDeployApplicationEntryQuery extends BaseTicketEntryQuery<Application> {
+public class SerDeployApplicationEntryQuery extends BaseTicketEntryQuery<SerDeployTask> {
 
     @Resource
-    private ApplicationService applicationService;
+    private SerDeployTaskService serDeployTaskService;
 
-    @Resource
-    private TagService tagService;
-
-    private static final String SER_TAG = "Ser";
 
     @Override
-    protected List<Application> queryEntries(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
-        Tag tag = tagService.getByTagKey(SER_TAG);
-        // 标签不存在
-        if (tag == null) {
-            return Collections.emptyList();
-        }
-        ApplicationParam.ApplicationPageQuery pageQuery = ApplicationParam.ApplicationPageQuery.builder()
-                .queryName(entryQuery.getQueryName())
-                .extend(false)
-                .tagId(tag.getId())
+    protected List<SerDeployTask> queryEntries(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
+        SerDeployParam.TaskPageQuery pageQuery = SerDeployParam.TaskPageQuery.builder()
+                .applicationId(entryQuery.getApplicationId())
+                .isActive(true)
+                .extend(SimpleExtend.NOT_EXTEND.getExtend())
                 .page(1)
                 .length(entryQuery.getLength())
                 .build();
-        DataTable<Application> dataTable = applicationService.queryPageByParam(pageQuery);
+        DataTable<SerDeployTask> dataTable = serDeployTaskService.queryPageByParam(pageQuery);
         return dataTable.getData();
     }
 
     @Override
-    protected WorkOrderTicketVO.Entry<Application> toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, Application entry) {
-        return WorkOrderTicketVO.Entry.<Application>builder()
+    protected WorkOrderTicketVO.Entry<SerDeployTask> toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, SerDeployTask entry) {
+        return WorkOrderTicketVO.Entry.<SerDeployTask>builder()
                 .workOrderTicketId(entryQuery.getWorkOrderTicketId())
-                .name(entry.getName())
-                .entryKey(entry.getName())
+                .name(entry.getTaskName())
+                .entryKey(entry.getTaskName())
                 .businessType(BusinessTypeEnum.APPLICATION.getType())
                 .businessId(entry.getId())
                 .content(JSONUtil.writeValueAsString(entry))
                 .entry(entry)
-                .comment(entry.getComment())
+                .comment(entry.getTaskDesc())
                 .build();
     }
 

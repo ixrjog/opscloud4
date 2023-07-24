@@ -65,7 +65,7 @@ public class WorkOrderToken {
 
         private Integer ticketId;
 
-        @Schema(description = "applicationId")
+        @Schema(description = "serDeployTaskId")
         private Integer key;
 
     }

@@ -69,7 +69,7 @@ public class SerDeployParam {
         private String taskName;
 
         @Schema(description = "任务描述")
-        @NotBlank(message = "任务名称不能为空")
+        @NotBlank(message = "任务描述不能为空")
         @Length(max = 128, message = "任务描述长度大于128")
         private String taskDesc;
 
