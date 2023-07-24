@@ -91,7 +91,7 @@ public class LeoBaseModel {
 
         public static final AutoDeploy EMPTY = AutoDeploy.builder().build();
 
-        @Schema(description = "资产ID:Kubernetes Deployment")
+        @Schema(description = "资产ID: Kubernetes Deployment")
         private Integer assetId;
 
         private Integer jobId;
