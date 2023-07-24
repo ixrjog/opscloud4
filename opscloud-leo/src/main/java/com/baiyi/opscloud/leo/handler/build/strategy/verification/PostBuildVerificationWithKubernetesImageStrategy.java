@@ -85,7 +85,7 @@ public class PostBuildVerificationWithKubernetesImageStrategy extends BasePostBu
                     .build();
             leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
         } catch (LeoBuildException e) {
-            logHelper.error(leoBuild, e.getMessage());
+            leoLog.error(leoBuild, e.getMessage());
         }
     }
 

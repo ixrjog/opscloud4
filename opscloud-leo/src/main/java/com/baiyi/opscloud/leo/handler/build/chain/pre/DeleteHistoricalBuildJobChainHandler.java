@@ -93,10 +93,10 @@ public class DeleteHistoricalBuildJobChainHandler extends BaseBuildChainHandler 
             JobWithDetails jobWithDetails = jenkinsServer.getJob(jobName);
             if (jobWithDetails != null) {
                 jenkinsJobDriver.deleteJob(jenkinsConfig.getJenkins(), jobName);
-                logHelper.info(leoBuild, "删除历史构建任务成功: instanceUuid={}, jobName={}", uuid, jobName);
+                leoLog.info(leoBuild, "删除历史构建任务成功: instanceUuid={}, jobName={}", uuid, jobName);
             }
         } catch (URISyntaxException | IOException e) {
-            logHelper.warn(leoBuild, "删除历史构建任务失败: instanceUuid={}, jobName={}", uuid, jobName);
+            leoLog.warn(leoBuild, "删除历史构建任务失败: instanceUuid={}, jobName={}", uuid, jobName);
         }
     }
 

@@ -7,12 +7,12 @@ import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.leo.constants.HeartbeatTypeConstants;
 import com.baiyi.opscloud.leo.handler.deploy.BaseDeployChainHandler;
 import com.baiyi.opscloud.leo.handler.deploy.LeoPostDeployHandler;
-import com.baiyi.opscloud.leo.domain.model.DeployStopFlag;
+import com.baiyi.opscloud.leo.domain.model.StopDeployFlag;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
-import com.baiyi.opscloud.leo.helper.DeployingLogHelper;
-import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
+import com.baiyi.opscloud.leo.log.LeoDeployingLog;
+import com.baiyi.opscloud.leo.holder.LeoHeartbeatHolder;
 import com.baiyi.opscloud.leo.supervisor.base.ISupervisor;
 import com.baiyi.opscloud.leo.supervisor.strategy.base.SupervisingStrategy;
 import com.baiyi.opscloud.leo.supervisor.strategy.base.SupervisingStrategyFactory;
@@ -34,7 +34,7 @@ public class DeployingSupervisor implements ISupervisor {
 
     private static final int SLEEP_SECONDS = 4;
 
-    private final LeoHeartbeatHelper heartbeatHelper;
+    private final LeoHeartbeatHolder heartbeatHolder;
 
     private final LeoDeployModel.DeployConfig deployConfig;
 
@@ -42,26 +42,43 @@ public class DeployingSupervisor implements ISupervisor {
 
     private final KubernetesConfig.Kubernetes kubernetes;
 
-    private final DeployingLogHelper logHelper;
+    private final LeoDeployingLog leoLog;
 
     private final LeoPostDeployHandler postDeployHandler;
 
     private final LeoDeployService deployService;
 
-    public DeployingSupervisor(LeoHeartbeatHelper heartbeatHelper,
+    public DeployingSupervisor(LeoHeartbeatHolder heartbeatHolder,
                                LeoDeploy leoDeploy,
                                LeoDeployService deployService,
-                               DeployingLogHelper logHelper,
+                               LeoDeployingLog leoLog,
                                LeoDeployModel.DeployConfig deployConfig,
                                KubernetesConfig.Kubernetes kubernetes,
                                LeoPostDeployHandler postDeployHandler) {
-        this.heartbeatHelper = heartbeatHelper;
+        this.heartbeatHolder = heartbeatHolder;
         this.leoDeploy = leoDeploy;
         this.deployService = deployService;
-        this.logHelper = logHelper;
+        this.leoLog = leoLog;
         this.deployConfig = deployConfig;
         this.kubernetes = kubernetes;
         this.postDeployHandler = postDeployHandler;
+    }
+
+    private boolean tryStop() {
+        StopDeployFlag deployStop = heartbeatHolder.getStopDeployFlag(leoDeploy.getId());
+        if (deployStop.getIsStop()) {
+            LeoDeploy saveLeoDeploy = LeoDeploy.builder()
+                    .id(leoDeploy.getId())
+                    .deployResult(BaseDeployChainHandler.RESULT_ERROR)
+                    .endTime(new Date())
+                    .isFinish(true)
+                    .isActive(false)
+                    .deployStatus(StringFormatter.format("{} 手动停止任务", deployStop.getUsername()))
+                    .build();
+            deployService.updateByPrimaryKeySelective(saveLeoDeploy);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -77,35 +94,24 @@ public class DeployingSupervisor implements ISupervisor {
 
         SupervisingStrategy deployingStrategy = SupervisingStrategyFactory.getStrategyByDeployType(deploy.getDeployType());
         if (deployingStrategy == null) {
-            logHelper.error(this.leoDeploy, "未找到对应的部署策略: deployType={}", deploy.getDeployType());
+            leoLog.error(this.leoDeploy, "未找到对应的部署策略: deployType={}", deploy.getDeployType());
             throw new LeoDeployException("未找到对应的部署策略: deployType={}", deploy.getDeployType());
         }
         // 循环
         while (true) {
             setHeartbeat();
-            // tryStop
-            DeployStopFlag deployStop = heartbeatHelper.getDeployStopFlag(leoDeploy.getId());
-            if (deployStop.getIsStop()) {
-                LeoDeploy saveLeoDeploy = LeoDeploy.builder()
-                        .id(leoDeploy.getId())
-                        .deployResult(BaseDeployChainHandler.RESULT_ERROR)
-                        .endTime(new Date())
-                        .isFinish(true)
-                        .isActive(false)
-                        .deployStatus(StringFormatter.format("{} 手动停止任务", deployStop.getUsername()))
-                        .build();
-                deployService.updateByPrimaryKeySelective(saveLeoDeploy);
+            if (tryStop()) {
                 return;
             }
             try {
                 deployingStrategy.handle(leoDeploy, deployConfig, kubernetes, deploy, deployment);
-                if (heartbeatHelper.isFinish(leoDeploy.getId())) {
+                if (heartbeatHolder.isFinish(leoDeploy.getId())) {
                     // 结束
                     postHandle();
                     break;
                 }
             } catch (Exception e) {
-                logHelper.warn(this.leoDeploy, e.getMessage());
+                leoLog.warn(this.leoDeploy, e.getMessage());
             }
             // 延迟执行
             NewTimeUtil.sleep(SLEEP_SECONDS);
@@ -113,7 +119,7 @@ public class DeployingSupervisor implements ISupervisor {
     }
 
     private void setHeartbeat() {
-        heartbeatHelper.setHeartbeat(HeartbeatTypeConstants.DEPLOY, leoDeploy.getId());
+        heartbeatHolder.setHeartbeat(HeartbeatTypeConstants.DEPLOY, leoDeploy.getId());
     }
 
     private void postHandle() {

@@ -12,7 +12,7 @@ import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
-import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
+import com.baiyi.opscloud.leo.log.LeoBuildingLog;
 import com.baiyi.opscloud.service.sys.EnvService;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -42,7 +42,7 @@ public abstract class BaseCrValidator<T extends BaseDsConfig> implements Initial
     private InstanceHelper instanceHelper;
 
     @Resource
-    protected BuildingLogHelper logHelper;
+    protected LeoBuildingLog leoLog;
 
     /**
      * 预检查
@@ -86,7 +86,7 @@ public abstract class BaseCrValidator<T extends BaseDsConfig> implements Initial
         preInspection(leoJob, cr, buildConfig);
         T dsConfig = getDsConfigByUuid(getDsInstanceUuid(cr));
         handleVerifyImage(leoJob, cr, buildConfig, dsConfig);
-        logHelper.info(leoBuild, "校验CR镜像成功");
+        leoLog.info(leoBuild, "校验CR镜像成功");
     }
 
     public void createRepository(LeoJob leoJob, LeoJobModel.CR cr) {

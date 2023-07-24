@@ -51,7 +51,7 @@ public class RecordBuildPipelineChainHandler extends BaseBuildChainHandler {
                     .pipelineContent(JSONUtil.writeValueAsString(pipeline))
                     .build();
             leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
-            logHelper.info(leoBuild, "结束构建记录流水线成功");
+            leoLog.info(leoBuild, "结束构建记录流水线成功");
         } catch (LeoBuildException e) {
             LeoBuild saveLeoBuild = LeoBuild.builder()
                     .id(leoBuild.getId())

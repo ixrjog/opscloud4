@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.leo.helper;
+package com.baiyi.opscloud.leo.log;
 
 import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class BuildingLogHelper {
+public class LeoBuildingLog {
 
     private final LeoBuildLogService logService;
 

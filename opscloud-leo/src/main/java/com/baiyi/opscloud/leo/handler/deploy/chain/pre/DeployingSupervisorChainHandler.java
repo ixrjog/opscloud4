@@ -6,7 +6,7 @@ import com.baiyi.opscloud.leo.handler.deploy.BaseDeployChainHandler;
 import com.baiyi.opscloud.leo.handler.deploy.LeoPostDeployHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
-import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
+import com.baiyi.opscloud.leo.holder.LeoHeartbeatHolder;
 import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class DeployingSupervisorChainHandler extends BaseDeployChainHandler {
     private LeoPostDeployHandler leoPostDeployHandler;
 
     @Resource
-    private LeoHeartbeatHelper leoDeployHelper;
+    private LeoHeartbeatHolder leoDeployHelper;
 
     @Autowired
     private ThreadPoolTaskExecutor coreExecutor;
@@ -49,7 +49,7 @@ public class DeployingSupervisorChainHandler extends BaseDeployChainHandler {
                 this.leoDeployHelper,
                 leoDeploy,
                 deployService,
-                logHelper,
+                leoLog,
                 deployConfig,
                 kubernetesConfig.getKubernetes(),
                 leoPostDeployHandler

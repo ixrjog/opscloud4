@@ -5,7 +5,11 @@ import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.instance.OcInstance;
-import com.baiyi.opscloud.common.util.*;
+import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.IdUtil;
+import com.baiyi.opscloud.common.util.JSONUtil;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabRepositoryDriver;
 import com.baiyi.opscloud.domain.DataTable;
@@ -34,8 +38,8 @@ import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.driver.BlueRestDriver;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.leo.handler.build.LeoBuildHandler;
-import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
-import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
+import com.baiyi.opscloud.leo.log.LeoBuildingLog;
+import com.baiyi.opscloud.leo.holder.LeoHeartbeatHolder;
 import com.baiyi.opscloud.leo.message.handler.impl.build.SubscribeLeoBuildRequestHandler;
 import com.baiyi.opscloud.leo.packer.LeoBuildResponsePacker;
 import com.baiyi.opscloud.leo.parser.MavenPublishParser;
@@ -93,7 +97,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     private final DsConfigHelper dsConfigHelper;
 
-    private final BuildingLogHelper logHelper;
+    private final LeoBuildingLog leoLog;
 
     private final LeoBuildHandler buildHandler;
 
@@ -109,7 +113,9 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     private final DsInstanceAssetRelationService dsInstanceAssetRelationService;
 
-    private final LeoHeartbeatHelper leoHeartbeatHelper;
+    private final LeoHeartbeatHolder leoHeartbeatHolder;
+
+    private final RedisUtil redisUtil;
 
     @Override
     @LeoBuildInterceptor(jobIdSpEL = "#doBuild.jobId")
@@ -259,7 +265,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         if (leoBuild.getIsFinish() != null && leoBuild.getIsFinish()) {
             throw new LeoBuildException("构建任务已完成: buildId={}", buildId);
         }
-        if (leoHeartbeatHelper.isLive(HeartbeatTypeConstants.BUILD, buildId)) {
+        if (leoHeartbeatHolder.isLive(HeartbeatTypeConstants.BUILD, buildId)) {
             throw new LeoBuildException("构建任务有心跳: buildId={}", buildId);
         }
         LeoBuild saveLeoBuild = LeoBuild.builder()
@@ -287,13 +293,14 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         try {
             stopJenkinsPipeline(leoBuild, buildConfig);
         } catch (Exception e) {
-            logHelper.warn(leoBuild, "Stop jenkins job err: {}", e.getMessage());
+            leoLog.warn(leoBuild, "Stop jenkins job err: {}", e.getMessage());
         }
         // step2 : stop leo build
+        stopLeoBuild(leoBuild);
     }
 
-    private void stopLeoBuild(){
-
+    private void stopLeoBuild(LeoBuild leoBuild) {
+        leoHeartbeatHolder.setStopSignal(HeartbeatTypeConstants.BUILD, leoBuild.getId());
     }
 
     private void stopJenkinsPipeline(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) throws LeoBuildException {
@@ -307,7 +314,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         JenkinsConfig jenkinsConfig = dsConfigHelper.build(dsConfig, JenkinsConfig.class);
         try {
             JenkinsPipeline.Step step = blueRestDriver.stopPipeline(jenkinsConfig.getJenkins(), leoBuild.getBuildJobName(), String.valueOf(1));
-            logHelper.info(leoBuild, "Stop jenkins job: {}", JSONUtil.writeValueAsString(step));
+            leoLog.info(leoBuild, "Stop jenkins job: {}", JSONUtil.writeValueAsString(step));
         } catch (Exception e) {
             throw new LeoBuildException(e.getMessage());
         }
@@ -560,7 +567,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         return BeanCopierUtil.copyListProperties(builds, LeoBuildVO.Build.class).stream()
                 .peek(e -> {
                     leoBuildResponsePacker.wrap(e);
-                    e.setIsLive(leoHeartbeatHelper.isLive(HeartbeatTypeConstants.BUILD, e.getId()));
+                    e.setIsLive(leoHeartbeatHolder.isLive(HeartbeatTypeConstants.BUILD, e.getId()));
                 })
                 .collect(Collectors.toList());
     }

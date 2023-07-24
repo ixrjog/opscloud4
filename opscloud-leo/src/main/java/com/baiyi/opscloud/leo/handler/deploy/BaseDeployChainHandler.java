@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
-import com.baiyi.opscloud.leo.helper.DeployingLogHelper;
+import com.baiyi.opscloud.leo.log.LeoDeployingLog;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 
 import jakarta.annotation.Resource;
@@ -25,7 +25,7 @@ public abstract class BaseDeployChainHandler {
     protected DsConfigHelper dsConfigHelper;
 
     @Resource
-    protected DeployingLogHelper logHelper;
+    protected LeoDeployingLog leoLog;
 
     @Resource
     protected LeoDeployService deployService;
@@ -51,7 +51,7 @@ public abstract class BaseDeployChainHandler {
             this.handle(leoDeploy, deployConfig);
         } catch (Exception e) {
             // 记录日志
-            logHelper.error(leoDeploy, e.getMessage());
+            leoLog.error(leoDeploy, e.getMessage());
             LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                     .id(leoDeploy.getId())
                     .deployResult(RESULT_ERROR)
@@ -85,7 +85,7 @@ public abstract class BaseDeployChainHandler {
     }
 
     protected void save(LeoDeploy saveLeoDeploy, String log, Object... var2) {
-        logHelper.info(saveLeoDeploy, log, var2);
+        leoLog.info(saveLeoDeploy, log, var2);
         deployService.updateByPrimaryKeySelective(saveLeoDeploy);
     }
 

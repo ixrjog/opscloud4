@@ -6,7 +6,7 @@ import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
 import com.baiyi.opscloud.leo.handler.build.LeoPostBuildHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
-import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
+import com.baiyi.opscloud.leo.holder.LeoHeartbeatHolder;
 import com.baiyi.opscloud.leo.supervisor.BuildingSupervisor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class BuildingSupervisorChainHandler extends BaseBuildChainHandler {
     private LeoPostBuildHandler leoPostBuildHandler;
 
     @Resource
-    private LeoHeartbeatHelper heartbeatHelper;
+    private LeoHeartbeatHolder heartbeatHolder;
 
     @Autowired
     private ThreadPoolTaskExecutor coreExecutor;
@@ -44,10 +44,10 @@ public class BuildingSupervisorChainHandler extends BaseBuildChainHandler {
         LeoBaseModel.DsInstance dsInstance = buildConfig.getBuild().getJenkins().getInstance();
         JenkinsConfig jenkinsConfig = getJenkinsConfigWithUuid(dsInstance.getUuid());
         BuildingSupervisor buildingSupervisor = new BuildingSupervisor(
-                this.heartbeatHelper,
+                this.heartbeatHolder,
                 this.leoBuildService,
                 leoBuild,
-                logHelper,
+                leoLog,
                 jenkinsConfig.getJenkins(),
                 buildConfig,
                 leoPostBuildHandler

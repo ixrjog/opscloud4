@@ -79,7 +79,7 @@ public class BuildFinalProcessingChainHandler extends BaseBuildChainHandler {
         }
 
         if (!checkAsset(leoBuild, autoDeploy.getAssetId())) {
-            logHelper.info(leoBuild, "构建后执行自动部署错误: assetId校验失败");
+            leoLog.info(leoBuild, "构建后执行自动部署错误: assetId校验失败");
             return;
         }
 
@@ -90,7 +90,7 @@ public class BuildFinalProcessingChainHandler extends BaseBuildChainHandler {
                 .deployType(autoDeploy.getDeployType())
                 .username(leoBuild.getUsername())
                 .build();
-        logHelper.info(leoBuild, "构建后执行自动部署");
+        leoLog.info(leoBuild, "构建后执行自动部署");
         // 发布事件
         autoDeployEventPublisher.publish(doAutoDeploy);
     }

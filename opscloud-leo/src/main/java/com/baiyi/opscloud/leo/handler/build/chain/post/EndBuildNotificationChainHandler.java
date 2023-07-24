@@ -41,7 +41,7 @@ public class EndBuildNotificationChainHandler extends BaseBuildChainHandler {
                     .buildStatus("结束构建通知阶段: 发送消息成功")
                     .build();
             leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
-            logHelper.info(leoBuild, "结束构建通知成功: jobName={}", leoBuild.getBuildJobName());
+            leoLog.info(leoBuild, "结束构建通知成功: jobName={}", leoBuild.getBuildJobName());
         } catch (LeoBuildException e) {
             LeoBuild saveLeoBuild = LeoBuild.builder()
                     .id(leoBuild.getId())
@@ -49,7 +49,7 @@ public class EndBuildNotificationChainHandler extends BaseBuildChainHandler {
                     .build();
             leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
             // 忽略异常，只记录日志
-            logHelper.warn(leoBuild, e.getMessage());
+            leoLog.warn(leoBuild, e.getMessage());
         }
     }
 

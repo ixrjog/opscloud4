@@ -3,8 +3,8 @@ package com.baiyi.opscloud.leo.task;
 import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.constants.HeartbeatTypeConstants;
-import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
-import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
+import com.baiyi.opscloud.leo.log.LeoBuildingLog;
+import com.baiyi.opscloud.leo.holder.LeoHeartbeatHolder;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +26,9 @@ public class LeoBuildCompensationTask {
 
     private final LeoBuildService leobuildService;
 
-    private final LeoHeartbeatHelper heartbeatHelper;
+    private final LeoHeartbeatHolder heartbeatHolder;
 
-    private final BuildingLogHelper logHelper;
+    private final LeoBuildingLog leoLog;
 
     public void handleTask() {
         List<LeoBuild> leoBuilds = leobuildService.queryNotFinishBuildWithOcInstance(OcInstance.OC_INSTANCE);
@@ -36,7 +36,7 @@ public class LeoBuildCompensationTask {
             return;
         }
         leoBuilds.forEach(leoBuild -> {
-            if (!heartbeatHelper.isLive(HeartbeatTypeConstants.BUILD, leoBuild.getId())) {
+            if (!heartbeatHolder.isLive(HeartbeatTypeConstants.BUILD, leoBuild.getId())) {
                 LeoBuild saveLeoBuild = LeoBuild.builder()
                         .buildResult("ERROR")
                         .endTime(new Date())
@@ -44,7 +44,7 @@ public class LeoBuildCompensationTask {
                         .isFinish(true)
                         .build();
                 leobuildService.updateByPrimaryKeySelective(saveLeoBuild);
-                logHelper.error(leoBuild, "任务异常终止: 心跳丢失！");
+                leoLog.error(leoBuild, "任务异常终止: 心跳丢失！");
             }
         });
     }

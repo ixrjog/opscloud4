@@ -2,6 +2,7 @@ package com.baiyi.opscloud.leo.supervisor;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
 import com.baiyi.opscloud.datasource.jenkins.model.Build;
 import com.baiyi.opscloud.datasource.jenkins.model.BuildResult;
@@ -11,10 +12,11 @@ import com.baiyi.opscloud.datasource.jenkins.server.JenkinsServerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.constants.HeartbeatTypeConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
+import com.baiyi.opscloud.leo.domain.model.StopBuildFlag;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.leo.handler.build.LeoPostBuildHandler;
-import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
-import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
+import com.baiyi.opscloud.leo.log.LeoBuildingLog;
+import com.baiyi.opscloud.leo.holder.LeoHeartbeatHolder;
 import com.baiyi.opscloud.leo.supervisor.base.ISupervisor;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,13 +43,13 @@ public class BuildingSupervisor implements ISupervisor {
 
     private final LeoBuildService leoBuildService;
 
-    private final BuildingLogHelper logHelper;
+    private final LeoBuildingLog leoLog;
 
     private final JenkinsConfig.Jenkins jenkins;
 
     private final LeoPostBuildHandler leoPostBuildHandler;
 
-    private final LeoHeartbeatHelper heartbeatHelper;
+    private final LeoHeartbeatHolder heartbeatHolder;
 
     private final LeoBuildModel.BuildConfig buildConfig;
 
@@ -55,30 +57,49 @@ public class BuildingSupervisor implements ISupervisor {
 
     private final LeoBuild leoBuild;
 
-    public BuildingSupervisor(LeoHeartbeatHelper heartbeatHelper,
+    public BuildingSupervisor(LeoHeartbeatHolder heartbeatHolder,
                               LeoBuildService leoBuildService,
                               LeoBuild leoBuild,
-                              BuildingLogHelper logHelper,
+                              LeoBuildingLog leoLog,
                               JenkinsConfig.Jenkins jenkins,
                               LeoBuildModel.BuildConfig buildConfig,
                               LeoPostBuildHandler leoPostBuildHandler) {
-        this.heartbeatHelper = heartbeatHelper;
+        this.heartbeatHolder = heartbeatHolder;
         this.leoBuildService = leoBuildService;
         this.leoBuild = leoBuild;
-        this.logHelper = logHelper;
+        this.leoLog = leoLog;
         this.jenkins = jenkins;
         this.buildConfig = buildConfig;
         this.leoPostBuildHandler = leoPostBuildHandler;
     }
 
+    private boolean tryStop() {
+        StopBuildFlag buildStop = heartbeatHolder.getStopBuildFlag(leoBuild.getId());
+        if (buildStop.getIsStop()) {
+            LeoBuild saveLeoBuild = LeoBuild.builder()
+                    .id(leoBuild.getId())
+                    .buildResult(RESULT_ERROR)
+                    .endTime(new Date())
+                    .isFinish(true)
+                    .isActive(false)
+                    .buildStatus(StringFormatter.format("{} 手动停止任务", buildStop.getUsername()))
+                    .build();
+            save(saveLeoBuild);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void run() {
         setHeartbeat();
-
         try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
             JobWithDetails jobWithDetails = jenkinsServer.getJob(leoBuild.getBuildJobName());
             while (true) {
                 setHeartbeat();
+                if (tryStop()) {
+                    return;
+                }
                 if (this.build == null) {
                     Build build = jobWithDetails.details().getLastBuild();
                     if (build.equals(Build.BUILD_HAS_NEVER_RUN)) {
@@ -130,7 +151,7 @@ public class BuildingSupervisor implements ISupervisor {
                     .buildStatus("监视任务阶段: 错误")
                     .build();
             save(saveLeoBuild);
-            logHelper.error(leoBuild, "异常错误任务结束: {}", e.getMessage());
+            leoLog.error(leoBuild, "异常错误任务结束: {}", e.getMessage());
         }
     }
 
@@ -139,7 +160,7 @@ public class BuildingSupervisor implements ISupervisor {
     }
 
     private void setHeartbeat() {
-        heartbeatHelper.setHeartbeat(HeartbeatTypeConstants.BUILD, leoBuild.getId());
+        heartbeatHolder.setHeartbeat(HeartbeatTypeConstants.BUILD, leoBuild.getId());
     }
 
     private void sleep() {
@@ -168,7 +189,7 @@ public class BuildingSupervisor implements ISupervisor {
      */
     protected void save(LeoBuild saveLeoBuild, String log, Object... var2) {
         save(saveLeoBuild);
-        logHelper.info(saveLeoBuild, log, var2);
+        leoLog.info(saveLeoBuild, log, var2);
     }
 
 }

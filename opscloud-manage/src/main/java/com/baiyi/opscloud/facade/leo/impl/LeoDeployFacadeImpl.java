@@ -2,10 +2,10 @@ package com.baiyi.opscloud.facade.leo.impl;
 
 import com.baiyi.opscloud.common.annotation.SetSessionUsername;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
@@ -39,7 +39,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.leo.handler.deploy.LeoDeployHandler;
-import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
+import com.baiyi.opscloud.leo.holder.LeoHeartbeatHolder;
 import com.baiyi.opscloud.leo.interceptor.LeoExecuteJobInterceptorHandler;
 import com.baiyi.opscloud.leo.message.handler.impl.deploy.SubscribeLeoDeployRequestHandler;
 import com.baiyi.opscloud.leo.message.handler.impl.deploy.SubscribeLeoDeploymentVersionDetailsRequestHandler;
@@ -66,8 +66,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper.STOP_SIGNAL;
 
 /**
  * @Author baiyi
@@ -116,7 +114,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     private final SubscribeLeoDeploymentVersionDetailsRequestHandler subscribeLeoDeploymentVersionDetailsRequestHandler;
 
-    private final LeoHeartbeatHelper leoHeartbeatHelper;
+    private final LeoHeartbeatHolder leoHeartbeatHolder;
 
     @Override
     @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType", buildIdSpEL = "#doDeploy.buildId")
@@ -241,13 +239,13 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     @Override
     public void closeDeploy(int deployId) {
         LeoDeploy leoDeploy = deployService.getById(deployId);
-        if (leoDeploy  == null) {
+        if (leoDeploy == null) {
             throw new LeoDeployException("Deploy record does not exist: deployId={}", deployId);
         }
         if (leoDeploy.getIsFinish() != null && leoDeploy.getIsFinish()) {
             throw new LeoDeployException("部署任务已完成: buildId={}", deployId);
         }
-        if (leoHeartbeatHelper.isLive(HeartbeatTypeConstants.DEPLOY, deployId)) {
+        if (leoHeartbeatHolder.isLive(HeartbeatTypeConstants.DEPLOY, deployId)) {
             throw new LeoDeployException("部署任务有心跳: deployId={}", deployId);
         }
         LeoDeploy saveLeoDeploy = LeoDeploy.builder()
@@ -270,14 +268,13 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         LeoJob leoJob = jobService.getById(leoDeploy.getJobId());
         final String username = SessionHolder.getUsername();
         if (executeJobInterceptorHandler.isAdmin(username)) {
-            log.info("Admin {} 停止部署任务",username);
+            log.info("Admin {} 停止部署任务", username);
         } else {
             // 权限校验
             executeJobInterceptorHandler.verifyAuthorization(leoJob.getId());
         }
         // 设置信号量
-        final String key = StringFormatter.format(STOP_SIGNAL, deployId);
-        redisUtil.set(key, username, 100L);
+        leoHeartbeatHolder.setStopSignal(HeartbeatTypeConstants.DEPLOY, deployId);
     }
 
     @Override
@@ -382,7 +379,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         return BeanCopierUtil.copyListProperties(deploys, LeoDeployVO.Deploy.class).stream()
                 .peek(e -> {
                     deployResponsePacker.wrap(e);
-                    e.setIsLive(leoHeartbeatHelper.isLive(HeartbeatTypeConstants.DEPLOY, e.getId()));
+                    e.setIsLive(leoHeartbeatHolder.isLive(HeartbeatTypeConstants.DEPLOY, e.getId()));
                 })
                 .collect(Collectors.toList());
     }

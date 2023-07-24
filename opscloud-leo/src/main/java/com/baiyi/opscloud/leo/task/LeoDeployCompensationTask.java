@@ -4,8 +4,8 @@ import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.leo.constants.HeartbeatTypeConstants;
 import com.baiyi.opscloud.leo.handler.deploy.BaseDeployChainHandler;
-import com.baiyi.opscloud.leo.helper.DeployingLogHelper;
-import com.baiyi.opscloud.leo.helper.LeoHeartbeatHelper;
+import com.baiyi.opscloud.leo.log.LeoDeployingLog;
+import com.baiyi.opscloud.leo.holder.LeoHeartbeatHolder;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +27,9 @@ public class LeoDeployCompensationTask {
 
     private final LeoDeployService deployService;
 
-    private final LeoHeartbeatHelper heartbeatHelper;
+    private final LeoHeartbeatHolder heartbeatHolder;
 
-    private final DeployingLogHelper logHelper;
+    private final LeoDeployingLog leoLog;
 
     public void handleTask() {
         List<LeoDeploy> leoDeploys = deployService.queryNotFinishDeployWithOcInstance(OcInstance.OC_INSTANCE);
@@ -37,7 +37,7 @@ public class LeoDeployCompensationTask {
             return;
         }
         leoDeploys.forEach(leoDeploy -> {
-            if (!heartbeatHelper.isLive(HeartbeatTypeConstants.DEPLOY, leoDeploy.getId())) {
+            if (!heartbeatHolder.isLive(HeartbeatTypeConstants.DEPLOY, leoDeploy.getId())) {
                 LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                         .id(leoDeploy.getId())
                         .deployResult(BaseDeployChainHandler.RESULT_ERROR)
@@ -47,7 +47,7 @@ public class LeoDeployCompensationTask {
                         .deployStatus("任务异常终止,心跳丢失！")
                         .build();
                 deployService.updateByPrimaryKeySelective(saveLeoDeploy);
-                logHelper.error(leoDeploy,"任务异常终止,心跳丢失！");
+                leoLog.error(leoDeploy,"任务异常终止,心跳丢失！");
             }
         });
     }

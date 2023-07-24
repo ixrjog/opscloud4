@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
-import com.baiyi.opscloud.leo.helper.BuildingLogHelper;
+import com.baiyi.opscloud.leo.log.LeoBuildingLog;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import jakarta.annotation.Resource;
 
@@ -25,7 +25,7 @@ public abstract class BaseBuildChainHandler {
     protected DsConfigHelper dsConfigHelper;
 
     @Resource
-    protected BuildingLogHelper logHelper;
+    protected LeoBuildingLog leoLog;
 
     @Resource
     protected LeoBuildService leoBuildService;
@@ -51,7 +51,7 @@ public abstract class BaseBuildChainHandler {
             this.handle(leoBuild, buildConfig);
         } catch (LeoBuildException e) {
             // 记录日志
-            logHelper.error(leoBuild, e.getMessage());
+            leoLog.error(leoBuild, e.getMessage());
             LeoBuild saveLeoBuild =LeoBuild.builder()
                     .id(leoBuild.getId())
                     .buildResult(RESULT_ERROR)
@@ -82,7 +82,7 @@ public abstract class BaseBuildChainHandler {
 
     protected void save(LeoBuild saveLeoBuild, String log, Object... var2) {
         leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
-        logHelper.info(saveLeoBuild, log, var2);
+        leoLog.info(saveLeoBuild, log, var2);
     }
 
 }
