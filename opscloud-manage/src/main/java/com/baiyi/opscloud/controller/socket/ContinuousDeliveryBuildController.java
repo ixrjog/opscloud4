@@ -3,7 +3,7 @@ package com.baiyi.opscloud.controller.socket;
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
 import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
 import com.baiyi.opscloud.common.leo.session.LeoBuildQuerySessionMap;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.controller.socket.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.param.leo.request.LoginLeoRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.SimpleLeoRequestParam;
@@ -92,7 +92,7 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
                 return;
             }
         } else {
-            SessionUtil.setUsername(this.username);
+            SessionHolder.setUsername(this.username);
         }
         LeoBuildQuerySessionMap.addSessionQueryMap(this.sessionId, getLeoMessageType(message), message);
     }

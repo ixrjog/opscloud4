@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.kubernetes.terminal.handler.impl;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalMessageHandlerFactory;
 import com.baiyi.opscloud.kubernetes.terminal.handler.AbstractKubernetesTerminalMessageHandler;
@@ -52,13 +52,13 @@ public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMe
     @Override
     public void handle(String message, Session session, TerminalSession terminalSession) {
         try {
-            String username = SessionUtil.getUsername();
+            String username = SessionHolder.getUsername();
             KubernetesMessage.Login loginMessage = toMessage(message);
             heartbeat(terminalSession.getSessionId());
             KubernetesResource kubernetesResource = loginMessage.getData();
             kubernetesResource.getPods().forEach(pod ->
                     pod.getContainers().forEach(container -> kubernetesTerminalExecutor.submit(() -> {
-                        SessionUtil.setUsername(username);
+                        SessionHolder.setUsername(username);
                         log.info("初始化容器终端: sessionType={}, container={}", loginMessage.getSessionType(), container.getName());
                         KubernetesConfig kubernetesDsInstanceConfig = buildConfig(kubernetesResource);
                         if (loginMessage.getSessionType().equals(SessionType.CONTAINER_LOG)) {

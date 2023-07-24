@@ -2,6 +2,7 @@ package com.baiyi.opscloud.common.util;
 
 
 import com.baiyi.opscloud.common.base.Global;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -179,7 +180,7 @@ public class IOUtil {
      * @return
      */
     public static boolean delFile(String path) {
-        log.info(SessionUtil.getUsername() + " del file " + path);
+        log.info(SessionHolder.getUsername() + " del file " + path);
 
         File file = new File(path);
         if (file.exists() && file.isFile()) {

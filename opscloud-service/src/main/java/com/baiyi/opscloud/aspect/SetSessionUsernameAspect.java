@@ -2,7 +2,7 @@ package com.baiyi.opscloud.aspect;
 
 import com.baiyi.opscloud.common.annotation.SetSessionUsername;
 import com.baiyi.opscloud.common.exception.common.OCException;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +51,7 @@ public class SetSessionUsernameAspect {
     @Before("@annotation(setSessionUsername)")
     public void doBefore(JoinPoint joinPoint, SetSessionUsername setSessionUsername) throws Throwable {
         if (!setSessionUsername.force()) {
-            if (StringUtils.isNotBlank(SessionUtil.getUsername())) {
+            if (StringUtils.isNotBlank(SessionHolder.getUsername())) {
                 return;
             }
         }
@@ -61,8 +61,8 @@ public class SetSessionUsernameAspect {
         if (user == null) {
             log.warn("设置当前会话但用户 {} 不存在!", username);
         } else {
-            SessionUtil.setUsername(user.getUsername());
-            SessionUtil.setUserId(user.getId());
+            SessionHolder.setUsername(user.getUsername());
+            SessionHolder.setUserId(user.getId());
         }
     }
 

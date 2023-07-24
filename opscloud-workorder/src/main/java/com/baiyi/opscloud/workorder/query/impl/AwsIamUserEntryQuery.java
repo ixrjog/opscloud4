@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.workorder.query.impl;
 
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
@@ -22,7 +22,7 @@ public class AwsIamUserEntryQuery extends BaseDsAssetExtendedTicketEntryQuery {
 
     @Override
     protected DsAssetParam.AssetPageQuery getAssetQueryParam(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
-        String username = SessionUtil.getUsername();
+        String username = SessionHolder.getUsername();
         return DsAssetParam.AssetPageQuery.builder()
                 .instanceUuid(entryQuery.getInstanceUuid())
                 .assetType(DsAssetTypeConstants.IAM_USER.name())
@@ -35,7 +35,7 @@ public class AwsIamUserEntryQuery extends BaseDsAssetExtendedTicketEntryQuery {
 
     @Override
     protected List<DatasourceInstanceAsset> doFilter(List<DatasourceInstanceAsset> preEntries) {
-        String username = SessionUtil.getUsername();
+        String username = SessionHolder.getUsername();
         return preEntries.stream().filter(e -> e.getName().equals(username)).collect(Collectors.toList());
     }
 

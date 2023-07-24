@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.leo.impl;
 import com.baiyi.opscloud.common.annotation.SetSessionUsername;
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
@@ -223,7 +224,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .isActive(false)
                 .ticketId(0)
                 .executionType(ExecutionTypeConstants.USER)
-                .username(SessionUtil.getUsername())
+                .username(SessionHolder.getUsername())
                 .buildConfig(buildConfig.dump())
                 .ocInstance(OcInstance.OC_INSTANCE)
                 .projectId(doBuild.getProjectId() == null ? 0 : doBuild.getProjectId())
@@ -264,7 +265,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         LeoBuild saveLeoBuild = LeoBuild.builder()
                 .id(buildId)
                 .buildResult("ERROR")
-                .buildStatus(StringFormatter.format("{} 关闭任务",SessionUtil.getUsername()))
+                .buildStatus(StringFormatter.format("{} 关闭任务", SessionHolder.getUsername()))
                 .isActive(false)
                 .isFinish(true)
                 .endTime(new Date())
@@ -282,6 +283,20 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
             throw new LeoBuildException("构建任务已经结束！");
         }
         LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.load(leoBuild);
+        // step1 : stop jenkins 任务
+        try {
+            stopJenkinsPipeline(leoBuild, buildConfig);
+        } catch (Exception e) {
+            logHelper.warn(leoBuild, "Stop jenkins job err: {}", e.getMessage());
+        }
+        // step2 : stop leo build
+    }
+
+    private void stopLeoBuild(){
+
+    }
+
+    private void stopJenkinsPipeline(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) throws LeoBuildException {
         final String jenkinsUuid = Optional.ofNullable(buildConfig)
                 .map(LeoBuildModel.BuildConfig::getBuild)
                 .map(LeoBuildModel.Build::getJenkins)
@@ -291,11 +306,10 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(jenkinsUuid);
         JenkinsConfig jenkinsConfig = dsConfigHelper.build(dsConfig, JenkinsConfig.class);
         try {
-            logHelper.info(leoBuild, "{} 停止构建任务", SessionUtil.getUsername());
             JenkinsPipeline.Step step = blueRestDriver.stopPipeline(jenkinsConfig.getJenkins(), leoBuild.getBuildJobName(), String.valueOf(1));
-            logHelper.info(leoBuild, "停止构建任务: {}", JSONUtil.writeValueAsString(step));
+            logHelper.info(leoBuild, "Stop jenkins job: {}", JSONUtil.writeValueAsString(step));
         } catch (Exception e) {
-            logHelper.error(leoBuild, "停止构建任务失败: {}", e.getMessage());
+            throw new LeoBuildException(e.getMessage());
         }
     }
 

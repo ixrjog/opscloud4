@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.workorder.query.impl.base;
 
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
@@ -62,7 +62,7 @@ public abstract class BaseTicketEntryQuery<T> implements ITicketEntryQuery<T>, I
     }
 
     protected User getUser() {
-        return userService.getByUsername(SessionUtil.getUsername());
+        return userService.getByUsername(SessionHolder.getUsername());
     }
 
 }

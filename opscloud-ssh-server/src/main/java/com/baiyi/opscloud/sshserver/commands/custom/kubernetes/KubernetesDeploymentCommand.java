@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.sshserver.commands.custom.kubernetes;
 
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -57,7 +57,7 @@ public class KubernetesDeploymentCommand extends BaseKubernetesCommand {
                 .assetType(DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name())
                 .queryName(name)
                 .businessType(BusinessTypeEnum.APPLICATION.getType())
-                .userId(userService.getByUsername(SessionUtil.getUsername()).getId())
+                .userId(userService.getByUsername(SessionHolder.getUsername()).getId())
                 .page(1)
                 .length(terminal.getSize().getRows() - PAGE_FOOTER_SIZE)
                 .build();

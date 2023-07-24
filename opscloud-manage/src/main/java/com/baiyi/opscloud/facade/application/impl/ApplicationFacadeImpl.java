@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.FunctionUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
@@ -85,10 +85,10 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     @Override
     public DataTable<ApplicationVO.Application> queryMyApplicationPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
         pageQuery.setBusinessType(getBusinessType());
-        if (isAdmin(SessionUtil.getUsername())) {
+        if (isAdmin(SessionHolder.getUsername())) {
             pageQuery.setAdmin(true);
         } else {
-            pageQuery.setUserId(userService.getByUsername(SessionUtil.getUsername()).getId());
+            pageQuery.setUserId(userService.getByUsername(SessionHolder.getUsername()).getId());
         }
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
         List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class)

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.workorder.helper;
 
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.workorder.util.WorkflowUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrder;
@@ -58,7 +58,7 @@ public class TicketApproveHelper {
         if (!OrderTicketPhaseCodeConstants.TOAUDIT.name().equals(workOrderTicket.getTicketPhase())) {
             return;
         }
-        final String username = SessionUtil.getUsername();
+        final String username = SessionHolder.getUsername();
         WorkOrderTicketNode ticketNode = ticketNodeService.getById(workOrderTicket.getNodeId());
         if (!StringUtils.isEmpty(ticketNode.getUsername())) {
             // 判断是否为当前用户

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.kubernetes.impl;
 
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.model.message.KubernetesDeploymentMessage;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
 import com.baiyi.opscloud.facade.kubernetes.KubernetesTerminalFacade;
@@ -31,7 +31,7 @@ public class KubernetesTerminalFacadeImpl implements KubernetesTerminalFacade {
                 .envType(envType)
                 .build();
         ApplicationVO.Kubernetes body = kubernetesDeploymentQueryRequestHandler
-                .getBody(kubernetesDeploymentMessage, SessionUtil.getUsername());
+                .getBody(kubernetesDeploymentMessage, SessionHolder.getUsername());
         return KubernetesDeploymentResponse.<ApplicationVO.Kubernetes>builder()
                 .body(body)
                 .messageType(messageType)

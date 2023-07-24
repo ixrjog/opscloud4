@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.SSHUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserCredential;
 import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
@@ -49,7 +49,7 @@ public class UserCredentialFacadeImpl implements UserCredentialFacade {
 
     @Override
     public void saveCredential(UserCredentialVO.Credential credential) {
-        User user = userService.getByUsername(SessionUtil.getUsername());
+        User user = userService.getByUsername(SessionHolder.getUsername());
         if (user == null) {
             return;
         }

@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.builder.SimpleDictBuilder;
 import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.common.exception.common.OCException;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -114,7 +115,7 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public UserVO.User getUserDetailsByUsername(String username) {
-        User user = userService.getByUsername(StringUtils.isEmpty(username) ? SessionUtil.getUsername() : username);
+        User user = userService.getByUsername(StringUtils.isEmpty(username) ? SessionHolder.getUsername() : username);
         UserVO.User userVO = BeanCopierUtil.copyProperties(user, UserVO.User.class);
         userPacker.wrap(userVO, SimpleExtend.EXTEND);
         return userVO;
@@ -190,8 +191,8 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public void updateUser(UserParam.UpdateUser updateUser) {
         User checkUser = userService.getById(updateUser.getId());
-        if (!checkUser.getUsername().equals(SessionUtil.getUsername())) {
-            int accessLevel = userPermissionFacade.getUserAccessLevel(SessionUtil.getUsername());
+        if (!checkUser.getUsername().equals(SessionHolder.getUsername())) {
+            int accessLevel = userPermissionFacade.getUserAccessLevel(SessionHolder.getUsername());
             FunctionUtil.isTure(accessLevel < AccessLevel.OPS.getLevel())
                     .throwBaseException(new OCException("权限不足: 需要管理员才能修改其他用户信息!"));
         }
@@ -228,7 +229,7 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public ServerTreeVO.ServerTree queryUserServerTree(ServerGroupParam.UserServerTreeQuery queryParam) {
-        User user = userService.getByUsername(SessionUtil.getUsername());
+        User user = userService.getByUsername(SessionHolder.getUsername());
         queryParam.setUserId(user.getId());
         return serverGroupFacade.queryServerTree(queryParam, user);
     }
@@ -244,7 +245,7 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public DataTable<ServerVO.Server> queryUserRemoteServerPage(ServerParam.UserRemoteServerPageQuery queryParam) {
-        User user = userService.getByUsername(SessionUtil.getUsername());
+        User user = userService.getByUsername(SessionHolder.getUsername());
         queryParam.setUserId(user.getId());
         return serverFacade.queryUserRemoteServerPage(queryParam);
     }
@@ -252,7 +253,7 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public AccessTokenVO.AccessToken grantUserAccessToken(AccessTokenVO.AccessToken accessToken) {
         AccessToken pre = AccessToken.builder()
-                .username(SessionUtil.getUsername())
+                .username(SessionHolder.getUsername())
                 .tokenId(IdUtil.buildUUID())
                 .token(PasswordUtil.generatorPassword(32, false))
                 .expiredTime(accessToken.getExpiredTime())
@@ -297,7 +298,7 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public UserVO.UserMFA getUserMFA() {
-        String username = SessionUtil.getUsername();
+        String username = SessionHolder.getUsername();
         User user = userService.getByUsername(username);
         return createMfa(user);
     }
@@ -305,7 +306,7 @@ public class UserFacadeImpl implements UserFacade {
     @Transactional(rollbackFor = {OCException.class, Exception.class})
     @Override
     public UserVO.UserMFA resetUserMFA() {
-        String username = SessionUtil.getUsername();
+        String username = SessionHolder.getUsername();
         User user = userService.getByUsername(username);
         FunctionUtil.isTure(user.getForceMfa())
                 .throwBaseException(new OCException("MFA无法重置: 管理员强制启用!"));
@@ -327,7 +328,7 @@ public class UserFacadeImpl implements UserFacade {
     @Transactional(rollbackFor = {OCException.class, Exception.class})
     @Override
     public UserVO.UserMFA bindUserMFA(String otp) {
-        String username = SessionUtil.getUsername();
+        String username = SessionHolder.getUsername();
         User user = userService.getByUsername(username);
         FunctionUtil.isTure(user.getMfa())
                 .throwBaseException(new OCException("MFA无法绑定: 重复操作!"));
@@ -339,7 +340,7 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public UserVO.UserIAMMFA getUserIAMMFA() {
-        String username = SessionUtil.getUsername();
+        String username = SessionHolder.getUsername();
         User user = userService.getByUsername(username);
         final String defQrcode = "otpauth://totp/Amazon%20Web%20Services:${NAME}?secret=${SECRET}&issuer=Amazon%20Web%20Services";
         List<MfaVO.MFA> userMfas = userCredentialService.queryByUserIdAndType(user.getId(), UserCredentialTypeEnum.IAM_OTP_SK.getType()).stream()

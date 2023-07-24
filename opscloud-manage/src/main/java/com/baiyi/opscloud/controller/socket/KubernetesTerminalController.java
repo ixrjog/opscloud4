@@ -2,7 +2,7 @@ package com.baiyi.opscloud.controller.socket;
 
 import com.baiyi.opscloud.common.model.HostInfo;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.controller.socket.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalMessageHandlerFactory;
@@ -106,7 +106,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
                 updateSessionUsername(hasLogin(new GsonBuilder().create().fromJson(message, SimpleLoginMessage.class)));
             }
         } else {
-            SessionUtil.setUsername(this.terminalSession.getUsername());
+            SessionHolder.setUsername(this.terminalSession.getUsername());
         }
         KubernetesTerminalMessageHandlerFactory.getHandlerByState(state).handle(message, session, terminalSession);
     }

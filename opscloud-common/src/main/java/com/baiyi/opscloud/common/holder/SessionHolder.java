@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.common.util;
+package com.baiyi.opscloud.common.holder;
 
 import com.baiyi.opscloud.domain.generator.opscloud.UserToken;
 import org.apache.commons.lang3.StringUtils;
@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
  * @Date 2020/1/7 1:52 下午
  * @Version 1.0
  */
-public class SessionUtil {
+public class SessionHolder {
 
     private static final ThreadLocal<String> username = new ThreadLocal<>();
 

@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.exception.ssh.SshException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.CredentialUtil;
 import com.baiyi.opscloud.common.util.ServerAccountUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.datasource.business.server.util.HostParamUtil;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
@@ -62,10 +62,10 @@ public class HostSystemHandler {
     }
 
     private boolean verifyAdmin(Server server) {
-        boolean isAdmin = SessionUtil.getIsAdmin();
+        boolean isAdmin = SessionHolder.getIsAdmin();
         if (!isAdmin) {
             UserPermission query = UserPermission.builder()
-                    .userId(SessionUtil.getUserId())
+                    .userId(SessionHolder.getUserId())
                     .businessType(BusinessTypeEnum.SERVERGROUP.getType())
                     .businessId(server.getServerGroupId())
                     .build();
@@ -118,7 +118,7 @@ public class HostSystemHandler {
     }
 
     public HostSystem buildHostSystem(ServerNode serverNode, ServerMessage.BaseMessage message) {
-        message.setAdmin(SessionUtil.getIsAdmin());
+        message.setAdmin(SessionHolder.getIsAdmin());
         Server server = serverService.getById(serverNode.getId());
         SshCredential sshCredential = buildSshCredential(message, server);
         ServerProperty.Server serverProperty = bizPropertyHelper.getBusinessProperty(server);
@@ -147,7 +147,7 @@ public class HostSystemHandler {
      * @return
      */
     private SshCredential getSshCredential(Server server, int loginType) {
-        if (SessionUtil.getIsAdmin()) {
+        if (SessionHolder.getIsAdmin()) {
             return getSshCredentialByAdmin(server.getId(), loginType);
         }
         List<ServerAccount> accounts = serverAccountService.getPermissionServerAccountByTypeAndProtocol(server.getId(), loginType, ProtocolEnum.SSH.getType());

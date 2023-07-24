@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.terminal.handler.impl;
 
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.interceptor.SuperAdminInterceptor;
@@ -52,10 +52,10 @@ public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<Se
         try {
             ServerMessage.Login loginMessage = toMessage(message);
             heartbeat(terminalSession.getSessionId());
-            String username = SessionUtil.getUsername();
+            String username = SessionHolder.getUsername();
             for (ServerNode serverNode : loginMessage.getServerNodes()) {
                 serverTerminalExecutor.submit(() -> {
-                    SessionUtil.setUsername(username);
+                    SessionHolder.setUsername(username);
                     log.info("Login server: instanceId={}", serverNode.getInstanceId());
                     superAdminInterceptor.interceptLoginServer(serverNode.getId());
                     HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverNode, loginMessage);

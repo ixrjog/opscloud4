@@ -2,7 +2,7 @@ package com.baiyi.opscloud.sshserver.commands.custom.kubernetes;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.datasource.kubernetes.client.MyKubernetesClientBuilder;
 import com.baiyi.opscloud.datasource.kubernetes.converter.PodAssetConverter;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
@@ -190,7 +190,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                 .assetType(DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name())
                 .queryName(deploymentName)
                 .businessType(BusinessTypeEnum.APPLICATION.getType())
-                .userId(userService.getByUsername(SessionUtil.getUsername()).getId())
+                .userId(userService.getByUsername(SessionHolder.getUsername()).getId())
                 .page(1)
                 .length(terminal.getSize().getRows() - PAGE_FOOTER_SIZE)
                 .build();

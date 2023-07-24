@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.auth.impl;
 
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.datasource.manager.DsAuthManager;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.PermitEmptyPasswords;
@@ -84,7 +84,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
             throw new AuthenticationException(ErrorEnum.AUTHENTICATION_TOKEN_INVALID);
         }
         // 设置会话用户
-        SessionUtil.setUserToken(userToken);
+        SessionHolder.setUserToken(userToken);
         // 校验用户是否可以访问资源路径
         if (userTokenService.checkUserHasResourceAuthorize(token, resourceName) == 0) {
             if (userTokenService.checkUserHasRole(token, SUPER_ADMIN) == 0) {
@@ -112,7 +112,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
             throw new AuthenticationException(ErrorEnum.AUTHENTICATION_TOKEN_INVALID);
         }
         // 设置会话用户
-        SessionUtil.setUsername(token.getUsername());
+        SessionHolder.setUsername(token.getUsername());
         // 校验用户是否可以访问资源路径
         if (accessTokenService.checkUserHasResourceAuthorize(accessToken, resourceName) == 0) {
             throw new AuthenticationException(ErrorEnum.AUTHENTICATION_FAILURE);
@@ -201,8 +201,8 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
 
     @Override
     public void logout() {
-        log.info("User logout: {}", SessionUtil.getUsername());
-        userTokenFacade.revokeUserToken(SessionUtil.getUsername());
+        log.info("User logout: {}", SessionHolder.getUsername());
+        userTokenFacade.revokeUserToken(SessionHolder.getUsername());
     }
 
 }

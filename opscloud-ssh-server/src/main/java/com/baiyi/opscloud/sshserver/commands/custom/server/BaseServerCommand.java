@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshserver.commands.custom.server;
 
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
@@ -69,7 +70,7 @@ public abstract class BaseServerCommand {
     protected void queryServer(QueryServerParam commandContext) {
         PrettyTable pt = PrettyTable.fieldNames(TABLE_SERVER_FIELD_NAMES);
         ServerParam.UserPermissionServerPageQuery pageQuery = commandContext.getQueryParam();
-        pageQuery.setUserId(com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin() ? null : com.baiyi.opscloud.common.util.SessionUtil.getUserId());
+        pageQuery.setUserId(SessionHolder.getIsAdmin() ? null : SessionHolder.getUserId());
         Terminal terminal = SshShellCommandFactory.SSH_THREAD_CONTEXT.get().getTerminal();
         pageQuery.setLength(terminal.getSize().getRows() - PAGE_FOOTER_SIZE);
         // 设置上下文
@@ -87,7 +88,7 @@ public abstract class BaseServerCommand {
                     ServerUtil.toDisplayEnv(s.getEnv()),
                     ServerUtil.toDisplayIp(s),
                     ServerUtil.toDisplayTag(s),
-                    toAccountField(s, com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin()),
+                    toAccountField(s, SessionHolder.getIsAdmin()),
                     toCommentField(s.getComment())
             );
             id++;

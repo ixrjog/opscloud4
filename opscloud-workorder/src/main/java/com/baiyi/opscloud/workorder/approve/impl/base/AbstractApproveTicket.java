@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.workorder.approve.impl.base;
 
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicket;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkOrderTicketNode;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketParam;
@@ -56,7 +56,7 @@ public abstract class AbstractApproveTicket implements ITicketApprove, Initializ
         }
         if (StringUtils.isEmpty(ticketNode.getUsername())) {
             // 审批人
-            ticketNode.setUsername(SessionUtil.getUsername());
+            ticketNode.setUsername(SessionHolder.getUsername());
         }
         // 审批状态
         ticketNode.setApprovalStatus(approveTicket.getApprovalType());

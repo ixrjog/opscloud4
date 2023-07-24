@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
@@ -88,7 +88,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
 
     @Override
     public DataTable<WorkOrderTicketVO.Ticket> queryMyTicketPage(WorkOrderTicketParam.MyTicketPageQuery pageQuery) {
-        pageQuery.setUsername(SessionUtil.getUsername());
+        pageQuery.setUsername(SessionHolder.getUsername());
         DataTable<WorkOrderTicket> table = ticketService.queryPageByParam(pageQuery);
 
         List<WorkOrderTicketVO.Ticket> data = BeanCopierUtil.copyListProperties(table.getData(), WorkOrderTicketVO.Ticket.class).stream().peek(e ->
@@ -100,7 +100,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public WorkOrderTicketVO.TicketView createTicket(WorkOrderTicketParam.CreateTicket createTicket) {
-        final String username = SessionUtil.getUsername();
+        final String username = SessionHolder.getUsername();
         WorkOrderTicket workOrderTicket = ticketService.getNewTicketByUser(createTicket.getWorkOrderKey(), username);
         WorkOrder workOrder = workOrderService.getByKey(createTicket.getWorkOrderKey());
         if (workOrderTicket == null) {
@@ -163,7 +163,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         if (!token.equals(outApproveTicket.getToken())) {
             return new HttpResult(ErrorEnum.WORKORDER_INVALID_TOKEN);
         }
-        SessionUtil.setUsername(outApproveTicket.getUsername());
+        SessionHolder.setUsername(outApproveTicket.getUsername());
         WorkOrderTicketParam.ApproveTicket approveTicket = WorkOrderTicketParam.ApproveTicket.builder()
                 .ticketId(outApproveTicket.getTicketId())
                 .approvalType(outApproveTicket.getApprovalType())
@@ -206,7 +206,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         if (workOrderTicket == null) {
             throw new TicketException("工单不存在！");
         }
-        final String username = SessionUtil.getUsername();
+        final String username = SessionHolder.getUsername();
         if (!workOrderTicket.getUsername().equals(username)) {
             throw new TicketException("只有本人才能保存工单！");
         }
@@ -299,7 +299,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
             throw new TicketException("新增工单条目错误: 对象为空！");
         }
         WorkOrderTicket workOrderTicket = ticketService.getById(ticketEntry.getWorkOrderTicketId());
-        if (!SessionUtil.equalsUsername(workOrderTicket.getUsername())) {
+        if (!SessionHolder.equalsUsername(workOrderTicket.getUsername())) {
             throw new TicketException("不合法的请求: 只有工单创建人才能新增条目！");
         }
         WorkOrder workOrder = workOrderService.getById(workOrderTicket.getWorkOrderId());
@@ -323,7 +323,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         if (!OrderTicketPhaseCodeConstants.NEW.name().equals(workOrderTicket.getTicketPhase())) {
             throw new TicketException("只有新建工单才能修改或删除条目！");
         }
-        if (!SessionUtil.equalsUsername(workOrderTicket.getUsername())) {
+        if (!SessionHolder.equalsUsername(workOrderTicket.getUsername())) {
             throw new TicketException("不合法的请求: 只有工单创建人才能新增条目！");
         }
         ticketEntryService.deleteById(ticketEntryId);

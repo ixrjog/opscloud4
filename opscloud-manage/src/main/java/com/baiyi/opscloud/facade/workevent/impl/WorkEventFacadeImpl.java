@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
@@ -86,7 +86,7 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
     public void addWorkEvent(WorkEventParam.AddWorkEvent param) {
         param.getWorkEventList().forEach(workEventVO -> {
             WorkEvent workEvent = BeanCopierUtil.copyProperties(workEventVO, WorkEvent.class);
-            workEvent.setUsername(SessionUtil.getUsername());
+            workEvent.setUsername(SessionHolder.getUsername());
             workEventService.add(workEvent);
             List<WorkEventProperty> propertyList = workEventVO.getPropertyList();
             if (!CollectionUtils.isEmpty(propertyList)) {
@@ -99,13 +99,13 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
     }
 
     private void validAccess(WorkEvent workEvent) {
-        String username = SessionUtil.getUsername();
+        String username = SessionHolder.getUsername();
         int accessLevel = userPermissionFacade.getUserAccessLevel(username);
         // ADMIN角色可以操作所有
         if (accessLevel >= AccessLevel.ADMIN.getLevel()) {
             return;
         }
-        if (SessionUtil.equalsUsername(workEvent.getUsername())) {
+        if (SessionHolder.equalsUsername(workEvent.getUsername())) {
             return;
         }
         throw new OCException("只能变更自己创建的工作事件");
@@ -152,7 +152,7 @@ public class WorkEventFacadeImpl implements WorkEventFacade {
 
     @Override
     public List<WorkRole> queryMyWorkRole() {
-        User user = userService.getByUsername(SessionUtil.getUsername());
+        User user = userService.getByUsername(SessionHolder.getUsername());
         if (ObjectUtils.isEmpty(user)) {
             throw new AuthenticationException(ErrorEnum.AUTHENTICATION_FAILURE);
         }

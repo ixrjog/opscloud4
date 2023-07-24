@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.interceptor;
 
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
@@ -44,7 +44,7 @@ public class SuperAdminInterceptor {
         if (bizTagService.countByBusinessTag(bizTag) == 0) {
             return;
         }
-        int accessLevel = userPermissionFacade.getUserAccessLevel(SessionUtil.getUsername());
+        int accessLevel = userPermissionFacade.getUserAccessLevel(SessionHolder.getUsername());
         if (accessLevel < 100) {
             log.warn("越权访问: 业务资源只有{SUPER_SA}才能访问！");
             throw new AuthenticationException("越权访问: 业务资源只有{SUPER_SA}才能访问！");

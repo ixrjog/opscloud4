@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.sys.impl;
 
 import com.baiyi.opscloud.common.exception.common.OCException;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthRoleMenu;
 import com.baiyi.opscloud.domain.generator.opscloud.Menu;
@@ -141,7 +141,7 @@ public class MenuFacadeImpl implements MenuFacade {
 
     @Override
     public List<MenuVO.Menu> queryMyMenu() {
-        return menuPacker.toVOList(SessionUtil.getUsername());
+        return menuPacker.toVOList(SessionHolder.getUsername());
     }
 
 }

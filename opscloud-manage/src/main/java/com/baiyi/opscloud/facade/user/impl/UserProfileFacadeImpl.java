@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.user.impl;
 
 import com.baiyi.opscloud.common.constants.UserProfileKeyEnum;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.generator.opscloud.UserProfile;
 import com.baiyi.opscloud.domain.vo.user.UserProfileVO;
 import com.baiyi.opscloud.facade.user.UserProfileFacade;
@@ -30,13 +30,13 @@ public class UserProfileFacadeImpl implements UserProfileFacade {
 
     @Override
     public UserProfileVO.Profiles getProfiles() {
-        if (StringUtils.isBlank(SessionUtil.getUsername())) {
+        if (StringUtils.isBlank(SessionHolder.getUsername())) {
             return UserProfileVO.Profiles.builder().build();
         }
-        List<UserProfile> profileList = userProfileService.queryByUsername(SessionUtil.getUsername());
+        List<UserProfile> profileList = userProfileService.queryByUsername(SessionHolder.getUsername());
         if (CollectionUtils.isEmpty(profileList)) {
             return UserProfileVO.Profiles.builder()
-                    .username(SessionUtil.getUsername())
+                    .username(SessionHolder.getUsername())
                     .build();
         }
         Map<String, String> profilesMap = profileList.stream().collect(Collectors.toMap(UserProfile::getProfileKey, UserProfile::getValue, (k1, k2) -> k1));
@@ -50,7 +50,7 @@ public class UserProfileFacadeImpl implements UserProfileFacade {
                 .theme(theme)
                 .build();
         return UserProfileVO.Profiles.builder()
-                .username(SessionUtil.getUsername())
+                .username(SessionHolder.getUsername())
                 .terminal(terminal)
                 .build();
     }

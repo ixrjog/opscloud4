@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade.sys.impl;
 import com.baiyi.opscloud.common.builder.SimpleDict;
 import com.baiyi.opscloud.common.builder.SimpleDictBuilder;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.util.TemplateUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Document;
@@ -83,7 +83,7 @@ public class DocumentFacadeImpl implements DocumentFacade {
             // 无有效文档
             return DocumentVO.DocZone.EMPTY;
         }
-        User user = userService.getByUsername(SessionUtil.getUsername());
+        User user = userService.getByUsername(SessionHolder.getUsername());
         return DocumentVO.DocZone.builder()
                 .zone(BeanCopierUtil.copyProperties(documentZone, DocumentVO.Zone.class))
                 .docs(documents.stream().map(doc -> toDoc(doc, user, query.getDict())).collect(Collectors.toList()))
@@ -92,7 +92,7 @@ public class DocumentFacadeImpl implements DocumentFacade {
 
     private DocumentVO.Doc toDoc(Document document, User user, Map<String, String> dict) {
         SimpleDict simpleDict = SimpleDictBuilder.newBuilder()
-                .put("username", SessionUtil.getUsername())
+                .put("username", SessionHolder.getUsername())
                 .put("email", user.getEmail())
                 .put(dict)
                 .build();
@@ -118,9 +118,9 @@ public class DocumentFacadeImpl implements DocumentFacade {
     }
 
     private void render(Document doc, DocumentParam.DocumentQuery query) {
-        User user = userService.getByUsername(SessionUtil.getUsername());
+        User user = userService.getByUsername(SessionHolder.getUsername());
         SimpleDict simpleDict = SimpleDictBuilder.newBuilder()
-                .put("username", SessionUtil.getUsername())
+                .put("username", SessionHolder.getUsername())
                 .put("email", user.getEmail())
                 // 反向注入
                 .put(query.getDict())

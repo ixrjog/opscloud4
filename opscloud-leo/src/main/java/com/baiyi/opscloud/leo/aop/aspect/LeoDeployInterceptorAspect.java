@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.leo.aop.aspect;
 
 import com.baiyi.opscloud.common.util.IdUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.leo.aop.annotation.LeoDeployInterceptor;
 import com.baiyi.opscloud.leo.exception.LeoJobException;
@@ -89,7 +89,7 @@ public class LeoDeployInterceptorAspect {
         if (leoDeployInterceptor.lock()) {
             executeJobInterceptorHandler.tryLockWithDeploy(jobId);
         }
-        if (executeJobInterceptorHandler.isAdmin(SessionUtil.getUsername())) {
+        if (executeJobInterceptorHandler.isAdmin(SessionHolder.getUsername())) {
             log.debug("管理员操作，跳过验证");
         } else {
             // 权限校验

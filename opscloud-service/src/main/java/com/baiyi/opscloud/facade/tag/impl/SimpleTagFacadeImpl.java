@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.tag.impl;
 
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
@@ -121,7 +121,7 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
     private void deleteBizTag(BusinessTag bizTag) {
         Tag tag = tagService.getById(bizTag.getTagId());
         if (tag != null && TagConstants.SUPER_ADMIN.getTag().equals(tag.getTagKey())) {
-            int accessLevel = userPermissionFacade.getUserAccessLevel(SessionUtil.getUsername());
+            int accessLevel = userPermissionFacade.getUserAccessLevel(SessionHolder.getUsername());
             if (accessLevel < 100) {
                 return;
             }

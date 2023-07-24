@@ -2,7 +2,7 @@ package com.baiyi.opscloud.sshserver.aop.aspect;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.constants.enums.SessionSource;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
 import com.baiyi.opscloud.service.user.UserService;
@@ -65,17 +65,17 @@ public class SettingContextSessionUserAspect {
                 helper.print("未经授权的访问！", PromptColor.RED);
                 throw new ExitRequest();
             }
-            SessionUtil.setUserId(user.getId());
-            SessionUtil.setUsername(user.getUsername());
+            SessionHolder.setUserId(user.getId());
+            SessionHolder.setUsername(user.getUsername());
             if (invokeSessionUser.invokeAdmin()) {
-                SessionUtil.setIsAdmin(isAdmin(user.getUsername()));
+                SessionHolder.setIsAdmin(isAdmin(user.getUsername()));
             }
         }
         if (invokeSessionUser.source() == SessionSource.TOKEN) {
             if (invokeSessionUser.invokeAdmin()) {
-                User user = userService.getByUsername(SessionUtil.getUsername());
-                SessionUtil.setUserId(user.getId());
-                SessionUtil.setIsAdmin(isAdmin(SessionUtil.getUsername()));
+                User user = userService.getByUsername(SessionHolder.getUsername());
+                SessionHolder.setUserId(user.getId());
+                SessionHolder.setIsAdmin(isAdmin(SessionHolder.getUsername()));
             }
         }
         joinPoint.proceed();

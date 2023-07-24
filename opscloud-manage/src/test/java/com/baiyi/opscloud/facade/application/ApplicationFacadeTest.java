@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.application;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,7 @@ class ApplicationFacadeTest extends BaseUnit {
 
     @Test
     void queryPageTest() {
-        SessionUtil.setUsername("baiyi");
+        SessionHolder.setUsername("baiyi");
         UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery =UserBusinessPermissionParam.UserBusinessPermissionPageQuery.builder()
                 .queryName("trade")
                 .extend(false)

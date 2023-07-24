@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.FunctionUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
@@ -96,7 +96,7 @@ public class ProjectFacadeImpl implements ProjectFacade {
     }
 
     private void addProjectUserPermission(Project project) {
-        User user = userService.getByUsername(SessionUtil.getUsername());
+        User user = userService.getByUsername(SessionHolder.getUsername());
         UserPermission userPermission = UserPermission.builder()
                 .userId(user.getId())
                 .businessId(project.getId())

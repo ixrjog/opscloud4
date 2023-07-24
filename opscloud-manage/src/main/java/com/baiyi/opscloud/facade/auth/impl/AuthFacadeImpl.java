@@ -4,7 +4,7 @@ package com.baiyi.opscloud.facade.auth.impl;
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
@@ -164,7 +164,7 @@ public class AuthFacadeImpl implements AuthFacade {
     @Override
     public void updateUserRole(AuthUserRoleParam.UpdateUserRole updateUserRole) {
         // 获取当前操作用户的操作权限
-        int accessLevel = userPermissionFacade.getUserAccessLevel(SessionUtil.getUsername());
+        int accessLevel = userPermissionFacade.getUserAccessLevel(SessionHolder.getUsername());
         // 至少需要OPS角色才能操作
         if (accessLevel < AccessLevel.OPS.getLevel()) {
             return;

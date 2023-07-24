@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.sys;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.param.sys.DocumentParam;
 import com.baiyi.opscloud.domain.vo.sys.DocumentVO;
 import jakarta.annotation.Resource;
@@ -19,7 +19,7 @@ class DocumentFacadeTest extends BaseUnit {
 
     @Test
     public void test() {
-        SessionUtil.setUsername("baiyi");
+        SessionHolder.setUsername("baiyi");
 
         DocumentParam.DocumentZoneQuery query = DocumentParam.DocumentZoneQuery.builder()
                 .mountZone("HOME")

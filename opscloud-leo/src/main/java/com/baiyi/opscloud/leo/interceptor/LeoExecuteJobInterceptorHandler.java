@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
 import com.baiyi.opscloud.common.exception.auth.AuthorizationException;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.leo.domain.model.LeoRuleModel;
@@ -87,7 +87,7 @@ public class LeoExecuteJobInterceptorHandler {
      */
     public void verifyAuthorization(int jobId) {
         LeoJob leoJob = leoJobService.getById(jobId);
-        String username = SessionUtil.getUsername();
+        String username = SessionHolder.getUsername();
 
         /*
          * 用户是平台管理员则通过

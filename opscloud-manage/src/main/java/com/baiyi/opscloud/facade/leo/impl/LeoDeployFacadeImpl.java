@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
@@ -155,7 +155,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .deployNumber(deployNumber)
                 .deployConfig(deployConfig.dump())
                 .executionType(ExecutionTypeConstants.USER)
-                .username(SessionUtil.getUsername())
+                .username(SessionHolder.getUsername())
                 .isFinish(false)
                 .isActive(true)
                 .isRollback(false)
@@ -253,7 +253,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                 .id(deployId)
                 .deployResult("ERROR")
-                .deployStatus(StringFormatter.format("{} 关闭任务",SessionUtil.getUsername()))
+                .deployStatus(StringFormatter.format("{} 关闭任务", SessionHolder.getUsername()))
                 .isActive(false)
                 .isFinish(true)
                 .endTime(new Date())
@@ -268,9 +268,9 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
             throw new LeoDeployException("Deploy record does not exist: deployId={}", deployId);
         }
         LeoJob leoJob = jobService.getById(leoDeploy.getJobId());
-        final String username = SessionUtil.getUsername();
+        final String username = SessionHolder.getUsername();
         if (executeJobInterceptorHandler.isAdmin(username)) {
-            // 管理员操作，跳过验证
+            log.info("Admin {} 停止部署任务",username);
         } else {
             // 权限校验
             executeJobInterceptorHandler.verifyAuthorization(leoJob.getId());

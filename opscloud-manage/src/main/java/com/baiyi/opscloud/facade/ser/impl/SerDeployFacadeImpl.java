@@ -11,6 +11,7 @@ import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.feign.driver.RiskControlDriver;
 import com.baiyi.opscloud.common.feign.request.RiskControlRequest;
 import com.baiyi.opscloud.common.feign.response.MgwCoreResponse;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.holder.WorkOrderSerDeployHolder;
 import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
@@ -109,7 +110,7 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
                     .itemBucketName(bucketName)
                     .itemMd5(s3Object.getObjectMetadata().getRawMetadata().get(S3_OBJECT_MD5_KEY).toString())
                     .itemSize(itemSize)
-                    .reloadUsername(SessionUtil.getUsername())
+                    .reloadUsername(SessionHolder.getUsername())
                     .build();
             SerDeployTaskItem item = serDeployTaskItemService.getByTaskIdAndItemName(serDeployTask.getId(), file.getOriginalFilename());
             FunctionUtil.isTureOrFalse(ObjectUtils.isEmpty(item))
@@ -212,7 +213,7 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
         FunctionUtil.isNull(env)
                 .throwBaseException(new OCException("选择环境不存在"));
         envValid(subtask, env);
-        subtask.setDeployUsername(SessionUtil.getUsername());
+        subtask.setDeployUsername(SessionHolder.getUsername());
         serDeploySubtaskService.update(subtask);
         try {
             SerDeployConfig serDeployConfig = getSerDeployConfig();
@@ -254,7 +255,7 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
     }
 
     private void envValid(SerDeploySubtask subtask, Env env) {
-        int accessLevel = authRoleService.getRoleAccessLevelByUsername(SessionUtil.getUsername());
+        int accessLevel = authRoleService.getRoleAccessLevelByUsername(SessionHolder.getUsername());
         if (accessLevel >= AccessLevel.OPS.getLevel()) {
             return;
         }
@@ -275,7 +276,7 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
                                 .build()
                 ).toList();
         return RiskControlRequest.SerLoader.builder()
-                .operator(SessionUtil.getUsername())
+                .operator(SessionHolder.getUsername())
                 .taskNo(subtask.getId())
                 .reloadingSerList(serList)
                 .build();
