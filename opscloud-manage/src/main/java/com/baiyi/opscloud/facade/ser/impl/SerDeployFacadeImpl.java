@@ -148,7 +148,7 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
     @Override
     public void addSerDeployTask(SerDeployParam.AddTask addTask) {
         FunctionUtil.isNotNull(serDeployTaskService.getByName(addTask.getTaskName()))
-                .throwBaseException(new OCException("Ser 包发布名称重复"));
+                .throwBaseException(new OCException("发布任务名称重复"));
         SerDeployTask task = SerDeployTask.builder()
                 .applicationId(addTask.getApplicationId())
                 .taskUuid(IdUtil.buildUUID())
