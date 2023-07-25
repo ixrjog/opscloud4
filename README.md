@@ -29,33 +29,37 @@ Welcome to the opscloud wiki!
 ## 开发环境
 + JDK 17
 + MacBook M1 PRO (macOS Ventura 13.1)
-+ IntelliJ IDEA 2023.1
-+ WebStorm 2023.1
++ IntelliJ IDEA 2023.1.4
++ WebStorm 2023.1.4
+
 
 ## Leo持续交付
-+ 部署
-
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-0.png" width="830"></img>
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-1.png" width="830"></img>
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-2.png" width="830"></img>
 
 + 构建
 
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-3.png" width="830"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-8.png" width="830"></img>
+
++ 部署
+
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-9.png" width="830"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-6.png" width="830"></img>
 
 + 规则配置（封网）
 
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-4.png" width="830"></img>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-10.png" width="830"></img>
 
 + 任务配置
 
 <img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-5.png" width="830"></img>
 
+## 容器堡垒机（集成版本信息）
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-7.png" width="830"></img>
+
 ## 主要功能
 + Leo持续交付（Kubernetes）
   + 多Jenkins实例调度
   + 权限控制/封网策略
-  + 可视化发布过程
+  + 分组（蓝/绿），金丝雀部署；可视化发布过程
 + 动态数据源
   + Zabbix、Nacos、LDAP、Jenkins、Guacamole、Ansible、Nexus、Gitlab、Sonar、Dingtalk、TencentExmail、Consul
   + `Kubernetes`
