@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Date;
 
+import static com.baiyi.opscloud.common.util.NewTimeUtil.MINUTE_TIME;
 import static com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler.RESULT_ERROR;
 
 /**
@@ -39,7 +40,7 @@ public class BuildingSupervisor implements ISupervisor {
 
     private static final int SLEEP_SECONDS = 4;
 
-    private static final long TIMEOUT = 3600000L;
+    private static final long TIMEOUT = 60 * MINUTE_TIME;
 
     private final LeoBuildService leoBuildService;
 
@@ -73,7 +74,8 @@ public class BuildingSupervisor implements ISupervisor {
         this.leoPostBuildHandler = leoPostBuildHandler;
     }
 
-    private boolean tryStop() {
+    @Override
+    public boolean tryStop() {
         StopBuildFlag buildStop = heartbeatHolder.getStopBuildFlag(leoBuild.getId());
         if (buildStop.getIsStop()) {
             LeoBuild saveLeoBuild = LeoBuild.builder()
@@ -137,7 +139,7 @@ public class BuildingSupervisor implements ISupervisor {
                     postBuildHandle();
                     return;
                 }
-                if (tryTimeout(leoBuild)) {
+                if (isTimeout()) {
                     throw new LeoBuildException("任务超时: {}", TIMEOUT);
                 }
             }
@@ -155,7 +157,7 @@ public class BuildingSupervisor implements ISupervisor {
         }
     }
 
-    private boolean tryTimeout(LeoBuild leoBuild) {
+    public boolean isTimeout() {
         return com.baiyi.opscloud.common.util.NewTimeUtil.isTimeout(leoBuild.getStartTime().getTime(), TIMEOUT);
     }
 

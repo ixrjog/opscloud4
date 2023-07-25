@@ -22,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Date;
 import java.util.Optional;
 
+import static com.baiyi.opscloud.common.util.NewTimeUtil.MINUTE_TIME;
+
 /**
  * 部署监督
  *
@@ -48,6 +50,8 @@ public class DeployingSupervisor implements ISupervisor {
 
     private final LeoDeployService deployService;
 
+    private static final long TIMEOUT = 30 * MINUTE_TIME;
+
     public DeployingSupervisor(LeoHeartbeatHolder heartbeatHolder,
                                LeoDeploy leoDeploy,
                                LeoDeployService deployService,
@@ -64,7 +68,8 @@ public class DeployingSupervisor implements ISupervisor {
         this.postDeployHandler = postDeployHandler;
     }
 
-    private boolean tryStop() {
+    @Override
+    public boolean tryStop() {
         StopDeployFlag deployStop = heartbeatHolder.getStopDeployFlag(leoDeploy.getId());
         if (deployStop.getIsStop()) {
             LeoDeploy saveLeoDeploy = LeoDeploy.builder()
@@ -116,6 +121,10 @@ public class DeployingSupervisor implements ISupervisor {
             // 延迟执行
             NewTimeUtil.sleep(SLEEP_SECONDS);
         }
+    }
+
+    public boolean isTimeout() {
+        return com.baiyi.opscloud.common.util.NewTimeUtil.isTimeout(leoDeploy.getStartTime().getTime(), TIMEOUT);
     }
 
     private void setHeartbeat() {

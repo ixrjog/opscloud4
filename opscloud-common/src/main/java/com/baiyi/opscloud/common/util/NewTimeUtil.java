@@ -79,8 +79,8 @@ public class NewTimeUtil {
 
     /**
      * 判断是否超时
-     *
      * @param startTime
+     * @param timeout (毫秒)
      * @return
      */
     public static boolean isTimeout(long startTime, long timeout) {

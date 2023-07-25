@@ -7,4 +7,8 @@ package com.baiyi.opscloud.leo.supervisor.base;
  */
 public interface ISupervisor extends Runnable {
 
+    boolean tryStop();
+
+    boolean isTimeout();
+
 }
