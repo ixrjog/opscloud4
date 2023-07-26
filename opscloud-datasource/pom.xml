@@ -28,6 +28,7 @@
             <artifactId>opscloud-datasource-google-cloud</artifactId>
         </dependency>
 
+        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-huaweicloud</artifactId>
