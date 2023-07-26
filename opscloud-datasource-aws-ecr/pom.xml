@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-ecr</artifactId>
-            <version>1.12.429</version>
+            <version>1.12.513</version>
         </dependency>
 
     </dependencies>
