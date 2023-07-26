@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.sshcore.task.ssh;
 
-import cn.hutool.core.util.ArrayUtil;
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.task.base.AbstractSshChannelOutputTask;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +26,7 @@ public class WatchKubernetesSshOutputTask extends AbstractSshChannelOutputTask {
 
     @Override
     public void write(char[] buff, int off, int len) throws IOException {
-        char[] outBuff = ArrayUtil.sub(buff, 0, len);
+        char[] outBuff = com.baiyi.opscloud.common.util.ArrayUtil.sub(buff, 0, len);
         this.channelOutput.write(toBytes(outBuff));
     }
 

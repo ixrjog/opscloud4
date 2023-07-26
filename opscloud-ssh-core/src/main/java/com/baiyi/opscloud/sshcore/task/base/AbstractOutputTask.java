@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.sshcore.task.base;
 
-import cn.hutool.core.util.ArrayUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.sshcore.AuditRecordHelper;
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
@@ -43,7 +42,7 @@ public abstract class AbstractOutputTask implements IRecordOutputTask {
             char[] buff = new char[BUFF_SIZE];
             int read;
             while ((read = br.read(buff)) != -1) {
-                char[] outBuff = ArrayUtil.sub(buff, 0, read);
+                char[] outBuff = com.baiyi.opscloud.common.util.ArrayUtil.sub(buff, 0, read);
                 writeAndRecord(outBuff, 0, outBuff.length);
                 NewTimeUtil.millisecondsSleep(10L);
             }
