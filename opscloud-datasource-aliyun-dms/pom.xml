@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--suppress VulnerableLibrariesLocal -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -28,17 +29,18 @@
             <artifactId>opscloud-datasource-core</artifactId>
         </dependency>
 
-        <!-- https://next.api.aliyun.com/api-tools/sdk/dms-enterprise?version=2018-11-01&language=java-tea -->
+        <!-- https://mvnrepository.com/artifact/com.aliyun/tea-openapi-->
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>tea-openapi</artifactId>
             <version>0.2.9</version>
         </dependency>
 
+        <!-- https://next.api.aliyun.com/api-tools/sdk/dms-enterprise?version=2018-11-01&language=java-tea -->
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>dms_enterprise20181101</artifactId>
-            <version>1.48.0</version>
+            <version>1.53.0</version>
         </dependency>
 
     </dependencies>

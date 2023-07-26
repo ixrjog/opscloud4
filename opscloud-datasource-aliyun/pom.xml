@@ -53,6 +53,7 @@
             <artifactId>opscloud-datasource-aliyun-redis</artifactId>
         </dependency>
 
+        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-aliyun-dms</artifactId>
