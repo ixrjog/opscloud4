@@ -23,7 +23,10 @@ public class GitFlowUtil {
         }
         for (LeoBuildVO.Option option : branchOptions.getOptions()) {
             if (option.getLabel().equals(BRANCHES)) {
-                option.setOptions(option.getOptions().stream().filter(o -> filter(o, envFilter)).collect(Collectors.toList()));
+                option.setOptions(option.getOptions()
+                        .stream()
+                        .filter(o -> filter(o, envFilter))
+                        .collect(Collectors.toList()));
             }
         }
         return branchOptions;

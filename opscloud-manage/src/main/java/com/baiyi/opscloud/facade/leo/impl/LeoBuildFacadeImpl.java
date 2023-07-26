@@ -361,37 +361,36 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         GitLabConfig gitLabConfig = dsConfigHelper.build(dsConfig, GitLabConfig.class);
         LeoBuildVO.BranchOptions branchOptions = gitLabRepoDelegate.generatorGitLabBranchOptions(gitLabConfig.getGitlab(), projectId, openTag);
         // gitFlow 分支管控
-        final boolean gitFlow = getGitFlow(leoJob, gitLabConfig);
-        return filterGitFlow(branchOptions, leoJob, gitLabConfig, gitFlow);
+        final boolean gitFlowEnabled = getGitFlowEnabled(leoJob, gitLabConfig);
+        return filterGitFlow(branchOptions, leoJob, gitLabConfig, gitFlowEnabled);
     }
 
-    private boolean getGitFlow(LeoJob leoJob, GitLabConfig gitLabConfig) {
+    private boolean getGitFlowEnabled(LeoJob leoJob, GitLabConfig gitLabConfig) {
         LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob);
         // 判断是否启用gitFlow
-        boolean gitFlow = Optional.of(jobConfig)
+        boolean gitFlowEnabled = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getGitLab)
                 .map(LeoBaseModel.GitLab::getGitFlow)
                 .map(LeoBaseModel.GitFlow::getEnabled)
-                .orElse(false);
-        if (gitFlow) {
-            gitFlow = Optional.of(gitLabConfig.getGitlab())
+                .orElse(true);
+        if (gitFlowEnabled) {
+            gitFlowEnabled = Optional.of(gitLabConfig.getGitlab())
                     .map(GitLabConfig.GitLab::getGitFlow)
                     .map(GitLabConfig.GitFlow::getEnabled)
                     .orElse(false);
         }
-        return gitFlow;
+        return gitFlowEnabled;
     }
 
-    private LeoBuildVO.BranchOptions filterGitFlow(LeoBuildVO.BranchOptions branchOptions, LeoJob leoJob, GitLabConfig gitLabConfig, boolean gitFlow) {
-        if (!gitFlow) {
+    private LeoBuildVO.BranchOptions filterGitFlow(LeoBuildVO.BranchOptions branchOptions, LeoJob leoJob, GitLabConfig gitLabConfig, boolean gitFlowEnabled) {
+        if (!gitFlowEnabled) {
             return branchOptions;
         }
         Map<String, List<String>> filter = Optional.of(gitLabConfig.getGitlab())
                 .map(GitLabConfig.GitLab::getGitFlow)
                 .map(GitLabConfig.GitFlow::getFilter)
                 .orElseThrow(() -> new LeoBuildException("GitLab instance configuration enables gitFlow but does not configure filter filtering conditions"));
-
         Env env = envService.getByEnvType(leoJob.getEnvType());
         List<String> envFilter;
         if (filter.containsKey(env.getEnvName())) {
