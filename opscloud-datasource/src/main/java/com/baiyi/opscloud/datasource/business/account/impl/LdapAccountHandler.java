@@ -14,6 +14,9 @@ import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
 import com.baiyi.opscloud.service.user.UserGroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -54,6 +57,11 @@ public class LdapAccountHandler extends AbstractAccountHandler {
     @Override
     protected void doDelete(User user) {
         if (personRepo.checkPersonInLdap(configContext.get(), user.getUsername())) {
+            // 清理用户组残留用户
+            List<String> userGroups = personRepo.searchUserGroupByUsername(configContext.get(), user.getUsername());
+            if (!CollectionUtils.isEmpty(userGroups)) {
+                userGroups.forEach(group -> groupRepo.removeGroupMember(configContext.get(), group, user.getUsername()));
+            }
             personRepo.delete(configContext.get(), user.getUsername());
         }
     }
