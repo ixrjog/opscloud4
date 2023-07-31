@@ -19,7 +19,8 @@ Welcome to the opscloud wiki!
 [![Security Status](https://www.murphysec.com/platform3/v31/badge/1683749365419687936.svg)](https://www.murphysec.com/console/report/1656107048332996608/1683749365419687936)
 <br/>
 
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/login_1.png" width="600"></img>
+## 架构图
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/github/4.5.0/opscloud4.svg" width="600" alt=""/>
 
 ## Code repository
 + Backend
