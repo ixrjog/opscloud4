@@ -27,12 +27,18 @@ Welcome to the opscloud wiki!
 + Frontend
   + [https://github.com/ixrjog/opscloud4-web](https://github.com/ixrjog/opscloud4-web)
 
+## Database
++ [v4.5.0 opscloud4-github.sql](https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/github/4.5.0/opscloud4-github.sql)
+
+## 登录信息
++ username:baiyi
++ password:空密码
+  
 ## 开发环境
 + JDK 17
-+ MacBook M1 PRO (macOS Ventura 13.1)
-+ IntelliJ IDEA 2023.1.4
-+ WebStorm 2023.1.4
-
++ MacBook M1 PRO
++ IntelliJ IDEA 2023
++ WebStorm 2023
 
 ## Leo持续交付
 
