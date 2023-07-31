@@ -20,7 +20,7 @@ Welcome to the opscloud wiki!
 <br/>
 
 ## 架构图
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/github/4.5.0/opscloud4.svg" width="600" alt=""/>
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/github/4.5.0/opscloud4_1.svg" width="600" alt=""/>
 
 ## Code repository
 + Backend
