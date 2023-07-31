@@ -24,7 +24,7 @@ public class ZabbixProblemEventListenerTask {
 
     @InstanceHealth
     @Scheduled(initialDelay = 8000, fixedRate = 120 * 1000)
-    @SchedulerLock(name = "zabbix_problem_event_listener_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
+    @SchedulerLock(name = "zabbix_problem_event_listener_task", lockAtMostFor = "3m", lockAtLeastFor = "3m")
     @WatchTask(name = "Listen for zabbix problems")
     public void run() {
         IEventHandler iEventProcess = EventFactory.getByEventType(EventTypeEnum.ZABBIX_PROBLEM);
