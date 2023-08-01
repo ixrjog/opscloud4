@@ -62,6 +62,9 @@ public class ServerVO {
 
         private BusinessPropertyVO.Property businessProperty;
 
+        @Schema(description = "资产标记")
+        private Boolean assetFlag;
+
         @Override
         public Integer getServerId() {
             return id;
