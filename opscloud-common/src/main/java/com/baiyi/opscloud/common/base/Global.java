@@ -25,6 +25,9 @@ public class Global {
 
     public static final String ENV_DAILY = "daily";
 
+    @Schema(description = "资产转换的默认环境")
+    public static final String DEF_ENV = ENV_PROD;
+
 
     public static final String ADMIN = "ADMIN";
 

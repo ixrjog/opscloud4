@@ -1,18 +1,22 @@
 package com.baiyi.opscloud.core.asset.impl.base;
 
-import com.baiyi.opscloud.core.asset.factory.AssetConverterFactory;
+import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.core.asset.IAssetConverter;
-import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
+import com.baiyi.opscloud.core.asset.factory.AssetConverterFactory;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
+import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
+import com.baiyi.opscloud.service.sys.EnvService;
 import com.google.common.collect.Maps;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import jakarta.annotation.Resource;
+
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +30,9 @@ public abstract class AbstractAssetToBO implements IAssetConverter, Initializing
 
     @Resource
     protected BusinessAssetRelationService businessAssetRelationService;
+
+    @Resource
+    private EnvService envService;
 
     protected abstract BusinessAssetRelationVO.IBusinessAssetRelation toBO(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum);
 
@@ -47,7 +54,8 @@ public abstract class AbstractAssetToBO implements IAssetConverter, Initializing
     }
 
     protected int getDefaultEnvType() {
-        return 0;
+        Env env = envService.getByEnvName(Global.DEF_ENV);
+        return env != null ? env.getEnvType() : 1;
     }
 
     protected List<BusinessAssetRelation> queryBusinessAssetRelations(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum) {
