@@ -3,6 +3,7 @@ package com.baiyi.opscloud.packer.task;
 import com.baiyi.opscloud.common.annotation.AgoWrapper;
 import com.baiyi.opscloud.common.annotation.DurationWrapper;
 import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.vo.task.ServerTaskVO;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.packer.user.UserPacker;
@@ -33,7 +34,7 @@ public class ServerTaskPacker implements IWrapper<ServerTaskVO.ServerTask> {
             // playbook
             ansiblePlaybookPacker.wrap(serverTask);
             // user
-            userPacker.wrap(serverTask);
+            userPacker.wrap(serverTask, SimpleExtend.NOT_EXTEND);
         }
     }
 
