@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.packer.sys;
 
 import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.vo.terminal.TerminalSessionVO;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.packer.user.UserPacker;
@@ -23,7 +24,7 @@ public class TerminalSessionPacker implements IWrapper<TerminalSessionVO.Session
     @Override
     public void wrap(TerminalSessionVO.Session session, IExtend iExtend) {
         if (iExtend.getExtend()) {
-            userPacker.wrap(session);
+            userPacker.wrap(session, SimpleExtend.EXTEND);
             sessionInstancePacker.wrap(session, iExtend);
         }
     }

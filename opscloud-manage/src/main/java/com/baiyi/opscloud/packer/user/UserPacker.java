@@ -4,7 +4,6 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.annotation.DesensitizedMethod;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.IExtend;
-import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.packer.user.delegate.UserPackerDelegate;
@@ -39,14 +38,14 @@ public class UserPacker implements IWrapper<UserVO.User> {
         userAvatarPacker.wrap(user, iExtend);
     }
 
-    public void wrap(UserVO.IUser iUser) {
+    public void wrap(UserVO.IUser iUser, IExtend iExtend) {
         if (StringUtils.isEmpty(iUser.getUsername())) {
             return;
         }
         User user = userService.getByUsername(iUser.getUsername());
         if (user != null) {
             UserVO.User userVO = BeanCopierUtil.copyProperties(user, UserVO.User.class);
-            wrap(userVO, SimpleExtend.EXTEND);
+            wrap(userVO, iExtend);
             iUser.setUser(userVO);
         }
     }

@@ -5,6 +5,7 @@ import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkEventProperty;
 import com.baiyi.opscloud.domain.generator.opscloud.WorkItem;
 import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventVO;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.packer.user.UserPacker;
@@ -60,7 +61,7 @@ public class WorkEventPacker implements IWrapper<WorkEventVO.WorkEvent> {
         Collections.reverse(list);
         vo.setWorkItemTree(Joiner.on("/").join(list));
         vo.setWorkRole(workRoleService.getById(vo.getWorkRoleId()));
-        userPacker.wrap(vo);
+        userPacker.wrap(vo, SimpleExtend.NOT_EXTEND);
         List<WorkEventProperty> propertyList = workEventPropertyService.listByWorkEventId(vo.getId());
         if (!CollectionUtils.isEmpty(propertyList)) {
             vo.setPropertyList(propertyList);
