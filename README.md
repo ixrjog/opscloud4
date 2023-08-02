@@ -11,9 +11,9 @@ Welcome to the opscloud wiki!
 ![GitHub Stats Card](https://github-readme-stats.vercel.app/api?username=ixrjog&show_icons=true&theme=onedark)
 
 ## OpsCloud4 云上运维
-<img src="https://img.shields.io/badge/Version-4.4.3-brightgreen.svg"></img>
+<img src="https://img.shields.io/badge/Version-4.5.0-brightgreen.svg"></img>
 <img src="https://img.shields.io/badge/JDK-17-brightgreen.svg"></img> 
-<img src="https://img.shields.io/badge/SpringBoot-3.0.6-brightgreen.svg"></img> 
+<img src="https://img.shields.io/badge/SpringBoot-3.1.2-brightgreen.svg"></img> 
 <img src="https://img.shields.io/badge/MySQL-8-brightgreen.svg"></img>
 <br/>
 [![Security Status](https://www.murphysec.com/platform3/v31/badge/1683749365419687936.svg)](https://www.murphysec.com/console/report/1656107048332996608/1683749365419687936)
@@ -65,32 +65,20 @@ Welcome to the opscloud wiki!
 
 ## 主要功能
 + Leo持续交付（Kubernetes）
-  + 多Jenkins实例调度
+  + 全冗余架构，多Jenkins引擎且无状态
   + 权限控制/封网策略
   + 分组（蓝/绿），金丝雀部署；可视化发布过程
-+ 动态数据源
-  + Zabbix、Nacos、LDAP、Jenkins、Guacamole、Ansible、Nexus、Gitlab、Sonar、Dingtalk、TencentExmail、Consul
-  + `Kubernetes`
-    + ACK、EKS
-  + `Aliyun`
-    + ECS、Image、VPC、RAM[User、Policy]、RDS[Instance、Database、Redis]、DMS[User]、ONS[Instance、Topic、Group]、Log
-  + `AWS`
-    + EC2、IAM[User、Policy]、SQS[Queue]、SNS[Topic、Subscription]
-  + `华为云`
-    + ECS 
++ 多实例动态数据源，万物皆资产
 + 堡垒机
-  + 远程桌面
-    + RDP、VNC
   + 服务器Web终端
     + 多服务器同时连接+命令同步、会话复制、会话心跳
     + 支持ED25519、RSA密钥
   + KubernetesWeb终端
     + 多容器同时登录+命令同步、容器日志、会话心跳 
   + SSH-Server
-    + 原生SSH协议实现，支持ED25519、RSA密钥
+    + 原生SSH协议实现，支持ED25519密钥
     + 简化用户登录，自动关联用户GitLab账户公钥
     + 支持服务器、容器登录
-    + 支持告警事件登录
 ```mermaid
 flowchart LR
     A[User] -->|SSH:22| B{SLB}
@@ -108,8 +96,6 @@ flowchart LR
   + 实例健康检查接口 /api/instance/health/lb-check (GET) 
   + 分布式调度任务(Quartz)、定时任务分布式锁(Shedlock)、任务并发锁(Redis)
   + 高性能、可伸缩、高可用性
-    + 集群SLA99.99%
-    + 无资产管理上限
 + 标签驱动、事件驱动 
 + API文档
   + example.com/doc.html
