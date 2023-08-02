@@ -4,7 +4,6 @@ import com.baiyi.opscloud.common.annotation.SetSessionUsername;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.instance.OcInstance;
-import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
@@ -28,6 +27,7 @@ import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVersionVO;
 import com.baiyi.opscloud.facade.application.ApplicationFacade;
+import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
 import com.baiyi.opscloud.facade.leo.LeoDeployFacade;
 import com.baiyi.opscloud.facade.sys.SimpleEnvFacade;
 import com.baiyi.opscloud.leo.aop.annotation.LeoDeployInterceptor;
@@ -94,8 +94,6 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     private final LeoExecuteJobInterceptorHandler executeJobInterceptorHandler;
 
-    private final RedisUtil redisUtil;
-
     private final LeoBuildDeploymentDelegate buildDeploymentDelegate;
 
     private final DsInstanceAssetService assetService;
@@ -115,6 +113,8 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     private final SubscribeLeoDeploymentVersionDetailsRequestHandler subscribeLeoDeploymentVersionDetailsRequestHandler;
 
     private final LeoHeartbeatHolder leoHeartbeatHolder;
+
+    private final DsInstanceAssetFacade assetFacade;
 
     @Override
     @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType", buildIdSpEL = "#doDeploy.buildId")
@@ -278,6 +278,23 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     }
 
     @Override
+    public void delDeployDeployment(int assetId) {
+        DatasourceInstanceAsset asset = assetService.getById(assetId);
+        if (asset == null) {
+            throw new LeoDeployException("Asset does not exist: assetId={}", assetId);
+        }
+        KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
+        final String namespace = asset.getAssetKey2();
+        final String deploymentName = asset.getAssetKey();
+        Deployment deployment = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), namespace, deploymentName);
+        if (deployment != null) {
+            KubernetesDeploymentDriver.delete(kubernetesConfig.getKubernetes(), deployment);
+        }
+        // 删除资产
+        assetFacade.deleteAssetByAssetId(assetId);
+    }
+
+    @Override
     public void cloneDeployDeployment(LeoDeployParam.CloneDeployDeployment cloneDeployDeployment) {
         LeoJob leoJob = jobService.getById(cloneDeployDeployment.getJobId());
         if (leoJob == null) {
@@ -285,6 +302,9 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         }
 
         DatasourceInstanceAsset asset = assetService.getById(cloneDeployDeployment.getAssetId());
+        if (asset == null) {
+            throw new LeoDeployException("Asset does not exist: assetId={}", cloneDeployDeployment.getAssetId());
+        }
         KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
         // 查询原无状态
         final String namespace = asset.getAssetKey2();
@@ -296,13 +316,15 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         if (deployment == null) {
             throw new LeoDeployException("无状态配置 {} 不存在!", cloneDeployDeployment.getDeploymentName());
         }
-
+        // 更新无状态基本信息
         preUpdateDeployment(deployment, deploymentName, cloneDeployDeployment.getDeploymentName(), cloneDeployDeployment.getReplicas());
+        // 更新无状态容器模板标签
+        preUpdateDeploymentTemplateLabels(deployment, cloneDeployDeployment.getTemplateLabels());
         // 创建无状态
         try {
             KubernetesDeploymentDriver.create(kubernetesConfig.getKubernetes(), namespace, deployment);
         } catch (Exception e) {
-            throw new LeoDeployException("克隆无状态错误: {}", e.getMessage());
+            throw new LeoDeployException("Kubernetes creation deployment err: {}", e.getMessage());
         }
 
         // 录入资产
@@ -321,6 +343,13 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                     .build();
             applicationFacade.bindApplicationResource(resource);
         });
+    }
+
+    private void preUpdateDeploymentTemplateLabels(Deployment deployment, Map<String, String> templateLabels) {
+        if (templateLabels == null || templateLabels.isEmpty()) {
+            return;
+        }
+        deployment.getSpec().getTemplate().getMetadata().getLabels().putAll(templateLabels);
     }
 
     private void preUpdateDeployment(Deployment deployment, String oldName, String newName, Integer replicas) {

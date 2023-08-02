@@ -4,8 +4,13 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -19,6 +24,7 @@ public class LeoDeployParam {
 
         /**
          * 自动部署
+         *
          * @return
          */
         Boolean getAutoDeploy();
@@ -163,6 +169,9 @@ public class LeoDeployParam {
         @NotNull(message = "副本数量不能为空")
         @Schema(description = "副本数量")
         private Integer replicas;
+
+        @Schema(description = "容器模板标签")
+        private Map<String, String> templateLabels;
 
     }
 
