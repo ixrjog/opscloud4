@@ -19,7 +19,7 @@ public class ZabbixRequestBuilder {
 
     private final ZabbixRequest.DefaultRequest request = ZabbixRequest.DefaultRequest.builder().build();
 
-    private final ZabbixRequest.Filter filter = ZabbixRequest.Filter.builder().build();
+    //private final ZabbixRequest.Filter filter = ZabbixRequest.Filter.builder().build();
 
     private ZabbixRequestBuilder() {
     }
