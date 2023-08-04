@@ -143,21 +143,21 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
         if (CollectionUtils.isEmpty(preTags)) {
             return;
         }
-        ZabbixHost.Host preHost = zabbixV5HostTagDriver.getHostTag(configContext.get(), host);
-        if (!CollectionUtils.isEmpty(preHost.getTags())) {
-            Map<String, ZabbixHost.HostTag> hostTagMap = preHost.getTags().stream().collect(Collectors.toMap(ZabbixHost.HostTag::getTag, a -> a, (k1, k2) -> k1));
-
-            for (ZabbixHostParam.Tag preTag : preTags) {
-                if (hostTagMap.containsKey(preTag.getTag())) {
-                    ZabbixHost.HostTag hostTag = hostTagMap.get(preTag.getTag());
-                    if (!preTag.getValue().equals(hostTag.getValue())) {
-                        break;
-                    }
-                } else {
-                    break;
-                }
-            }
-        }
+//        ZabbixHost.Host preHost = zabbixV5HostTagDriver.getHostTag(configContext.get(), host);
+//        if (!CollectionUtils.isEmpty(preHost.getTags())) {
+//            Map<String, ZabbixHost.HostTag> hostTagMap = preHost.getTags().stream().collect(Collectors.toMap(ZabbixHost.HostTag::getTag, a -> a, (k1, k2) -> k1));
+//
+//            for (ZabbixHostParam.Tag preTag : preTags) {
+//                if (hostTagMap.containsKey(preTag.getTag())) {
+//                    ZabbixHost.HostTag hostTag = hostTagMap.get(preTag.getTag());
+//                    if (!preTag.getValue().equals(hostTag.getValue())) {
+//                        break;
+//                    }
+//                } else {
+//                    break;
+//                }
+//            }
+//        }
         requestBuilder.putParam("tags", buildTagsParam(server));
         // 清理缓存
         zabbixV5HostTagDriver.evictHostTag(configContext.get(), host);
