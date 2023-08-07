@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.leo.handler.deploy.strategy.inspection;
 
+import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
+import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.handler.deploy.strategy.inspection.base.BasePreInspectionStrategy;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
@@ -23,7 +25,6 @@ import java.util.Optional;
 @Component
 public class PreInspectionWithOfflineStrategy extends BasePreInspectionStrategy {
 
-
     /**
      * 预检查
      *
@@ -35,7 +36,8 @@ public class PreInspectionWithOfflineStrategy extends BasePreInspectionStrategy 
         preHandle(leoDeploy, deployConfig);
         LeoDeployModel.Deploy deploy = deployConfig.getDeploy();
 
-        final String image = Optional.of(deploy)
+        // image
+        Optional.of(deploy)
                 .map(LeoDeployModel.Deploy::getKubernetes)
                 .map(LeoBaseModel.Kubernetes::getDeployment)
                 .map(LeoBaseModel.Deployment::getContainer)
@@ -51,9 +53,16 @@ public class PreInspectionWithOfflineStrategy extends BasePreInspectionStrategy 
                 .orElseThrow(() -> new LeoDeployException("Configuration does not exist: deploy->kubernetes"));
 
         final String deploymentName = kubernetes.getDeployment().getName();
-        // 校验无状态名称
-        if (!deploymentName.endsWith("-canary")) {
-            throw new LeoDeployException("非金丝雀环境禁止下线操作！");
+        // 校验
+        if (dict.containsKey(BuildDictConstants.ENV.getKey())) {
+            // env = prod
+            if (dict.get(BuildDictConstants.ENV.getKey()).equals(Global.ENV_PROD)) {
+                if (!deploymentName.endsWith("-canary")) {
+                    throw new LeoDeployException("禁止生产环境下线！");
+                }
+            }
+        } else {
+            throw new LeoDeployException("Configuration does not exist: deploy->dict->env");
         }
 
         LeoDeploy saveLeoDeploy = LeoDeploy.builder()
