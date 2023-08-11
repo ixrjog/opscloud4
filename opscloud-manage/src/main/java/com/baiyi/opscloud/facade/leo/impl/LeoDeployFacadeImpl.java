@@ -50,10 +50,7 @@ import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
 import com.google.common.collect.Maps;
-import io.fabric8.kubernetes.api.model.Container;
-import io.fabric8.kubernetes.api.model.LabelSelector;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.kubernetes.api.model.PodTemplateSpec;
+import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentSpec;
 import lombok.RequiredArgsConstructor;
@@ -370,6 +367,17 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .filter(c -> c.getName().startsWith(projectName))
                 .findFirst();
         optionalContainer.ifPresent(container -> container.setName(newName));
+        // 2023/8/10 修改GROUP
+//        optionalContainer.ifPresent(container -> {
+//            List<EnvVar> envs = container.getEnv();
+//            for (EnvVar env : envs) {
+//                if ("GROUP".equals(env.getName())) {
+//                    env.setValue(newName);
+//                    container.setEnv(envs);
+//                    break;
+//                }
+//            }
+//        });
 
         if (labels.containsKey(WORKLOAD_SELECTOR_NAME)) {
             final String workloadSelector = labels.get(WORKLOAD_SELECTOR_NAME).replace(oldName, newName);

@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * 灰度预检查策略
+ * 下线预检查策略
  *
  * @Author baiyi
  * @Date 2022/12/13 15:16
