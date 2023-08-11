@@ -31,7 +31,7 @@ public class ProjectResourcePacker implements IWrapperRelation<ProjectResourceVO
     public void wrap(ProjectResourceVO.Resource vo, IExtend iExtend, IRelation iRelation) {
         DatasourceInstanceAsset asset = assetService.getById(vo.getBusinessId());
         FunctionUtil.trueFunction(asset != null)
-                .trueHandle(() -> {
+                .withTrue(() -> {
                     DsAssetVO.Asset assetVO = BeanCopierUtil.copyProperties(asset, DsAssetVO.Asset.class);
                     dsAssetPacker.wrap(assetVO, iExtend, iRelation);
                     vo.setAsset(assetVO);

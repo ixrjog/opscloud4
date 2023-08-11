@@ -45,7 +45,7 @@ public class SerDeploySubtaskPacker implements IWrapper<SerDeployVO.SubTask> {
     @RuntimeWrapper
     public void wrap(SerDeployVO.SubTask vo, IExtend iExtend) {
         FunctionUtil.trueFunction(iExtend.getExtend())
-                .trueHandle(
+                .withTrue(
                         () -> {
                             Env env = envService.getByEnvType(vo.getEnvType());
                             vo.setEnv(env);

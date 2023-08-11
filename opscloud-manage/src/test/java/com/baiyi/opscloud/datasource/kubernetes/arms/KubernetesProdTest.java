@@ -62,11 +62,11 @@ public class KubernetesProdTest extends BaseKubernetesTest {
             prodResList.forEach(applicationResource -> {
                 String name = applicationResource.getName().split(":")[1];
                 FunctionUtil.isTureOrFalse(applicationResource.getName().endsWith("-canary"))
-                        .trueOrFalseHandle(
+                        .withBoolean(
                                 () -> ackOne(kubernetesConfig, appName, name, appName + "-canary"),
                                 () -> {
                                     FunctionUtil.trueFunction(!onlyCanary)
-                                            .trueHandle(
+                                            .withTrue(
                                                     () -> ackOne(kubernetesConfig, appName, name, appName + "-prod")
                                             );
                                 }

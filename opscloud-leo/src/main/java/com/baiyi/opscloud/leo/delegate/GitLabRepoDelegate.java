@@ -33,7 +33,7 @@ public class GitLabRepoDelegate {
     /**
      * 默认创建分支（发布分支）
      */
-    public static final List<String> DEF_BRANCHES = Lists.newArrayList("dev", "daily", "pre", "sit", "master");
+    public static final List<String> DEF_BRANCHES = Lists.newArrayList("dev", "daily", "sit", "pre", "master");
 
     /**
      * 生成GitLab分支选项
@@ -66,6 +66,7 @@ public class GitLabRepoDelegate {
         }
     }
 
+    @SuppressWarnings("SpringCacheableMethodCallsInspection")
     public LeoBuildVO.BranchOptions createGitLabBranch(GitLabConfig.GitLab gitlab, Long projectId, String ref) {
         for (String branch : DEF_BRANCHES) {
             try {
@@ -74,6 +75,7 @@ public class GitLabRepoDelegate {
                 log.warn("Create gitLab branch err: url={}, projectId={}, branch={}, ref={}, {}", gitlab.getUrl(), projectId, branch, ref, e.getMessage());
             }
         }
+        // 忽略缓存
         return generatorGitLabBranchOptions(gitlab, projectId, false);
     }
 

@@ -77,6 +77,9 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
             dsInstanceFacade.pullAsset(grantPolicy.getInstanceUuid(), DsAssetTypeConstants.RAM_USER.name(), ramUser);
             postHandle(grantPolicy.getInstanceUuid(), policy);
         } catch (ClientException e) {
+            if (e.getMessage().startsWith("EntityAlreadyExists.User.Policy")) {
+                throw new OCException("RAM用户授权策略错误: 重复授权！");
+            }
             throw new OCException("阿里云接口查询错误: {}", e.getMessage());
         }
     }

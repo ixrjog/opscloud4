@@ -205,7 +205,7 @@ public class UserFacadeImpl implements UserFacade {
     public void setUserActive(String username) {
         User user = userService.getByUsername(username);
         FunctionUtil.isTureOrFalse(user.getIsActive())
-                .trueOrFalseHandle(() -> userService.setInactive(user)
+                .withBoolean(() -> userService.setInactive(user)
                         , () -> userService.setActive(user));
     }
 
