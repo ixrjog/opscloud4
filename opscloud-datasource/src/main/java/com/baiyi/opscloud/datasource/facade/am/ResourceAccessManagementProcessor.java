@@ -69,7 +69,7 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
             }
             RamPolicy.Policy ramPolicy = BeanCopierUtil.copyProperties(grantPolicy.getPolicy(), RamPolicy.Policy.class);
             if (aliyunRamUserDriver.listUsersForPolicy(aliyun.getRegionId(), aliyun, ramPolicy.getPolicyType(), ramPolicy.getPolicyName()).stream().anyMatch(e -> e.getUserName().equals(grantPolicy.getUsername()))) {
-                throw new OCException("RAM用户授权策略错误: 重复授权！");
+                throw new OCException("重复授权！");
             }
             aliyunRamPolicyDriver.attachPolicyToUser(aliyun.getRegionId(), aliyun, ramUser.getUserName(), ramPolicy);
             RamPolicy.Policy policy = aliyunRamPolicyDriver.getPolicy(aliyun.getRegionId(), aliyun, ramPolicy);
@@ -78,9 +78,9 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
             postHandle(grantPolicy.getInstanceUuid(), policy);
         } catch (ClientException e) {
             if (e.getMessage().startsWith("EntityAlreadyExists.User.Policy")) {
-                throw new OCException("RAM用户授权策略错误: 重复授权！");
+                throw new OCException("重复授权！");
             }
-            throw new OCException("阿里云接口查询错误: {}", e.getMessage());
+            throw new OCException(e.getMessage());
         }
     }
 
