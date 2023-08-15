@@ -51,7 +51,7 @@
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.15.6.RELEASE</version>
+            <version>3.15.8.RELEASE</version>
         </dependency>
 
         <!-- Shedlock 分布式任务锁 -->
