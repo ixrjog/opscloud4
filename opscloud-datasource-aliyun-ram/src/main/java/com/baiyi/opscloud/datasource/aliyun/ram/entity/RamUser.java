@@ -23,7 +23,7 @@ import java.util.Date;
  */
 public class RamUser {
 
-    public static Date toGmtDate(String time) {
+    public static Date toUtcDate(String time) {
         return TimeUtil.toDate(time, TimeZoneEnum.UTC);
     }
 
@@ -58,7 +58,7 @@ public class RamUser {
                     .kind("ramUser")
                     .assetType(DsAssetTypeConstants.RAM_USER.name())
                     .description(this.comments)
-                    .createdTime(toGmtDate(this.createDate))
+                    .createdTime(toUtcDate(this.createDate))
                     .build();
 
             return AssetContainerBuilder.newBuilder()

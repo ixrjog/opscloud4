@@ -128,7 +128,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                     toNamespaceStr(pod.getMetadata().getNamespace()),
                     pod.getMetadata().getName(),
                     StringUtils.isEmpty(pod.getStatus().getPodIP()) ? "N/A" : pod.getStatus().getPodIP(),
-                    NewTimeUtil.parse(PodAssetConverter.toGmtDate(pod.getStatus().getStartTime())),
+                    NewTimeUtil.parse(PodAssetConverter.toUtcDate(pod.getStatus().getStartTime())),
                     toPodStatusStr(pod.getStatus().getPhase(), podStatusMap),
                     // Restart Count
                     pod.getStatus().getContainerStatuses().get(0).getRestartCount(),
@@ -239,7 +239,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                             toNamespaceStr(pod.getMetadata().getNamespace()),
                             podName,
                             StringUtils.isEmpty(pod.getStatus().getPodIP()) ? "N/A" : pod.getStatus().getPodIP(),
-                            NewTimeUtil.parse(PodAssetConverter.toGmtDate(pod.getStatus().getStartTime())),
+                            NewTimeUtil.parse(PodAssetConverter.toUtcDate(pod.getStatus().getStartTime())),
                             toPodStatusStr(pod.getStatus().getPhase(),
                                     podStatusMap),
                             pod.getStatus().getContainerStatuses().get(0).getRestartCount(),

@@ -22,10 +22,6 @@ import java.util.Date;
  */
 public class IamUser {
 
-//    public static Date toGmtDate(String time) {
-//        return TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
-//    }
-
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor

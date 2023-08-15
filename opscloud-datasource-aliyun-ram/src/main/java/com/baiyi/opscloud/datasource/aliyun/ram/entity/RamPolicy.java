@@ -19,7 +19,7 @@ import java.util.Date;
  */
 public class RamPolicy {
 
-    public static Date toGmtDate(String time) {
+    public static Date toUtcDate(String time) {
         return TimeUtil.toDate(time, TimeZoneEnum.UTC);
     }
 
@@ -46,7 +46,7 @@ public class RamPolicy {
                     .kind("ramUser")
                     .assetType(DsAssetTypeConstants.RAM_POLICY.name())
                     .description(this.description)
-                    .createdTime(toGmtDate(this.createDate))
+                    .createdTime(toUtcDate(this.createDate))
                     .build();
 
             return AssetContainerBuilder.newBuilder()

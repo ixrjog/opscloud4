@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  */
 public class NodeAssetConverter {
 
-    public static Date toGmtDate(String time) {
+    public static Date toUtcDate(String time) {
         return TimeUtil.toDate(time, TimeZoneEnum.UTC);
     }
 
@@ -38,7 +38,7 @@ public class NodeAssetConverter {
                 .assetKey2(addressMap.containsKey("Hostname") ? addressMap.get("Hostname").getAddress() : null)
                 .kind(entity.getKind())
                 .assetType(DsAssetTypeConstants.KUBERNETES_NODE.name())
-                .createdTime(toGmtDate(entity.getMetadata().getCreationTimestamp()))
+                .createdTime(toUtcDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)

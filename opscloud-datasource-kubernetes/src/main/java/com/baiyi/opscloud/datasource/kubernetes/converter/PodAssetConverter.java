@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PodAssetConverter {
 
-    public static Date toGmtDate(String time) {
+    public static Date toUtcDate(String time) {
         return TimeUtil.toDate(time, TimeZoneEnum.UTC);
     }
 
@@ -44,10 +44,10 @@ public class PodAssetConverter {
                 // namespace
                 .assetKey2(entity.getMetadata().getNamespace())
                 .kind(entity.getKind()).assetType(DsAssetTypeConstants.KUBERNETES_POD.name())
-                .createdTime(toGmtDate(entity.getMetadata().getCreationTimestamp()))
+                .createdTime(toUtcDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
 
-        Date startTime = toGmtDate(entity.getStatus().getStartTime());
+        Date startTime = toUtcDate(entity.getStatus().getStartTime());
         Map<String, Boolean> podStatusMap = entity.getStatus().getConditions()
                 .stream()
                 .collect(Collectors.toMap(PodCondition::getType, a -> Boolean.valueOf(a.getStatus()), (k1, k2) -> k1));
