@@ -35,6 +35,15 @@ public class DsInstanceAssetPropertyServiceImpl implements DsInstanceAssetProper
     }
 
     @Override
+    public DatasourceInstanceAssetProperty getByUniqueKey(Integer assetId, String name) {
+        Example example = new Example(DatasourceInstanceAssetProperty.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("datasourceInstanceAssetId", assetId)
+                .andEqualTo("name", name);
+        return dsInstanceAssetPropertyMapper.selectOneByExample(example);
+    }
+
+    @Override
     public List<DatasourceInstanceAssetProperty> queryByAssetId(Integer assetId) {
         Example example = new Example(DatasourceInstanceAssetProperty.class);
         Example.Criteria criteria = example.createCriteria();
@@ -61,9 +70,9 @@ public class DsInstanceAssetPropertyServiceImpl implements DsInstanceAssetProper
             if (property.getName().equals(assetProperty.getName())) {
                 if (!property.getValue().equals(assetProperty.getValue())) {
                     property.setValue(assetProperty.getValue());
-                    try{
+                    try {
                         dsInstanceAssetPropertyMapper.updateByPrimaryKey(property);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         log.error(e.getMessage());
                         log.error(JSONUtil.writeValueAsString(property));
                     }

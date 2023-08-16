@@ -59,6 +59,8 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
 
     private final static String IMAGE = "image";
 
+    private final static String ZONE = "labels:failure-domain.beta.kubernetes.io/zone";
+
     /**
      * Deployment Pod
      *
@@ -77,21 +79,10 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
         try {
             DatasourceInstance dsInstance = dsInstanceService.getByUuid(datasourceInstanceAsset.getInstanceUuid());
             if (dsInstance != null) {
+                // 插入版本信息
                 List<AssetContainer> assetContainers = kubernetesPodHandler.queryAssetsByDeployment(dsInstance.getId(), namespace, deployment)
                         .stream()
-                        .peek(c -> {
-                            // 插入版本信息
-                            if (c.getProperties().containsKey(IMAGE)) {
-                                String image = c.getProperties().get(IMAGE);
-                                LeoBuildImage buildImage = leoBuildImageService.getByImage(image);
-                                if (buildImage != null) {
-                                    c.getProperties().put("versionName", buildImage.getVersionName());
-                                    c.getProperties().put("versionDesc", buildImage.getVersionDesc());
-                                } else {
-                                    c.getProperties().put("versionName", "unknown");
-                                }
-                            }
-                        })
+                        .peek(c -> fillProperties(resource, c))
                         .collect(Collectors.toList());
                 resource.setAssetContainers(assetContainers);
                 resource.setTags(null);
@@ -102,7 +93,38 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
         applicationResourceInstancePacker.wrap(resource);
     }
 
-    private DsAssetVO.Asset getAsset(DatasourceInstanceAsset datasourceInstanceAsset){
+    private void fillProperties(ApplicationResourceVO.Resource resource, AssetContainer c) {
+        if (c.getProperties().containsKey(IMAGE)) {
+            final String image = c.getProperties().get(IMAGE);
+            LeoBuildImage buildImage = leoBuildImageService.getByImage(image);
+            if (buildImage != null) {
+                c.getProperties().put("versionName", buildImage.getVersionName());
+                c.getProperties().put("versionDesc", buildImage.getVersionDesc());
+            } else {
+                c.getProperties().put("versionName", "unknown");
+            }
+        }
+        if (c.getProperties().containsKey("nodeName")) {
+            final String nodeName = c.getProperties().get("nodeName");
+            final String instanceUuid = resource.getAsset().getInstanceUuid();
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                    .instanceUuid(instanceUuid)
+                    .name(nodeName)
+                    .assetType(DsAssetTypeConstants.KUBERNETES_NODE.name())
+                    .build();
+
+            List<DatasourceInstanceAsset> nodes = assetService.queryAssetByAssetParam(asset);
+            if (!CollectionUtils.isEmpty(nodes) && nodes.size() == 1) {
+                DatasourceInstanceAssetProperty zoneProperty = propertyService.getByUniqueKey(nodes.get(0).getId(), ZONE);
+                if (zoneProperty != null) {
+                    c.getProperties().put("zone", "zone:" + zoneProperty.getValue());
+                }
+            }
+
+        }
+    }
+
+    private DsAssetVO.Asset getAsset(DatasourceInstanceAsset datasourceInstanceAsset) {
         DsAssetVO.Asset asset = BeanCopierUtil.copyProperties(datasourceInstanceAsset, DsAssetVO.Asset.class);
         if (DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name().equals(asset.getAssetType())) {
             Map<String, String> properties = propertyService.queryByAssetId(asset.getId())

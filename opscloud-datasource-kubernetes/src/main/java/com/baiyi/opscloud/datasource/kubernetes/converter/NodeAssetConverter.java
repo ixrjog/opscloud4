@@ -9,9 +9,11 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import io.fabric8.kubernetes.api.model.Node;
 import io.fabric8.kubernetes.api.model.NodeAddress;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -40,12 +42,19 @@ public class NodeAssetConverter {
                 .assetType(DsAssetTypeConstants.KUBERNETES_NODE.name())
                 .createdTime(toUtcDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
-        return AssetContainerBuilder.newBuilder()
+
+        AssetContainerBuilder assetContainerBuilder = AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
                 .paramProperty("cpu", entity.getStatus().getCapacity().get("cpu"))
                 .paramProperty("memory", entity.getStatus().getCapacity().get("memory"))
-                .paramProperty("pods", entity.getStatus().getCapacity().get("pods"))
-                .build();
+                .paramProperty("pods", entity.getStatus().getCapacity().get("pods"));
+        // 标签录入
+        Optional.of(entity)
+                .map(Node::getMetadata)
+                .map(ObjectMeta::getLabels)
+                .ifPresent(stringStringMap -> stringStringMap.forEach((k, v) -> assetContainerBuilder.paramProperty("labels:" + k, v)));
+
+        return assetContainerBuilder.build();
     }
 
 }
