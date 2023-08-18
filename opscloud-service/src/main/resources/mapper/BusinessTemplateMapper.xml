@@ -15,6 +15,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="vars" jdbcType="LONGVARCHAR" property="vars" />
+    <result column="kind" jdbcType="VARCHAR" property="kind" />
     <result column="content" jdbcType="LONGVARCHAR" property="content" />
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
   </resultMap>

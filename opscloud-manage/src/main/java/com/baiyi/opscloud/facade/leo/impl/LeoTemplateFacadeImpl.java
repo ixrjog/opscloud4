@@ -5,10 +5,7 @@ import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.domain.generator.opscloud.LeoTemplate;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.leo.LeoTemplateParam;
 import com.baiyi.opscloud.domain.vo.leo.LeoTemplateVO;
@@ -18,7 +15,7 @@ import com.baiyi.opscloud.facade.leo.tags.LeoTagHelper;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoTemplateModel;
 import com.baiyi.opscloud.leo.exception.LeoTemplateException;
-import com.baiyi.opscloud.leo.helper.JenkinsJobHelper;
+import com.baiyi.opscloud.leo.facade.JenkinsJobFacade;
 import com.baiyi.opscloud.packer.leo.LeoTemplatePacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
@@ -53,7 +50,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
 
     private final DsConfigHelper dsConfigHelper;
 
-    private final JenkinsJobHelper jenkinsJobHelper;
+    private final JenkinsJobFacade jenkinsJobFacade;
 
     private final LeoTagHelper tagHelper;
 
@@ -142,10 +139,23 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
                 .map(LeoTemplateModel.TemplateConfig::getTemplate)
                 .map(LeoTemplateModel.Template::getFolder).orElse("");
 
-        String jobXml = jenkinsJobHelper.getJobXml(templateConfig, jenkinsConfig, folder);
+        String jobXml = jenkinsJobFacade.getJobXml(templateConfig, jenkinsConfig, folder);
         leoTemplate.setTemplateContent(jobXml);
         templateService.updateByPrimaryKeySelective(leoTemplate);
         return toLeoTemplateVO(leoTemplate);
+    }
+
+    @Override
+    public void uploadTemplate(int templateId) {
+        LeoTemplate leoTemplate = templateService.getById(templateId);
+        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(leoTemplate.getJenkinsInstanceUuid());
+        JenkinsConfig jenkinsConfig = dsConfigHelper.build(dsConfig, JenkinsConfig.class);
+        LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(leoTemplate.getTemplateConfig());
+
+        String folder = Optional.of(templateConfig)
+                .map(LeoTemplateModel.TemplateConfig::getTemplate)
+                .map(LeoTemplateModel.Template::getFolder).orElse("");
+        jenkinsJobFacade.createJob(templateConfig, jenkinsConfig, folder, leoTemplate.getTemplateContent());
     }
 
     /**

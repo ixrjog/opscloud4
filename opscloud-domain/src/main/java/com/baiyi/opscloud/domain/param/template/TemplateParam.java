@@ -37,6 +37,9 @@ public class TemplateParam {
         @Schema(description = "环境类型")
         private Integer envType;
 
+        @Schema(description = "分类")
+        private String kind;
+
         @Schema(description = "展开数据")
         private Boolean extend;
     }
@@ -60,6 +63,7 @@ public class TemplateParam {
         @NotBlank(message = "必须指定模板格式类型")
         private String templateType;
         private String vars;
+        private String kind;
         private String content;
         private String comment;
 

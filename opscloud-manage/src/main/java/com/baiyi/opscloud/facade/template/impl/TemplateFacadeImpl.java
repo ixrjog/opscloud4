@@ -3,10 +3,10 @@ package com.baiyi.opscloud.facade.template.impl;
 import com.baiyi.opscloud.common.constants.TemplateKeyConstants;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.exception.common.OCException;
-import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.common.template.YamlVars;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
+import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
@@ -15,6 +15,7 @@ import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.template.BusinessTemplateParam;
 import com.baiyi.opscloud.domain.param.template.MessageTemplateParam;
 import com.baiyi.opscloud.domain.param.template.TemplateParam;
+import com.baiyi.opscloud.domain.vo.common.OptionsVO;
 import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
 import com.baiyi.opscloud.domain.vo.template.MessageTemplateVO;
 import com.baiyi.opscloud.domain.vo.template.TemplateVO;
@@ -29,6 +30,7 @@ import com.baiyi.opscloud.service.sys.EnvService;
 import com.baiyi.opscloud.service.template.BusinessTemplateService;
 import com.baiyi.opscloud.service.template.MessageTemplateService;
 import com.baiyi.opscloud.service.template.TemplateService;
+import com.baiyi.opscloud.util.OptionsUtil;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
@@ -68,7 +70,6 @@ public class TemplateFacadeImpl implements TemplateFacade {
 
     private final DsInstanceAssetService dsInstanceAssetService;
 
-
     private static final String TEMPLATE_KEY_SERVICE = "SERVICE";
 
     @Override
@@ -96,21 +97,27 @@ public class TemplateFacadeImpl implements TemplateFacade {
 
     @Override
     public TemplateVO.Template updateTemplate(TemplateParam.Template template) {
-        Template pre = BeanCopierUtil.copyProperties(template, Template.class);
-        if (businessTemplateService.countByTemplateId(pre.getId()) > 0) {
-            pre.setEnvType(null);
-            pre.setInstanceType(null);
-            pre.setTemplateKey(null);
-            pre.setTemplateType(null);
+        Template preTemplate = BeanCopierUtil.copyProperties(template, Template.class);
+        if (businessTemplateService.countByTemplateId(preTemplate.getId()) > 0) {
+            preTemplate.setEnvType(null);
+            preTemplate.setInstanceType(null);
+            preTemplate.setTemplateKey(null);
+            preTemplate.setTemplateType(null);
         }
-        templateService.updateSelective(pre);
-        return toVO(templateService.getById(pre.getId()));
+        if (StringUtils.isBlank(template.getKind())) {
+            preTemplate.setKind("default");
+        }
+        templateService.updateByPrimaryKeySelective(preTemplate);
+        return toVO(templateService.getById(preTemplate.getId()));
     }
 
     @Override
     public void deleteTemplateById(int id) {
-        if (businessTemplateService.countByTemplateId(id) > 0) {
-            throw new OCException("模板已经使用无法删除！");
+        List<BusinessTemplate> bizTemplates = businessTemplateService.queryByTemplateId(id);
+        if (!CollectionUtils.isEmpty(bizTemplates)) {
+            for (BusinessTemplate bizTemplate : bizTemplates) {
+                businessTemplateService.deleteById(bizTemplate.getId());
+            }
         }
         templateService.deleteById(id);
     }
@@ -127,15 +134,6 @@ public class TemplateFacadeImpl implements TemplateFacade {
         }
         return new DataTable<>(data, table.getTotalNum());
     }
-
-//    private YamlVars.Vars toVars(BusinessTemplate bizTemplate) {
-//        YamlVars.Vars vars = YamlUtil.toVars(bizTemplate.getVars());
-//        if (!vars.getVars().containsKey("envName")) {
-//            Env env = envService.getByEnvType(bizTemplate.getEnvType());
-//            vars.getVars().put("envName", env.getEnvName());
-//        }
-//        return vars;
-//    }
 
     @Override
     public BusinessTemplateVO.BusinessTemplate createAssetByBusinessTemplate(int id) {
@@ -199,19 +197,40 @@ public class TemplateFacadeImpl implements TemplateFacade {
 
     @Override
     public BusinessTemplateVO.BusinessTemplate addBusinessTemplate(BusinessTemplateParam.BusinessTemplate addBusinessTemplate) {
-        BusinessTemplate bizTemplate = BeanCopierUtil.copyProperties(addBusinessTemplate, BusinessTemplate.class);
-        Template template = templateService.getById(bizTemplate.getTemplateId());
+        Template template = templateService.getById(addBusinessTemplate.getTemplateId());
         if (template == null) {
-            throw new OCException("无法创建业务模板: 模板不存在!");
+            throw new OCException("关联模板不存在!");
         }
+        BusinessTemplate bizTemplate = BeanCopierUtil.copyProperties(addBusinessTemplate, BusinessTemplate.class);
+
         bizTemplate.setEnvType(template.getEnvType());
         bizTemplate.setVars(template.getVars());
+        bizTemplate.setVars(toVars(template.getVars(), addBusinessTemplate.getVars()));
         setName(bizTemplate);
         businessTemplateService.add(bizTemplate);
 
         BusinessTemplateVO.BusinessTemplate businessTemplateVO = BeanCopierUtil.copyProperties(bizTemplate, BusinessTemplateVO.BusinessTemplate.class);
         businessTemplatePacker.wrap(businessTemplateVO, SimpleExtend.EXTEND);
         return businessTemplateVO;
+    }
+
+    /**
+     * 转换变量
+     *
+     * @param addVarsStr
+     * @param templateVarsStr
+     * @return
+     */
+    private String toVars(String templateVarsStr, String addVarsStr) {
+        YamlVars.Vars vars = YamlUtil.loadVars(addVarsStr);
+        YamlVars.Vars templateVars = YamlUtil.loadVars(templateVarsStr);
+
+        templateVars.getVars().forEach((k, v) -> {
+            if (vars.getVars().containsKey(k)) {
+                templateVars.getVars().put(k, vars.getVars().get(k));
+            }
+        });
+        return templateVars.dump();
     }
 
     @Override
@@ -221,7 +240,7 @@ public class TemplateFacadeImpl implements TemplateFacade {
         if (!preBizTemplate.getTemplateId().equals(businessTemplate.getTemplateId())) {
             Template template = templateService.getById(businessTemplate.getTemplateId());
             if (template == null) {
-                throw new OCException("无法创建业务模板: 模板不存在!");
+                throw new OCException("关联模板不存在!");
             }
             preBizTemplate.setTemplateId(businessTemplate.getTemplateId());
             preBizTemplate.setEnvType(template.getEnvType());
@@ -290,6 +309,12 @@ public class TemplateFacadeImpl implements TemplateFacade {
     public void updateMessageTemplate(MessageTemplateParam.UpdateMessageTemplate messageTemplate) {
         MessageTemplate saveMessageTemplate = BeanCopierUtil.copyProperties(messageTemplate, MessageTemplate.class);
         messageTemplateService.updateByPrimaryKeySelective(saveMessageTemplate);
+    }
+
+    @Override
+    public OptionsVO.Options getKindOptions() {
+        List<String> kinds = templateService.getKindOptions();
+        return OptionsUtil.toOptions(kinds);
     }
 
 }

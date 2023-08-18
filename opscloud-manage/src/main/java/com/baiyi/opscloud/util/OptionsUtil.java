@@ -59,4 +59,16 @@ public class OptionsUtil {
                 .options(optionList)
                 .build();
     }
+
+    public static OptionsVO.Options toOptions(List<String> strings) {
+        List<OptionsVO.Option> optionList = strings.stream().map(e -> OptionsVO.Option.builder()
+                .label(e)
+                .value(e)
+                .build()).collect(Collectors.toList());
+        return OptionsVO.Options.builder()
+                .options(optionList)
+                .build();
+    }
+
+
 }

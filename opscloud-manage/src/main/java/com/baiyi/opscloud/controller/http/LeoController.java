@@ -82,6 +82,13 @@ public class LeoController {
         return new HttpResult<>(templateFacade.updateLeoTemplateContent(updateTemplate));
     }
 
+    @Operation(summary = "上传模板到Jenkins")
+    @PutMapping(value = "/template/upload", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> uploadTemplate(@RequestParam @Valid int templateId) {
+        templateFacade.uploadTemplate(templateId);
+        return HttpResult.SUCCESS;
+    }
+
     @Operation(summary = "删除指定的任务模板")
     @DeleteMapping(value = "/template/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteLeoTemplateById(@RequestParam @Valid int templateId) {
@@ -274,7 +281,7 @@ public class LeoController {
     }
 
     @Operation(summary = "删除部署无状态")
-    @DeleteMapping(value = "/deploy/deployment/del",  produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/deploy/deployment/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> delLeoDeployDeployment(@RequestParam @Schema(description = "资产ID") int assetId) {
         deployFacade.delDeployDeployment(assetId);
         return HttpResult.SUCCESS;

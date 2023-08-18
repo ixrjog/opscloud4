@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.template.BusinessTemplateParam;
 import com.baiyi.opscloud.domain.param.template.MessageTemplateParam;
 import com.baiyi.opscloud.domain.param.template.TemplateParam;
+import com.baiyi.opscloud.domain.vo.common.OptionsVO;
 import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
 import com.baiyi.opscloud.domain.vo.template.MessageTemplateVO;
 import com.baiyi.opscloud.domain.vo.template.TemplateVO;
@@ -50,5 +51,7 @@ public interface TemplateFacade {
     DataTable<MessageTemplateVO.MessageTemplate> queryMessageTemplatePage(MessageTemplateParam.MessageTemplatePageQuery pageQuery);
 
     void updateMessageTemplate(MessageTemplateParam.UpdateMessageTemplate messageTemplate);
+
+    OptionsVO.Options getKindOptions();
 
 }

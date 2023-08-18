@@ -66,6 +66,8 @@ public class Template {
      */
     private String vars;
 
+    private String kind;
+
     /**
      * 模板内容
      */

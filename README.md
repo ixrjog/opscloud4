@@ -37,6 +37,7 @@ Welcome to the opscloud wiki!
   
 ## 开发环境
 + JDK 17
++ node-v16.13.0
 + MacBook M1 PRO
 + IntelliJ IDEA 2023
 + WebStorm 2023
