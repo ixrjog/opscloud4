@@ -61,8 +61,8 @@ Welcome to the opscloud wiki!
 
 <img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-5.png" width="830"></img>
 
-## 容器堡垒机（集成版本信息）
-<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/help/leo/leo-7.png" width="830"></img>
+## 容器堡垒机（集成:Leo持续交付版本信息,多可用区部署可视化）
+<img src="https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/github/4.5.1/kt-1.png" width="830"></img>
 
 ## 主要功能
 + Leo持续交付（Kubernetes）
