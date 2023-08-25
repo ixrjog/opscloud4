@@ -28,6 +28,11 @@ public class BaseKubernetesTest extends BaseUnit {
         int ACK_PRE = 13;
         int ACK_PROD = 14;
 
+        int ACK_FRANKFURT_DEV = 39;
+        int ACK_FRANKFURT_DAILY = 40;
+        int ACK_FRANKFURT_SIT = 86;
+        int ACK_FRANKFURT_PRE = 44;
+        int ACK_FRANKFURT_PROD = 48;
     }
 
     protected KubernetesConfig getConfigById(int id) {
