@@ -10,12 +10,12 @@ import java.io.Serial;
  * @Date 2021/5/17 2:01 下午
  * @Version 1.0
  */
-public class DatasourceRuntimeException extends BaseException {
+public class DatasourceException extends BaseException {
 
     @Serial
     private static final long serialVersionUID = 6568038823824057120L;
 
-    public DatasourceRuntimeException(ErrorEnum errorEnum) {
+    public DatasourceException(ErrorEnum errorEnum) {
         super(errorEnum);
     }
 

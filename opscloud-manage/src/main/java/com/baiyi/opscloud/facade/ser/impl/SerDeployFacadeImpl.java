@@ -114,7 +114,7 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
                     .build();
             SerDeployTaskItem item = serDeployTaskItemService.getByTaskIdAndItemName(serDeployTask.getId(), file.getOriginalFilename());
             FunctionUtil.isTureOrFalse(ObjectUtils.isEmpty(item))
-                    .trueOrFalseHandle(
+                    .withBoolean(
                             () -> serDeployTaskItemService.add(serDeployTaskItem),
                             () -> {
                                 serDeployTaskItem.setId(item.getId());

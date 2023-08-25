@@ -56,6 +56,8 @@ public class BusinessTemplateVO {
 
         private String vars;
 
+        private String kind;
+
         private String content;
 
         private String comment;

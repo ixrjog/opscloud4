@@ -24,7 +24,7 @@ import java.util.Optional;
  */
 public class DeploymentAssetConverter {
 
-    public static Date toGmtDate(String time) {
+    public static Date toUtcDate(String time) {
         return TimeUtil.toDate(time, TimeZoneEnum.UTC);
     }
 
@@ -50,7 +50,7 @@ public class DeploymentAssetConverter {
                 .assetKey2(namespace)
                 .kind(entity.getKind())
                 .assetType(DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name())
-                .createdTime(toGmtDate(entity.getMetadata().getCreationTimestamp()))
+                .createdTime(toUtcDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
 
         /*

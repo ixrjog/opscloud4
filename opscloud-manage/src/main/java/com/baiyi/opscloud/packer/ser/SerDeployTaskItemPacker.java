@@ -24,7 +24,7 @@ public class SerDeployTaskItemPacker implements IWrapper<SerDeployVO.TaskItem> {
     @Override
     public void wrap(SerDeployVO.TaskItem vo, IExtend iExtend) {
         FunctionUtil.trueFunction(iExtend.getExtend())
-                .trueHandle(
+                .withTrue(
                         () -> {
                             User user = userService.getByUsername(vo.getReloadUsername());
                             vo.setReloadUser(user);

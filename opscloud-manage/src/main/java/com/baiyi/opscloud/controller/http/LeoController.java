@@ -11,6 +11,7 @@ import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.leo.*;
 import com.baiyi.opscloud.facade.leo.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -79,6 +80,13 @@ public class LeoController {
     @PutMapping(value = "/template/content/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<LeoTemplateVO.Template> updateLeoTemplateContent(@RequestBody @Valid LeoTemplateParam.UpdateTemplate updateTemplate) {
         return new HttpResult<>(templateFacade.updateLeoTemplateContent(updateTemplate));
+    }
+
+    @Operation(summary = "上传模板到Jenkins")
+    @PutMapping(value = "/template/upload", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> uploadTemplate(@RequestParam @Valid int templateId) {
+        templateFacade.uploadTemplate(templateId);
+        return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "删除指定的任务模板")
@@ -269,6 +277,13 @@ public class LeoController {
     @PostMapping(value = "/deploy/deployment/clone", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> cloneLeoDeployDeployment(@RequestBody @Valid LeoDeployParam.CloneDeployDeployment cloneDeployDeployment) {
         deployFacade.cloneDeployDeployment(cloneDeployDeployment);
+        return HttpResult.SUCCESS;
+    }
+
+    @Operation(summary = "删除部署无状态")
+    @DeleteMapping(value = "/deploy/deployment/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> delLeoDeployDeployment(@RequestParam @Schema(description = "资产ID") int assetId) {
+        deployFacade.delDeployDeployment(assetId);
         return HttpResult.SUCCESS;
     }
 

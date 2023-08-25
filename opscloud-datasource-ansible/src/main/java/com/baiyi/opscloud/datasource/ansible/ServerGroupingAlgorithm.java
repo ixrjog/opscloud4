@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.baiyi.opscloud.common.base.Global.DEF_NUM_OF_GROUPS;
+
 /**
  * 服务器算法
  *
@@ -56,7 +58,7 @@ public class ServerGroupingAlgorithm extends BaseAlgorithm {
         return Optional.ofNullable(serverGroupProperty)
                 .map(ServerProperty.Server::getAnsible)
                 .map(ServerProperty.Ansible::getSubgroup)
-                .orElse(2);
+                .orElse(DEF_NUM_OF_GROUPS);
     }
 
     private void groupingSubgroup(Map<String, List<ServerPack>> serverMap, int subgroup) {
@@ -83,7 +85,6 @@ public class ServerGroupingAlgorithm extends BaseAlgorithm {
      */
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'server_grouping_algorithm_servergroupid_' + #serverGroup.id", unless = "#result == null")
     public Map<String, List<ServerPack>> grouping(ServerGroup serverGroup) {
-        log.info("服务器分组: serverGroupName={}", serverGroup.getName());
         Map<String, List<ServerPack>> serverMap = groupingByEnv(serverGroup);
         if (serverMap.isEmpty()) {
             return serverMap;

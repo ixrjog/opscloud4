@@ -61,6 +61,8 @@ public class BusinessTemplate {
      */
     private String vars;
 
+    private String kind;
+
     /**
      * 模板内容
      */

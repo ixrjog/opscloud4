@@ -167,8 +167,14 @@ public abstract class BaseDoBuildStrategy extends BaseBuildStrategy {
                 .orElse(Maps.newHashMap());
 
         List<LeoBaseModel.Parameter> jobParameters = buildJobParameters(buildConfig);
-        Map<String, String> paramMap = jobParameters.stream()
-                .collect(Collectors.toMap(LeoBaseModel.Parameter::getName, LeoBaseModel.Parameter::getValue, (k1, k2) -> k1));
+        Map<String, String> paramMap;
+        try {
+            paramMap = jobParameters.stream()
+                    .collect(Collectors.toMap(LeoBaseModel.Parameter::getName, LeoBaseModel.Parameter::getValue, (k1, k2) -> k1));
+        } catch (NullPointerException e) {
+            throw new LeoBuildException("任务参数配置不正确: job->parameters");
+        }
+
         LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob);
 
         User user = userService.getByUsername(leoBuild.getUsername());
@@ -240,6 +246,7 @@ public abstract class BaseDoBuildStrategy extends BaseBuildStrategy {
 
     /**
      * 配置文件中的构建参数
+     *
      * @param buildConfig
      * @return
      */
@@ -252,6 +259,7 @@ public abstract class BaseDoBuildStrategy extends BaseBuildStrategy {
 
     /**
      * 构建参数转换Map
+     *
      * @param jobParameters
      * @return
      */

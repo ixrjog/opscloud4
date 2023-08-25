@@ -19,7 +19,7 @@ import java.util.Date;
  */
 public class AliyunRds {
 
-    public static Date toGmtDate(String time) {
+    public static Date toUtcDate(String time) {
         return TimeUtil.toDate(time, TimeZoneEnum.UTC);
     }
 
@@ -86,8 +86,8 @@ public class AliyunRds {
                     .kind(this.getDBInstanceClass()) // 类 rds.mysql.s3.large
                     .regionId(this.getRegionId())
                     .zone(this.getZoneId())
-                    .createdTime(toGmtDate(this.getCreateTime()))
-                    .expiredTime(toGmtDate(this.getExpireTime()))
+                    .createdTime(toUtcDate(this.getCreateTime()))
+                    .expiredTime(toUtcDate(this.getExpireTime()))
                     .build();
 
             return AssetContainerBuilder.newBuilder()

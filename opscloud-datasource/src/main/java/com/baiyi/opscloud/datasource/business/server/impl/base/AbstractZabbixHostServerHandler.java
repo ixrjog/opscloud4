@@ -4,14 +4,18 @@ import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.datasource.business.server.util.HostParamUtil;
 import com.baiyi.opscloud.datasource.business.server.util.ZabbixTemplateUtil;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.Env;
-import com.baiyi.opscloud.domain.generator.opscloud.Server;
-import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.base.SimpleBusiness;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.util.ObjectUtil;
+import com.baiyi.opscloud.service.tag.BusinessTagService;
+import com.baiyi.opscloud.service.tag.TagService;
 import com.baiyi.opscloud.zabbix.helper.ZabbixGroupHelper;
-import com.baiyi.opscloud.zabbix.v5.driver.*;
+import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5HostDriver;
+import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5HostTagDriver;
+import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5ProxyDriver;
+import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5TemplateDriver;
 import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixV5HostDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
@@ -22,11 +26,11 @@ import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
 import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixRequestBuilder;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -58,6 +62,12 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
 
     @Resource
     private SimpleZabbixV5HostDriver simpleZabbixV5HostDriver;
+
+    @Resource
+    private BusinessTagService businessTagService;
+
+    @Resource
+    private TagService tagService;
 
     protected static ThreadLocal<ZabbixConfig.Zabbix> configContext = new ThreadLocal<>();
 
@@ -128,19 +138,27 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
     }
 
     private void putTagUpdateParam(Server server, ZabbixHost.Host host, ZabbixRequestBuilder requestBuilder) {
-        ZabbixHost.Host hostTag = zabbixV5HostTagDriver.getHostTag(configContext.get(), host);
-        Env env = getEnv(server);
-        if (!CollectionUtils.isEmpty(hostTag.getTags())) {
-            Optional<ZabbixHost.HostTag> optionalHostTag = hostTag.getTags().stream().filter(e -> e.getTag().equals("env")).findFirst();
-            if (optionalHostTag.isPresent() && env.getEnvName().equals(optionalHostTag.get().getValue())) {
-                return;
-            }
+        // 判断Tags是否需要更新
+        List<ZabbixHostParam.Tag> preTags = buildTagsParam(server);
+        if (CollectionUtils.isEmpty(preTags)) {
+            return;
         }
-        ZabbixHostParam.Tag tag = ZabbixHostParam.Tag.builder()
-                .tag("env")
-                .value(env.getEnvName())
-                .build();
-        requestBuilder.putParam("tags", Lists.newArrayList(tag));
+//        ZabbixHost.Host preHost = zabbixV5HostTagDriver.getHostTag(configContext.get(), host);
+//        if (!CollectionUtils.isEmpty(preHost.getTags())) {
+//            Map<String, ZabbixHost.HostTag> hostTagMap = preHost.getTags().stream().collect(Collectors.toMap(ZabbixHost.HostTag::getTag, a -> a, (k1, k2) -> k1));
+//
+//            for (ZabbixHostParam.Tag preTag : preTags) {
+//                if (hostTagMap.containsKey(preTag.getTag())) {
+//                    ZabbixHost.HostTag hostTag = hostTagMap.get(preTag.getTag());
+//                    if (!preTag.getValue().equals(hostTag.getValue())) {
+//                        break;
+//                    }
+//                } else {
+//                    break;
+//                }
+//            }
+//        }
+        requestBuilder.putParam("tags", buildTagsParam(server));
         // 清理缓存
         zabbixV5HostTagDriver.evictHostTag(configContext.get(), host);
     }
@@ -223,11 +241,35 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
         return zabbixV5ProxyDriver.getProxy(configContext.get(), proxyName);
     }
 
-    protected ZabbixHostParam.Tag buildTagsParam(Server server) {
-        return ZabbixHostParam.Tag.builder()
+    protected List<ZabbixHostParam.Tag> buildTagsParam(Server server) {
+        List<ZabbixHostParam.Tag> tags = Lists.newArrayList();
+        ZabbixHostParam.Tag envTag = ZabbixHostParam.Tag.builder()
                 .tag("env")
                 .value(getEnv(server).getEnvName())
                 .build();
+        tags.add(envTag);
+
+        // TODO
+        SimpleBusiness query = SimpleBusiness.builder()
+                .businessType(BusinessTypeEnum.SERVER.getType())
+                .businessId(server.getId())
+                .build();
+        List<BusinessTag> bizTags = businessTagService.queryByBusiness(query);
+
+        if (!CollectionUtils.isEmpty(bizTags)) {
+            for (BusinessTag bizTag : bizTags) {
+                Tag tag = tagService.getById(bizTag.getTagId());
+                if (tag.getTagKey().startsWith("@")) {
+                    ZabbixHostParam.Tag regionTag = ZabbixHostParam.Tag.builder()
+                            .tag("region")
+                            .value(tag.getTagKey())
+                            .build();
+                    tags.add(regionTag);
+                }
+                break;
+            }
+        }
+        return tags;
     }
 
     protected List<ZabbixHostParam.Template> buildTemplatesParam(ZabbixConfig.Zabbix zabbix, ServerProperty.Server property) {

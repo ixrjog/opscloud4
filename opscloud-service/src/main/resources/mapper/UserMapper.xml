@@ -96,13 +96,13 @@
 
     <select id="queryByTagKeys" resultMap="BaseResultMap">
         select * from user where id in (
-        select business_id from business_tag where business_type = 3
-        and tag_id in
-        ( select id from tag where tag_key in
-        <foreach open="(" item="tagKey" separator="," close=")"
+          select business_id from business_tag where business_type = 3
+          and tag_id in
+            ( select id from tag where tag_key in
+              <foreach open="(" item="tagKey" separator="," close=")"
                  collection="tagKeys">#{tagKey}
-        </foreach>
-        )
+              </foreach>
+            )
         )
     </select>
 

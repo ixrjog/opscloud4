@@ -129,7 +129,7 @@ public class KubernetesServiceDriver {
      * @return
      * @throws RuntimeException
      */
-    public static Service toService(KubernetesClient kubernetesClient, String content) throws KubernetesException {
+    private static Service toService(KubernetesClient kubernetesClient, String content) throws KubernetesException {
         InputStream is = new ByteArrayInputStream(content.getBytes());
         return kubernetesClient
                 .services()

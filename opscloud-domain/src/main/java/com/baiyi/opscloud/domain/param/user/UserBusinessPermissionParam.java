@@ -70,11 +70,9 @@ public class UserBusinessPermissionParam {
         private Boolean extend;
 
         @Schema(description = "业务对象类型")
-        @NotNull(message = "业务对象类型不能为空")
         private int businessType;
 
         @Schema(description = "业务对象ID")
-        @NotNull(message = "业务对象ID不能为空")
         private int businessId;
 
         private final String FILTER_SYSTEM_TAG = TagConstants.SYSTEM.getTag();

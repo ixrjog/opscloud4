@@ -18,19 +18,6 @@ import java.util.List;
 @Slf4j
 public class KubernetesIngressDriver {
 
-//    public static List<Ingress> list(KubernetesConfig.Kubernetes kubernetes, String namespace) {
-//        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
-//           return kc.network()
-//                    .ingress()
-//                    .inNamespace(namespace)
-//                    .withName("oneloop-home-dev").item();
-//
-//        } catch (Exception e) {
-//            log.warn(e.getMessage());
-//            throw e;
-//        }
-//    }
-
     public static Ingress get(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.network()

@@ -203,11 +203,11 @@ public class ServerGroupFacadeImpl extends AbstractAppResQuery implements Server
 
         List<ServerTreeVO.Tree> treeList = Lists.newArrayList();
         AtomicInteger treeSize = new AtomicInteger();
-        for (ServerGroup group : groups) {
+        groups.forEach(group -> {
             Map<String, List<ServerPack>> serverGroupMap = serverAlgorithm.grouping(group);
             treeList.add(serverTreeUtil.wrap(group, serverGroupMap));
             treeSize.addAndGet(serverTreeUtil.getServerGroupMapSize(serverGroupMap));
-        }
+        });
         return ServerTreeVO.ServerTree.builder()
                 .userId(user.getId())
                 .tree(treeList)

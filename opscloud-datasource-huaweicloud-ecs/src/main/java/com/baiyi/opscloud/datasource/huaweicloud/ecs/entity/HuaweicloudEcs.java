@@ -43,7 +43,7 @@ public class HuaweicloudEcs {
 
         private String osType;
 
-        public static Date toGmtDate(String time) {
+        public static Date toUtcDate(String time) {
             return com.baiyi.opscloud.core.util.TimeUtil.toDate(time, TimeZoneEnum.UTC);
         }
 
@@ -58,7 +58,7 @@ public class HuaweicloudEcs {
                     .regionId(this.regionId)
                     .kind(this.kind)
                     .assetType(DsAssetTypeConstants.HUAWEICLOUD_ECS.name())
-                    .createdTime(toGmtDate(this.created))
+                    .createdTime(toUtcDate(this.created))
                     .isActive("ACTIVE".equalsIgnoreCase(this.status))
                     .zone(this.zone)
                     .build();

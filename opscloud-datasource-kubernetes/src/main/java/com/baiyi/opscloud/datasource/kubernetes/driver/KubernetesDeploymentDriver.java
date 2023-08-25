@@ -219,6 +219,19 @@ public class KubernetesDeploymentDriver {
         }
     }
 
+    public static void delete(KubernetesConfig.Kubernetes kubernetes, Deployment deployment) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
+            kc.apps()
+                    .deployments()
+                    .inNamespace(deployment.getMetadata().getNamespace())
+                    .resource(deployment)
+                    .delete();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
+    }
+
     private static Deployment toDeployment(KubernetesClient kubernetesClient, String content) {
         InputStream is = new ByteArrayInputStream(content.getBytes());
         return kubernetesClient

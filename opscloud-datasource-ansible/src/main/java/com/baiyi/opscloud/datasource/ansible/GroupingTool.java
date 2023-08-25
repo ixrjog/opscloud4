@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.baiyi.opscloud.common.base.Global.DEF_NUM_OF_GROUPS;
+
 /**
  * @Author baiyi
  * @Date 2021/8/16 6:46 下午
@@ -64,7 +66,7 @@ public class GroupingTool {
     }
 
     private int getSubgroup(ServerGroup serverGroup) {
-        return 2;
+        return DEF_NUM_OF_GROUPS;
     }
 
     private void groupingSubgroup(Map<String, List<Server>> serverMap, int subgroup) {

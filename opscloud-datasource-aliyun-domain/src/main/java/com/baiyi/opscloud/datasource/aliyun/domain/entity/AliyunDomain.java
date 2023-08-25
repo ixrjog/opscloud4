@@ -1,8 +1,6 @@
 package com.baiyi.opscloud.datasource.aliyun.domain.entity;
 
 import com.baiyi.opscloud.core.asset.IToAsset;
-import com.baiyi.opscloud.core.util.TimeUtil;
-import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -18,10 +16,6 @@ import java.util.Date;
  * @Version 1.0
  */
 public class AliyunDomain {
-
-    public static Date toGmtDate(String time) {
-        return TimeUtil.toDate(time, TimeZoneEnum.UTC);
-    }
 
     @Data
     public static class Domain implements IToAsset {

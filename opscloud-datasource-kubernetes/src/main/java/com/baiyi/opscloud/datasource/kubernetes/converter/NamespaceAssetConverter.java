@@ -18,7 +18,7 @@ import java.util.Date;
  */
 public class NamespaceAssetConverter {
 
-    public static Date toGmtDate(String time) {
+    public static Date toUtcDate(String time) {
         return TimeUtil.toDate(time, TimeZoneEnum.UTC);
     }
 
@@ -31,7 +31,7 @@ public class NamespaceAssetConverter {
                 .assetKey(entity.getMetadata().getName())
                 .kind(entity.getKind())
                 .assetType(DsAssetTypeConstants.KUBERNETES_NAMESPACE.name())
-                .createdTime(toGmtDate(entity.getMetadata().getCreationTimestamp()))
+                .createdTime(toUtcDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
 
         return AssetContainerBuilder.newBuilder()

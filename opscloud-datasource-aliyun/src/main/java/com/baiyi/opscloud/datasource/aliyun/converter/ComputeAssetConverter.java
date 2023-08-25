@@ -25,7 +25,7 @@ public class ComputeAssetConverter {
 
     private static final String PRE_PAID = "PrePaid";
 
-    public static Date toGmtDate(String time) {
+    public static Date toUtcDate(String time) {
         return TimeUtil.toDate(time, TimeZoneEnum.UTC);
     }
 
@@ -44,10 +44,10 @@ public class ComputeAssetConverter {
                 .kind(entity.getInstanceType())
                 .regionId(entity.getRegionId())
                 .zone(entity.getZoneId())
-                .createdTime(toGmtDate(entity.getCreationTime()))
+                .createdTime(toUtcDate(entity.getCreationTime()))
                 .expiredTime(
                         entity.getInstanceChargeType().equalsIgnoreCase(PRE_PAID) && !StringUtils.isEmpty(entity.getExpiredTime())
-                                ? toGmtDate(entity.getExpiredTime()) : null)
+                                ? toUtcDate(entity.getExpiredTime()) : null)
                 .build();
 
         return AssetContainerBuilder.newBuilder()
@@ -82,7 +82,7 @@ public class ComputeAssetConverter {
                 .kind("ecsImage")
                 .assetType(DsAssetTypeConstants.ECS_IMAGE.name())
                 .description(entity.getDescription())
-                .createdTime(toGmtDate(entity.getCreationTime()))
+                .createdTime(toUtcDate(entity.getCreationTime()))
                 .build();
 
         return AssetContainerBuilder.newBuilder()

@@ -19,4 +19,7 @@ public interface DsInstanceAssetPropertyService {
     List<DatasourceInstanceAssetProperty> queryByAssetId(Integer assetId);
 
     void saveAssetProperties(int assetId, Map<String, String> properties);
+
+    DatasourceInstanceAssetProperty getByUniqueKey(Integer assetId, String name);
+
 }

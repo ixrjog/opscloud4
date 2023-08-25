@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.template.BusinessTemplateParam;
 import com.baiyi.opscloud.domain.param.template.MessageTemplateParam;
 import com.baiyi.opscloud.domain.param.template.TemplateParam;
+import com.baiyi.opscloud.domain.vo.common.OptionsVO;
 import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
 import com.baiyi.opscloud.domain.vo.template.MessageTemplateVO;
 import com.baiyi.opscloud.domain.vo.template.TemplateVO;
@@ -28,6 +29,12 @@ import org.springframework.web.bind.annotation.*;
 public class TemplateController {
 
     private final TemplateFacade templateFacade;
+
+    @Operation(summary = "查询模板分类选项")
+    @GetMapping(value = "/kind/options/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<OptionsVO.Options> getKindOptions() {
+        return new HttpResult<>(templateFacade.getKindOptions());
+    }
 
     @Operation(summary = "分页查询模板列表")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

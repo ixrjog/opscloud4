@@ -11,7 +11,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 
-import static com.baiyi.opscloud.datasource.aliyun.converter.ComputeAssetConverter.toGmtDate;
+import static com.baiyi.opscloud.datasource.aliyun.converter.ComputeAssetConverter.toUtcDate;
 
 /**
  * @Author 修远
@@ -75,7 +75,7 @@ public class VpcAssetConverter {
                 .assetType(DsAssetTypeConstants.V_SWITCH.name())
                 .zone(entity.getZoneId())
                 .description(entity.getDescription())
-                .createdTime(toGmtDate(entity.getCreationTime()))
+                .createdTime(toUtcDate(entity.getCreationTime()))
                 .build();
 
         return AssetContainerBuilder.newBuilder()

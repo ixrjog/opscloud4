@@ -37,4 +37,8 @@ public class Global {
     @Schema(description = "自动构建")
     public static final String AUTO_BUILD = "AutoBuild";
 
+
+    @Schema(description = "默认分组数")
+    public static final int DEF_NUM_OF_GROUPS = 1;
+
 }

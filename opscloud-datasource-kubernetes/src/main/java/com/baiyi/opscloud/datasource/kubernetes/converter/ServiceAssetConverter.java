@@ -33,7 +33,7 @@ public class ServiceAssetConverter {
                 .assetKey2(namespace)
                 .kind(entity.getKind())
                 .assetType(DsAssetTypeConstants.KUBERNETES_SERVICE.name())
-                .createdTime(DeploymentAssetConverter.toGmtDate(entity.getMetadata().getCreationTimestamp()))
+                .createdTime(DeploymentAssetConverter.toUtcDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
 
         return AssetContainerBuilder.newBuilder()

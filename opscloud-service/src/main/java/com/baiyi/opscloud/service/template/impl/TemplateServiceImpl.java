@@ -47,6 +47,9 @@ public class TemplateServiceImpl implements TemplateService {
         if (StringUtils.isNotBlank(pageQuery.getTemplateType())) {
             criteria.andLike("templateType", SQLUtil.toLike(pageQuery.getTemplateType()));
         }
+        if (StringUtils.isNotBlank(pageQuery.getKind())) {
+            criteria.andEqualTo("kind", pageQuery.getKind());
+        }
         List<Template> data = templateMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }
@@ -67,13 +70,18 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     @Override
-    public void updateSelective(Template template) {
+    public void updateByPrimaryKeySelective(Template template) {
         templateMapper.updateByPrimaryKeySelective(template);
     }
 
     @Override
     public void deleteById(Integer id) {
         templateMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public List<String> getKindOptions() {
+        return templateMapper.getKindOptions();
     }
 
 }

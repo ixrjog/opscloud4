@@ -24,14 +24,14 @@
         <dependency>
             <groupId>io.fabric8</groupId>
             <artifactId>kubernetes-client</artifactId>
-            <version>6.8.0</version>
+            <version>6.8.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.fabric8/kubernetes-model -->
         <dependency>
             <groupId>io.fabric8</groupId>
             <artifactId>kubernetes-model</artifactId>
-            <version>6.8.0</version>
+            <version>6.8.1</version>
         </dependency>
 
     </dependencies>

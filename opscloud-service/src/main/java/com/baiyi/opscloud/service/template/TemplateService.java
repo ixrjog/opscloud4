@@ -21,8 +21,10 @@ public interface TemplateService {
 
     void add(Template template);
 
-    void updateSelective(Template template);
+    void updateByPrimaryKeySelective(Template template);
 
     void deleteById(Integer id);
+
+    List<String> getKindOptions();
 
 }

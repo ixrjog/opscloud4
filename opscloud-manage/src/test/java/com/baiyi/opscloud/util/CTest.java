@@ -31,13 +31,13 @@ public class CTest extends BaseUnit {
         }
 
         FunctionUtil.isTureOrFalse(true)
-                .trueOrFalseHandle(
+                .withBoolean(
                         () -> print("trueHandle-true"),
                         () -> print("falseHandle-true")
                 );
 
         FunctionUtil.isTureOrFalse(false)
-                .trueOrFalseHandle(
+                .withBoolean(
                         () -> print("trueHandle-false"),
                         () -> print("falseHandle-false")
                 );

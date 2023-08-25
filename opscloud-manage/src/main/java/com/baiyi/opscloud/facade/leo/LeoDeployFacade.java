@@ -60,6 +60,8 @@ public interface LeoDeployFacade {
      */
     void cloneDeployDeployment(LeoDeployParam.CloneDeployDeployment cloneDeployDeployment);
 
+    void delDeployDeployment(int assetId);
+
     List<LeoDeployVO.Deploy> getLatestLeoDeploy(LeoMonitorParam.QueryLatestDeploy queryLatestDeploy);
 
 }

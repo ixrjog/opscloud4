@@ -58,7 +58,7 @@ public class ProjectPacker implements IWrapperRelation<ProjectVO.Project> {
         List<ProjectResource> projectResourceList = projectResourceService.listByProjectId(project.getId());
         projectResourceList.forEach(res ->
                 FunctionUtil.isTureOrFalse(res.getBusinessType() == BusinessTypeEnum.ASSET.getType())
-                        .trueOrFalseHandle(
+                        .withBoolean(
                                 () -> {
                                     ProjectResourceVO.Resource resource = BeanCopierUtil.copyProperties(res, ProjectResourceVO.Resource.class);
                                     resourcePacker.wrap(resource, iExtend, iRelation);

@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @Author baiyi
@@ -85,5 +86,32 @@ public class JenkinsServerDriver {
             throw e;
         }
     }
+
+    public static void createJob(JenkinsConfig.Jenkins jenkins, String jobName, String jobXml) throws URISyntaxException, IOException {
+        final boolean crumbFlag = Optional.of(jenkins)
+                .map(JenkinsConfig.Jenkins::getSecurity)
+                .map(JenkinsConfig.Security::getCrumbFlag)
+                .orElse(false);
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
+            jenkinsServer.createJob(jobName, jobXml, crumbFlag);
+        } catch (URISyntaxException | IOException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    public static void createJob(JenkinsConfig.Jenkins jenkins, FolderJob folder, String jobName, String jobXml) throws URISyntaxException, IOException {
+        final boolean crumbFlag = Optional.of(jenkins)
+                .map(JenkinsConfig.Jenkins::getSecurity)
+                .map(JenkinsConfig.Security::getCrumbFlag)
+                .orElse(false);
+        try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins)) {
+            jenkinsServer.createJob(folder, jobName, jobXml, crumbFlag);
+        } catch (URISyntaxException | IOException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
+    }
+
 
 }

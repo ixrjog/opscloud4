@@ -9,5 +9,5 @@ package com.baiyi.opscloud.common.function;
 @FunctionalInterface
 public interface TrueFunction {
 
-    void trueHandle(Runnable trueHandle);
+    void withTrue(Runnable runnable);
 }

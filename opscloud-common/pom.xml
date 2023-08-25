@@ -51,7 +51,7 @@
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.15.6.RELEASE</version>
+            <version>3.15.8.RELEASE</version>
         </dependency>
 
         <!-- Shedlock 分布式任务锁 -->
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-jackson</artifactId>
-            <version>12.2</version>
+            <version>12.3</version>
         </dependency>
 
         <dependency>

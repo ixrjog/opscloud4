@@ -3,6 +3,7 @@ package com.baiyi.opscloud.otp;
 import com.baiyi.opscloud.otp.exception.OtpException;
 import com.baiyi.opscloud.otp.model.OTPAccessCode;
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator;
+import org.slf4j.helpers.MessageFormatter;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
@@ -23,15 +24,15 @@ import java.time.Instant;
  */
 public class OtpUtil {
 
+    private OtpUtil() {
+    }
+
     private static final Duration DURATION = Duration.ofSeconds(30L);
 
     /**
      * otpauth://totp/OPSCLOUD@${ACCOUNT}?secret=${OTP_SK}?&issuer=OPSCLOUD
      */
-    private static final String QR_CODE = "otpauth://totp/OPSCLOUD@%s?secret=%s";
-
-    private OtpUtil() {
-    }
+    private static final String QR_CODE = "otpauth://totp/OPSCLOUD@{}?secret={}";
 
     /**
      * 构建一个OTP SecretKey
@@ -103,7 +104,7 @@ public class OtpUtil {
      * @return otpauth://totp/客户端显示的账户信息?secret=secretBase32
      */
     public static String toQRCode(String account, String otpSk) {
-        return String.format(QR_CODE, account, otpSk);
+        return MessageFormatter.format(QR_CODE, account, otpSk).getMessage();
     }
 
 }

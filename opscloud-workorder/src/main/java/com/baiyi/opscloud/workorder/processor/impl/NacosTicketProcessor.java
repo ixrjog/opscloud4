@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import jakarta.annotation.Resource;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -62,12 +63,16 @@ public class NacosTicketProcessor extends AbstractDsAssetExtendedBaseTicketProce
     protected void processHandle(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
         NacosConfig.Nacos config = getDsConfig(ticketEntry, NacosConfig.class).getNacos();
 
-        String prefix = Optional.ofNullable(config.getAccount())
+        final String prefix = Optional.ofNullable(config.getAccount())
                 .map(NacosConfig.Account::getPrefix)
                 .orElse("");
         WorkOrderTicket ticket = getTicketById(ticketEntry.getWorkOrderTicketId());
         String nacosUsername = Joiner.on("").skipNulls().join(prefix, ticket.getUsername());
-        createNacosUser(config, nacosUsername);
+        try {
+            createNacosUser(config, nacosUsername);
+        } catch (Exception e) {
+            throw new TicketProcessException("Create Nacos user err: {}", e.getMessage());
+        }
         try {
             NacosUser.AuthRoleResponse authRoleResponse = nacosAuthDrive.authRole(config, nacosUsername, ticketEntry.getName());
             if (authRoleResponse.getCode() != HttpStatus.SC_OK) {

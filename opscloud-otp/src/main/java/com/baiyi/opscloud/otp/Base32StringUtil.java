@@ -32,9 +32,7 @@ public class Base32StringUtil {
     private static final String SEPARATOR = "-";
 
     protected Base32StringUtil(String alphabet) {
-        /**
-         * 32 alpha-numeric characters.
-         */
+        // 32 alpha-numeric characters.
         DIGITS = alphabet.toCharArray();
         MASK = DIGITS.length - 1;
         SHIFT = Integer.numberOfTrailingZeros(DIGITS.length);
@@ -59,7 +57,7 @@ public class Base32StringUtil {
 
         // Canonicalize to all upper case
         encoded = encoded.toUpperCase(Locale.US);
-        if (encoded.length() == 0) {
+        if (encoded.isEmpty()) {
             return new byte[0];
         }
         int encodedLength = encoded.length();
@@ -80,10 +78,6 @@ public class Base32StringUtil {
                 bitsLeft -= 8;
             }
         }
-        // We'll ignore leftover bits for now.
-        // if (next != outLength || bitsLeft >= SHIFT) {
-        //  throw new DecodingException("Bits left: " + bitsLeft);
-        // }
         return result;
     }
 

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.common.util;
 
-import com.baiyi.opscloud.common.exception.datasource.DatasourceRuntimeException;
+import com.baiyi.opscloud.common.exception.datasource.DatasourceException;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.google.gson.JsonSyntaxException;
 import org.apache.commons.lang3.StringUtils;
@@ -25,12 +25,12 @@ public class DsUtil {
      */
     public static <T> T toDsConfig(String propsYml, Class<T> targetClass) {
         if (StringUtils.isEmpty(propsYml)) {
-            throw new DatasourceRuntimeException(ErrorEnum.DATASOURCE_PROPS_EMPTY);
+            throw new DatasourceException(ErrorEnum.DATASOURCE_PROPS_EMPTY);
         }
         try {
             return YamlUtil.loadAs(propsYml, targetClass);
         } catch (JsonSyntaxException e) {
-            throw new DatasourceRuntimeException(ErrorEnum.DATASOURCE_PROPS_CONVERT_ERROR);
+            throw new DatasourceException(ErrorEnum.DATASOURCE_PROPS_CONVERT_ERROR);
         }
     }
 
