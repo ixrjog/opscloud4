@@ -105,12 +105,12 @@ public class KubernetesDeploymentDriver {
      * @param replicas
      * @throws KubernetesDeploymentException
      */
-    public static void scale(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, Integer replicas) throws KubernetesDeploymentException {
+    public static void scale(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, int replicas) throws KubernetesDeploymentException {
         Deployment deployment = get(kubernetes, namespace, name);
         final Integer nowReplicas = Optional.ofNullable(deployment)
                 .map(Deployment::getSpec)
                 .map(DeploymentSpec::getReplicas)
-                .orElseThrow(() -> new KubernetesDeploymentException("Deployment扩容失败: 读取副本数量错误！"));
+                .orElseThrow(() -> new KubernetesDeploymentException("扩容失败: 读取副本数量错误！"));
         // 更新副本数
         if (nowReplicas >= replicas) {
             throw new KubernetesDeploymentException("只能扩容 nowReplicas={}, newReplicas={} ！", nowReplicas, replicas);
@@ -136,15 +136,15 @@ public class KubernetesDeploymentDriver {
      * @param replicas
      * @throws KubernetesDeploymentException
      */
-    public static void reduce(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, Integer replicas) throws KubernetesDeploymentException {
+    public static void reduce(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, int replicas) throws KubernetesDeploymentException {
         Deployment deployment = get(kubernetes, namespace, name);
         final Integer nowReplicas = Optional.ofNullable(deployment)
                 .map(Deployment::getSpec)
                 .map(DeploymentSpec::getReplicas)
-                .orElseThrow(() -> new KubernetesDeploymentException("Deployment缩容失败: 读取副本数量错误！"));
+                .orElseThrow(() -> new KubernetesDeploymentException("缩容失败: 读取副本数量错误！"));
         // 更新副本数
         if (replicas < 1) {
-            throw new KubernetesDeploymentException("指定副本数不能少于1 replicas={} ！", replicas);
+            throw new KubernetesDeploymentException("指定副本数不能少于1, replicas={} ！", replicas);
         }
         if (replicas >= nowReplicas) {
             throw new KubernetesDeploymentException("只能缩容 nowReplicas={}, newReplicas={} ！", nowReplicas, replicas);
