@@ -64,6 +64,11 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
     }
 
     @Override
+    public List<Tag> getFinOpsTags() {
+        return tagService.queryFinOpsTags();
+    }
+
+    @Override
     public DataTable<TagVO.Tag> queryTagPage(TagParam.TagPageQuery pageQuery) {
         DataTable<Tag> table = tagService.queryPageByParam(pageQuery);
         List<TagVO.Tag> data = Lists.newArrayList();

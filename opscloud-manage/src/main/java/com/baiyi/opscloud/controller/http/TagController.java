@@ -76,4 +76,10 @@ public class TagController {
         return HttpResult.SUCCESS;
     }
 
+    @Operation(summary = "查询FinOps标签选项")
+    @GetMapping(value = "/finops/options/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<OptionsVO.Options> getFinOpsTagOptions() {
+        return new HttpResult<>(OptionsUtil.toFinOpsTagOptions(tagFacade.getFinOpsTags()));
+    }
+
 }
