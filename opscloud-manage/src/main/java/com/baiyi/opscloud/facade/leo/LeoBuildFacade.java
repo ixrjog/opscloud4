@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.leo;
 
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.LeoMonitorParam;
@@ -21,7 +22,7 @@ public interface LeoBuildFacade {
      *
      * @param doBuild
      */
-    void doBuild(LeoBuildParam.DoBuild doBuild);
+    LeoBuild doBuild(LeoBuildParam.DoBuild doBuild);
 
     void doAutoBuild(LeoBuildParam.DoAutoBuild doBuild);
 

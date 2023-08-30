@@ -115,7 +115,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     @Override
     @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType", buildIdSpEL = "#doDeploy.buildId")
-    public void doDeploy(LeoDeployParam.DoDeploy doDeploy) {
+    public LeoDeploy doDeploy(LeoDeployParam.DoDeploy doDeploy) {
         // 执行部署任务
         LeoJob leoJob = jobService.getById(doDeploy.getJobId());
         final int deployNumber = generateDeployNumberWithJobId(leoJob.getId());
@@ -160,6 +160,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         deployService.add(newLeoDeploy);
         autoDeployHelper.labeling(doDeploy, BusinessTypeEnum.LEO_DEPLOY.getType(), newLeoDeploy.getId());
         handleDeploy(newLeoDeploy, deployConfig);
+        return newLeoDeploy;
     }
 
     /**
