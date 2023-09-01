@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.metersphere.entity;
+package com.baiyi.opscloud.datasource.aliyun.eventbridge.entity;
 
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.core.asset.IToAsset;
@@ -20,7 +20,7 @@ import java.util.Date;
 
 /**
  * @Author baiyi
- * @Date 2023/5/15 14:18
+ * @Date 2023/8/31 10:44
  * @Version 1.0
  */
 @Data
@@ -28,10 +28,10 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LeoDeployHook implements IToAsset, Serializable {
+public class LeoDeployEvent implements IToAsset, Serializable {
 
     @Serial
-    private static final long serialVersionUID = -2606192335138876931L;
+    private static final long serialVersionUID = -7929388965788840998L;
 
     private Integer deployId;
 
@@ -45,20 +45,19 @@ public class LeoDeployHook implements IToAsset, Serializable {
 
     private boolean success;
 
-    private int code;
+    private String eventId;
 
-    private Object body;
+    private String requestId;
 
     @Override
     public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(String.valueOf(this.deployId))
+                .assetId(eventId)
                 .name(this.name)
                 .assetKey(String.valueOf(this.deployId))
-                .assetKey2(this.projectId != null ? String.valueOf(this.projectId) : null)
                 .isActive(true)
-                .assetType(DsAssetTypeConstants.METER_SPHERE_DEPLOY_HOOK.name())
+                .assetType(DsAssetTypeConstants.EVENT_BRIDGE_DEPLOY_EVENT.name())
                 .createdTime(new Date())
                 .kind("hook")
                 .build();
@@ -67,8 +66,7 @@ public class LeoDeployHook implements IToAsset, Serializable {
                 .paramProperty("buildId", this.buildId)
                 .paramProperty("hook", JSONUtil.writeValueAsString(this.hook))
                 .paramProperty("success", this.success)
-                .paramProperty("code", this.code)
-                .paramProperty("body", JSONUtil.writeValueAsString(this.body))
+                .paramProperty("requestId", requestId)
                 .build();
     }
 

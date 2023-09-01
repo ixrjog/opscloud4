@@ -52,6 +52,10 @@ public enum DsTypeEnum {
     APOLLO(56, "APOLLO"),
     SER_DEPLOY(57, "SER_DEPLOY"),
     ALIYUN_ARMS(58,"ALIYUN_ARMS"),
+    /**
+     * 阿里云事件总线
+     */
+    ALIYUN_EVENTBRIDGE(59,"ALIYUN_EVENTBRIDGE")
     ;
 
     private final int type;

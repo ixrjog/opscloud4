@@ -7,6 +7,7 @@ import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.constants.DeployDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.handler.deploy.BaseDeployChainHandler;
+import com.baiyi.opscloud.leo.handler.deploy.chain.post.event.AliyunEventBridgeDeployEventPublisher;
 import com.baiyi.opscloud.leo.handler.deploy.chain.post.event.MeterSphereDeployEventPublisher;
 import com.baiyi.opscloud.leo.helper.LeoDeployPassCheck;
 import com.baiyi.opscloud.service.user.UserService;
@@ -29,6 +30,9 @@ public class DeployFinalProcessingChainHandler extends BaseDeployChainHandler {
 
     @Resource
     private MeterSphereDeployEventPublisher meterSphereDeployEventPublisher;
+
+    @Resource
+    private AliyunEventBridgeDeployEventPublisher aliyunEventBridgeDeployEventPublisher;
 
     @Resource
     private UserService userService;
@@ -86,9 +90,11 @@ public class DeployFinalProcessingChainHandler extends BaseDeployChainHandler {
                     .projectId(leoDeploy.getProjectId())
                     .pods(null)
                     .gmtModified(leoDeploy.getEndTime())
+                    .imageTag(dict.getOrDefault(BuildDictConstants.IMAGE_TAG.getKey(), ""))
                     .build();
 
             meterSphereDeployEventPublisher.publish(hook);
+            aliyunEventBridgeDeployEventPublisher.publish(hook);
         } catch (Exception ignored) {
         }
     }

@@ -24,8 +24,10 @@ public class LeoHook {
     @AllArgsConstructor
     @Schema(description = "Leo持续交付构建通知")
     public static class BuildHook extends BaseLeoHook {
+
         @Serial
-        private static final long serialVersionUID = -1L;
+        private static final long serialVersionUID = 7955161750565608196L;
+
         private User user;
         private GitLab gitLab;
         @Schema(description = "任务名称")
@@ -43,8 +45,10 @@ public class LeoHook {
     @Schema(description = "Leo持续交付部署通知")
     @SuperBuilder(toBuilder = true)
     public static class DeployHook extends BaseLeoHook {
+
         @Serial
-        private static final long serialVersionUID = -1L;
+        private static final long serialVersionUID = -415506636920151020L;
+
         private User user;
         private Integer buildId;
         @Schema(description = "任务名称")
@@ -53,6 +57,9 @@ public class LeoHook {
         private final String type = "DEPLOY";
         @Schema(description = "部署类型")
         private String deployType;
+        @Schema(description = "镜像标签")
+        private String imageTag;
+
     }
 
     @Data
@@ -60,8 +67,9 @@ public class LeoHook {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class BaseLeoHook implements Serializable {
+
         @Serial
-        private static final long serialVersionUID = -1L;
+        private static final long serialVersionUID = 4059862093988312907L;
         @Schema(description = "应用名")
         private String appName;
         @Schema(description = "应用ID")
@@ -74,6 +82,7 @@ public class LeoHook {
         private String envName;
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date gmtModified;
+
     }
 
     @Data
@@ -82,11 +91,13 @@ public class LeoHook {
     @AllArgsConstructor
     @Schema(description = "Leo持续交付构建GitLab信息")
     public static class GitLab implements Serializable {
+
         @Serial
-        private static final long serialVersionUID = -1L;
+        private static final long serialVersionUID = 699217404815087525L;
         private String sshUrl;
         private String branch;
         private Commit commit;
+
     }
 
     @Data
@@ -94,10 +105,12 @@ public class LeoHook {
     @AllArgsConstructor
     @Schema(description = "Leo持续交付部署后Pod信息")
     public static class Pod implements Serializable {
+
         @Serial
-        private static final long serialVersionUID = -1L;
+        private static final long serialVersionUID = -5118051679182917571L;
         private String name;
         private String ip;
+
     }
 
     @Data
@@ -106,10 +119,12 @@ public class LeoHook {
     @AllArgsConstructor
     @Schema(description = "Leo持续交付构建Commit信息")
     public static class Commit implements Serializable {
+
         @Serial
-        private static final long serialVersionUID = -1L;
+        private static final long serialVersionUID = 3589050781498051795L;
         private String id;
         private String message;
+
     }
 
     @Data
@@ -118,11 +133,13 @@ public class LeoHook {
     @AllArgsConstructor
     @Schema(description = "Leo持续交付执行用户信息")
     public static class User implements Serializable {
+
         @Serial
-        private static final long serialVersionUID = -1L;
+        private static final long serialVersionUID = -6993920655149630267L;
         private String username;
         private String displayName;
         private String email;
+
     }
 
 }
