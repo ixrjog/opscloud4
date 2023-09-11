@@ -47,6 +47,8 @@ public interface LeoBuildService {
 
     List<LeoBuild> queryNotFinishBuildWithOcInstance(String ocInstance);
 
+    List<LeoBuild> queryNotFinishBuild();
+
     int countRunningWithJobId(int jobId);
 
     List<ReportVO.Report> statByMonth();

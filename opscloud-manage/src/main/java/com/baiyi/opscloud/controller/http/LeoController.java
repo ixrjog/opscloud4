@@ -2,6 +2,8 @@ package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.param.leo.*;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeployRequestParam;
@@ -201,9 +203,8 @@ public class LeoController {
 
     @Operation(summary = "执行构建")
     @PostMapping(value = "/build/do", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> doLeoBuild(@RequestBody @Valid LeoBuildParam.DoBuild doBuild) {
-        buildFacade.doBuild(doBuild);
-        return HttpResult.SUCCESS;
+    public HttpResult<LeoBuild> doLeoBuild(@RequestBody @Valid LeoBuildParam.DoBuild doBuild) {
+        return new HttpResult<>(buildFacade.doBuild(doBuild));
     }
 
     @Operation(summary = "关闭构建")
@@ -255,10 +256,9 @@ public class LeoController {
 
     @Operation(summary = "执行部署")
     @PostMapping(value = "/deploy/do", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> doLeoDeploy(@RequestBody @Valid LeoDeployParam.DoDeploy doDeploy) {
+    public HttpResult<LeoDeploy> doLeoDeploy(@RequestBody @Valid LeoDeployParam.DoDeploy doDeploy) {
         doDeploy.setAutoDeploy(false);
-        deployFacade.doDeploy(doDeploy);
-        return HttpResult.SUCCESS;
+        return new HttpResult<>(deployFacade.doDeploy(doDeploy));
     }
 
     @Operation(summary = "查询部署版本")

@@ -19,6 +19,7 @@ public class WorkOrderVO {
         Integer getWorkOrderId();
 
         void setWorkOrder(WorkOrderVO.WorkOrder workOrder);
+
     }
 
     @EqualsAndHashCode(callSuper = true)
@@ -36,6 +37,10 @@ public class WorkOrderVO {
         @Schema(description = "工单名称")
         @NotEmpty(message = "工单名称不能为空")
         private String name;
+
+        @Schema(description = "工单名称国际化")
+        @NotEmpty(message = "工单名称国际化不能为空")
+        private String i18nEn;
 
         @Schema(description = "顺序")
         private Integer seq;
@@ -94,6 +99,10 @@ public class WorkOrderVO {
         @NotEmpty(message = "工单组名称不能为空")
         private String name;
 
+        @Schema(description = "工单组名称国际化")
+        @NotEmpty(message = "工单组名称国际化不能为空")
+        private String i18nEn;
+
         @Schema(description = "顺序")
         private Integer seq;
 
@@ -106,4 +115,5 @@ public class WorkOrderVO {
         @Schema(description = "说明")
         private String comment;
     }
+
 }

@@ -34,8 +34,9 @@ public enum BusinessTypeEnum {
     LEO_DEPLOY(105, "持续交付部署"),
     METER_SPHERE_BUILD_HOOK(106, "MeterSphere构建通知"),
     METER_SPHERE_DEPLOY_HOOK(107, "MeterSphere部署通知"),
-    PROJECT(108, "项目");
-
+    PROJECT(108, "项目"),
+    EVENT_BRIDGE_DEPLOY_EVENT(109, "AliyunEventBridge部署事件")
+    ;
 
     private final String name;
     private final int type;
@@ -54,4 +55,5 @@ public enum BusinessTypeEnum {
     BusinessTypeEnum(int type, String name) {
         this(type, name, false);
     }
+
 }

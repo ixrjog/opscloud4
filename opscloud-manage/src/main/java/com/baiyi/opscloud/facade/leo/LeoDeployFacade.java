@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.leo;
 
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.param.leo.LeoDeployParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.LeoMonitorParam;
@@ -25,7 +26,7 @@ public interface LeoDeployFacade {
      *
      * @param doDeploy
      */
-    void doDeploy(LeoDeployParam.DoDeploy doDeploy);
+    LeoDeploy doDeploy(LeoDeployParam.DoDeploy doDeploy);
 
     /**
      * 构建后自动部署接口，内部调用

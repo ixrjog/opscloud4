@@ -5,7 +5,6 @@ import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.instance.OcInstance;
-import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.JSONUtil;
@@ -38,8 +37,8 @@ import com.baiyi.opscloud.leo.domain.model.LeoJobModel;
 import com.baiyi.opscloud.leo.driver.BlueRestDriver;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.leo.handler.build.LeoBuildHandler;
-import com.baiyi.opscloud.leo.log.LeoBuildingLog;
 import com.baiyi.opscloud.leo.holder.LeoHeartbeatHolder;
+import com.baiyi.opscloud.leo.log.LeoBuildingLog;
 import com.baiyi.opscloud.leo.message.handler.impl.build.SubscribeLeoBuildRequestHandler;
 import com.baiyi.opscloud.leo.packer.LeoBuildResponsePacker;
 import com.baiyi.opscloud.leo.parser.MavenPublishParser;
@@ -115,11 +114,9 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     private final LeoHeartbeatHolder leoHeartbeatHolder;
 
-    private final RedisUtil redisUtil;
-
     @Override
     @LeoBuildInterceptor(jobIdSpEL = "#doBuild.jobId")
-    public void doBuild(LeoBuildParam.DoBuild doBuild) {
+    public LeoBuild doBuild(LeoBuildParam.DoBuild doBuild) {
         LeoJob leoJob = jobService.getById(doBuild.getJobId());
         if (leoJob == null) {
             throw new LeoBuildException("Leo job does not exist: jobId={}", doBuild.getJobId());
@@ -239,6 +236,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         // 打标签
         labelingMachineHelper.labeling(doBuild, BusinessTypeEnum.LEO_BUILD.getType(), leoBuild.getId());
         handleBuild(leoBuild, buildConfig);
+        return leoBuild;
     }
 
     @Override

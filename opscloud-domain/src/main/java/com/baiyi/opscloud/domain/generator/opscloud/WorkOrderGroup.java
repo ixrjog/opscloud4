@@ -17,6 +17,9 @@ public class WorkOrderGroup {
      */
     private String name;
 
+    @Column(name = "i18n_en")
+    private String i18nEn;
+
     /**
      * 顺序
      */

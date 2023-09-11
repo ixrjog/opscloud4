@@ -64,13 +64,14 @@
         <module>opscloud-datasource-metersphere</module>
         <module>opscloud-datasource-apollo</module>
         <module>opscloud-datasource-aliyun-arms</module>
+        <module>opscloud-datasource-aliyun-eventbridge</module>
     </modules>
 
     <parent>
         <!--  https://spring.io/projects/spring-boot#learn  -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.2</version>
+        <version>3.1.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -400,6 +401,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-aliyun-devops</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aliyun-eventbridge</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
 import com.baiyi.opscloud.domain.vo.business.IBusinessPermissionUser;
+import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
@@ -75,10 +76,12 @@ public class ApplicationVO {
     @Builder
     @AllArgsConstructor
     public static class ArmsTraceApp {
+
         @Schema(description = "是否显示")
         private boolean show;
 
         private String homeUrl;
+
     }
 
     @EqualsAndHashCode(callSuper = true)
@@ -102,6 +105,9 @@ public class ApplicationVO {
         private List<ApplicationResourceVO.Resource> resources;
 
         private Map<String, List<ApplicationResourceVO.Resource>> resourceMap;
+
+        @Schema(description = "Leo任务")
+        private List<LeoJobVO.Job> leoJobs;
 
         @Schema(description = "业务文档")
         private BusinessDocumentVO.Document document;
@@ -130,4 +136,5 @@ public class ApplicationVO {
         private UserPermissionVO.UserPermission userPermission;
 
     }
+
 }

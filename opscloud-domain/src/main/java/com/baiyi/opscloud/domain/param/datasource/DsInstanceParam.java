@@ -90,6 +90,9 @@ public class DsInstanceParam {
         @Valid
         private String instanceType;
 
+        @Schema(description = "数据源实例版本")
+        private String version;
+
         @Schema(description = "数据源配置ID", example = "1")
         private Integer configId;
 

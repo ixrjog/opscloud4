@@ -48,6 +48,14 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public List<Tag> queryFinOpsTags() {
+        Example example = new Example(Tag.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andLike("tagKey", "$%");
+        return tagMapper.selectByExample(example);
+    }
+
+    @Override
     public void add(Tag tag) {
         tagMapper.insert(tag);
     }

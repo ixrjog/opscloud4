@@ -4,10 +4,12 @@ import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.param.report.ApolloReportParam;
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.baiyi.opscloud.domain.vo.datasource.report.ApolloReportVO;
+import com.baiyi.opscloud.domain.vo.finops.KubernetesFinOpsVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoReportVO;
 import com.baiyi.opscloud.domain.vo.terminal.TerminalReportVO;
 import com.baiyi.opscloud.domain.vo.workevent.WorkEventReportVO;
 import com.baiyi.opscloud.facade.datasource.report.ApolloReportFacade;
+import com.baiyi.opscloud.facade.kubernetes.KubernetesFinOpsReportFacade;
 import com.baiyi.opscloud.facade.leo.LeoReportFacade;
 import com.baiyi.opscloud.facade.terminal.TerminalReportFacade;
 import com.baiyi.opscloud.facade.workevent.WorkEventFacade;
@@ -38,6 +40,8 @@ public class ReportController {
     private final LeoReportFacade leoReportFacade;
 
     private final ApolloReportFacade apolloReportFacade;
+
+    private final KubernetesFinOpsReportFacade kubernetesFinOpsReportFacade;
 
     @Operation(summary = "查询终端报表")
     @GetMapping(value = "/terminal/get", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -97,6 +101,12 @@ public class ReportController {
     @PostMapping(value = "/apollo/release/get", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<ApolloReportVO.ApolloReleaseReport> getApolloReleaseReport(@RequestBody @Valid ApolloReportParam.ApolloReleaseReport apolloReleaseReport) {
         return new HttpResult<>(apolloReportFacade.getApolloReleaseReport(apolloReleaseReport));
+    }
+
+    @Operation(summary = "查询KubernetesFinOps报表")
+    @GetMapping(value = "/kubernetes/finops/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<KubernetesFinOpsVO.FinOpsReport> getKubernetesFinOps(@RequestParam int instanceId) {
+        return new HttpResult<>(kubernetesFinOpsReportFacade.getKubernetesFinOps(instanceId));
     }
 
 }

@@ -17,6 +17,8 @@ public interface TagService {
 
     List<Tag> queryTagByBusinessType(Integer businessType);
 
+    List<Tag> queryFinOpsTags();
+
     Tag getById(Integer id);
 
     void add(Tag tag);

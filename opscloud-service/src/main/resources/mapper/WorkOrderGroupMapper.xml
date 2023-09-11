@@ -7,6 +7,7 @@
         -->
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="i18n_en" jdbcType="VARCHAR" property="i18nEn"/>
         <result column="seq" jdbcType="INTEGER" property="seq"/>
         <result column="group_type" jdbcType="INTEGER" property="groupType"/>
         <result column="icon" jdbcType="VARCHAR" property="icon"/>

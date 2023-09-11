@@ -18,12 +18,11 @@ public class GitLabApiFactory {
 
     public static GitLabApi buildGitLabApi(GitLabConfig.GitLab gitlab) {
         assert gitlab != null;
-        String version = Optional.of(gitlab)
+        final String version = Optional.of(gitlab)
                 .map(GitLabConfig.GitLab::getApi)
                 .map(GitLabConfig.Api::getVersion)
                 .orElse("v4");
         GitLabApi gitLabApi = buildWithVersion(version, gitlab);
-
         int connectTimeout = Optional.of(gitlab)
                 .map(GitLabConfig.GitLab::getApi)
                 .map(GitLabConfig.Api::getConnectTimeout)

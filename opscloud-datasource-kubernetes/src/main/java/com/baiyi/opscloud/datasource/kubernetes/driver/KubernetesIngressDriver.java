@@ -91,6 +91,20 @@ public class KubernetesIngressDriver {
         }
     }
 
+    public static Ingress update(KubernetesConfig.Kubernetes kubernetes, Ingress ingress) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
+            return kc.network()
+                    .v1()
+                    .ingresses()
+                    .inNamespace(ingress.getMetadata().getNamespace())
+                    .resource(ingress)
+                    .update();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
+    }
+
     private static Ingress toIngress(KubernetesClient kubernetesClient, String content) {
         InputStream is = new ByteArrayInputStream(content.getBytes());
         return kubernetesClient

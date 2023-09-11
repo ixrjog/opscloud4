@@ -141,22 +141,21 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
         if (!dsAuthManager.tryLogin(user, loginParam)) {
             throw new AuthenticationException(ErrorEnum.AUTH_USER_LOGIN_FAILURE);
         }
-        boolean bindMfa = false;
+        boolean lockMfa = false;
         if (user.getMfa()) {
             mfaValidator.verify(user, loginParam);
         } else {
-            bindMfa = mfaValidator.tryBind(user, loginParam);
+            lockMfa = mfaValidator.tryBind(user, loginParam);
         }
         // 更新用户登录信息
         User saveUser = User.builder()
                 .id(user.getId())
                 .password(stringEncryptor.encrypt(loginParam.getPassword()))
                 .lastLogin(new Date())
-                .mfa(bindMfa ? true : null)
+                .mfa(lockMfa ? true : null)
                 .build();
-        userService.updateLogin(user);
+        userService.updateLogin(saveUser);
         return userTokenFacade.userLogin(user);
-
     }
 
     @Override

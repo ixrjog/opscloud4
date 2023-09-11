@@ -31,7 +31,7 @@ import java.util.Date;
 public class LeoDeployHook implements IToAsset, Serializable {
 
     @Serial
-    private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -2606192335138876931L;
 
     private Integer deployId;
 

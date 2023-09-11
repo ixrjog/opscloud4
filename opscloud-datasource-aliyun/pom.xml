@@ -79,6 +79,11 @@
             <artifactId>opscloud-datasource-aliyun-arms</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-aliyun-eventbridge</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

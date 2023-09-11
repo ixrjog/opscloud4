@@ -42,6 +42,8 @@ public enum WorkOrderKeyConstants {
     // 配置发布
     APOLLO_RELEASE,
     // Ser发布
-    SER_DEPLOY
+    SER_DEPLOY,
+
+    APPLICATION_FINOPS_TAG
 
 }

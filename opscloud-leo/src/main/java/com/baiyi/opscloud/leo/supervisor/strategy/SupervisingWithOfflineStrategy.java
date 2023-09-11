@@ -49,7 +49,7 @@ public class SupervisingWithOfflineStrategy extends SupervisingStrategy {
                 .orElse("N/A");
 
         LeoDeployingVO.VersionDetails offlineVersion = LeoDeployingVO.VersionDetails.builder()
-                .title("下线中")
+                .title("Offline|下线中")
                 .image(image)
                 .build();
 

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.vo.leo;
 
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
@@ -23,7 +24,7 @@ public class LeoJobVO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Job implements TagVO.ITags, EnvVO.IEnv {
+    public static class Job implements TagVO.ITags, EnvVO.IEnv, BaseBusiness.IBusiness {
 
         private final Integer businessType = BusinessTypeEnum.LEO_JOB.getType();
 
