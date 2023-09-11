@@ -37,13 +37,7 @@ public class AgoUtil {
         }
     }
 
-    /**
-     * 废弃:改用@AgoWrapper
-     *
-     * @param iAgo
-     */
-    @Deprecated
-    public static void wrap(ReadableTime.IAgo iAgo) {
+    private static void wrap(ReadableTime.IAgo iAgo) {
         if (iAgo.getAgoTime() == null) {
             return;
         }

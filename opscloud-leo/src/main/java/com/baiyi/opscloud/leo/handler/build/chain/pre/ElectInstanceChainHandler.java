@@ -6,12 +6,14 @@ import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
 import com.baiyi.opscloud.datasource.jenkins.helper.JenkinsVersion;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
+import com.baiyi.opscloud.leo.domain.model.JenkinsInstanceTask;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
 import com.baiyi.opscloud.leo.handler.build.helper.LeoJenkinsInstanceHelper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +23,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.common.base.Global.AUTO_BUILD;
@@ -113,7 +112,7 @@ public class ElectInstanceChainHandler extends BaseBuildChainHandler {
     }
 
     /**
-     * 随机选取一个可用实例
+     * 取任务最少的实例
      *
      * @param activeInstances
      * @return
@@ -122,9 +121,62 @@ public class ElectInstanceChainHandler extends BaseBuildChainHandler {
         if (activeInstances.size() == 1) {
             return activeInstances.get(0);
         }
-        Random random = new Random();
-        int n = random.nextInt(activeInstances.size());
-        return activeInstances.get(n);
+        List<LeoBuild> builds = leoBuildService.queryNotFinishBuild();
+        // 所有引擎都空闲
+        if (CollectionUtils.isEmpty(builds)) {
+            return getRandomOneInstance(activeInstances);
+        }
+        // 计算任务最少的实例
+        try {
+            Map<String, JenkinsInstanceTask.Task> taskMap = Maps.newHashMap();
+            int i = 0, activeInstancesSize = activeInstances.size();
+            while (i < activeInstancesSize) {
+                DatasourceInstance activeInstance = activeInstances.get(i);
+                JenkinsInstanceTask.Task task = JenkinsInstanceTask.Task.builder()
+                        .name(activeInstance.getInstanceName())
+                        .index(i)
+                        .task(0)
+                        .build();
+                taskMap.put(task.getName(), task);
+                i++;
+            }
+
+            builds.forEach(build -> {
+                LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.load(build);
+                Optional<String> optionalInstanceName = Optional.ofNullable(buildConfig)
+                        .map(LeoBuildModel.BuildConfig::getBuild)
+                        .map(LeoBuildModel.Build::getJenkins)
+                        .map(LeoBaseModel.Jenkins::getInstance)
+                        .map(LeoBaseModel.DsInstance::getName);
+                if (optionalInstanceName.isPresent()) {
+                    final String instanceName = optionalInstanceName.get();
+                    if (taskMap.containsKey(instanceName)) {
+                        taskMap.get(instanceName).setTask(taskMap.get(instanceName).getTask() + 1);
+                    }
+                }
+            });
+
+            List<JenkinsInstanceTask.Task> tasks = taskMap.keySet().stream().map(taskMap::get).toList();
+            JenkinsInstanceTask jenkinsInstanceTask = JenkinsInstanceTask.builder()
+                    .instanceTasks(tasks)
+                    .build();
+            jenkinsInstanceTask.sort();
+            return activeInstances.get(jenkinsInstanceTask.getIndex());
+        } catch (Exception e) {
+            log.error("选取实例错误: {}", e.getMessage());
+            return getRandomOneInstance(activeInstances);
+        }
+    }
+
+    /**
+     * 随机选择一个实例
+     *
+     * @param activeInstances
+     * @return
+     */
+    private DatasourceInstance getRandomOneInstance(List<DatasourceInstance> activeInstances) {
+        Collections.shuffle(activeInstances);
+        return activeInstances.get(0);
     }
 
 }

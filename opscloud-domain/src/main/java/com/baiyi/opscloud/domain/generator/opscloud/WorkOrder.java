@@ -21,6 +21,9 @@ public class WorkOrder implements Serializable {
      */
     private String name;
 
+    @Column(name = "i18n_en")
+    private String i18nEn;
+
     /**
      * 顺序
      */

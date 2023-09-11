@@ -6,11 +6,14 @@ import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
+import com.baiyi.opscloud.domain.vo.leo.LeoJobVO;
 import com.baiyi.opscloud.packer.IWrapper;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
+import com.baiyi.opscloud.service.leo.LeoJobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +36,8 @@ public class ApplicationPacker implements IWrapper<ApplicationVO.Application> {
 
     private final ApplicationResourceDsInstancePacker applicationResourceInstancePacker;
 
+    private final LeoJobService leoJobService;
+
     @Override
     @TagsWrapper
     @BizDocWrapper
@@ -49,6 +54,9 @@ public class ApplicationPacker implements IWrapper<ApplicationVO.Application> {
         Map<String, List<ApplicationResourceVO.Resource>> resourcesMap = resources.stream()
                 .collect(Collectors.groupingBy(ApplicationResourceVO.Resource::getResourceType));
         application.setResourceMap(resourcesMap);
+        // LeoJob
+        List<LeoJob> jobs = leoJobService.queryJobWithApplicationId(application.getId());
+        application.setLeoJobs(BeanCopierUtil.copyListProperties(jobs, LeoJobVO.Job.class));
     }
 
     /**

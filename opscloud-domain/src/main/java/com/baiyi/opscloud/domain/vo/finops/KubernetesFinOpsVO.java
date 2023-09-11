@@ -30,7 +30,7 @@ public class KubernetesFinOpsVO {
 
         public static final FinOpsReport EMPTY = FinOpsReport.builder().build();
 
-        public void sort(){
+        public void sort() {
             Collections.sort(this.data);
         }
 
@@ -45,7 +45,7 @@ public class KubernetesFinOpsVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @Schema
-    public static class FinOpsData implements Comparable<FinOpsData>,Serializable {
+    public static class FinOpsData implements Comparable<FinOpsData>, Serializable {
 
         @Serial
         private static final long serialVersionUID = 6602738677515278417L;

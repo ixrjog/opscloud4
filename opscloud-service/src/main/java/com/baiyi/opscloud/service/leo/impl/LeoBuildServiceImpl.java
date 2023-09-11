@@ -166,6 +166,15 @@ public class LeoBuildServiceImpl implements LeoBuildService {
     }
 
     @Override
+    public List<LeoBuild> queryNotFinishBuild() {
+        Example example = new Example(LeoBuild.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isFinish", false);
+        example.setOrderByClause("id desc");
+        return buildMapper.selectByExample(example);
+    }
+
+    @Override
     public int countRunningWithJobId(int jobId) {
         Example example = new Example(LeoBuild.class);
         Example.Criteria criteria = example.createCriteria();
