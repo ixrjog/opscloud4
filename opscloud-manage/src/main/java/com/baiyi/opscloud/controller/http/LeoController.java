@@ -2,6 +2,7 @@ package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.param.leo.*;
@@ -275,9 +276,8 @@ public class LeoController {
 
     @Operation(summary = "克隆部署无状态")
     @PostMapping(value = "/deploy/deployment/clone", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> cloneLeoDeployDeployment(@RequestBody @Valid LeoDeployParam.CloneDeployDeployment cloneDeployDeployment) {
-        deployFacade.cloneDeployDeployment(cloneDeployDeployment);
-        return HttpResult.SUCCESS;
+    public HttpResult<List<DatasourceInstanceAsset>> cloneLeoDeployDeployment(@RequestBody @Valid LeoDeployParam.CloneDeployDeployment cloneDeployDeployment) {
+        return new HttpResult<>(deployFacade.cloneDeployDeployment(cloneDeployDeployment));
     }
 
     @Operation(summary = "删除部署无状态")

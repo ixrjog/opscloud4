@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.leo;
 
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.param.leo.LeoDeployParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
@@ -59,7 +60,7 @@ public interface LeoDeployFacade {
      *
      * @param cloneDeployDeployment
      */
-    void cloneDeployDeployment(LeoDeployParam.CloneDeployDeployment cloneDeployDeployment);
+    List<DatasourceInstanceAsset> cloneDeployDeployment(LeoDeployParam.CloneDeployDeployment cloneDeployDeployment);
 
     void delDeployDeployment(int assetId);
 

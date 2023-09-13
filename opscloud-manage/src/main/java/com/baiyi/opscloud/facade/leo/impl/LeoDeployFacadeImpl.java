@@ -293,7 +293,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     }
 
     @Override
-    public void cloneDeployDeployment(LeoDeployParam.CloneDeployDeployment cloneDeployDeployment) {
+    public List<DatasourceInstanceAsset> cloneDeployDeployment(LeoDeployParam.CloneDeployDeployment cloneDeployDeployment) {
         LeoJob leoJob = jobService.getById(cloneDeployDeployment.getJobId());
         if (leoJob == null) {
             throw new LeoDeployException("Leo job does not exist: jobId={}", cloneDeployDeployment.getJobId());
@@ -341,6 +341,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                     .build();
             applicationFacade.bindApplicationResource(resource);
         });
+        return assets ;
     }
 
     private void preUpdateDeploymentTemplateLabels(Deployment deployment, Map<String, String> templateLabels) {

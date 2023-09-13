@@ -73,7 +73,7 @@ public class DsInstanceFacadeImpl<T> implements DsInstanceFacade<T> {
 
     @Override
     public void setDsInstanceConfig(DsAssetParam.SetDsInstanceConfig setDsInstanceConfig) {
-        AbstractSetDsInstanceConfigProvider<T> setDsInstanceConfigProvider = SetDsInstanceConfigFactory.getProvider(setDsInstanceConfig.getInstanceType());
+        AbstractSetDsInstanceConfigProvider<?> setDsInstanceConfigProvider = SetDsInstanceConfigFactory.getProvider(setDsInstanceConfig.getInstanceType());
         assert setDsInstanceConfigProvider != null;
         setDsInstanceConfigProvider.setConfig(setDsInstanceConfig.getInstanceId());
     }
