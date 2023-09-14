@@ -29,7 +29,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class OnsGroupTicketV5Processor  extends AbstractDsAssetExtendedBaseTicketProcessor<OnsGroupV5.Group, AliyunConfig> {
+public class OnsGroupTicketV5Processor extends AbstractDsAssetExtendedBaseTicketProcessor<OnsGroupV5.Group, AliyunConfig> {
 
     private final AliyunOnsGroupV5Driver aliyunOnsGroupV5Driver;
 
@@ -94,6 +94,22 @@ public class OnsGroupTicketV5Processor  extends AbstractDsAssetExtendedBaseTicke
         try {
             OnsGroupV5.Group group = aliyunOnsGroupV5Driver.getGroup(entry.getRegionId(), config, entry.getInstanceId(), entry.getConsumerGroupId());
             pullAsset(ticketEntry, group);
+            DatasourceInstanceAsset queryAssetAsset = dsInstanceAssetService.getByUniqueKey(DatasourceInstanceAsset.builder()
+                    .instanceUuid(ticketEntry.getInstanceUuid())
+                    .assetId(group.getInstanceId())
+                    .assetType(DsAssetTypeConstants.ONS5_GROUP.name())
+                    .assetKey(group.getConsumerGroupId())
+                    .build());
+            DatasourceInstanceAsset asset = dsInstanceAssetService.getByUniqueKey(queryAssetAsset);
+            DatasourceInstanceAsset queryParentAssetAsset = dsInstanceAssetService.getByUniqueKey(DatasourceInstanceAsset.builder()
+                    .instanceUuid(ticketEntry.getInstanceUuid())
+                    .assetId(group.getInstanceId())
+                    .assetType(DsAssetTypeConstants.ONS5_INSTANCE.name())
+                    .assetKey(group.getInstanceId())
+                    .build());
+            DatasourceInstanceAsset parentAsset = dsInstanceAssetService.getByUniqueKey(queryParentAssetAsset);
+            asset.setParentId(parentAsset.getId());
+            dsInstanceAssetService.update(asset);
         } catch (Exception e) {
             throw new TicketProcessException("GID创建失败: GID={}", entry.getConsumerGroupId());
         }

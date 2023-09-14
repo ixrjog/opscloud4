@@ -94,6 +94,22 @@ public class OnsGroupTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
         try {
             OnsRocketMqGroup.Group group = aliyunOnsRocketMqGroupDrive.getGroup(entry.getRegionId(), config, entry.getInstanceId(), entry.getGroupId(), entry.getGroupType());
             pullAsset(ticketEntry, group);
+            DatasourceInstanceAsset queryAssetAsset = dsInstanceAssetService.getByUniqueKey(DatasourceInstanceAsset.builder()
+                    .instanceUuid(ticketEntry.getInstanceUuid())
+                    .assetId(group.getInstanceId())
+                    .assetType(DsAssetTypeConstants.ONS_ROCKETMQ_GROUP.name())
+                    .assetKey(group.getGroupId())
+                    .build());
+            DatasourceInstanceAsset asset = dsInstanceAssetService.getByUniqueKey(queryAssetAsset);
+            DatasourceInstanceAsset queryParentAssetAsset = dsInstanceAssetService.getByUniqueKey(DatasourceInstanceAsset.builder()
+                    .instanceUuid(ticketEntry.getInstanceUuid())
+                    .assetId(group.getInstanceId())
+                    .assetType(DsAssetTypeConstants.ONS_ROCKETMQ_INSTANCE.name())
+                    .assetKey(group.getInstanceId())
+                    .build());
+            DatasourceInstanceAsset parentAsset = dsInstanceAssetService.getByUniqueKey(queryParentAssetAsset);
+            asset.setParentId(parentAsset.getId());
+            dsInstanceAssetService.update(asset);
         } catch (ClientException e) {
             throw new TicketProcessException("GID创建失败: GID={}", entry.getGroupId());
         }
