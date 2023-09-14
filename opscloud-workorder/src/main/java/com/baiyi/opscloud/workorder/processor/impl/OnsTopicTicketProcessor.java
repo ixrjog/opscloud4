@@ -97,6 +97,22 @@ public class OnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
         try {
             OnsRocketMqTopic.Topic topic = aliyunOnsRocketMqTopicDrive.getTopic(entry.getRegionId(), config, entry.getInstanceId(), entry.getTopic());
             pullAsset(ticketEntry, topic);
+            DatasourceInstanceAsset queryAssetAsset = dsInstanceAssetService.getByUniqueKey(DatasourceInstanceAsset.builder()
+                    .instanceUuid(ticketEntry.getInstanceUuid())
+                    .assetId(topic.getInstanceId())
+                    .assetType(DsAssetTypeConstants.ONS_ROCKETMQ_TOPIC.name())
+                    .assetKey(topic.getTopic())
+                    .build());
+            DatasourceInstanceAsset asset = dsInstanceAssetService.getByUniqueKey(queryAssetAsset);
+            DatasourceInstanceAsset queryParentAssetAsset = dsInstanceAssetService.getByUniqueKey(DatasourceInstanceAsset.builder()
+                    .instanceUuid(ticketEntry.getInstanceUuid())
+                    .assetId(topic.getInstanceId())
+                    .assetType(DsAssetTypeConstants.ONS_ROCKETMQ_INSTANCE.name())
+                    .assetKey(topic.getInstanceId())
+                    .build());
+            DatasourceInstanceAsset parentAsset = dsInstanceAssetService.getByUniqueKey(queryParentAssetAsset);
+            asset.setParentId(parentAsset.getId());
+            dsInstanceAssetService.update(asset);
         } catch (ClientException e) {
             throw new TicketProcessException("Topic创建失败: Topic={}", entry.getTopic());
         }

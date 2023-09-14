@@ -94,6 +94,22 @@ public class OnsTopicTicketV5Processor extends AbstractDsAssetExtendedBaseTicket
         try {
             OnsTopicV5.Topic topic = aliyunOnsTopicV5Driver.getTopic(entry.getRegionId(), config, entry.getInstanceId(), entry.getTopicName());
             pullAsset(ticketEntry, topic);
+            DatasourceInstanceAsset queryAssetAsset = dsInstanceAssetService.getByUniqueKey(DatasourceInstanceAsset.builder()
+                    .instanceUuid(ticketEntry.getInstanceUuid())
+                    .assetId(topic.getInstanceId())
+                    .assetType(DsAssetTypeConstants.ONS5_TOPIC.name())
+                    .assetKey(topic.getTopicName())
+                    .build());
+            DatasourceInstanceAsset asset = dsInstanceAssetService.getByUniqueKey(queryAssetAsset);
+            DatasourceInstanceAsset queryParentAssetAsset = dsInstanceAssetService.getByUniqueKey(DatasourceInstanceAsset.builder()
+                    .instanceUuid(ticketEntry.getInstanceUuid())
+                    .assetId(topic.getInstanceId())
+                    .assetType(DsAssetTypeConstants.ONS5_INSTANCE.name())
+                    .assetKey(topic.getInstanceId())
+                    .build());
+            DatasourceInstanceAsset parentAsset = dsInstanceAssetService.getByUniqueKey(queryParentAssetAsset);
+            asset.setParentId(parentAsset.getId());
+            dsInstanceAssetService.update(asset);
         } catch (Exception e) {
             throw new TicketProcessException("Topic创建失败: Topic={}", entry.getTopicName());
         }
