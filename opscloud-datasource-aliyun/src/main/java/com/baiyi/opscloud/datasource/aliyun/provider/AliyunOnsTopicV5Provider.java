@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.datasource.aliyun.provider;
 
-import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
@@ -9,45 +8,46 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetChildProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsRocketMqInstanceDriver;
-import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsRocketMqTopicDriver;
+import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsInstanceV5Driver;
+import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsTopicV5Driver;
+import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsInstanceV5;
+import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsTopicV5;
 import com.baiyi.opscloud.datasource.aliyun.util.AliyunRegionIdUtil;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
-import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsInstance;
-import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsRocketMqTopic;
-import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-
 import jakarta.annotation.Resource;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.stereotype.Component;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_ONS_ROCKETMQ_TOPIC;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_ONS5_TOPIC;
 
 /**
- * @Author baiyi
- * @Date 2021/9/30 3:09 下午
- * @Version 1.0
+ * @Author 修远
+ * @Date 2023/9/12 12:48 AM
+ * @Since 1.0
  */
+
 @Component
-@ChildProvider(parentType = DsAssetTypeConstants.ONS_ROCKETMQ_INSTANCE)
-public class AliyunOnsRocketMqTopicProvider extends AbstractAssetChildProvider<OnsRocketMqTopic.Topic> {
+@ChildProvider(parentType = DsAssetTypeConstants.ONS5_INSTANCE)
+public class AliyunOnsTopicV5Provider extends AbstractAssetChildProvider<OnsTopicV5.Topic> {
 
     @Resource
-    private AliyunOnsRocketMqInstanceDriver aliyunOnsRocketMqInstanceDriver;
+    private AliyunOnsInstanceV5Driver aliyunOnsInstanceV5Driver;
 
     @Resource
-    private AliyunOnsRocketMqTopicDriver aliyunOnsRocketMqTopicDriver;
+    private AliyunOnsTopicV5Driver aliyunOnsTopicV5Driver;
 
     @Resource
-    private AliyunOnsRocketMqTopicProvider aliyunOnsRocketMqTopicProvider;
+    private AliyunOnsTopicV5Provider aliyunOnsTopicV5Provider;
 
     @Override
-    @SingleTask(name = PULL_ALIYUN_ONS_ROCKETMQ_TOPIC, lockTime = "5m")
+    @SingleTask(name = PULL_ALIYUN_ONS5_TOPIC, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -71,33 +71,33 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetChildProvider<O
     }
 
     @Override
-    protected List<OnsRocketMqTopic.Topic> listEntities(DsInstanceContext dsInstanceContext) {
+    protected List<OnsTopicV5.Topic> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         Set<String> regionIds = AliyunRegionIdUtil.toOnsRegionIds(aliyun);
-        List<OnsRocketMqTopic.Topic> entities = Lists.newArrayList();
+        List<OnsTopicV5.Topic> entities = Lists.newArrayList();
         regionIds.forEach(regionId -> {
             try {
-                List<OnsInstance.InstanceBaseInfo> instances = aliyunOnsRocketMqInstanceDriver.listInstance(regionId, aliyun);
+                List<OnsInstanceV5.InstanceInfo> instances = aliyunOnsInstanceV5Driver.listInstance(regionId, aliyun);
                 if (!CollectionUtils.isEmpty(instances)) {
                     instances.forEach(instance -> {
                         try {
-                            entities.addAll(aliyunOnsRocketMqTopicDriver.listTopic(regionId, aliyun, instance.getInstanceId()));
-                        } catch (ClientException ignored) {
+                            entities.addAll(aliyunOnsTopicV5Driver.listTopic(regionId, aliyun, instance.getInstanceId()));
+                        } catch (Exception ignored) {
                         }
                     });
                 }
-            } catch (ClientException ignored) {
+            } catch (Exception ignored) {
             }
         });
         return entities;
     }
 
     @Override
-    protected List<OnsRocketMqTopic.Topic> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
+    protected List<OnsTopicV5.Topic> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         try {
-            return aliyunOnsRocketMqTopicDriver.listTopic(asset.getRegionId(), aliyun, asset.getAssetId());
-        } catch (ClientException e) {
+            return aliyunOnsTopicV5Driver.listTopic(asset.getRegionId(), aliyun, asset.getAssetId());
+        } catch (Exception e) {
             return Collections.emptyList();
         }
     }
@@ -109,12 +109,12 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetChildProvider<O
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeConstants.ONS_ROCKETMQ_TOPIC.name();
+        return DsAssetTypeConstants.ONS5_TOPIC.name();
     }
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(aliyunOnsRocketMqTopicProvider);
+        AssetProviderFactory.register(aliyunOnsTopicV5Provider);
     }
 
 }

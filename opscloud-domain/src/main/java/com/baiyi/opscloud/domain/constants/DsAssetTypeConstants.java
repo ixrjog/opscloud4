@@ -40,6 +40,10 @@ public enum DsAssetTypeConstants {
     ONS_ROCKETMQ_TOPIC,
     ONS_ROCKETMQ_GROUP,
 
+    ONS5_INSTANCE,
+    ONS5_TOPIC,
+    ONS5_GROUP,
+
     EC2,
     IAM_POLICY,
     IAM_USER,

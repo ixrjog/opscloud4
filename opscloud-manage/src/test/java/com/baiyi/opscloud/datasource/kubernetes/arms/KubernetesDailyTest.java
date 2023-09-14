@@ -58,7 +58,7 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
                     }
                 }
                 if (flag) {
-                    EnvVar agentEnvVar = new EnvVar("JAVA_JVM_AGENT", "-javaagent:/jmx_prometheus_javaagent-0.16.1.jar=9999:/prometheus-jmx-config.yaml -javaagent:/pp-agent/arms-agent.jar -javaagent:/arms-agent/arms-bootstrap-1.7.0-SNAPSHOT.jar -Darms.licenseKey=ib04e3ad3a@2a60bfc4abfe2d0 -Darms.appName=$(APP_NAME)", null);
+                    EnvVar agentEnvVar = new EnvVar("JAVA_JVM_AGENT", "-javaagent:/pp-agent/arms-agent.jar", null);
                     newEnvVars.add(agentEnvVar);
                 }
                 optionalContainer.get().setEnv(newEnvVars);

@@ -1,8 +1,7 @@
 package com.baiyi.opscloud.datasource.aws.ec2.driver;
 
 import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
-import com.amazonaws.services.ec2.model.DescribeInstancesResult;
+import com.amazonaws.services.ec2.model.*;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.datasource.aws.ec2.entity.Ec2Instance;
@@ -14,11 +13,11 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +69,29 @@ public class AmazonEc2Driver {
 
     private AmazonEC2 buildAmazonEC2(AwsConfig.Aws aws, String regionId) {
         return AmazonEC2Service.buildAmazonEC2(aws, regionId);
+    }
+
+    public void createTags(AwsConfig.Aws aws, String regionId, List<String> resources, List<Tag> tags) {
+        CreateTagsRequest request = new CreateTagsRequest(resources, tags);
+        try {
+            buildAmazonEC2(aws, regionId).createTags(request);
+        } catch (Exception e) {
+            log.error("CreateTags 错误: {}", e.getMessage());
+        }
+    }
+
+    public List<Instance> listByInstanceIds(AwsConfig.Aws aws, String regionId, List<String> instanceIds) {
+        DescribeInstancesRequest request = new DescribeInstancesRequest();
+        request.setInstanceIds(instanceIds);
+        List<Instance> instanceList = Lists.newArrayList();
+        while (true) {
+            DescribeInstancesResult response = buildAmazonEC2(aws, regionId).describeInstances(request);
+            response.getReservations().forEach(e -> instanceList.addAll(e.getInstances()));
+            request.setNextToken(response.getNextToken());
+            if (response.getNextToken() == null) {
+                return instanceList;
+            }
+        }
     }
 
 }

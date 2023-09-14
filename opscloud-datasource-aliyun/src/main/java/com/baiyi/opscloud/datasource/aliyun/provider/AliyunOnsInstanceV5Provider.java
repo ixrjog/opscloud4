@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.datasource.aliyun.provider;
 
-import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
@@ -9,38 +8,38 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsRocketMqInstanceDriver;
+import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsInstanceV5Driver;
+import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsInstanceV5;
 import com.baiyi.opscloud.datasource.aliyun.util.AliyunRegionIdUtil;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.google.common.collect.Lists;
-import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsInstance;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Set;
 
-import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_ONS_ROCKETMQ_INSTANCE;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_ONS5_INSTANCE;
 
 /**
- * @Author baiyi
- * @Date 2021/12/14 5:26 PM
- * @Version 1.0
+ * @Author 修远
+ * @Date 2023/9/12 12:48 AM
+ * @Since 1.0
  */
 @Component
-public class AliyunOnsRocketMqInstanceProvider extends BaseAssetProvider<OnsInstance.InstanceBaseInfo> {
+public class AliyunOnsInstanceV5Provider extends BaseAssetProvider<OnsInstanceV5.InstanceInfo> {
 
     @Resource
-    private AliyunOnsRocketMqInstanceDriver aliyunOnsRocketMqInstanceDriver;
+    private AliyunOnsInstanceV5Driver aliyunOnsInstanceV5Driver;
 
     @Resource
-    private AliyunOnsRocketMqInstanceProvider aliyunOnsRocketMqInstanceProvider;
+    private AliyunOnsInstanceV5Provider aliyunOnsInstanceV5Provider;
 
     @Override
-    @EnablePullChild(type = DsAssetTypeConstants.ONS_ROCKETMQ_INSTANCE)
-    @SingleTask(name = PULL_ALIYUN_ONS_ROCKETMQ_INSTANCE, lockTime = "2m")
+    @EnablePullChild(type = DsAssetTypeConstants.ONS5_INSTANCE)
+    @SingleTask(name = PULL_ALIYUN_ONS5_INSTANCE, lockTime = "2m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -58,14 +57,14 @@ public class AliyunOnsRocketMqInstanceProvider extends BaseAssetProvider<OnsInst
     }
 
     @Override
-    protected List<OnsInstance.InstanceBaseInfo> listEntities(DsInstanceContext dsInstanceContext) {
+    protected List<OnsInstanceV5.InstanceInfo> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         Set<String> regionIds = AliyunRegionIdUtil.toOnsRegionIds(aliyun);
-        List<OnsInstance.InstanceBaseInfo> entities = Lists.newArrayList();
+        List<OnsInstanceV5.InstanceInfo> entities = Lists.newArrayList();
         regionIds.forEach(regionId -> {
             try {
-                entities.addAll(aliyunOnsRocketMqInstanceDriver.listInstance(regionId, aliyun));
-            } catch (ClientException ignored) {
+                entities.addAll(aliyunOnsInstanceV5Driver.listInstance(regionId, aliyun));
+            } catch (Exception ignored) {
             }
         });
         return entities;
@@ -78,12 +77,13 @@ public class AliyunOnsRocketMqInstanceProvider extends BaseAssetProvider<OnsInst
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeConstants.ONS_ROCKETMQ_INSTANCE.name();
+        return DsAssetTypeConstants.ONS5_INSTANCE.name();
     }
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(aliyunOnsRocketMqInstanceProvider);
+        AssetProviderFactory.register(aliyunOnsInstanceV5Provider);
     }
 
 }
+
