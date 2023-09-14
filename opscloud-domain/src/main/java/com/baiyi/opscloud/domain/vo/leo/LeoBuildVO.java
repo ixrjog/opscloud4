@@ -144,7 +144,7 @@ public class LeoBuildVO {
     public static class MavenPublishInfo implements Serializable {
 
         @Serial
-        private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = -2414452655205061922L;
 
         public static final MavenPublishInfo EMPTY_INFO = MavenPublishInfo.builder().build();
 
@@ -173,7 +173,7 @@ public class LeoBuildVO {
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema
-    public static class Children implements Serializable {
+    public static class Children implements ReadableTime.IAgo, Serializable {
 
         @Serial
         private static final long serialVersionUID = -1561200881442892379L;
@@ -186,13 +186,25 @@ public class LeoBuildVO {
         private String commitId;
         private String commitMessage;
         private String commitWebUrl;
+
+        private String authorName;
+        private String authorEmail;
+        private Date authoredDate;
+
+        private String ago;
+
+        @Override
+        public Date getAgoTime() {
+            return authoredDate;
+        }
+
     }
 
     @Data
     @Builder
     @Schema
     @AllArgsConstructor
-    public static class BranchOrTag implements Serializable {
+    public static class BranchOrTag implements ReadableTime.IAgo, Serializable {
 
         @Serial
         private static final long serialVersionUID = 8033652452171334565L;
@@ -202,6 +214,16 @@ public class LeoBuildVO {
         private String commit;
         private String commitMessage;
         private String commitWebUrl;
+        private String authorName;
+        private String authorEmail;
+        private Date authoredDate;
+
+        private String ago;
+
+        @Override
+        public Date getAgoTime() {
+            return authoredDate;
+        }
 
     }
 

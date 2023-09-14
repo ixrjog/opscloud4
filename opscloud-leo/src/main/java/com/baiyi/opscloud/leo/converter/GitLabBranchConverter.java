@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.leo.converter;
 
+import com.baiyi.opscloud.common.util.time.AgoUtil;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +34,10 @@ public class GitLabBranchConverter {
                 .commitId(e.getCommit())
                 .commitMessage(e.getCommitMessage())
                 .commitWebUrl(e.getCommitWebUrl())
+                .authorName(e.getAuthorName())
+                .authorEmail(e.getAuthorEmail())
+                .authoredDate(e.getAuthoredDate())
+                .ago(e.getAgo())
                 .build()).collect(Collectors.toList());
     }
 
@@ -40,13 +45,19 @@ public class GitLabBranchConverter {
         if (CollectionUtils.isEmpty(branches)) {
             return Lists.newArrayList();
         }
-        return branches.stream().map(branch ->
-                LeoBuildVO.BranchOrTag.builder()
-                        .name(branch.getName())
-                        .commit(branch.getCommit().getId())
-                        .commitMessage(branch.getCommit().getMessage())
-                        .commitWebUrl(branch.getCommit().getWebUrl())
-                        .build()
+        return branches.stream().map(branch -> {
+                    LeoBuildVO.BranchOrTag branchOrTag = LeoBuildVO.BranchOrTag.builder()
+                            .name(branch.getName())
+                            .commit(branch.getCommit().getId())
+                            .commitMessage(branch.getCommit().getMessage())
+                            .commitWebUrl(branch.getCommit().getWebUrl())
+                            .authorName(branch.getCommit().getAuthorName())
+                            .authorEmail(branch.getCommit().getAuthorEmail())
+                            .authoredDate(branch.getCommit().getAuthoredDate())
+                            .build();
+                    branchOrTag.setAgo(AgoUtil.format(branchOrTag.getAgoTime()));
+                    return branchOrTag;
+                }
         ).collect(Collectors.toList());
     }
 
