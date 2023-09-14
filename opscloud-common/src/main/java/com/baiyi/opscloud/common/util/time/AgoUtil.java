@@ -24,7 +24,7 @@ public class AgoUtil {
     private static final String ONE_MINUTE_AGO = "分钟前";
     private static final String ONE_HOUR_AGO = "小时前";
     private static final String ONE_DAY_AGO = "天前";
-    private static final String ONE_MONTH_AGO = "月前";
+    private static final String ONE_MONTH_AGO = "个月前";
     private static final String ONE_YEAR_AGO = "年前";
 
     public static String format(String gmtDate) {

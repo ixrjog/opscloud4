@@ -24,7 +24,7 @@ public class LaterUtil {
     private static final String ONE_MINUTE_LATER = "分钟后";
     private static final String ONE_HOUR_LATER = "小时后";
     private static final String ONE_DAY_LATER = "天后";
-    private static final String ONE_MONTH_LATER = "月后";
+    private static final String ONE_MONTH_LATER = "个月后";
     private static final String ONE_YEAR_LATER = "年后";
 
     //private static final String SUFFIX = "后";
