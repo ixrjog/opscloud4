@@ -22,8 +22,10 @@ public class ExampleVO {
     @Schema
     public static class HelloWorld {
 
+        public static final HelloWorld EXAMPLE = ExampleVO.HelloWorld.builder().build();
+
         @Builder.Default
-        private String msg = "欢迎来到白衣的运维世界";
+        private String msg = "Welcome to Baiyi's operations world";
 
         @Builder.Default
         private Date requestTime = new Date();
