@@ -69,7 +69,12 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
                 }
                 Optional<EnvVar> agentEnv = envVars.stream().filter(env -> env.getName().equals("JAVA_JVM_AGENT")).findFirst();
                 agentEnv.ifPresent(envVar -> envVar.setValue("-javaagent:/pp-agent/arms-agent.jar"));
-                KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), AWS_NAMESPACE, deployment);
+                try {
+                    KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), AWS_NAMESPACE, deployment);
+                }catch (Exception e) {
+                    print(deployment.getMetadata().getName());
+                }
+
             } else {
                 print(deployment.getMetadata().getName());
             }
