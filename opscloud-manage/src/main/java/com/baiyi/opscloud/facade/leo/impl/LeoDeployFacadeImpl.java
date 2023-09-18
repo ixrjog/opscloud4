@@ -336,7 +336,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .orElseThrow(() -> new LeoDeployException("Container not found: name={}", updateDeployDeploymentContainerEnv.getContainerName()));
 
         List<EnvVar> appendEnvs = Lists.newArrayList();
-        for (LeoDeployParam.UpdateEnv env : updateDeployDeploymentContainerEnv.getEnvs()) {
+        updateDeployDeploymentContainerEnv.getEnvs().forEach(env -> {
             Optional<EnvVar> optionalEnvVar = container.getEnv().stream().filter(e -> env.getName().equals(e.getName())).findFirst();
             if (optionalEnvVar.isPresent()) {
                 // env存在: update
@@ -346,7 +346,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 EnvVar envVar = new EnvVar(env.getName(), env.getValue(), null);
                 appendEnvs.add(envVar);
             }
-        }
+        });
         // append
         container.getEnv().addAll(appendEnvs);
         try {
