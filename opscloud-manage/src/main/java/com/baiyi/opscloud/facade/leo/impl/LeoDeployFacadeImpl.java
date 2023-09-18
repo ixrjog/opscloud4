@@ -293,6 +293,29 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     }
 
     @Override
+    public void updateDeployDeployment(LeoDeployParam.UpdateDeployDeployment updateDeployDeployment) {
+        DatasourceInstanceAsset asset = assetService.getById(updateDeployDeployment.getAssetId());
+        if (asset == null) {
+            throw new LeoDeployException("Asset does not exist: assetId={}", updateDeployDeployment.getAssetId());
+        }
+        KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
+        // 查询原无状态
+        final String namespace = asset.getAssetKey2();
+        final String deploymentName = asset.getAssetKey();
+        Deployment deployment = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), namespace, deploymentName);
+        if (deployment == null) {
+            throw new LeoDeployException("The deployment corresponding to assetId={} does not exist in kubernetes", updateDeployDeployment.getAssetId());
+        }
+        preUpdateDeploymentTemplateLabels(deployment, updateDeployDeployment.getTemplateLabels());
+        // 更新无状态
+        try {
+            KubernetesDeploymentDriver.create(kubernetesConfig.getKubernetes(), namespace, deployment);
+        } catch (Exception e) {
+            throw new LeoDeployException("Kubernetes update deployment err: {}", e.getMessage());
+        }
+    }
+
+    @Override
     public List<DatasourceInstanceAsset> cloneDeployDeployment(LeoDeployParam.CloneDeployDeployment cloneDeployDeployment) {
         LeoJob leoJob = jobService.getById(cloneDeployDeployment.getJobId());
         if (leoJob == null) {
@@ -341,14 +364,18 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                     .build();
             applicationFacade.bindApplicationResource(resource);
         });
-        return assets ;
+        return assets;
     }
 
     private void preUpdateDeploymentTemplateLabels(Deployment deployment, Map<String, String> templateLabels) {
         if (templateLabels == null || templateLabels.isEmpty()) {
             return;
         }
-        deployment.getSpec().getTemplate().getMetadata().getLabels().putAll(templateLabels);
+        deployment.getSpec()
+                .getTemplate()
+                .getMetadata()
+                .getLabels()
+                .putAll(templateLabels);
     }
 
     private void preUpdateDeployment(Deployment deployment, String oldName, String newName, Integer replicas) {

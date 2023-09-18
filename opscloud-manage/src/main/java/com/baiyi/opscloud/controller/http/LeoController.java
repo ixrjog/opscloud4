@@ -280,6 +280,13 @@ public class LeoController {
         return new HttpResult<>(deployFacade.cloneDeployDeployment(cloneDeployDeployment));
     }
 
+    @Operation(summary = "更新部署无状态(DevOps组需求)")
+    @PostMapping(value = "/deploy/deployment/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updateLeoDeployDeployment(@RequestBody @Valid LeoDeployParam.UpdateDeployDeployment updateDeployDeployment) {
+        deployFacade.updateDeployDeployment(updateDeployDeployment);
+        return HttpResult.SUCCESS;
+    }
+
     @Operation(summary = "删除部署无状态")
     @DeleteMapping(value = "/deploy/deployment/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> delLeoDeployDeployment(@RequestParam @Schema(description = "资产ID") int assetId) {

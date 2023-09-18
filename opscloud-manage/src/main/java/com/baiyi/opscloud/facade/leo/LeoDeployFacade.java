@@ -62,6 +62,8 @@ public interface LeoDeployFacade {
      */
     List<DatasourceInstanceAsset> cloneDeployDeployment(LeoDeployParam.CloneDeployDeployment cloneDeployDeployment);
 
+    void updateDeployDeployment(LeoDeployParam.UpdateDeployDeployment updateDeployDeployment);
+
     void delDeployDeployment(int assetId);
 
     List<LeoDeployVO.Deploy> getLatestLeoDeploy(LeoMonitorParam.QueryLatestDeploy queryLatestDeploy);

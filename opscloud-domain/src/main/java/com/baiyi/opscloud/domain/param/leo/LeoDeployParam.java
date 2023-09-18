@@ -170,7 +170,24 @@ public class LeoDeployParam {
         @Schema(description = "副本数量")
         private Integer replicas;
 
-        @Schema(description = "容器模板标签")
+        @Schema(description = "容器模板标签: deployment->spec->template->metadata->labels")
+        private Map<String, String> templateLabels;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema
+    public static class UpdateDeployDeployment {
+
+        @NotNull(message = "资产ID不能为空")
+        @Min(value = 0, message = "资产ID不能为空")
+        @Schema(description = "资产ID")
+        private Integer assetId;
+
+        @Schema(description = "容器模板标签: deployment->spec->template->metadata->labels")
         private Map<String, String> templateLabels;
 
     }
