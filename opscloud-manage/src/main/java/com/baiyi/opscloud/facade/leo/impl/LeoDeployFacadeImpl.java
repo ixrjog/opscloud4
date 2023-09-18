@@ -49,14 +49,17 @@ import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentSpec;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Date;
 import java.util.List;
@@ -290,6 +293,67 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         }
         // 删除资产
         assetFacade.deleteAssetByAssetId(assetId);
+    }
+
+    @Override
+    public List<EnvVar> queryLeoDeployDeploymentContainerEnv(@RequestBody @Valid LeoDeployParam.QueryDeployDeploymentContainer queryDeployDeploymentContainer) {
+        DatasourceInstanceAsset asset = assetService.getById(queryDeployDeploymentContainer.getAssetId());
+        if (asset == null) {
+            throw new LeoDeployException("Asset does not exist: assetId={}", queryDeployDeploymentContainer.getAssetId());
+        }
+        KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
+        // 查询原无状态
+        final String namespace = asset.getAssetKey2();
+        final String deploymentName = asset.getAssetKey();
+        Deployment deployment = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), namespace, deploymentName);
+        if (deployment == null) {
+            throw new LeoDeployException("The deployment corresponding to assetId={} does not exist in kubernetes", queryDeployDeploymentContainer.getAssetId());
+        }
+        List<Container> containers = deployment.getSpec().getTemplate().getSpec().getContainers();
+        return containers.stream()
+                .filter(c -> c.getName().equals(queryDeployDeploymentContainer.getContainerName())).findFirst()
+                .orElseThrow(() -> new LeoDeployException("Container not found: name={}", queryDeployDeploymentContainer.getContainerName()))
+                .getEnv();
+    }
+
+    @Override
+    public void updateLeoDeployDeploymentContainerEnv(@RequestBody @Valid LeoDeployParam.UpdateDeployDeploymentContainerEnv updateDeployDeploymentContainerEnv) {
+        DatasourceInstanceAsset asset = assetService.getById(updateDeployDeploymentContainerEnv.getAssetId());
+        if (asset == null) {
+            throw new LeoDeployException("Asset does not exist: assetId={}", updateDeployDeploymentContainerEnv.getAssetId());
+        }
+        KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
+        // 查询原无状态
+        final String namespace = asset.getAssetKey2();
+        final String deploymentName = asset.getAssetKey();
+        Deployment deployment = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), namespace, deploymentName);
+        if (deployment == null) {
+            throw new LeoDeployException("The deployment corresponding to assetId={} does not exist in kubernetes", updateDeployDeploymentContainerEnv.getAssetId());
+        }
+        List<Container> containers = deployment.getSpec().getTemplate().getSpec().getContainers();
+        Container container = containers.stream()
+                .filter(c -> c.getName().equals(updateDeployDeploymentContainerEnv.getContainerName())).findFirst()
+                .orElseThrow(() -> new LeoDeployException("Container not found: name={}", updateDeployDeploymentContainerEnv.getContainerName()));
+
+        List<EnvVar> appendEnvs = Lists.newArrayList();
+        for (LeoDeployParam.UpdateEnv env : updateDeployDeploymentContainerEnv.getEnvs()) {
+            Optional<EnvVar> optionalEnvVar = container.getEnv().stream().filter(e -> env.getName().equals(e.getName())).findFirst();
+            if (optionalEnvVar.isPresent()) {
+                // env存在: update
+                optionalEnvVar.get().setValue(env.getValue());
+            } else {
+                // env不存: append
+                EnvVar envVar = new EnvVar(env.getName(), env.getValue(), null);
+                appendEnvs.add(envVar);
+            }
+        }
+        // append
+        container.getEnv().addAll(appendEnvs);
+        try {
+            KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), namespace, deployment);
+        } catch (Exception e) {
+            throw new LeoDeployException("Kubernetes update deployment err: {}", e.getMessage());
+        }
     }
 
     @Override

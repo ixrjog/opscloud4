@@ -13,6 +13,7 @@ import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoJobRequestParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.leo.*;
 import com.baiyi.opscloud.facade.leo.*;
+import io.fabric8.kubernetes.api.model.EnvVar;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -281,9 +282,22 @@ public class LeoController {
     }
 
     @Operation(summary = "更新部署无状态(DevOps组需求)")
-    @PostMapping(value = "/deploy/deployment/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/deploy/deployment/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> updateLeoDeployDeployment(@RequestBody @Valid LeoDeployParam.UpdateDeployDeployment updateDeployDeployment) {
         deployFacade.updateDeployDeployment(updateDeployDeployment);
+        return HttpResult.SUCCESS;
+    }
+
+    @Operation(summary = "查询部署无状态容器Env(DevOps组需求)")
+    @PostMapping(value = "/deploy/deployment/container/env/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<EnvVar>> queryLeoDeployDeploymentContainerEnv(@RequestBody @Valid LeoDeployParam.QueryDeployDeploymentContainer queryDeployDeploymentContainer) {
+        return new HttpResult<>(deployFacade.queryLeoDeployDeploymentContainerEnv(queryDeployDeploymentContainer));
+    }
+
+    @Operation(summary = "更新部署无状态容器Env(DevOps组需求)")
+    @PutMapping(value = "/deploy/deployment/container/env/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updateLeoDeployDeploymentContainerEnv(@RequestBody @Valid LeoDeployParam.UpdateDeployDeploymentContainerEnv updateDeployDeploymentContainerEnv) {
+        deployFacade.updateLeoDeployDeploymentContainerEnv(updateDeployDeploymentContainerEnv);
         return HttpResult.SUCCESS;
     }
 

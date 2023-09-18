@@ -58,7 +58,7 @@ public class OnsTopicTicketV5Processor extends AbstractDsAssetExtendedBaseTicket
         if (!entry.getTopicName().startsWith("TOPIC_")) {
             throw new TicketVerifyException("校验工单条目失败: Topic名称必须以TOPIC_开头！");
         }
-        if (!entry.getTopicName().matches("[0-9A-Z_]{9,64}")) {
+        if (!entry.getTopicName().matches("[0-9A-Z_]{9,60}")) {
             throw new TicketVerifyException("校验工单条目失败: Topic名称不合规！");
         }
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
