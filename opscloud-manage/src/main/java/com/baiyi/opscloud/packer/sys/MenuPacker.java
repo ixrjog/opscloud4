@@ -87,7 +87,7 @@ public class MenuPacker {
         if (CollectionUtils.isEmpty(authRoleMenuList)) {
             return Collections.emptyList();
         }
-        List<MenuChild> menuChildren = querySubmenu(authRoleMenuList);
+        List<MenuChild> menuChildren = querySubMenu(authRoleMenuList);
         return wrapVOList(menuChildren);
     }
 
@@ -103,6 +103,7 @@ public class MenuPacker {
             MenuVO.Menu menuVO = MenuVO.Menu.builder()
                     .id(menu.getId())
                     .title(menu.getTitle())
+                    .i18nEn(menu.getI18nEn())
                     .icon(menu.getIcon())
                     .seq(menu.getSeq())
                     .children(sort)
@@ -114,7 +115,7 @@ public class MenuPacker {
                 .collect(Collectors.toList());
     }
 
-    private List<MenuChild> querySubmenu(List<AuthRoleMenu> authRoleMenuList) {
+    private List<MenuChild> querySubMenu(List<AuthRoleMenu> authRoleMenuList) {
         List<Integer> idList = authRoleMenuList.stream().map(AuthRoleMenu::getMenuChildId).collect(Collectors.toList());
         return menuChildService.listByIdList(idList);
     }
@@ -132,7 +133,7 @@ public class MenuPacker {
         if (CollectionUtils.isEmpty(authRoleMenuList)) {
             return Collections.emptyList();
         }
-        List<MenuChild> menuChildren = querySubmenu(authRoleMenuList);
+        List<MenuChild> menuChildren = querySubMenu(authRoleMenuList);
         return wrapVOList(menuChildren);
     }
 

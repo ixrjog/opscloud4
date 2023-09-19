@@ -12,6 +12,9 @@ import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoJobVersionVO;
+import io.fabric8.kubernetes.api.model.EnvVar;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -61,6 +64,12 @@ public interface LeoDeployFacade {
      * @param cloneDeployDeployment
      */
     List<DatasourceInstanceAsset> cloneDeployDeployment(LeoDeployParam.CloneDeployDeployment cloneDeployDeployment);
+
+    void updateDeployDeployment(LeoDeployParam.UpdateDeployDeployment updateDeployDeployment);
+
+    List<EnvVar> queryLeoDeployDeploymentContainerEnv(@RequestBody @Valid LeoDeployParam.QueryDeployDeploymentContainer queryDeployDeploymentContainer);
+
+    void updateLeoDeployDeploymentContainerEnv(@RequestBody @Valid LeoDeployParam.UpdateDeployDeploymentContainerEnv updateDeployDeploymentContainerEnv);
 
     void delDeployDeployment(int assetId);
 

@@ -7,6 +7,7 @@
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="i18n_en" jdbcType="VARCHAR" property="i18nEn" />
     <result column="icon" jdbcType="VARCHAR" property="icon" />
     <result column="seq" jdbcType="INTEGER" property="seq" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />

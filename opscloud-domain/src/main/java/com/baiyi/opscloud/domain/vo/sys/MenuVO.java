@@ -29,6 +29,7 @@ public class MenuVO {
         private static final long serialVersionUID = -2841897420522344967L;
         private Integer id;
         private String title;
+        private String i18nEn;
         private String icon;
         private Integer seq;
         private List<Child> children;
@@ -45,6 +46,7 @@ public class MenuVO {
         private Integer id;
         private Integer menuId;
         private String title;
+        private String i18nEn;
         private String icon;
         private String path;
         private Integer seq;
