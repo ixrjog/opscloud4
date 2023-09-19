@@ -17,6 +17,9 @@ public class Menu {
      */
     private String title;
 
+    @Column(name = "i18n_en")
+    private String i18nEn;
+
     /**
      * 菜单图标
      */

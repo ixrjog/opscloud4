@@ -10,4 +10,5 @@ import com.baiyi.opscloud.domain.vo.user.UIVO;
 public interface UserUIFacade {
 
     UIVO.UIInfo buildUIInfo();
+
 }
