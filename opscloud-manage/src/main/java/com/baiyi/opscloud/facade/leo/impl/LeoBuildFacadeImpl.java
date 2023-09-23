@@ -554,6 +554,17 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
     }
 
     @Override
+    public LeoBuildVO.Build getLeoBuild(int buildId) {
+        LeoBuild leoBuild = buildService.getById(buildId);
+        if (leoBuild == null) {
+            throw new LeoBuildException("Build information does not exist: buildId={}", buildId);
+        }
+        LeoBuildVO.Build build = BeanCopierUtil.copyProperties(leoBuild, LeoBuildVO.Build.class);
+        leoBuildResponsePacker.wrap(build);
+        return build;
+    }
+
+    @Override
     public DataTable<LeoBuildVO.Build> queryMyLeoJobBuildPage(SubscribeLeoBuildRequestParam pageQuery) {
         return subscribeLeoBuildRequestHandler.queryLeoBuildPage(pageQuery);
     }

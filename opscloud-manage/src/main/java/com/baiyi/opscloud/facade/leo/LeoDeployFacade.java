@@ -75,4 +75,6 @@ public interface LeoDeployFacade {
 
     List<LeoDeployVO.Deploy> getLatestLeoDeploy(LeoMonitorParam.QueryLatestDeploy queryLatestDeploy);
 
+    LeoDeployVO.Deploy getLeoDeploy(int deployId);
+
 }

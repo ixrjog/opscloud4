@@ -28,6 +28,7 @@ public interface LeoBuildFacade {
 
     /**
      * 关闭任务
+     *
      * @param buildId
      */
     void closeBuild(int buildId);
@@ -54,6 +55,8 @@ public interface LeoBuildFacade {
     void updateLeoBuild(LeoBuildParam.UpdateBuild updateBuild);
 
     DataTable<LeoBuildVO.Build> queryLeoJobBuildPage(LeoJobParam.JobBuildPageQuery pageQuery);
+
+    LeoBuildVO.Build getLeoBuild(int buildId);
 
     DataTable<LeoBuildVO.Build> queryMyLeoJobBuildPage(SubscribeLeoBuildRequestParam pageQuery);
 

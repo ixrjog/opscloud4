@@ -248,6 +248,12 @@ public class LeoController {
         return HttpResult.SUCCESS;
     }
 
+    @Operation(summary = "查询构建详情")
+    @GetMapping(value = "/build/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<LeoBuildVO.Build> getLeoBuild(@RequestParam @Valid int buildId) {
+        return new HttpResult<>(buildFacade.getLeoBuild(buildId));
+    }
+
     @Operation(summary = "删除指定的构建信息")
     @DeleteMapping(value = "/build/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteLeoBuildById(@RequestParam @Valid int buildId) {
@@ -320,6 +326,12 @@ public class LeoController {
     public HttpResult<Boolean> stopLeoDeploy(@RequestParam @Valid int deployId) {
         deployFacade.stopDeploy(deployId);
         return HttpResult.SUCCESS;
+    }
+
+    @Operation(summary = "查询部署详情")
+    @GetMapping(value = "/deploy/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<LeoDeployVO.Deploy> getLeoDeploy(@RequestParam @Valid int deployId) {
+        return new HttpResult<>(deployFacade.getLeoDeploy(deployId));
     }
 
     // Pipeline

@@ -514,4 +514,15 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public LeoDeployVO.Deploy getLeoDeploy(int deployId) {
+        LeoDeploy leoDeploy = deployService.getById(deployId);
+        if (leoDeploy == null) {
+            throw new LeoDeployException("Deploy information does not exist: deployId={}", deployId);
+        }
+        LeoDeployVO.Deploy deploy = BeanCopierUtil.copyProperties(leoDeploy, LeoDeployVO.Deploy.class);
+        deployResponsePacker.wrap(deploy);
+        return deploy;
+    }
+
 }
