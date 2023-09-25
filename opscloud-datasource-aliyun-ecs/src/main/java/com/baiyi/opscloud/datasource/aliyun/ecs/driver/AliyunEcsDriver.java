@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.baiyi.opscloud.datasource.aliyun.core.SimpleAliyunClient.Query.PAGE_SIZE;
@@ -93,6 +94,19 @@ public class AliyunEcsDriver {
             log.error(e.getMessage());
         }
         return securityGroups;
+    }
+
+    public List<DescribeDisksResponse.Disk> describeDisks(String regionId, AliyunConfig.Aliyun aliyun, String instanceId) {
+        try {
+            DescribeDisksRequest describe = new DescribeDisksRequest();
+            describe.setSysRegionId(regionId);
+            describe.setInstanceId(instanceId);
+            DescribeDisksResponse response = aliyunClient.getAcsResponse(regionId, aliyun, describe);
+            return response.getDisks();
+        } catch (ClientException e) {
+            log.error(e.getMessage());
+            return Collections.emptyList();
+        }
     }
 
 }

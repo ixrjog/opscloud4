@@ -21,4 +21,8 @@ public class BaseAliyunTest extends BaseUnit {
         return dsConfigHelper.build(dsConfigHelper.getConfigByDsType(DsTypeEnum.ALIYUN.getType()), AliyunConfig.class);
     }
 
+    protected AliyunConfig getConfigById(int id) {
+        return dsConfigHelper.build(dsConfigHelper.getConfigById(id), AliyunConfig.class);
+    }
+
 }

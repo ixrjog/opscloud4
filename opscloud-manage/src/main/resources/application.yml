@@ -2,8 +2,14 @@ spring:
   application:
     name: opscloud
     version: 4.5.0
+  lifecycle:
+    timeout-per-shutdown-phase: 60s
+  # 关闭控制台
+  shell:
+    interactive:
+      enabled: false
 
-#  web:
+  #  web:
 #    resources:
 #      static-locations: classpath:/static/
 #  mvc:
@@ -85,6 +91,7 @@ server:
       max: 800
       # Tomcat启动初始化的线程数，默认值25
       min-spare: 25
+  shutdown: graceful
 
 pagehelper:
   helper-dialect: mysql
@@ -105,9 +112,6 @@ mapper:
   not-empty: true
   identity: MYSQL
   before: false
-
-# 关闭控制台
-spring.shell.interactive.enabled: false
 
 ssh:
   shell:
