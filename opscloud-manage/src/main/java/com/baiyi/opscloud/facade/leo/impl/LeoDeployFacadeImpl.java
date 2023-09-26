@@ -373,7 +373,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         preUpdateDeploymentTemplateLabels(deployment, updateDeployDeployment.getTemplateLabels());
         // 更新无状态
         try {
-            KubernetesDeploymentDriver.create(kubernetesConfig.getKubernetes(), namespace, deployment);
+            KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), namespace, deployment);
         } catch (Exception e) {
             throw new LeoDeployException("Kubernetes update deployment err: {}", e.getMessage());
         }
