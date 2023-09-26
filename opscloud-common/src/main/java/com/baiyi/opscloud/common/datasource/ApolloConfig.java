@@ -58,6 +58,7 @@ public class ApolloConfig extends BaseDsConfig {
     @Schema
     public static class Release {
         private Interceptor interceptor;
+        private String notify;
     }
 
     @Data

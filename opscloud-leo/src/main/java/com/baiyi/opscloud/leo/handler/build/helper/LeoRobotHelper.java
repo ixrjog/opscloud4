@@ -35,14 +35,14 @@ public class LeoRobotHelper {
                 .orElseThrow(() -> new LeoBuildException("未找到DingtalkRobot配置！"));
     }
 
-    public void send(DatasourceInstance dsInstance,String msg) {
+    public void send(DatasourceInstance dsInstance, String msg) {
         DatasourceConfig dsConfig = dsConfigHelper.getConfigById(dsInstance.getConfigId());
         DingtalkConfig dingtalkConfig = dsConfigHelper.build(dsConfig, DingtalkConfig.class);
         final String token = Optional.of(dingtalkConfig)
                 .map(DingtalkConfig::getRobot)
                 .map(DingtalkConfig.Robot::getToken)
                 .orElseThrow(() -> new LeoBuildException("未找到DingtalkRobot Token配置！"));
-        dingtalkSendHelper.send(token,msg);
+        dingtalkSendHelper.send(token, msg);
     }
 
 }

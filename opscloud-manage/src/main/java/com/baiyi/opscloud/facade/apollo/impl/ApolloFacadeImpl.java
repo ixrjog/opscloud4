@@ -4,23 +4,29 @@ import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ApolloConfig;
 import com.baiyi.opscloud.common.holder.WorkOrderApolloReleaseHolder;
+import com.baiyi.opscloud.common.util.BeetlUtil;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.apollo.entity.InterceptRelease;
 import com.baiyi.opscloud.datasource.apollo.provider.ApolloInterceptReleaseProvider;
-import com.baiyi.opscloud.domain.generator.opscloud.Application;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.domain.generator.opscloud.LeoRule;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.model.WorkOrderToken;
 import com.baiyi.opscloud.domain.param.apollo.ApolloParam;
 import com.baiyi.opscloud.facade.apollo.ApolloFacade;
 import com.baiyi.opscloud.facade.apollo.ApolloRuleValidator;
 import com.baiyi.opscloud.leo.domain.model.LeoRuleModel;
 import com.baiyi.opscloud.leo.exception.LeoInterceptorException;
+import com.baiyi.opscloud.leo.handler.build.helper.ApplicationTagsHelper;
+import com.baiyi.opscloud.leo.handler.build.helper.LeoRobotHelper;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.leo.LeoRuleService;
+import com.baiyi.opscloud.service.template.MessageTemplateService;
+import com.baiyi.opscloud.service.user.UserService;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -28,6 +34,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
@@ -58,6 +65,15 @@ public class ApolloFacadeImpl implements ApolloFacade {
     private final WorkOrderApolloReleaseHolder workOrderApolloReleaseHolder;
 
     private final ApplicationService applicationService;
+
+    private final MessageTemplateService msgTemplateService;
+
+    private final UserService userService;
+
+    private final ApplicationTagsHelper applicationTagsHelper;
+
+    private final LeoRobotHelper leoRobotHelper;
+
 
     private static final int NO_WORK_ORDER_ID = 0;
 
@@ -102,7 +118,7 @@ public class ApolloFacadeImpl implements ApolloFacade {
         // 白名单规则校验
         if (workOrderApolloReleaseHolder.hasKey(application.getId())) {
             WorkOrderToken.ApolloReleaseToken token = workOrderApolloReleaseHolder.getToken(application.getId());
-            recordAsset(apolloConfig, releaseEvent, token.getTicketId());
+            consumeAsset(apolloConfig, releaseEvent, token.getTicketId(), application);
             return HttpResult.SUCCESS;
         }
 
@@ -110,7 +126,7 @@ public class ApolloFacadeImpl implements ApolloFacade {
         HttpResult httpResult;
         try {
             verifyRule(releaseEvent);
-            recordAsset(apolloConfig, releaseEvent, NO_WORK_ORDER_ID);
+            consumeAsset(apolloConfig, releaseEvent, NO_WORK_ORDER_ID, application);
             httpResult = HttpResult.SUCCESS;
         } catch (LeoInterceptorException e) {
             httpResult = HttpResult.builder()
@@ -118,7 +134,7 @@ public class ApolloFacadeImpl implements ApolloFacade {
                     .code(SC_BAD_REQUEST)
                     .msg(e.getMessage())
                     .build();
-            recordAsset(apolloConfig, releaseEvent, httpResult, NO_WORK_ORDER_ID);
+            consumeAsset(apolloConfig, releaseEvent, httpResult, NO_WORK_ORDER_ID);
             return httpResult;
         }
         return httpResult;
@@ -131,8 +147,9 @@ public class ApolloFacadeImpl implements ApolloFacade {
      * @param releaseEvent
      * @param ticketId
      */
-    private void recordAsset(ApolloConfig apolloConfig, ApolloParam.ReleaseEvent releaseEvent, Integer ticketId) {
-        this.recordAsset(apolloConfig, releaseEvent, HttpResult.SUCCESS, ticketId);
+    private void consumeAsset(ApolloConfig apolloConfig, ApolloParam.ReleaseEvent releaseEvent, Integer ticketId, Application application) {
+        this.consumeAsset(apolloConfig, releaseEvent, HttpResult.SUCCESS, ticketId);
+        this.notify(apolloConfig, releaseEvent, ticketId, application);
     }
 
     /**
@@ -143,7 +160,7 @@ public class ApolloFacadeImpl implements ApolloFacade {
      * @param httpResult
      * @param ticketId
      */
-    private void recordAsset(ApolloConfig apolloConfig, ApolloParam.ReleaseEvent releaseEvent, HttpResult httpResult, Integer ticketId) {
+    private void consumeAsset(ApolloConfig apolloConfig, ApolloParam.ReleaseEvent releaseEvent, HttpResult httpResult, Integer ticketId) {
         DatasourceInstance datasourceInstance = dsInstanceService.getByConfigId(apolloConfig.getConfigId());
         if (datasourceInstance == null) {
             return;
@@ -165,6 +182,44 @@ public class ApolloFacadeImpl implements ApolloFacade {
         // 写入资产
         apolloInterceptReleaseProvider.pullAsset(datasourceInstance.getId(), event);
     }
+
+    @Override
+    public void notify(ApolloConfig apolloConfig, ApolloParam.ReleaseEvent releaseEvent, Integer ticketId, Application application) {
+        if (!releaseEvent.getEnv().equalsIgnoreCase("PROD")) {
+            return;
+        }
+        DatasourceInstance datasourceInstance = dsInstanceService.getByConfigId(apolloConfig.getConfigId());
+        // 发送通知
+        try {
+            MessageTemplate messageTemplate = msgTemplateService.getByUniqueKey("APOLLO_RELEASE", "DINGTALK_ROBOT", "markdown");
+            Map<String, Object> contentMap = Maps.newHashMap();
+            User user = userService.getByUsername(releaseEvent.getUsername());
+            applicationTagsHelper.getTagsStr(application.getId());
+            contentMap.put("applicationName", application.getName());
+            contentMap.put("nowDate", NewTimeUtil.nowDate());
+            contentMap.put("applicationTags", applicationTagsHelper.getTagsStr(application.getId()));
+            contentMap.put("instanceName", datasourceInstance.getInstanceName());
+            contentMap.put("env", releaseEvent.getEnv().toLowerCase());
+            contentMap.put("isGray", releaseEvent.getIsGray() ? "是" : "否");
+            contentMap.put("ticketMsg", ticketId == 0 ? "未关联配置发布工单" : StringFormatter.format("配置发布工单ID={}", ticketId));
+            contentMap.put("displayName", user.getDisplayName());
+            contentMap.put("users", Lists.newArrayList(user));
+            final String msg = BeetlUtil.renderTemplate(messageTemplate.getMsgTemplate(), contentMap);
+
+            String dingtalkRobot = Optional.of(apolloConfig)
+                    .map(ApolloConfig::getApollo)
+                    .map(ApolloConfig.Apollo::getPortal)
+                    .map(ApolloConfig.Portal::getRelease)
+                    .map(ApolloConfig.Release::getNotify)
+                    .orElseThrow(() -> new LeoInterceptorException("Configuration does not exist: apollo->portal->release->notify"));
+
+            DatasourceInstance dsInstance = leoRobotHelper.getRobotInstance(dingtalkRobot);
+            leoRobotHelper.send(dsInstance, msg);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+    }
+
 
     /**
      * 校验

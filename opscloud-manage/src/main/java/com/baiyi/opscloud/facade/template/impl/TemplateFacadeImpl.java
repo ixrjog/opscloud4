@@ -141,7 +141,7 @@ public class TemplateFacadeImpl implements TemplateFacade {
         if (bizTemplate == null) {
             throw new OCException("无法创建资产: 业务模板不存在!");
         }
-        if (StringUtils.isEmpty(bizTemplate.getName())) {
+        if (StringUtils.isBlank(bizTemplate.getName())) {
             throw new OCException("无法创建资产: 业务模板名称不合规（空值）!");
         }
         Template template = templateService.getById(bizTemplate.getTemplateId());

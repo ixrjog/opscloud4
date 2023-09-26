@@ -9,6 +9,7 @@ import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.leo.log.LeoDeployingLog;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import jakarta.annotation.Resource;
+import lombok.Getter;
 
 import java.util.Date;
 
@@ -30,6 +31,7 @@ public abstract class BaseDeployChainHandler {
     @Resource
     protected LeoDeployService deployService;
 
+    @Getter
     private BaseDeployChainHandler next;
 
     protected KubernetesConfig getKubernetesConfigWithUuid(String uuid) {
@@ -40,10 +42,6 @@ public abstract class BaseDeployChainHandler {
     public BaseDeployChainHandler setNextHandler(BaseDeployChainHandler next) {
         this.next = next;
         return this.next;
-    }
-
-    public BaseDeployChainHandler getNext() {
-        return next;
     }
 
     public void handleRequest(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
