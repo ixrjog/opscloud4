@@ -9,6 +9,7 @@ public enum TemplateKeyConstants {
 
     DEPLOYMENT,
     SERVICE,
-    INGRESS
+    INGRESS,
+    CUSTOM_RESOURCE
 
 }

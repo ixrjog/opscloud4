@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.template.impl;
 import com.baiyi.opscloud.common.constants.TemplateKeyConstants;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.exception.common.OCException;
+import com.baiyi.opscloud.common.exception.template.BusinessTemplateException;
 import com.baiyi.opscloud.common.template.YamlVars;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
@@ -139,18 +140,18 @@ public class TemplateFacadeImpl implements TemplateFacade {
     public BusinessTemplateVO.BusinessTemplate createAssetByBusinessTemplate(int id) {
         BusinessTemplate bizTemplate = businessTemplateService.getById(id);
         if (bizTemplate == null) {
-            throw new OCException("无法创建资产: 业务模板不存在!");
+            throw new BusinessTemplateException("业务模板不存在!");
         }
         if (StringUtils.isBlank(bizTemplate.getName())) {
-            throw new OCException("无法创建资产: 业务模板名称不合规（空值）!");
+            throw new BusinessTemplateException("业务模板名称不合规（空值）!");
         }
         Template template = templateService.getById(bizTemplate.getTemplateId());
         if (template == null) {
-            throw new OCException("无法创建资产: 模板不存在!");
+            throw new BusinessTemplateException("模板不存在!");
         }
         ITemplateProvider templateProvider = TemplateFactory.getByInstanceAsset(template.getInstanceType(), template.getTemplateKey());
         if (templateProvider == null) {
-            throw new OCException("无法创建资产: 无可用的生产者!");
+            throw new BusinessTemplateException("无可用的业务模板供应商: instanceType={}, templateKey={}", template.getInstanceType(), template.getTemplateKey());
         }
         return templateProvider.produce(bizTemplate);
     }
@@ -240,7 +241,7 @@ public class TemplateFacadeImpl implements TemplateFacade {
         if (!preBizTemplate.getTemplateId().equals(businessTemplate.getTemplateId())) {
             Template template = templateService.getById(businessTemplate.getTemplateId());
             if (template == null) {
-                throw new OCException("关联模板不存在!");
+                throw new BusinessTemplateException("关联模板不存在!");
             }
             preBizTemplate.setTemplateId(businessTemplate.getTemplateId());
             preBizTemplate.setEnvType(template.getEnvType());

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.template.factory.base;
 
-import com.baiyi.opscloud.common.exception.common.OCException;
+import com.baiyi.opscloud.common.exception.template.BusinessTemplateException;
 import com.baiyi.opscloud.common.template.YamlVars;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.BeetlUtil;
@@ -8,15 +8,15 @@ import com.baiyi.opscloud.common.util.TemplateUtil;
 import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
-import com.baiyi.opscloud.domain.generator.opscloud.BusinessTemplate;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.generator.opscloud.Env;
-import com.baiyi.opscloud.domain.generator.opscloud.Template;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
 import com.baiyi.opscloud.facade.template.factory.ITemplateProvider;
 import com.baiyi.opscloud.facade.template.factory.TemplateFactory;
 import com.baiyi.opscloud.packer.template.BusinessTemplatePacker;
+import com.baiyi.opscloud.service.application.ApplicationResourceService;
+import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.baiyi.opscloud.service.template.BusinessTemplateService;
 import com.baiyi.opscloud.service.template.TemplateService;
@@ -56,12 +56,27 @@ public abstract class AbstractTemplateProvider<T> implements ITemplateProvider, 
     @Resource
     protected BusinessTemplatePacker businessTemplatePacker;
 
+    @Resource
+    private ApplicationService applicationService;
+
+    @Resource
+    protected ApplicationResourceService applicationResourceService;
+
+    /**
+     * 应用资源
+     *
+     * @return
+     */
+    protected boolean hasApplicationResources() {
+        return false;
+    }
+
     private String renderTemplate(Template template, YamlVars.Vars vars) {
         try {
             return BeetlUtil.renderTemplate(template.getContent(), vars);
         } catch (IOException e) {
             log.error(e.getMessage());
-            throw new OCException("无法创建资产: 渲染模板失败!");
+            throw new BusinessTemplateException("渲染模板失败!");
         }
     }
 
@@ -76,11 +91,11 @@ public abstract class AbstractTemplateProvider<T> implements ITemplateProvider, 
 
     public BusinessTemplateVO.BusinessTemplate produce(BusinessTemplate bizTemplate) {
         if (bizTemplate == null) {
-            throw new OCException("无法创建资产: 业务模板不存在!");
+            throw new BusinessTemplateException("业务模板不存在!");
         }
         Template template = templateService.getById(bizTemplate.getTemplateId());
         if (template == null) {
-            throw new OCException("无法创建资产: 模板不存在!");
+            throw new BusinessTemplateException("模板不存在!");
         }
         YamlVars.Vars vars = toVars(bizTemplate);
         // 渲染模板
@@ -88,7 +103,10 @@ public abstract class AbstractTemplateProvider<T> implements ITemplateProvider, 
         T entity = produce(bizTemplate, content);
         List<DatasourceInstanceAsset> assets = dsInstanceFacade.pullAsset(bizTemplate.getInstanceUuid(), getAssetType(), entity);
         if (CollectionUtils.isEmpty(assets)) {
-            throw new OCException("创建资产错误: 无法从生产者获取资产对象!");
+            throw new BusinessTemplateException("无法从数据源获取资产对象!");
+        }
+        if (hasApplicationResources()) {
+            addApplicationResource(assets, vars);
         }
         bizTemplate.setBusinessId(assets.get(0).getId());
         // 更新关联资产
@@ -97,6 +115,29 @@ public abstract class AbstractTemplateProvider<T> implements ITemplateProvider, 
         BusinessTemplateVO.BusinessTemplate businessTemplateVO = BeanCopierUtil.copyProperties(bizTemplate, BusinessTemplateVO.BusinessTemplate.class);
         businessTemplatePacker.wrap(businessTemplateVO, SimpleExtend.EXTEND);
         return businessTemplateVO;
+    }
+
+    private void addApplicationResource(List<DatasourceInstanceAsset> assets, YamlVars.Vars vars) {
+        if (!vars.getVars().containsKey("appName")) {
+            return;
+        }
+        final String appName = vars.getVars().get("appName");
+        Application application = applicationService.getByName(appName);
+        if (application == null) {
+            return;
+        }
+        for (DatasourceInstanceAsset asset : assets) {
+            if (applicationResourceService.getByUniqueKey(application.getId(), BusinessTypeEnum.ASSET.getType(), asset.getId()) == null) {
+                ApplicationResource applicationResource = ApplicationResource.builder()
+                        .applicationId(application.getId())
+                        .businessType(BusinessTypeEnum.ASSET.getType())
+                        .businessId(asset.getId())
+                        .resourceType(asset.getAssetType())
+                        .name(asset.getName())
+                        .build();
+                applicationResourceService.add(applicationResource);
+            }
+        }
     }
 
     private YamlVars.Vars toVars(BusinessTemplate bizTemplate) {
@@ -112,6 +153,7 @@ public abstract class AbstractTemplateProvider<T> implements ITemplateProvider, 
         return vars;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         TemplateFactory.register(this);
     }

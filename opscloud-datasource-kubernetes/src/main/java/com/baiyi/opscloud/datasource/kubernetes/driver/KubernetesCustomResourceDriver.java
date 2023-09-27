@@ -20,17 +20,18 @@ public class KubernetesCustomResourceDriver {
 
     /**
      * 创建自定义资源
+     *
      * @param kubernetes
      * @param content
      */
-    public static void create(KubernetesConfig.Kubernetes kubernetes, String content) {
+    public static CustomResourceDefinition create(KubernetesConfig.Kubernetes kubernetes, String content) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             InputStream is = new ByteArrayInputStream(content.getBytes());
             CustomResourceDefinition crd = kc.apiextensions().v1()
                     .customResourceDefinitions()
                     .load(is)
                     .item();
-            kc.apiextensions().v1().customResourceDefinitions().resource(crd).create();
+            return kc.apiextensions().v1().customResourceDefinitions().resource(crd).create();
         } catch (Exception e) {
             log.warn(e.getMessage());
             throw e;
