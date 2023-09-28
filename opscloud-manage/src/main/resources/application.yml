@@ -1,19 +1,13 @@
 spring:
   application:
     name: opscloud
-    version: 4.5.0
+    version: 4.5.3
   lifecycle:
     timeout-per-shutdown-phase: 60s
   # 关闭控制台
   shell:
     interactive:
       enabled: false
-
-  #  web:
-#    resources:
-#      static-locations: classpath:/static/
-#  mvc:
-#    static-path-pattern: /static/**
   main:
     # 允许循环依赖
     allow-circular-references: on
@@ -26,6 +20,11 @@ spring:
     active: '@env@'
   thymeleaf:
     cache: off
+#  web:
+#    resources:
+#      static-locations: classpath:/static/
+#  mvc:
+#    static-path-pattern: /static/**
 
 # OpenAPI
 springdoc:
