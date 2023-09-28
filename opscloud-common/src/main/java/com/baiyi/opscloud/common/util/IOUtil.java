@@ -151,7 +151,7 @@ public class IOUtil {
                 FileReader reader = new FileReader(path);
                 BufferedReader bufferedReader = new BufferedReader(reader)
         ) {
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             String tmp;
             while ((tmp = bufferedReader.readLine()) != null) {
                 buffer.append(tmp);
@@ -165,7 +165,7 @@ public class IOUtil {
     }
 
     public static String getPath(String path) {
-        if (path == null || path.equals("")) {
+        if (path == null || path.isEmpty()) {
             return "";
         }
         String[] a = path.split("/");
