@@ -205,7 +205,7 @@ public class TimeUtil {
     public static String stampSecToDate(String s) {
         String res;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        long lt = (new Long(s)) * 1000;
+        long lt = (Long.parseLong(s)) * 1000;
         Date date = new Date(lt);
         res = simpleDateFormat.format(date);
         return res;
@@ -217,7 +217,8 @@ public class TimeUtil {
     public static String stampToDate(String s) {
         String res;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        long lt = new Long(s);
+        long lt = Long.parseLong(s);
+
         Date date = new Date(lt);
         res = simpleDateFormat.format(date);
         return res;
@@ -231,7 +232,7 @@ public class TimeUtil {
      */
     public static String stampToDateMin(String s) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        long lt = new Long(s);
+        long lt = Long.parseLong(s);
         Date date = new Date(lt);
         return simpleDateFormat.format(date);
     }

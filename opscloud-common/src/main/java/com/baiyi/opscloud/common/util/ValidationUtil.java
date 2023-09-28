@@ -20,7 +20,7 @@ public class ValidationUtil {
         String SERVER_NAME = "[a-zA-Z][\\d0-9a-zA-Z-.]{1,55}";
         String SERVER_GROUP_NAME = "group_[a-z][\\d0-9a-z-]{2,64}";
         String APPLICATION_NAME = "[a-z][\\d0-9a-z-]{3,32}";
-        String EMAIL = "[A-z0-9-_\\.]+@([\\w]+[\\w-]*)(\\.[\\w]+[-\\w]*)+";
+        String EMAIL = "[A-z0-9-_.]+@(\\w+[\\w-]*)(\\.\\w+[-\\w]*)+";
         String JOB_KEY = "[a-z0-9-_]{3,64}";
     }
 
@@ -108,7 +108,7 @@ public class ValidationUtil {
 
     @Deprecated
     public static String getHost(String url) {
-        if (url == null || url.trim().equals("")) {
+        if (url == null || url.trim().isEmpty()) {
             return "";
         }
         String host = "";
