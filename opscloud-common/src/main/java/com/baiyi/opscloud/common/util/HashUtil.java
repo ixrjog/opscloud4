@@ -33,7 +33,7 @@ public class HashUtil {
     }
 
     public static String md5(String input) {
-        if (input == null || input.length() == 0) {
+        if (input == null || input.isEmpty()) {
             return null;
         }
         try {

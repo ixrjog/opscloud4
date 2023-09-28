@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.common.util;
 
+import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.common.exception.datasource.DatasourceException;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.google.gson.JsonSyntaxException;
@@ -23,7 +24,7 @@ public class DsUtil {
      * @param <T>
      * @return
      */
-    public static <T> T toDsConfig(String propsYml, Class<T> targetClass) {
+    public static <T extends BaseDsConfig> T toDsConfig(String propsYml, Class<T> targetClass) {
         if (StringUtils.isEmpty(propsYml)) {
             throw new DatasourceException(ErrorEnum.DATASOURCE_PROPS_EMPTY);
         }

@@ -19,6 +19,12 @@ public class CronUtil {
 
     private static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
 
+    /**
+     * 解析CRON表达式，展示最近N次执行时间
+     * @param expression
+     * @param cnt
+     * @return
+     */
     public static List<String> recentTime(String expression, int cnt) {
         List<String> result = Lists.newArrayList();
         try {

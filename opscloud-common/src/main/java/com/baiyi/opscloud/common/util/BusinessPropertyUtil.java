@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.stream.IntStream;
 
 /**
  * @Author baiyi
@@ -32,14 +33,14 @@ public class BusinessPropertyUtil {
 
         Field[] sourceFields = sourceBeanClass.getDeclaredFields();
         Field[] targetFields = targetBeanClass.getDeclaredFields();
-        for (int i = 0; i < sourceFields.length; i++) {
+        IntStream.range(0, sourceFields.length).forEach(i -> {
             Field sourceField = sourceFields[i];
             if (Modifier.isStatic(sourceField.getModifiers())) {
-                continue;
+                return;
             }
             Field targetField = targetFields[i];
             if (Modifier.isStatic(targetField.getModifiers())) {
-                continue;
+                return;
             }
             sourceField.setAccessible(true);
             targetField.setAccessible(true);
@@ -50,7 +51,7 @@ public class BusinessPropertyUtil {
             } catch (IllegalArgumentException | IllegalAccessException e) {
                 log.error(e.getMessage());
             }
-        }
+        });
         return targetBean;
     }
 
