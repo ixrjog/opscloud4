@@ -120,12 +120,10 @@ public class ValidationUtil {
         return host;
     }
 
-
     public static boolean checkAppLabelInService(String serviceName, String label) {
         String repx = "(.*)-" + label + "$";
         return serviceName.matches(repx);
     }
-
 
     public static boolean checkApk(String fileName) {
         return fileName.endsWith(".apk");
