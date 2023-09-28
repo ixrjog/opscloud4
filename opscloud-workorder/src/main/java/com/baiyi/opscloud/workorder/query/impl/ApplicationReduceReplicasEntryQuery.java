@@ -48,6 +48,8 @@ public class ApplicationReduceReplicasEntryQuery extends BaseTicketEntryQuery<Ap
     @Resource
     private DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
 
+    private static final String TICKET_DESC = "(Created: {} Desired: {})";
+
     @Override
     protected List<ApplicationReduceReplicasEntry.KubernetesDeployment> queryEntries(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
         DsAssetParam.AssetPageQuery pageQuery = getAssetQueryParam(entryQuery);
@@ -80,10 +82,9 @@ public class ApplicationReduceReplicasEntryQuery extends BaseTicketEntryQuery<Ap
     }
 
     public static String getComment(ApplicationReduceReplicasEntry.KubernetesDeployment entry) {
-        String c = "已创建{}个,总共需要{}个";
-        String desc = StringFormatter.arrayFormat(c, entry.getReplicas(), entry.getReduceReplicas());
+        String desc = StringFormatter.arrayFormat(TICKET_DESC, entry.getReplicas(), entry.getReduceReplicas());
         if (StringUtils.isNotBlank(entry.getComment())) {
-            return Joiner.on("").skipNulls().join(entry.getComment(), "(", desc, ")");
+            return Joiner.on("").skipNulls().join(entry.getComment(), desc);
         } else {
             return desc;
         }

@@ -49,6 +49,8 @@ public class ApplicationScaleReplicasEntryQuery extends BaseTicketEntryQuery<App
     @Resource
     private DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
 
+    private static final String TICKET_DESC = "(Created: {} Desired: {})";
+
     @Override
     protected List<ApplicationScaleReplicasEntry.KubernetesDeployment> queryEntries(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
         DsAssetParam.AssetPageQuery pageQuery = getAssetQueryParam(entryQuery);
@@ -81,10 +83,9 @@ public class ApplicationScaleReplicasEntryQuery extends BaseTicketEntryQuery<App
     }
 
     public static String getComment(ApplicationScaleReplicasEntry.KubernetesDeployment entry) {
-        String c = "已创建{}个,总共需要{}个";
-        String desc = StringFormatter.arrayFormat(c, entry.getReplicas(), entry.getScaleReplicas());
+        String desc = StringFormatter.arrayFormat(TICKET_DESC, entry.getReplicas(), entry.getScaleReplicas());
         if (StringUtils.isNotBlank(entry.getComment())) {
-            return Joiner.on("").skipNulls().join(entry.getComment(), "(", desc, ")");
+            return Joiner.on("").skipNulls().join(entry.getComment(), desc);
         } else {
             return desc;
         }
