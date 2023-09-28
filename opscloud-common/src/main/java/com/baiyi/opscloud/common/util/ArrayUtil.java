@@ -15,11 +15,9 @@ public class ArrayUtil {
         if (start < 0) {
             start += length;
         }
-
         if (end < 0) {
             end += length;
         }
-
         if (start == length) {
             return new char[0];
         } else {
@@ -28,7 +26,6 @@ public class ArrayUtil {
                 start = end;
                 end = tmp;
             }
-
             if (end > length) {
                 if (start >= length) {
                     return new char[0];
@@ -36,7 +33,6 @@ public class ArrayUtil {
 
                 end = length;
             }
-
             return Arrays.copyOfRange(array, start, end);
         }
     }

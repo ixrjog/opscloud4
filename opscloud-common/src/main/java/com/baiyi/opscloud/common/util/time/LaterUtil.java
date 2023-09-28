@@ -15,10 +15,10 @@ public class LaterUtil {
     private LaterUtil() {
     }
 
-    private static final long ONE_MINUTE = 60000L;
-    private static final long ONE_HOUR = 3600000L;
-    private static final long ONE_DAY = 86400000L;
-    private static final long ONE_WEEK = 604800000L;
+    private static final long ONE_MINUTE = 60 * 1000L;
+    private static final long ONE_HOUR = ONE_MINUTE * 60;
+    private static final long ONE_DAY = ONE_HOUR * 24;
+    private static final long ONE_WEEK = ONE_DAY * 7;
 
     private static final String ONE_SECOND_LATER = "秒后";
     private static final String ONE_MINUTE_LATER = "分钟后";
@@ -26,8 +26,7 @@ public class LaterUtil {
     private static final String ONE_DAY_LATER = "天后";
     private static final String ONE_MONTH_LATER = "个月后";
     private static final String ONE_YEAR_LATER = "年后";
-
-    //private static final String SUFFIX = "后";
+    private static final String YESTERDAY = "昨天";
 
     public static String format(String gmtDate) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:m:s");
@@ -40,6 +39,9 @@ public class LaterUtil {
     }
 
     public static void wrap(ReadableTime.ILater iLater) {
+        if (iLater.getExpiredTime() == null) {
+            return;
+        }
         iLater.setLater(format(iLater.getExpiredTime()));
     }
 
@@ -58,7 +60,7 @@ public class LaterUtil {
             return (hours <= 0 ? 1 : hours) + ONE_HOUR_LATER;
         }
         if (delta < 48L * ONE_HOUR) {
-            return "昨天";
+            return YESTERDAY;
         }
         if (delta < 30L * ONE_DAY) {
             long days = toDays(delta);

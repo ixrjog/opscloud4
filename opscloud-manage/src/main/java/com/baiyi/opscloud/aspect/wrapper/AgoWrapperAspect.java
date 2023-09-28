@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 注入ago字段
+ *
  * @Author baiyi
  * @Date 2022/2/23 11:08 AM
  * @Version 1.0
@@ -34,7 +35,7 @@ public class AgoWrapperAspect {
         try {
             result = joinPoint.proceed();
         } catch (Throwable e) {
-           throw new OCException(e.getMessage());
+            throw new OCException(e.getMessage());
         }
         boolean extend = agoWrapper.extend();
         ReadableTime.IAgo agoTarget = null;
@@ -59,16 +60,9 @@ public class AgoWrapperAspect {
             }
         }
         if (extend && agoTarget != null) {
-            wrap(agoTarget);
+            AgoUtil.wrap(agoTarget);
         }
         return result;
-    }
-
-    public void wrap(ReadableTime.IAgo iAgo) {
-        if (iAgo.getAgoTime() == null) {
-            return;
-        }
-        iAgo.setAgo(AgoUtil.format(iAgo.getAgoTime()));
     }
 
 }

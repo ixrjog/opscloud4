@@ -59,16 +59,9 @@ public class LaterWrapperAspect {
             }
         }
         if (extend && laterTarget != null) {
-            wrap(laterTarget);
+            LaterUtil.wrap(laterTarget);
         }
         return result;
-    }
-
-    public void wrap(ReadableTime.ILater iLater) {
-        if (iLater.getExpiredTime() == null) {
-            return;
-        }
-        iLater.setLater(LaterUtil.format(iLater.getExpiredTime()));
     }
 
 }
