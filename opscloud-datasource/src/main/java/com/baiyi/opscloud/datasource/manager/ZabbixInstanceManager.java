@@ -88,17 +88,14 @@ public class ZabbixInstanceManager extends BaseManager {
         if (host == null) {
             updateServerMonitorStatus(server, ServerMonitorStatusEnum.NOT_CREATED);
         } else {
-            if (host.getStatus() == ServerMonitorStatusEnum.MONITORED.getStatus()) {
-                updateServerMonitorStatus(server, ServerMonitorStatusEnum.MONITORED);
-            } else {
-                updateServerMonitorStatus(server, ServerMonitorStatusEnum.UNMONITORED);
-            }
+            updateServerMonitorStatus(server, host.getStatus() == ServerMonitorStatusEnum.MONITORED.getStatus() ?
+                    ServerMonitorStatusEnum.MONITORED : ServerMonitorStatusEnum.UNMONITORED);
         }
     }
 
     private void updateServerMonitorStatus(Server server, ServerMonitorStatusEnum serverMonitorStatusEnum) {
         if (serverMonitorStatusEnum.getStatus() != server.getMonitorStatus()) {
-            log.info("更新服务器监控状态: ip={}, monitorStatus={}", server.getPrivateIp(), serverMonitorStatusEnum.getStatus());
+            log.debug("Update server monitor status: ip={}, monitorStatus={}", server.getPrivateIp(), serverMonitorStatusEnum.getStatus());
             server.setMonitorStatus(serverMonitorStatusEnum.getStatus());
             serverService.update(server);
         }
