@@ -39,7 +39,7 @@ public class GitLabRepositoryDriver {
     public static Optional<RepositoryFile> getRepositoryOptionalFile(GitLabConfig.GitLab gitlab, Long projectId, String filePath, String ref) {
         try (GitLabApi gitLabApi = GitLabApiBuilder.build(gitlab)) {
             return gitLabApi.getRepositoryFileApi().getOptionalFileInfo(projectId, filePath, ref);
-        }catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
 
