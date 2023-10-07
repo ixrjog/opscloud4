@@ -3,7 +3,7 @@ Welcome to the opscloud wiki!
 
 ## Thanks to JetBrains
 <a href="https://www.jetbrains.com" target="_blank">
-  <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/jetbrains-logos/jetbrains-variant-2.svg"></img>
+  <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/jetbrains-logos/jetbrains-variant-2.svg" alt=""/>
 </a>
 
 > Thanks JetBrains to support the project providing such great IDE.
@@ -11,9 +11,9 @@ Welcome to the opscloud wiki!
 ![GitHub Stats Card](https://github-readme-stats.vercel.app/api?username=ixrjog&show_icons=true&theme=onedark)
 
 ## OpsCloud4 云上运维
-<img src="https://img.shields.io/badge/Version-4.5.0-brightgreen.svg"></img>
+<img src="https://img.shields.io/badge/Version-4.5.3-brightgreen.svg"></img>
 <img src="https://img.shields.io/badge/JDK-17-brightgreen.svg"></img> 
-<img src="https://img.shields.io/badge/SpringBoot-3.1.3-brightgreen.svg"></img> 
+<img src="https://img.shields.io/badge/SpringBoot-3.1.4-brightgreen.svg"></img> 
 <img src="https://img.shields.io/badge/MySQL-8-brightgreen.svg"></img>
 <br/>
 [![Security Status](https://www.murphysec.com/platform3/v31/badge/1683749365419687936.svg)](https://www.murphysec.com/console/report/1656107048332996608/1683749365419687936)
@@ -38,7 +38,7 @@ Welcome to the opscloud wiki!
 ## 开发环境
 + JDK 17
 + node-v16.13.0
-+ MacBook M1 PRO
++ MacBook M1
 + IntelliJ IDEA 2023
 + WebStorm 2023
 
