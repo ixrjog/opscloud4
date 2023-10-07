@@ -29,4 +29,14 @@ public class ServerAccountUtil {
         return accountTypeMap;
     }
 
+    public static Map<Integer, List<ServerAccount>> catByTypeTest(List<ServerAccount> accounts) {
+        Map<Integer, List<ServerAccount>> accountTypeMap = Maps.newHashMap();
+        accounts.forEach(account -> FunctionUtil.isTureOrFalse(accountTypeMap.containsKey(account.getAccountType()))
+                .withBoolean(
+                        () -> accountTypeMap.get(account.getAccountType()).add(account),
+                        () -> accountTypeMap.put(account.getAccountType(), Lists.newArrayList(account))
+                ));
+        return accountTypeMap;
+    }
+
 }

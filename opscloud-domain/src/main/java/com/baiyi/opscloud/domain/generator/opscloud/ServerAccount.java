@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import java.util.Date;
 
 @Data
 @Table(name = "server_account")
+@Builder
 public class ServerAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
