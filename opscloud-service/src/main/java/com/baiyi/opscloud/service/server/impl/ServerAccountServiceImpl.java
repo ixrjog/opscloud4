@@ -26,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ServerAccountServiceImpl extends AbstractCredentialCustomer implements ServerAccountService {
 
-    private final ServerAccountMapper accountMapper;
+    private final ServerAccountMapper serverAccountMapper;
 
     @Override
     public String getBeanName() {
@@ -35,17 +35,17 @@ public class ServerAccountServiceImpl extends AbstractCredentialCustomer impleme
 
     @Override
     public ServerAccount getById(Integer id) {
-        return accountMapper.selectByPrimaryKey(id);
+        return serverAccountMapper.selectByPrimaryKey(id);
     }
 
     @Override
     public void add(ServerAccount serverAccount) {
-        accountMapper.insert(serverAccount);
+        serverAccountMapper.insert(serverAccount);
     }
 
     @Override
     public void update(ServerAccount serverAccount) {
-        accountMapper.updateByPrimaryKey(serverAccount);
+        serverAccountMapper.updateByPrimaryKey(serverAccount);
     }
 
     @Override
@@ -62,20 +62,20 @@ public class ServerAccountServiceImpl extends AbstractCredentialCustomer impleme
         if (StringUtils.isNotBlank(pageQuery.getProtocol())) {
             criteria.andEqualTo("protocol", pageQuery.getProtocol());
         }
-        List<ServerAccount> data = accountMapper.selectByExample(example);
+        List<ServerAccount> data = serverAccountMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }
 
     @Override
     public List<ServerAccount> getPermissionServerAccountByTypeAndProtocol(Integer serverId, Integer accountType, String protocol) {
-        return accountMapper.getPermissionServerAccountByTypeAndProtocol(serverId, accountType, protocol);
+        return serverAccountMapper.getPermissionServerAccountByTypeAndProtocol(serverId, accountType, protocol);
     }
 
     @Override
     public ServerAccount getPermissionServerAccountByUsernameAndProtocol(Integer serverId,
                                                                          String username,
                                                                          String protocol) {
-        return accountMapper.getPermissionServerAccountByUsernameAndProtocol(serverId, username, protocol);
+        return serverAccountMapper.getPermissionServerAccountByUsernameAndProtocol(serverId, username, protocol);
     }
 
     @Override
@@ -83,12 +83,12 @@ public class ServerAccountServiceImpl extends AbstractCredentialCustomer impleme
         Example example = new Example(ServerAccount.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("credentialId", credentialId);
-        return accountMapper.selectCountByExample(example);
+        return serverAccountMapper.selectCountByExample(example);
     }
 
     @Override
     public void deleteById(Integer id) {
-        accountMapper.deleteByPrimaryKey(id);
+        serverAccountMapper.deleteByPrimaryKey(id);
     }
 
 }

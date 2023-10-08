@@ -31,14 +31,19 @@ public class DefaultKubernetesProvider {
      * @return
      */
     public static KubernetesClient buildClient(KubernetesConfig.Kubernetes kubernetes) {
+        return new KubernetesClientBuilder()
+                .withConfig(buildConfig(kubernetes))
+                .build();
+    }
+
+    public static io.fabric8.kubernetes.client.Config buildConfig(KubernetesConfig.Kubernetes kubernetes) {
         preSet(kubernetes);
-        io.fabric8.kubernetes.client.Config config = new ConfigBuilder()
+        return new ConfigBuilder()
                 .withTrustCerts(true)
                 // .withWebsocketTimeout(KubeClient.Config.WEBSOCKET_TIMEOUT)
                 // .withConnectionTimeout(KubeClient.Config.CONNECTION_TIMEOUT)
                 // .withRequestTimeout(KubeClient.Config.REQUEST_TIMEOUT)
                 .build();
-        return new KubernetesClientBuilder().withConfig(config).build();
     }
 
     private static void preSet(KubernetesConfig.Kubernetes kubernetes) {

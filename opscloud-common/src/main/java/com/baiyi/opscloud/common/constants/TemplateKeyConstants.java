@@ -10,6 +10,8 @@ public enum TemplateKeyConstants {
     DEPLOYMENT,
     SERVICE,
     INGRESS,
-    CUSTOM_RESOURCE
+    CUSTOM_RESOURCE,
+    VIRTUAL_SERVICE,
+    DESTINATION_RULE
 
 }

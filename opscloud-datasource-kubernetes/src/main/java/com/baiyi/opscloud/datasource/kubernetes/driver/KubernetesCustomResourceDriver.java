@@ -30,7 +30,7 @@ public class KubernetesCustomResourceDriver {
             CustomResourceDefinition crd = kc.apiextensions().v1()
                     .customResourceDefinitions()
                     .load(is)
-                    .item();
+                    .create();
             return kc.apiextensions().v1().customResourceDefinitions().resource(crd).create();
         } catch (Exception e) {
             log.warn(e.getMessage());

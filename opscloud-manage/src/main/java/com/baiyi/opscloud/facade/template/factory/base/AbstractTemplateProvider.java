@@ -63,7 +63,7 @@ public abstract class AbstractTemplateProvider<T> implements ITemplateProvider, 
     protected ApplicationResourceService applicationResourceService;
 
     /**
-     * 应用资源
+     * 当值为true则会绑定应用资源
      *
      * @return
      */
@@ -131,9 +131,10 @@ public abstract class AbstractTemplateProvider<T> implements ITemplateProvider, 
                 ApplicationResource applicationResource = ApplicationResource.builder()
                         .applicationId(application.getId())
                         .businessType(BusinessTypeEnum.ASSET.getType())
+                        .virtualResource(false)
                         .businessId(asset.getId())
                         .resourceType(asset.getAssetType())
-                        .name(asset.getName())
+                        .name(asset.getAssetId())
                         .build();
                 applicationResourceService.add(applicationResource);
             }
