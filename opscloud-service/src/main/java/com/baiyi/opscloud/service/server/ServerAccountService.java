@@ -24,6 +24,10 @@ public interface ServerAccountService extends ICredentialCustomer {
 
     List<ServerAccount> getPermissionServerAccountByTypeAndProtocol(Integer serverId, Integer accountType, String protocol);
 
+    default List<ServerAccount> getPermissionServerAccountByTypeAndProtocol(Integer serverId, String protocol) {
+        return getPermissionServerAccountByTypeAndProtocol(serverId, null, protocol);
+    }
+
     ServerAccount getPermissionServerAccountByUsernameAndProtocol(Integer serverId,
                                                                   String username,
                                                                   String protocol);
