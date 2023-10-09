@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.common.datasource;
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
+import com.baiyi.opscloud.common.datasource.base.DsManageConfig;
 import com.google.common.collect.Sets;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -33,6 +34,8 @@ public class JenkinsConfig extends BaseDsConfig {
         private String username;
         private String token;
         private Template template;
+        @Schema(description = "DataSource Manage")
+        private DsManageConfig.Manage manage;
 
     }
 

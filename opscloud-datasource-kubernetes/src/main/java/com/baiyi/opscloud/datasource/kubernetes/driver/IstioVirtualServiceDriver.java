@@ -38,6 +38,23 @@ public class IstioVirtualServiceDriver {
         }
     }
 
+    public static VirtualService update(KubernetesConfig.Kubernetes kubernetes, String content) {
+        try (IstioClient ic = IstioClientBuilder.build(kubernetes)) {
+            InputStream is = new ByteArrayInputStream(content.getBytes());
+            VirtualService virtualService = ic.v1alpha3()
+                    .virtualServices()
+                    .load(is)
+                    .item();
+            return ic.v1alpha3()
+                    .virtualServices()
+                    .resource(virtualService)
+                    .update();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
+    }
+
     public static List<VirtualService> list(KubernetesConfig.Kubernetes kubernetes, String namespace) {
         try (IstioClient ic = IstioClientBuilder.build(kubernetes)) {
             VirtualServiceList virtualServiceList = ic.v1alpha3()
@@ -48,6 +65,19 @@ public class IstioVirtualServiceDriver {
                 return Collections.emptyList();
             }
             return virtualServiceList.getItems();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
+    }
+
+    public static VirtualService get(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
+        try (IstioClient ic = IstioClientBuilder.build(kubernetes)) {
+            return ic.v1alpha3()
+                    .virtualServices()
+                    .inNamespace(namespace)
+                    .withName(name)
+                    .get();
         } catch (Exception e) {
             log.warn(e.getMessage());
             throw e;

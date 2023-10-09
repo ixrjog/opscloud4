@@ -35,6 +35,23 @@ public class IstioDestinationRuleDriver {
         }
     }
 
+    public static DestinationRule update(KubernetesConfig.Kubernetes kubernetes, String content) {
+        try (IstioClient ic = IstioClientBuilder.build(kubernetes)) {
+            InputStream is = new ByteArrayInputStream(content.getBytes());
+            DestinationRule destinationRule = ic.v1alpha3()
+                    .destinationRules()
+                    .load(is)
+                    .item();
+            return ic.v1alpha3()
+                    .destinationRules()
+                    .resource(destinationRule)
+                    .update();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
+    }
+
     public static List<DestinationRule> list(KubernetesConfig.Kubernetes kubernetes, String namespace) {
         try (IstioClient ic = IstioClientBuilder.build(kubernetes)) {
             DestinationRuleList destinationRuleList = ic.v1alpha3()
@@ -45,6 +62,19 @@ public class IstioDestinationRuleDriver {
                 return Collections.emptyList();
             }
             return destinationRuleList.getItems();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
+    }
+
+    public static DestinationRule get(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
+        try (IstioClient ic = IstioClientBuilder.build(kubernetes)) {
+            return ic.v1alpha3()
+                    .destinationRules()
+                    .inNamespace(namespace)
+                    .withName(name)
+                    .get();
         } catch (Exception e) {
             log.warn(e.getMessage());
             throw e;
