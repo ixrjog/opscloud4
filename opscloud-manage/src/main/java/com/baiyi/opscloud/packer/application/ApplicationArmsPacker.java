@@ -3,7 +3,7 @@ package com.baiyi.opscloud.packer.application;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunArmsConfig;
 import com.baiyi.opscloud.common.util.StringFormatter;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -34,7 +34,7 @@ public class ApplicationArmsPacker {
 
     private final DsInstanceAssetService dsInstanceAssetService;
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     public void warp(Env env, ApplicationVO.Kubernetes kubernetes) {
         List<DatasourceInstance> instances = dsInstanceService.listByInstanceType(DsTypeEnum.ALIYUN_ARMS.name());
@@ -45,8 +45,8 @@ public class ApplicationArmsPacker {
                     .build();
             List<DatasourceInstanceAsset> assets = dsInstanceAssetService.queryAssetByAssetParam(query);
             if (!CollectionUtils.isEmpty(assets) && assets.size() == 1) {
-                DatasourceConfig datasourceConfig = dsConfigHelper.getConfigById(instance.getConfigId());
-                AliyunArmsConfig armsConfig = dsConfigHelper.build(datasourceConfig, AliyunArmsConfig.class);
+                DatasourceConfig datasourceConfig = dsConfigManager.getConfigById(instance.getConfigId());
+                AliyunArmsConfig armsConfig = dsConfigManager.build(datasourceConfig, AliyunArmsConfig.class);
                 Optional<String> optionalHomeUrl = Optional.of(armsConfig.getArms())
                         .map(AliyunArmsConfig.Arms::getUrl)
                         .map(AliyunArmsConfig.Url::getHome);

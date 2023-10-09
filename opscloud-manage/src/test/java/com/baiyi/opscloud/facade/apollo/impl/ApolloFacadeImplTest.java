@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade.apollo.impl;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.datasource.ApolloConfig;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.param.apollo.ApolloParam;
 import com.baiyi.opscloud.facade.apollo.ApolloFacade;
@@ -18,7 +18,7 @@ class ApolloFacadeImplTest extends BaseUnit {
     private ApolloFacade apolloFacade;
 
     @Resource
-    private DsConfigHelper dsConfigHelper;
+    private DsConfigManager dsConfigManager;
 
     @Resource
     private ApplicationService applicationService;
@@ -53,7 +53,7 @@ class ApolloFacadeImplTest extends BaseUnit {
                 .isGray(false)
                 .token("13f731d2-822b-e554-3a19-ba96f9189908")
                 .build();
-        ApolloConfig apolloConfig = dsConfigHelper.build(dsConfigHelper.getConfigById(78), ApolloConfig.class);
+        ApolloConfig apolloConfig = dsConfigManager.build(dsConfigManager.getConfigById(78), ApolloConfig.class);
         Application application = applicationService.getByName(CLASS_A);
         apolloFacade.notify(apolloConfig, releaseEvent, 99999, application);
     }

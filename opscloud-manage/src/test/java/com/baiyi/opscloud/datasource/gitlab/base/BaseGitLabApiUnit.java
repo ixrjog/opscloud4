@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.gitlab.base;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 
 import jakarta.annotation.Resource;
 
@@ -14,15 +14,14 @@ import jakarta.annotation.Resource;
 public class BaseGitLabApiUnit extends BaseUnit {
 
     @Resource
-    private DsConfigHelper dsConfigHelper;
+    private DsConfigManager dsConfigManager;
 
     protected GitLabConfig getConfigById(int id) {
-        return dsConfigHelper.build(dsConfigHelper.getConfigById(id), GitLabConfig.class);
+        return dsConfigManager.build(dsConfigManager.getConfigById(id), GitLabConfig.class);
     }
 
     protected GitLabConfig getConfig() {
-        // config_gitlab.chuanyinet.com
-        return dsConfigHelper.build(dsConfigHelper.getConfigById(26), GitLabConfig.class);
+        return dsConfigManager.build(dsConfigManager.getConfigById(26), GitLabConfig.class);
     }
 
 }

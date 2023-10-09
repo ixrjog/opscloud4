@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.jenkins.engine.impl;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
 import com.baiyi.opscloud.datasource.jenkins.engine.JenkinsBuildExecutorHelper;
 import com.baiyi.opscloud.datasource.jenkins.model.Computer;
@@ -42,13 +42,13 @@ public class JenkinsBuildExecutorHelperImpl implements JenkinsBuildExecutorHelpe
 
     public final static String OFFLINE = "(Offline)";
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     @Override
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10S, key = "'jenkins.build.executor#instance_uuid_'+ #instance.uuid", unless = "#result == null")
     public JenkinsBuildExecutorStatusVO.Children generatorBuildExecutorStatus(DatasourceInstance instance) {
-        DatasourceConfig datasourceConfig = dsConfigHelper.getConfigByInstanceUuid(instance.getUuid());
-        JenkinsConfig jenkinsConfig = dsConfigHelper.build(datasourceConfig, JenkinsConfig.class);
+        DatasourceConfig datasourceConfig = dsConfigManager.getConfigByInstanceUuid(instance.getUuid());
+        JenkinsConfig jenkinsConfig = dsConfigManager.build(datasourceConfig, JenkinsConfig.class);
         List<JenkinsBuildExecutorStatusVO.Children> children = buildComputers(jenkinsConfig.getJenkins());
         return JenkinsBuildExecutorStatusVO.Children.builder()
                 .name(StringUtils.isNoneBlank(jenkinsConfig.getJenkins().getName()) ? jenkinsConfig.getJenkins().getName() : instance.getInstanceName())

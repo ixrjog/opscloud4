@@ -22,8 +22,8 @@ public class KubernetesIngressTemplateProvider extends AbstractTemplateProvider<
 
     @Override
     protected Ingress produce(BusinessTemplate bizTemplate, String content) {
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
-        KubernetesConfig.Kubernetes config = dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
+        KubernetesConfig.Kubernetes config = dsConfigManager.build(dsConfig, KubernetesConfig.class).getKubernetes();
         if (KubernetesIngressDriver.get(config, content) == null) {
             return KubernetesIngressDriver.create(config, content);
         } else {

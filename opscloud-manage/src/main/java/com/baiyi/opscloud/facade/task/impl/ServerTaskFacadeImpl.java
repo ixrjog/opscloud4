@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.common.util.YamlUtil;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.core.util.SystemEnvUtil;
@@ -68,7 +68,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     private AnsiblePlaybookService ansiblePlaybookService;
 
     @Resource
-    private DsConfigHelper dsConfigHelper;
+    private DsConfigManager dsConfigManager;
 
     @Resource
     private ServerTaskPacker serverTaskPacker;
@@ -122,7 +122,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
         // 构建上下文
         DsInstanceContext instanceContext = buildDsInstanceContext(serverTask.getInstanceUuid());
         AnsibleConfig.Ansible ansible =
-                dsConfigHelper.build(instanceContext.getDsConfig(), AnsibleConfig.class).getAnsible();
+                dsConfigManager.build(instanceContext.getDsConfig(), AnsibleConfig.class).getAnsible();
         AnsiblePlaybook ansiblePlaybook = ansiblePlaybookService.getById(serverTask.getAnsiblePlaybookId());
 
         AnsiblePlaybookArgs args = AnsiblePlaybookArgs.builder()

@@ -7,7 +7,7 @@ import com.baiyi.opscloud.common.holder.WorkOrderApolloReleaseHolder;
 import com.baiyi.opscloud.common.util.BeetlUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.common.util.StringFormatter;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.apollo.entity.InterceptRelease;
 import com.baiyi.opscloud.datasource.apollo.provider.ApolloInterceptReleaseProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
@@ -52,7 +52,7 @@ public class ApolloFacadeImpl implements ApolloFacade {
 
     private final DsConfigService dsConfigService;
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     private final ApolloRuleValidator apolloRuleValidator;
 
@@ -82,7 +82,7 @@ public class ApolloFacadeImpl implements ApolloFacade {
         List<DatasourceConfig> dsConfigs = dsConfigService.queryByDsType(DsTypeEnum.APOLLO.getType());
         // 通过Token过滤实例
         Optional<ApolloConfig> optionalConfig = dsConfigs.stream()
-                .map(config -> dsConfigHelper.build(config, ApolloConfig.class))
+                .map(config -> dsConfigManager.build(config, ApolloConfig.class))
                 .toList()
                 .stream()
                 .filter(e -> e.getApollo().filter(releaseEvent.getToken()))

@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.common.util.GitLabTokenUtil;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -31,7 +31,7 @@ public class GitLabInstanceStore extends BaseManager {
 
     private final DsConfigService dsConfigService;
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     /**
      * 支持SystemHooks标签的实例类型
@@ -51,7 +51,7 @@ public class GitLabInstanceStore extends BaseManager {
         }
         return instances.stream().filter(i -> {
             DatasourceConfig datasourceConfig = dsConfigService.getById(i.getConfigId());
-            GitLabConfig gitlabDsInstanceConfig = dsConfigHelper.build(datasourceConfig, GitLabConfig.class);
+            GitLabConfig gitlabDsInstanceConfig = dsConfigManager.build(datasourceConfig, GitLabConfig.class);
             Optional<String> tokenOptional = Optional.ofNullable(gitlabDsInstanceConfig.getGitlab())
                     .map(GitLabConfig.GitLab::getSystemHooks)
                     .map(GitLabConfig.SystemHooks::getToken);

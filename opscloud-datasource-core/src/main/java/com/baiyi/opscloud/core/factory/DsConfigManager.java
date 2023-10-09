@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Component
 @RequiredArgsConstructor
-public class DsConfigHelper {
+public class DsConfigManager {
 
     private final TemplateUtil templateUtil;
 

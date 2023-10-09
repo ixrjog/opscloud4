@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.BeetlUtil;
 import com.baiyi.opscloud.common.util.TemplateUtil;
 import com.baiyi.opscloud.common.util.YamlUtil;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
@@ -48,7 +48,7 @@ public abstract class AbstractTemplateProvider<T> implements ITemplateProvider, 
     private EnvService envService;
 
     @Resource
-    protected DsConfigHelper dsConfigHelper;
+    protected DsConfigManager dsConfigManager;
 
     @Resource
     protected DsInstanceFacade<T> dsInstanceFacade;

@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.constants.ServerMonitorStatusEnum;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.util.IPUtil;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.domain.constants.TagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -35,7 +35,7 @@ public class ZabbixInstanceManager extends BaseManager {
 
     private final DsConfigService dsConfigService;
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     private final ZabbixV5HostDriver zabbixV5HostDriver;
 
@@ -66,7 +66,7 @@ public class ZabbixInstanceManager extends BaseManager {
         }
         List<ZabbixConfig> zabbixConfigs = instances.stream().map(i -> {
             DatasourceConfig datasourceConfig = dsConfigService.getById(i.getConfigId());
-            return dsConfigHelper.build(datasourceConfig, ZabbixConfig.class);
+            return dsConfigManager.build(datasourceConfig, ZabbixConfig.class);
         }).collect(Collectors.toList());
         servers.forEach(s -> updateServerMonitorStatus(s, zabbixConfigs));
     }

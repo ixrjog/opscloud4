@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.leo.handler.deploy;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
@@ -23,7 +23,7 @@ public abstract class BaseDeployChainHandler {
     public static final String RESULT_ERROR = "ERROR";
 
     @Resource
-    protected DsConfigHelper dsConfigHelper;
+    protected DsConfigManager dsConfigManager;
 
     @Resource
     protected LeoDeployingLog leoLog;
@@ -35,8 +35,8 @@ public abstract class BaseDeployChainHandler {
     private BaseDeployChainHandler next;
 
     protected KubernetesConfig getKubernetesConfigWithUuid(String uuid) {
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(uuid);
-        return dsConfigHelper.build(dsConfig, KubernetesConfig.class);
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(uuid);
+        return dsConfigManager.build(dsConfig, KubernetesConfig.class);
     }
 
     public BaseDeployChainHandler setNextHandler(BaseDeployChainHandler next) {

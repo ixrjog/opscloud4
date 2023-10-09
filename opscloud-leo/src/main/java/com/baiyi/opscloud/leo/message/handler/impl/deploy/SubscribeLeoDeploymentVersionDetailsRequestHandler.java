@@ -2,7 +2,7 @@ package com.baiyi.opscloud.leo.message.handler.impl.deploy;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeploymentVersionDetailsRequestParam;
@@ -59,7 +59,7 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
     private LeoBuildDeploymentDelegate buildDeploymentDelegate;
 
     @Resource
-    private DsConfigHelper dsConfigHelper;
+    private DsConfigManager dsConfigManager;
 
     @Resource
     private LeoBuildImageService buildImageService;
@@ -121,7 +121,7 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
                         return LeoJobVersionVO.DeploymentVersion.EMPTY;
                     }
                     try {
-                        KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
+                        KubernetesConfig kubernetesConfig = dsConfigManager.buildKubernetesConfig(asset.getInstanceUuid());
                         Deployment deployment = KubernetesDeploymentDriver.get(
                                 kubernetesConfig.getKubernetes(),
                                 // namespace

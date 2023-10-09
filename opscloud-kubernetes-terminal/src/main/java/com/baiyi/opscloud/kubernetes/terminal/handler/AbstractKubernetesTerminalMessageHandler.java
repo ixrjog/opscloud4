@@ -2,7 +2,7 @@ package com.baiyi.opscloud.kubernetes.terminal.handler;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.exception.common.OCException;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -36,7 +36,7 @@ public abstract class AbstractKubernetesTerminalMessageHandler<T extends Kuberne
     protected DsInstanceAssetService dsInstanceAssetService;
 
     @Resource
-    private DsConfigHelper dsConfigHelper;
+    private DsConfigManager dsConfigManager;
 
     /**
      * 转换消息
@@ -51,7 +51,7 @@ public abstract class AbstractKubernetesTerminalMessageHandler<T extends Kuberne
     }
 
     private KubernetesConfig buildConfig(String instanceUuid) {
-        return dsConfigHelper.buildKubernetesConfig(instanceUuid);
+        return dsConfigManager.buildKubernetesConfig(instanceUuid);
     }
 
     private DatasourceInstanceAsset getAssetByResource(KubernetesResource kubernetesResource) {

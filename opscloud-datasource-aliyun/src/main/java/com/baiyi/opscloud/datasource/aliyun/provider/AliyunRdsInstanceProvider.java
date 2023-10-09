@@ -46,7 +46,7 @@ public class AliyunRdsInstanceProvider extends BaseAssetProvider<AliyunRds.DBIns
     }
 
     private AliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AliyunConfig.class).getAliyun();
+        return dsConfigManager.build(dsConfig, AliyunConfig.class).getAliyun();
     }
 
     @Override

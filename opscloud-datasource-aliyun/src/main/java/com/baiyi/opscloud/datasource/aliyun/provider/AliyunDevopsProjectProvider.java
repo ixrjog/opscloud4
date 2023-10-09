@@ -39,7 +39,7 @@ public class AliyunDevopsProjectProvider extends BaseAssetProvider<ListProjectsR
     }
 
     private AliyunDevopsConfig.Devops buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AliyunDevopsConfig.class).getDevops();
+        return dsConfigManager.build(dsConfig, AliyunDevopsConfig.class).getDevops();
     }
 
     @Override

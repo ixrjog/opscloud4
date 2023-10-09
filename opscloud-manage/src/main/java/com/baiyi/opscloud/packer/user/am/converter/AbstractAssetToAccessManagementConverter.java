@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.packer.user.am.converter;
 
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
@@ -28,7 +28,7 @@ public abstract class AbstractAssetToAccessManagementConverter implements IAsset
     protected DsConfigService dsConfigService;
 
     @Resource
-    protected DsConfigHelper dsConfigHelper;
+    protected DsConfigManager dsConfigManager;
 
     @Override
     public AccessManagementVO.XAccessManagement toAM(DsAssetVO.Asset asset) {

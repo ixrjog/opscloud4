@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.leo.impl;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.param.leo.LeoBuildPipelineParam;
@@ -35,7 +35,7 @@ public class LeoBuildPipelineFacadeImpl implements LeoBuildPipelineFacade {
 
     private final LeoBuildService buildService;
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     @Override
     public List<LeoBuildPipelineVO.Step> getPipelineRunNodeSteps(LeoBuildPipelineParam.GetPipelineRunNodeSteps param) {
@@ -70,8 +70,8 @@ public class LeoBuildPipelineFacadeImpl implements LeoBuildPipelineFacade {
     }
 
     private JenkinsConfig getJenkinsConfigWithUuid(String uuid) {
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(uuid);
-        return dsConfigHelper.build(dsConfig, JenkinsConfig.class);
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(uuid);
+        return dsConfigManager.build(dsConfig, JenkinsConfig.class);
     }
 
 }

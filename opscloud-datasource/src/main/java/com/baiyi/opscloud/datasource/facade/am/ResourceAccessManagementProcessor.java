@@ -161,8 +161,8 @@ public class ResourceAccessManagementProcessor extends AbstractAccessManagementP
     }
 
     private AliyunConfig.Aliyun buildConfig(String instanceUuid) {
-        DatasourceConfig config = dsConfigHelper.getConfigByInstanceUuid(instanceUuid);
-        return dsConfigHelper.build(config, AliyunConfig.class).getAliyun();
+        DatasourceConfig config = dsConfigManager.getConfigByInstanceUuid(instanceUuid);
+        return dsConfigManager.build(config, AliyunConfig.class).getAliyun();
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.leo.handler.build.strategy.verification.validator.bas
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.core.InstanceHelper;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
@@ -36,7 +36,7 @@ public abstract class BaseCrValidator<T extends BaseDsConfig> implements Initial
     protected EnvService envService;
 
     @Resource
-    protected DsConfigHelper dsConfigHelper;
+    protected DsConfigManager dsConfigManager;
 
     @Resource
     private InstanceHelper instanceHelper;
@@ -122,8 +122,8 @@ public abstract class BaseCrValidator<T extends BaseDsConfig> implements Initial
     protected abstract T getDsConfigByUuid(String uuid);
 
     protected T getDsConfigByUuid(String uuid, Class<T> targetClass) {
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(uuid);
-        return dsConfigHelper.build(dsConfig, targetClass);
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(uuid);
+        return dsConfigManager.build(dsConfig, targetClass);
     }
 
     /**

@@ -43,7 +43,7 @@ public class AwsIamUserProvider extends AbstractAssetRelationProvider<IamUser.Us
     }
 
     private AwsConfig.Aws buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AwsConfig.class).getAws();
+        return dsConfigManager.build(dsConfig, AwsConfig.class).getAws();
     }
 
     @Override

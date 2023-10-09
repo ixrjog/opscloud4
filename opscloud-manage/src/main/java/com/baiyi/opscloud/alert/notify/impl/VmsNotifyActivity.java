@@ -4,7 +4,7 @@ import com.baiyi.opscloud.alert.notify.NotifyMediaEnum;
 import com.baiyi.opscloud.alert.notify.NotifyStatusEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.message.driver.AliyunVmsDriver;
 import com.baiyi.opscloud.domain.alert.AlertContext;
 import com.baiyi.opscloud.domain.alert.AlertNotifyMedia;
@@ -34,14 +34,14 @@ public class VmsNotifyActivity extends AbstractNotifyActivity {
     private AliyunVmsDriver aliyunVmsDriver;
 
     @Resource
-    private DsConfigHelper dsConfigHelper;
+    private DsConfigManager dsConfigManager;
 
     private static final String MAIN_ALIYUN_INSTANCE_UUID = "75cde081a08646e6b8568b3d34f203a3";
 
     private static final Integer NO_CALL_TIME = 3;
 
     private AliyunConfig getConfig() {
-        return dsConfigHelper.build(dsConfigHelper.getConfigByInstanceUuid(MAIN_ALIYUN_INSTANCE_UUID), AliyunConfig.class);
+        return dsConfigManager.build(dsConfigManager.getConfigByInstanceUuid(MAIN_ALIYUN_INSTANCE_UUID), AliyunConfig.class);
     }
 
     @Override

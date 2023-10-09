@@ -73,7 +73,7 @@ public abstract class AbstractZabbixHostServerHandler extends BaseServerHandler<
 
     @Override
     protected void initialConfig(DatasourceConfig dsConfig) {
-        configContext.set(dsConfigHelper.build(dsConfig, ZabbixConfig.class).getZabbix());
+        configContext.set(dsConfigManager.build(dsConfig, ZabbixConfig.class).getZabbix());
     }
 
     @Override

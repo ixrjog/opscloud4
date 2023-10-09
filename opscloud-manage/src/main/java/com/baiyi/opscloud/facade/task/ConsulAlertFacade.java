@@ -79,7 +79,7 @@ public class ConsulAlertFacade extends AbstractAlertRule {
 
     private ConsulConfig.Consul getConfig(String instanceUuid) {
         DatasourceConfig dsConfig = DS_CONFIG_MAP.get(instanceUuid);
-        return dsConfigHelper.build(dsConfig, ConsulConfig.class).getConsul();
+        return dsConfigManager.build(dsConfig, ConsulConfig.class).getConsul();
     }
 
     @Override

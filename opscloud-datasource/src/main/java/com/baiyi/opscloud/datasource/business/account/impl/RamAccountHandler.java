@@ -40,7 +40,7 @@ public class RamAccountHandler extends AbstractAccountHandler {
 
     @Override
     protected void initialConfig(DatasourceConfig dsConfig) {
-        configContext.set(dsConfigHelper.build(dsConfig, AliyunConfig.class).getAliyun());
+        configContext.set(dsConfigManager.build(dsConfig, AliyunConfig.class).getAliyun());
     }
 
     @Override

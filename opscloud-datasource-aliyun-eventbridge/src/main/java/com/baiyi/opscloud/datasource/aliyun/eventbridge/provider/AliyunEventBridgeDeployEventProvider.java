@@ -37,7 +37,7 @@ public class AliyunEventBridgeDeployEventProvider extends BaseAssetProvider<LeoD
     }
 
     private AliyunEventBridgeConfig.EventBridge buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AliyunEventBridgeConfig.class).getEventBridge();
+        return dsConfigManager.build(dsConfig, AliyunEventBridgeConfig.class).getEventBridge();
     }
 
     @Override

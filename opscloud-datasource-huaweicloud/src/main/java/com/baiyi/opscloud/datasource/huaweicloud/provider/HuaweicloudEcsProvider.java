@@ -40,7 +40,7 @@ public class HuaweicloudEcsProvider extends AbstractAssetBusinessRelationProvide
     }
 
     private HuaweicloudConfig.Huaweicloud buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, HuaweicloudConfig.class).getHuaweicloud();
+        return dsConfigManager.build(dsConfig, HuaweicloudConfig.class).getHuaweicloud();
     }
 
     @Override

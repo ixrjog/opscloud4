@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade.kubernetes.impl;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.exception.common.OCException;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.kubernetes.driver.IstioDestinationRuleDriver;
 import com.baiyi.opscloud.datasource.kubernetes.driver.IstioVirtualServiceDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -28,7 +28,7 @@ public class IstioFacadeImpl implements IstioFacade {
 
     private final DsInstanceService dsInstanceService;
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     @Override
     public VirtualService getIstioVirtualService(IstioParam.GetResource getResource) {
@@ -74,7 +74,7 @@ public class IstioFacadeImpl implements IstioFacade {
         if (!DsTypeEnum.KUBERNETES.name().equals(datasourceInstance.getInstanceType())) {
             throw new OCException("数据源实例类型不正确: instanceType={}", datasourceInstance.getInstanceType());
         }
-        return dsConfigHelper.buildKubernetesConfig(datasourceInstance.getUuid());
+        return dsConfigManager.buildKubernetesConfig(datasourceInstance.getUuid());
     }
 
 }

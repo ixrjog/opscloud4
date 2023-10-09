@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.huaweicloud.base;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.HuaweicloudConfig;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 
 import jakarta.annotation.Resource;
 
@@ -15,10 +15,10 @@ import jakarta.annotation.Resource;
 public class BaseHuaweicloudTest extends BaseUnit {
 
     @Resource
-    private DsConfigHelper dsConfigHelper;
+    private DsConfigManager dsConfigManager;
 
     protected HuaweicloudConfig getConfig() {
-        return dsConfigHelper.build(dsConfigHelper.getConfigByDsType(DsTypeEnum.HUAWEICLOUD.getType()), HuaweicloudConfig.class);
+        return dsConfigManager.build(dsConfigManager.getConfigByDsType(DsTypeEnum.HUAWEICLOUD.getType()), HuaweicloudConfig.class);
     }
 
 }

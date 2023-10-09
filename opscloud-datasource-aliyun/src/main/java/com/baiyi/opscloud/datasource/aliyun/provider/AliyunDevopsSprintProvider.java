@@ -41,7 +41,7 @@ public class AliyunDevopsSprintProvider extends BaseAssetProvider<ListSprintsRes
     }
 
     private AliyunDevopsConfig.Devops buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AliyunDevopsConfig.class).getDevops();
+        return dsConfigManager.build(dsConfig, AliyunDevopsConfig.class).getDevops();
     }
 
     @Override

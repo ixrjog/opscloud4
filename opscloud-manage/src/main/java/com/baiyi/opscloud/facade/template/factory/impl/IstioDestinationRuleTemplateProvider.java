@@ -22,8 +22,8 @@ public class IstioDestinationRuleTemplateProvider extends AbstractTemplateProvid
 
     @Override
     protected DestinationRule produce(BusinessTemplate bizTemplate, String content) {
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
-        KubernetesConfig.Kubernetes config = dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
+        KubernetesConfig.Kubernetes config = dsConfigManager.build(dsConfig, KubernetesConfig.class).getKubernetes();
         return IstioDestinationRuleDriver.create(config, content);
     }
 

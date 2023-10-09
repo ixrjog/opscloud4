@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.kubernetes.client.MyKubernetesClientBuilder;
 import com.baiyi.opscloud.datasource.kubernetes.event.KubernetesPodWatch;
 import com.baiyi.opscloud.datasource.kubernetes.event.KubernetesWatchEvent;
@@ -39,7 +39,7 @@ public class KubernetesTest extends BaseUnit {
     private DsConfigService dsConfigService;
 
     @Resource
-    private DsConfigHelper dsFactory;
+    private DsConfigManager dsFactory;
 
     @Test
     void pullNamespaceTest() {

@@ -29,7 +29,7 @@ public class IamAccountHandler extends AbstractAccountHandler {
 
     @Override
     protected void initialConfig(DatasourceConfig dsConfig) {
-        configContext.set(dsConfigHelper.build(dsConfig, AwsConfig.class).getAws());
+        configContext.set(dsConfigManager.build(dsConfig, AwsConfig.class).getAws());
     }
 
     @Override

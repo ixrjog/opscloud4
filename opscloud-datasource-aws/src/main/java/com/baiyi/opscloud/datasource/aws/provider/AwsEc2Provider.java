@@ -45,7 +45,7 @@ public class AwsEc2Provider extends AbstractAssetBusinessRelationProvider<Ec2Ins
     }
 
     private AwsConfig.Aws buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AwsConfig.class).getAws();
+        return dsConfigManager.build(dsConfig, AwsConfig.class).getAws();
     }
 
     @Override

@@ -44,7 +44,7 @@ public class AliyunRedisInstanceProvider extends BaseAssetProvider<AliyunRedis.K
     }
 
     private AliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AliyunConfig.class).getAliyun();
+        return dsConfigManager.build(dsConfig, AliyunConfig.class).getAliyun();
     }
 
     @Override

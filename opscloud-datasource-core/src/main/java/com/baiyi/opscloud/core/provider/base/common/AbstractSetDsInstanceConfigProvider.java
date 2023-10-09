@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.core.provider.base.common;
 
 import com.baiyi.opscloud.core.factory.SetDsInstanceConfigFactory;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.domain.base.IInstanceType;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -18,7 +18,7 @@ import jakarta.annotation.Resource;
 public abstract class AbstractSetDsInstanceConfigProvider<T> extends SimpleDsInstanceProvider implements ISetDsInstanceConfig, IInstanceType, InitializingBean {
 
     @Resource
-    protected DsConfigHelper dsFactory;
+    protected DsConfigManager dsFactory;
 
     @Resource
     protected StringEncryptor stringEncryptor;

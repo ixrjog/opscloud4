@@ -177,8 +177,8 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
     }
 
     private AwsConfig.Aws buildConfig(String instanceUuid) {
-        DatasourceConfig config = dsConfigHelper.getConfigByInstanceUuid(instanceUuid);
-        return dsConfigHelper.build(config, AwsConfig.class).getAws();
+        DatasourceConfig config = dsConfigManager.getConfigByInstanceUuid(instanceUuid);
+        return dsConfigManager.build(config, AwsConfig.class).getAws();
     }
 
 }

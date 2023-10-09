@@ -39,7 +39,7 @@ public class AliyunArmsTraceAppProvider extends BaseAssetProvider<ListTraceAppsR
     }
 
     private AliyunArmsConfig.Arms buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AliyunArmsConfig.class).getArms();
+        return dsConfigManager.build(dsConfig, AliyunArmsConfig.class).getArms();
     }
 
     @Override

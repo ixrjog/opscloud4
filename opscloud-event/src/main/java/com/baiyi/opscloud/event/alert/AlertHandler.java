@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeetlUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.datasource.message.notice.DingtalkSendHelper;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
@@ -59,7 +59,7 @@ public class AlertHandler extends SimpleDsInstanceProvider {
 
     private final DingtalkSendHelper dingtalkSendHelper;
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     private final RedisUtil redisUtil;
 
@@ -80,8 +80,8 @@ public class AlertHandler extends SimpleDsInstanceProvider {
     }
 
     private void instanceSend(DatasourceInstance instance) {
-        DatasourceConfig datasourceConfig = dsConfigHelper.getConfigByInstanceUuid(instance.getUuid());
-        ZabbixConfig zabbixConfig = dsConfigHelper.build(datasourceConfig, ZabbixConfig.class);
+        DatasourceConfig datasourceConfig = dsConfigManager.getConfigByInstanceUuid(instance.getUuid());
+        ZabbixConfig zabbixConfig = dsConfigManager.build(datasourceConfig, ZabbixConfig.class);
         Map<String, List<Event>> eventMap = Maps.newHashMap();
         Map<String, String> hostMap = Maps.newHashMap();
         List<Event> events = eventService.queryEventByInstance(instance.getUuid())

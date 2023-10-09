@@ -51,7 +51,7 @@ public class GitLabSshKeyProvider extends AbstractAssetRelationProvider<SshKey, 
     }
 
     private GitLabConfig.GitLab buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, GitLabConfig.class).getGitlab();
+        return dsConfigManager.build(dsConfig, GitLabConfig.class).getGitlab();
     }
 
     @Override

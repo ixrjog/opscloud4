@@ -28,7 +28,7 @@ public class LdapAuthProvider extends BaseAuthProvider {
     }
 
     private LdapConfig.Ldap buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, LdapConfig.class).getLdap();
+        return dsConfigManager.build(dsConfig, LdapConfig.class).getLdap();
     }
 
     @Override

@@ -42,7 +42,7 @@ public class ZabbixServerGroupHandler extends AbstractServerGroupHandler {
 
     @Override
     protected void initialConfig(DatasourceConfig dsConfig) {
-        configContext.set(dsConfigHelper.build(dsConfig, ZabbixConfig.class).getZabbix());
+        configContext.set(dsConfigManager.build(dsConfig, ZabbixConfig.class).getZabbix());
     }
 
     private ServerProperty.Server getBusinessProperty(ServerGroup serverGroup) {

@@ -62,7 +62,7 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
     }
 
     private DingtalkConfig.Dingtalk buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, DingtalkConfig.class).getDingtalk();
+        return dsConfigManager.build(dsConfig, DingtalkConfig.class).getDingtalk();
     }
 
     @Override

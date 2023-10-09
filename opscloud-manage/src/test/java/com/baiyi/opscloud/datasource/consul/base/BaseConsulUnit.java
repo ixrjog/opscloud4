@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.consul.base;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ConsulConfig;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 
 import jakarta.annotation.Resource;
 
@@ -15,10 +15,10 @@ import jakarta.annotation.Resource;
 public class BaseConsulUnit extends BaseUnit {
 
     @Resource
-    private DsConfigHelper dsConfigHelper;
+    private DsConfigManager dsConfigManager;
 
     protected ConsulConfig getConfig() {
-        return dsConfigHelper.build(dsConfigHelper.getConfigByDsType(DsTypeEnum.CONSUL.getType()), ConsulConfig.class);
+        return dsConfigManager.build(dsConfigManager.getConfigByDsType(DsTypeEnum.CONSUL.getType()), ConsulConfig.class);
     }
 
 }

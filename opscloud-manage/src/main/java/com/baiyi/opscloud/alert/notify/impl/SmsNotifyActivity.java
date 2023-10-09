@@ -3,7 +3,7 @@ package com.baiyi.opscloud.alert.notify.impl;
 import com.baiyi.opscloud.alert.notify.NotifyMediaEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.message.driver.AliyunSmsDriver;
 import com.baiyi.opscloud.domain.alert.AlertContext;
 import com.baiyi.opscloud.domain.alert.AlertNotifyMedia;
@@ -33,7 +33,7 @@ public class SmsNotifyActivity extends AbstractNotifyActivity {
     private AliyunSmsDriver aliyunSmsDriver;
 
     @Resource
-    private DsConfigHelper dsConfigHelper;
+    private DsConfigManager dsConfigManager;
 
     @Resource
     private RedisUtil redisUtil;
@@ -58,7 +58,7 @@ public class SmsNotifyActivity extends AbstractNotifyActivity {
     }
 
     private AliyunConfig getConfig() {
-        return dsConfigHelper.build(dsConfigHelper.getConfigByInstanceUuid(MAIN_ALIYUN_INSTANCE_UUID), AliyunConfig.class);
+        return dsConfigManager.build(dsConfigManager.getConfigByInstanceUuid(MAIN_ALIYUN_INSTANCE_UUID), AliyunConfig.class);
     }
 
     private List<AlertNotifyHistory> buildAlertNotifyHistoryList(AlertNotifyMedia media) {

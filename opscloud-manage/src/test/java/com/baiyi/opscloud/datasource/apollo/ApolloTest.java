@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.apollo;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ApolloConfig;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.apollo.driver.ApolloAppDriver;
 import com.ctrip.framework.apollo.openapi.dto.OpenAppDTO;
 import jakarta.annotation.Resource;
@@ -19,10 +19,10 @@ import java.util.List;
 public class ApolloTest extends BaseUnit {
 
     @Resource
-    private DsConfigHelper dsConfigHelper;
+    private DsConfigManager dsConfigManager;
 
     protected ApolloConfig getConfig() {
-        return dsConfigHelper.build(dsConfigHelper.getConfigByDsType(DsTypeEnum.APOLLO.getType()), ApolloConfig.class);
+        return dsConfigManager.build(dsConfigManager.getConfigByDsType(DsTypeEnum.APOLLO.getType()), ApolloConfig.class);
     }
 
     @Test

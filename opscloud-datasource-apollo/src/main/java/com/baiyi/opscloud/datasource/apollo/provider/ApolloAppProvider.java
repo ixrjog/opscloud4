@@ -47,7 +47,7 @@ public class ApolloAppProvider extends BaseAssetProvider<OpenAppDTO> {
     }
 
     private ApolloConfig.Apollo buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, ApolloConfig.class).getApollo();
+        return dsConfigManager.build(dsConfig, ApolloConfig.class).getApollo();
     }
 
     @Override

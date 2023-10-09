@@ -9,7 +9,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.common.util.StringFormatter;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabRepositoryDriver;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
@@ -94,7 +94,7 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
 
     private final DsInstanceAssetService assetService;
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     private final LeoBuildingLog leoLog;
 
@@ -158,8 +158,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         // gitLab commit信息
         DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, gitLab.getProject().getSshUrl());
         final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
-        GitLabConfig gitLabConfig = dsConfigHelper.build(dsConfig, GitLabConfig.class);
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
+        GitLabConfig gitLabConfig = dsConfigManager.build(dsConfig, GitLabConfig.class);
         Commit commit = gitLabRepoDelegate.getBranchOrTagCommit(gitLabConfig.getGitlab(), projectId, doBuild.getBranch());
         gitLab.getProject().setCommit(
                 LeoBaseModel.GitLabCommit.builder()
@@ -308,8 +308,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                 .map(LeoBaseModel.Jenkins::getInstance)
                 .map(LeoBaseModel.DsInstance::getUuid)
                 .orElseThrow(() -> new LeoBuildException("Configuration does not exist: build->jenkins->instance->uuid"));
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(jenkinsUuid);
-        JenkinsConfig jenkinsConfig = dsConfigHelper.build(dsConfig, JenkinsConfig.class);
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(jenkinsUuid);
+        JenkinsConfig jenkinsConfig = dsConfigManager.build(dsConfig, JenkinsConfig.class);
         try {
             JenkinsPipeline.Step step = blueRestDriver.stopPipeline(jenkinsConfig.getJenkins(), leoBuild.getBuildJobName(), String.valueOf(1));
             leoLog.info(leoBuild, "Stop jenkins job: {}", JSONUtil.writeValueAsString(step));
@@ -355,8 +355,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, options.getSshUrl());
         final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
         final boolean openTag = options.getOpenTag() != null && options.getOpenTag();
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
-        GitLabConfig gitLabConfig = dsConfigHelper.build(dsConfig, GitLabConfig.class);
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
+        GitLabConfig gitLabConfig = dsConfigManager.build(dsConfig, GitLabConfig.class);
         LeoBuildVO.BranchOptions branchOptions = gitLabRepoDelegate.generatorGitLabBranchOptions(gitLabConfig.getGitlab(), projectId, openTag);
         // gitFlow 分支管控
         final boolean gitFlowEnabled = getGitFlowEnabled(leoJob, gitLabConfig);
@@ -411,8 +411,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         }
         DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, getBuildMavenPublishInfo.getSshUrl());
         final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
-        GitLabConfig gitLabConfig = dsConfigHelper.build(dsConfig, GitLabConfig.class);
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
+        GitLabConfig gitLabConfig = dsConfigManager.build(dsConfig, GitLabConfig.class);
 
         final String filePath = Optional.of(getBuildMavenPublishInfo)
                 .map(LeoBuildParam.GetBuildMavenPublishInfo::getTools)
@@ -445,8 +445,8 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         }
         DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, createBuildBranch.getSshUrl());
         final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
-        GitLabConfig gitLabConfig = dsConfigHelper.build(dsConfig, GitLabConfig.class);
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
+        GitLabConfig gitLabConfig = dsConfigManager.build(dsConfig, GitLabConfig.class);
         return gitLabRepoDelegate.createGitLabBranch(gitLabConfig.getGitlab(), projectId, createBuildBranch.getRef());
     }
 

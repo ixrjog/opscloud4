@@ -45,7 +45,7 @@ public class AliyunOnsInstanceV5Provider extends BaseAssetProvider<OnsInstanceV5
     }
 
     private AliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AliyunConfig.class).getAliyun();
+        return dsConfigManager.build(dsConfig, AliyunConfig.class).getAliyun();
     }
 
     @Override

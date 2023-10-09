@@ -48,7 +48,7 @@ public class NacosUserProvider extends BaseAssetProvider<NacosRole.Role> {
     }
 
     private NacosConfig.Nacos buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, NacosConfig.class).getNacos();
+        return dsConfigManager.build(dsConfig, NacosConfig.class).getNacos();
     }
 
     @Override

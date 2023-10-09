@@ -51,7 +51,7 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
     }
 
     private AnsibleConfig.Ansible buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AnsibleConfig.class).getAnsible();
+        return dsConfigManager.build(dsConfig, AnsibleConfig.class).getAnsible();
     }
 
     @Override

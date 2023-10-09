@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.core.provider.asset;
 
 import com.baiyi.opscloud.core.asset.IToAsset;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
@@ -44,7 +44,7 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     private CredentialService credentialService;
 
     @Resource
-    protected DsConfigHelper dsConfigHelper;
+    protected DsConfigManager dsConfigManager;
 
     public interface Model {
         @Schema(description = "增量模式: 不删除旧数据")

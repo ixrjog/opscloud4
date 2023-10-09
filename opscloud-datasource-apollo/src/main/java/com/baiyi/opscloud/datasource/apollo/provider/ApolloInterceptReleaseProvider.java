@@ -39,7 +39,7 @@ public class ApolloInterceptReleaseProvider extends BaseAssetProvider<InterceptR
     }
 
     private MeterSphereConfig.MeterSphere buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, MeterSphereConfig.class).getMeterSphere();
+        return dsConfigManager.build(dsConfig, MeterSphereConfig.class).getMeterSphere();
     }
 
     @Override

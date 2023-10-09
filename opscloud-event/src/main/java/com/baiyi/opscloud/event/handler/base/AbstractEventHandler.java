@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.event.handler.base;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
@@ -48,7 +48,7 @@ public abstract class AbstractEventHandler<E extends IRecover> extends SimpleDsI
     private EventBusinessService eventBusinessService;
 
     @Resource
-    protected DsConfigHelper dsFactory;
+    protected DsConfigManager dsFactory;
 
     @Resource
     private SimpleTagService simpleTagService;

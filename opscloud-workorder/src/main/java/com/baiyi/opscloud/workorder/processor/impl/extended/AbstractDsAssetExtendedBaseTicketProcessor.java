@@ -2,7 +2,7 @@ package com.baiyi.opscloud.workorder.processor.impl.extended;
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.common.util.JSONUtil;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import com.baiyi.opscloud.domain.base.IAssetType;
 import com.baiyi.opscloud.domain.base.IInstanceType;
@@ -32,7 +32,7 @@ public abstract class AbstractDsAssetExtendedBaseTicketProcessor<T, C extends Ba
     protected DsInstanceAssetService dsInstanceAssetService;
 
     @Resource
-    protected DsConfigHelper dsConfigHelper;
+    protected DsConfigManager dsConfigManager;
 
     @Resource
     protected DsInstanceFacade<T> dsInstanceFacade;
@@ -74,8 +74,8 @@ public abstract class AbstractDsAssetExtendedBaseTicketProcessor<T, C extends Ba
      * @return
      */
     protected C getDsConfig(WorkOrderTicketEntry ticketEntry, Class<C> targetClass) {
-        DatasourceConfig datasourceConfig = dsConfigHelper.getConfigByInstanceUuid(ticketEntry.getInstanceUuid());
-        return dsConfigHelper.build(datasourceConfig, targetClass);
+        DatasourceConfig datasourceConfig = dsConfigManager.getConfigByInstanceUuid(ticketEntry.getInstanceUuid());
+        return dsConfigManager.build(datasourceConfig, targetClass);
     }
 
     /**

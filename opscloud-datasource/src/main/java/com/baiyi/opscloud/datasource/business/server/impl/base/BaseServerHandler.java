@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.business.server.impl.base;
 
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.datasource.business.server.IServer;
@@ -25,7 +25,7 @@ import jakarta.annotation.Resource;
 public abstract class BaseServerHandler<T> extends SimpleDsInstanceProvider implements IServer, InitializingBean {
 
     @Resource
-    protected DsConfigHelper dsConfigHelper;
+    protected DsConfigManager dsConfigManager;
 
     @Resource
     private ServerGroupService serverGroupService;

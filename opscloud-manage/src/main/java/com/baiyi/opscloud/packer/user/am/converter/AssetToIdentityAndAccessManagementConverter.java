@@ -20,7 +20,7 @@ public class AssetToIdentityAndAccessManagementConverter extends AbstractAssetTo
 
     @Override
     protected void wrap(AccessManagementVO.XAccessManagement xam, DatasourceConfig datasourceConfig) {
-        AwsConfig config = dsConfigHelper.build(datasourceConfig, AwsConfig.class);
+        AwsConfig config = dsConfigManager.build(datasourceConfig, AwsConfig.class);
         xam.setLoginUser(xam.getUsername());
         xam.setLoginUrl(config.getAws().getAccount().getLoginUrl());
     }

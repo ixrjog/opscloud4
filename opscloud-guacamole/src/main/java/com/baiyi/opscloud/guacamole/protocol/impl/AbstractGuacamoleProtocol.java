@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.GuacamoleConfig;
 import com.baiyi.opscloud.common.util.RandomUtil;
 import com.baiyi.opscloud.core.InstanceHelper;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.param.guacamole.GuacamoleParam;
@@ -41,7 +41,7 @@ public abstract class AbstractGuacamoleProtocol implements IGuacamoleProtocol, I
     private InstanceHelper instanceHelper;
 
     @Resource
-    private DsConfigHelper dsConfigHelper;
+    private DsConfigManager dsConfigManager;
 
     @Resource
     private CredentialService credentialService;
@@ -99,9 +99,9 @@ public abstract class AbstractGuacamoleProtocol implements IGuacamoleProtocol, I
         }
         int index = RandomUtil.random(instances.size());
         DatasourceInstance instance = instances.get(index);
-        DatasourceConfig datasourceConfig = dsConfigHelper.getConfigById(instance.getConfigId());
+        DatasourceConfig datasourceConfig = dsConfigManager.getConfigById(instance.getConfigId());
 
-       return dsConfigHelper.build(datasourceConfig, GuacamoleConfig.class);
+       return dsConfigManager.build(datasourceConfig, GuacamoleConfig.class);
     }
 
     protected ServerProperty.Server getBusinessProperty(Server server) {

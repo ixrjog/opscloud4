@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.kubernetes.handler;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.kubernetes.converter.PodAssetConverter;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Component
 public class KubernetesPodHandler {
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     private final DsInstanceService dsInstanceService;
 
@@ -54,7 +54,7 @@ public class KubernetesPodHandler {
     }
 
     private KubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
+        return dsConfigManager.build(dsConfig, KubernetesConfig.class).getKubernetes();
     }
 
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Pod entity) {

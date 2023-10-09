@@ -22,8 +22,8 @@ public class KubernetesServiceTemplateProvider extends AbstractTemplateProvider<
 
     @Override
     protected Service produce(BusinessTemplate bizTemplate, String content) {
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
-        KubernetesConfig.Kubernetes config = dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
+        KubernetesConfig.Kubernetes config = dsConfigManager.build(dsConfig, KubernetesConfig.class).getKubernetes();
         if (KubernetesServiceDriver.get(config, content) == null) {
             return KubernetesServiceDriver.create(config, content);
         } else {

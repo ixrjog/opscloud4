@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.StringFormatter;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.DataTable;
@@ -98,7 +98,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
 
     private final DsInstanceAssetService assetService;
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     private final DsInstanceFacade<Deployment> dsInstanceFacade;
 
@@ -284,7 +284,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         if (asset == null) {
             throw new LeoDeployException("Asset does not exist: assetId={}", assetId);
         }
-        KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
+        KubernetesConfig kubernetesConfig = dsConfigManager.buildKubernetesConfig(asset.getInstanceUuid());
         final String namespace = asset.getAssetKey2();
         final String deploymentName = asset.getAssetKey();
         Deployment deployment = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), namespace, deploymentName);
@@ -301,7 +301,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         if (asset == null) {
             throw new LeoDeployException("Asset does not exist: assetId={}", queryDeployDeploymentContainer.getAssetId());
         }
-        KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
+        KubernetesConfig kubernetesConfig = dsConfigManager.buildKubernetesConfig(asset.getInstanceUuid());
         // 查询原无状态
         final String namespace = asset.getAssetKey2();
         final String deploymentName = asset.getAssetKey();
@@ -322,7 +322,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         if (asset == null) {
             throw new LeoDeployException("Asset does not exist: assetId={}", updateDeployDeploymentContainerEnv.getAssetId());
         }
-        KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
+        KubernetesConfig kubernetesConfig = dsConfigManager.buildKubernetesConfig(asset.getInstanceUuid());
         // 查询原无状态
         final String namespace = asset.getAssetKey2();
         final String deploymentName = asset.getAssetKey();
@@ -362,7 +362,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         if (asset == null) {
             throw new LeoDeployException("Asset does not exist: assetId={}", updateDeployDeployment.getAssetId());
         }
-        KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
+        KubernetesConfig kubernetesConfig = dsConfigManager.buildKubernetesConfig(asset.getInstanceUuid());
         // 查询原无状态
         final String namespace = asset.getAssetKey2();
         final String deploymentName = asset.getAssetKey();
@@ -390,7 +390,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         if (asset == null) {
             throw new LeoDeployException("Asset does not exist: assetId={}", cloneDeployDeployment.getAssetId());
         }
-        KubernetesConfig kubernetesConfig = dsConfigHelper.buildKubernetesConfig(asset.getInstanceUuid());
+        KubernetesConfig kubernetesConfig = dsConfigManager.buildKubernetesConfig(asset.getInstanceUuid());
         // 查询原无状态
         final String namespace = asset.getAssetKey2();
         final String deploymentName = asset.getAssetKey();

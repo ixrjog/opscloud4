@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.event.NoticeEvent;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.core.InstanceHelper;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.aliyun.eventbridge.driver.AliyunEventBridgeHookDriver;
 import com.baiyi.opscloud.datasource.aliyun.eventbridge.entity.AliyunEventBridgeResult;
 import com.baiyi.opscloud.datasource.aliyun.eventbridge.entity.CloudEvents;
@@ -42,7 +42,7 @@ public class AliyunEventBridgeDeployEventConsumer extends AbstractEventConsumer<
 
     private final InstanceHelper instanceHelper;
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.ALIYUN_EVENTBRIDGE};
 
@@ -64,7 +64,7 @@ public class AliyunEventBridgeDeployEventConsumer extends AbstractEventConsumer<
     }
 
     private AliyunEventBridgeConfig.EventBridge buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AliyunEventBridgeConfig.class).getEventBridge();
+        return dsConfigManager.build(dsConfig, AliyunEventBridgeConfig.class).getEventBridge();
     }
 
     @Override
@@ -72,7 +72,7 @@ public class AliyunEventBridgeDeployEventConsumer extends AbstractEventConsumer<
         LeoHook.DeployHook deployHook = toEventData(noticeEvent.getMessage());
         List<DatasourceInstance> instances = listInstance();
         for (DatasourceInstance instance : instances) {
-            DatasourceConfig dsConfig = dsConfigHelper.getConfigById(instance.getConfigId());
+            DatasourceConfig dsConfig = dsConfigManager.getConfigById(instance.getConfigId());
             AliyunEventBridgeConfig.EventBridge eventBridgeConfig = buildConfig(dsConfig);
             AliyunEventBridgeResult.Result result = null;
             boolean success = false;

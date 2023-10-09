@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.sshserver.commands.custom.kubernetes.base;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
@@ -31,13 +31,13 @@ public class BaseKubernetesCommand {
     protected DsInstanceAssetService dsInstanceAssetService;
 
     @Resource
-    private DsConfigHelper dsConfigHelper;
+    private DsConfigManager dsConfigManager;
 
     @Resource
     protected SimpleTerminalSessionFacade simpleTerminalSessionFacade;
 
     protected KubernetesConfig buildConfig(String instanceUuid) {
-       return dsConfigHelper.buildKubernetesConfig(instanceUuid);
+       return dsConfigManager.buildKubernetesConfig(instanceUuid);
     }
 
 }

@@ -14,7 +14,7 @@ import com.baiyi.opscloud.common.feign.response.MgwCoreResponse;
 import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.holder.WorkOrderSerDeployHolder;
 import com.baiyi.opscloud.common.util.*;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.aws.s3.driver.AmazonS3Driver;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
@@ -60,7 +60,7 @@ import static com.baiyi.opscloud.common.base.Global.ENV_PROD;
 @Component
 public class SerDeployFacadeImpl implements SerDeployFacade {
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
     private final SerDeployTaskService serDeployTaskService;
     private final SerDeployTaskItemService serDeployTaskItemService;
     private final SerDeploySubtaskService serDeploySubtaskService;
@@ -80,11 +80,11 @@ public class SerDeployFacadeImpl implements SerDeployFacade {
 
 
     private AwsConfig getAwsConfig(String instanceUuid) {
-        return dsConfigHelper.build(dsConfigHelper.getConfigByInstanceUuid(instanceUuid), AwsConfig.class);
+        return dsConfigManager.build(dsConfigManager.getConfigByInstanceUuid(instanceUuid), AwsConfig.class);
     }
 
     private SerDeployConfig getSerDeployConfig() {
-        return dsConfigHelper.build(dsConfigHelper.getConfigByDsType(DsTypeEnum.SER_DEPLOY.getType()), SerDeployConfig.class);
+        return dsConfigManager.build(dsConfigManager.getConfigByDsType(DsTypeEnum.SER_DEPLOY.getType()), SerDeployConfig.class);
     }
 
     @Override

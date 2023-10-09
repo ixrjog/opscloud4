@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.jenkins;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.jenkins.base.BaseJenkinsTest;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsServerDriver;
 import com.baiyi.opscloud.datasource.jenkins.engine.JenkinsBuildExecutorHelper;
@@ -28,7 +28,7 @@ public class JenkinsTest extends BaseJenkinsTest {
     private DsConfigService dsConfigService;
 
     @Resource
-    private DsConfigHelper dsFactory;
+    private DsConfigManager dsFactory;
 
     @Resource
     private DsInstanceService dsInstanceService;

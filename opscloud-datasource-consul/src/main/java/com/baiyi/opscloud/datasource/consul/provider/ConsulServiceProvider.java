@@ -46,7 +46,7 @@ public class ConsulServiceProvider extends BaseAssetProvider<ConsulService.Servi
     }
 
     private ConsulConfig.Consul buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, ConsulConfig.class).getConsul();
+        return dsConfigManager.build(dsConfig, ConsulConfig.class).getConsul();
     }
 
     @Override

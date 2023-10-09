@@ -8,7 +8,7 @@ import com.baiyi.opscloud.common.template.YamlVars;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.YamlUtil;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
@@ -65,7 +65,7 @@ public class TemplateFacadeImpl implements TemplateFacade {
 
     private final TemplatePacker templatePacker;
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     private final EnvService envService;
 
@@ -265,8 +265,8 @@ public class TemplateFacadeImpl implements TemplateFacade {
                 Template template = templateService.getById(bizTemplate.getTemplateId());
                 Env env = envService.getByEnvType(bizTemplate.getEnvType());
                 YamlVars.Vars vars = YamlUtil.loadVars(bizTemplate.getVars());
-                DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
-                KubernetesConfig.Kubernetes config = dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
+                DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
+                KubernetesConfig.Kubernetes config = dsConfigManager.build(dsConfig, KubernetesConfig.class).getKubernetes();
                 if (TemplateKeyConstants.DEPLOYMENT.name().equals(template.getTemplateKey())) {
                     setName(bizTemplate, config.getDeployment().getNomenclature(), vars, env);
                     return;

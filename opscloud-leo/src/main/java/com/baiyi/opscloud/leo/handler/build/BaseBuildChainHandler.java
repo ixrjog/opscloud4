@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.leo.handler.build;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
@@ -22,7 +22,7 @@ public abstract class BaseBuildChainHandler {
     public static final String RESULT_ERROR = "ERROR";
 
     @Resource
-    protected DsConfigHelper dsConfigHelper;
+    protected DsConfigManager dsConfigManager;
 
     @Resource
     protected LeoBuildingLog leoLog;
@@ -33,8 +33,8 @@ public abstract class BaseBuildChainHandler {
     private BaseBuildChainHandler next;
 
     protected JenkinsConfig getJenkinsConfigWithUuid(String uuid) {
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(uuid);
-        return dsConfigHelper.build(dsConfig, JenkinsConfig.class);
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(uuid);
+        return dsConfigManager.build(dsConfig, JenkinsConfig.class);
     }
 
     public BaseBuildChainHandler setNextHandler(BaseBuildChainHandler next) {

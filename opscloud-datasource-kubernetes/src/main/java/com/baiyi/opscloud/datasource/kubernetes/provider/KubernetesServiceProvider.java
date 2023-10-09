@@ -47,7 +47,7 @@ public class KubernetesServiceProvider extends BaseAssetProvider<Service> {
     }
 
     private KubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
+        return dsConfigManager.build(dsConfig, KubernetesConfig.class).getKubernetes();
     }
 
     @Override

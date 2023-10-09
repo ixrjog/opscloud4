@@ -3,7 +3,7 @@ package com.baiyi.opscloud.leo.message.handler.impl.build;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
 import com.baiyi.opscloud.datasource.jenkins.driver.JenkinsJobDriver;
 import com.baiyi.opscloud.datasource.jenkins.model.Build;
@@ -42,7 +42,7 @@ public class QueryLeoBuildConsoleStreamRequestHandler extends BaseLeoContinuousD
     private LeoBuildService leoBuildService;
 
     @Resource
-    private DsConfigHelper dsConfigHelper;
+    private DsConfigManager dsConfigManager;
 
     @Resource
     private JenkinsJobDriver jenkinsJobDriver;
@@ -67,8 +67,8 @@ public class QueryLeoBuildConsoleStreamRequestHandler extends BaseLeoContinuousD
                 .map(LeoBaseModel.Jenkins::getInstance)
                 .map(LeoBaseModel.DsInstance::getUuid)
                 .orElseThrow(() -> new LeoBuildException("Jenkins配置不存在！"));
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(jenkinsUuid);
-        JenkinsConfig jenkinsConfig = dsConfigHelper.build(dsConfig, JenkinsConfig.class);
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(jenkinsUuid);
+        JenkinsConfig jenkinsConfig = dsConfigManager.build(dsConfig, JenkinsConfig.class);
 
         try (JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkinsConfig.getJenkins())) {
             JobWithDetails jobWithDetails = jenkinsServer.getJob(leoBuild.getBuildJobName());

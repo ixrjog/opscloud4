@@ -23,8 +23,8 @@ public class KubernetesCustomResourceTemplateProvider extends AbstractTemplatePr
 
     @Override
     protected CustomResourceDefinition produce(BusinessTemplate bizTemplate, String content) {
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
-        KubernetesConfig.Kubernetes config = dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
+        KubernetesConfig.Kubernetes config = dsConfigManager.build(dsConfig, KubernetesConfig.class).getKubernetes();
         return KubernetesCustomResourceDriver.create(config, content);
     }
 

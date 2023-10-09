@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.facade.am;
 
 import com.baiyi.opscloud.common.exception.am.CreateUserException;
 import com.baiyi.opscloud.core.InstanceHelper;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.facade.DsInstanceFacade;
 import com.baiyi.opscloud.datasource.facade.UserAmFacade;
 import com.baiyi.opscloud.datasource.facade.am.base.IAccessManagementProcessor;
@@ -39,7 +39,7 @@ public abstract class AbstractAccessManagementProcessor implements IAccessManage
     private StringEncryptor stringEncryptor;
 
     @Resource
-    protected DsConfigHelper dsConfigHelper;
+    protected DsConfigManager dsConfigManager;
 
     @Resource
     private InstanceHelper instanceHelper;

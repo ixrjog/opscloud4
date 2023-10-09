@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.MeterSphereConfig;
 import com.baiyi.opscloud.common.event.NoticeEvent;
 import com.baiyi.opscloud.core.InstanceHelper;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.metersphere.driver.MeterSphereBuildHookDriver;
 import com.baiyi.opscloud.datasource.metersphere.entity.LeoBuildHook;
 import com.baiyi.opscloud.datasource.metersphere.entity.LeoHookResult;
@@ -38,7 +38,7 @@ public class MeterSphereBuildEventConsumer extends AbstractEventConsumer<LeoHook
 
     private final InstanceHelper instanceHelper;
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.METER_SPHERE};
 
@@ -60,7 +60,7 @@ public class MeterSphereBuildEventConsumer extends AbstractEventConsumer<LeoHook
     }
 
     private MeterSphereConfig.MeterSphere buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, MeterSphereConfig.class).getMeterSphere();
+        return dsConfigManager.build(dsConfig, MeterSphereConfig.class).getMeterSphere();
     }
 
     @Override
@@ -68,7 +68,7 @@ public class MeterSphereBuildEventConsumer extends AbstractEventConsumer<LeoHook
         LeoHook.BuildHook buildHook = toEventData(noticeEvent.getMessage());
         List<DatasourceInstance> instances = listInstance();
         for (DatasourceInstance instance : instances) {
-            DatasourceConfig dsConfig = dsConfigHelper.getConfigById(instance.getConfigId());
+            DatasourceConfig dsConfig = dsConfigManager.getConfigById(instance.getConfigId());
             LeoHookResult.Result result;
             try {
                 result = meterSphereBuildHookDriver.sendHook(buildConfig(dsConfig), buildHook);

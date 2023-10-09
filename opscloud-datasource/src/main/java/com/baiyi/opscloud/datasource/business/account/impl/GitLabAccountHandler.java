@@ -29,7 +29,7 @@ public class GitLabAccountHandler extends AbstractAccountHandler {
 
     @Override
     protected void initialConfig(DatasourceConfig dsConfig) {
-        configContext.set(dsConfigHelper.build(dsConfig, GitLabConfig.class).getGitlab());
+        configContext.set(dsConfigManager.build(dsConfig, GitLabConfig.class).getGitlab());
     }
 
     @Override

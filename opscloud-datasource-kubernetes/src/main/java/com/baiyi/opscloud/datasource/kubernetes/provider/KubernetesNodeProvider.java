@@ -44,7 +44,7 @@ public class KubernetesNodeProvider extends BaseAssetProvider<Node> {
     }
 
     private KubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
+        return dsConfigManager.build(dsConfig, KubernetesConfig.class).getKubernetes();
     }
 
     @Override

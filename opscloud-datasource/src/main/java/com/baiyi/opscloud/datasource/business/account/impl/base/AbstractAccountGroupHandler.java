@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.business.account.impl.base;
 
 import com.baiyi.opscloud.datasource.business.account.AccountGroupHandlerFactory;
 import com.baiyi.opscloud.datasource.business.account.IAccountGroup;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -22,7 +22,7 @@ import jakarta.annotation.Resource;
 public abstract class AbstractAccountGroupHandler extends SimpleDsInstanceProvider implements IAccountGroup, InitializingBean {
 
     @Resource
-    protected DsConfigHelper dsConfigHelper;
+    protected DsConfigManager dsConfigManager;
 
     protected static ThreadLocal<DsInstanceContext> dsInstanceContext = new ThreadLocal<>();
 

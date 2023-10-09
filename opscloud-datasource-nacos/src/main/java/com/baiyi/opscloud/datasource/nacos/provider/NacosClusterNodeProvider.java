@@ -47,7 +47,7 @@ public class NacosClusterNodeProvider extends BaseAssetProvider<NacosCluster.Nod
     }
 
     private NacosConfig.Nacos buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, NacosConfig.class).getNacos();
+        return dsConfigManager.build(dsConfig, NacosConfig.class).getNacos();
     }
 
     @Override

@@ -35,7 +35,7 @@ public abstract class AbstractDingtalkAssetProvider<T> extends AbstractAssetBusi
     }
 
     private DingtalkConfig.Dingtalk buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, DingtalkConfig.class).getDingtalk();
+        return dsConfigManager.build(dsConfig, DingtalkConfig.class).getDingtalk();
     }
 
     protected Set<Long> queryDeptSubIds(DsInstanceContext dsInstanceContext) {

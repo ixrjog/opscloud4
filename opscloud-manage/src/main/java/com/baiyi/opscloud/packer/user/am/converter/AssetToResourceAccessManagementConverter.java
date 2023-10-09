@@ -21,7 +21,7 @@ public class AssetToResourceAccessManagementConverter extends AbstractAssetToAcc
 
     @Override
     protected void wrap(AccessManagementVO.XAccessManagement xam, DatasourceConfig datasourceConfig) {
-        AliyunConfig config = dsConfigHelper.build(datasourceConfig, AliyunConfig.class);
+        AliyunConfig config = dsConfigManager.build(datasourceConfig, AliyunConfig.class);
         xam.setLoginUser(Joiner.on("").join(xam.getUsername(), config.getAliyun().getAccount().getDomain()));
         xam.setLoginUrl(config.getAliyun().getAccount().getLoginUrl(config.getAliyun().getVersion()));
     }

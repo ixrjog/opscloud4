@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.jenkins.base;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 
 import jakarta.annotation.Resource;
 
@@ -15,15 +15,15 @@ import jakarta.annotation.Resource;
 public class BaseJenkinsTest extends BaseUnit {
 
     @Resource
-    private DsConfigHelper dsConfigHelper;
+    private DsConfigManager dsConfigManager;
 
     protected JenkinsConfig getConfig() {
-        return dsConfigHelper.build(dsConfigHelper.getConfigByDsType(DsTypeEnum.JENKINS.getType()), JenkinsConfig.class);
+        return dsConfigManager.build(dsConfigManager.getConfigByDsType(DsTypeEnum.JENKINS.getType()), JenkinsConfig.class);
     }
 
 
     protected JenkinsConfig getConfigById(int id) {
-        return dsConfigHelper.build(dsConfigHelper.getConfigById(id), JenkinsConfig.class);
+        return dsConfigManager.build(dsConfigManager.getConfigById(id), JenkinsConfig.class);
     }
 
 }

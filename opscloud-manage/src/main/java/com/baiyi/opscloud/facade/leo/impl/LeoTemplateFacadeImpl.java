@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade.leo.impl;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
@@ -48,7 +48,7 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
 
     private final LeoTemplatePacker templatePacker;
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     private final JenkinsJobFacade jenkinsJobFacade;
 
@@ -125,8 +125,8 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
     @Override
     @Transactional(rollbackFor = {LeoTemplateException.class})
     public LeoTemplateVO.Template updateLeoTemplateContent(LeoTemplateParam.UpdateTemplate template) {
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(template.getJenkinsInstanceUuid());
-        JenkinsConfig jenkinsConfig = dsConfigHelper.build(dsConfig, JenkinsConfig.class);
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(template.getJenkinsInstanceUuid());
+        JenkinsConfig jenkinsConfig = dsConfigManager.build(dsConfig, JenkinsConfig.class);
         // 从DB中获取配置
         LeoTemplate leoTemplate = templateService.getById(template.getId());
         LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(leoTemplate.getTemplateConfig());
@@ -148,8 +148,8 @@ public class LeoTemplateFacadeImpl implements LeoTemplateFacade {
     @Override
     public void uploadTemplate(int templateId) {
         LeoTemplate leoTemplate = templateService.getById(templateId);
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(leoTemplate.getJenkinsInstanceUuid());
-        JenkinsConfig jenkinsConfig = dsConfigHelper.build(dsConfig, JenkinsConfig.class);
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(leoTemplate.getJenkinsInstanceUuid());
+        JenkinsConfig jenkinsConfig = dsConfigManager.build(dsConfig, JenkinsConfig.class);
         LeoTemplateModel.TemplateConfig templateConfig = LeoTemplateModel.load(leoTemplate.getTemplateConfig());
 
         String folder = Optional.of(templateConfig)

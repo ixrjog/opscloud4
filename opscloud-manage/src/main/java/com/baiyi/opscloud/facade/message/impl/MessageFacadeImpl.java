@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.datasource.LXHLConfig;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.core.InstanceHelper;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.message.LXHLMessageResponse;
 import com.baiyi.opscloud.datasource.message.driver.LXHLMessageDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthPlatform;
@@ -40,7 +40,7 @@ public class MessageFacadeImpl implements MessageFacade {
 
     private final InstanceHelper instanceHelper;
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     private final PlatformNotifyHistoryService platformNotifyHistoryService;
 
@@ -87,6 +87,6 @@ public class MessageFacadeImpl implements MessageFacade {
     private LXHLConfig.Account getInstanceConfig(List<DatasourceInstance> instances) {
         Collections.shuffle(instances);
         DatasourceInstance instance = instances.get(0);
-        return dsConfigHelper.build(dsConfigHelper.getConfigById(instance.getConfigId()), LXHLConfig.class).getAccount();
+        return dsConfigManager.build(dsConfigManager.getConfigById(instance.getConfigId()), LXHLConfig.class).getAccount();
     }
 }

@@ -46,7 +46,7 @@ public class AwsSqsProvider extends AbstractAssetBusinessRelationProvider<Simple
     }
 
     private AwsConfig.Aws buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AwsConfig.class).getAws();
+        return dsConfigManager.build(dsConfig, AwsConfig.class).getAws();
     }
 
     @Override

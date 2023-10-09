@@ -2,7 +2,7 @@ package com.baiyi.opscloud.leo.delegate;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.leo.converter.JenkinsPipelineConverter;
@@ -31,7 +31,7 @@ public class JenkinsPipelineDelegate {
 
     private final BlueRestDriver blueRestDriver;
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'OC4:V0:LEO:BUILD:PIPELINE:BID:' + #build.id")
     public LeoBuildVO.Pipeline getPipelineByCache(LeoBuildVO.Build build, LeoBuildModel.BuildConfig buildConfig) {
@@ -50,8 +50,8 @@ public class JenkinsPipelineDelegate {
             }
         } else {
             try {
-                DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(buildConfig.getBuild().getJenkins().getInstance().getUuid());
-                JenkinsConfig jenkinsConfig = dsConfigHelper.build(dsConfig, JenkinsConfig.class);
+                DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(buildConfig.getBuild().getJenkins().getInstance().getUuid());
+                JenkinsConfig jenkinsConfig = dsConfigManager.build(dsConfig, JenkinsConfig.class);
                 List<JenkinsPipeline.Node> nodes = blueRestDriver.getPipelineNodes(jenkinsConfig.getJenkins(), build.getBuildJobName(), String.valueOf(1));
                 return LeoBuildVO.Pipeline.builder()
                         .nodes(JenkinsPipelineConverter.toLeoBuildNodes(nodes))

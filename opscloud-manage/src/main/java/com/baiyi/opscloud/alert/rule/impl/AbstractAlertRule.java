@@ -2,7 +2,7 @@ package com.baiyi.opscloud.alert.rule.impl;
 
 import com.baiyi.opscloud.alert.rule.IRule;
 import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.domain.alert.AlertContext;
 import com.baiyi.opscloud.domain.alert.AlertRuleMatchExpression;
 import com.baiyi.opscloud.domain.base.IInstanceType;
@@ -34,7 +34,7 @@ public abstract class AbstractAlertRule implements IRule, IInstanceType {
     private RedisUtil redisUtil;
 
     @Resource
-    protected DsConfigHelper dsConfigHelper;
+    protected DsConfigManager dsConfigManager;
 
     @Resource
     protected DsInstanceService dsInstanceService;
@@ -50,7 +50,7 @@ public abstract class AbstractAlertRule implements IRule, IInstanceType {
         DS_CONFIG_MAP.clear();
         List<DatasourceInstance> datasourceInstances = dsInstanceService.listByInstanceType(getInstanceType());
         datasourceInstances.forEach(dsInstance -> {
-            DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(dsInstance.getUuid());
+            DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(dsInstance.getUuid());
             DS_CONFIG_MAP.put(dsInstance.getUuid(), dsConfig);
         });
     }

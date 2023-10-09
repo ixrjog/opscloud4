@@ -61,7 +61,7 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
     }
 
     private AnsibleConfig.Ansible buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AnsibleConfig.class).getAnsible();
+        return dsConfigManager.build(dsConfig, AnsibleConfig.class).getAnsible();
     }
 
     @Override

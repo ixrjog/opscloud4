@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IOUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.core.util.SystemEnvUtil;
@@ -50,7 +50,7 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
     private DsInstanceAssetSubscriptionService dsInstanceAssetSubscriptionService;
 
     @Resource
-    private DsConfigHelper dsConfigHelper;
+    private DsConfigManager dsConfigManager;
 
     @Override
     public DataTable<DsAssetSubscriptionVO.AssetSubscription> queryAssetSubscriptionPage(DsAssetSubscriptionParam.AssetSubscriptionPageQuery pageQuery) {
@@ -87,7 +87,7 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
     @Override
     public void publishAssetSubscription(DatasourceInstanceAssetSubscription datasourceInstanceAssetSubscription) {
         DsInstanceContext instanceContext = buildDsInstanceContext(datasourceInstanceAssetSubscription.getInstanceUuid());
-        AnsibleConfig.Ansible ansible = dsConfigHelper.build(instanceContext.getDsConfig(), AnsibleConfig.class).getAnsible();
+        AnsibleConfig.Ansible ansible = dsConfigManager.build(instanceContext.getDsConfig(), AnsibleConfig.class).getAnsible();
         AnsiblePlaybookArgs args = AnsiblePlaybookArgs.builder()
                 .extraVars(YamlUtil.loadVars(datasourceInstanceAssetSubscription.getVars()).getVars())
                 .keyFile(SystemEnvUtil.renderEnvHome(ansible.getPrivateKey()))
@@ -131,7 +131,7 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
      */
     public String toSubscriptionPlaybookFile(DatasourceInstanceAssetSubscription subscription) {
         DsInstanceContext instanceContext = buildDsInstanceContext(subscription.getInstanceUuid());
-        AnsibleConfig.Ansible ansible = dsConfigHelper.build(instanceContext.getDsConfig(), AnsibleConfig.class).getAnsible();
+        AnsibleConfig.Ansible ansible = dsConfigManager.build(instanceContext.getDsConfig(), AnsibleConfig.class).getAnsible();
         return toSubscriptionPlaybookFile(ansible, subscription);
     }
 

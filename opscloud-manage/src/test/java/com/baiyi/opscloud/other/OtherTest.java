@@ -83,35 +83,6 @@ public class OtherTest extends BaseUnit {
     }
 
     @Test
-    void test3() throws InterruptedException {
-//        consulAlertRule.preData();
-//        DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
-//                .assetType("CONSUL_SERVICE")
-//                .extend(true)
-//                .instanceId(36)
-//                .length(5)
-//                .page(1)
-//                .queryName("device-check")
-//                .relation(false)
-//                .build();
-//        List<DsAssetVO.Asset> assetList = dsInstanceAssetFacade.queryAssetPage(pageQuery).getData();
-//        DatasourceInstance dsInstance = dsInstanceService.getById(36);
-//        DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(dsInstance.getUuid());
-//        ConsulConfig.Consul consul = dsConfigHelper.build(dsConfig, ConsulConfig.class).getConsul();
-//        print("11111");
-//        assetList.forEach(asset -> consulAlertRule.evaluate(asset, consul.getStrategyMatchExpressions()));
-//        print("22222");
-//        assetList.forEach(asset -> consulAlertRule.evaluate(asset, consul.getStrategyMatchExpressions()));
-//        print("33333");
-//        assetList.forEach(asset -> consulAlertRule.evaluate(asset, consul.getStrategyMatchExpressions()));
-//        print("44444");
-//        assetList.forEach(asset -> consulAlertRule.evaluate(asset, consul.getStrategyMatchExpressions()));
-//        print("55555");
-//        assetList.forEach(asset -> consulAlertRule.evaluate(asset, consul.getStrategyMatchExpressions()));
-//        TimeUnit.MINUTES.sleep(20L);
-    }
-
-    @Test
     void test4() throws InterruptedException {
         String key = "redisUtilTest";
         redisUtil.set(key, 1, 1);

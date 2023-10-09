@@ -53,7 +53,7 @@ public class JenkinsTemplateProvider extends BaseAssetProvider<Job> {
     }
 
     private JenkinsConfig.Jenkins buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, JenkinsConfig.class).getJenkins();
+        return dsConfigManager.build(dsConfig, JenkinsConfig.class).getJenkins();
     }
 
     @Override

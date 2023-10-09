@@ -58,7 +58,7 @@ public class DingtalkAppMessageConsumer extends AbstractMessageConsumer<Dingtalk
     @Override
     protected DingtalkConfig.Dingtalk buildConfig(DatasourceInstance instance) {
         DatasourceConfig config = getConfig(instance);
-        return dsConfigHelper.build(config, DingtalkConfig.class).getDingtalk();
+        return dsConfigManager.build(config, DingtalkConfig.class).getDingtalk();
     }
 
     @Override

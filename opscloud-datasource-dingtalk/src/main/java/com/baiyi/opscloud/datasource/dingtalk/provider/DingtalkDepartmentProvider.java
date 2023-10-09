@@ -39,7 +39,7 @@ public class DingtalkDepartmentProvider extends AbstractDingtalkAssetProvider<Di
     }
 
     private DingtalkConfig.Dingtalk buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, DingtalkConfig.class).getDingtalk();
+        return dsConfigManager.build(dsConfig, DingtalkConfig.class).getDingtalk();
     }
 
     @Override

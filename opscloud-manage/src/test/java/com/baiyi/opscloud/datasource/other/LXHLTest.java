@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.other;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.LXHLConfig;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.message.LXHLMessageResponse;
 import com.baiyi.opscloud.datasource.message.driver.LXHLMessageDriver;
 import org.junit.jupiter.api.Test;
@@ -17,14 +17,14 @@ import jakarta.annotation.Resource;
 public class LXHLTest extends BaseUnit {
 
     @Resource
-    private DsConfigHelper dsConfigHelper;
+    private DsConfigManager dsConfigManager;
 
     @Resource
     private LXHLMessageDriver lxhlMessageDriver;
 
     // 45 sms  46 vms
     private LXHLConfig getConfigById(int id) {
-        return dsConfigHelper.build(dsConfigHelper.getConfigById(id), LXHLConfig.class);
+        return dsConfigManager.build(dsConfigManager.getConfigById(id), LXHLConfig.class);
     }
 
     @Test

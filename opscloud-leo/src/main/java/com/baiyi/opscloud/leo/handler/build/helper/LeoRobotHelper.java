@@ -2,7 +2,7 @@ package com.baiyi.opscloud.leo.handler.build.helper;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.DingtalkConfig;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.message.notice.DingtalkSendHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -25,7 +25,7 @@ public class LeoRobotHelper {
 
     private final DsInstanceService dsInstanceService;
 
-    private final DsConfigHelper dsConfigHelper;
+    private final DsConfigManager dsConfigManager;
 
     private final DingtalkSendHelper dingtalkSendHelper;
 
@@ -36,8 +36,8 @@ public class LeoRobotHelper {
     }
 
     public void send(DatasourceInstance dsInstance, String msg) {
-        DatasourceConfig dsConfig = dsConfigHelper.getConfigById(dsInstance.getConfigId());
-        DingtalkConfig dingtalkConfig = dsConfigHelper.build(dsConfig, DingtalkConfig.class);
+        DatasourceConfig dsConfig = dsConfigManager.getConfigById(dsInstance.getConfigId());
+        DingtalkConfig dingtalkConfig = dsConfigManager.build(dsConfig, DingtalkConfig.class);
         final String token = Optional.of(dingtalkConfig)
                 .map(DingtalkConfig::getRobot)
                 .map(DingtalkConfig.Robot::getToken)
