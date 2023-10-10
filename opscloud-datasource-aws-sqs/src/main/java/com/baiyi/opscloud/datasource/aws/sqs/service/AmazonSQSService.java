@@ -5,7 +5,7 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
-import com.baiyi.opscloud.datasource.aws.core.helper.AwsCredentialsHelper;
+import com.baiyi.opscloud.datasource.aws.core.helper.AwsCredentialsManager;
 
 /**
  * @Author baiyi
@@ -18,7 +18,7 @@ public class AmazonSQSService {
     }
 
     public static AmazonSQS buildAmazonSQS(AwsConfig.Aws aws, String regionId) {
-        AWSCredentials credentials = AwsCredentialsHelper.buildAWSCredentials(aws);
+        AWSCredentials credentials = AwsCredentialsManager.buildAWSCredentials(aws);
         return AmazonSQSClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(regionId)

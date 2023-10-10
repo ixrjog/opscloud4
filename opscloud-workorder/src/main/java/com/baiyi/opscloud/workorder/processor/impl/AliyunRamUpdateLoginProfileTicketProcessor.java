@@ -28,9 +28,6 @@ public class AliyunRamUpdateLoginProfileTicketProcessor  extends AbstractDsAsset
     @Resource
     private UserAmFacade userAmFacade;
 
-//    @Resource
-//    private StringEncryptor stringEncryptor;
-
     @Override
     protected void process(WorkOrderTicketEntry ticketEntry, DatasourceInstanceAsset entry) throws TicketProcessException {
         User createUser = queryCreateUser(ticketEntry);

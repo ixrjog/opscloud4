@@ -10,7 +10,7 @@ import com.baiyi.opscloud.common.datasource.AwsConfig;
  * @Version 1.0
  */
 
-public class AwsCredentialsHelper {
+public class AwsCredentialsManager {
 
     public static AWSCredentials buildAWSCredentials(AwsConfig.Aws aws) {
         return new BasicAWSCredentials(aws.getAccount().getAccessKeyId(), aws.getAccount().getSecretKey());

@@ -55,18 +55,22 @@ public class OtherTest extends BaseUnit {
                 .id("1")
                 .build();
 
-        ValidatorFactory vF = Validation.buildDefaultValidatorFactory();
+        try (ValidatorFactory vF = Validation.buildDefaultValidatorFactory()) {
+            Validator v = validatorFactory.getValidator();
 
-        Validator v = validatorFactory.getValidator();
+            StringBuilder sb = new StringBuilder();
 
-        StringBuilder sb = new StringBuilder();
+            Set<ConstraintViolation<ATest>> constraintViolationSet = validator.validate(a);
+            constraintViolationSet.forEach(vInfo -> {
+                sb.append(vInfo.getMessage());
+            });
 
-        Set<ConstraintViolation<ATest>> constraintViolationSet = validator.validate(a);
-        constraintViolationSet.forEach(vInfo -> {
-            sb.append(vInfo.getMessage());
-        });
+            print(sb.toString());
+        } catch (Exception e) {
 
-        print(sb.toString());
+        }
+
+
     }
 
     @Test

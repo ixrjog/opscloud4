@@ -5,7 +5,7 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
-import com.baiyi.opscloud.datasource.aws.core.helper.AwsCredentialsHelper;
+import com.baiyi.opscloud.datasource.aws.core.helper.AwsCredentialsManager;
 
 /**
  * @Author baiyi
@@ -18,7 +18,7 @@ public class AmazonSNSService {
     }
 
     public static AmazonSNS buildAmazonSNS(AwsConfig.Aws aws, String regionId) {
-        AWSCredentials credentials = AwsCredentialsHelper.buildAWSCredentials(aws);
+        AWSCredentials credentials = AwsCredentialsManager.buildAWSCredentials(aws);
         return AmazonSNSClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(regionId)

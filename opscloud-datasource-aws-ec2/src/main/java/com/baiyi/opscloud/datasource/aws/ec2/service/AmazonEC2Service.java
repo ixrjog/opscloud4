@@ -5,7 +5,7 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
-import com.baiyi.opscloud.datasource.aws.core.helper.AwsCredentialsHelper;
+import com.baiyi.opscloud.datasource.aws.core.helper.AwsCredentialsManager;
 
 /**
  * @Author baiyi
@@ -19,7 +19,7 @@ public class AmazonEC2Service {
     }
 
     public static AmazonEC2 buildAmazonEC2(AwsConfig.Aws aws, String regionId) {
-        AWSCredentials credentials = AwsCredentialsHelper.buildAWSCredentials(aws);
+        AWSCredentials credentials = AwsCredentialsManager.buildAWSCredentials(aws);
         // AWSCredentials credentials = awsCore.getAWSCredentials();
         return AmazonEC2ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))

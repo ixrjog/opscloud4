@@ -5,7 +5,7 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagement;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagementClientBuilder;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
-import com.baiyi.opscloud.datasource.aws.core.helper.AwsCredentialsHelper;
+import com.baiyi.opscloud.datasource.aws.core.helper.AwsCredentialsManager;
 
 /**
  * @Author baiyi
@@ -18,7 +18,7 @@ public class AmazonIdentityManagementService {
     }
 
     public static AmazonIdentityManagement buildAmazonIdentityManagement(AwsConfig.Aws aws) {
-        AWSCredentials credentials = AwsCredentialsHelper.buildAWSCredentials(aws);
+        AWSCredentials credentials = AwsCredentialsManager.buildAWSCredentials(aws);
         return AmazonIdentityManagementClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(aws.getRegionId())

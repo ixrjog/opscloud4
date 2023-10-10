@@ -5,7 +5,7 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.services.ecr.AmazonECR;
 import com.amazonaws.services.ecr.AmazonECRClientBuilder;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
-import com.baiyi.opscloud.datasource.aws.core.helper.AwsCredentialsHelper;
+import com.baiyi.opscloud.datasource.aws.core.helper.AwsCredentialsManager;
 
 /**
  * @Author baiyi
@@ -18,7 +18,7 @@ public class AmazonEcrService {
     }
 
     public static AmazonECR buildAmazonECR(AwsConfig.Aws aws) {
-        AWSCredentials credentials = AwsCredentialsHelper.buildAWSCredentials(aws);
+        AWSCredentials credentials = AwsCredentialsManager.buildAWSCredentials(aws);
         return AmazonECRClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(aws.getRegionId())
@@ -26,7 +26,7 @@ public class AmazonEcrService {
     }
 
     public static AmazonECR buildAmazonECR(String regionId, AwsConfig.Aws aws) {
-        AWSCredentials credentials = AwsCredentialsHelper.buildAWSCredentials(aws);
+        AWSCredentials credentials = AwsCredentialsManager.buildAWSCredentials(aws);
         return AmazonECRClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(regionId)

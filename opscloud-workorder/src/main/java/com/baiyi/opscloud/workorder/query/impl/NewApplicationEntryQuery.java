@@ -32,7 +32,7 @@ public class NewApplicationEntryQuery extends BaseTicketEntryQuery<NewApplicatio
 
     @Override
     protected List<NewApplicationEntry.NewApplication> queryEntries(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
-        DsAssetParam.AssetPageQuery pageQuery=   DsAssetParam.AssetPageQuery.builder()
+        DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
                 .instanceUuid(entryQuery.getInstanceUuid())
                 .assetType(DsAssetTypeConstants.GITLAB_PROJECT.name())
                 .queryName(entryQuery.getQueryName())
@@ -40,12 +40,9 @@ public class NewApplicationEntryQuery extends BaseTicketEntryQuery<NewApplicatio
                 .page(1)
                 .length(entryQuery.getLength())
                 .build();
-
-
         DataTable<DatasourceInstanceAsset> dataTable = dsInstanceAssetService.queryPageByParam(pageQuery);
-
         return dataTable.getData().stream().map(e ->
-           BeanCopierUtil.copyProperties(e, NewApplicationEntry.NewApplication.class)
+                BeanCopierUtil.copyProperties(e, NewApplicationEntry.NewApplication.class)
         ).collect(Collectors.toList());
     }
 

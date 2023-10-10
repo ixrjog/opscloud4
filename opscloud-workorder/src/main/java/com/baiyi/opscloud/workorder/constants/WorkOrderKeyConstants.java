@@ -46,6 +46,8 @@ public enum WorkOrderKeyConstants {
     // Ser发布
     SER_DEPLOY,
 
-    APPLICATION_FINOPS_TAG
+    APPLICATION_FINOPS_TAG,
+
+    AWS_TRANSFER_CREATE_USER
 
 }

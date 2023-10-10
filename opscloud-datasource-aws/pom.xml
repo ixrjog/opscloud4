@@ -48,6 +48,11 @@
             <artifactId>opscloud-datasource-aws-s3</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-aws-transfer</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

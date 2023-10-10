@@ -1,25 +1,25 @@
-package com.baiyi.opscloud.datasource.aws.domain.service;
+package com.baiyi.opscloud.datasource.aws.transfer.service;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.services.route53.AmazonRoute53;
-import com.amazonaws.services.route53.AmazonRoute53ClientBuilder;
+import com.amazonaws.services.transfer.AWSTransfer;
+import com.amazonaws.services.transfer.AWSTransferClientBuilder;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.datasource.aws.core.helper.AwsCredentialsManager;
 
 /**
  * @Author baiyi
- * @Date 2022/4/18 17:00
+ * @Date 2023/10/9 17:20
  * @Version 1.0
  */
-public class AmazonRoute53Service {
+public class AwsTransferService {
 
-    private AmazonRoute53Service() {
+    private AwsTransferService() {
     }
 
-    public static AmazonRoute53 buildAmazonRoute53(AwsConfig.Aws aws, String regionId) {
+    public static AWSTransfer buildAwsTransfer(String regionId, AwsConfig.Aws aws) {
         AWSCredentials credentials = AwsCredentialsManager.buildAWSCredentials(aws);
-        return AmazonRoute53ClientBuilder.standard()
+        return AWSTransferClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(regionId)
                 .build();

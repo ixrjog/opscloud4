@@ -29,7 +29,7 @@ public abstract class BaseUserGroupExtendedTicketEntryQuery extends BaseTicketEn
     @Override
     protected List<UserGroup> queryEntries(WorkOrderTicketEntryParam.EntryQuery entryQuery) {
         List<UserGroup> entries = Lists.newArrayList();
-        ITicketProcessor ticketProcessor = WorkOrderTicketProcessorFactory.getByKey(getKey());
+        ITicketProcessor<?> ticketProcessor = WorkOrderTicketProcessorFactory.getByKey(getKey());
         if (ticketProcessor == null) {
             return entries;
         }

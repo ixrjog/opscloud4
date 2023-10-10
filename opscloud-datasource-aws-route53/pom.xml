@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-route53</artifactId>
-            <version>1.12.513</version>
+            <version>${aws-java-sdk.version}</version>
         </dependency>
 
     </dependencies>
