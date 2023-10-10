@@ -1,11 +1,10 @@
 package com.baiyi.opscloud.leo.supervisor.strategy;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
+import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO;
-import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
@@ -22,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO.MAX_RESTART;
 
 /**
  * @Author baiyi
@@ -105,21 +102,6 @@ public class SupervisingWithRedeployStrategy extends SupervisingStrategy {
             return true;
         }
         return false;
-    }
-
-    @Override
-    protected void verifyError(LeoDeploy leoDeploy, LeoDeployingVO.Deploying deploying) {
-        if (deploying.isMaxRestartError()) {
-            LeoDeploy saveLeoDeploy = LeoDeploy.builder()
-                    .id(leoDeploy.getId())
-                    .endTime(new Date())
-                    .deployResult("ERROR")
-                    .deployStatus(StringFormatter.format("执行部署任务阶段: 容器重启次数超过最大值 maxRestart={}", MAX_RESTART))
-                    .isFinish(true)
-                    .isActive(false)
-                    .build();
-            leoDeployService.updateByPrimaryKeySelective(saveLeoDeploy);
-        }
     }
 
     @Override

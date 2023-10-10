@@ -55,6 +55,9 @@ public class LeoDeployVO {
         @Schema(description = "部署详情")
         private Object deployDetails;
 
+        @Schema(description = "部署日志")
+        private List<LeoLogVO.Log> deployLogs;
+
         private Integer id;
         private Integer applicationId;
         private Integer jobId;

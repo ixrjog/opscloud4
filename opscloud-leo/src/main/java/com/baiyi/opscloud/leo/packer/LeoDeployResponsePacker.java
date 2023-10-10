@@ -3,11 +3,16 @@ package com.baiyi.opscloud.leo.packer;
 import com.baiyi.opscloud.common.annotation.AgoWrapper;
 import com.baiyi.opscloud.common.annotation.RuntimeWrapper;
 import com.baiyi.opscloud.common.annotation.TagsWrapper;
+import com.baiyi.opscloud.domain.generator.opscloud.LeoDeployLog;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployVO;
+import com.baiyi.opscloud.domain.vo.leo.LeoLogVO;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
+import com.baiyi.opscloud.service.leo.LeoDeployLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -19,12 +24,31 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LeoDeployResponsePacker {
 
+    private final LeoDeployLogService leoDeployLogService;
+
     @AgoWrapper(extend = true)
     @RuntimeWrapper(extend = true)
     @TagsWrapper(extend = true)
     public void wrap(LeoDeployVO.Deploy deploy) {
         LeoDeployModel.DeployConfig deployConfig = LeoDeployModel.load(deploy.getDeployConfig());
         deploy.setDeployDetails(deployConfig);
+        wrapLogs(deploy);
+    }
+
+    private void wrapLogs(LeoDeployVO.Deploy deploy) {
+        deploy.setDeployLogs(leoDeployLogService.queryByDeployId(deploy.getId()).stream()
+                .map(this::toLog)
+                .collect(Collectors.toList())
+        );
+    }
+
+    private LeoLogVO.Log toLog(LeoDeployLog leoDeployLog) {
+        return LeoLogVO.Log.builder()
+                .id(leoDeployLog.getId())
+                .level(leoDeployLog.getLogLevel())
+                .log(leoDeployLog.getLog())
+                .createTime(leoDeployLog.getCreateTime())
+                .build();
     }
 
 }

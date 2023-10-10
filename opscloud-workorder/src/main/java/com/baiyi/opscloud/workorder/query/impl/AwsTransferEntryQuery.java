@@ -32,7 +32,7 @@ public class AwsTransferEntryQuery extends BaseTicketEntryQuery<AwsTransferCreat
 
     @Override
     protected WorkOrderTicketVO.Entry<AwsTransferCreateUserEntry.TransferUser> toEntry(WorkOrderTicketEntryParam.EntryQuery entryQuery, AwsTransferCreateUserEntry.TransferUser entry) {
-        final String comment = Joiner.on("@").join(entry.getUserName(), "s-6d384561f0da4b148.server.transfer.eu-west-1.amazonaws.com");
+        final String comment = Joiner.on("@").skipNulls().join(entry.getUserName(), "s-6d384561f0da4b148.server.transfer.eu-west-1.amazonaws.com");
         return WorkOrderTicketVO.Entry.<AwsTransferCreateUserEntry.TransferUser>builder()
                 .workOrderTicketId(entryQuery.getWorkOrderTicketId())
                 .name(entry.getUserName())

@@ -102,6 +102,7 @@
         <guava.version>32.0.0-jre</guava.version>
         <jsch.version>0.2.8</jsch.version>
 
+        <huaweicloud-sdk.version>3.1.49</huaweicloud-sdk.version>
         <aws-java-sdk.version>1.12.565</aws-java-sdk.version>
 
     </properties>

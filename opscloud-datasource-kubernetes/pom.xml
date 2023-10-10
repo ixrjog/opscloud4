@@ -11,6 +11,10 @@
 
     <artifactId>opscloud-datasource-kubernetes</artifactId>
 
+    <properties>
+        <fabric8-sdk.version>6.9.0</fabric8-sdk.version>
+    </properties>
+
     <dependencies>
 
         <dependency>
@@ -24,21 +28,21 @@
         <dependency>
             <groupId>io.fabric8</groupId>
             <artifactId>kubernetes-client</artifactId>
-            <version>6.9.0</version>
+            <version>${fabric8-sdk.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.fabric8/kubernetes-model -->
         <dependency>
             <groupId>io.fabric8</groupId>
             <artifactId>kubernetes-model</artifactId>
-            <version>6.9.0</version>
+            <version>${fabric8-sdk.version}</version>
         </dependency>
 
         <!--  https://search.maven.org/artifact/io.fabric8/istio-client/6.9.0/jar?eh= -->
         <dependency>
             <groupId>io.fabric8</groupId>
             <artifactId>istio-client</artifactId>
-            <version>6.9.0</version>
+            <version>${fabric8-sdk.version}</version>
         </dependency>
 
     </dependencies>

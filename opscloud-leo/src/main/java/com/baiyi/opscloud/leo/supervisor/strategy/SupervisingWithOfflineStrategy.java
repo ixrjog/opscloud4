@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.leo.supervisor.strategy;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesPodDriver;
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
@@ -19,8 +18,6 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
-import static com.baiyi.opscloud.domain.vo.leo.LeoDeployingVO.MAX_RESTART;
 
 /**
  * @Author baiyi
@@ -83,21 +80,6 @@ public class SupervisingWithOfflineStrategy extends SupervisingStrategy {
             return true;
         }
         return false;
-    }
-
-    @Override
-    protected void verifyError(LeoDeploy leoDeploy, LeoDeployingVO.Deploying deploying) {
-        if (deploying.isMaxRestartError()) {
-            LeoDeploy saveLeoDeploy = LeoDeploy.builder()
-                    .id(leoDeploy.getId())
-                    .endTime(new Date())
-                    .deployResult("ERROR")
-                    .deployStatus(StringFormatter.format("执行部署任务阶段: 容器重启次数超过最大值 maxRestart={}", MAX_RESTART))
-                    .isFinish(true)
-                    .isActive(false)
-                    .build();
-            leoDeployService.updateByPrimaryKeySelective(saveLeoDeploy);
-        }
     }
 
     @Override
