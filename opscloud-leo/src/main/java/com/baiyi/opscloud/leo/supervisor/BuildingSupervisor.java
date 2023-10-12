@@ -87,6 +87,7 @@ public class BuildingSupervisor implements ISupervisor {
                     .buildStatus(StringFormatter.format("{} 手动停止任务", buildStop.getUsername()))
                     .build();
             save(saveLeoBuild);
+            leoLog.error(leoBuild, StringFormatter.format("{} 手动停止任务", buildStop.getUsername()));
             return true;
         }
         return false;
@@ -115,9 +116,9 @@ public class BuildingSupervisor implements ISupervisor {
                                 .isFinish(true)
                                 .isActive(false)
                                 .buildResult(BuildResult.CANCELLED.name())
-                                .buildStatus("用户取消任务！")
+                                .buildStatus("用户在构建引擎中取消任务！")
                                 .build();
-                        save(saveLeoBuild, "用户取消任务！");
+                        save(saveLeoBuild, "用户在构建引擎中取消任务！");
                         break;
                     }
                     this.build = build;
