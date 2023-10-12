@@ -45,6 +45,9 @@ public class LeoBuildVO {
 
         private List<TagVO.Tag> tags;
 
+        @Schema(description = "构建日志")
+        private List<LeoLogVO.Log> buildLogs;
+
         @Schema(description = "存活")
         private Boolean isLive;
 
