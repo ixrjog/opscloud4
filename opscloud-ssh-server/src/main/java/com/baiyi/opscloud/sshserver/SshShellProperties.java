@@ -16,7 +16,7 @@
 
 package com.baiyi.opscloud.sshserver;
 
-import com.baiyi.opscloud.sshserver.commands.CommandProperties;
+import com.baiyi.opscloud.sshserver.command.CommandProperties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

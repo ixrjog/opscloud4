@@ -1,11 +1,13 @@
-package com.baiyi.opscloud.sshserver.commands.builtin;
+package com.baiyi.opscloud.sshserver.command.builtin;
 
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.SshShellProperties;
-import com.baiyi.opscloud.sshserver.commands.AbstractCommand;
-import com.baiyi.opscloud.sshserver.commands.SshShellComponent;
+import com.baiyi.opscloud.sshserver.command.AbstractCommand;
+import com.baiyi.opscloud.sshserver.command.SshShellComponent;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.SpringBootVersion;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
@@ -28,6 +30,11 @@ public class VersionCommand extends AbstractCommand implements Version.Command {
     public static final String GROUP = "version";
     public static final String COMMAND_VERSION = GROUP;
 
+    private static final String VERSION = "Spring Boot<{}>  Spring Shell<3.1.3>";
+
+//    @Value("${spring.application.spring-shell-starter.version}")
+//    private String shellVersion;
+
     @Resource
     private SshShellHelper sshShellHelper;
 
@@ -38,7 +45,7 @@ public class VersionCommand extends AbstractCommand implements Version.Command {
     @SuppressWarnings("SpringShellCommandInspection")
     @ShellMethod(key = COMMAND_VERSION, value = "Show version info")
     public void version() {
-        sshShellHelper.print("Spring Boot 3.0.6, Spring Shell 3.0.2");
+        sshShellHelper.print(StringFormatter.arrayFormat(VERSION, SpringBootVersion.getVersion()));
     }
 
 }

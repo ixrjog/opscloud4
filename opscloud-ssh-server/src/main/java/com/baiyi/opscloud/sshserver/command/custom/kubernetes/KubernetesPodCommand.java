@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshserver.commands.custom.kubernetes;
+package com.baiyi.opscloud.sshserver.command.custom.kubernetes;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
@@ -30,11 +30,11 @@ import com.baiyi.opscloud.sshserver.SshShellCommandFactory;
 import com.baiyi.opscloud.sshserver.aop.annotation.ScreenClear;
 import com.baiyi.opscloud.sshserver.aop.annotation.SettingContextSessionUser;
 import com.baiyi.opscloud.sshserver.aop.annotation.TerminalSize;
-import com.baiyi.opscloud.sshserver.commands.SshShellComponent;
-import com.baiyi.opscloud.sshserver.commands.custom.context.KubernetesDsInstance;
-import com.baiyi.opscloud.sshserver.commands.custom.context.SessionCommandContext;
-import com.baiyi.opscloud.sshserver.commands.custom.kubernetes.base.BaseKubernetesCommand;
-import com.baiyi.opscloud.sshserver.commands.custom.kubernetes.base.PodContext;
+import com.baiyi.opscloud.sshserver.command.SshShellComponent;
+import com.baiyi.opscloud.sshserver.command.custom.context.KubernetesDsInstance;
+import com.baiyi.opscloud.sshserver.command.custom.context.SessionCommandContext;
+import com.baiyi.opscloud.sshserver.command.custom.kubernetes.base.BaseKubernetesCommand;
+import com.baiyi.opscloud.sshserver.command.custom.kubernetes.base.PodContext;
 import com.baiyi.opscloud.sshserver.util.ServerUtil;
 import com.baiyi.opscloud.sshserver.util.TerminalUtil;
 import com.google.common.base.Joiner;

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.baiyi.opscloud.sshserver.commands.builtin;
+package com.baiyi.opscloud.sshserver.command.builtin;
 
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.SshShellProperties;
-import com.baiyi.opscloud.sshserver.commands.AbstractCommand;
-import com.baiyi.opscloud.sshserver.commands.SshShellComponent;
+import com.baiyi.opscloud.sshserver.command.AbstractCommand;
+import com.baiyi.opscloud.sshserver.command.SshShellComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.shell.Availability;

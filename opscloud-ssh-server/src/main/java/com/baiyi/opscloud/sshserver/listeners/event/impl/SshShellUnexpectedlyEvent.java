@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.sshserver.listeners.event.impl;
 
-import com.baiyi.opscloud.sshserver.commands.custom.context.SessionCommandContext;
+import com.baiyi.opscloud.sshserver.command.custom.context.SessionCommandContext;
 import com.baiyi.opscloud.sshserver.listeners.SshShellEvent;
 import com.baiyi.opscloud.sshserver.listeners.SshShellEventType;
 import com.baiyi.opscloud.sshserver.listeners.event.AbstractSshShellEvent;

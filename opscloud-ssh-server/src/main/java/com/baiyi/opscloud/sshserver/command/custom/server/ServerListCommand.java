@@ -1,13 +1,13 @@
-package com.baiyi.opscloud.sshserver.commands.custom.server;
+package com.baiyi.opscloud.sshserver.command.custom.server;
 
 
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.sshserver.SshShellProperties;
 import com.baiyi.opscloud.sshserver.aop.annotation.ScreenClear;
 import com.baiyi.opscloud.sshserver.aop.annotation.SettingContextSessionUser;
-import com.baiyi.opscloud.sshserver.commands.SshShellComponent;
-import com.baiyi.opscloud.sshserver.commands.custom.context.SessionCommandContext;
-import com.baiyi.opscloud.sshserver.commands.custom.server.param.QueryServerParam;
+import com.baiyi.opscloud.sshserver.command.SshShellComponent;
+import com.baiyi.opscloud.sshserver.command.custom.context.SessionCommandContext;
+import com.baiyi.opscloud.sshserver.command.custom.server.param.QueryServerParam;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;

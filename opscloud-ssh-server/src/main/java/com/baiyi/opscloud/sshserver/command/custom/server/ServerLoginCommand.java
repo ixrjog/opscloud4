@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshserver.commands.custom.server;
+package com.baiyi.opscloud.sshserver.command.custom.server;
 
 import com.baiyi.opscloud.common.exception.ssh.SshException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
@@ -23,8 +23,8 @@ import com.baiyi.opscloud.sshcore.model.SessionIdMapper;
 import com.baiyi.opscloud.sshserver.*;
 import com.baiyi.opscloud.sshserver.aop.annotation.ScreenClear;
 import com.baiyi.opscloud.sshserver.aop.annotation.SettingContextSessionUser;
-import com.baiyi.opscloud.sshserver.commands.SshShellComponent;
-import com.baiyi.opscloud.sshserver.commands.custom.context.SessionCommandContext;
+import com.baiyi.opscloud.sshserver.command.SshShellComponent;
+import com.baiyi.opscloud.sshserver.command.custom.context.SessionCommandContext;
 import com.baiyi.opscloud.sshserver.packer.SshServerPacker;
 import com.baiyi.opscloud.sshserver.util.TerminalUtil;
 import com.google.common.base.Joiner;

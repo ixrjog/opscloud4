@@ -1,7 +1,7 @@
-package com.baiyi.opscloud.sshserver.commands.custom.context;
+package com.baiyi.opscloud.sshserver.command.custom.context;
 
 import com.baiyi.opscloud.domain.param.server.ServerParam;
-import com.baiyi.opscloud.sshserver.commands.custom.kubernetes.base.PodContext;
+import com.baiyi.opscloud.sshserver.command.custom.kubernetes.base.PodContext;
 
 import java.util.Map;
 

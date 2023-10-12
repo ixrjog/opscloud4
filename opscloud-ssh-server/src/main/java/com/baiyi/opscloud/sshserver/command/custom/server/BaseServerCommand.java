@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshserver.commands.custom.server;
+package com.baiyi.opscloud.sshserver.command.custom.server;
 
 import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
@@ -13,8 +13,8 @@ import com.baiyi.opscloud.sshcore.table.PrettyTable;
 import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshShellCommandFactory;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
-import com.baiyi.opscloud.sshserver.commands.custom.context.SessionCommandContext;
-import com.baiyi.opscloud.sshserver.commands.custom.server.param.QueryServerParam;
+import com.baiyi.opscloud.sshserver.command.custom.context.SessionCommandContext;
+import com.baiyi.opscloud.sshserver.command.custom.server.param.QueryServerParam;
 import com.baiyi.opscloud.sshserver.packer.SshServerPacker;
 import com.baiyi.opscloud.sshserver.pagination.TableFooter;
 import com.baiyi.opscloud.sshserver.util.ServerUtil;

@@ -107,4 +107,17 @@ public class NewTimeUtil {
         }
     }
 
+    /**
+     * Calculate how many seconds
+     * @param date
+     * @return
+     */
+    public static long calculateHowManySecondsHavePassed(Date date) {
+        long subTime = System.currentTimeMillis() - date.getTime();
+        if (subTime < 0) {
+            return 0;
+        }
+        return subTime / NewTimeUtil.SECOND_TIME;
+    }
+
 }

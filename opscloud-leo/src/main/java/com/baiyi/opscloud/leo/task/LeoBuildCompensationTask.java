@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.leo.task;
 
 import com.baiyi.opscloud.common.instance.OcInstance;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.constants.HeartbeatTypeConstants;
 import com.baiyi.opscloud.leo.log.LeoBuildingLog;
@@ -13,6 +14,8 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
+
+import static com.baiyi.opscloud.leo.task.LeoDeployCompensationTask.MAX_HEARTBEAT_DELAY;
 
 /**
  * @Author baiyi
@@ -37,14 +40,17 @@ public class LeoBuildCompensationTask {
         }
         leoBuilds.forEach(leoBuild -> {
             if (!heartbeatHolder.isLive(HeartbeatTypeConstants.BUILD, leoBuild.getId())) {
-                LeoBuild saveLeoBuild = LeoBuild.builder()
-                        .buildResult("ERROR")
-                        .endTime(new Date())
-                        .isActive(false)
-                        .isFinish(true)
-                        .build();
-                leobuildService.updateByPrimaryKeySelective(saveLeoBuild);
-                leoLog.error(leoBuild, "任务异常终止: 心跳丢失！");
+                if (NewTimeUtil.calculateHowManySecondsHavePassed(leoBuild.getStartTime()) >= MAX_HEARTBEAT_DELAY) {
+                    LeoBuild saveLeoBuild = LeoBuild.builder()
+                            .buildResult("ERROR")
+                            .endTime(new Date())
+                            .isActive(false)
+                            .isFinish(true)
+                            .buildStatus("Compensation task: 心跳丢失任务异常终止！")
+                            .build();
+                    leobuildService.updateByPrimaryKeySelective(saveLeoBuild);
+                    leoLog.error(leoBuild, "Compensation task: 心跳丢失任务异常终止！");
+                }
             }
         });
     }

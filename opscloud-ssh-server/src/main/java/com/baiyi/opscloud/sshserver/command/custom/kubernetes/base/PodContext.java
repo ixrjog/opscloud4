@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshserver.commands.custom.kubernetes.base;
+package com.baiyi.opscloud.sshserver.command.custom.kubernetes.base;
 
 import com.baiyi.opscloud.common.util.JSONUtil;
 import lombok.Builder;

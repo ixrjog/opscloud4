@@ -1,11 +1,12 @@
 package com.baiyi.opscloud.leo.task;
 
 import com.baiyi.opscloud.common.instance.OcInstance;
+import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.leo.constants.HeartbeatTypeConstants;
 import com.baiyi.opscloud.leo.handler.deploy.BaseDeployChainHandler;
-import com.baiyi.opscloud.leo.log.LeoDeployingLog;
 import com.baiyi.opscloud.leo.holder.LeoHeartbeatHolder;
+import com.baiyi.opscloud.leo.log.LeoDeployingLog;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,8 @@ public class LeoDeployCompensationTask {
 
     private final LeoDeployingLog leoLog;
 
+    public final static int MAX_HEARTBEAT_DELAY = 60;
+
     public void handleTask() {
         List<LeoDeploy> leoDeploys = deployService.queryNotFinishDeployWithOcInstance(OcInstance.OC_INSTANCE);
         if (CollectionUtils.isEmpty(leoDeploys)) {
@@ -38,16 +41,18 @@ public class LeoDeployCompensationTask {
         }
         leoDeploys.forEach(leoDeploy -> {
             if (!heartbeatHolder.isLive(HeartbeatTypeConstants.DEPLOY, leoDeploy.getId())) {
-                LeoDeploy saveLeoDeploy = LeoDeploy.builder()
-                        .id(leoDeploy.getId())
-                        .deployResult(BaseDeployChainHandler.RESULT_ERROR)
-                        .endTime(new Date())
-                        .isFinish(true)
-                        .isActive(false)
-                        .deployStatus("任务异常终止,心跳丢失！")
-                        .build();
-                deployService.updateByPrimaryKeySelective(saveLeoDeploy);
-                leoLog.error(leoDeploy,"任务异常终止,心跳丢失！");
+                if (NewTimeUtil.calculateHowManySecondsHavePassed(leoDeploy.getStartTime()) >= MAX_HEARTBEAT_DELAY) {
+                    LeoDeploy saveLeoDeploy = LeoDeploy.builder()
+                            .id(leoDeploy.getId())
+                            .deployResult(BaseDeployChainHandler.RESULT_ERROR)
+                            .endTime(new Date())
+                            .isFinish(true)
+                            .isActive(false)
+                            .deployStatus("Compensation task: 心跳丢失任务异常终止！")
+                            .build();
+                    deployService.updateByPrimaryKeySelective(saveLeoDeploy);
+                    leoLog.error(leoDeploy, "Compensation task: 心跳丢失任务异常终止！");
+                }
             }
         });
     }

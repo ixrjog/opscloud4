@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshserver.commands.custom.kubernetes;
+package com.baiyi.opscloud.sshserver.command.custom.kubernetes;
 
 import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.DataTable;
@@ -14,10 +14,10 @@ import com.baiyi.opscloud.sshserver.SshShellCommandFactory;
 import com.baiyi.opscloud.sshserver.aop.annotation.ScreenClear;
 import com.baiyi.opscloud.sshserver.aop.annotation.SettingContextSessionUser;
 import com.baiyi.opscloud.sshserver.aop.annotation.TerminalSize;
-import com.baiyi.opscloud.sshserver.commands.SshShellComponent;
-import com.baiyi.opscloud.sshserver.commands.custom.context.KubernetesDsInstance;
-import com.baiyi.opscloud.sshserver.commands.custom.context.SessionCommandContext;
-import com.baiyi.opscloud.sshserver.commands.custom.kubernetes.base.BaseKubernetesCommand;
+import com.baiyi.opscloud.sshserver.command.SshShellComponent;
+import com.baiyi.opscloud.sshserver.command.custom.context.KubernetesDsInstance;
+import com.baiyi.opscloud.sshserver.command.custom.context.SessionCommandContext;
+import com.baiyi.opscloud.sshserver.command.custom.kubernetes.base.BaseKubernetesCommand;
 import com.baiyi.opscloud.sshserver.pagination.TableFooter;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;

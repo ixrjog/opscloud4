@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshserver.commands.custom.server.param;
+package com.baiyi.opscloud.sshserver.command.custom.server.param;
 
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import lombok.AllArgsConstructor;

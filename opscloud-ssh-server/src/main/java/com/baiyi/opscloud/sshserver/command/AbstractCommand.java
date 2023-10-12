@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.baiyi.opscloud.sshserver.commands;
+package com.baiyi.opscloud.sshserver.command;
 
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.SshShellProperties;
