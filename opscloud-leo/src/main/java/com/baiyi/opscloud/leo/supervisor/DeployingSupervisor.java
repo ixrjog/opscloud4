@@ -81,6 +81,7 @@ public class DeployingSupervisor implements ISupervisor {
                     .deployStatus(StringFormatter.format("{} 手动停止任务", deployStop.getUsername()))
                     .build();
             deployService.updateByPrimaryKeySelective(saveLeoDeploy);
+            leoLog.error(leoDeploy, StringFormatter.format("{} 手动停止任务", deployStop.getUsername()));
             return true;
         }
         return false;
