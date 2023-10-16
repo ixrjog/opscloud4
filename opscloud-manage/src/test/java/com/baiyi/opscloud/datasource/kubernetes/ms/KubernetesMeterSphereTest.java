@@ -30,7 +30,7 @@ public class KubernetesMeterSphereTest extends BaseKubernetesTest {
     @Test
     void updateEnvTest() {
         List<Application> apps = applicationService.queryAll();
-        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.ACK_DAILY);
+        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_TEST);
         for (Application app : apps) {
             updateOneAppEnv(kubernetesConfig, app.getName());
         }
@@ -39,7 +39,8 @@ public class KubernetesMeterSphereTest extends BaseKubernetesTest {
     private void updateOneAppEnv(KubernetesConfig kubernetesConfig, String appName) {
 
         final String namespace = "test";
-        final String deploymentName = appName + "-daily";
+//        final String deploymentName = appName + "-daily";
+        final String deploymentName = appName;
 
         Deployment deployment = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), namespace, deploymentName);
         if (deployment == null) {
@@ -49,12 +50,12 @@ public class KubernetesMeterSphereTest extends BaseKubernetesTest {
             return;
         }
 
-       Optional<List<Container>> optionalContainers = Optional.ofNullable(deployment)
+        Optional<List<Container>> optionalContainers = Optional.ofNullable(deployment)
                 .map(Deployment::getSpec)
                 .map(DeploymentSpec::getTemplate)
                 .map(PodTemplateSpec::getSpec)
                 .map(PodSpec::getContainers);
-        if(optionalContainers.isEmpty()){
+        if (optionalContainers.isEmpty()) {
             return;
         }
 

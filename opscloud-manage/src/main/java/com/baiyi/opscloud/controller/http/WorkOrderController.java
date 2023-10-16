@@ -53,7 +53,7 @@ public class WorkOrderController {
 
     @Operation(summary = "更新工单配置")
     @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> queryWorkOrderPage(@RequestBody @Valid WorkOrderVO.WorkOrder workOrder) {
+    public HttpResult<Boolean> updateWorkOrderPage(@RequestBody @Valid WorkOrderVO.WorkOrder workOrder) {
         workOrderFacade.updateWorkOrder(workOrder);
         return HttpResult.SUCCESS;
     }

@@ -71,7 +71,7 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
                 agentEnv.ifPresent(envVar -> envVar.setValue("-javaagent:/pp-agent/arms-agent.jar"));
                 try {
                     KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), AWS_NAMESPACE, deployment);
-                }catch (Exception e) {
+                } catch (Exception e) {
                     print(deployment.getMetadata().getName());
                 }
 
@@ -81,4 +81,37 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
         });
 
     }
+
+    @Test
+    void updateJacoco() {
+        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_TEST);
+        List<Deployment> deploymentList = KubernetesDeploymentDriver.list(kubernetesConfig.getKubernetes(), AWS_NAMESPACE);
+
+        deploymentList.forEach(deployment -> {
+            String appName = deployment.getMetadata().getName();
+            Optional<Container> optionalContainer =
+                    deployment.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith(appName)).findFirst();
+            if (optionalContainer.isPresent()) {
+                Container container = optionalContainer.get();
+                // env
+                List<EnvVar> envVars = container.getEnv();
+                Optional<EnvVar> agentEnv = envVars.stream().filter(env -> env.getName().equals("JAVA_JVM_AGENT")).findFirst();
+                agentEnv.ifPresent(envVar -> {
+                    if (envVar.getValue().equals("-javaagent:/pp-agent/arms-agent.jar"))
+                            envVar.setValue("-javaagent:/pp-agent/arms-agent.jar -javaagent:/jacoco/jacocoagent.jar=appname=$(APP_NAME),cloud=aws,buildid=$(OC_BUILD_ID)");
+                        }
+                );
+                try {
+                    KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), AWS_NAMESPACE, deployment);
+                } catch (Exception e) {
+                    print(deployment.getMetadata().getName());
+                }
+
+            } else {
+                print(deployment.getMetadata().getName());
+            }
+        });
+
+    }
+
 }
