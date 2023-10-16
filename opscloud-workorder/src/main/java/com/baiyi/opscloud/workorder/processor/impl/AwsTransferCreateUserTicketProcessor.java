@@ -2,6 +2,7 @@ package com.baiyi.opscloud.workorder.processor.impl;
 
 import com.amazonaws.services.transfer.model.HomeDirectoryMapEntry;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
+import com.baiyi.opscloud.common.util.SSHUtil;
 import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.aws.transfer.driver.AwsTransferDriver;
@@ -78,6 +79,7 @@ public class AwsTransferCreateUserTicketProcessor extends BaseTicketProcessor<Aw
         if (StringUtils.isBlank(transferUser.getSshPublicKey())) {
             throw new TicketVerifyException("SshPublicKey cannot be empty");
         }
+        verifySshPublicKey(transferUser.getSshPublicKey());
     }
 
     public static void verifyUserName(String userName) {
@@ -86,6 +88,16 @@ public class AwsTransferCreateUserTicketProcessor extends BaseTicketProcessor<Aw
         }
         if (!userName.matches("^\\w[\\w@.-]{2,99}$")) {
             throw new TicketVerifyException("The UserName does not meet the specifications ! Length Constraints: Minimum length of 3. Maximum length of 100. Pattern: ^[\\w][\\w@.-]{2,99}$");
+        }
+    }
+
+    public static void verifySshPublicKey(String sshPublicKey) {
+        if (StringUtils.isBlank(sshPublicKey)) {
+            throw new TicketVerifyException("SshPublicKey cannot be empty");
+        }
+        String fingerprint = SSHUtil.getFingerprint(sshPublicKey);
+        if (StringUtils.isBlank(fingerprint)) {
+            throw new TicketVerifyException("Incorrect format of SshPublicKey");
         }
     }
 
