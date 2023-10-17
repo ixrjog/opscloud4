@@ -30,7 +30,7 @@ public class MessageController {
         return new HttpResult<>(messageFacade.sendMessage(param));
     }
 
-    @Operation(summary = "发送消息 for grafana")
+    @Operation(summary = "发送消息 toGrafana")
     @PostMapping(value = "/send/grafana", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<LXHLMessageResponse.SendMessage> sendMessage4Grafana(@RequestParam String media,
                                                                            @RequestParam String mobiles,

@@ -62,7 +62,7 @@ public class DsInstanceScheduleController {
 
     @Operation(summary = "检查Cron表达式")
     @PostMapping(value = "/cron/check", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<String>> deleteSchedule(@RequestBody @Valid DsInstanceScheduleParam.CheckCron param) {
+    public HttpResult<List<String>> checkCron(@RequestBody @Valid DsInstanceScheduleParam.CheckCron param) {
         return new HttpResult<>(scheduleFacade.checkCron(param));
     }
 

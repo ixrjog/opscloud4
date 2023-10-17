@@ -2,19 +2,17 @@ package com.baiyi.opscloud.filter;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
-import com.baiyi.opscloud.common.util.GitLabTokenUtil;
 import com.baiyi.opscloud.config.properties.WhiteConfigurationProperties;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
@@ -39,8 +37,6 @@ public class AuthFilter extends OncePerRequestFilter {
      */
     public static final String ACCESS_TOKEN = "AccessToken";
 
-    public static final String GITLAB_TOKEN = "X-Gitlab-Token";
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         response.setContentType(APPLICATION_JSON_VALUE);
@@ -60,14 +56,6 @@ public class AuthFilter extends OncePerRequestFilter {
             if (whiteConfig.getResources().stream().anyMatch(resourceName::endsWith)) {
                 filterChain.doFilter(request, response);
                 return;
-            }
-            // GitLab SystemHooks 鉴权
-            try {
-                String gitLabToken = request.getHeader(GITLAB_TOKEN);
-                if (StringUtils.isNotBlank(gitLabToken)) {
-                    GitLabTokenUtil.setToken(gitLabToken);
-                }
-            } catch (Exception ignored) {
             }
             try {
                 final String token = request.getHeader(AUTHORIZATION);

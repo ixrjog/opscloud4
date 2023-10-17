@@ -3,7 +3,6 @@ package com.baiyi.opscloud.facade.datasource.instance;
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
-import com.baiyi.opscloud.common.util.GitLabTokenUtil;
 import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.domain.constants.TagConstants;
@@ -40,11 +39,12 @@ public class GitLabInstanceStore extends BaseManager {
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10M, key = "'GITLAB#INSTANCE#TOKEN:' + #token", unless = "#result == null")
     public DatasourceInstance getGitLabInstance(String token) {
-        Optional<DatasourceInstance> optional = filterInstance();
+        Optional<DatasourceInstance> optional = filterInstance(token);
         // 数据源配置文件未配置 SystemHooks.SecretToken
         return optional.orElse(null);
     }
-    private Optional<DatasourceInstance> filterInstance() {
+
+    private Optional<DatasourceInstance> filterInstance(String token) {
         List<DatasourceInstance> instances = super.listInstance();
         if (CollectionUtils.isEmpty(instances)) {
             return Optional.empty();
@@ -55,7 +55,7 @@ public class GitLabInstanceStore extends BaseManager {
             Optional<String> tokenOptional = Optional.ofNullable(gitlabDsInstanceConfig.getGitlab())
                     .map(GitLabConfig.GitLab::getSystemHooks)
                     .map(GitLabConfig.SystemHooks::getToken);
-            return tokenOptional.filter(s -> GitLabTokenUtil.getToken().equals(s))
+            return tokenOptional.filter(token::equals)
                     .isPresent();
         }).findFirst();
     }
