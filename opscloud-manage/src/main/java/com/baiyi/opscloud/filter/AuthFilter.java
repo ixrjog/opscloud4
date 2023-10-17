@@ -15,6 +15,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -44,7 +45,7 @@ public class AuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         response.setContentType(APPLICATION_JSON_VALUE);
         if (!"options".equalsIgnoreCase(request.getMethod())) {
-            String resourceName = request.getServletPath();
+            final String resourceName = request.getServletPath();
             // 单页不拦截页面,只拦截协议请求
             if ("/dashboard".equalsIgnoreCase(resourceName)) {
                 filterChain.doFilter(request, response);
@@ -62,9 +63,9 @@ public class AuthFilter extends OncePerRequestFilter {
             }
             // GitLab SystemHooks 鉴权
             try {
-                String gitlabToken = request.getHeader(GITLAB_TOKEN);
-                if (!StringUtils.isEmpty(gitlabToken)) {
-                    GitLabTokenUtil.setToken(gitlabToken);
+                String gitLabToken = request.getHeader(GITLAB_TOKEN);
+                if (StringUtils.isNotBlank(gitLabToken)) {
+                    GitLabTokenUtil.setToken(gitLabToken);
                 }
             } catch (Exception ignored) {
             }

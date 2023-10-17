@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @Builder
-public class GitlabEventContext {
+public class GitLabEventContext {
     private DatasourceInstance instance;
     private GitLabNotifyParam.SystemHook systemHook;
     private Event event;
