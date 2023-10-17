@@ -6,7 +6,9 @@ import com.baiyi.opscloud.common.annotation.TagsWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeployLog;
 import com.baiyi.opscloud.domain.vo.leo.LeoDeployVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoLogVO;
+import com.baiyi.opscloud.leo.constants.HeartbeatTypeConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
+import com.baiyi.opscloud.leo.holder.LeoHeartbeatHolder;
 import com.baiyi.opscloud.service.leo.LeoDeployLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,8 @@ public class LeoDeployResponsePacker {
 
     private final LeoDeployLogService leoDeployLogService;
 
+    private final LeoHeartbeatHolder leoHeartbeatHolder;
+
     @AgoWrapper(extend = true)
     @RuntimeWrapper(extend = true)
     @TagsWrapper(extend = true)
@@ -33,6 +37,7 @@ public class LeoDeployResponsePacker {
         LeoDeployModel.DeployConfig deployConfig = LeoDeployModel.load(deploy.getDeployConfig());
         deploy.setDeployDetails(deployConfig);
         wrapLogs(deploy);
+        deploy.setIsLive(leoHeartbeatHolder.isLive(HeartbeatTypeConstants.DEPLOY, deploy.getId()));
     }
 
     private void wrapLogs(LeoDeployVO.Deploy deploy) {

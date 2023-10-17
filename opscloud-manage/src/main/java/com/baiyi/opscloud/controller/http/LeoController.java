@@ -260,7 +260,11 @@ public class LeoController {
         return HttpResult.SUCCESS;
     }
 
-    // Deploy
+    @Operation(summary = "Query all deploys associated with build")
+    @GetMapping(value = "/deploys/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<LeoDeployVO.Deploy>> getLeoDeploys(@RequestParam int buildId) {
+        return new HttpResult<>(deployFacade.getLeoDeploys(buildId));
+    }
 
     @Operation(summary = "执行部署")
     @PostMapping(value = "/deploy/do", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

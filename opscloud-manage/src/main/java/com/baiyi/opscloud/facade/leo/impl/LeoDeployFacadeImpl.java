@@ -507,11 +507,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     public List<LeoDeployVO.Deploy> getLatestLeoDeploy(LeoMonitorParam.QueryLatestDeploy queryLatestDeploy) {
         List<LeoDeploy> deploys = deployService.queryLatestLeoDeploy(queryLatestDeploy);
         return BeanCopierUtil.copyListProperties(deploys, LeoDeployVO.Deploy.class).stream()
-                .peek(e -> {
-                    deployResponsePacker.wrap(e);
-                    e.setIsLive(leoHeartbeatHolder.isLive(HeartbeatTypeConstants.DEPLOY, e.getId()));
-                })
-                .collect(Collectors.toList());
+                .peek(deployResponsePacker::wrap).collect(Collectors.toList());
     }
 
     @Override
@@ -523,6 +519,13 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         LeoDeployVO.Deploy deploy = BeanCopierUtil.copyProperties(leoDeploy, LeoDeployVO.Deploy.class);
         deployResponsePacker.wrap(deploy);
         return deploy;
+    }
+
+    @Override
+    public List<LeoDeployVO.Deploy> getLeoDeploys(int buildId) {
+        List<LeoDeploy> deploys = deployService.queryWithBuildId(buildId);
+        return BeanCopierUtil.copyListProperties(deploys, LeoDeployVO.Deploy.class).stream()
+                .peek(deployResponsePacker::wrap).collect(Collectors.toList());
     }
 
 }
