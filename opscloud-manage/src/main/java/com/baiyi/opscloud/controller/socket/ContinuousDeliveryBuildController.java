@@ -85,7 +85,7 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
             try {
                 hasLogin(new GsonBuilder().create().fromJson(message, LoginLeoRequestParam.class));
             } catch (AuthenticationException e) {
-                LeoContinuousDeliveryResponse response = LeoContinuousDeliveryResponse.builder()
+                LeoContinuousDeliveryResponse<?> response = LeoContinuousDeliveryResponse.builder()
                         .messageType(LeoRequestType.AUTHENTICATION_FAILURE.name())
                         .build();
                 sendToSession(session, response);
@@ -102,7 +102,7 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
         return requestParam.getMessageType();
     }
 
-    protected void sendToSession(Session session, LeoContinuousDeliveryResponse response) {
+    protected void sendToSession(Session session, LeoContinuousDeliveryResponse<?> response) {
         try {
             if (session.isOpen()) {
                 session.getBasicRemote().sendText(response.toString());

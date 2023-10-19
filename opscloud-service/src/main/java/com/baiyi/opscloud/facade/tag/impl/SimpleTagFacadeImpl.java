@@ -79,7 +79,7 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
     }
 
     @Override
-    public void addTag(TagVO.Tag tag) {
+    public void addTag(TagParam.Tag tag) {
         try {
             tagService.add(BeanCopierUtil.copyProperties(tag, Tag.class));
         } catch (Exception ex) {
@@ -88,7 +88,7 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
     }
 
     @Override
-    public void updateTag(TagVO.Tag tag) {
+    public void updateTag(TagParam.Tag tag) {
         Tag saveTag = Tag.builder()
                 .id(tag.getId())
                 .color(tag.getColor())
