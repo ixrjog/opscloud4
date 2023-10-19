@@ -2,12 +2,15 @@ package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.param.kubernetes.IstioParam;
+import com.baiyi.opscloud.domain.param.kubernetes.KubernetesParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
 import com.baiyi.opscloud.facade.kubernetes.IstioFacade;
+import com.baiyi.opscloud.facade.kubernetes.KubernetesFacade;
 import com.baiyi.opscloud.facade.kubernetes.KubernetesTerminalFacade;
 import com.baiyi.opscloud.loop.kubernetes.KubernetesDeploymentResponse;
 import io.fabric8.istio.api.networking.v1alpha3.DestinationRule;
 import io.fabric8.istio.api.networking.v1alpha3.VirtualService;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -29,6 +32,8 @@ public class KubernetesController {
     private final KubernetesTerminalFacade kubernetesTerminalFacade;
 
     private final IstioFacade istioFacade;
+
+    private final KubernetesFacade kubernetesFacade;
 
     @Operation(summary = "按应用&环境查询无状态信息")
     @GetMapping(value = "/terminal/deployment/get", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -70,6 +75,12 @@ public class KubernetesController {
     @PostMapping(value = "/istio/destinationRule/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DestinationRule> createIstioDestinationRule(@RequestBody IstioParam.CreateResource createResource) {
         return new HttpResult<>(istioFacade.createIstioDestinationRule(createResource));
+    }
+
+    @Operation(summary = "查询Deployment")
+    @PostMapping(value = "/deployment/get", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Deployment> getDeployment(@RequestBody KubernetesParam.GetResource getResource) {
+        return new HttpResult<>(kubernetesFacade.getKubernetesDeployment(getResource));
     }
 
 }

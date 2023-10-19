@@ -49,7 +49,7 @@ public class ProjectController {
 
     @Operation(summary = "查询项目详情")
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<ProjectVO.Project> getProjectById(@Valid Integer id) {
+    public HttpResult<ProjectVO.Project> getProjectById(@Valid int id) {
         return new HttpResult<>(projectFacade.getProjectById(id));
     }
 
@@ -62,7 +62,7 @@ public class ProjectController {
 
     @Operation(summary = "删除项目")
     @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> deleteProject(@RequestParam Integer id) {
+    public HttpResult<Boolean> deleteProject(@RequestParam int id) {
         projectFacade.deleteProject(id);
         return HttpResult.SUCCESS;
     }
@@ -89,7 +89,7 @@ public class ProjectController {
 
     @Operation(summary = "项目资源解除绑定")
     @DeleteMapping(value = "/res/unbind", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> unbindResource(@RequestParam Integer id) {
+    public HttpResult<Boolean> unbindResource(@RequestParam int id) {
         projectFacade.unbindResource(id);
         return HttpResult.SUCCESS;
     }

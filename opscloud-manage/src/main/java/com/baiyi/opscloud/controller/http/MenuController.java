@@ -65,7 +65,7 @@ public class MenuController {
 
     @Operation(summary = "查询子菜单")
     @GetMapping(value = "/child/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<MenuVO.Child>> queryMenuChild(@RequestParam Integer id) {
+    public HttpResult<List<MenuVO.Child>> queryMenuChild(@RequestParam int id) {
         return new HttpResult<>(menuFacade.queryMenuChild(id));
     }
 
@@ -84,13 +84,13 @@ public class MenuController {
 
     @Operation(summary = "查询角色菜单")
     @GetMapping(value = "/role/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<AuthRoleMenu>> queryAuthRoleMenu(Integer roleId) {
+    public HttpResult<List<AuthRoleMenu>> queryAuthRoleMenu(@RequestParam int roleId) {
         return new HttpResult<>(menuFacade.queryAuthRoleMenu(roleId));
     }
 
     @Operation(summary = "查询角色菜单详情")
     @GetMapping(value = "/role/detail/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<MenuVO.Menu>> queryAuthRoleMenuDetail(Integer roleId) {
+    public HttpResult<List<MenuVO.Menu>> queryAuthRoleMenuDetail(@RequestParam int roleId) {
         return new HttpResult<>(menuFacade.queryAuthRoleMenuDetail(roleId));
     }
 

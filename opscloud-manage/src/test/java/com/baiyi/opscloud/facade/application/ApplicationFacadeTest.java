@@ -15,7 +15,7 @@ import jakarta.annotation.Resource;
 class ApplicationFacadeTest extends BaseUnit {
 
     @Resource
-    private KubernetesFacade kubernetesFacade;
+    private ApplicationKubernetesFacade kubernetesFacade;
 
     @Test
     void queryPageTest() {

@@ -251,6 +251,7 @@ public class LeoController {
     @Operation(summary = "查询构建详情")
     @GetMapping(value = "/build/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<LeoBuildVO.Build> getLeoBuild(@RequestParam @Valid int buildId) {
+        // TODO
         return new HttpResult<>(buildFacade.getLeoBuild(buildId));
     }
 
