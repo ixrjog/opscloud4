@@ -16,6 +16,7 @@ import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -62,16 +63,17 @@ public class AssetPullJob extends QuartzJobBean {
                 .instanceId(instanceId)
                 .build();
         try {
-            List<SimpleAssetProvider> providers = getProviders(pullAsset.getInstanceId(), pullAsset.getAssetType());
-            assert providers != null;
-            providers.forEach(x -> x.pullAsset(pullAsset.getInstanceId()));
+            List<SimpleAssetProvider<?>> providers = getProviders(pullAsset.getInstanceId(), pullAsset.getAssetType());
+            if (!CollectionUtils.isEmpty(providers)) {
+                providers.forEach(x -> x.pullAsset(pullAsset.getInstanceId()));
+            }
         } catch (Exception e) {
             log.error("Pull asset task error: assetType={}, instanceId={}, trigger={}, {}", assetType, instanceId, jobExecutionContext.getTrigger(), e.getMessage());
             throw new JobExecutionException(e.getMessage());
         }
     }
 
-    private List<SimpleAssetProvider> getProviders(Integer instanceId, String assetType) {
+    private List<SimpleAssetProvider<?>> getProviders(Integer instanceId, String assetType) {
         DatasourceInstance dsInstance = dsInstanceService.getById(instanceId);
         DsInstanceVO.Instance instance = BeanCopierUtil.copyProperties(dsInstance, DsInstanceVO.Instance.class);
         dsInstancePacker.wrap(instance, SimpleExtend.EXTEND);
