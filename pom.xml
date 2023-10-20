@@ -108,6 +108,9 @@
 
         <spring-shell-version>3.1.3</spring-shell-version>
 
+        <!--  net.javacrumbs.shedlock-->
+        <shedlock-spring.version>5.9.0</shedlock-spring.version>
+
     </properties>
 
     <!--    <properties>-->
