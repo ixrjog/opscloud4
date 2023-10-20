@@ -77,20 +77,20 @@
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-core</artifactId>
-            <version>12.2</version>
+            <version>${github-openfeign.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-gson</artifactId>
-            <version>12.2</version>
+            <version>${github-openfeign.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.github.openfeign/feign-jackson -->
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-jackson</artifactId>
-            <version>12.3</version>
+            <version>${github-openfeign.version}</version>
         </dependency>
 
         <dependency>

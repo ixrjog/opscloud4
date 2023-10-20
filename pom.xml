@@ -111,6 +111,9 @@
         <!--  net.javacrumbs.shedlock-->
         <shedlock-spring.version>5.9.0</shedlock-spring.version>
 
+        <!-- https://mvnrepository.com/artifact/io.github.openfeign/feign-core -->
+        <github-openfeign.version>12.5</github-openfeign.version>
+
     </properties>
 
     <!--    <properties>-->
