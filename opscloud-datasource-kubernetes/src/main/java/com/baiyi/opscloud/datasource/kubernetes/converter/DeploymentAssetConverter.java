@@ -89,12 +89,22 @@ public class DeploymentAssetConverter {
                 memory = limits.get(MEMORY).toString();
             }
         }
+
+        String envoy = "false";
+        Map<String, String> labels = entity.getSpec().getTemplate().getMetadata().getLabels();
+        if (labels.containsKey("sidecar.istio.io/inject")) {
+            if ("true".equalsIgnoreCase(labels.get("sidecar.istio.io/inject"))) {
+                envoy = "true";
+            }
+        }
+
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
                 .paramProperty("replicas", entity.getSpec().getReplicas())
                 .paramProperty("uid", entity.getMetadata().getUid())
                 .paramProperty("resources.limits.cpu", cpu)
                 .paramProperty("resources.limits.memory", memory)
+                .paramProperty("sidecar.istio.io/inject", envoy)
                 .build();
     }
 
