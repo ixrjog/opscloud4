@@ -62,7 +62,7 @@ public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermis
     }
 
     @Override
-    @AssetBusinessRelation // 资产绑定业务对象
+    @AssetBusinessRelation
     public void addUserGroup(UserGroupVO.UserGroup userGroup) {
         userGroupService.add(BeanCopierUtil.copyProperties(userGroup, UserGroup.class));
     }
