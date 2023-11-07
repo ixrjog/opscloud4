@@ -12,19 +12,18 @@ import java.io.Serializable;
 
 /**
  * @Author baiyi
- * @Date 2023/4/10 18:21
+ * @Date 2023/11/2 17:28
  * @Version 1.0
  */
-public class ApplicationReduceReplicasEntry {
+public class KubernetesContainerJvmSpecEntry {
 
     @Builder
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
     public static class KubernetesDeployment implements Serializable {
-
         @Serial
-        private static final long serialVersionUID = -2749378184929243327L;
+        private static final long serialVersionUID = 8774673996156130691L;
 
         @Schema(description = "数据实例UUID")
         private String instanceUuid;
@@ -36,11 +35,8 @@ public class ApplicationReduceReplicasEntry {
 
         private String deploymentName;
 
-        @Schema(description = "原副本数量")
-        private Integer replicas;
-
-        @Schema(description = "缩容后的副本数量")
-        private Integer reduceReplicas;
+        @Schema(description = "规格")
+        private String spec;
 
         private Integer id;
 

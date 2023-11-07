@@ -25,7 +25,7 @@ public class ApplicationDeployEntry {
     public static class LeoBuildVersion extends LeoBuild implements Serializable {
 
         @Serial
-        private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = -6877793248500302561L;
 
         private Application application;
 

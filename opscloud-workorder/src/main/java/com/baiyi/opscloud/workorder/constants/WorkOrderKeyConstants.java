@@ -37,6 +37,9 @@ public enum WorkOrderKeyConstants {
 
     APPLICATION_SCALE_REPLICAS,
     APPLICATION_REDUCE_REPLICAS,
+
+    KUBERNETES_CONTAINER_JVM_SPEC_CHANGES,
+
     // 发布
     APPLICATION_DEPLOY,
     // 新应用
