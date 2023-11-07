@@ -47,6 +47,3 @@ public class OutApiController {
     }
 
 }
-
-
-
