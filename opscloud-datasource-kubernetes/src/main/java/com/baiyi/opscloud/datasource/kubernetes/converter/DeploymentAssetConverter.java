@@ -8,14 +8,13 @@ import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.ResourceRequirements;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @Author baiyi
@@ -31,6 +30,17 @@ public class DeploymentAssetConverter {
     private static final String CPU = "cpu";
 
     private static final String MEMORY = "memory";
+
+    private static final String JAVA_OPTS = "JAVA_OPTS";
+
+    private static final String SIDECAR_ISTIO_IO_INJECT = "sidecar.istio.io/inject";
+
+    private static final String ENV_JAVA_OPTS = "env.java.opts";
+
+    private static final String ENV_JAVA_OPTS_TAG = "env.java.opts.tag";
+
+    // private static final String[] JVM_ARGS_PREFIX = {"-Xms", "-Xmx", "-Xmn", "-XX:MetaspaceSize", "-XX:MaxMetaspaceSize"};
+    private static final String[] JVM_ARGS_PREFIX = {"-Xms", "-Xmx", "-Xmn"};
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Deployment entity) {
         final String namespace = entity.getMetadata().getNamespace();
@@ -53,16 +63,12 @@ public class DeploymentAssetConverter {
                 .createdTime(toUtcDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
 
-        /*
-         *         resources:
-         *           limits:
-         *             cpu: "4"
-         *             memory: 8Gi
-         *           requests:
-         *             cpu: "2"
-         *             memory: 6Gi
-         */
-        Optional<Map<String, Quantity>> optionalLimits = entity
+        AssetContainerBuilder assetContainerBuilder = AssetContainerBuilder.newBuilder()
+                .paramAsset(asset)
+                .paramProperty("replicas", entity.getSpec().getReplicas())
+                .paramProperty("uid", entity.getMetadata().getUid());
+
+        Optional<Container> optionalContainer = entity
                 .getSpec()
                 .getTemplate()
                 .getSpec()
@@ -73,39 +79,61 @@ public class DeploymentAssetConverter {
                  * 容器名称 c: account
                  */
                 .filter(c -> name.startsWith(c.getName()))
-                .findFirst()
+                .findFirst();
+
+        if (optionalContainer.isPresent()) {
+            Container container = optionalContainer.get();
+            setPropertyWithLimits(assetContainerBuilder, container);
+            setPropertyWithJavaOpts(assetContainerBuilder, container);
+        }
+
+        // Istio Envoy
+        Map<String, String> labels = entity.getSpec().getTemplate().getMetadata().getLabels();
+        if (labels.containsKey(SIDECAR_ISTIO_IO_INJECT)) {
+            assetContainerBuilder.paramProperty(SIDECAR_ISTIO_IO_INJECT, "true".equals(labels.get(SIDECAR_ISTIO_IO_INJECT)));
+        }
+        return assetContainerBuilder.build();
+    }
+
+    private static void setPropertyWithLimits(AssetContainerBuilder assetContainerBuilder, Container container) {
+        /*
+         *         resources:
+         *           limits:
+         *             cpu: "4"
+         *             memory: 8Gi
+         *           requests:
+         *             cpu: "2"
+         *             memory: 6Gi
+         */
+        Optional<Map<String, Quantity>> optionalLimits = Optional.of(container)
                 .map(Container::getResources)
                 .map(ResourceRequirements::getLimits);
-
-        String cpu = "n/a";
-        String memory = "n/a";
 
         if (optionalLimits.isPresent()) {
             Map<String, Quantity> limits = optionalLimits.get();
             if (limits.containsKey(CPU)) {
-                cpu = limits.get(CPU).toString();
+                assetContainerBuilder.paramProperty("resources.limits.cpu", limits.get(CPU).toString());
             }
             if (limits.containsKey(MEMORY)) {
-                memory = limits.get(MEMORY).toString();
+                assetContainerBuilder.paramProperty("resources.limits.memory", limits.get(MEMORY).toString());
             }
         }
+    }
 
-        String envoy = "false";
-        Map<String, String> labels = entity.getSpec().getTemplate().getMetadata().getLabels();
-        if (labels.containsKey("sidecar.istio.io/inject")) {
-            if ("true".equalsIgnoreCase(labels.get("sidecar.istio.io/inject"))) {
-                envoy = "true";
-            }
-        }
-
-        return AssetContainerBuilder.newBuilder()
-                .paramAsset(asset)
-                .paramProperty("replicas", entity.getSpec().getReplicas())
-                .paramProperty("uid", entity.getMetadata().getUid())
-                .paramProperty("resources.limits.cpu", cpu)
-                .paramProperty("resources.limits.memory", memory)
-                .paramProperty("sidecar.istio.io/inject", envoy)
-                .build();
+    private static void setPropertyWithJavaOpts(AssetContainerBuilder assetContainerBuilder, Container container) {
+        // Optional<EnvVar> optionalEnvVar =
+        container.getEnv()
+                .stream()
+                .filter(e -> JAVA_OPTS.equals(e.getName()))
+                .findFirst()
+                .ifPresent(javaOptsEnvVar -> {
+                    List<String> javaOptsList = Splitter.onPattern(" |\\n").omitEmptyStrings().splitToList(javaOptsEnvVar.getValue());
+                    assetContainerBuilder.paramProperty(ENV_JAVA_OPTS, Joiner.on("\n").skipNulls().join(javaOptsList));
+                    List<String> tags = javaOptsList.stream().filter(e ->
+                            Arrays.stream(JVM_ARGS_PREFIX).anyMatch(e::startsWith)
+                    ).toList();
+                    assetContainerBuilder.paramProperty(ENV_JAVA_OPTS_TAG, Joiner.on(" ").skipNulls().join(tags));
+                });
     }
 
 }

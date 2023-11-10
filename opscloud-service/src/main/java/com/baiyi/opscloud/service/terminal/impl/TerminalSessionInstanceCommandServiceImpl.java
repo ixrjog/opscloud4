@@ -21,6 +21,7 @@ import java.util.List;
  * @Date 2021/7/28 10:50 上午
  * @Version 1.0
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 @RequiredArgsConstructor
 public class TerminalSessionInstanceCommandServiceImpl implements TerminalSessionInstanceCommandService {

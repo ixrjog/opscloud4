@@ -30,6 +30,7 @@ import java.util.List;
  * @Date 2021/6/16 3:16 下午
  * @Version 1.0
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @BusinessType(BusinessTypeEnum.USERGROUP)
 @Service
 @RequiredArgsConstructor

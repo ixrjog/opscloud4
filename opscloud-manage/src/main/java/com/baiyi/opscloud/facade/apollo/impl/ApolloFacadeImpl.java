@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.apollo.impl;
 
 import com.baiyi.opscloud.common.HttpResult;
+import com.baiyi.opscloud.common.constants.enums.ApolloReleaseActionEnum;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ApolloConfig;
 import com.baiyi.opscloud.common.holder.WorkOrderApolloReleaseHolder;
@@ -29,6 +30,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -103,17 +105,32 @@ public class ApolloFacadeImpl implements ApolloFacade {
                 .map(ApolloConfig.Release::getInterceptor)
                 .map(ApolloConfig.Interceptor::getEnvs)
                 .orElse(Collections.emptyList());
+
         // 环境配置不存在
         if (CollectionUtils.isEmpty(envs)) {
             log.debug("Interceptor environment configuration is empty");
             return HttpResult.SUCCESS;
         }
 
+        // 判断是否是标准应用，若非标准应用则允许发布配置
         Application application = applicationService.getByName(releaseEvent.getAppId());
-        // 应用不存在
         if (application == null) {
             return HttpResult.SUCCESS;
         }
+
+        // 判断动作，禁止全量发布
+        if (StringUtils.isNotBlank(releaseEvent.getAction()) && ApolloReleaseActionEnum.RELEASE.name().equalsIgnoreCase(releaseEvent.getAction())) {
+            // TODO 跳过白名单
+            HttpResult httpResult = HttpResult.builder()
+                    .success(false)
+                    .code(SC_BAD_REQUEST)
+                    .msg("当前应用禁止全量发布配置，请使用灰度发布")
+                    .build();
+            consumeAsset(apolloConfig, releaseEvent, httpResult, NO_WORK_ORDER_ID);
+            return httpResult;
+
+        }
+
 
         // 白名单规则校验
         if (workOrderApolloReleaseHolder.hasKey(application.getId())) {
@@ -220,14 +237,13 @@ public class ApolloFacadeImpl implements ApolloFacade {
         }
     }
 
-
     /**
      * 校验
      */
     public void verifyRule(ApolloParam.ReleaseEvent releaseEvent) {
         final String env = releaseEvent.getEnv().toLowerCase();
         List<LeoRule> rules = leoRuleService.queryAll();
-        for (LeoRule rule : rules) {
+        rules.forEach(rule -> {
             LeoRuleModel.RuleConfig ruleConfig = LeoRuleModel.load(rule);
             List<String> envs = Optional.ofNullable(ruleConfig)
                     .map(LeoRuleModel.RuleConfig::getRule)
@@ -242,7 +258,7 @@ public class ApolloFacadeImpl implements ApolloFacade {
                     }
                 }
             }
-        }
+        });
     }
 
 }

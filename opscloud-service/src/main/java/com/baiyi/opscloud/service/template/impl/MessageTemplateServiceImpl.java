@@ -20,6 +20,7 @@ import java.util.List;
  * @Date 2021/12/2 10:42 AM
  * @Version 1.0
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 @RequiredArgsConstructor
 public class MessageTemplateServiceImpl implements MessageTemplateService {

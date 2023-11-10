@@ -21,6 +21,7 @@ import java.util.List;
  * @Date 2021/12/3 4:27 PM
  * @Version 1.0
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 @RequiredArgsConstructor
 public class TemplateServiceImpl implements TemplateService {
