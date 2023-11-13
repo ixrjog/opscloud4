@@ -9,6 +9,7 @@ import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.leo.log.LeoBuildingLog;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import jakarta.annotation.Resource;
+import lombok.Getter;
 
 import java.util.Date;
 
@@ -30,6 +31,7 @@ public abstract class BaseBuildChainHandler {
     @Resource
     protected LeoBuildService leoBuildService;
 
+    @Getter
     private BaseBuildChainHandler next;
 
     protected JenkinsConfig getJenkinsConfigWithUuid(String uuid) {
@@ -40,10 +42,6 @@ public abstract class BaseBuildChainHandler {
     public BaseBuildChainHandler setNextHandler(BaseBuildChainHandler next) {
         this.next = next;
         return this.next;
-    }
-
-    public BaseBuildChainHandler getNext() {
-        return next;
     }
 
     public void handleRequest(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {

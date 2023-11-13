@@ -67,6 +67,8 @@ public class ApolloConfig extends BaseDsConfig {
     public static class Interceptor {
         private String token;
         private List<String> envs;
+        @Schema(name = "白名单")
+        private List<String> whiteList;
     }
 
 }

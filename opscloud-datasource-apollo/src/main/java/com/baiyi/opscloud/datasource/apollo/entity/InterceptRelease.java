@@ -32,7 +32,7 @@ public class InterceptRelease {
     public static class Event implements IToAsset, Serializable {
 
         @Serial
-        private static final long serialVersionUID = -1L;
+        private static final long serialVersionUID = -6025712687441034294L;
 
         private String appId;
 
@@ -62,6 +62,8 @@ public class InterceptRelease {
 
         private Integer ticketId;
 
+        private String action;
+
         @Override
         public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {
             DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
@@ -85,6 +87,7 @@ public class InterceptRelease {
                     .paramProperty("username", this.username)
                     .paramProperty("releaseTitle", this.releaseTitle)
                     .paramProperty("ticketId",this.ticketId)
+                    .paramProperty("action",this.action)
                     .build();
         }
 
