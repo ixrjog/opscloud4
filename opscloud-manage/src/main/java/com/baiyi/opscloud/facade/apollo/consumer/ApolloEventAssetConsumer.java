@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class ApolloAssetConsumer {
+public class ApolloEventAssetConsumer {
 
     @Resource
     private DsInstanceService dsInstanceService;

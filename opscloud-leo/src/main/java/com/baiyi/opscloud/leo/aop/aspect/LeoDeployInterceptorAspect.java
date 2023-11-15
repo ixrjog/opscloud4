@@ -63,31 +63,13 @@ public class LeoDeployInterceptorAspect {
         EvaluationContext context = new StandardEvaluationContext();
         IntStream.range(0, Objects.requireNonNull(params).length).forEach(len -> context.setVariable(params[len], arguments[len]));
 
-        // jobId Expression 解析表达式并获取SpEL的值
-        Expression jobIdExpression = expressionParser.parseExpression(leoDeployInterceptor.jobIdSpEL());
-        Object jobIdParam = jobIdExpression.getValue(context);
-
-        int jobId;
-        if (jobIdParam instanceof Integer) {
-            jobId = (Integer) jobIdParam;
-            if (IdUtil.isEmpty(jobId)) {
-                throw new LeoJobException("任务ID不存在！");
-            }
-        } else {
-            throw new LeoJobException("任务ID类型不正确！");
-        }
-
-        Expression buildIdExpression = expressionParser.parseExpression(leoDeployInterceptor.buildIdSpEL());
-        Object buildIdParam = buildIdExpression.getValue(context);
-
-        Integer buildId = 0;
-        if (buildIdParam instanceof Integer) {
-            buildId = (Integer) buildIdParam;
-        }
+        int jobId = parseJobId(leoDeployInterceptor, context);
+        int buildId = parseBuildId(leoDeployInterceptor, context);
+        int assetId = parseAssetId(leoDeployInterceptor, context);
 
         // 并发校验
         if (leoDeployInterceptor.lock()) {
-            executeJobInterceptorHandler.tryLockWithDeploy(jobId);
+            executeJobInterceptorHandler.tryLockWithDeploy(jobId, assetId);
         }
         if (executeJobInterceptorHandler.isAdmin(SessionHolder.getUsername())) {
             log.debug("管理员操作，跳过验证");
@@ -96,22 +78,67 @@ public class LeoDeployInterceptorAspect {
             executeJobInterceptorHandler.verifyAuthorization(jobId);
             // 工单校验
             if (!leoDeployPassCheck.checkPass(buildId)) {
-                // 规则校验
-                // deployType Expression 解析表达式并获取SpEL的值
-                Expression deployTypeExpression = expressionParser.parseExpression(leoDeployInterceptor.deployTypeSpEL());
-                Object deployTypeParam = deployTypeExpression.getValue(context);
-                if (deployTypeParam instanceof String deployType) {
-                    if (DeployTypeConstants.ROLLING.name().equalsIgnoreCase(deployType)) {
-                        // 规则校验
-                        executeJobInterceptorHandler.verifyRule(jobId);
-                    }
-                } else {
-                    throw new LeoJobException("DeployType类型不正确！");
+                String deployType = parseDeployType(leoDeployInterceptor, context);
+                if (DeployTypeConstants.ROLLING.name().equalsIgnoreCase(deployType)) {
+                    // 规则校验
+                    executeJobInterceptorHandler.verifyRule(jobId);
                 }
             }
         }
 
         return joinPoint.proceed();
+    }
+
+    private String parseDeployType(LeoDeployInterceptor leoDeployInterceptor, EvaluationContext context) {
+        // deployType Expression 解析表达式并获取SpEL的值
+        Expression deployTypeExpression = expressionParser.parseExpression(leoDeployInterceptor.deployTypeSpEL());
+        Object deployTypeParam = deployTypeExpression.getValue(context);
+        if (deployTypeParam instanceof String deployType) {
+            return deployType;
+        } else {
+            throw new LeoJobException("参数DeployType类型不正确！");
+        }
+    }
+
+    private int parseJobId(LeoDeployInterceptor leoDeployInterceptor, EvaluationContext context) {
+        // jobId Expression 解析表达式并获取SpEL的值
+        Expression jobIdExpression = expressionParser.parseExpression(leoDeployInterceptor.jobIdSpEL());
+        Object jobIdParam = jobIdExpression.getValue(context);
+
+        if (jobIdParam instanceof Integer) {
+            int jobId = (Integer) jobIdParam;
+            if (IdUtil.isEmpty(jobId)) {
+                throw new LeoJobException("任务ID不存在！");
+            }
+            return jobId;
+        } else {
+            throw new LeoJobException("任务ID类型不正确！");
+        }
+    }
+
+    private int parseAssetId(LeoDeployInterceptor leoDeployInterceptor, EvaluationContext context) {
+        // jobId Expression 解析表达式并获取SpEL的值
+        Expression jobIdExpression = expressionParser.parseExpression(leoDeployInterceptor.deploymentAssetIdSpEL());
+        Object assetIdParam = jobIdExpression.getValue(context);
+
+        if (assetIdParam instanceof Integer) {
+            int assetId = (int) assetIdParam;
+            if (IdUtil.isEmpty(assetId)) {
+                throw new LeoJobException("部署无状态ID不存在！");
+            }
+            return assetId;
+        } else {
+            throw new LeoJobException("部署无状态ID类型不正确！");
+        }
+    }
+
+    private int parseBuildId(LeoDeployInterceptor leoDeployInterceptor, EvaluationContext context) {
+        Expression buildIdExpression = expressionParser.parseExpression(leoDeployInterceptor.buildIdSpEL());
+        Object buildIdParam = buildIdExpression.getValue(context);
+        if (buildIdParam instanceof Integer) {
+            return (int) buildIdParam;
+        }
+        return 0;
     }
 
 }

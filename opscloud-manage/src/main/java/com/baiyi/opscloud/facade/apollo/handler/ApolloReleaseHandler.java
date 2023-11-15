@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.apollo.handler;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.datasource.ApolloConfig;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.param.apollo.ApolloParam;
 import com.baiyi.opscloud.facade.apollo.chain.*;
 import com.baiyi.opscloud.facade.apollo.holder.ApolloConfigHolder;
@@ -43,6 +44,7 @@ public class ApolloReleaseHandler implements InitializingBean {
     private final ApolloConfigHolder apolloConfigHolder;
 
     public HttpResult<Boolean> handleReleases(ApolloParam.ReleaseEvent releaseEvent) {
+        log.info(JSONUtil.writeValueAsString(releaseEvent));
         Optional<ApolloConfig> optionalConfig = apolloConfigHolder.getConfigByToken(releaseEvent.getToken());
         return optionalConfig.map(apolloConfig -> interceptByEnvChainHandler.handleRequest(releaseEvent, apolloConfig))
                 .orElse(HttpResult.SUCCESS);

@@ -11,6 +11,7 @@
         <result column="job_name" jdbcType="VARCHAR" property="jobName"/>
         <result column="deploy_number" jdbcType="INTEGER" property="deployNumber"/>
         <result column="build_id" jdbcType="INTEGER" property="buildId"/>
+        <result column="asset_id" jdbcType="INTEGER" property="assetId"/>
         <result column="version_name" jdbcType="VARCHAR" property="versionName"/>
         <result column="version_desc" jdbcType="VARCHAR" property="versionDesc"/>
         <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>

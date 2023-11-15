@@ -70,6 +70,16 @@ public class LeoExecuteJobInterceptorHandler {
     }
 
     /**
+     * @param jobId
+     * @param assetId Deployment
+     */
+    public void tryLockWithDeploy(int jobId, int assetId) {
+        if (leoDeployService.countRunningWithJobIdAndAssetId(jobId, assetId) > 0) {
+            throw new LeoDeployException("部署任务执行中，请勿并发操作！");
+        }
+    }
+
+    /**
      * 构建并发控制
      *
      * @param jobId

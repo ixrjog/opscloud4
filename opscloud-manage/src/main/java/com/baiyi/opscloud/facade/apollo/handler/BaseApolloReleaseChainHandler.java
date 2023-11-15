@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.datasource.ApolloConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.param.apollo.ApolloParam;
 import com.baiyi.opscloud.facade.apollo.chain.ReleaseWorkOrderReleaseChainHandler;
-import com.baiyi.opscloud.facade.apollo.consumer.ApolloAssetConsumer;
+import com.baiyi.opscloud.facade.apollo.consumer.ApolloEventAssetConsumer;
 import com.baiyi.opscloud.facade.apollo.messenger.ApolloReleaseMessenger;
 import com.baiyi.opscloud.leo.exception.LeoInterceptorException;
 import com.baiyi.opscloud.service.application.ApplicationService;
@@ -29,7 +29,7 @@ public abstract class BaseApolloReleaseChainHandler {
     private DsInstanceService dsInstanceService;
 
     @Resource
-    private ApolloAssetConsumer apolloAssetConsumer;
+    private ApolloEventAssetConsumer apolloAssetConsumer;
 
     @Resource
     private ApolloReleaseMessenger apolloReleaseMessenger;
@@ -39,6 +39,8 @@ public abstract class BaseApolloReleaseChainHandler {
 
     @Resource
     private ReleaseWorkOrderReleaseChainHandler releaseWorkOrderReleaseChainHandler;
+
+    protected static final HttpResult<Boolean> DO_NEXT = null;
 
     protected static final int NO_WORK_ORDER_ID = 0;
 
@@ -64,10 +66,10 @@ public abstract class BaseApolloReleaseChainHandler {
             httpResult = getNext().handleRequest(releaseEvent, apolloConfig);
         }
 
-        if (httpResult != null) {
+        if (httpResult == null) {
             httpResult = HttpResult.SUCCESS;
         }
-        this.consume(apolloConfig, releaseEvent, httpResult,  releaseWorkOrderReleaseChainHandler.getWorkOrderTicketId(releaseEvent));
+        this.consume(apolloConfig, releaseEvent, httpResult, releaseWorkOrderReleaseChainHandler.getWorkOrderTicketId(releaseEvent));
         return httpResult;
     }
 
@@ -94,6 +96,7 @@ public abstract class BaseApolloReleaseChainHandler {
 
     /**
      * Notify and Result
+     *
      * @param apolloConfig
      * @param releaseEvent
      * @param ticketId
@@ -107,6 +110,7 @@ public abstract class BaseApolloReleaseChainHandler {
 
     /**
      * Notify and Result
+     *
      * @param apolloConfig
      * @param releaseEvent
      * @return

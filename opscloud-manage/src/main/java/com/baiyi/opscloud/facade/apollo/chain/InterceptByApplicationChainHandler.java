@@ -26,7 +26,7 @@ public class InterceptByApplicationChainHandler extends BaseApolloReleaseChainHa
         if (application == null) {
             return HttpResult.SUCCESS;
         }
-        return null;
+        return DO_NEXT;
     }
 
 }

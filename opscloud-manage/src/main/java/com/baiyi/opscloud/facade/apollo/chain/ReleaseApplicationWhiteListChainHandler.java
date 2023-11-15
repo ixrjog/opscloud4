@@ -33,7 +33,7 @@ public class ReleaseApplicationWhiteListChainHandler extends BaseApolloReleaseCh
             // 白名单通过是否需要发送通知 ？
             return HttpResult.SUCCESS;
         }
-        return null;
+        return DO_NEXT;
     }
 
 }

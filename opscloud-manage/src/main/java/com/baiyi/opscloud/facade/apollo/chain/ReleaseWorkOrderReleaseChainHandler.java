@@ -23,13 +23,11 @@ public class ReleaseWorkOrderReleaseChainHandler extends BaseApolloReleaseChainH
     @Resource
     private WorkOrderApolloReleaseHolder workOrderApolloReleaseHolder;
 
-    protected static final int NO_WORK_ORDER_ID = 0;
-
     @Override
     protected HttpResult<Boolean> handle(ApolloParam.ReleaseEvent releaseEvent, ApolloConfig apolloConfig) {
         int ticketId = getWorkOrderTicketId(releaseEvent);
         if (ticketId == 0) {
-            return null;
+            return DO_NEXT;
         } else {
             return notify(apolloConfig, releaseEvent, ticketId);
         }
@@ -37,6 +35,9 @@ public class ReleaseWorkOrderReleaseChainHandler extends BaseApolloReleaseChainH
 
     public Integer getWorkOrderTicketId(ApolloParam.ReleaseEvent releaseEvent) {
         Application application = applicationService.getByName(releaseEvent.getAppId());
+        if (application == null) {
+            return NO_WORK_ORDER_ID;
+        }
         if (workOrderApolloReleaseHolder.hasKey(application.getId())) {
             WorkOrderToken.ApolloReleaseToken token = workOrderApolloReleaseHolder.getToken(application.getId());
             return token.getTicketId();

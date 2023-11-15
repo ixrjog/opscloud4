@@ -49,6 +49,12 @@ public class LeoDeploy {
     private Integer buildId;
 
     /**
+     * 资产ID
+     */
+    @Column(name = "asset_id")
+    private Integer assetId;
+
+    /**
      * 版本名称
      */
     @Column(name = "version_name")

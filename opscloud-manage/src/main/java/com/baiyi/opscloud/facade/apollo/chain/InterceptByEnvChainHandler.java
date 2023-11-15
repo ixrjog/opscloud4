@@ -35,7 +35,11 @@ public class InterceptByEnvChainHandler extends BaseApolloReleaseChainHandler {
             log.debug("Interceptor environment configuration is empty");
             return HttpResult.SUCCESS;
         }
-        return null;
+        // 当前环境不拦截
+        if (envs.stream().noneMatch(e -> e.equals(releaseEvent.getEnv()))) {
+            return HttpResult.SUCCESS;
+        }
+        return DO_NEXT;
     }
 
 }

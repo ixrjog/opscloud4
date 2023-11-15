@@ -4,9 +4,12 @@ import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import com.baiyi.opscloud.core.factory.DsConfigManager;
+import com.baiyi.opscloud.datasource.gitlab.driver.GitLabExampleDriver;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.workorder.delegate.GitLabUserDelegate;
+import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.CompareResults;
 import org.junit.jupiter.api.Test;
 
 import jakarta.annotation.Resource;
@@ -44,6 +47,19 @@ public class GitLabTest extends BaseUnit {
         DatasourceConfig datasourceConfig = dsConfigService.getById(79);
         GitLabConfig c = dsFactory.build(datasourceConfig, GitLabConfig.class);
         print(c);
+    }
+
+    @Test
+    public void testC() {
+        DatasourceConfig datasourceConfig = dsConfigService.getById(29);
+        GitLabConfig c = dsFactory.build(datasourceConfig, GitLabConfig.class);
+        try {
+            CompareResults cr = GitLabExampleDriver.compare(c.getGitlab(), 791L, "d6bc4c68", "4a8a2382");
+            print(cr);
+        } catch (GitLabApiException e) {
+            e.printStackTrace();
+        }
+
     }
 
 

@@ -41,6 +41,8 @@ public interface LeoDeployService {
 
     int countRunningWithJobId(int jobId);
 
+    int countRunningWithJobIdAndAssetId(int jobId, int assetId);
+
     int countWithJobId(int jobId);
 
     List<ReportVO.Report> statByMonth();
@@ -57,6 +59,7 @@ public interface LeoDeployService {
 
     /**
      * 按项目统计
+     *
      * @param projectId
      * @return
      */

@@ -117,7 +117,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     private final DsInstanceAssetFacade assetFacade;
 
     @Override
-    @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType", buildIdSpEL = "#doDeploy.buildId")
+    @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deploymentAssetIdSpEL = "#doDeploy.assetId", deployTypeSpEL = "#doDeploy.deployType", buildIdSpEL = "#doDeploy.buildId")
     public LeoDeploy doDeploy(LeoDeployParam.DoDeploy doDeploy) {
         // 执行部署任务
         LeoJob leoJob = jobService.getById(doDeploy.getJobId());
@@ -150,6 +150,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .jobId(leoJob.getId())
                 .jobName(leoJob.getName())
                 .buildId(doDeploy.getBuildId() == null ? 0 : doDeploy.getBuildId())
+                .assetId(doDeploy.getAssetId())
                 .deployNumber(deployNumber)
                 .deployConfig(deployConfig.dump())
                 .executionType(ExecutionTypeConstants.USER)

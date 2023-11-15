@@ -28,7 +28,7 @@ class ApolloFacadeImplTest extends BaseUnit {
     @Resource
     private ApolloReleaseMessenger apolloReleaseMessenger;
 
-    private static final String CLASS_A = "trade";
+    private static final String CLASS_A = "leo-demo";
 
     private static final String CLASS_B = "account-management";
 
@@ -42,7 +42,7 @@ class ApolloFacadeImplTest extends BaseUnit {
                 .namespaceName("application")
                 .token("13f731d2-822b-e554-3a19-ba96f9189908")
                 .isGray(false)
-                .action(ApolloReleaseActionEnum.MERGE.name())
+                .action(ApolloReleaseActionEnum.RELEASE.name())
                 .build();
         HttpResult<Boolean> result = apolloFacade.interceptRelease(releaseEvent);
         print(result);
