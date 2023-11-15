@@ -174,7 +174,7 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
      */
     @Override
     @SetSessionUsername(usernameSpEL = "#doDeploy.username")
-    @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deployTypeSpEL = "#doDeploy.deployType", buildIdSpEL = "#doDeploy.buildId")
+    @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deploymentAssetIdSpEL = "#doDeploy.assetId", deployTypeSpEL = "#doDeploy.deployType", buildIdSpEL = "#doDeploy.buildId")
     public void doAutoDeploy(LeoDeployParam.DoAutoDeploy doDeploy) {
         this.doDeploy(doDeploy.toDoDeploy());
     }
