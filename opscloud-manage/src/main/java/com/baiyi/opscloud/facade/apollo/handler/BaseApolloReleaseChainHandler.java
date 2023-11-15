@@ -7,7 +7,6 @@ import com.baiyi.opscloud.domain.param.apollo.ApolloParam;
 import com.baiyi.opscloud.facade.apollo.chain.ReleaseWorkOrderReleaseChainHandler;
 import com.baiyi.opscloud.facade.apollo.consumer.ApolloEventAssetConsumer;
 import com.baiyi.opscloud.facade.apollo.messenger.ApolloReleaseMessenger;
-import com.baiyi.opscloud.leo.exception.LeoInterceptorException;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import jakarta.annotation.Resource;
@@ -50,27 +49,17 @@ public abstract class BaseApolloReleaseChainHandler {
     }
 
     public HttpResult<Boolean> handleRequest(ApolloParam.ReleaseEvent releaseEvent, ApolloConfig apolloConfig) {
-        HttpResult<Boolean> httpResult;
-        try {
-            httpResult = this.handle(releaseEvent, apolloConfig);
-            // 当前链处理成功直接返回结果
-            if (httpResult != null) {
-                return httpResult;
-            }
-        } catch (LeoInterceptorException e) {
-            log.error(e.getMessage());
+        HttpResult<Boolean> httpResult = this.handle(releaseEvent, apolloConfig);
+        if (httpResult != null) {
+            int ticketId = releaseWorkOrderReleaseChainHandler.getWorkOrderTicketId(releaseEvent);
+            this.consume(apolloConfig, releaseEvent, httpResult, ticketId);
+            return httpResult;
+        }
+        if (getNext() != null) {
+            return getNext().handleRequest(releaseEvent, apolloConfig);
+        } else {
             return HttpResult.SUCCESS;
         }
-        // 交给下链处理
-        if (getNext() != null) {
-            httpResult = getNext().handleRequest(releaseEvent, apolloConfig);
-        }
-
-        if (httpResult == null) {
-            httpResult = HttpResult.SUCCESS;
-        }
-        this.consume(apolloConfig, releaseEvent, httpResult, releaseWorkOrderReleaseChainHandler.getWorkOrderTicketId(releaseEvent));
-        return httpResult;
     }
 
     /**

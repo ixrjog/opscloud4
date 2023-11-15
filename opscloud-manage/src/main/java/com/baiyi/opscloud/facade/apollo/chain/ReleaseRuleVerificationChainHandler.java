@@ -37,7 +37,7 @@ public class ReleaseRuleVerificationChainHandler extends BaseApolloReleaseChainH
 
     @Override
     protected HttpResult<Boolean> handle(ApolloParam.ReleaseEvent releaseEvent, ApolloConfig apolloConfig) {
-        // 白名单规则校验
+        // 规则校验
         try {
             verifyRule(releaseEvent);
             return notify(apolloConfig, releaseEvent);
