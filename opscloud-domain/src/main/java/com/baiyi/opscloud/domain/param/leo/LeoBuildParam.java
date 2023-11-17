@@ -153,6 +153,29 @@ public class LeoBuildParam {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @Schema(name = "比较分支参数")
+    public static class CompareBranch {
+
+        @Min(value = 0, message = "关联任务ID不能为空")
+        @Schema(description = "关联任务ID")
+        private Integer jobId;
+
+        @NotEmpty(message = "必须指定项目SshURL")
+        @Schema(description = "项目SshURL")
+        private String sshUrl;
+
+        @Schema(description = "当前构建分支")
+        private String from;
+
+        @Schema(description = "目标分支,省略参数使用master")
+        private String to;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Schema
     public static class GetBuildMavenPublishInfo {
 

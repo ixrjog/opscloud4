@@ -297,4 +297,58 @@ public class LeoBuildVO {
 
     }
 
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema
+    public static class CompareResults implements Serializable {
+        @Serial
+        private static final long serialVersionUID = 2408573959847040385L;
+
+        private Commit commit;
+        private List<Commit> commits;
+        // private List<Diff> diffs;
+        private Boolean compareTimeout;
+        private Boolean compareSameRef;
+
+        private Boolean success;
+
+        private String msg;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema
+    public static class Commit implements Serializable {
+
+        @Serial
+
+        private static final long serialVersionUID = 2434593315783430166L;
+        // private Author author;
+        private Date authoredDate;
+        private String authorEmail;
+        private String authorName;
+        private Date committedDate;
+        private String committerEmail;
+        private String committerName;
+        private Date createdAt;
+        private String id;
+        private String message;
+        private List<String> parentIds;
+        private String shortId;
+        // private CommitStats stats;
+        private String status;
+        private Date timestamp;
+        private String title;
+        private String url;
+        private String webUrl;
+        private Long projectId;
+        private Pipeline lastPipeline;
+
+    }
+
 }

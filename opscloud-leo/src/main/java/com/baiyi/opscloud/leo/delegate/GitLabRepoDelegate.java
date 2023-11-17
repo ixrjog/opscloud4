@@ -3,7 +3,9 @@ package com.baiyi.opscloud.leo.delegate;
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabProjectDriver;
+import com.baiyi.opscloud.datasource.gitlab.driver.GitLabRepositoryDriver;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
+import com.baiyi.opscloud.leo.converter.CompareResultsConverter;
 import com.baiyi.opscloud.leo.converter.GitLabBranchConverter;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.google.common.collect.Lists;
@@ -94,6 +96,18 @@ public class GitLabRepoDelegate {
             log.error(e.getMessage());
         }
         throw new LeoBuildException("Query build branch commit err: gitLab={}, projectId={}, branchOrTag={}", gitlab.getUrl(), projectId, branchNameOrTagName);
+    }
+
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10S, key = "'URL:' + #gitlab.url + '&PID:' + #projectId + '&FROM:' + #from + '&TO:' + #to", unless = "#result == null")
+    public LeoBuildVO.CompareResults compareBranch(GitLabConfig.GitLab gitlab, Long projectId, String from, String to) {
+        try {
+            return CompareResultsConverter.to(GitLabRepositoryDriver.compare(gitlab, projectId, from, to));
+        } catch (GitLabApiException e) {
+            return LeoBuildVO.CompareResults.builder()
+                    .success(false)
+                    .msg(e.getMessage())
+                    .build();
+        }
     }
 
 }
