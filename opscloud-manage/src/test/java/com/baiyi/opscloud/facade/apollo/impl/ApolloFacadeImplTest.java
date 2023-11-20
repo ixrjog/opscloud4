@@ -40,10 +40,10 @@ class ApolloFacadeImplTest extends BaseUnit {
                 .clusterName("default")
                 .username("baiyi")
                 .namespaceName("application")
-                .branchName("by1000001")
+                .branchName("by1000002")
                 .token("13f731d2-822b-e554-3a19-ba96f9189908")
                 .isGray(false)
-                .action(ApolloReleaseActionEnum.MERGE.name())
+                .action(ApolloReleaseActionEnum.GRAY_RELEASE.name())
                 .build();
         HttpResult<Boolean> result = apolloFacade.interceptRelease(releaseEvent);
         print(result);

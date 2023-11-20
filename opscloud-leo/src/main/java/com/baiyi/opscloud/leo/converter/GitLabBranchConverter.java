@@ -18,6 +18,9 @@ import java.util.stream.Collectors;
  */
 public class GitLabBranchConverter {
 
+    private GitLabBranchConverter() {
+    }
+
     public static LeoBuildVO.Option toOption(String label, List<LeoBuildVO.BranchOrTag> branches) {
         return LeoBuildVO.Option.builder()
                 .label(label)

@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
  */
 public class CompareResultsConverter {
 
+    private CompareResultsConverter() {
+    }
+
     public static LeoBuildVO.CompareResults to(CompareResults compareResults) {
         return LeoBuildVO.CompareResults.builder()
                 .commits(compareResults.getCommits().stream().map(CompareResultsConverter::to).collect(Collectors.toList()))
@@ -23,7 +26,7 @@ public class CompareResultsConverter {
                 .build();
     }
 
-    public static LeoBuildVO.Commit to(org.gitlab4j.api.models.Commit commit) {
+    private static LeoBuildVO.Commit to(org.gitlab4j.api.models.Commit commit) {
         return BeanCopierUtil.copyProperties(commit, LeoBuildVO.Commit.class);
     }
 
