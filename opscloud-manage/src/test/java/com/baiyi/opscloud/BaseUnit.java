@@ -28,4 +28,8 @@ public class BaseUnit {
         }
     }
 
+    public void print(Exception e){
+        System.out.println(e.getMessage());
+    }
+
 }
