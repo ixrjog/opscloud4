@@ -35,7 +35,7 @@ public class InterceptByActionChainHandler extends BaseApolloReleaseChainHandler
             return notify(apolloConfig, releaseEvent);
         }
 
-        return DO_NEXT;
+        return PASS_AND_DO_NEXT;
     }
 
 }

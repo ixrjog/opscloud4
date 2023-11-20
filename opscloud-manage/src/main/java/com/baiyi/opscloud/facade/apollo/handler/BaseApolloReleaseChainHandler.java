@@ -39,7 +39,7 @@ public abstract class BaseApolloReleaseChainHandler {
     @Resource
     private ReleaseWorkOrderReleaseChainHandler releaseWorkOrderReleaseChainHandler;
 
-    protected static final HttpResult<Boolean> DO_NEXT = null;
+    protected static final HttpResult<Boolean> PASS_AND_DO_NEXT = null;
 
     protected static final int NO_WORK_ORDER_ID = 0;
 

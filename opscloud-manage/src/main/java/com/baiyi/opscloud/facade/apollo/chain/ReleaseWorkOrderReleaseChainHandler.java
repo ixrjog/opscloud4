@@ -27,7 +27,7 @@ public class ReleaseWorkOrderReleaseChainHandler extends BaseApolloReleaseChainH
     protected HttpResult<Boolean> handle(ApolloParam.ReleaseEvent releaseEvent, ApolloConfig apolloConfig) {
         int ticketId = getWorkOrderTicketId(releaseEvent);
         if (ticketId == 0) {
-            return DO_NEXT;
+            return PASS_AND_DO_NEXT;
         } else {
             return notify(apolloConfig, releaseEvent, ticketId);
         }

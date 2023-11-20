@@ -39,7 +39,7 @@ public class InterceptByEnvChainHandler extends BaseApolloReleaseChainHandler {
         if (envs.stream().noneMatch(e -> e.equals(releaseEvent.getEnv()))) {
             return HttpResult.SUCCESS;
         }
-        return DO_NEXT;
+        return PASS_AND_DO_NEXT;
     }
 
 }

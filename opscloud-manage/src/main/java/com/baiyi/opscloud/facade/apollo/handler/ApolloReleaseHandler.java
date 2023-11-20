@@ -44,7 +44,7 @@ public class ApolloReleaseHandler implements InitializingBean {
     private final ApolloConfigHolder apolloConfigHolder;
 
     public HttpResult<Boolean> handleReleases(ApolloParam.ReleaseEvent releaseEvent) {
-        log.info(JSONUtil.writeValueAsString(releaseEvent));
+        log.debug(JSONUtil.writeValueAsString(releaseEvent));
         Optional<ApolloConfig> optionalConfig = apolloConfigHolder.getConfigByToken(releaseEvent.getToken());
         return optionalConfig.map(apolloConfig -> interceptByEnvChainHandler.handleRequest(releaseEvent, apolloConfig))
                 .orElse(HttpResult.SUCCESS);
