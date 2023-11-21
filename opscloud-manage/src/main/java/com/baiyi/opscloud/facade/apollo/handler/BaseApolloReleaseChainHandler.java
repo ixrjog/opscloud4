@@ -44,17 +44,19 @@ public abstract class BaseApolloReleaseChainHandler {
     protected static final int NO_WORK_ORDER_ID = 0;
 
     public BaseApolloReleaseChainHandler setNextHandler(BaseApolloReleaseChainHandler next) {
-        this.next = next;
-        return this.next;
+       this.next = next;
+       return this.next;
     }
 
     public HttpResult<Boolean> handleRequest(ApolloParam.ReleaseEvent releaseEvent, ApolloConfig apolloConfig) {
         HttpResult<Boolean> httpResult = this.handle(releaseEvent, apolloConfig);
+        // 当前链执行结束
         if (httpResult != null) {
             int ticketId = releaseWorkOrderReleaseChainHandler.getWorkOrderTicketId(releaseEvent);
             this.consume(apolloConfig, releaseEvent, httpResult, ticketId);
             return httpResult;
         }
+        // 下链执行
         if (getNext() != null) {
             return getNext().handleRequest(releaseEvent, apolloConfig);
         } else {
