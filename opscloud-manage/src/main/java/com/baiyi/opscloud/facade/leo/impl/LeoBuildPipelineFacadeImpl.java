@@ -12,6 +12,7 @@ import com.baiyi.opscloud.leo.domain.model.JenkinsPipeline;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.driver.BlueRestDriver;
+import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.service.leo.LeoBuildService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,8 @@ public class LeoBuildPipelineFacadeImpl implements LeoBuildPipelineFacade {
 
     private final DsConfigManager dsConfigManager;
 
+    private static final String buildNumber = String.valueOf(1);
+
     @Override
     public List<LeoBuildPipelineVO.Step> getPipelineRunNodeSteps(LeoBuildPipelineParam.GetPipelineRunNodeSteps param) {
         LeoBuild leoBuild = buildService.getById(param.getBuildId());
@@ -46,27 +49,32 @@ public class LeoBuildPipelineFacadeImpl implements LeoBuildPipelineFacade {
         LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.load(leoBuild);
         LeoBaseModel.DsInstance dsInstance = buildConfig.getBuild().getJenkins().getInstance();
         JenkinsConfig jenkinsConfig = getJenkinsConfigWithUuid(dsInstance.getUuid());
-        List<JenkinsPipeline.Step> steps = blueRestDriver.getPipelineNodeSteps(
-                jenkinsConfig.getJenkins(),
-                leoBuild.getBuildJobName(),
-                String.valueOf(1),
-                param.getNodeId());
-        // 加入步骤日志
-        return steps.stream().map(s -> {
-            LeoBuildPipelineVO.Step step = BeanCopierUtil.copyProperties(s, LeoBuildPipelineVO.Step.class);
-            try {
-                String stepLog = blueRestDriver.getPipelineNodeStepLog(
-                        jenkinsConfig.getJenkins(),
-                        leoBuild.getBuildJobName(),
-                        String.valueOf(1),
-                        param.getNodeId(),
-                        step.getId());
-                step.setLog(stepLog);
-            } catch (Exception e) {
-                log.error(e.getMessage());
-            }
-            return step;
-        }).collect(Collectors.toList());
+        try {
+            List<JenkinsPipeline.Step> steps = blueRestDriver.getPipelineNodeSteps(
+                    jenkinsConfig.getJenkins(),
+                    leoBuild.getBuildJobName(),
+                    String.valueOf(1),
+                    param.getNodeId());
+            // 加入步骤日志
+            return steps.stream().map(s -> toStepVO(jenkinsConfig, leoBuild, param.getNodeId(), s)).collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new LeoBuildException("Error querying pipeline task deleted ！");
+        }
+    }
+
+    private LeoBuildPipelineVO.Step toStepVO(JenkinsConfig jenkinsConfig, LeoBuild leoBuild, String nodeId, JenkinsPipeline.Step step) {
+        LeoBuildPipelineVO.Step stepVO = BeanCopierUtil.copyProperties(step, LeoBuildPipelineVO.Step.class);
+        try {
+            final String stepLog = blueRestDriver.getPipelineNodeStepLog(
+                    jenkinsConfig.getJenkins(),
+                    leoBuild.getBuildJobName(),
+                    buildNumber,
+                    nodeId,
+                    stepVO.getId());
+            stepVO.setLog(stepLog);
+        } catch (Exception ignore) {
+        }
+        return stepVO;
     }
 
     private JenkinsConfig getJenkinsConfigWithUuid(String uuid) {
