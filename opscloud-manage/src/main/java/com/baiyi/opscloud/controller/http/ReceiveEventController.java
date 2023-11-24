@@ -35,7 +35,7 @@ public class ReceiveEventController {
     @PostMapping(value = "/gitlab/v4/system/hooks", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> receiveGitLabV4SystemHooks(@RequestHeader(GITLAB_TOKEN) @NotNull(message = "Header `X-Gitlab-Token` is null") String gitLabToken, @RequestBody @Valid GitLabNotifyParam.SystemHook systemHook) {
         try {
-            gitLabFacade.consumeEventV4(systemHook,gitLabToken);
+            gitLabFacade.consumeEventV4(systemHook, gitLabToken);
         } catch (Exception e) {
             throw new InvalidTokenException();
         }
