@@ -33,11 +33,11 @@ public class EncryptorAspect {
     @Around(value = "action()")
     public Object doAround(ProceedingJoinPoint pjp) throws Throwable {
         Object requestObj = pjp.getArgs()[0];
-        handleEncrypt(requestObj);
+        doEncrypt(requestObj);
         return pjp.proceed();
     }
 
-    private void handleEncrypt(Object requestObj) throws IllegalAccessException {
+    private void doEncrypt(Object requestObj) throws IllegalAccessException {
         if (Objects.isNull(requestObj)) {
             return;
         }

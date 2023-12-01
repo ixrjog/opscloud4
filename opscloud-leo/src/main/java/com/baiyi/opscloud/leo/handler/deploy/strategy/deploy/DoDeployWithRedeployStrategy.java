@@ -46,7 +46,7 @@ public class DoDeployWithRedeployStrategy extends DoDeployStrategy {
 
         // 校验副本数
         if (replicas == 0) {
-            deployment.getSpec().setReplicas(1);
+            deployment.getSpec().setReplicas(calcReplicas(deployConfig));
         }
 
         try {

@@ -8,6 +8,8 @@ import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientBuilder;
 
+import java.util.Optional;
+
 /**
  * @Author baiyi
  * @Date 2022/9/14 09:40
@@ -57,7 +59,11 @@ public class DefaultKubernetesProvider {
     }
 
     private static String toKubeconfigPath(KubernetesConfig.Kubernetes kubernetes) {
-        String path = Joiner.on("/").join(kubernetes.getKubeconfig().getPath(),
+        String kubeConfigPath = Optional.ofNullable(kubernetes)
+                .map(KubernetesConfig.Kubernetes::getKubeconfig)
+                .map(KubernetesConfig.Kubeconfig::getPath)
+                .orElse("");
+        String path = Joiner.on("/").join(kubeConfigPath,
                 io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE);
         return SystemEnvUtil.renderEnvHome(path);
     }

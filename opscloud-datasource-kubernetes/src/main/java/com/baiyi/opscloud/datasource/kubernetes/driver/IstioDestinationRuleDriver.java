@@ -28,7 +28,10 @@ public class IstioDestinationRuleDriver {
                     .destinationRules()
                     .load(is)
                     .item();
-            return ic.v1alpha3().destinationRules().resource(destinationRule).create();
+            return ic.v1alpha3()
+                    .destinationRules()
+                    .resource(destinationRule)
+                    .create();
         } catch (Exception e) {
             log.warn(e.getMessage());
             throw e;

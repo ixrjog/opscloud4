@@ -95,7 +95,7 @@
         <springdoc-openapi-starter-webmvc.version>2.2.0</springdoc-openapi-starter-webmvc.version>
         <jasypt-spring-boot-starter.version>3.0.5</jasypt-spring-boot-starter.version>
         <gson.version>2.10.1</gson.version>
-        <mysql-connector-j.version>8.0.33</mysql-connector-j.version>
+        <mysql-connector-j.version>8.2.0</mysql-connector-j.version>
         <druid-spring-boot-starter.version>1.2.16</druid-spring-boot-starter.version>
         <commons-text.version>1.10.0</commons-text.version>
         <oshi-core.version>6.4.0</oshi-core.version>
