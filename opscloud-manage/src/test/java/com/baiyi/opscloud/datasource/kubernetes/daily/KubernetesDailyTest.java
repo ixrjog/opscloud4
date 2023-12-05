@@ -97,8 +97,8 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
                 List<EnvVar> envVars = container.getEnv();
                 Optional<EnvVar> agentEnv = envVars.stream().filter(env -> env.getName().equals("JAVA_JVM_AGENT")).findFirst();
                 agentEnv.ifPresent(envVar -> {
-                    if (envVar.getValue().equals("-javaagent:/pp-agent/arms-agent.jar"))
-                            envVar.setValue("-javaagent:/pp-agent/arms-agent.jar -javaagent:/jacoco/jacocoagent.jar=appname=$(APP_NAME),cloud=aws,buildid=$(OC_BUILD_ID)");
+                            if (envVar.getValue().equals("-javaagent:/pp-agent/arms-agent.jar"))
+                                envVar.setValue("-javaagent:/pp-agent/arms-agent.jar -javaagent:/jacoco/jacocoagent.jar=appname=$(APP_NAME),cloud=aws,buildid=$(OC_BUILD_ID)");
                         }
                 );
                 try {
@@ -113,5 +113,36 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
         });
 
     }
+
+
+    @Test
+    void updateIstio() {
+        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.ACK_FRANKFURT_DAILY);
+        List<Deployment> deploymentList = KubernetesDeploymentDriver.list(kubernetesConfig.getKubernetes(), NAMESPACE);
+
+        deploymentList.forEach(deployment -> {
+            String appName = deployment.getMetadata().getName();
+            Optional<Container> optionalContainer =
+                    deployment.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith(appName)).findFirst();
+            if (optionalContainer.isPresent()) {
+                // labels
+                Map<String, String> labels = deployment.getSpec().getTemplate().getMetadata().getLabels();
+                if (labels.containsKey("sidecar.istio.io/inject")) {
+                    labels.keySet().removeIf(key -> "sidecar.istio.io/inject".equals(key));
+                    deployment.getSpec().getTemplate().getMetadata().setLabels(labels);
+                    try {
+                        KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), NAMESPACE, deployment);
+                    } catch (Exception e) {
+                        print(deployment.getMetadata().getName());
+                    }
+                }
+            } else {
+                print(deployment.getMetadata().getName());
+            }
+        });
+    }
+
+
+
 
 }

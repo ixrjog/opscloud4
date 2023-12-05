@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableMap;
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.ObjectUtils;
 
@@ -28,21 +29,19 @@ public class KubernetesServiceTest extends BaseKubernetesTest {
             apiVersion: v1
             kind: Service
             metadata:
-              name: ${appName}
+              name: ${appName}-headless
               namespace: ${envName}
               labels:
                 env: ${envName}
-                micrometer-prometheus-discovery: 'true'
             spec:
+              clusterIP: None
+              clusterIPs:
+                - None
               ports:
                 - name: http
                   port: 80
                   protocol: TCP
                   targetPort: 8080
-                - name: http-mgmt
-                  port: 8081
-                  protocol: TCP
-                  targetPort: 8081
               selector:
                 app: ${appName}-${envName}
               sessionAffinity: None
@@ -60,12 +59,12 @@ public class KubernetesServiceTest extends BaseKubernetesTest {
 
     @Test
     void serviceCreateTest() {
-        final String envName = "dev";
-        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.ACK_FRANKFURT_DEV);
+        final String envName = "prod";
+        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.ACK_FRANKFURT_PROD);
         List<Deployment> deploymentList = KubernetesDeploymentDriver.list(kubernetesConfig.getKubernetes(), envName);
         deploymentList.forEach(deployment -> {
-            String name = deployment.getMetadata().getName();
-            if (name.endsWith("-" + envName)) {
+            String name = deployment.getMetadata().getLabels().get("app");
+            if (Strings.isNotBlank(name) && name.endsWith("-" + envName)) {
                 try {
                     String appName = name.substring(0, name.length() - envName.length() - 1);
                     serviceCreate(kubernetesConfig.getKubernetes(), appName, envName);
@@ -77,7 +76,7 @@ public class KubernetesServiceTest extends BaseKubernetesTest {
     }
 
     private void serviceCreate(KubernetesConfig.Kubernetes kubernetes, String appName, String envName) throws Exception {
-        Service service = KubernetesServiceDriver.get(kubernetes, envName, appName);
+        Service service = KubernetesServiceDriver.get(kubernetes, envName, appName+ "-headless");
         if (ObjectUtils.isEmpty(service)) {
             Map<String, Object> contentMap = new ImmutableMap.Builder<String, Object>()
                     .put("appName", appName)
