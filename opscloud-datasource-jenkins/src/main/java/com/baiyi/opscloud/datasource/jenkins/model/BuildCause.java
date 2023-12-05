@@ -21,7 +21,7 @@ public class BuildCause {
     private String userName;
 
     public BuildCause() {
-        this.upstreamBuild = new Integer(0);
+        this.upstreamBuild = 0;
         //TODO: Think about initialization of the other
         // attributes as well.
         // userId = StringConstant.EMPTY;

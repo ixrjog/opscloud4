@@ -71,14 +71,20 @@ public abstract class DoDeployStrategy extends BaseDeployStrategy {
 
     abstract protected void doDeploy(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig, KubernetesConfig kubernetesConfig, Deployment deployment);
 
-    protected int calcReplicas(LeoDeployModel.DeployConfig deployConfig){
+    protected int calcReplicas(LeoDeployModel.DeployConfig deployConfig) {
         Map<String, String> dict = Optional.of(deployConfig)
                 .map(LeoDeployModel.DeployConfig::getDeploy)
                 .map(LeoDeployModel.Deploy::getDict)
                 .orElse(Maps.newHashMap());
         if (dict.containsKey(BuildDictConstants.ENV.getKey()) && Global.ENV_PROD.equalsIgnoreCase(dict.get(BuildDictConstants.ENV.getKey()))) {
-            // 生产环境 3 副本
-            return 3;
+            String deploymentName = Optional.of(deployConfig)
+                    .map(LeoDeployModel.DeployConfig::getDeploy)
+                    .map(LeoDeployModel.Deploy::getKubernetes)
+                    .map(LeoBaseModel.Kubernetes::getDeployment)
+                    .map(LeoBaseModel.Deployment::getName)
+                    .orElse("");
+            // 生产环境 3 副本 / Canary 1 副本
+            return deploymentName.endsWith("-canary") ? 1 : 3;
         } else {
             // 非生产环境 3 副本
             return 1;

@@ -1,7 +1,10 @@
 spring:
   application:
     name: opscloud
-    version: 4.5.3
+    version: 4.6.0
+  threads:
+    virtual:
+      enabled: true
   lifecycle:
     timeout-per-shutdown-phase: 60s
   # 关闭控制台

@@ -101,6 +101,7 @@ public class LeoJobVersionVO {
 
         private String versionType;
 
+        @Builder.Default
         private Map<String, String> properties = Maps.newHashMap();
 
     }
