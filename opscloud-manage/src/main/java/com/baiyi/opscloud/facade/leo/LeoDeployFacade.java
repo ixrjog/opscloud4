@@ -77,4 +77,6 @@ public interface LeoDeployFacade {
 
     LeoDeployVO.Deploy getLeoDeploy(int deployId);
 
+    List<LeoDeployVO.Deploy> getLeoDeploys(int buildId);
+
 }

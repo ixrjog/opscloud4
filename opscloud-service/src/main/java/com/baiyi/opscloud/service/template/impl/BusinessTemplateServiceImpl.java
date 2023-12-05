@@ -22,6 +22,7 @@ import java.util.List;
  * @Date 2021/12/6 11:03 AM
  * @Version 1.0
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 @RequiredArgsConstructor
 public class BusinessTemplateServiceImpl implements BusinessTemplateService {

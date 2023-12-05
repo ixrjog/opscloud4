@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
 import com.baiyi.opscloud.domain.model.message.KubernetesDeploymentMessage;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
-import com.baiyi.opscloud.facade.application.KubernetesFacade;
+import com.baiyi.opscloud.facade.application.ApplicationKubernetesFacade;
 import com.baiyi.opscloud.loop.kubernetes.BaseKubernetesDeploymentRequestHandler;
 import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class KubernetesDeploymentQueryRequestHandler extends BaseKubernetesDeploymentRequestHandler<ApplicationVO.Kubernetes> {
 
-    private final KubernetesFacade kubernetesFacade;
+    private final ApplicationKubernetesFacade kubernetesFacade;
 
     @Override
     public String getMessageType() {

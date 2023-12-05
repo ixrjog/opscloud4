@@ -1,20 +1,18 @@
 package com.baiyi.opscloud.facade.datasource.instance;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.util.GitLabTokenUtil;
 import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
 import com.baiyi.opscloud.factory.gitlab.enums.GitLabEventNameEnum;
 import jakarta.annotation.Resource;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.InitializingBean;
 
 /**
  * @Author baiyi
  * @Date 2021/10/29 2:54 下午
  * @Version 1.0
  */
-class gGitlabFacadeTest extends BaseUnit implements InitializingBean {
+class GitlabFacadeTest extends BaseUnit {
 
     @Resource
     private GitLabFacade gitlabFacade;
@@ -30,13 +28,13 @@ class gGitlabFacadeTest extends BaseUnit implements InitializingBean {
                 .id(999)
                 .key("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC58FwqHUbebw2SdT7SP4FxZ0w+lAO/erhy2ylhlcW/tZ3GY3mBu9VeeiSGoGz8hCx80Zrz+aQv28xfFfKlC8XQFpCWwsnWnQqO2Lv9bS8V1fIHgMxOHIt5Vs+9CAWGCCvUOAurjsUDoE2ALIXLDMKnJxcxD13XjWdK54j6ZXDB4syLF0C2PnAQSVY9X7MfCYwtuFmhQhKaBussAXpaVMRHltie3UYSBUUuZaB3J4cg/7TxlmxcNd+ppPRIpSZAB0NI6aOnqoBCpimscO/VpQRJMVLr3XiSYeT6HBiDXWHnIVPfQc03OGcaFqOit6p8lYKMaP/iUQLm+pgpZqrXZ9vB john@localhost")
                 .build();
-        gitlabFacade.consumeEventV4(systemHook);
+        gitlabFacade.consumeEventV4(systemHook, "x");
     }
 
 
     @Test
     void consumeEventV4Test2() {
-        GitLabTokenUtil.setToken("YBzt3R5S9cKfOeYMUPpPgeJAGQSf36r5");
+
         GitLabNotifyParam.Project project = GitLabNotifyParam.Project.builder()
                 .id(434)
                 .name("Ant Design Pro")
@@ -62,13 +60,7 @@ class gGitlabFacadeTest extends BaseUnit implements InitializingBean {
                 .refs(Lists.newArrayList("refs/heads/dev"))
                 .project(project)
                 .build();
-        gitlabFacade.consumeEventV4(systemHook);
-    }
-
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        GitLabTokenUtil.setToken(token);
+        gitlabFacade.consumeEventV4(systemHook, "x");
     }
 
 }

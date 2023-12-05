@@ -18,6 +18,8 @@ import jakarta.servlet.MultipartConfigElement;
 @Configuration
 public class MvcConfiguration implements WebMvcConfigurer {
 
+    private static final String HOME = "index.html";
+
     /**
      * 首页
      *
@@ -25,7 +27,7 @@ public class MvcConfiguration implements WebMvcConfigurer {
      */
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("index.html");
+        registry.addViewController("/").setViewName(HOME);
     }
 
     @Override

@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ExampleController {
 
-    @Operation(summary = "Hello World")
+    @Operation(summary = "Example for Hello World")
     @GetMapping(value = "/helloWorld", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<ExampleVO.HelloWorld> helloWorld() {
         return new HttpResult<>(ExampleVO.HelloWorld.EXAMPLE);

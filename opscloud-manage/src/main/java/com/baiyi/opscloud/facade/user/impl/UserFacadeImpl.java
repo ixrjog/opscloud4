@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.facade.user.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
-import com.baiyi.opscloud.common.builder.SimpleDictBuilder;
 import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.holder.SessionHolder;
@@ -30,10 +29,10 @@ import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.domain.vo.user.mfa.MfaVO;
-import com.baiyi.opscloud.facade.user.UserCredentialFacade;
 import com.baiyi.opscloud.facade.auth.mfa.MfaValidator;
 import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
+import com.baiyi.opscloud.facade.user.UserCredentialFacade;
 import com.baiyi.opscloud.facade.user.UserFacade;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
@@ -57,7 +56,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
@@ -67,9 +65,9 @@ import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskP
  * @Date 2021/5/14 10:38 上午
  * @Version 1.0
  */
-@BusinessType(BusinessTypeEnum.USER)
 @Slf4j
 @Service
+@BusinessType(BusinessTypeEnum.USER)
 @RequiredArgsConstructor
 public class UserFacadeImpl implements UserFacade {
 
@@ -103,6 +101,9 @@ public class UserFacadeImpl implements UserFacade {
 
     private final UserHandler userHandler;
 
+    // Name & Secret
+    private static final String AWS_QRCODE = "otpauth://totp/Amazon%20Web%20Services:{}?secret={}&issuer=Amazon%20Web%20Services";
+
     @Override
     public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {
         DataTable<User> table = userService.queryPageByParam(pageQuery);
@@ -121,8 +122,8 @@ public class UserFacadeImpl implements UserFacade {
         return userVO;
     }
 
-    @Async(value = CORE)
     @Override
+    @Async(value = CORE)
     public void syncUserPermissionGroupForAsset() {
         List<User> users = userService.queryAll();
         if (CollectionUtils.isEmpty(users)) {
@@ -214,9 +215,9 @@ public class UserFacadeImpl implements UserFacade {
      *
      * @param id
      */
-    @RevokeUserPermission
-    @TagClear
     @Override
+    @TagClear
+    @RevokeUserPermission
     public void deleteUser(Integer id) {
         User user = userService.getById(id);
         if (user == null) {
@@ -342,16 +343,10 @@ public class UserFacadeImpl implements UserFacade {
     public UserVO.UserIAMMFA getUserIAMMFA() {
         String username = SessionHolder.getUsername();
         User user = userService.getByUsername(username);
-        final String defQrcode = "otpauth://totp/Amazon%20Web%20Services:${NAME}?secret=${SECRET}&issuer=Amazon%20Web%20Services";
-        List<MfaVO.MFA> userMfas = userCredentialService.queryByUserIdAndType(user.getId(), UserCredentialTypeEnum.IAM_OTP_SK.getType()).stream()
+        List<MfaVO.MFA> userMFAs = userCredentialService.queryByUserIdAndType(user.getId(), UserCredentialTypeEnum.IAM_OTP_SK.getType()).stream()
                 .map(e -> {
                     String name = StringUtils.isNotBlank(e.getComment()) ? e.getComment() : username;
-                    Map<String, String> dict = SimpleDictBuilder.newBuilder()
-                            .put("NAME", name)
-                            .put("SECRET", e.getCredential())
-                            .build()
-                            .getDict();
-                    final String qrcode = TemplateUtil.render(defQrcode, dict);
+                    final String qrcode = StringFormatter.arrayFormat(AWS_QRCODE, name, e.getCredential());
                     return MfaVO.MFA.builder()
                             .title(e.getTitle())
                             .secret(e.getCredential())
@@ -361,8 +356,8 @@ public class UserFacadeImpl implements UserFacade {
                 }).collect(Collectors.toList());
         return UserVO.UserIAMMFA.builder()
                 .username(username)
-                .mfa(CollectionUtils.isEmpty(userMfas))
-                .userMfas(userMfas)
+                .mfa(CollectionUtils.isEmpty(userMFAs))
+                .userMfas(userMFAs)
                 .build();
     }
 

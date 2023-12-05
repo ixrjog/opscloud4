@@ -14,6 +14,7 @@ import java.util.List;
  * @Date 2023/2/2 14:56
  * @Version 1.0
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 @RequiredArgsConstructor
 public class UserProfileServiceImpl implements UserProfileService {

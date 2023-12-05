@@ -45,7 +45,7 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
             List<User> users = GitLabUserDriver.findUsers(getConfig().getGitlab(), "baiyi");
             print(users.get(0));
         } catch (GitLabApiException e) {
-            e.printStackTrace();
+            print(e);
         }
     }
 
@@ -59,7 +59,7 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
             User user = GitLabUserDriver.getUser(getConfig().getGitlab(), BAIYI_USER_ID);
             print(user);
         } catch (GitLabApiException e) {
-            e.printStackTrace();
+            print(e);
         }
     }
 
@@ -69,7 +69,7 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
             List<User> users = GitLabUserDriver.getUsers(getConfig().getGitlab());
             print(users);
         } catch (GitLabApiException e) {
-            e.printStackTrace();
+            print(e);
         }
     }
 
@@ -79,7 +79,7 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
             List<SshKey> sshKeys = GitLabSshKeyDriver.getSshKeysWithUserId(getConfig().getGitlab(), BAIYI_USER_ID);
             print(sshKeys);
         } catch (GitLabApiException e) {
-            e.printStackTrace();
+            print(e);
         }
     }
 
@@ -124,7 +124,7 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
             List<Membership> memberships = GitLabUserDriver.getUserMemberships(getConfig().getGitlab(), BAIYI_USER_ID);
             print(memberships);
         } catch (GitLabApiException e) {
-            e.printStackTrace();
+            print(e);
         }
     }
 
@@ -134,7 +134,7 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
             List<Member> members = GitLabProjectDriver.getMembersWithProjectId(getConfigById(56).getGitlab(), 73L, 20);
             print(members);
         } catch (GitLabApiException e) {
-            e.printStackTrace();
+            print(e);
         }
     }
 
@@ -144,7 +144,7 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
             List<Project> projects = GitLabProjectDriver.getProjects(getConfig().getGitlab());
             print(projects);
         } catch (GitLabApiException e) {
-            e.printStackTrace();
+            print(e);
         }
     }
 
@@ -153,7 +153,7 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
         try {
             gitlabUserDelegate.createUser(getConfigById(56).getGitlab(), "chenyingying");
         } catch (TicketProcessException e) {
-            e.printStackTrace();
+            print(e);
         }
     }
 
@@ -188,7 +188,7 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
             //ddd2(x);
 
         } catch (GitLabApiException e) {
-            e.printStackTrace();
+            print(e);
         }
     }
 
@@ -208,11 +208,9 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
 
 
         }catch (IOException e){
-            e.printStackTrace();
-
+            print(e);
         }
     }
-
 
     @Test
     void mavenTest() {
@@ -242,9 +240,8 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            print(e);
         }
     }
-
 
 }

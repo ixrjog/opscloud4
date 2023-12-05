@@ -22,7 +22,7 @@ public class NewApplicationEntry {
     public static class NewApplication implements Serializable {
 
         @Serial
-        private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 1436284707624901947L;
 
         @Schema(description = "应用级别标签")
         private String levelTag;

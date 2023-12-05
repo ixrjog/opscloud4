@@ -24,9 +24,9 @@ public interface SimpleTagFacade {
 
     DataTable<TagVO.Tag> queryTagPage(TagParam.TagPageQuery pageQuery);
 
-    void addTag(TagVO.Tag tag);
+    void addTag(TagParam.Tag tag);
 
-    void updateTag(TagVO.Tag tag);
+    void updateTag(TagParam.Tag tag);
 
     void updateBusinessTags(BusinessTagParam.UpdateBusinessTags updateBusinessTags);
 

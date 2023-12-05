@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.param.apollo;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +19,9 @@ public class ApolloParam {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ReleaseEvent {
+
+        @Schema(name = "动作")
+        private String action;
 
         private String appId;
 

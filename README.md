@@ -11,9 +11,9 @@ Welcome to the opscloud wiki!
 ![GitHub Stats Card](https://github-readme-stats.vercel.app/api?username=ixrjog&show_icons=true&theme=onedark)
 
 ## OpsCloud4 云上运维
-<img src="https://img.shields.io/badge/Version-4.5.3-brightgreen.svg"></img>
-<img src="https://img.shields.io/badge/JDK-17-brightgreen.svg"></img> 
-<img src="https://img.shields.io/badge/SpringBoot-3.1.4-brightgreen.svg"></img> 
+<img src="https://img.shields.io/badge/Version-4.6.0-brightgreen.svg"></img>
+<img src="https://img.shields.io/badge/OpenJDK-21-brightgreen.svg"></img> 
+<img src="https://img.shields.io/badge/SpringBoot-3.2.0-brightgreen.svg"></img> 
 <img src="https://img.shields.io/badge/MySQL-8-brightgreen.svg"></img>
 <br/>
 [![Security Status](https://www.murphysec.com/platform3/v31/badge/1683749365419687936.svg)](https://www.murphysec.com/console/report/1656107048332996608/1683749365419687936)
@@ -36,7 +36,7 @@ Welcome to the opscloud wiki!
 + password:空密码
   
 ## 开发环境
-+ JDK 17
++ OpenJDK 21
 + node-v16.13.0
 + MacBook M1
 + IntelliJ IDEA 2023

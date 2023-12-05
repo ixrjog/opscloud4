@@ -19,6 +19,7 @@ import java.util.List;
  * @Date 2021/5/26 5:39 下午
  * @Version 1.0
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @BusinessType(BusinessTypeEnum.USER_PERMISSION)
 @Service
 @RequiredArgsConstructor

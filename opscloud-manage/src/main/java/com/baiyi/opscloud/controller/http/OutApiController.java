@@ -30,7 +30,7 @@ public class OutApiController {
 
     @Operation(summary = "审批工单票据")
     @GetMapping(value = "/ticket/approve", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult approveTicket(@RequestParam Integer ticketId, String username, String approvalType, String token) {
+    public HttpResult approveTicket(@RequestParam int ticketId, String username, String approvalType, String token) {
         WorkOrderTicketParam.OutApproveTicket outApproveTicket = WorkOrderTicketParam.OutApproveTicket.builder()
                 .ticketId(ticketId)
                 .username(username)
@@ -47,6 +47,3 @@ public class OutApiController {
     }
 
 }
-
-
-

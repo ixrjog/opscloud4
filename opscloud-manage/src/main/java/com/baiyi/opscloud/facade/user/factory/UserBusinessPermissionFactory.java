@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.user.factory;
 
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
+import lombok.Getter;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,6 +16,7 @@ public class UserBusinessPermissionFactory {
     private UserBusinessPermissionFactory() {
     }
 
+    @Getter
     static Map<Integer, IUserBusinessPermissionPageQuery> context = new ConcurrentHashMap<>();
 
     public static IUserBusinessPermissionPageQuery getByBusinessType(int businessType) {
@@ -23,10 +25,6 @@ public class UserBusinessPermissionFactory {
 
     public static void register(IUserBusinessPermissionPageQuery bean) {
         context.put(bean.getBusinessType(), bean);
-    }
-
-    public static Map<Integer, IUserBusinessPermissionPageQuery> getContext(){
-        return context;
     }
 
 }

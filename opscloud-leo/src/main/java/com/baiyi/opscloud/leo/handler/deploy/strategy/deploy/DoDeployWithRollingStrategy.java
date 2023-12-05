@@ -63,10 +63,7 @@ public class DoDeployWithRollingStrategy extends DoDeployStrategy {
                 .map(DeploymentSpec::getReplicas)
                 .orElseThrow(() -> new LeoDeployException("Read configuration error: deployment->spec->replicas"));
         if (replicas == 0) {
-            /*
-             * 为了安全考虑，副本数量+1，而不是设置为1
-             */
-            deployment.getSpec().setReplicas(replicas + 1);
+            deployment.getSpec().setReplicas(calcReplicas(deployConfig));
         }
         // Env写入buildId
         writeEnv(container, leoDeploy.getBuildId());

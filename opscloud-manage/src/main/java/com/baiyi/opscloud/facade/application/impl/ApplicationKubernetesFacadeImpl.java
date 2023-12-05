@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
-import com.baiyi.opscloud.facade.application.KubernetesFacade;
+import com.baiyi.opscloud.facade.application.ApplicationKubernetesFacade;
 import com.baiyi.opscloud.packer.application.ApplicationKubernetesPacker;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @BusinessType(BusinessTypeEnum.APPLICATION)
-public class KubernetesFacadeImpl implements KubernetesFacade {
+public class ApplicationKubernetesFacadeImpl implements ApplicationKubernetesFacade {
 
     private final ApplicationKubernetesPacker applicationKubernetesPacker;
 

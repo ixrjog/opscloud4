@@ -46,4 +46,28 @@ public class TagParam {
 
     }
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @Schema
+    public static class Tag  {
+
+        @Schema(description = "主键", example = "1")
+        private Integer id;
+
+        @Schema(description = "业务类型", example = "0")
+        private Integer businessType;
+
+        @Schema(description = "标签key")
+        private String tagKey;
+
+        @Schema(description = "颜色值")
+        private String color;
+
+        @Schema(description = "描述")
+        private String comment;
+
+    }
+
 }

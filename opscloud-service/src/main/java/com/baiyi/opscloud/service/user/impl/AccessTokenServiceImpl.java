@@ -14,6 +14,7 @@ import java.util.List;
  * @Date 2021/8/5 9:47 上午
  * @Version 1.0
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 @RequiredArgsConstructor
 public class AccessTokenServiceImpl implements AccessTokenService {

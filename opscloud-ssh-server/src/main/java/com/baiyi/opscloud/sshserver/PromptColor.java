@@ -43,4 +43,5 @@ public enum PromptColor {
     public int toJlineAttributedStyle() {
         return value;
     }
+
 }

@@ -16,8 +16,7 @@
 
 package com.baiyi.opscloud.sshserver;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.apache.sshd.server.ExitCallback;
 
 import java.io.InputStream;
@@ -26,8 +25,7 @@ import java.io.OutputStream;
 /**
  * Ssh io
  */
-@Getter
-@Setter
+@Data
 public class SshIO {
 
     private InputStream is;
@@ -35,4 +33,5 @@ public class SshIO {
     private OutputStream os;
 
     private ExitCallback ec;
+
 }

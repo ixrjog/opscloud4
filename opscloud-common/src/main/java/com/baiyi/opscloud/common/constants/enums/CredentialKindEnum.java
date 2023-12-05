@@ -25,6 +25,8 @@ public enum CredentialKindEnum {
     ACCESS_KEY(5,"Access key"),
     // Kubernetes Config 客户端配置文件
     KUBE_CONFIG(6,"Kubernetes kubeconfig"),
+    // SSL 证书（Pem/Key）
+    SSL_CERTIFICATES(7,"SSL certificates")
     ;
 
     private final int kind;

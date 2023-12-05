@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.facade.apollo.impl;
+package com.baiyi.opscloud.facade.apollo.validator;
 
 import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
@@ -6,7 +6,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoRule;
 import com.baiyi.opscloud.domain.param.apollo.ApolloParam;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
-import com.baiyi.opscloud.facade.apollo.ApolloRuleValidator;
 import com.baiyi.opscloud.facade.tag.SimpleTagFacade;
 import com.baiyi.opscloud.leo.domain.model.LeoRuleModel;
 import com.baiyi.opscloud.leo.exception.LeoInterceptorException;
@@ -23,14 +22,16 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * Apollo 规则校验器
+ *
  * @Author baiyi
- * @Date 2023/6/12 16:07
+ * @Date 2023/5/31 15:37
  * @Version 1.0
  */
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ApolloRuleValidatorImpl implements ApolloRuleValidator {
+public class ApolloRuleValidator{
 
     private final ApplicationService applicationService;
 

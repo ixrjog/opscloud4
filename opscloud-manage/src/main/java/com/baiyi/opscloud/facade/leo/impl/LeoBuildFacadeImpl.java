@@ -363,6 +363,22 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
         return filterGitFlow(branchOptions, leoJob, gitLabConfig, gitFlowEnabled);
     }
 
+    @Override
+    public LeoBuildVO.CompareResults compareBranch(LeoBuildParam.CompareBranch compareBranch) {
+        LeoJob leoJob = jobService.getById(compareBranch.getJobId());
+        if (leoJob == null) {
+            throw new LeoBuildException("任务配置不存在: jobId={}", compareBranch.getJobId());
+        }
+
+        DatasourceInstanceAsset gitLabProjectAsset = getGitLabProjectAssetWithLeoJobAndSshUrl(leoJob, compareBranch.getSshUrl());
+        final Long projectId = Long.valueOf(gitLabProjectAsset.getAssetId());
+        DatasourceConfig dsConfig = dsConfigManager.getConfigByInstanceUuid(gitLabProjectAsset.getInstanceUuid());
+        GitLabConfig gitLabConfig = dsConfigManager.build(dsConfig, GitLabConfig.class);
+
+        final String to = StringUtils.isBlank(compareBranch.getTo()) ? "master" : compareBranch.getTo();
+        return gitLabRepoDelegate.compareBranch(gitLabConfig.getGitlab(), projectId, compareBranch.getFrom(), to);
+    }
+
     private boolean getGitFlowEnabled(LeoJob leoJob, GitLabConfig gitLabConfig) {
         LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob);
         // 判断是否启用gitFlow

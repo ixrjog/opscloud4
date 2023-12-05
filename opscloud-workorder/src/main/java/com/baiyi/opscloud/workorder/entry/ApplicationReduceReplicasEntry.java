@@ -24,7 +24,7 @@ public class ApplicationReduceReplicasEntry {
     public static class KubernetesDeployment implements Serializable {
 
         @Serial
-        private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = -2749378184929243327L;
 
         @Schema(description = "数据实例UUID")
         private String instanceUuid;

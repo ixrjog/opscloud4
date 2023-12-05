@@ -22,7 +22,7 @@ import java.util.List;
  * @Date 2022/12/5 18:02
  * @Version 1.0
  */
-@SuppressWarnings({"resource", "rawtypes", "SpringJavaInjectionPointsAutowiringInspection"})
+@SuppressWarnings({"rawtypes", "SpringJavaInjectionPointsAutowiringInspection"})
 @Service
 @RequiredArgsConstructor
 public class LeoDeployServiceImpl implements LeoDeployService {
@@ -107,6 +107,17 @@ public class LeoDeployServiceImpl implements LeoDeployService {
         Example example = new Example(LeoDeploy.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("jobId", jobId)
+                .andEqualTo("isActive", true)
+                .andEqualTo("isFinish", false);
+        return deployMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public int countRunningWithJobIdAndAssetId(int jobId, int assetId) {
+        Example example = new Example(LeoDeploy.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("jobId", jobId)
+                .andEqualTo("assetId", assetId)
                 .andEqualTo("isActive", true)
                 .andEqualTo("isFinish", false);
         return deployMapper.selectCountByExample(example);

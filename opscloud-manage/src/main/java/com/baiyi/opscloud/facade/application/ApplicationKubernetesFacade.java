@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
  * @Date 2023/3/27 17:19
  * @Version 1.0
  */
-public interface KubernetesFacade {
+public interface ApplicationKubernetesFacade {
 
     ApplicationVO.Kubernetes getApplicationKubernetes(ApplicationParam.GetApplicationKubernetes getApplicationKubernetes, String username);
 

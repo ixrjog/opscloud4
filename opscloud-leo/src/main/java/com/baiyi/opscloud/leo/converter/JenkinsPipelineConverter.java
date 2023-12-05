@@ -17,6 +17,9 @@ import java.util.List;
  */
 public class JenkinsPipelineConverter {
 
+    private JenkinsPipelineConverter() {
+    }
+
     public interface States {
         String FINISHED = "FINISHED";
         String RUNNING = "RUNNING";

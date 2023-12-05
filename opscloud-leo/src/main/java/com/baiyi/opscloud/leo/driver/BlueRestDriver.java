@@ -33,6 +33,7 @@ public class BlueRestDriver {
                 .retryer(new Retryer.Default(3000, 3000, 3))
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
+                .errorDecoder(new CustomFeignErrorHandler())
                 .options(new Request.Options(10L, TimeUnit.SECONDS, 60L, TimeUnit.SECONDS, false))
                 .requestInterceptor(new BasicAuthRequestInterceptor(config.getUsername(),
                         config.getToken()))

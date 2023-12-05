@@ -121,4 +121,3 @@ public class ApplicationReduceReplicasEntryQuery extends BaseTicketEntryQuery<Ap
     }
 
 }
-

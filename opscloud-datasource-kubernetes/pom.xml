@@ -12,7 +12,7 @@
     <artifactId>opscloud-datasource-kubernetes</artifactId>
 
     <properties>
-        <fabric8-sdk.version>6.9.0</fabric8-sdk.version>
+        <fabric8-sdk.version>6.9.2</fabric8-sdk.version>
     </properties>
 
     <dependencies>

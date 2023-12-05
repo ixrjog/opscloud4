@@ -45,7 +45,7 @@ public class TagController {
 
     @Operation(summary = "按类型查询所有标签")
     @GetMapping(value = "/business/type/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<TagVO.Tag>> getTagByBusinessType(@RequestParam @Valid Integer businessType) {
+    public HttpResult<List<TagVO.Tag>> getTagByBusinessType(@RequestParam @Valid int businessType) {
         return new HttpResult<>(tagFacade.queryTagByBusinessType(businessType));
     }
 
@@ -57,14 +57,14 @@ public class TagController {
 
     @Operation(summary = "新增标签信息")
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addTag(@RequestBody @Valid TagVO.Tag tag) {
+    public HttpResult<Boolean> addTag(@RequestBody @Valid TagParam.Tag tag) {
         tagFacade.addTag(tag);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "更新标签信息")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateTag(@RequestBody @Valid TagVO.Tag tag) {
+    public HttpResult<Boolean> updateTag(@RequestBody @Valid TagParam.Tag tag) {
         tagFacade.updateTag(tag);
         return HttpResult.SUCCESS;
     }

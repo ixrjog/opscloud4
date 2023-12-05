@@ -1,18 +1,22 @@
 package com.baiyi.opscloud.leo.handler.deploy.strategy.deploy;
 
+import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
+import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.leo.handler.deploy.strategy.deploy.base.DoDeployStrategy;
+import com.google.common.collect.Maps;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentSpec;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -39,13 +43,12 @@ public class DoDeployWithOfflineStrategy extends DoDeployStrategy {
                 .map(LeoDeployModel.Deploy::getKubernetes)
                 .orElseThrow(() -> new LeoDeployException("Configuration does not exist: deploy->kubernetes"));
 
-        final int replicas = Optional.of(deployment)
+        Optional.of(deployment)
                 .map(Deployment::getSpec)
                 .map(DeploymentSpec::getReplicas)
                 .orElseThrow(() -> new LeoDeployException("Read configuration error: deployment->spec->replicas"));
-
-        // 校验副本数
-        if (replicas == 1) {
+        // 设置副本数
+        if (!isEnvProd(deployConfig)) {
             deployment.getSpec().setReplicas(0);
         }
         try {
@@ -60,6 +63,14 @@ public class DoDeployWithOfflineStrategy extends DoDeployStrategy {
         } catch (Exception e) {
             throw new LeoDeployException(e.getMessage());
         }
+    }
+
+    protected boolean isEnvProd(LeoDeployModel.DeployConfig deployConfig) {
+        Map<String, String> dict = Optional.of(deployConfig)
+                .map(LeoDeployModel.DeployConfig::getDeploy)
+                .map(LeoDeployModel.Deploy::getDict)
+                .orElse(Maps.newHashMap());
+        return dict.containsKey(BuildDictConstants.ENV.getKey()) && Global.ENV_PROD.equalsIgnoreCase(dict.get(BuildDictConstants.ENV.getKey()));
     }
 
     @Override

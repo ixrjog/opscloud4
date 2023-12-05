@@ -15,6 +15,7 @@ import java.util.List;
  * @Date 2021/5/14 4:04 下午
  * @Version 1.0
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 @RequiredArgsConstructor
 public class UserTokenServiceImpl implements UserTokenService {

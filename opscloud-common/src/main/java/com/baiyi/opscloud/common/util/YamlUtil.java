@@ -38,14 +38,14 @@ public class YamlUtil {
      * @param <T>
      * @throws JsonSyntaxException
      */
-    public static <T> T loadAs(String loadYaml, Class<T> targetClass) throws JsonSyntaxException {
-        Representer representer = new Representer(new DumperOptions());
-        representer.getPropertyUtils().setSkipMissingProperties(true);
-        LoaderOptions loaderOptions = new LoaderOptions();
-        Constructor constructor = new Constructor(targetClass, loaderOptions);
-        Yaml yaml = new Yaml(constructor, representer);
-        return yaml.loadAs(loadYaml, targetClass);
-    }
+//    public static <T> T loadAs(String loadYaml, Class<T> targetClass) throws JsonSyntaxException {
+//        Representer representer = new Representer(new DumperOptions());
+//        representer.getPropertyUtils().setSkipMissingProperties(true);
+//        LoaderOptions loaderOptions = new LoaderOptions();
+//        Constructor constructor = new Constructor(targetClass, loaderOptions);
+//        Yaml yaml = new Yaml(constructor, representer);
+//        return yaml.loadAs(loadYaml, targetClass);
+//    }
 
     /**
      * 2.0
@@ -56,14 +56,14 @@ public class YamlUtil {
      * @return
      * @throws JsonSyntaxException
      */
-//    public static <T> T loadAs(String loadYaml, Class<T> targetClass) throws JsonSyntaxException {
-//        Representer representer = new Representer(new DumperOptions());
-//        representer.getPropertyUtils().setSkipMissingProperties(true);
-//        LoaderOptions loaderOptions = new LoaderOptions();
-//        loaderOptions.setTagInspector(new TrustedTagInspector());
-//        Constructor constructor = new Constructor(targetClass, loaderOptions);
-//        Yaml yaml = new Yaml(constructor, representer);
-//        return yaml.loadAs(loadYaml, targetClass);
-//    }
+    public static <T> T loadAs(String loadYaml, Class<T> targetClass) throws JsonSyntaxException {
+        Representer representer = new Representer(new DumperOptions());
+        representer.getPropertyUtils().setSkipMissingProperties(true);
+        LoaderOptions loaderOptions = new LoaderOptions();
+        loaderOptions.setTagInspector(tag -> true);
+        Constructor constructor = new Constructor(targetClass, loaderOptions);
+        Yaml yaml = new Yaml(constructor, representer);
+        return yaml.loadAs(loadYaml, targetClass);
+    }
 
 }

@@ -1,25 +1,26 @@
 package com.baiyi.opscloud.facade.apollo;
 
 import com.baiyi.opscloud.common.HttpResult;
-import com.baiyi.opscloud.common.datasource.ApolloConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.param.apollo.ApolloParam;
+import com.baiyi.opscloud.facade.apollo.handler.ApolloReleaseHandler;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author baiyi
  * @Date 2023/5/30 14:10
  * @Version 1.0
  */
-@SuppressWarnings("rawtypes")
-public interface ApolloFacade {
+@Slf4j
+@AllArgsConstructor
+@Component
+public class ApolloFacade {
 
-    /**
-     * Apollo发布拦截
-     * @param releaseEvent
-     * @return
-     */
-    HttpResult interceptRelease(ApolloParam.ReleaseEvent releaseEvent);
+    private final ApolloReleaseHandler apolloReleaseHandler;
 
-    void notify(ApolloConfig apolloConfig, ApolloParam.ReleaseEvent releaseEvent, Integer ticketId, Application application);
+    public HttpResult<Boolean> interceptRelease(ApolloParam.ReleaseEvent releaseEvent) {
+        return apolloReleaseHandler.handleReleases(releaseEvent);
+    }
 
 }

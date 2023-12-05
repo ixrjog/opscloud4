@@ -164,7 +164,6 @@ public class SshShellTerminalDelegate implements Terminal {
     @Override
     public void flush() {
         delegate().flush();
-
     }
 
     @Override
@@ -236,4 +235,5 @@ public class SshShellTerminalDelegate implements Terminal {
     public void close() throws IOException {
         delegate().close();
     }
+
 }

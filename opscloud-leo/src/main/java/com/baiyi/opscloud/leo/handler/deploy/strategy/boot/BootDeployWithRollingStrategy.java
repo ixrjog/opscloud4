@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.Resource;
+
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,6 +35,9 @@ public class BootDeployWithRollingStrategy extends BootDeployStrategy {
             throw new LeoDeployException("发布版本不存在");
         }
         LeoBuild leoBuild = leoBuildService.getById(leoDeploy.getBuildId());
+        if (!leoBuild.getIsActive()) {
+            throw new LeoDeployException("构建版本无效: buildId={}, isActive=false", leoDeploy.getBuildId());
+        }
         LeoBuildModel.BuildConfig buildConfig = LeoBuildModel.load(leoBuild.getBuildConfig());
         // 从构建中获取字典
         Map<String, String> dict = Optional.ofNullable(buildConfig)

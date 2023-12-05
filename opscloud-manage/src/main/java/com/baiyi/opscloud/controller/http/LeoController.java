@@ -229,6 +229,12 @@ public class LeoController {
         return new HttpResult<>(buildFacade.getBuildBranchOptions(getOptions));
     }
 
+    @Operation(summary = "比较分支")
+    @PostMapping(value = "/build/branch/compare", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<LeoBuildVO.CompareResults> compareBranch(@RequestBody @Valid LeoBuildParam.CompareBranch compareBranch) {
+        return new HttpResult<>(buildFacade.compareBranch(compareBranch));
+    }
+
     @Operation(summary = "查询MavenPublish信息")
     @PostMapping(value = "/build/maven/publish/get", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<LeoBuildVO.MavenPublishInfo> getBuildMavenPublishInfo(@RequestBody @Valid LeoBuildParam.GetBuildMavenPublishInfo getBuildMavenPublishInfo) {
@@ -260,7 +266,11 @@ public class LeoController {
         return HttpResult.SUCCESS;
     }
 
-    // Deploy
+    @Operation(summary = "Query all deploys associated with build")
+    @GetMapping(value = "/deploys/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<LeoDeployVO.Deploy>> getLeoDeploys(@RequestParam int buildId) {
+        return new HttpResult<>(deployFacade.getLeoDeploys(buildId));
+    }
 
     @Operation(summary = "执行部署")
     @PostMapping(value = "/deploy/do", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

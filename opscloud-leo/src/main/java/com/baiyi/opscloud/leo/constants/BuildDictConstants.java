@@ -7,6 +7,7 @@ import lombok.Getter;
  * @Date 2022/11/21 13:31
  * @Version 1.0
  */
+@Getter
 public enum BuildDictConstants {
 
     /**
@@ -30,7 +31,6 @@ public enum BuildDictConstants {
     REGISTRY_URL("registryUrl"),
     ;
 
-    @Getter
     private final String key;
 
     BuildDictConstants(String key) {
