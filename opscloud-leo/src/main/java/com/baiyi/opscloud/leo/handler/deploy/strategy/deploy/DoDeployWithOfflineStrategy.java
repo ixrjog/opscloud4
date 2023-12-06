@@ -6,6 +6,7 @@ import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDrive
 import com.baiyi.opscloud.domain.constants.DeployTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
+import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.leo.handler.deploy.strategy.deploy.base.DoDeployStrategy;
@@ -48,9 +49,10 @@ public class DoDeployWithOfflineStrategy extends DoDeployStrategy {
                 .map(DeploymentSpec::getReplicas)
                 .orElseThrow(() -> new LeoDeployException("Read configuration error: deployment->spec->replicas"));
         // 设置副本数
-        if (!isEnvProd(deployConfig)) {
-            deployment.getSpec().setReplicas(0);
+        if (isEnvProd(deployConfig)) {
+            throw new LeoDeployException("Prod environment is still offline, please contact the administrator for operation");
         }
+        deployment.getSpec().setReplicas(0);
         try {
             KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), deployment);
             LeoDeploy saveLeoDeploy = LeoDeploy.builder()
@@ -70,7 +72,18 @@ public class DoDeployWithOfflineStrategy extends DoDeployStrategy {
                 .map(LeoDeployModel.DeployConfig::getDeploy)
                 .map(LeoDeployModel.Deploy::getDict)
                 .orElse(Maps.newHashMap());
-        return dict.containsKey(BuildDictConstants.ENV.getKey()) && Global.ENV_PROD.equalsIgnoreCase(dict.get(BuildDictConstants.ENV.getKey()));
+        boolean isProd = dict.containsKey(BuildDictConstants.ENV.getKey()) && Global.ENV_PROD.equalsIgnoreCase(dict.get(BuildDictConstants.ENV.getKey()));
+        if (!isProd) {
+            return false;
+        } else {
+            String deploymentName = Optional.of(deployConfig)
+                    .map(LeoDeployModel.DeployConfig::getDeploy)
+                    .map(LeoDeployModel.Deploy::getKubernetes)
+                    .map(LeoBaseModel.Kubernetes::getDeployment)
+                    .map(LeoBaseModel.Deployment::getName)
+                    .orElse("");
+            return !deploymentName.endsWith("-canary");
+        }
     }
 
     @Override
