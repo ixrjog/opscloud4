@@ -1,9 +1,11 @@
 package com.baiyi.opscloud.leo.handler.build;
 
-import com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
-import com.baiyi.opscloud.leo.handler.build.chain.post.*;
+import com.baiyi.opscloud.leo.handler.build.chain.post.BuildFinalProcessingChainHandler;
+import com.baiyi.opscloud.leo.handler.build.chain.post.EndBuildNotificationChainHandler;
+import com.baiyi.opscloud.leo.handler.build.chain.post.PostBuildVerificationChainHandler;
+import com.baiyi.opscloud.leo.handler.build.chain.post.RecordBuildPipelineChainHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -40,7 +42,7 @@ public class LeoPostBuildHandler implements InitializingBean {
      */
     private final BuildFinalProcessingChainHandler buildFinalProcessingChainHandler;
 
-    @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
+    @Async
     public void handleBuild(LeoBuild leoBuild, LeoBuildModel.BuildConfig buildConfig) {
         /*
           使用责任链设计模式解耦代码

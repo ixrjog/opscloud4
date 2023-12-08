@@ -1,13 +1,5 @@
 package com.baiyi.opscloud.sshcore.table.simple;
 
-/**
- * 默认的表格格式化类
- *
- * @Author baiyi
- * @Date 2021/10/20 2:42 下午
- * @Version 1.0
- */
-
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,8 +9,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static java.lang.System.getProperty;
-
+/**
+ * 默认的表格格式化类
+ *
+ * @Author baiyi
+ * @Date 2021/10/20 2:42 下午
+ * @Version 1.0
+ */
 @Slf4j
 public class DefaultTableFormatter implements TableFormatter {
 
@@ -35,7 +32,7 @@ public class DefaultTableFormatter implements TableFormatter {
     };
     private int overallWidth;
     private int columnSeparatorWidth;
-    private String lineSeparator = getProperty("line.separator");
+    private String lineSeparator = System.lineSeparator();
     private char titlePadLeftChar = '=';
     private char titlePadRightChar = '=';
     private char headerSplitChar = '—';
@@ -329,7 +326,7 @@ public class DefaultTableFormatter implements TableFormatter {
     }
 
     public static boolean isEmpty(Object str) {
-        return str == null || "".equals(str.toString().trim());
+        return str == null || str.toString().trim().isEmpty();
     }
 
     public static int sum(int[] d) {

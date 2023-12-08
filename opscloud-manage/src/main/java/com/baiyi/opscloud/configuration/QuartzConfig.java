@@ -1,6 +1,6 @@
-package com.baiyi.opscloud.config;
+package com.baiyi.opscloud.configuration;
 
-import com.baiyi.opscloud.config.condition.EnvCondition;
+import com.baiyi.opscloud.configuration.condition.EnvCondition;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;

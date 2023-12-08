@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.config;
+package com.baiyi.opscloud.configuration;
 
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;

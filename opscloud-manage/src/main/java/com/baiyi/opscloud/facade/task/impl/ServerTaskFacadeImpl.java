@@ -44,8 +44,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
-
 /**
  * @Author baiyi
  * @Date 2021/9/18 3:21 下午
@@ -88,8 +86,8 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
         return new DataTable<>(data, table.getTotalNum());
     }
 
-    @Async(value = CORE)
     @Override
+    @Async
     public void submitServerTask(ServerTaskParam.SubmitServerTask submitServerTask, String username) {
         ServerTask serverTask = ServerTaskBuilder.newBuilder(submitServerTask, username);
         serverTaskService.add(serverTask);

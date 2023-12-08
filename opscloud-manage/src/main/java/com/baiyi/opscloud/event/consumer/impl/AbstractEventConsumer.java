@@ -1,17 +1,14 @@
 package com.baiyi.opscloud.event.consumer.impl;
 
-import com.baiyi.opscloud.common.helper.topic.TopicHelper;
-import com.baiyi.opscloud.domain.constants.EventActionTypeEnum;
 import com.baiyi.opscloud.common.event.IEvent;
 import com.baiyi.opscloud.common.event.NoticeEvent;
+import com.baiyi.opscloud.common.helper.topic.TopicHelper;
+import com.baiyi.opscloud.domain.constants.EventActionTypeEnum;
 import com.baiyi.opscloud.event.consumer.EventConsumerFactory;
 import com.baiyi.opscloud.event.consumer.IEventConsumer;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.annotation.Async;
-
-import jakarta.annotation.Resource;
-
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi
@@ -24,7 +21,7 @@ public abstract class AbstractEventConsumer<T> implements IEventConsumer<T>, Ini
     protected TopicHelper topicHelper;
 
     @Override
-    @Async(value = CORE)
+    @Async
     public void onMessage(NoticeEvent<T> noticeEvent) {
         // 预处理
         preHandle(noticeEvent);

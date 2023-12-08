@@ -15,6 +15,7 @@ public interface TableFormatter {
 	 * @param table
 	 * @return
 	 */
+	@Deprecated
 	String format(Table table);
 
 	/**

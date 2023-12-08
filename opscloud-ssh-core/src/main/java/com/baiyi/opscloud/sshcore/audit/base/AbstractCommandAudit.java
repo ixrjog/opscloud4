@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.sshcore.audit.base;
 
-import com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstanceCommand;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceCommandService;
@@ -8,12 +7,12 @@ import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
 import com.baiyi.opscloud.sshcore.audit.InstanceCommandBuilder;
 import com.baiyi.opscloud.sshcore.config.TerminalConfigurationProperties;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.scheduling.annotation.Async;
 
-import jakarta.annotation.Resource;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -47,7 +46,7 @@ public abstract class AbstractCommandAudit {
      * @param sessionId
      * @param instanceId
      */
-    @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
+    @Async
     public void asyncRecordCommand(String sessionId, String instanceId) {
         TerminalSessionInstance terminalSessionInstance = terminalSessionInstanceService.getByUniqueKey(sessionId, instanceId);
         // 跳过日志审计

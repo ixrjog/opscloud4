@@ -26,8 +26,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
-
 /**
  * @Author baiyi
  * @Date 2021/5/24 5:45 下午
@@ -91,8 +89,8 @@ public class ServerFacadeImpl extends AbstractAppResQuery implements ServerFacad
         serverService.update(pre);
     }
 
-    @Async(CORE)
     @Override
+    @Async
     public void scanServerMonitoringStatus() {
         List<Server> servers = serverService.selectAll();
         zabbixInstanceManager.updateServerMonitorStatus(servers);

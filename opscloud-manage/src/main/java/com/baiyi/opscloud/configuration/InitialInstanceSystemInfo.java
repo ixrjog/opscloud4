@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.config;
+package com.baiyi.opscloud.configuration;
 
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;

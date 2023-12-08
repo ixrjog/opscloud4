@@ -1,7 +1,7 @@
-package com.baiyi.opscloud.config;
+package com.baiyi.opscloud.configuration;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.config.properties.WhiteConfigurationProperties;
+import com.baiyi.opscloud.configuration.properties.WhiteConfigurationProperties;
 import org.junit.jupiter.api.Test;
 
 import jakarta.annotation.Resource;

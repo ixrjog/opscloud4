@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.config;
+package com.baiyi.opscloud.configuration;
 
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;

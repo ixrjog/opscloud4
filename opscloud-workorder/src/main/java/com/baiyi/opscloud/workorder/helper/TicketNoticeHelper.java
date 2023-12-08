@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
-
 /**
  * 工单通知助手
  *
@@ -30,7 +28,7 @@ public class TicketNoticeHelper {
      *
      * @param ticket
      */
-    @Async(CORE)
+    @Async
     public void send(WorkOrderTicket ticket) {
         final String phase = ticket.getTicketPhase();
         if (CONTEXT.containsKey(phase)) {

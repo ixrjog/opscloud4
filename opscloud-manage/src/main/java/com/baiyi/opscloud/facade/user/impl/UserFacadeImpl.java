@@ -50,15 +50,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi
@@ -123,7 +120,6 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    @Async(value = CORE)
     public void syncUserPermissionGroupForAsset() {
         List<User> users = userService.queryAll();
         if (CollectionUtils.isEmpty(users)) {

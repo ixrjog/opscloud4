@@ -2,7 +2,7 @@ package com.baiyi.opscloud.filter;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
-import com.baiyi.opscloud.config.properties.WhiteConfigurationProperties;
+import com.baiyi.opscloud.configuration.properties.WhiteConfigurationProperties;
 import com.baiyi.opscloud.facade.audit.OperationalAuditFacade;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import jakarta.servlet.FilterChain;

@@ -12,15 +12,12 @@ import com.baiyi.opscloud.workorder.approve.factory.WorkOrderTicketApproveFactor
 import com.baiyi.opscloud.workorder.constants.ApprovalTypeConstants;
 import com.baiyi.opscloud.workorder.exception.TicketException;
 import com.baiyi.opscloud.workorder.helper.TicketApproveHelper;
+import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.annotation.Async;
 
-import jakarta.annotation.Resource;
-
 import java.util.Date;
-
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi
@@ -39,7 +36,7 @@ public abstract class AbstractApproveTicket implements ITicketApprove, Initializ
     private TicketApproveHelper ticketApproveHelper;
 
     @Override
-    @Async(value = CORE)
+    @Async
     public void approve(WorkOrderTicketParam.ApproveTicket approveTicket) {
         if (StringUtils.isBlank(approveTicket.getApprovalComment())) {
             // 设置默认的审批意见
