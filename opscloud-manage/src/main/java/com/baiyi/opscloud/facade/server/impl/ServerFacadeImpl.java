@@ -74,20 +74,20 @@ public class ServerFacadeImpl extends AbstractAppResQuery implements ServerFacad
     @Override
     @EnvWrapper(extend = true, wrapResult = true)
     @AssetBusinessRelation
-    public ServerVO.Server addServer(ServerParam.AddServer server) {
-        Server pre = serverConverter.to(server);
-        pre.setDisplayName(SimpleServerNameFacade.toServerName(pre));
-        serverService.add(pre);
+    public ServerVO.Server addServer(ServerParam.AddServer addServer) {
+        Server server = serverConverter.to(addServer);
+        server.setDisplayName(SimpleServerNameFacade.toServerName(server));
+        serverService.add(server);
         // 绑定资产
-        server.setId(pre.getId());
-        return BeanCopierUtil.copyProperties(pre, ServerVO.Server.class);
+        addServer.setId(server.getId());
+        return BeanCopierUtil.copyProperties(server, ServerVO.Server.class);
     }
 
     @Override
-    public void updateServer(ServerParam.UpdateServer server) {
-        Server pre = serverConverter.to(server);
-        pre.setDisplayName(SimpleServerNameFacade.toServerName(pre));
-        serverService.update(pre);
+    public void updateServer(ServerParam.UpdateServer updateServer) {
+        Server server = serverConverter.to(updateServer);
+        server.setDisplayName(SimpleServerNameFacade.toServerName(server));
+        serverService.update(server);
     }
 
     @Override
@@ -102,10 +102,9 @@ public class ServerFacadeImpl extends AbstractAppResQuery implements ServerFacad
     @Override
     public void deleteServerById(Integer id) {
         Server server = serverService.getById(id);
-        if (server == null) {
-            return;
+        if (server != null) {
+            serverService.delete(server);
         }
-        serverService.delete(server);
     }
 
     @Override

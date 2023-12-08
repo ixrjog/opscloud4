@@ -24,7 +24,7 @@ public class ServerParam {
     public static class AddServer {
 
         @Schema(description = "主键", example = "1")
-        private Integer id ;
+        private Integer id;
 
         @Schema(description = "服务器名称")
         @NotBlank(message = "服务器名称不能为空")
@@ -50,8 +50,7 @@ public class ServerParam {
 
         @Schema(description = "服务器类型", example = "1")
         @NotNull(message = "服务器类型不能为空")
-        @Builder.Default
-        private Integer serverType = 0;
+        private Integer serverType;
 
         @Schema(description = "地区")
         private String area;
@@ -60,8 +59,7 @@ public class ServerParam {
         private String osType;
 
         @Schema(description = "序号", example = "1")
-        @Builder.Default
-        private Integer serialNumber = 0;
+        private Integer serialNumber;
 
         @Schema(description = "监控状态", example = "1")
         private Integer monitorStatus;
@@ -73,8 +71,7 @@ public class ServerParam {
         private Integer serverStatus;
 
         @Schema(description = "有效")
-        @Builder.Default
-        private Boolean isActive = true;
+        private Boolean isActive;
 
         @Schema(description = "资产ID")
         private Integer assetId;
@@ -88,7 +85,7 @@ public class ServerParam {
     public static class UpdateServer {
 
         @Schema(description = "主键", example = "1")
-        private Integer id ;
+        private Integer id;
 
         @Schema(description = "服务器名称")
         @NotBlank(message = "服务器名称不能为空")
@@ -114,8 +111,7 @@ public class ServerParam {
 
         @Schema(description = "服务器类型", example = "1")
         @NotNull(message = "服务器类型不能为空")
-        @Builder.Default
-        private Integer serverType = 0;
+        private Integer serverType;
 
         @Schema(description = "地区")
         private String area;
@@ -124,8 +120,7 @@ public class ServerParam {
         private String osType;
 
         @Schema(description = "序号", example = "1")
-        @Builder.Default
-        private Integer serialNumber = 0;
+        private Integer serialNumber;
 
         @Schema(description = "监控状态", example = "1")
         private Integer monitorStatus;
@@ -137,8 +132,7 @@ public class ServerParam {
         private Integer serverStatus;
 
         @Schema(description = "有效")
-        @Builder.Default
-        private Boolean isActive = true;
+        private Boolean isActive;
 
         @Schema(description = "资产ID")
         private Integer assetId;
