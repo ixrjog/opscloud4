@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -15,6 +16,134 @@ import lombok.experimental.SuperBuilder;
  * @Version 1.0
  */
 public class ServerParam {
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema
+    public static class AddServer {
+
+        @Schema(description = "主键", example = "1")
+        private Integer id ;
+
+        @Schema(description = "服务器名称")
+        @NotBlank(message = "服务器名称不能为空")
+        private String name;
+
+        @Schema(description = "显示名称")
+        private String displayName;
+
+        @Schema(description = "服务器组id", example = "1")
+        @NotNull(message = "服务器组不能为空")
+        private Integer serverGroupId;
+
+        @Schema(description = "环境类型", example = "1")
+        @NotNull(message = "环境类型不能为空")
+        private Integer envType;
+
+        @Schema(description = "公网IP")
+        private String publicIp;
+
+        @Schema(description = "私网IP")
+        @NotBlank(message = "私网ip不能为空")
+        private String privateIp;
+
+        @Schema(description = "服务器类型", example = "1")
+        @NotNull(message = "服务器类型不能为空")
+        @Builder.Default
+        private Integer serverType = 0;
+
+        @Schema(description = "地区")
+        private String area;
+
+        @Schema(description = "系统类型")
+        private String osType;
+
+        @Schema(description = "序号", example = "1")
+        @Builder.Default
+        private Integer serialNumber = 0;
+
+        @Schema(description = "监控状态", example = "1")
+        private Integer monitorStatus;
+
+        @Schema(description = "资源描述")
+        private String comment;
+
+        @Schema(description = "服务器状态", example = "1")
+        private Integer serverStatus;
+
+        @Schema(description = "有效")
+        @Builder.Default
+        private Boolean isActive = true;
+
+        @Schema(description = "资产ID")
+        private Integer assetId;
+
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema
+    public static class UpdateServer {
+
+        @Schema(description = "主键", example = "1")
+        private Integer id ;
+
+        @Schema(description = "服务器名称")
+        @NotBlank(message = "服务器名称不能为空")
+        private String name;
+
+        @Schema(description = "显示名称")
+        private String displayName;
+
+        @Schema(description = "服务器组id", example = "1")
+        @NotNull(message = "服务器组不能为空")
+        private Integer serverGroupId;
+
+        @Schema(description = "环境类型", example = "1")
+        @NotNull(message = "环境类型不能为空")
+        private Integer envType;
+
+        @Schema(description = "公网IP")
+        private String publicIp;
+
+        @Schema(description = "私网IP")
+        @NotBlank(message = "私网ip不能为空")
+        private String privateIp;
+
+        @Schema(description = "服务器类型", example = "1")
+        @NotNull(message = "服务器类型不能为空")
+        @Builder.Default
+        private Integer serverType = 0;
+
+        @Schema(description = "地区")
+        private String area;
+
+        @Schema(description = "系统类型")
+        private String osType;
+
+        @Schema(description = "序号", example = "1")
+        @Builder.Default
+        private Integer serialNumber = 0;
+
+        @Schema(description = "监控状态", example = "1")
+        private Integer monitorStatus;
+
+        @Schema(description = "资源描述")
+        private String comment;
+
+        @Schema(description = "服务器状态", example = "1")
+        private Integer serverStatus;
+
+        @Schema(description = "有效")
+        @Builder.Default
+        private Boolean isActive = true;
+
+        @Schema(description = "资产ID")
+        private Integer assetId;
+
+    }
 
     @Data
     @SuperBuilder(toBuilder = true)
