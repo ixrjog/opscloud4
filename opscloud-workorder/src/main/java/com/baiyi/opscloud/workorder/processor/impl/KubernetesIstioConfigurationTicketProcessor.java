@@ -19,6 +19,7 @@ import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentSpec;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -103,7 +104,7 @@ public class KubernetesIstioConfigurationTicketProcessor extends AbstractDsAsset
 //            } else {
 //                istioInject = "true";
 //            }
-            String istioInject = Boolean.toString(!Boolean.getBoolean(entry.getIstioInject()));
+            String istioInject = Boolean.toString(!BooleanUtils.toBoolean(entry.getIstioInject()));
             labels.put(SIDECAR_ISTIO_IO_INJECT, istioInject);
             KubernetesDeploymentDriver.update(config, entry.getNamespace(), deployment);
             log.info("应用服务网格配置: instanceUuid={}, inject={}", ticketEntry.getInstanceUuid(), istioInject);
