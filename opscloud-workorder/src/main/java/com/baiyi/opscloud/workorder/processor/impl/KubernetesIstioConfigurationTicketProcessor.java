@@ -103,9 +103,10 @@ public class KubernetesIstioConfigurationTicketProcessor extends AbstractDsAsset
 //            } else {
 //                istioInject = "true";
 //            }
-            labels.put(SIDECAR_ISTIO_IO_INJECT, entry.getIstioInject());
+            String istioInject = Boolean.toString(!Boolean.getBoolean(entry.getIstioInject()));
+            labels.put(SIDECAR_ISTIO_IO_INJECT, istioInject);
             KubernetesDeploymentDriver.update(config, entry.getNamespace(), deployment);
-            log.info("应用服务网格配置: instanceUuid={}, inject={}", ticketEntry.getInstanceUuid(), entry.getIstioInject());
+            log.info("应用服务网格配置: instanceUuid={}, inject={}", ticketEntry.getInstanceUuid(), istioInject);
         } catch (KubernetesDeploymentException e) {
             throw new TicketProcessException("Failed to change Kubernetes istio configuration: {}", e.getMessage());
         }
