@@ -40,7 +40,7 @@ public class LeoBuildCompensationTask {
         }
         leoBuilds.forEach(leoBuild -> {
             if (!heartbeatHolder.isLive(HeartbeatTypeConstants.BUILD, leoBuild.getId())) {
-                if (NewTimeUtil.calculateHowManySecondsHavePassed(leoBuild.getStartTime()) >= MAX_HEARTBEAT_DELAY) {
+                if (leoBuild.getStartTime() != null && NewTimeUtil.calculateHowManySecondsHavePassed(leoBuild.getStartTime()) >= MAX_HEARTBEAT_DELAY) {
                     LeoBuild saveLeoBuild = LeoBuild.builder()
                             .buildResult("ERROR")
                             .endTime(new Date())
