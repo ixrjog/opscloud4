@@ -4,8 +4,8 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.driver.IstioDestinationRuleDriver;
 import com.baiyi.opscloud.datasource.kubernetes.driver.IstioVirtualServiceDriver;
 import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesException;
-import com.baiyi.opscloud.domain.param.kubernetes.IstioParam;
-import com.baiyi.opscloud.facade.kubernetes.IstioFacade;
+import com.baiyi.opscloud.domain.param.kubernetes.KubernetesIstioParam;
+import com.baiyi.opscloud.facade.kubernetes.KubernetesIstioFacade;
 import io.fabric8.istio.api.networking.v1alpha3.DestinationRule;
 import io.fabric8.istio.api.networking.v1alpha3.VirtualService;
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +18,10 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class IstioFacadeImpl extends BaseKubernetesConfig implements IstioFacade {
+public class KubernetesIstioFacadeImpl extends BaseKubernetesConfig implements KubernetesIstioFacade {
 
     @Override
-    public VirtualService getIstioVirtualService(IstioParam.GetResource getResource) {
+    public VirtualService getIstioVirtualService(KubernetesIstioParam.GetResource getResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(getResource.getInstanceId());
         try {
             return IstioVirtualServiceDriver.get(kubernetesConfig.getKubernetes(), getResource.getNamespace(), getResource.getName());
@@ -31,7 +31,7 @@ public class IstioFacadeImpl extends BaseKubernetesConfig implements IstioFacade
     }
 
     @Override
-    public VirtualService updateIstioVirtualService(IstioParam.UpdateResource updateResource) {
+    public VirtualService updateIstioVirtualService(KubernetesIstioParam.UpdateResource updateResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(updateResource.getInstanceId());
         try {
             return IstioVirtualServiceDriver.update(kubernetesConfig.getKubernetes(), updateResource.getResourceYaml());
@@ -41,7 +41,7 @@ public class IstioFacadeImpl extends BaseKubernetesConfig implements IstioFacade
     }
 
     @Override
-    public VirtualService createIstioVirtualService(IstioParam.CreateResource createResource) {
+    public VirtualService createIstioVirtualService(KubernetesIstioParam.CreateResource createResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(createResource.getInstanceId());
         try {
             return IstioVirtualServiceDriver.create(kubernetesConfig.getKubernetes(), createResource.getResourceYaml());
@@ -51,7 +51,7 @@ public class IstioFacadeImpl extends BaseKubernetesConfig implements IstioFacade
     }
 
     @Override
-    public DestinationRule getIstioDestinationRule(IstioParam.GetResource getResource) {
+    public DestinationRule getIstioDestinationRule(KubernetesIstioParam.GetResource getResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(getResource.getInstanceId());
         try {
             return IstioDestinationRuleDriver.get(kubernetesConfig.getKubernetes(), getResource.getNamespace(), getResource.getName());
@@ -61,7 +61,7 @@ public class IstioFacadeImpl extends BaseKubernetesConfig implements IstioFacade
     }
 
     @Override
-    public DestinationRule updateIstioDestinationRule(IstioParam.UpdateResource updateResource) {
+    public DestinationRule updateIstioDestinationRule(KubernetesIstioParam.UpdateResource updateResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(updateResource.getInstanceId());
         try {
             return IstioDestinationRuleDriver.update(kubernetesConfig.getKubernetes(), updateResource.getResourceYaml());
@@ -71,7 +71,7 @@ public class IstioFacadeImpl extends BaseKubernetesConfig implements IstioFacade
     }
 
     @Override
-    public DestinationRule createIstioDestinationRule(IstioParam.CreateResource createResource) {
+    public DestinationRule createIstioDestinationRule(KubernetesIstioParam.CreateResource createResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(createResource.getInstanceId());
         try {
             return IstioDestinationRuleDriver.create(kubernetesConfig.getKubernetes(), createResource.getResourceYaml());

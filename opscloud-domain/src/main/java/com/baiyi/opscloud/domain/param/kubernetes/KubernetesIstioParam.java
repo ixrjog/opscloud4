@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
  * @Date 2023/10/8 15:51
  * @Version 1.0
  */
-public class IstioParam {
+public class KubernetesIstioParam {
 
     @Data
     @Builder

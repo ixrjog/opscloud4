@@ -2,12 +2,10 @@ package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.HttpResult;
-import com.baiyi.opscloud.domain.param.kubernetes.IstioParam;
+import com.baiyi.opscloud.domain.param.kubernetes.KubernetesIstioParam;
 import io.fabric8.istio.api.networking.v1alpha3.VirtualService;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @Author baiyi
@@ -21,7 +19,7 @@ class KubernetesControllerTest extends BaseUnit {
 
     @Test
     void ddd() {
-        IstioParam.GetResource getResource = IstioParam.GetResource.builder()
+        KubernetesIstioParam.GetResource getResource = KubernetesIstioParam.GetResource.builder()
                 .instanceId(37)
                 .namespace("dev")
                 .name("basic-data-dev")
