@@ -56,11 +56,7 @@ public final class JsonParser implements Parser {
                 return value.asText();
             }
             case NUMBER -> {
-                if (value.toString().contains(".")) {
-                    return value.asDouble();
-                } else {
-                    return value.asInt();
-                }
+                return value.toString().contains(".") ? value.asDouble() : value.asInt();
             }
             default -> {
                 return value.toString();
