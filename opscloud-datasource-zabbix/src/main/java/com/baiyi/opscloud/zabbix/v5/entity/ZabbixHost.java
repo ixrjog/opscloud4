@@ -110,7 +110,7 @@ public class ZabbixHost {
                     .instanceUuid(dsInstance.getUuid())
                     .assetId(this.hostid)
                     .name(this.name)
-                    .assetKey(this.interfaces.get(0).getIp())
+                    .assetKey(this.interfaces.getFirst().getIp())
                     //.assetKey2()
                     .kind(String.valueOf(this.flags))
                     .isActive(0 == this.status)

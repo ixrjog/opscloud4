@@ -44,7 +44,7 @@ public class ZabbixV5ProxyDriver extends AbstractZabbixV5ProxyDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     /**

@@ -43,7 +43,7 @@ public class GitLabApiTest extends BaseGitLabApiUnit {
     void findUserTest() {
         try {
             List<User> users = GitLabUserDriver.findUsers(getConfig().getGitlab(), "baiyi");
-            print(users.get(0));
+            print(users.getFirst());
         } catch (GitLabApiException e) {
             print(e);
         }

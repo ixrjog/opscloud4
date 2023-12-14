@@ -363,7 +363,7 @@ public class UserFacadeImpl implements UserFacade {
             // 创建用户MFA凭据（不会重复申请）
             userCredentialFacade.createMFACredential(user);
             List<UserCredential> credentials = userCredentialService.queryByUserIdAndType(user.getId(), UserCredentialTypeEnum.OTP_SK.getType());
-            String otpSk = credentials.get(0).getCredential();
+            String otpSk = credentials.getFirst().getCredential();
             mfa = MfaVO.MFA.builder()
                     .username(user.getUsername())
                     .qrcode(OtpUtil.toQRCode(Joiner.on("@").join(user.getUsername(), "opscloud"), otpSk))

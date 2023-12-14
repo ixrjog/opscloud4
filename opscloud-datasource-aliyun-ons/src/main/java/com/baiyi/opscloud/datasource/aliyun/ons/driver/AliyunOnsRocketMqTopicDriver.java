@@ -39,7 +39,7 @@ public class AliyunOnsRocketMqTopicDriver {
 
     public OnsRocketMqTopic.Topic getTopic(String regionId, AliyunConfig.Aliyun aliyun, String instanceId, String topic) throws ClientException {
         List<OnsRocketMqTopic.Topic> list = listTopic(regionId, aliyun, instanceId, topic);
-        return CollectionUtils.isEmpty(list) ? null : list.get(0);
+        return CollectionUtils.isEmpty(list) ? null : list.getFirst();
     }
 
     /**

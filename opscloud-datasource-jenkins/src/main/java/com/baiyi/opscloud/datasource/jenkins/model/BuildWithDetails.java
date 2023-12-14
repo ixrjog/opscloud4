@@ -335,7 +335,7 @@ public class BuildWithDetails extends Build {
         if (this.changeSet != null) {
             result = this.changeSet;
         } else if (this.changeSets != null && !this.changeSets.isEmpty()) {
-            result = (BuildChangeSet) this.changeSets.get(0);
+            result = (BuildChangeSet) this.changeSets.getFirst();
         } else {
             result = null;
         }

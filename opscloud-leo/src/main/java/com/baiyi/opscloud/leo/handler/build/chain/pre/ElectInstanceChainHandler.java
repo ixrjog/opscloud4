@@ -119,7 +119,7 @@ public class ElectInstanceChainHandler extends BaseBuildChainHandler {
      */
     private DatasourceInstance getOneInstance(List<DatasourceInstance> activeInstances) {
         if (activeInstances.size() == 1) {
-            return activeInstances.get(0);
+            return activeInstances.getFirst();
         }
         List<LeoBuild> builds = leoBuildService.queryNotFinishBuild();
         // 所有引擎都空闲
@@ -176,7 +176,7 @@ public class ElectInstanceChainHandler extends BaseBuildChainHandler {
      */
     private DatasourceInstance getRandomOneInstance(List<DatasourceInstance> activeInstances) {
         Collections.shuffle(activeInstances);
-        return activeInstances.get(0);
+        return activeInstances.getFirst();
     }
 
 }

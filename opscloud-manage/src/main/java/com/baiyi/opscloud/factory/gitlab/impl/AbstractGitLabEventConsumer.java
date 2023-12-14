@@ -98,7 +98,7 @@ public abstract class AbstractGitLabEventConsumer implements IGitLabEventConsume
 
         List<DatasourceInstanceAsset> assets = dsInstanceAssetService.queryAssetByAssetParam(asset);
         if (assets.size() == 1) {
-            String username = assets.get(0).getAssetKey();
+            String username = assets.getFirst().getAssetKey();
             return Optional.ofNullable(userService.getByUsername(username));
         }
         return Optional.empty();

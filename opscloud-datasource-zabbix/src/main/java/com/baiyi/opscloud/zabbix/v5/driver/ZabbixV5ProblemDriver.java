@@ -84,7 +84,7 @@ public class ZabbixV5ProblemDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             throw new RuntimeException("ZabbixProblem不存在");
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     public ZabbixProblem.Problem getByTriggerId(ZabbixConfig.Zabbix config, String triggerId) {
@@ -99,7 +99,7 @@ public class ZabbixV5ProblemDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             throw new RuntimeException("ZabbixProblem不存在");
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
 }

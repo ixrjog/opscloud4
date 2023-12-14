@@ -111,7 +111,7 @@ public class HostSystemHandler {
         ServerProperty.Server serverProperty = bizPropertyHelper.getBusinessProperty(server);
         return HostSystem.builder()
                 // 避免绕过未授权服务器
-                .host(HostParamUtil.getManageIp(server,  serverProperty))
+                .host(HostParamUtil.getManageIp(server, serverProperty))
                 .port(HostParamUtil.getSshPort(serverProperty))
                 .sshCredential(sshCredential)
                 .build();
@@ -156,13 +156,14 @@ public class HostSystemHandler {
         }
         Map<Integer, List<ServerAccount>> accountCatMap = ServerAccountUtil.catByType(accounts);
         if (accountCatMap.containsKey(loginType)) {
-            return buildSshCredential(accountCatMap.get(loginType).get(0));
+            return buildSshCredential(accountCatMap.get(loginType).getFirst());
         }
         return null;
     }
 
     /**
      * 管理员
+     *
      * @param serverId
      * @param loginType
      * @return
@@ -173,11 +174,11 @@ public class HostSystemHandler {
             return null;
         }
         if (accountCatMap.containsKey(loginType)) {
-            return buildSshCredential(accountCatMap.get(loginType).get(0));
+            return buildSshCredential(accountCatMap.get(loginType).getFirst());
         }
         if (loginType == LoginType.LOW_AUTHORITY) {
             if (accountCatMap.containsKey(LoginType.HIGH_AUTHORITY)) {
-                return buildSshCredential(accountCatMap.get(LoginType.HIGH_AUTHORITY).get(0));
+                return buildSshCredential(accountCatMap.get(LoginType.HIGH_AUTHORITY).getFirst());
             }
         }
         // 未找到凭据

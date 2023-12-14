@@ -47,7 +47,7 @@ public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     public List<ZabbixUser.User> list(ZabbixConfig.Zabbix config) {
@@ -143,7 +143,7 @@ public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
 }

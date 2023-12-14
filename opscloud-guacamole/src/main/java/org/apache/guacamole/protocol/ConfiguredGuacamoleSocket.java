@@ -19,7 +19,6 @@
 
 package org.apache.guacamole.protocol;
 
-import java.util.List;
 import org.apache.guacamole.GuacamoleConnectionClosedException;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.GuacamoleServerException;
@@ -29,6 +28,8 @@ import org.apache.guacamole.net.DelegatingGuacamoleSocket;
 import org.apache.guacamole.net.GuacamoleSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * A GuacamoleSocket which pre-configures the connection based on a given
@@ -94,8 +95,8 @@ public class ConfiguredGuacamoleSocket extends DelegatingGuacamoleSocket {
         // Parse human-readable message from "error" instruction, warning if no
         // message was given
         List<String> args = instruction.getArgs();
-        if (args.size() >= 1)
-            message = args.get(0);
+        if (!args.isEmpty())
+            message = args.getFirst();
         else
             logger.debug("Received \"error\" instruction with no corresponding message.");
 
@@ -313,7 +314,7 @@ public class ConfiguredGuacamoleSocket extends DelegatingGuacamoleSocket {
         if (ready_args.isEmpty())
             throw new GuacamoleServerException("No connection ID received");
 
-        id = ready.getArgs().get(0);
+        id = ready.getArgs().getFirst();
 
     }
 

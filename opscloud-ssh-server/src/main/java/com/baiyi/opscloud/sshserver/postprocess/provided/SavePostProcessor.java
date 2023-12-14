@@ -57,7 +57,7 @@ public class SavePostProcessor
             if (parameters.size() != 1) {
                 log.debug("[{}] post processor only need one parameter, rest will be ignored", getName());
             }
-            String path = parameters.get(0);
+            String path = parameters.getFirst();
             if (path == null || path.isEmpty()) {
                 throw new PostProcessorException("Cannot save without file path !");
             }

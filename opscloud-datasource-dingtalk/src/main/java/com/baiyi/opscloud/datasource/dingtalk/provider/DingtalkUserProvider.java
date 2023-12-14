@@ -129,7 +129,7 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
         if (!StringUtils.isEmpty(user.getMobile())) {
             List<User> users = userService.listByPhone(user.getMobile());
             if (!CollectionUtils.isEmpty(users)) {
-                user.setUsername(users.get(0).getUsername());
+                user.setUsername(users.getFirst().getUsername());
                 return;
             }
         }

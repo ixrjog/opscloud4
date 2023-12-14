@@ -36,8 +36,8 @@ public class ComputeAssetConverter {
                 .assetId(entity.getInstanceId())
                 .name(entity.getInstanceName())
                 // privateIp
-                .assetKey(entity.getInstanceNetworkType().equals(VPC) ? entity.getVpcAttributes().getPrivateIpAddress().get(0) :
-                        entity.getInnerIpAddress().get(0))
+                .assetKey(entity.getInstanceNetworkType().equals(VPC) ? entity.getVpcAttributes().getPrivateIpAddress().getFirst() :
+                        entity.getInnerIpAddress().getFirst())
                 // publicIp
                 .assetKey2(getPublicIp(entity))
                 .assetType(DsAssetTypeConstants.ECS.name())
@@ -64,7 +64,7 @@ public class ComputeAssetConverter {
 
     private static String getPublicIp(DescribeInstancesResponse.Instance entity) {
         if (!CollectionUtils.isEmpty(entity.getPublicIpAddress())) {
-            return entity.getPublicIpAddress().get(0);
+            return entity.getPublicIpAddress().getFirst();
         }
         if (entity.getEipAddress() != null) {
             return entity.getEipAddress().getIpAddress();

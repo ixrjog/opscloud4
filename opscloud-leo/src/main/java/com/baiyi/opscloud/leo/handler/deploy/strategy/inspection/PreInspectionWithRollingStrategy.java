@@ -58,7 +58,7 @@ public class PreInspectionWithRollingStrategy extends BasePreInspectionStrategy 
             previousVersion = LeoDeployModel.DeployVersion.UNKNOWN;
             previousVersion.setImage(image);
         } else {
-            LeoBuildImage leoBuildImage = leoBuildImages.get(0);
+            LeoBuildImage leoBuildImage = leoBuildImages.getFirst();
             previousVersion = LeoDeployModel.DeployVersion.builder()
                     .buildId(leoBuildImage.getBuildId())
                     .versionName(leoBuildImage.getVersionName())

@@ -77,7 +77,7 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
                     List<User> users = listByPhone(asset.getProperties().get("mobile"));
                     if (!CollectionUtils.isEmpty(users) && users.size() == 1) {
                         log.info("同步钉钉查询本地用户: name={}, mobile={}", asset.getName(), asset.getProperties().get("mobile"));
-                        return toUserVO(users.get(0));
+                        return toUserVO(users.getFirst());
                     }
                 }
             }

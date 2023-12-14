@@ -115,7 +115,7 @@ public class ApplicationResourcePacker implements IWrapper<ApplicationResourceVO
 
             List<DatasourceInstanceAsset> nodes = assetService.queryAssetByAssetParam(asset);
             if (!CollectionUtils.isEmpty(nodes) && nodes.size() == 1) {
-                DatasourceInstanceAssetProperty zoneProperty = propertyService.getByUniqueKey(nodes.get(0).getId(), ZONE);
+                DatasourceInstanceAssetProperty zoneProperty = propertyService.getByUniqueKey(nodes.getFirst().getId(), ZONE);
                 if (zoneProperty != null) {
                     c.getProperties().put("zone", "zone:" + zoneProperty.getValue());
                 }

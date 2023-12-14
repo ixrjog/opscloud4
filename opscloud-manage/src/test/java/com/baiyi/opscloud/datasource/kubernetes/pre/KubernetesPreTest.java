@@ -109,7 +109,7 @@ public class KubernetesPreTest extends BaseKubernetesTest {
          * 查询应用容器
          */
         Optional<Container> optionalContainer = deployment.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith(appName)).findFirst();
-        if (!optionalContainer.isPresent()) {
+        if (optionalContainer.isEmpty()) {
             print("未找到容器: 退出");
             return;
         }
@@ -249,7 +249,7 @@ public class KubernetesPreTest extends BaseKubernetesTest {
                 // APP_NAME
                 if (envVars.stream().noneMatch(env -> env.getName().equals("APP_NAME"))) {
                     EnvVar appNameEnvVar = new EnvVar("APP_NAME", deployment.getMetadata().getLabels().get("app"), null);
-                    envVars.add(0, appNameEnvVar);
+                    envVars.addFirst(appNameEnvVar);
                 }
 
                 KubernetesDeploymentDriver.update(preConfig.getKubernetes(), NAMESPACE, deployment);
@@ -263,12 +263,12 @@ public class KubernetesPreTest extends BaseKubernetesTest {
     void updateAckPreDept() {
         KubernetesConfig grayConfig = getConfigById(KubernetesClusterConfigs.ACK_GRAY);
         Deployment srcDeployment = KubernetesDeploymentDriver.get(grayConfig.getKubernetes(), "gray", "mgw-core-aliyun-gray");
-        ResourceRequirements resourceRequirements = srcDeployment.getSpec().getTemplate().getSpec().getContainers().get(0).getResources();
+        ResourceRequirements resourceRequirements = srcDeployment.getSpec().getTemplate().getSpec().getContainers().getFirst().getResources();
 
 
-        Probe startupProbe = srcDeployment.getSpec().getTemplate().getSpec().getContainers().get(0).getStartupProbe();
-        Probe livenessProbe = srcDeployment.getSpec().getTemplate().getSpec().getContainers().get(0).getLivenessProbe();
-        Probe readinessProbe = srcDeployment.getSpec().getTemplate().getSpec().getContainers().get(0).getReadinessProbe();
+        Probe startupProbe = srcDeployment.getSpec().getTemplate().getSpec().getContainers().getFirst().getStartupProbe();
+        Probe livenessProbe = srcDeployment.getSpec().getTemplate().getSpec().getContainers().getFirst().getLivenessProbe();
+        Probe readinessProbe = srcDeployment.getSpec().getTemplate().getSpec().getContainers().getFirst().getReadinessProbe();
 
         List<Deployment> deploymentList = KubernetesDeploymentDriver.list(grayConfig.getKubernetes(), "pre");
         deploymentList.forEach(deployment -> {
@@ -297,7 +297,7 @@ public class KubernetesPreTest extends BaseKubernetesTest {
                 // APP_NAME
                 if (envVars.stream().noneMatch(env -> env.getName().equals("APP_NAME"))) {
                     EnvVar appNameEnvVar = new EnvVar("APP_NAME", deployment.getMetadata().getLabels().get("app"), null);
-                    envVars.add(0, appNameEnvVar);
+                    envVars.addFirst(appNameEnvVar);
                 }
                 KubernetesDeploymentDriver.update(grayConfig.getKubernetes(), "pre", deployment);
             } else {

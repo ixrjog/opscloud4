@@ -78,7 +78,7 @@ public class ApplicationReduceReplicasEntryQuery extends BaseTicketEntryQuery<Ap
 
     private String getApplicationComment(Integer assetId) {
         List<ApplicationResource> resources = applicationResourceService.queryByBusiness(BusinessTypeEnum.ASSET.getType(), assetId);
-        return CollectionUtils.isEmpty(resources) ? "" : applicationService.getById(resources.get(0).getApplicationId()).getComment();
+        return CollectionUtils.isEmpty(resources) ? "" : applicationService.getById(resources.getFirst().getApplicationId()).getComment();
     }
 
     public static String getComment(ApplicationReduceReplicasEntry.KubernetesDeployment entry) {

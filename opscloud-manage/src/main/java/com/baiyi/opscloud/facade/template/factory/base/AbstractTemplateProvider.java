@@ -108,7 +108,7 @@ public abstract class AbstractTemplateProvider<T> implements ITemplateProvider, 
         if (hasApplicationResources()) {
             addApplicationResource(assets, vars);
         }
-        bizTemplate.setBusinessId(assets.get(0).getId());
+        bizTemplate.setBusinessId(assets.getFirst().getId());
         // 更新关联资产
         businessTemplateService.update(bizTemplate);
 

@@ -54,7 +54,7 @@ public class ZabbixV5ActionDriver extends AbstractZabbixV5ActionDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     public void create(ZabbixConfig.Zabbix config, String actionName, String usergrpName) {

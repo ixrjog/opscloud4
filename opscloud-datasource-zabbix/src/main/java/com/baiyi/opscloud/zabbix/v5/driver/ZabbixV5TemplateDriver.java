@@ -92,7 +92,7 @@ public class ZabbixV5TemplateDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     public List<ZabbixTemplate.Template> listByNames(ZabbixConfig.Zabbix config, List<String> names) {
@@ -116,7 +116,7 @@ public class ZabbixV5TemplateDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
 }

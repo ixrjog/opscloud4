@@ -4,22 +4,19 @@ import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkOrderTicketEntryParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkOrderTicketVO;
-import com.baiyi.opscloud.service.application.ApplicationResourceService;
-import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.workorder.constants.WorkOrderKeyConstants;
 import com.baiyi.opscloud.workorder.entry.KubernetesDeploymentIstioEntry;
 import com.baiyi.opscloud.workorder.query.impl.base.BaseTicketEntryQuery;
 import jakarta.annotation.Resource;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,12 +30,6 @@ import static com.baiyi.opscloud.datasource.kubernetes.converter.DeploymentAsset
  */
 @Component
 public class KubernetesIstioConfigurationEntryQuery extends BaseTicketEntryQuery<KubernetesDeploymentIstioEntry.KubernetesDeployment> {
-
-    @Resource
-    private ApplicationResourceService applicationResourceService;
-
-    @Resource
-    private ApplicationService applicationService;
 
     @Resource
     private DsInstanceAssetService dsInstanceAssetService;
@@ -55,6 +46,8 @@ public class KubernetesIstioConfigurationEntryQuery extends BaseTicketEntryQuery
                     .stream()
                     .filter(p -> p.getName().equals(SIDECAR_ISTIO_IO_INJECT))
                     .findFirst().map(DatasourceInstanceAssetProperty::getValue).orElse("false");
+
+            final String comment = BooleanUtils.toBoolean(istioInject) ? "Disable Istio" : "Enable Istio";
             return KubernetesDeploymentIstioEntry.KubernetesDeployment.builder()
                     .id(e.getId())
                     .instanceUuid(entryQuery.getInstanceUuid())
@@ -62,14 +55,10 @@ public class KubernetesIstioConfigurationEntryQuery extends BaseTicketEntryQuery
                     .deploymentName(e.getAssetKey())
                     .namespace(e.getAssetKey2())
                     .istioInject(istioInject)
-                    .comment(getApplicationComment(e.getId()))
+                    //.comment(getApplicationComment(e.getId()))
+                    .comment(comment)
                     .build();
         }).collect(Collectors.toList());
-    }
-
-    private String getApplicationComment(Integer assetId) {
-        List<ApplicationResource> resources = applicationResourceService.queryByBusiness(BusinessTypeEnum.ASSET.getType(), assetId);
-        return CollectionUtils.isEmpty(resources) ? "" : applicationService.getById(resources.get(0).getApplicationId()).getComment();
     }
 
     @Override

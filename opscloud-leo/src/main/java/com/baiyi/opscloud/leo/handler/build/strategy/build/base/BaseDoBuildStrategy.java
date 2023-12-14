@@ -241,7 +241,7 @@ public abstract class BaseDoBuildStrategy extends BaseBuildStrategy {
         if (CollectionUtils.isEmpty(resources) || resources.size() > 1) {
             throw new LeoBuildException("Configuration does not exist: gitLab->project->sshUrl");
         }
-        gitLabProject.setSshUrl(resources.get(0).getName());
+        gitLabProject.setSshUrl(resources.getFirst().getName());
     }
 
     /**

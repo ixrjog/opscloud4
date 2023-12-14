@@ -63,7 +63,7 @@ public class PreInspectionWithRedeployStrategy extends BasePreInspectionStrategy
             oldVersion = LeoDeployModel.DeployVersion.UNKNOWN;
             oldVersion.setImage(image);
         } else {
-            LeoBuildImage leoBuildImage = leoBuildImages.get(0);
+            LeoBuildImage leoBuildImage = leoBuildImages.getFirst();
             oldVersion = LeoDeployModel.DeployVersion.builder()
                     .buildId(leoDeploy.getBuildId())
                     .image(leoBuildImage.getImage())

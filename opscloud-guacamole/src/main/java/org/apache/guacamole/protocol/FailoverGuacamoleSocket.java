@@ -19,19 +19,16 @@
 
 package org.apache.guacamole.protocol;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import org.apache.guacamole.GuacamoleException;
-import org.apache.guacamole.GuacamoleUpstreamException;
-import org.apache.guacamole.GuacamoleUpstreamNotFoundException;
-import org.apache.guacamole.GuacamoleUpstreamTimeoutException;
-import org.apache.guacamole.GuacamoleUpstreamUnavailableException;
+import org.apache.guacamole.*;
 import org.apache.guacamole.io.GuacamoleReader;
 import org.apache.guacamole.net.DelegatingGuacamoleSocket;
 import org.apache.guacamole.net.GuacamoleSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * GuacamoleSocket which intercepts errors received early in the Guacamole
@@ -104,19 +101,19 @@ public class FailoverGuacamoleSocket extends DelegatingGuacamoleSocket {
 
             // Generic upstream error
             case UPSTREAM_ERROR:
-                throw new GuacamoleUpstreamException(args.get(0));
+                throw new GuacamoleUpstreamException(args.getFirst());
 
             // Upstream is unreachable
             case UPSTREAM_NOT_FOUND:
-                throw new GuacamoleUpstreamNotFoundException(args.get(0));
+                throw new GuacamoleUpstreamNotFoundException(args.getFirst());
 
             // Upstream did not respond
             case UPSTREAM_TIMEOUT:
-                throw new GuacamoleUpstreamTimeoutException(args.get(0));
+                throw new GuacamoleUpstreamTimeoutException(args.getFirst());
 
             // Upstream is refusing the connection
             case UPSTREAM_UNAVAILABLE:
-                throw new GuacamoleUpstreamUnavailableException(args.get(0));
+                throw new GuacamoleUpstreamUnavailableException(args.getFirst());
 
         }
 

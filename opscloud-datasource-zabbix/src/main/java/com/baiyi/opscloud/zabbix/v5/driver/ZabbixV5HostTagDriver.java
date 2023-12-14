@@ -40,7 +40,7 @@ public class ZabbixV5HostTagDriver extends SimpleZabbixV5HostDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     public void updateHostTags(ZabbixConfig.Zabbix config, ZabbixHost.Host host, List<ZabbixHostParam.Tag> tags) {

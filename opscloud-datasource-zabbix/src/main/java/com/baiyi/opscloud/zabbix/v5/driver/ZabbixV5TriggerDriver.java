@@ -161,7 +161,7 @@ public class ZabbixV5TriggerDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
 }

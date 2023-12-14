@@ -70,7 +70,7 @@ public class KubernetesContainerJvmSpecEntryQuery extends BaseTicketEntryQuery<K
 
     private String getApplicationComment(Integer assetId) {
         List<ApplicationResource> resources = applicationResourceService.queryByBusiness(BusinessTypeEnum.ASSET.getType(), assetId);
-        return CollectionUtils.isEmpty(resources) ? "" : applicationService.getById(resources.get(0).getApplicationId()).getComment();
+        return CollectionUtils.isEmpty(resources) ? "" : applicationService.getById(resources.getFirst().getApplicationId()).getComment();
     }
 
     @Override

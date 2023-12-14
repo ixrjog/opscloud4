@@ -23,7 +23,7 @@ public final class JsonParser implements Parser {
 
         if (root.isArray()) {
 
-            if (root.size() < 1) {
+            if (root.isEmpty()) {
                 return PrettyTable.fieldNames();
             }
 

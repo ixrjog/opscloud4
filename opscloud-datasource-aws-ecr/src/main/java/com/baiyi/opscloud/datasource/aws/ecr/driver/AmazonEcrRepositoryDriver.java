@@ -40,7 +40,7 @@ public class AmazonEcrRepositoryDriver {
         List<Repository> repositories = describeRepositories(regionId, config, Lists.newArrayList(repositoryName));
         if (CollectionUtils.isEmpty(repositories))
             return null;
-        return repositories.get(0);
+        return repositories.getFirst();
     }
 
     /**

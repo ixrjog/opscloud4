@@ -59,7 +59,7 @@ public class GitLabPushEventConsumer extends AbstractGitLabEventConsumer {
         if (StringUtils.isNotBlank(systemHook.getRef())) {
             return systemHook.getRef();
         }
-        return CollectionUtils.isEmpty(systemHook.getRefs()) ? "" : systemHook.getRefs().get(0);
+        return CollectionUtils.isEmpty(systemHook.getRefs()) ? "" : systemHook.getRefs().getFirst();
     }
 
     protected void process(DatasourceInstance instance, GitLabNotifyParam.SystemHook systemHook) {

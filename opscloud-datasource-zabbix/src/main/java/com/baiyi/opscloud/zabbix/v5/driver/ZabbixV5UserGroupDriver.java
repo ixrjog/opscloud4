@@ -51,7 +51,7 @@ public class ZabbixV5UserGroupDriver extends AbstractZabbixV5UserGroupDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_usergroup_name_' + #usergroup", unless = "#result == null")
@@ -66,7 +66,7 @@ public class ZabbixV5UserGroupDriver extends AbstractZabbixV5UserGroupDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     public ZabbixUserGroup.UserGroup create(ZabbixConfig.Zabbix config, String usergroup, ZabbixHostGroup.HostGroup hostGroup) {
@@ -88,7 +88,7 @@ public class ZabbixV5UserGroupDriver extends AbstractZabbixV5UserGroupDriver {
         if (CollectionUtils.isEmpty(response.getResult().getUsrgrpids())) {
             return null;
         }
-        return getById(config, response.getResult().getUsrgrpids().get(0));
+        return getById(config, response.getResult().getUsrgrpids().getFirst());
     }
 
 }

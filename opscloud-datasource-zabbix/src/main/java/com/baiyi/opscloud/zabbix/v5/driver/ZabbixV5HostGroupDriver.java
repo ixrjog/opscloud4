@@ -85,7 +85,7 @@ public class ZabbixV5HostGroupDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_hostgroup_name_' + #hostGroup.name")
@@ -104,7 +104,7 @@ public class ZabbixV5HostGroupDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     public void create(ZabbixConfig.Zabbix config, String name) {

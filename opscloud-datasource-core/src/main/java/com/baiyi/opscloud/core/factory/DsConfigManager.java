@@ -49,7 +49,7 @@ public class DsConfigManager {
         if (CollectionUtils.isEmpty(configs)) {
             throw new OCException("无可用的数据源配置文件！");
         }
-        return configs.get(0);
+        return configs.getFirst();
     }
 
     public <T extends BaseDsConfig> T build(DatasourceConfig datasourceConfig, Class<T> targetClass) {

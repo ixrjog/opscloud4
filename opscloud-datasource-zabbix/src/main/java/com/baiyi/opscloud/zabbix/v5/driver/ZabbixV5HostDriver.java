@@ -76,7 +76,7 @@ public class ZabbixV5HostDriver extends SimpleZabbixV5HostDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_host_ip_' + #ip")
@@ -95,7 +95,7 @@ public class ZabbixV5HostDriver extends SimpleZabbixV5HostDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     public void updateHost(ZabbixConfig.Zabbix config, ZabbixHost.Host host, ZabbixRequest.DefaultRequest request) {
