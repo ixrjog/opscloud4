@@ -97,14 +97,7 @@ public class KubernetesIstioConfigurationTicketProcessor extends AbstractDsAsset
                     .map(PodTemplateSpec::getMetadata)
                     .map(ObjectMeta::getLabels)
                     .orElseThrow(() -> new TicketVerifyException("Not found: deployment->spec->template->metadata->labels"));
-//            String istioInject;
-//            // Istio
-//            if (labels.containsKey(SIDECAR_ISTIO_IO_INJECT)) {
-//                istioInject = Boolean.toString(!Boolean.getBoolean(labels.get(SIDECAR_ISTIO_IO_INJECT)));
-//            } else {
-//                istioInject = "true";
-//            }
-            String istioInject = Boolean.toString(!BooleanUtils.toBoolean(entry.getIstioInject()));
+            final String istioInject = Boolean.toString(!BooleanUtils.toBoolean(entry.getIstioInject()));
             labels.put(SIDECAR_ISTIO_IO_INJECT, istioInject);
             KubernetesDeploymentDriver.update(config, entry.getNamespace(), deployment);
             log.info("应用服务网格配置: instanceUuid={}, inject={}", ticketEntry.getInstanceUuid(), istioInject);
