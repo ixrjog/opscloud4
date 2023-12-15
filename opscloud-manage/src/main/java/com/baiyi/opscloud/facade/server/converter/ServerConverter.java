@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.facade.server;
+package com.baiyi.opscloud.facade.server.converter;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;

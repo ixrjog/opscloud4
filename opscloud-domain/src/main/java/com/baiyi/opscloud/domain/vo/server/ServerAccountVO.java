@@ -3,7 +3,6 @@ package com.baiyi.opscloud.domain.vo.server;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.sys.CredentialVO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -46,13 +45,10 @@ public class ServerAccountVO {
 
         private String displayName;
 
-        @NotNull(message = "凭据不能为空")
         private Integer credentialId;
 
-        @NotNull(message = "账户类型不能为空")
         private Integer accountType;
 
-        @NotNull(message = "协议不能为空")
         private String protocol;
 
         private Boolean isActive;
@@ -60,4 +56,5 @@ public class ServerAccountVO {
         private String comment;
 
     }
+
 }

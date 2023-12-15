@@ -40,14 +40,14 @@ public class ServerAccountController {
 
     @Operation(summary = "新增服务器账户")
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addServerAccount(@RequestBody @Valid ServerAccountVO.Account account) {
+    public HttpResult<Boolean> addServerAccount(@RequestBody @Valid ServerAccountParam.ServerAccount account) {
         serverAccountFacade.addServerAccount(account);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "更新服务器账户")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateServerAccount(@RequestBody @Valid ServerAccountVO.Account account) {
+    public HttpResult<Boolean> updateServerAccount(@RequestBody @Valid ServerAccountParam.ServerAccount account) {
         serverAccountFacade.updateServerAccount(account);
         return HttpResult.SUCCESS;
     }

@@ -21,17 +21,17 @@ public interface ServerGroupFacade {
 
     DataTable<ServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.ServerGroupPageQuery pageQuery);
 
-    void addServerGroup(ServerGroupVO.ServerGroup serverGroup);
+    void addServerGroup(ServerGroupParam.AddServerGroup addServerGroup);
 
-    void updateServerGroup(ServerGroupVO.ServerGroup serverGroup);
+    void updateServerGroup(ServerGroupParam.UpdateServerGroup updateServerGroup);
 
     void deleteServerGroupById(int id);
 
     DataTable<ServerGroupTypeVO.ServerGroupType> queryServerGroupTypePage(ServerGroupTypeParam.ServerGroupTypePageQuery pageQuery);
 
-    void addServerGroupType(ServerGroupTypeVO.ServerGroupType serverGroupType);
+    void addServerGroupType(ServerGroupTypeParam.AddServerGroupType addServerGroupType);
 
-    void updateServerGroupType(ServerGroupTypeVO.ServerGroupType serverGroupType);
+    void updateServerGroupType(ServerGroupTypeParam.UpdateServerGroupType updateServerGroupType);
 
     void deleteServerGroupTypeById(int id);
 

@@ -19,6 +19,32 @@ import java.util.Set;
 public class ServerAccountParam {
 
     @Data
+    @NoArgsConstructor
+    @Schema
+    public static class ServerAccount {
+
+        private Integer id;
+
+        private String username;
+
+        private String displayName;
+
+        @NotNull(message = "凭据不能为空")
+        private Integer credentialId;
+
+        @NotNull(message = "账户类型不能为空")
+        private Integer accountType;
+
+        @NotNull(message = "协议不能为空")
+        private String protocol;
+
+        private Boolean isActive;
+
+        private String comment;
+
+    }
+
+    @Data
     @Builder
     @Schema
     public static class UpdateServerAccountPermission {
