@@ -159,8 +159,8 @@ public class UserController {
 
     @Operation(summary = "查询用户授权的远程服务器")
     @PostMapping(value = "/server/remote/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<ServerVO.Server>> queryUserRemoteServerPage(@RequestBody @Valid ServerParam.UserRemoteServerPageQuery queryParam) {
-        return new HttpResult<>(userFacade.queryUserRemoteServerPage(queryParam));
+    public HttpResult<DataTable<ServerVO.Server>> queryUserRemoteServerPage(@RequestBody @Valid ServerParam.UserRemoteServerPageQuery pageQuery) {
+        return new HttpResult<>(userFacade.queryUserRemoteServerPage(pageQuery));
     }
 
     @Operation(summary = "分页查询用户组列表")

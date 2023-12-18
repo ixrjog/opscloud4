@@ -49,8 +49,8 @@ public class DsInstanceController {
 
     @Operation(summary = "拉取数据源资产信息")
     @PutMapping(value = "/asset/pull", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> pullAsset(@RequestBody DsAssetParam.PullAsset pullAssetParam) {
-        instanceFacade.pullAsset(pullAssetParam);
+    public HttpResult<Boolean> pullAsset(@RequestBody DsAssetParam.PullAsset pullAsset) {
+        instanceFacade.pullAsset(pullAsset);
         return HttpResult.SUCCESS;
     }
 
@@ -118,8 +118,8 @@ public class DsInstanceController {
 
     @Operation(summary = "推送数据源资产信息")
     @PutMapping(value = "/asset/push", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> pushAsset(@RequestBody DsAssetParam.PushAsset pushAssetParam) {
-        instanceFacade.pushAsset(pushAssetParam);
+    public HttpResult<Boolean> pushAsset(@RequestBody DsAssetParam.PushAsset pushAsset) {
+        instanceFacade.pushAsset(pushAsset);
         return HttpResult.SUCCESS;
     }
 

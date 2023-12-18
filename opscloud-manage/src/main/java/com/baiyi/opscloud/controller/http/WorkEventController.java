@@ -59,8 +59,8 @@ public class WorkEventController {
 
     @Operation(summary = "工作事项树查询")
     @PostMapping(value = "/item/tree/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<TreeVO.Tree>> queryWorkItemTree(@RequestBody @Valid WorkEventParam.WorkItemTreeQuery param) {
-        return new HttpResult<>(workEventFacade.queryWorkItemTree(param));
+    public HttpResult<List<TreeVO.Tree>> queryWorkItemTree(@RequestBody @Valid WorkEventParam.WorkItemTreeQuery workItemTreeQuery) {
+        return new HttpResult<>(workEventFacade.queryWorkItemTree(workItemTreeQuery));
     }
 
     @Operation(summary = "工作角色查询")
@@ -83,8 +83,8 @@ public class WorkEventController {
 
     @Operation(summary = "工作事项查询")
     @PostMapping(value = "/item/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<WorkItem>> listWorkItem(@RequestBody @Valid WorkEventParam.WorkItemQuery param) {
-        return new HttpResult<>(workEventFacade.listWorkItem(param));
+    public HttpResult<List<WorkItem>> listWorkItem(@RequestBody @Valid WorkEventParam.WorkItemQuery workItemQuery) {
+        return new HttpResult<>(workEventFacade.listWorkItem(workItemQuery));
     }
 
     @Operation(summary = "工作事项id查询")
