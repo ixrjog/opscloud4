@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
 
@@ -40,6 +41,8 @@ import java.util.Base64;
  */
 public abstract class GuacamoleHTTPTunnelServlet extends HttpServlet {
 
+    @Serial
+    private static final long serialVersionUID = 4237008258929569940L;
     /**
      * Logger for this class.
      */
@@ -400,7 +403,7 @@ public abstract class GuacamoleHTTPTunnelServlet extends HttpServlet {
 
             // Get writer for response
             Writer out = new BufferedWriter(new OutputStreamWriter(
-                    response.getOutputStream(), "UTF-8"));
+                    response.getOutputStream(), StandardCharsets.UTF_8));
 
             // Stream data to response, ensuring output stream is closed
             try {
@@ -528,12 +531,11 @@ public abstract class GuacamoleHTTPTunnelServlet extends HttpServlet {
             GuacamoleWriter writer = tunnel.acquireWriter();
 
             // Get input reader for HTTP stream
-            Reader input = new InputStreamReader(
-                    request.getInputStream(), "UTF-8");
 
             // Transfer data from input stream to tunnel output, ensuring
             // input is always closed
-            try {
+            try (Reader input = new InputStreamReader(
+                    request.getInputStream(), StandardCharsets.UTF_8)) {
 
                 // Buffer
                 int length;
@@ -544,11 +546,6 @@ public abstract class GuacamoleHTTPTunnelServlet extends HttpServlet {
                         (length = input.read(buffer, 0, buffer.length)) != -1)
                     writer.write(buffer, 0, length);
 
-            }
-
-            // Close input stream in all cases
-            finally {
-                input.close();
             }
 
         }

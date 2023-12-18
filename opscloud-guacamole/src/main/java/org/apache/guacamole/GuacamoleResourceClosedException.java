@@ -21,11 +21,16 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 /**
  * An exception which is thrown when a resource is no longer available because
  * it is closed.
  */
 public class GuacamoleResourceClosedException extends GuacamoleClientException {
+
+    @Serial
+    private static final long serialVersionUID = 8085330284963794548L;
 
     /**
      * Creates a new GuacamoleResourceClosedException with the given message

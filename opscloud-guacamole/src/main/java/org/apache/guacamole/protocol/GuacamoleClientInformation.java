@@ -20,6 +20,8 @@
 package org.apache.guacamole.protocol;
 
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,55 +29,101 @@ import java.util.List;
  * An abstract representation of Guacamole client information, including all
  * information required by the Guacamole protocol during the preamble.
  */
+@Getter
 public class GuacamoleClientInformation {
 
     /**
      * The optimal screen width requested by the client, in pixels.
+     * -- GETTER --
+     *  Returns the optimal screen width requested by the client, in pixels.
+     *
+     * @return The optimal screen width requested by the client, in pixels.
+
      */
     private int optimalScreenWidth  = 1024;
 
     /**
      * The optimal screen height requested by the client, in pixels.
+     * -- GETTER --
+     *  Returns the optimal screen height requested by the client, in pixels.
+     *
+     * @return The optimal screen height requested by the client, in pixels.
+
      */
     private int optimalScreenHeight = 768;
 
     /**
      * The resolution of the optimal dimensions given, in DPI.
+     * -- GETTER --
+     *  Returns the resolution of the screen if the optimal width and height are
+     *  used, in DPI.
+     *
+     * @return The optimal screen resolution.
+
      */
     private int optimalResolution = 96;
 
     /**
      * The list of audio mimetypes reported by the client to be supported.
+     * -- GETTER --
+     *  Returns the list of audio mimetypes supported by the client. To add or
+     *  removed supported mimetypes, the list returned by this function can be
+     *  modified.
+     *
+     * @return The set of audio mimetypes supported by the client.
+
      */
     private final List<String> audioMimetypes = new ArrayList<>();
 
     /**
      * The list of video mimetypes reported by the client to be supported.
+     * -- GETTER --
+     *  Returns the list of video mimetypes supported by the client. To add or
+     *  removed supported mimetypes, the list returned by this function can be
+     *  modified.
+     *
+     * @return The set of video mimetypes supported by the client.
+
      */
     private final List<String> videoMimetypes = new ArrayList<>();
 
     /**
      * The list of image mimetypes reported by the client to be supported.
+     * -- GETTER --
+     *  Returns the list of image mimetypes supported by the client. To add or
+     *  removed supported mimetypes, the list returned by this function can be
+     *  modified.
+     *
+     * @return
+     *     The set of image mimetypes supported by the client.
+
      */
     private final List<String> imageMimetypes = new ArrayList<>();
     
     /**
      * The name of the user reported by the client.
+     * -- GETTER --
+     *  Returns the name of the Guacamole user as reported by the client, or null
+     *  if the user name is not set.
+     *
+     * @return
+     *     A string value of the human-readable name reported by the client.
+
      */
     private String name;
     
     /**
      * The timezone reported by the client.
+     * -- GETTER --
+     *  Return the timezone as reported by the client, or null if the timezone
+     *  is not set.  Valid timezones are specified in IANA zone key format,
+     *  also known as Olson time zone database or TZ Database.
+     *
+     * @return
+     *     A string value of the timezone reported by the client.
+
      */
     private String timezone;
-
-    /**
-     * Returns the optimal screen width requested by the client, in pixels.
-     * @return The optimal screen width requested by the client, in pixels.
-     */
-    public int getOptimalScreenWidth() {
-        return optimalScreenWidth;
-    }
 
     /**
      * Sets the client's optimal screen width.
@@ -86,29 +134,11 @@ public class GuacamoleClientInformation {
     }
 
     /**
-     * Returns the optimal screen height requested by the client, in pixels.
-     * @return The optimal screen height requested by the client, in pixels.
-     */
-    public int getOptimalScreenHeight() {
-        return optimalScreenHeight;
-    }
-
-    /**
      * Sets the client's optimal screen height.
      * @param optimalScreenHeight The optimal screen height of the client.
      */
     public void setOptimalScreenHeight(int optimalScreenHeight) {
         this.optimalScreenHeight = optimalScreenHeight;
-    }
-
-    /**
-     * Returns the resolution of the screen if the optimal width and height are
-     * used, in DPI.
-     * 
-     * @return The optimal screen resolution.
-     */
-    public int getOptimalResolution() {
-        return optimalResolution;
     }
 
     /**
@@ -121,63 +151,6 @@ public class GuacamoleClientInformation {
         this.optimalResolution = optimalResolution;
     }
 
-    /**
-     * Returns the list of audio mimetypes supported by the client. To add or
-     * removed supported mimetypes, the list returned by this function can be
-     * modified.
-     *
-     * @return The set of audio mimetypes supported by the client.
-     */
-    public List<String> getAudioMimetypes() {
-        return audioMimetypes;
-    }
-
-    /**
-     * Returns the list of video mimetypes supported by the client. To add or
-     * removed supported mimetypes, the list returned by this function can be
-     * modified.
-     *
-     * @return The set of video mimetypes supported by the client.
-     */
-    public List<String> getVideoMimetypes() {
-        return videoMimetypes;
-    }
-
-    /**
-     * Returns the list of image mimetypes supported by the client. To add or
-     * removed supported mimetypes, the list returned by this function can be
-     * modified.
-     *
-     * @return
-     *     The set of image mimetypes supported by the client.
-     */
-    public List<String> getImageMimetypes() {
-        return imageMimetypes;
-    }
-    
-    /**
-     * Returns the name of the Guacamole user as reported by the client, or null
-     * if the user name is not set.
-     * 
-     * @return 
-     *     A string value of the human-readable name reported by the client.
-     */
-    public String getName() {
-        return name;
-    }
-    
-    /**
-     * Return the timezone as reported by the client, or null if the timezone
-     * is not set.  Valid timezones are specified in IANA zone key format,
-     * also known as Olson time zone database or TZ Database.
-     * 
-     * @return
-     *     A string value of the timezone reported by the client.
-     */
-    public String getTimezone() {
-        return timezone;
-    }
-    
     /**
      * Set the human-readable name of the user associated with this client.
      * 

@@ -19,6 +19,8 @@
 
 package org.apache.guacamole.protocol;
 
+import lombok.Getter;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +30,7 @@ import java.util.regex.Pattern;
  * determining the version of the Guacamole protocol common to guacd and a
  * client.
  */
+@Getter
 public class GuacamoleProtocolVersion {
     
     /**
@@ -80,16 +83,34 @@ public class GuacamoleProtocolVersion {
     
     /**
      * The major version component of the protocol version.
+     * -- GETTER --
+     *  Return the major version component of the protocol version.
+     *
+     * @return
+     *     The integer major version component.
+
      */
     private final int major;
 
     /**
      * The minor version component of the protocol version.
+     * -- GETTER --
+     *  Return the minor version component of the protocol version.
+     *
+     * @return
+     *     The integer minor version component.
+
      */
     private final int minor;
 
     /**
      * The patch version component of the protocol version.
+     * -- GETTER --
+     *  Return the patch version component of the protocol version.
+     *
+     * @return
+     *     The integer patch version component.
+
      */
     private final int patch;
     
@@ -111,37 +132,7 @@ public class GuacamoleProtocolVersion {
         this.minor = minor;
         this.patch = patch;
     }
-    
-    /**
-     * Return the major version component of the protocol version.
-     * 
-     * @return 
-     *     The integer major version component.
-     */
-    public int getMajor() {
-        return major;
-    }
-    
-    /**
-     * Return the minor version component of the protocol version.
-     * 
-     * @return 
-     *     The integer minor version component.
-     */
-    public int getMinor() {
-        return minor;
-    }
-    
-    /**
-     * Return the patch version component of the protocol version.
-     * 
-     * @return 
-     *     The integer patch version component.
-     */
-    public int getPatch() {
-        return patch;
-    }
-    
+
     /**
      * Returns whether this GuacamoleProtocolVersion is at least as recent as
      * (greater than or equal to) the given version.
@@ -208,11 +199,10 @@ public class GuacamoleProtocolVersion {
     @Override
     public boolean equals(Object obj) {
 
-        if (obj == null || !(obj instanceof GuacamoleProtocolVersion))
+        if (!(obj instanceof GuacamoleProtocolVersion otherVersion))
             return false;
 
         // Versions are equal if all major/minor/patch components are identical
-        final GuacamoleProtocolVersion otherVersion = (GuacamoleProtocolVersion) obj;
         return this.major == otherVersion.getMajor()
             && this.minor == otherVersion.getMinor()
             && this.patch == otherVersion.getPatch();

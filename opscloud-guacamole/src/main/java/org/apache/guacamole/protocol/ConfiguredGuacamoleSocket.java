@@ -19,6 +19,7 @@
 
 package org.apache.guacamole.protocol;
 
+import lombok.Getter;
 import org.apache.guacamole.GuacamoleConnectionClosedException;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.GuacamoleServerException;
@@ -30,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A GuacamoleSocket which pre-configures the connection based on a given
@@ -53,20 +55,31 @@ public class ConfiguredGuacamoleSocket extends DelegatingGuacamoleSocket {
      * The configuration to use when performing the Guacamole protocol
      * handshake.
      */
-    private GuacamoleConfiguration config;
+    private final GuacamoleConfiguration config;
 
     /**
      * The unique identifier associated with this connection, as determined
      * by the "ready" instruction received from the Guacamole proxy.
      */
-    private String id;
+    private final String id;
     
     /**
      * The protocol version that will be used to communicate with guacd.  The
      * default is 1.0.0, and, if the server does not provide a specific version
      * it will be assumed that it operates at this version and certain features
      * may be unavailable.
+     * -- GETTER --
+     *  Returns the version of the Guacamole protocol associated with the
+     *  Guacamole connection negotiated by this ConfiguredGuacamoleSocket. This
+     *  version is the lowest version common to both ConfiguredGuacamoleSocket
+     *  and the relevant Guacamole proxy instance (guacd).
+     *
+     * @return
+     *     The protocol version that this ConfiguredGuacamoleSocket will use to
+     *     communicate with guacd.
+
      */
+    @Getter
     private GuacamoleProtocolVersion protocolVersion =
             GuacamoleProtocolVersion.VERSION_1_0_0;
 
@@ -252,10 +265,8 @@ public class ConfiguredGuacamoleSocket extends DelegatingGuacamoleSocket {
             String value = config.getParameter(arg_name);
 
             // If value defined, set that value
-            if (value != null) arg_values[i] = value;
-
             // Otherwise, leave value blank
-            else arg_values[i] = "";
+            arg_values[i] = Objects.requireNonNullElse(value, "");
 
         }
 
@@ -338,20 +349,6 @@ public class ConfiguredGuacamoleSocket extends DelegatingGuacamoleSocket {
      */
     public String getConnectionID() {
         return id;
-    }
-
-    /**
-     * Returns the version of the Guacamole protocol associated with the
-     * Guacamole connection negotiated by this ConfiguredGuacamoleSocket. This
-     * version is the lowest version common to both ConfiguredGuacamoleSocket
-     * and the relevant Guacamole proxy instance (guacd).
-     *
-     * @return
-     *     The protocol version that this ConfiguredGuacamoleSocket will use to
-     *     communicate with guacd.
-     */
-    public GuacamoleProtocolVersion getProtocolVersion() {
-        return protocolVersion;
     }
 
     @Override

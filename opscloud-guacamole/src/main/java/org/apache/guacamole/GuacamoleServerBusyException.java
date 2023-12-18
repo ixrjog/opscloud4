@@ -21,12 +21,17 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 
 /**
  * An exception which is thrown when the server is too busy to service the
  * request.
  */
 public class GuacamoleServerBusyException extends GuacamoleServerException {
+
+    @Serial
+    private static final long serialVersionUID = -8018605333676806856L;
 
     /**
      * Creates a new GuacamoleServerBusyException with the given message and cause.

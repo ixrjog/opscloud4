@@ -21,12 +21,17 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 
 /**
  * An exception which indicates than an upstream server (such as the remote
  * desktop) is returning an error or is otherwise unreachable.
  */
 public class GuacamoleUpstreamException extends GuacamoleException {
+
+    @Serial
+    private static final long serialVersionUID = -6514432656216873706L;
 
     /**
      * Creates a new GuacamoleUpstreamException with the given message and

@@ -21,11 +21,16 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 /**
  * An exception which indicates that a session within an upstream server (such
  * as the remote desktop) has ended because it conflicted with another session.
  */
 public class GuacamoleSessionConflictException extends GuacamoleUpstreamException {
+
+    @Serial
+    private static final long serialVersionUID = 1691436072138165439L;
 
     /**
      * Creates a new GuacamoleSessionConflictException with the given message

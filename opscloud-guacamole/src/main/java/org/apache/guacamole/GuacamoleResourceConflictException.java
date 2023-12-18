@@ -21,6 +21,8 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 
 /**
  * An exception which is thrown when a resource has been requested, but that
@@ -28,6 +30,9 @@ import org.apache.guacamole.protocol.GuacamoleStatus;
  * current user.
  */
 public class GuacamoleResourceConflictException extends GuacamoleClientException {
+
+    @Serial
+    private static final long serialVersionUID = 7270479022583546295L;
 
     /**
      * Creates a new GuacamoleResourceConflictException with the given message and cause.

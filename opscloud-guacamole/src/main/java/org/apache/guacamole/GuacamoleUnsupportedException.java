@@ -21,12 +21,17 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 
 /**
  * An exception which is thrown when the requested operation is unsupported
  * or unimplemented.
  */
 public class GuacamoleUnsupportedException extends GuacamoleServerException {
+
+    @Serial
+    private static final long serialVersionUID = 4702456335739404487L;
 
     /**
      * Creates a new GuacamoleUnsupportedException with the given message and cause.

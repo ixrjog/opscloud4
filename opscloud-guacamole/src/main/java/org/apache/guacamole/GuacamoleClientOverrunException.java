@@ -21,6 +21,8 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 
 /**
  * An exception which is thrown when the client has sent too much data. This
@@ -29,6 +31,9 @@ import org.apache.guacamole.protocol.GuacamoleStatus;
  * received.
  */
 public class GuacamoleClientOverrunException extends GuacamoleClientException {
+
+    @Serial
+    private static final long serialVersionUID = 6507066214290008243L;
 
     /**
      * Creates a new GuacamoleClientOverrunException with the given message and cause.

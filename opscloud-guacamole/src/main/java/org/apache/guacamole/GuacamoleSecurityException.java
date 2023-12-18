@@ -21,12 +21,17 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 
 /**
  * A security-related exception thrown when parts of the Guacamole API is
  * denying access to a resource.
  */
 public class GuacamoleSecurityException extends GuacamoleClientException {
+
+    @Serial
+    private static final long serialVersionUID = -572717012832303586L;
 
     /**
      * Creates a new GuacamoleSecurityException with the given message and cause.

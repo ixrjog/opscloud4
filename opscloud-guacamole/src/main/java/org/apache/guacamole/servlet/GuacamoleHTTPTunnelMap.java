@@ -69,7 +69,7 @@ class GuacamoleHTTPTunnelMap {
 
         // Check for unused tunnels every few seconds
         executor.scheduleAtFixedRate(
-            new TunnelTimeoutTask(TUNNEL_TIMEOUT * 1000l),
+            new TunnelTimeoutTask(TUNNEL_TIMEOUT * 1000L),
             TUNNEL_TIMEOUT, TUNNEL_TIMEOUT, TimeUnit.SECONDS);
 
     }

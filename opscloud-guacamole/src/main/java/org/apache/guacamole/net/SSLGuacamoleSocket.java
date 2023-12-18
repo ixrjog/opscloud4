@@ -20,15 +20,6 @@
 package org.apache.guacamole.net;
 
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
-import javax.net.SocketFactory;
-import javax.net.ssl.SSLSocketFactory;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.GuacamoleServerException;
 import org.apache.guacamole.io.GuacamoleReader;
@@ -37,6 +28,17 @@ import org.apache.guacamole.io.ReaderGuacamoleReader;
 import org.apache.guacamole.io.WriterGuacamoleWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLSocketFactory;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Provides abstract socket-like access to a Guacamole connection over SSL to
@@ -52,12 +54,12 @@ public class SSLGuacamoleSocket implements GuacamoleSocket {
     /**
      * The GuacamoleReader this socket should read from.
      */
-    private GuacamoleReader reader;
+    private final GuacamoleReader reader;
 
     /**
      * The GuacamoleWriter this socket should write to.
      */
-    private GuacamoleWriter writer;
+    private final GuacamoleWriter writer;
 
     /**
      * The number of milliseconds to wait for data on the TCP socket before
@@ -69,7 +71,7 @@ public class SSLGuacamoleSocket implements GuacamoleSocket {
      * The TCP socket that the GuacamoleReader and GuacamoleWriter exposed
      * by this class should affect.
      */
-    private Socket sock;
+    private final Socket sock;
 
     /**
      * Creates a new SSLGuacamoleSocket which reads and writes instructions
@@ -105,8 +107,8 @@ public class SSLGuacamoleSocket implements GuacamoleSocket {
             sock.setSoTimeout(SOCKET_TIMEOUT);
 
             // On successful connect, retrieve I/O streams
-            reader = new ReaderGuacamoleReader(new InputStreamReader(sock.getInputStream(),   "UTF-8"));
-            writer = new WriterGuacamoleWriter(new OutputStreamWriter(sock.getOutputStream(), "UTF-8"));
+            reader = new ReaderGuacamoleReader(new InputStreamReader(sock.getInputStream(), StandardCharsets.UTF_8));
+            writer = new WriterGuacamoleWriter(new OutputStreamWriter(sock.getOutputStream(), StandardCharsets.UTF_8));
 
         }
         catch (IOException e) {
