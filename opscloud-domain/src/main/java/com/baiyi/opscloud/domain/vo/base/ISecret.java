@@ -12,4 +12,5 @@ public interface ISecret {
     void setPlaintext(String plaintext);
 
     String getPlaintext();
+
 }

@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
  */
 public class LeoRuleVO {
 
-
     @Data
     @Builder
     @NoArgsConstructor

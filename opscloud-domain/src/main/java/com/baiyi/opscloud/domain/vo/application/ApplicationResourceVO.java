@@ -41,7 +41,6 @@ public class ApplicationResourceVO {
         @Schema(description = "主键", example = "1")
         private Integer id;
 
-        @NotNull(message = "应用ID不能为空")
         private Integer applicationId;
 
         private String name;
@@ -50,13 +49,10 @@ public class ApplicationResourceVO {
         @Builder.Default
         private Boolean virtualResource = false;
 
-        @NotNull(message = "资源类型不能为空")
         private String resourceType;
 
-        @NotNull(message = "业务id不能为空")
         private Integer businessId;
 
-        @NotNull(message = "业务类型不能为空")
         private Integer businessType;
 
         private String comment;
@@ -92,13 +88,10 @@ public class ApplicationResourceVO {
         @Builder.Default
         private Boolean virtualResource = false;
 
-        @NotNull(message = "资源类型不能为空")
         private String resourceType;
 
-        @NotNull(message = "业务id不能为空")
         private Integer businessId;
 
-        @NotNull(message = "业务类型不能为空")
         private Integer businessType;
 
         private String comment;

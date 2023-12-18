@@ -25,7 +25,7 @@ public class AuthResourceVO {
         @Schema(description = "主键", example = "1")
         private Integer id;
 
-        @Schema(description = "资源组id", example = "1")
+        @Schema(description = "资源组ID", example = "1")
         private Integer groupId;
 
         @Schema(description = "资源路径")

@@ -4,7 +4,6 @@ import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -42,10 +41,8 @@ public class DsAssetSubscriptionVO {
 
         private Integer id;
 
-        @NotNull(message = "必须指定数据源实例UUID")
         private String instanceUuid;
 
-        @NotNull(message = "必须指定资产ID")
         private Integer datasourceInstanceAssetId;
 
         /**

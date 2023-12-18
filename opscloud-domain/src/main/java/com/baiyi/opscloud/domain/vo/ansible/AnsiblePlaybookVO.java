@@ -35,7 +35,6 @@ public class AnsiblePlaybookVO {
         private String playbookUuid;
 
         @Schema(description = "剧本名称")
-        @NotNull(message = "剧本名称不能为空")
         private String name;
 
         @NotNull(message = " 剧本内容不能为空")

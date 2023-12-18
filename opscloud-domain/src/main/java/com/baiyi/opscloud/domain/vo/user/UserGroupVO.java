@@ -4,7 +4,6 @@ import com.baiyi.opscloud.domain.base.IAllowOrder;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -54,7 +53,6 @@ public class UserGroupVO {
         @Builder.Default
         private Integer id = 0;
 
-        @NotBlank(message = "用户组名称不能为空")
         @Schema(description = "用户组名称")
         private String name;
 

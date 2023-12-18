@@ -19,4 +19,5 @@ public class MenuVO {
     private String title;
     private String icon;
     private List<MenuChildrenVO> children;
+
 }
