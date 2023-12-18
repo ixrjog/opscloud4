@@ -13,9 +13,9 @@ public interface AnsiblePlaybookFacade {
 
     DataTable<AnsiblePlaybookVO.Playbook> queryAnsiblePlaybookPage(AnsiblePlaybookParam.AnsiblePlaybookPageQuery pageQuery);
 
-    void updateAnsiblePlaybook(AnsiblePlaybookVO.Playbook playbook);
+    void updateAnsiblePlaybook(AnsiblePlaybookParam.Playbook playbook);
 
-    void addAnsiblePlaybook(AnsiblePlaybookVO.Playbook playbook);
+    void addAnsiblePlaybook(AnsiblePlaybookParam.Playbook playbook);
 
     void deleteAnsiblePlaybookById(int id);
 

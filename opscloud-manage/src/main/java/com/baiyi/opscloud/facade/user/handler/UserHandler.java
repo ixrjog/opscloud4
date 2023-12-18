@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
 import com.baiyi.opscloud.domain.param.auth.AuthUserRoleParam;
-import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
+import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.facade.auth.AuthFacade;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
@@ -65,7 +65,7 @@ public class UserHandler {
     }
 
     private void initializeUserGroups(Integer userId, List<String> groups) {
-        UserPermissionVO.UserBusinessPermission userBizPermission = UserPermissionVO.UserBusinessPermission.builder()
+        UserBusinessPermissionParam.UserBusinessPermission userBusinessPermission = UserBusinessPermissionParam.UserBusinessPermission.builder()
                 .businessType(BusinessTypeEnum.USERGROUP.getType())
                 .userId(userId)
                 .build();
@@ -75,8 +75,8 @@ public class UserHandler {
                 if (userGroup == null) {
                     return;
                 }
-                userBizPermission.setBusinessId(userGroup.getId());
-                permissionFacade.grantUserBusinessPermission(userBizPermission);
+                userBusinessPermission.setBusinessId(userGroup.getId());
+                permissionFacade.grantUserBusinessPermission(userBusinessPermission);
             });
         } catch (Exception e) {
             log.error("初始化用户的用户组错误: userId={}, {}", userId, e.getMessage());

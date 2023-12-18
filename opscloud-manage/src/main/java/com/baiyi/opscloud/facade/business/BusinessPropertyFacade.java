@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.business;
 
-import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
+import com.baiyi.opscloud.domain.param.server.business.BusinessPropertyParam;
 
 /**
  * @Author baiyi
@@ -9,8 +9,8 @@ import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
  */
 public interface BusinessPropertyFacade {
 
-    void add(BusinessPropertyVO.Property property);
+    void add(BusinessPropertyParam.Property property);
 
-    void update(BusinessPropertyVO.Property property);
+    void update(BusinessPropertyParam.Property property);
 
 }

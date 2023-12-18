@@ -111,14 +111,14 @@ public class UserController {
 
     @Operation(summary = "新增用户组")
     @PostMapping(value = "/group/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addUserGroup(@RequestBody @Valid UserGroupVO.UserGroup userGroup) {
+    public HttpResult<Boolean> addUserGroup(@RequestBody @Valid UserGroupParam.UserGroup userGroup) {
         userGroupFacade.addUserGroup(userGroup);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "更新用户组")
     @PutMapping(value = "/group/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateUserGroup(@RequestBody @Valid UserGroupVO.UserGroup userGroup) {
+    public HttpResult<Boolean> updateUserGroup(@RequestBody @Valid UserGroupParam.UserGroup userGroup) {
         userGroupFacade.updateUserGroup(userGroup);
         return HttpResult.SUCCESS;
     }
@@ -132,14 +132,14 @@ public class UserController {
 
     @Operation(summary = "解除用户业务许可")
     @PutMapping(value = "/business/permission/revoke", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> revokeUserBusinessPermission(@RequestBody @Valid UserPermissionVO.UserBusinessPermission userBusinessPermission) {
+    public HttpResult<Boolean> revokeUserBusinessPermission(@RequestBody @Valid UserBusinessPermissionParam.UserBusinessPermission userBusinessPermission) {
         permissionFacade.revokeUserBusinessPermission(userBusinessPermission);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "授予用户业务许可")
     @PostMapping(value = "/business/permission/grant", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> grantUserBusinessPermission(@RequestBody @Valid UserPermissionVO.UserBusinessPermission userBusinessPermission) {
+    public HttpResult<Boolean> grantUserBusinessPermission(@RequestBody @Valid UserBusinessPermissionParam.UserBusinessPermission userBusinessPermission) {
         permissionFacade.grantUserBusinessPermission(userBusinessPermission);
         return HttpResult.SUCCESS;
     }
@@ -183,8 +183,8 @@ public class UserController {
 
     @Operation(summary = "授权用户AccessToken")
     @PostMapping(value = "/access/token/grant", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<AccessTokenVO.AccessToken> grantUserAccessToken(@RequestBody @Valid AccessTokenVO.AccessToken accessToken) {
-        return new HttpResult<>(userFacade.grantUserAccessToken(accessToken));
+    public HttpResult<AccessTokenVO.AccessToken> grantUserAccessToken(@RequestBody @Valid AccessTokenParam.ApplicationAccessToken applicationAccessToken) {
+        return new HttpResult<>(userFacade.grantUserAccessToken(applicationAccessToken));
     }
 
     @Operation(summary = "撤销用户AccessToken")

@@ -19,6 +19,24 @@ import lombok.experimental.SuperBuilder;
 public class UserBusinessPermissionParam {
 
     @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema
+    public static class UserBusinessPermission {
+
+        @NotNull(message = "用户ID不能为空")
+        private Integer userId;
+
+        @NotNull(message = "业务类型不能为空")
+        private Integer businessType;
+
+        @NotNull(message = "业务id不能为空")
+        private Integer businessId;
+
+    }
+
+    @Data
     @SuperBuilder(toBuilder = true)
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor

@@ -19,6 +19,7 @@ import com.baiyi.opscloud.domain.param.SimpleRelation;
 import com.baiyi.opscloud.domain.param.auth.LoginParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
+import com.baiyi.opscloud.domain.param.user.AccessTokenParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
@@ -248,16 +249,16 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public AccessTokenVO.AccessToken grantUserAccessToken(AccessTokenVO.AccessToken accessToken) {
-        AccessToken pre = AccessToken.builder()
+    public AccessTokenVO.AccessToken grantUserAccessToken(AccessTokenParam.ApplicationAccessToken applicationAccessToken) {
+        AccessToken accessToken = AccessToken.builder()
                 .username(SessionHolder.getUsername())
                 .tokenId(IdUtil.buildUUID())
                 .token(PasswordUtil.generatorPassword(32, false))
-                .expiredTime(accessToken.getExpiredTime())
-                .comment(accessToken.getComment())
+                .expiredTime(applicationAccessToken.getExpiredTime())
+                .comment(applicationAccessToken.getComment())
                 .build();
-        accessTokenService.add(pre);
-        return BeanCopierUtil.copyProperties(pre, AccessTokenVO.AccessToken.class);
+        accessTokenService.add(accessToken);
+        return BeanCopierUtil.copyProperties(accessToken, AccessTokenVO.AccessToken.class);
     }
 
     @Override

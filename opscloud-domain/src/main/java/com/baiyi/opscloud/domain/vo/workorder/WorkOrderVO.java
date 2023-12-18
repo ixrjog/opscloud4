@@ -2,7 +2,6 @@ package com.baiyi.opscloud.domain.vo.workorder;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.util.List;
@@ -35,11 +34,9 @@ public class WorkOrderVO {
         private Integer id;
 
         @Schema(description = "工单名称")
-        @NotEmpty(message = "工单名称不能为空")
         private String name;
 
         @Schema(description = "工单名称国际化")
-        @NotEmpty(message = "工单名称国际化不能为空")
         private String i18nEn;
 
         @Schema(description = "顺序")
@@ -96,11 +93,9 @@ public class WorkOrderVO {
         private Integer id;
 
         @Schema(description = "工单组名称")
-        @NotEmpty(message = "工单组名称不能为空")
         private String name;
 
         @Schema(description = "工单组名称国际化")
-        @NotEmpty(message = "工单组名称国际化不能为空")
         private String i18nEn;
 
         @Schema(description = "顺序")

@@ -36,14 +36,14 @@ public class AnsiblePlaybookFacadeImpl implements AnsiblePlaybookFacade {
     }
 
     @Override
-    public void updateAnsiblePlaybook(AnsiblePlaybookVO.Playbook playbook) {
+    public void updateAnsiblePlaybook(AnsiblePlaybookParam.Playbook playbook) {
         AnsiblePlaybook ansiblePlaybook = BeanCopierUtil.copyProperties(playbook, AnsiblePlaybook.class);
         ansiblePlaybookService.update(ansiblePlaybook);
         writeFilePlaybook(ansiblePlaybook);
     }
 
     @Override
-    public void addAnsiblePlaybook(AnsiblePlaybookVO.Playbook playbook) {
+    public void addAnsiblePlaybook(AnsiblePlaybookParam.Playbook playbook) {
         playbook.setPlaybookUuid(IdUtil.buildUUID());
         AnsiblePlaybook ansiblePlaybook = BeanCopierUtil.copyProperties(playbook, AnsiblePlaybook.class);
         ansiblePlaybookService.add(ansiblePlaybook);

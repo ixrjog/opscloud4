@@ -66,38 +66,38 @@ public class DsInstanceScheduleFacadeImpl implements DsInstanceScheduleFacade {
         addJob(instance, param);
     }
 
-    private void addJob(DatasourceInstance instance, DsInstanceScheduleParam.AddJob param) {
+    private void addJob(DatasourceInstance instance, DsInstanceScheduleParam.AddJob addJob) {
         Map<String, Object> map = ImmutableMap.<String, Object>builder()
-                .put("assetType", param.getAssetType())
+                .put("assetType", addJob.getAssetType())
                 .put("instanceId", instance.getId())
                 .build();
         quartzService.addJob(
-                jobClassMap.get(param.getJobType()),
+                jobClassMap.get(addJob.getJobType()),
                 instance.getUuid(),
-                param.getAssetType(),
-                param.getJobTime(),
-                param.getJobDescription(),
+                addJob.getAssetType(),
+                addJob.getJobTime(),
+                addJob.getJobDescription(),
                 map);
     }
 
     @Override
-    public void pauseJob(DsInstanceScheduleParam.UpdateJob param) {
-        quartzService.pauseJob(param.getGroup(), param.getName());
+    public void pauseJob(DsInstanceScheduleParam.UpdateJob updateJob) {
+        quartzService.pauseJob(updateJob.getGroup(), updateJob.getName());
     }
 
     @Override
-    public void resumeJob(DsInstanceScheduleParam.UpdateJob param) {
-        quartzService.resumeJob(param.getGroup(), param.getName());
+    public void resumeJob(DsInstanceScheduleParam.UpdateJob updateJob) {
+        quartzService.resumeJob(updateJob.getGroup(), updateJob.getName());
     }
 
     @Override
-    public void deleteJob(DsInstanceScheduleParam.UpdateJob param) {
-        quartzService.deleteJob(param.getGroup(), param.getName());
+    public void deleteJob(DsInstanceScheduleParam.DeleteJob deleteJob) {
+        quartzService.deleteJob(deleteJob.getGroup(), deleteJob.getName());
     }
 
     @Override
-    public List<String> checkCron(DsInstanceScheduleParam.CheckCron param) {
-        return CronUtil.recentTime(param.getJobTime(), 5);
+    public List<String> checkCron(DsInstanceScheduleParam.CheckCron checkCron) {
+        return CronUtil.recentTime(checkCron.getJobTime(), 5);
     }
 
 }

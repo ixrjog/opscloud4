@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.user;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
+import com.baiyi.opscloud.domain.param.user.AccessTokenParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
@@ -56,7 +57,7 @@ public interface UserFacade {
      * @param accessToken
      * @return
      */
-    AccessTokenVO.AccessToken grantUserAccessToken(AccessTokenVO.AccessToken accessToken);
+    AccessTokenVO.AccessToken grantUserAccessToken(AccessTokenParam.ApplicationAccessToken applicationAccessToken);
 
     /**
      * 撤销用户AccessToken

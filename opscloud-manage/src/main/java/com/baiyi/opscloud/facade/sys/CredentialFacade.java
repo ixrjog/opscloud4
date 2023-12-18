@@ -13,9 +13,9 @@ public interface CredentialFacade {
 
     DataTable<CredentialVO.Credential> queryCredentialPage(CredentialParam.CredentialPageQuery pageQuery);
 
-    void addCredential(CredentialVO.Credential credential);
+    void addCredential(CredentialParam.Credential credential);
 
-    void updateCredential(CredentialVO.Credential credential);
+    void updateCredential(CredentialParam.Credential credential);
 
     void deleteCredentialById(Integer id);
 

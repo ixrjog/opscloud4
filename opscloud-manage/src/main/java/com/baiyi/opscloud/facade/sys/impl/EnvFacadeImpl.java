@@ -26,18 +26,18 @@ public class EnvFacadeImpl implements EnvFacade {
 
     private final EnvService envService;
 
-    private Env toDO(EnvVO.Env env) {
+    private Env to(EnvParam.Env env) {
         return BeanCopierUtil.copyProperties(env, Env.class);
     }
 
     @Override
-    public void addEnv(EnvVO.Env env) {
-        envService.add(toDO(env));
+    public void addEnv(EnvParam.Env env) {
+        envService.add(to(env));
     }
 
     @Override
-    public void updateEnv(EnvVO.Env env) {
-        envService.update(toDO(env));
+    public void updateEnv(EnvParam.Env env) {
+        envService.update(to(env));
     }
 
     @Override

@@ -33,14 +33,14 @@ public class EnvController {
 
     @Operation(summary = "新增环境")
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addEnv(@RequestBody @Valid EnvVO.Env env) {
+    public HttpResult<Boolean> addEnv(@RequestBody @Valid EnvParam.Env env) {
         envFacade.addEnv(env);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "更新环境")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateEnv(@RequestBody @Valid EnvVO.Env env) {
+    public HttpResult<Boolean> updateEnv(@RequestBody @Valid EnvParam.Env env) {
         envFacade.updateEnv(env);
         return HttpResult.SUCCESS;
     }

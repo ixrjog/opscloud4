@@ -2,8 +2,8 @@ package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.param.server.business.BusinessDocumentParam;
+import com.baiyi.opscloud.domain.param.server.business.BusinessPropertyParam;
 import com.baiyi.opscloud.domain.vo.business.BusinessDocumentVO;
-import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
 import com.baiyi.opscloud.facade.business.BusinessDocumentFacade;
 import com.baiyi.opscloud.facade.business.BusinessPropertyFacade;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,14 +30,14 @@ public class BusinessController {
 
     @Operation(summary = "新增业务对象属性配置")
     @PostMapping(value = "/property/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addBusinessProperty(@RequestBody @Valid BusinessPropertyVO.Property property) {
+    public HttpResult<Boolean> addBusinessProperty(@RequestBody @Valid BusinessPropertyParam.Property property) {
         businessPropertyFacade.add(property);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "更新业务对象属性配置")
     @PutMapping(value = "/property/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateBusinessProperty(@RequestBody @Valid BusinessPropertyVO.Property property) {
+    public HttpResult<Boolean> updateBusinessProperty(@RequestBody @Valid BusinessPropertyParam.Property property) {
         businessPropertyFacade.update(property);
         return HttpResult.SUCCESS;
     }

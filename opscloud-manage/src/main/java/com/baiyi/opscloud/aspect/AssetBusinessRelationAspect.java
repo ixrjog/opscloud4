@@ -47,8 +47,8 @@ public class AssetBusinessRelationAspect {
         Object[] args = joinPoint.getArgs();
         if (params != null && params.length != 0) {
             Object obj = args[0];
-            if (obj instanceof BusinessAssetRelationVO.IBusinessAssetRelation bar) {
-                bindRelation(bar);
+            if (obj instanceof BusinessAssetRelationVO.IBusinessAssetRelation businessAssetRelation) {
+                bindRelation(businessAssetRelation);
             }
         }
         return result;
@@ -57,11 +57,11 @@ public class AssetBusinessRelationAspect {
     /**
      * 业务对象与资产绑定（无需传入assetId）
      *
-     * @param bar
+     * @param businessAssetRelation
      */
-    private void bindRelation(BusinessAssetRelationVO.IBusinessAssetRelation bar) {
-        log.info("业务对象绑定资产: businessType={}, businessId={}, assetId={}", bar.getBusinessType(), bar.getBusinessId(), bar.getAssetId());
-        businessAssetRelationFacade.bindAsset(bar);
+    private void bindRelation(BusinessAssetRelationVO.IBusinessAssetRelation businessAssetRelation) {
+        log.info("业务对象绑定资产: businessType={}, businessId={}, assetId={}", businessAssetRelation.getBusinessType(), businessAssetRelation.getBusinessId(), businessAssetRelation.getAssetId());
+        businessAssetRelationFacade.bindAsset(businessAssetRelation);
     }
 
 }
