@@ -1,44 +1,27 @@
-package com.baiyi.opscloud.domain.vo.user;
+package com.baiyi.opscloud.domain.param.user;
 
-import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @Author baiyi
- * @Date 2020/2/27 1:17 下午
+ * @Date 2023/12/15 18:21
  * @Version 1.0
  */
-public class UserCredentialVO {
+public class UserCredentialParam {
 
     @Data
     @Builder
-    @AllArgsConstructor
     @NoArgsConstructor
-    @Schema
-    public static class CredentialDetails {
-
-        @Schema(description = "用户凭据")
-        private Map<String, List<Credential>> credentialMap;
-
-        @Schema(description = "资产凭据")
-        private Map<String, List<DsAssetVO.Asset>> assetCredentialMap;
-
-    }
-
-    @EqualsAndHashCode(callSuper = true)
-    @Builder
     @AllArgsConstructor
-    @Data
-    @NoArgsConstructor
     @Schema
-    public static class Credential extends BaseVO {
+    public static class Credential {
 
         @Schema(description = "主键")
         private Integer id;
@@ -56,6 +39,7 @@ public class UserCredentialVO {
         private Integer credentialType;
 
         @Schema(description = "凭据内容")
+        @NotNull(message = "凭据不能为空")
         private String credential;
 
         @Schema(description = "凭据指纹")
@@ -65,10 +49,10 @@ public class UserCredentialVO {
         private Boolean valid;
 
         @Schema(description = "有效期")
-        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date expiredTime;
 
         private String comment;
+
     }
 
 }

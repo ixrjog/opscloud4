@@ -11,14 +11,14 @@ import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementUser
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamPolicy;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamUser;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
-import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
+import com.baiyi.opscloud.domain.param.user.UserCredentialParam;
 import com.baiyi.opscloud.facade.user.UserCredentialFacade;
 import com.baiyi.opscloud.otp.OtpUtil;
 import com.baiyi.opscloud.otp.model.OTPAccessCode;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import jakarta.annotation.Resource;
 import javax.crypto.SecretKey;
 import java.util.List;
 
@@ -129,7 +129,7 @@ public class IamTest extends BaseAwsTest {
                 .id(1)
                 .username("baiyi")
                 .build();
-        UserCredentialVO.Credential credential = UserCredentialVO.Credential.builder()
+        UserCredentialParam.Credential credential = UserCredentialParam.Credential.builder()
                 .instanceUuid("121213")
                 .title("xdpisjdg")
                 .userId(99999)

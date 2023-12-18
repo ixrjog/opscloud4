@@ -13,6 +13,28 @@ import lombok.experimental.SuperBuilder;
 public class AuthRoleParam {
 
     @Data
+    @NoArgsConstructor
+    @Schema
+    public static class Role {
+
+        @Schema(description = "主键", example = "1")
+        private Integer id;
+
+        @Schema(description = "角色名称")
+        private String roleName;
+
+        @Schema(description = "访问级别", example = "50")
+        private Integer accessLevel;
+
+        @Schema(description = "角色描述")
+        private String comment;
+
+        @Schema(description = "是否支持工单", example = "true")
+        private Boolean allowOrder;
+
+    }
+
+    @Data
     @SuperBuilder(toBuilder = true)
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor

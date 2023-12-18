@@ -17,6 +17,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
+import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
 import com.baiyi.opscloud.domain.param.leo.LeoDeployParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.LeoMonitorParam;
@@ -417,11 +418,11 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         List<DatasourceInstanceAsset> assets = dsInstanceFacade.pullAsset(asset.getInstanceUuid(), DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name(), deployment);
         // 绑定资产到应用
         assets.forEach(a -> {
-            ApplicationResourceVO.Resource resource = ApplicationResourceVO.Resource.builder()
+            ApplicationResourceParam.Resource resource = ApplicationResourceParam.Resource.builder()
                     .applicationId(leoJob.getApplicationId())
                     .businessId(a.getId())
                     .businessType(BusinessTypeEnum.ASSET.getType())
-                    .checked(false)
+                    //.checked(false)
                     .comment(a.getAssetId())
                     .name(a.getAssetId())
                     .resourceType(ApplicationResTypeEnum.KUBERNETES_DEPLOYMENT.name())

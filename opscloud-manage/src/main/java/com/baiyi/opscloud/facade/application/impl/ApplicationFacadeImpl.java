@@ -129,23 +129,23 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     }
 
     @Override
-    public void addApplication(ApplicationVO.Application application) {
-        if (applicationService.getByKey(application.getApplicationKey()) != null) {
+    public void addApplication(ApplicationParam.AddApplication addApplication) {
+        if (applicationService.getByKey(addApplication.getApplicationKey()) != null) {
             throw new OCException(ErrorEnum.APPLICATION_ALREADY_EXIST);
         }
-        Application newApplication = BeanCopierUtil.copyProperties(application, Application.class);
-        if (StringUtils.isNotBlank(application.getApplicationKey())) {
-            newApplication.setApplicationKey(application.getApplicationKey().replaceAll(" ", "").toUpperCase());
+        Application application = BeanCopierUtil.copyProperties(addApplication, Application.class);
+        if (StringUtils.isNotBlank(addApplication.getApplicationKey())) {
+            application.setApplicationKey(addApplication.getApplicationKey().replaceAll(" ", "").toUpperCase());
         }
-        applicationService.add(newApplication);
+        applicationService.add(application);
     }
 
     @Override
-    public void updateApplication(ApplicationVO.Application application) {
-        if (applicationService.getById(application.getId()) == null) {
+    public void updateApplication(ApplicationParam.UpdateApplication updateApplication) {
+        if (applicationService.getById(updateApplication.getId()) == null) {
             throw new OCException(ErrorEnum.APPLICATION_NOT_EXIST);
         }
-        applicationService.update(BeanCopierUtil.copyProperties(application, Application.class));
+        applicationService.update(BeanCopierUtil.copyProperties(updateApplication, Application.class));
     }
 
     @Override
@@ -158,7 +158,7 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     }
 
     @Override
-    public void bindApplicationResource(ApplicationResourceVO.Resource resource) {
+    public void bindApplicationResource(ApplicationResourceParam.Resource resource) {
         if (applicationResourceService.getByUniqueKey(resource.getApplicationId(), resource.getBusinessType(), resource.getBusinessId()) != null) {
             throw new OCException(ErrorEnum.APPLICATION_RES_ALREADY_EXIST);
         }

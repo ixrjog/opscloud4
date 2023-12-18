@@ -56,8 +56,8 @@ public class ApplicationController {
 
     @Operation(summary = "新增应用")
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addApplication(@RequestBody @Valid ApplicationVO.Application application) {
-        applicationFacade.addApplication(application);
+    public HttpResult<Boolean> addApplication(@RequestBody @Valid ApplicationParam.AddApplication addApplication) {
+        applicationFacade.addApplication(addApplication);
         return HttpResult.SUCCESS;
     }
 
@@ -70,8 +70,8 @@ public class ApplicationController {
 
     @Operation(summary = "更新应用")
     @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateApplication(@RequestBody @Valid ApplicationVO.Application application) {
-        applicationFacade.updateApplication(application);
+    public HttpResult<Boolean> updateApplication(@RequestBody @Valid ApplicationParam.UpdateApplication updateApplication) {
+        applicationFacade.updateApplication(updateApplication);
         return HttpResult.SUCCESS;
     }
 
@@ -83,7 +83,7 @@ public class ApplicationController {
 
     @Operation(summary = "应用资源绑定")
     @PutMapping(value = "/res/bind", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> bindApplicationResource(@RequestBody @Valid ApplicationResourceVO.Resource resource) {
+    public HttpResult<Boolean> bindApplicationResource(@RequestBody @Valid ApplicationResourceParam.Resource resource) {
         applicationFacade.bindApplicationResource(resource);
         return HttpResult.SUCCESS;
     }

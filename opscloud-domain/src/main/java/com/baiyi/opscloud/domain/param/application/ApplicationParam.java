@@ -16,6 +16,55 @@ import lombok.experimental.SuperBuilder;
  */
 public class ApplicationParam {
 
+    @Data
+    @Schema
+    public static class AddApplication {
+
+        @Schema(description = "主键", example = "1")
+        private Integer id;
+
+        @NotNull(message = "应用名称不能为空")
+        @Schema(description = "应用名称")
+        private String name;
+
+        @NotNull(message = "应用关键字不能为空")
+        @Schema(description = "应用关键字")
+        private String applicationKey;
+
+        private Integer applicationType;
+
+        @Schema(description = "描述")
+        private String comment;
+
+        private Boolean isActive;
+
+    }
+
+    @Data
+    @Schema
+    public static class UpdateApplication {
+
+        @Schema(description = "主键", example = "1")
+        @NotNull(message = "ID不能为空")
+        private Integer id;
+
+        @NotNull(message = "应用名称不能为空")
+        @Schema(description = "应用名称")
+        private String name;
+
+        @NotNull(message = "应用关键字不能为空")
+        @Schema(description = "应用关键字")
+        private String applicationKey;
+
+        private Integer applicationType;
+
+        @Schema(description = "描述")
+        private String comment;
+
+        private Boolean isActive;
+
+    }
+
     @SuperBuilder(toBuilder = true)
     @Data
     @EqualsAndHashCode(callSuper = true)

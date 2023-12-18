@@ -12,6 +12,24 @@ import lombok.*;
 public class AuthRoleResourceParam {
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema
+    @Builder
+    public static class RoleResource {
+
+        @Schema(description = "主键",example="1")
+        private Integer id;
+
+        @Schema(description = "role主键",example="1")
+        private Integer roleId;
+
+        @Schema(description = "资源主键",example="1")
+        private Integer resourceId;
+
+    }
+
+    @Data
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor

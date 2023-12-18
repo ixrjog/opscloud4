@@ -6,10 +6,7 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.SuperPageParam;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -18,6 +15,37 @@ import lombok.experimental.SuperBuilder;
  * @Version 1.0
  */
 public class ApplicationResourceParam {
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema
+    public static class Resource {
+
+        @Schema(description = "主键", example = "1")
+        private Integer id;
+
+        @NotNull(message = "应用ID不能为空")
+        private Integer applicationId;
+
+        private String name;
+
+        @Schema(description = "虚拟资源", example = "true")
+        private Boolean virtualResource ;
+
+        @NotNull(message = "资源类型不能为空")
+        private String resourceType;
+
+        @NotNull(message = "业务id不能为空")
+        private Integer businessId;
+
+        @NotNull(message = "业务类型不能为空")
+        private Integer businessType;
+
+        private String comment;
+
+    }
 
     @Data
     @SuperBuilder(toBuilder = true)

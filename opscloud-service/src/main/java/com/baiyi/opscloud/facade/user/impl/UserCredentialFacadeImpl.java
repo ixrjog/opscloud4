@@ -2,13 +2,13 @@ package com.baiyi.opscloud.facade.user.impl;
 
 import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.common.exception.common.OCException;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.SSHUtil;
-import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserCredential;
-import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
+import com.baiyi.opscloud.domain.param.user.UserCredentialParam;
 import com.baiyi.opscloud.facade.user.UserCredentialFacade;
 import com.baiyi.opscloud.otp.Base32StringUtil;
 import com.baiyi.opscloud.otp.OtpUtil;
@@ -48,7 +48,7 @@ public class UserCredentialFacadeImpl implements UserCredentialFacade {
     }
 
     @Override
-    public void saveCredential(UserCredentialVO.Credential credential) {
+    public void saveCredential(UserCredentialParam.Credential credential) {
         User user = userService.getByUsername(SessionHolder.getUsername());
         if (user == null) {
             return;
@@ -57,7 +57,7 @@ public class UserCredentialFacadeImpl implements UserCredentialFacade {
     }
 
     @Override
-    public void saveCredential(UserCredentialVO.Credential credential, User user) {
+    public void saveCredential(UserCredentialParam.Credential credential, User user) {
         credential.setUserId(user.getId());
         if (credential.getCredentialType() == UserCredentialTypeEnum.PUB_KEY.getType()) {
             savePubKey(credential);
@@ -95,7 +95,7 @@ public class UserCredentialFacadeImpl implements UserCredentialFacade {
         userCredentialService.add(userCredential);
     }
 
-    private void savePubKey(UserCredentialVO.Credential credential) {
+    private void savePubKey(UserCredentialParam.Credential credential) {
         List<String> result = Splitter.on(" ").splitToList(credential.getCredential());
         // 计算指纹
         credential.setFingerprint(SSHUtil.getFingerprint(Joiner.on(" ").join(result.get(0), result.get(1))));

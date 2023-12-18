@@ -11,7 +11,7 @@ import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
+import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
 import com.baiyi.opscloud.facade.application.ApplicationFacade;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
@@ -201,11 +201,10 @@ public class KubernetesPreTest extends BaseKubernetesTest {
         List<DatasourceInstanceAsset> assetList = dsInstanceAssetService.listByInstanceAssetType("3592e35e387f45adac441878cebdf219", DsAssetTypeConstants.KUBERNETES_DEPLOYMENT.name());
         assetList.forEach(a -> {
             Application application = applicationService.getByName(a.getName());
-            ApplicationResourceVO.Resource resource = ApplicationResourceVO.Resource.builder()
+            ApplicationResourceParam.Resource resource = ApplicationResourceParam.Resource.builder()
                     .applicationId(application.getId())
                     .businessId(a.getId())
                     .businessType(BusinessTypeEnum.ASSET.getType())
-                    .checked(false)
                     .comment(a.getAssetId())
                     .name(a.getAssetId())
                     .resourceType(ApplicationResTypeEnum.KUBERNETES_DEPLOYMENT.name())

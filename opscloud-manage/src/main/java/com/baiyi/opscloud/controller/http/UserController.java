@@ -5,10 +5,7 @@ import com.baiyi.opscloud.datasource.facade.UserAmFacade;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
-import com.baiyi.opscloud.domain.param.user.UserAmParam;
-import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
-import com.baiyi.opscloud.domain.param.user.UserGroupParam;
-import com.baiyi.opscloud.domain.param.user.UserParam;
+import com.baiyi.opscloud.domain.param.user.*;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.*;
@@ -67,7 +64,7 @@ public class UserController {
 
     @Operation(summary = "保存用户凭据")
     @PostMapping(value = "/credential/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> saveUserCredential(@RequestBody @Valid UserCredentialVO.Credential credential) {
+    public HttpResult<Boolean> saveUserCredential(@RequestBody @Valid UserCredentialParam.Credential credential) {
         userCredentialFacade.saveCredential(credential);
         return HttpResult.SUCCESS;
     }

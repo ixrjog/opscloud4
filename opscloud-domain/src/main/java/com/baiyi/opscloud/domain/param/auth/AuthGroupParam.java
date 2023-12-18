@@ -17,6 +17,27 @@ import lombok.experimental.SuperBuilder;
 public class AuthGroupParam {
 
     @Data
+    @Schema
+    public static class Group {
+
+        @Schema(description = "资源数量")
+        private Integer resourceSize;
+
+        @Schema(description = "主键", example = "1")
+        private Integer id;
+
+        @Schema(description = "资源组名称")
+        private String groupName;
+
+        @Schema(description = "基本路径")
+        private String basePath;
+
+        @Schema(description = "资源描述")
+        private String comment;
+
+    }
+
+    @Data
     @SuperBuilder(toBuilder = true)
     @EqualsAndHashCode(callSuper = true)
     @AllArgsConstructor

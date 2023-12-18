@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.user;
 
 import com.baiyi.opscloud.domain.generator.opscloud.User;
-import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
+import com.baiyi.opscloud.domain.param.user.UserCredentialParam;
 
 /**
  * @Author baiyi
@@ -12,7 +12,7 @@ public interface UserCredentialFacade {
 
     void clearCredential(int userId, String instanceUuid, int credentialType);
 
-    void saveCredential(UserCredentialVO.Credential credential);
+    void saveCredential(UserCredentialParam.Credential credential);
 
     /**
      * 内部使用
@@ -20,7 +20,7 @@ public interface UserCredentialFacade {
      * @param credential
      * @param user
      */
-    void saveCredential(UserCredentialVO.Credential credential, User user);
+    void saveCredential(UserCredentialParam.Credential credential, User user);
 
 
     /**

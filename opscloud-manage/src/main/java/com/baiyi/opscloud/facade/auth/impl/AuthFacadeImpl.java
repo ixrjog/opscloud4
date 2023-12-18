@@ -3,19 +3,15 @@ package com.baiyi.opscloud.facade.auth.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
-import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.holder.SessionHolder;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
-import com.baiyi.opscloud.domain.param.auth.AuthGroupParam;
-import com.baiyi.opscloud.domain.param.auth.AuthResourceParam;
-import com.baiyi.opscloud.domain.param.auth.AuthRoleParam;
-import com.baiyi.opscloud.domain.param.auth.AuthUserRoleParam;
+import com.baiyi.opscloud.domain.param.auth.*;
 import com.baiyi.opscloud.domain.vo.auth.AuthGroupVO;
 import com.baiyi.opscloud.domain.vo.auth.AuthResourceVO;
-import com.baiyi.opscloud.domain.vo.auth.AuthRoleResourceVO;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleVO;
 import com.baiyi.opscloud.facade.auth.AuthFacade;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
@@ -67,12 +63,12 @@ public class AuthFacadeImpl implements AuthFacade {
     }
 
     @Override
-    public void addRole(AuthRoleVO.Role role) {
+    public void addRole(AuthRoleParam.Role role) {
         authRoleService.add(BeanCopierUtil.copyProperties(role, AuthRole.class));
     }
 
     @Override
-    public void updateRole(AuthRoleVO.Role role) {
+    public void updateRole(AuthRoleParam.Role role) {
         authRoleService.update(BeanCopierUtil.copyProperties(role, AuthRole.class));
     }
 
@@ -93,12 +89,12 @@ public class AuthFacadeImpl implements AuthFacade {
     }
 
     @Override
-    public void addGroup(AuthGroupVO.Group group) {
+    public void addGroup(AuthGroupParam.Group group) {
         authGroupService.add(BeanCopierUtil.copyProperties(group, AuthGroup.class));
     }
 
     @Override
-    public void updateGroup(AuthGroupVO.Group group) {
+    public void updateGroup(AuthGroupParam.Group group) {
         authGroupService.update(BeanCopierUtil.copyProperties(group, AuthGroup.class));
     }
 
@@ -119,7 +115,7 @@ public class AuthFacadeImpl implements AuthFacade {
     }
 
     @Override
-    public void addRoleResource(AuthRoleResourceVO.RoleResource roleResource) {
+    public void addRoleResource(AuthRoleResourceParam.RoleResource roleResource) {
         try {
             authRoleResourceService.add(BeanCopierUtil.copyProperties(roleResource, AuthRoleResource.class));
         } catch (DuplicateKeyException ignored) {
@@ -140,12 +136,12 @@ public class AuthFacadeImpl implements AuthFacade {
     }
 
     @Override
-    public void updateResource(AuthResourceVO.Resource resource) {
+    public void updateResource(AuthResourceParam.Resource resource) {
         authResourceService.update(BeanCopierUtil.copyProperties(resource, AuthResource.class));
     }
 
     @Override
-    public void addResource(AuthResourceVO.Resource resource) {
+    public void addResource(AuthResourceParam.Resource resource) {
         authResourceService.add(BeanCopierUtil.copyProperties(resource, AuthResource.class));
     }
 

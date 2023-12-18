@@ -2,13 +2,9 @@ package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.param.auth.AuthGroupParam;
-import com.baiyi.opscloud.domain.param.auth.AuthResourceParam;
-import com.baiyi.opscloud.domain.param.auth.AuthRoleParam;
-import com.baiyi.opscloud.domain.param.auth.AuthUserRoleParam;
+import com.baiyi.opscloud.domain.param.auth.*;
 import com.baiyi.opscloud.domain.vo.auth.AuthGroupVO;
 import com.baiyi.opscloud.domain.vo.auth.AuthResourceVO;
-import com.baiyi.opscloud.domain.vo.auth.AuthRoleResourceVO;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleVO;
 import com.baiyi.opscloud.facade.auth.AuthFacade;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,14 +35,14 @@ public class AuthController {
 
     @Operation(summary = "新增role")
     @PostMapping(value = "/role/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addRole(@RequestBody @Valid AuthRoleVO.Role role) {
+    public HttpResult<Boolean> addRole(@RequestBody @Valid AuthRoleParam.Role role) {
         authFacade.addRole(role);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "更新role")
     @PutMapping(value = "/role/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateRole(@RequestBody @Valid AuthRoleVO.Role role) {
+    public HttpResult<Boolean> updateRole(@RequestBody @Valid AuthRoleParam.Role role) {
         authFacade.updateRole(role);
         return HttpResult.SUCCESS;
     }
@@ -66,14 +62,14 @@ public class AuthController {
 
     @Operation(summary = "新增资源组")
     @PostMapping(value = "/group/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addGroup(@RequestBody @Valid AuthGroupVO.Group group) {
+    public HttpResult<Boolean> addGroup(@RequestBody @Valid AuthGroupParam.Group group) {
         authFacade.addGroup(group);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "更新资源组")
     @PutMapping(value = "/group/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateGroup(@RequestBody @Valid AuthGroupVO.Group group) {
+    public HttpResult<Boolean> updateGroup(@RequestBody @Valid AuthGroupParam.Group group) {
         authFacade.updateGroup(group);
         return HttpResult.SUCCESS;
     }
@@ -93,7 +89,7 @@ public class AuthController {
 
     @Operation(summary = "角色绑定资源")
     @PostMapping(value = "/role/resource/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addRoleResource(@RequestBody @Valid AuthRoleResourceVO.RoleResource roleResource) {
+    public HttpResult<Boolean> addRoleResource(@RequestBody @Valid AuthRoleResourceParam.RoleResource roleResource) {
         authFacade.addRoleResource(roleResource);
         return HttpResult.SUCCESS;
     }
@@ -113,14 +109,14 @@ public class AuthController {
 
     @Operation(summary = "新增资源")
     @PostMapping(value = "/resource/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addResource(@RequestBody @Valid AuthResourceVO.Resource resource) {
+    public HttpResult<Boolean> addResource(@RequestBody @Valid AuthResourceParam.Resource resource) {
         authFacade.addResource(resource);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "更新资源")
     @PutMapping(value = "/resource/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateResource(@RequestBody @Valid AuthResourceVO.Resource resource) {
+    public HttpResult<Boolean> updateResource(@RequestBody @Valid AuthResourceParam.Resource resource) {
         authFacade.updateResource(resource);
         return HttpResult.SUCCESS;
     }
