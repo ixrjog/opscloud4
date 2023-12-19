@@ -29,7 +29,7 @@ Welcome to the opscloud wiki!
   + [https://github.com/ixrjog/opscloud4-web](https://github.com/ixrjog/opscloud4-web)
 
 ## Database
-+ [v4.5.0 opscloud4-github.sql](https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/github/4.5.0/opscloud4-github.sql)
++ [v4.6.0 opscloud4-github.sql](https://opscloud4-web.oss-eu-west-1.aliyuncs.com/package/4.6.0/opscloud4-github.sql)
 
 ## 登录信息
 + username:baiyi
