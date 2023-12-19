@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.tencent.exmail.driver;
 
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.TencentExmailConfig;
 import com.baiyi.opscloud.tencent.exmail.entity.ExmailToken;
 import com.baiyi.opscloud.tencent.exmail.feign.TencentExmailTokenFeign;

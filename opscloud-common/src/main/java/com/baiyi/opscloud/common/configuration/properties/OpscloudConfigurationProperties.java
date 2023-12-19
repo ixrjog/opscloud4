@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.common.config.properties;
+package com.baiyi.opscloud.common.configuration.properties;
 
 import com.google.common.base.Joiner;
 import lombok.Data;

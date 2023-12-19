@@ -1,6 +1,6 @@
-package com.baiyi.opscloud.common.config;
+package com.baiyi.opscloud.common.configuration;
 
-import com.baiyi.opscloud.common.config.properties.CacheProperties;
+import com.baiyi.opscloud.common.configuration.properties.CacheProperties;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;

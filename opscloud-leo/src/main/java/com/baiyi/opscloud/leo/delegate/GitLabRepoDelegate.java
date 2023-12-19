@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.leo.delegate;
 
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabProjectDriver;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabRepositoryDriver;

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.common.constants;
+package com.baiyi.opscloud.common.constants.enums;
 
 import lombok.Getter;
 

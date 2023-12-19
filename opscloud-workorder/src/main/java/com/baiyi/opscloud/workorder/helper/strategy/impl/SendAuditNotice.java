@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.workorder.helper.strategy.impl;
 
-import com.baiyi.opscloud.common.config.properties.OpscloudConfigurationProperties;
+import com.baiyi.opscloud.common.configuration.properties.OpscloudConfigurationProperties;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.common.util.StringFormatter;

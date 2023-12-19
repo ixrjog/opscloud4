@@ -8,7 +8,6 @@ package com.baiyi.opscloud.common.constants;
 public class SerDeployConstants {
 
     public interface SubTaskResult {
-
         String SUCCESS = "SUCCESS";
         String CALL_FAIL = "CALL_FAIL";
         String VALID_FAIL = "VALID_FAIL";

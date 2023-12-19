@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.leo.impl;
 
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.InstanceHelper;
 import com.baiyi.opscloud.domain.base.SimpleBusiness;

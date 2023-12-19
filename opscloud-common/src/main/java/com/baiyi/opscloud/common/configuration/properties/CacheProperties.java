@@ -1,6 +1,6 @@
-package com.baiyi.opscloud.common.config.properties;
+package com.baiyi.opscloud.common.configuration.properties;
 
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

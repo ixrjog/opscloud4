@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.common.config.properties;
+package com.baiyi.opscloud.common.configuration.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

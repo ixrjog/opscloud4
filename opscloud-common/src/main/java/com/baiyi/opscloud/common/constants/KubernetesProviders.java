@@ -7,6 +7,7 @@ import lombok.Getter;
  * @Date 2022/3/17 09:38
  * @Version 1.0
  */
+@Getter
 public enum KubernetesProviders {
 
     /**
@@ -14,7 +15,6 @@ public enum KubernetesProviders {
      */
     AMAZON_EKS("AmazonEKS");
 
-    @Getter
     private final String desc;
 
     KubernetesProviders(String desc) {

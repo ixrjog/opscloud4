@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.aws.ec2.helper;
 
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.datasource.aws.ec2.feign.AmazonEc2InstanceFeign;
 import com.baiyi.opscloud.datasource.aws.ec2.model.InstanceModel;

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.user.handler;
 
-import com.baiyi.opscloud.common.config.properties.OpscloudConfigurationProperties;
+import com.baiyi.opscloud.common.configuration.properties.OpscloudConfigurationProperties;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;

@@ -7,6 +7,7 @@ import lombok.Getter;
  * @Date 2022/1/25 4:50 PM
  * @Version 1.0
  */
+@Getter
 public enum OsTypeConstants {
 
     /**
@@ -16,7 +17,6 @@ public enum OsTypeConstants {
     WINDOWS("Windows"),
     MACOS("MacOS");
 
-    @Getter
     private final String desc;
 
     OsTypeConstants(String desc) {

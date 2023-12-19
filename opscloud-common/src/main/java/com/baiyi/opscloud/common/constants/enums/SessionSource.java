@@ -6,6 +6,8 @@ package com.baiyi.opscloud.common.constants.enums;
  * @Version 1.0
  */
 public enum SessionSource {
+
     SSH_SHELL,
     TOKEN
+
 }
