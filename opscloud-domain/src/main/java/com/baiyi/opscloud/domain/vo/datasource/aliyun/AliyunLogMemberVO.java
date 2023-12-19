@@ -6,7 +6,6 @@ import com.baiyi.opscloud.domain.vo.base.ReadableTime;
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -40,17 +39,14 @@ public class AliyunLogMemberVO {
 
         private Integer id;
 
-        @NotNull(message = "必须指定日志服务ID")
         private Integer aliyunLogId;
 
-        @NotNull(message = "必须指定服务器组ID")
         private Integer serverGroupId;
 
         private String serverGroupName;
 
         private String topic;
 
-        @NotNull(message = "必须指定环境")
         private Integer envType;
 
         private String comment;
