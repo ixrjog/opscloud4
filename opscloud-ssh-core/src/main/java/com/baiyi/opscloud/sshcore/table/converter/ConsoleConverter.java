@@ -6,10 +6,7 @@ import com.baiyi.opscloud.sshcore.table.PrettyTable;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -61,7 +58,7 @@ public abstract class ConsoleConverter implements Converter, Bordered {
             ab("\n");
             leftBorder();
 
-            int rL = colLength(String.valueOf(r));
+            int rL = colLength(Arrays.toString(r));
             // for (int c = 0; c < r.length; c++) {
             for (int c = 0; c < r.length; c++) {
 

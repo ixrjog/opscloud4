@@ -7,7 +7,7 @@ import static org.fusesource.jansi.Ansi.Color.valueOf;
 
 public class ColoredConsoleConverter extends ConsoleConverter implements Colored {
 
-    private Ansi ansi = new Ansi();
+    private final Ansi ansi = new Ansi();
 
     private Ansi.Color fontColor = Ansi.Color.DEFAULT;
 

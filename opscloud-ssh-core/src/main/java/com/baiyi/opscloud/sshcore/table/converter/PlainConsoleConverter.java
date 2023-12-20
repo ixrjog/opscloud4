@@ -2,7 +2,7 @@ package com.baiyi.opscloud.sshcore.table.converter;
 
 public class PlainConsoleConverter extends ConsoleConverter {
 
-    private StringBuilder sb = new StringBuilder();
+    private final StringBuilder sb = new StringBuilder();
 
     @Override
     ConsoleConverter clear() {
@@ -27,4 +27,5 @@ public class PlainConsoleConverter extends ConsoleConverter {
     public String toString() {
         return sb.toString();
     }
+
 }

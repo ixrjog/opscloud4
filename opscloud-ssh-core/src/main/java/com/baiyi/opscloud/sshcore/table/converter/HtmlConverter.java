@@ -36,10 +36,10 @@ public class HtmlConverter implements Converter {
             sb.append(minified ? "" : "\n  ");
             sb.append("<tr>");
 
-            for (int c = 0; c < r.length; c++) {
+            for (Object o : r) {
                 sb.append(minified ? "" : "\n    ");
                 sb.append("<td>");
-                sb.append(r[c].toString());
+                sb.append(o.toString());
                 sb.append("</td>");
             }
 
