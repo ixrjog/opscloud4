@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class ReleaseWorkOrderReleaseChainHandler extends BaseApolloReleaseChainHandler {
+public class ReleaseForWorkOrderChainHandler extends BaseApolloReleaseChainHandler {
 
     @Resource
     private WorkOrderApolloReleaseHolder workOrderApolloReleaseHolder;
