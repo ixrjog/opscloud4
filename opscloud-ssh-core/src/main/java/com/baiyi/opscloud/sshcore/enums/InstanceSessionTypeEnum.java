@@ -23,4 +23,5 @@ public enum InstanceSessionTypeEnum {
     InstanceSessionTypeEnum(String type) {
         this.type = type;
     }
+
 }

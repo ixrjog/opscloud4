@@ -43,4 +43,5 @@ public class SshSession {
     public SessionOutput getSessionOutput() {
         return SshSession.sessionOutput;
     }
+
 }

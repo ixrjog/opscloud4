@@ -53,41 +53,41 @@ public abstract class AbstractCommandAudit {
         if (InstanceSessionTypeEnum.CONTAINER_LOG.getType().equals(terminalSessionInstance.getInstanceSessionType())) {
             return;
         }
-        String commanderLogPath = terminalConfig.buildAuditLogPath(sessionId, instanceId);
+        final String commanderLogPath = terminalConfig.buildAuditLogPath(sessionId, instanceId);
         String str;
         InstanceCommandBuilder builder = null;
         String regex = getInputRegex();
         File file = new File(commanderLogPath);
-        if (file.exists()) {
-            try {
-                LineNumberReader reader = new LineNumberReader(new FileReader(commanderLogPath));
-                while ((str = reader.readLine()) != null) {
-                    if (!str.isEmpty()) {
-                        boolean isInput = Pattern.matches(regex, str);
-                        if (isInput) {
-                            if (builder != null) {
-                                // save
-                                TerminalSessionInstanceCommand auditCommand = builder.build();
-                                if (auditCommand != null) {
-                                    if (!StringUtils.isEmpty(auditCommand.getInputFormatted())) {
-                                        terminalSessionInstanceCommandService.add(auditCommand);
-                                    }
-                                    builder = null;
+        if (!file.exists()) {
+            log.debug("命令审计文件不存在: sessionId={}, instanceId={}, path={}", sessionId, instanceId, commanderLogPath);
+            return;
+        }
+        try {
+            LineNumberReader reader = new LineNumberReader(new FileReader(commanderLogPath));
+            while ((str = reader.readLine()) != null) {
+                if (!str.isEmpty()) {
+                    boolean isInput = Pattern.matches(regex, str);
+                    if (isInput) {
+                        if (builder != null) {
+                            // save
+                            TerminalSessionInstanceCommand auditCommand = builder.build();
+                            if (auditCommand != null) {
+                                if (!StringUtils.isEmpty(auditCommand.getInputFormatted())) {
+                                    terminalSessionInstanceCommandService.add(auditCommand);
                                 }
+                                builder = null;
                             }
-                            builder = builder(terminalSessionInstance.getId(), str);
-                        } else {
-                            if (builder != null) {
-                                builder.addOutput(str);
-                            }
+                        }
+                        builder = builder(terminalSessionInstance.getId(), str);
+                    } else {
+                        if (builder != null) {
+                            builder.addOutput(str);
                         }
                     }
                 }
-            } catch (IOException e) {
-                log.error("记录审计命令错误: {}", e.getMessage());
             }
-        } else {
-            log.info("审计文件不存在: path={}", commanderLogPath);
+        } catch (IOException e) {
+            log.error("写入命令审计文件错误: sessionId={}, instanceId={}, err={}", sessionId, instanceId, e.getMessage());
         }
     }
 
