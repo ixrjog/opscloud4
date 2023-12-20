@@ -8,14 +8,10 @@ import java.util.Optional;
 
 public class Utils {
 
-	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	public static final String LINE_SEPARATOR = System.lineSeparator();
 	
 	public static String repeat(char ch, int count) {
-		StringBuilder buffer = new StringBuilder();
-		for (int i = 0; i < count; ++i) {
-            buffer.append(ch);
-        }
-		return buffer.toString();
+        return String.valueOf(ch).repeat(Math.max(0, count));
 	}
 
 	public static int sum(int[] d) {
@@ -27,11 +23,11 @@ public class Utils {
 	}
 	
     public static boolean isEmpty(String str) {
-        return str == null || str.length() == 0;
+        return str == null || str.isEmpty();
     }
     
     public static boolean isChChar(char ch) {
-        return ch > 255 || ch < 0;
+        return ch > 255;
     }
 
     /**

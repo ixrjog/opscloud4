@@ -56,8 +56,7 @@ class Row implements Comparable<Row> {
 	}
 
 	Object get(int i) {
-		Object t = data[i];
-		return t;
+        return data[i];
 	}
 
 	void set(int i, Object d) {
