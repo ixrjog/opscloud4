@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.apollo.chain;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.datasource.ApolloConfig;
+import com.baiyi.opscloud.common.util.MatchingUtil;
 import com.baiyi.opscloud.domain.param.apollo.ApolloParam;
 import com.baiyi.opscloud.facade.apollo.handler.BaseApolloReleaseChainHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ public class InterceptByNamespaceChainHandler extends BaseApolloReleaseChainHand
 
     /**
      * 通配符`*`只能出现在首尾
+     *
      * @param releaseEvent
      * @param apolloConfig
      * @return
@@ -43,29 +45,10 @@ public class InterceptByNamespaceChainHandler extends BaseApolloReleaseChainHand
         }
 
         for (String namespace : namespaces) {
-            final String matchingNamespace = namespace.replace("*", "");
-            // 无通配符
-            if (namespace.equals(matchingNamespace)) {
-                if (namespace.equals(releaseEvent.getNamespaceName())) {
-                    return PASS_AND_DO_NEXT;
-                }
-            } else {
-                // *在前, 后缀匹配
-                if (namespace.startsWith("*")) {
-                    if (namespace.endsWith(matchingNamespace)) {
-                        return PASS_AND_DO_NEXT;
-                    }
-                } else{
-                    // *在后, 前缀匹配
-                    if(namespace.endsWith("*")) {
-                        if (namespace.startsWith(matchingNamespace)) {
-                            return PASS_AND_DO_NEXT;
-                        }
-                    }
-                }
+            if (MatchingUtil.fuzzyMatching(releaseEvent.getNamespaceName(), namespace)) {
+                return PASS_AND_DO_NEXT;
             }
         }
-
         return HttpResult.SUCCESS;
     }
 
