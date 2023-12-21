@@ -46,4 +46,5 @@ public class KubernetesIngressTemplateProvider extends AbstractTemplateProvider<
     public String getTemplateKey() {
         return INGRESS.name();
     }
+
 }

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.template.factory.base;
 
+import com.baiyi.opscloud.common.builder.SimpleDictBuilder;
 import com.baiyi.opscloud.common.exception.template.BusinessTemplateException;
 import com.baiyi.opscloud.common.template.YamlVars;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
@@ -20,7 +21,6 @@ import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.baiyi.opscloud.service.template.BusinessTemplateService;
 import com.baiyi.opscloud.service.template.TemplateService;
-import com.google.common.collect.Maps;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -144,8 +144,10 @@ public abstract class AbstractTemplateProvider<T> implements ITemplateProvider, 
     private YamlVars.Vars toVars(BusinessTemplate bizTemplate) {
         Env env = envService.getByEnvType(bizTemplate.getEnvType());
         // 模板内注入 envName
-        Map<String, String> dict = Maps.newHashMap();
-        dict.put("envName", env.getEnvName());
+        Map<String, String> dict = SimpleDictBuilder.newBuilder()
+                .put("envName", env.getEnvName())
+                .build()
+                .getDict();
         String varsStr = TemplateUtil.render(bizTemplate.getVars(), dict);
         YamlVars.Vars vars = YamlUtil.loadVars(varsStr);
         if (!vars.getVars().containsKey("envName")) {

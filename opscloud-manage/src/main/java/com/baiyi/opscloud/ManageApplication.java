@@ -42,7 +42,7 @@ public class ManageApplication {
         SpringApplication.run(ManageApplication.class, args);
         log.info("Opscloud 4 <Spring Boot {}>", SpringBootVersion.getVersion());
         System.setProperty("druid.mysql.usePingMethod", "false");
-        log.info("Swagger UI page http://server:port/swagger-ui.html");
+        log.info("Swagger UI page https://server:port/swagger-ui.html");
     }
 
 }

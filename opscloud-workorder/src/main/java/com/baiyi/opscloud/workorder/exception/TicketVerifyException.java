@@ -38,5 +38,5 @@ public class TicketVerifyException extends BaseException {
     public TicketVerifyException(String message, Throwable cause) {
         super(message, cause);
     }
-}
 
+}

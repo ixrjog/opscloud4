@@ -169,7 +169,7 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     @AssetBusinessRelation
     public UserVO.User addUser(UserParam.CreateUser createUser) {
-        User preCreateUser = UserConverter.toDO(createUser);
+        User preCreateUser = UserConverter.to(createUser);
         userService.add(preCreateUser);
         if (BooleanUtils.isTrue(createUser.getNeedInitializeDefaultConfiguration())) {
             userHandler.postCreateUserHandle(preCreateUser);
@@ -194,7 +194,7 @@ public class UserFacadeImpl implements UserFacade {
             FunctionUtil.isTure(accessLevel < AccessLevel.OPS.getLevel())
                     .throwBaseException(new OCException("权限不足: 需要管理员才能修改其他用户信息!"));
         }
-        User preUpdateUser = UserConverter.toDO(updateUser);
+        User preUpdateUser = UserConverter.to(updateUser);
         updateUser.setUsername(checkUser.getUsername());
         userService.updateBySelective(preUpdateUser);
     }

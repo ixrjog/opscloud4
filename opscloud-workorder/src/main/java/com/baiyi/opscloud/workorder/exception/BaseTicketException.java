@@ -33,5 +33,5 @@ public class BaseTicketException extends BaseException {
     public BaseTicketException(String message, Throwable cause) {
         super(message, cause);
     }
-}
 
+}

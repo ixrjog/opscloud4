@@ -89,4 +89,5 @@ public class MessageFacadeImpl implements MessageFacade {
         DatasourceInstance instance = instances.getFirst();
         return dsConfigManager.build(dsConfigManager.getConfigById(instance.getConfigId()), LXHLConfig.class).getAccount();
     }
+
 }

@@ -114,4 +114,5 @@ public abstract class AbstractAlertRule implements IRule, IInstanceType {
         redisUtil.set(cacheKey, true, matchExpression.getSilenceSeconds());
         return false;
     }
+
 }
