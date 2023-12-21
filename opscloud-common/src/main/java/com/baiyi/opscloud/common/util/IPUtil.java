@@ -16,7 +16,6 @@ public class IPUtil {
     private IPUtil() {
     }
 
-
     /**
      * @param network 192.168.5.100
      * @param mask    192.168.0.0/16

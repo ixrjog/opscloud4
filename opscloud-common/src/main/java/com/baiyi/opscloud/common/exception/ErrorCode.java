@@ -10,4 +10,5 @@ public interface ErrorCode {
     String getCode();
 
     String getDesc();
+
 }

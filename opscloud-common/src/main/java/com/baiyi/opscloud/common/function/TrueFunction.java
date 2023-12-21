@@ -10,4 +10,5 @@ package com.baiyi.opscloud.common.function;
 public interface TrueFunction {
 
     void withTrue(Runnable runnable);
+
 }

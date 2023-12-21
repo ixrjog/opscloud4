@@ -29,4 +29,5 @@ public class SshException extends BaseException {
     public SshException(ErrorEnum errorEnum) {
         super(errorEnum);
     }
+
 }

@@ -11,6 +11,7 @@ import java.io.Serial;
  * @Date 2021/8/17 4:26 下午
  * @Version 1.0
  */
+@Getter
 @Slf4j
 public class NoticeEvent<T> extends ApplicationEvent {
 
@@ -19,7 +20,6 @@ public class NoticeEvent<T> extends ApplicationEvent {
     /**
      * 接受信息
      */
-    @Getter
     private final IEvent<T> message;
 
     public NoticeEvent(IEvent<T> message) {
