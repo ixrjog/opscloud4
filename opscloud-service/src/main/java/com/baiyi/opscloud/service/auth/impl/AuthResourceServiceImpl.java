@@ -89,4 +89,5 @@ public class AuthResourceServiceImpl implements AuthResourceService {
     public void deleteById(int id) {
         authResourceMapper.deleteByPrimaryKey(id);
     }
+
 }

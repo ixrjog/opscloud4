@@ -70,4 +70,5 @@ public class EventServiceImpl implements EventService {
         List<Event> data = eventMapper.queryUserPermissionServerEventPageByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
+
 }

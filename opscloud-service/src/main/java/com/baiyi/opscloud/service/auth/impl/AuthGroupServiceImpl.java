@@ -58,4 +58,5 @@ public class AuthGroupServiceImpl implements AuthGroupService {
     public void deleteById(int id) {
         authGroupMapper.deleteByPrimaryKey(id);
     }
+
 }

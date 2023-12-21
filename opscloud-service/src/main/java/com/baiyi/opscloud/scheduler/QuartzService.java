@@ -206,8 +206,7 @@ public class QuartzService {
                     .description(jobDetail.getDescription())
                     .status(triggerState.name())
                     .build();
-            if (trigger instanceof CronTrigger) {
-                CronTrigger cronTrigger = (CronTrigger) trigger;
+            if (trigger instanceof CronTrigger cronTrigger) {
                 job.setCronExpression(cronTrigger.getCronExpression());
                 job.setExecutionTime(CronUtil.recentTime(cronTrigger.getCronExpression(), 5));
             }
@@ -255,8 +254,7 @@ public class QuartzService {
                     .description("触发器: " + trigger.getKey())
                     .status(triggerState.name())
                     .build();
-            if (trigger instanceof CronTrigger) {
-                CronTrigger cronTrigger = (CronTrigger) trigger;
+            if (trigger instanceof CronTrigger cronTrigger) {
                 job.setCronExpression(cronTrigger.getCronExpression());
             }
             jobList.add(job);

@@ -25,7 +25,7 @@ public class LeoTemplateServiceImpl implements LeoTemplateService {
 
     @Override
     public DataTable<LeoTemplate> queryTemplatePage(LeoTemplateParam.TemplatePageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<LeoTemplate> data = templateMapper.queryPageByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }

@@ -88,4 +88,5 @@ public class AliyunLogMemberServiceImpl implements AliyunLogMemberService {
     public void add(AliyunLogMember aliyunLogMember) {
         aliyunLogMemberMapper.insert(aliyunLogMember);
     }
+
 }
