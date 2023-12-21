@@ -9,6 +9,7 @@ import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
 import com.baiyi.opscloud.facade.kubernetes.*;
 import com.baiyi.opscloud.loop.kubernetes.KubernetesDeploymentResponse;
 import io.fabric8.istio.api.networking.v1alpha3.DestinationRule;
+import io.fabric8.istio.api.networking.v1alpha3.EnvoyFilter;
 import io.fabric8.istio.api.networking.v1alpha3.VirtualService;
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
@@ -50,37 +51,37 @@ public class KubernetesController {
     @Operation(summary = "查询VirtualService")
     @PostMapping(value = "/istio/virtualService/get", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<VirtualService> getIstioVirtualService(@RequestBody KubernetesIstioParam.GetResource getResource) {
-        return new HttpResult<>(istioFacade.getIstioVirtualService(getResource));
+        return new HttpResult<>(istioFacade.getVirtualService(getResource));
     }
 
     @Operation(summary = "更新VirtualService")
     @PutMapping(value = "/istio/virtualService/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<VirtualService> updateIstioVirtualService(@RequestBody KubernetesIstioParam.UpdateResource updateResource) {
-        return new HttpResult<>(istioFacade.updateIstioVirtualService(updateResource));
+        return new HttpResult<>(istioFacade.updateVirtualService(updateResource));
     }
 
     @Operation(summary = "创建VirtualService")
     @PostMapping(value = "/istio/virtualService/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<VirtualService> createIstioVirtualService(@RequestBody KubernetesIstioParam.CreateResource createResource) {
-        return new HttpResult<>(istioFacade.createIstioVirtualService(createResource));
+        return new HttpResult<>(istioFacade.createVirtualService(createResource));
     }
 
     @Operation(summary = "查询DestinationRule")
     @PostMapping(value = "/istio/destinationRule/get", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DestinationRule> getIstioDestinationRule(@RequestBody KubernetesIstioParam.GetResource getResource) {
-        return new HttpResult<>(istioFacade.getIstioDestinationRule(getResource));
+        return new HttpResult<>(istioFacade.getDestinationRule(getResource));
     }
 
     @Operation(summary = "更新DestinationRule")
     @PutMapping(value = "/istio/destinationRule/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DestinationRule> updateIstioDestinationRule(@RequestBody KubernetesIstioParam.UpdateResource updateResource) {
-        return new HttpResult<>(istioFacade.updateIstioDestinationRule(updateResource));
+        return new HttpResult<>(istioFacade.updateDestinationRule(updateResource));
     }
 
     @Operation(summary = "创建DestinationRule")
     @PostMapping(value = "/istio/destinationRule/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DestinationRule> createIstioDestinationRule(@RequestBody KubernetesIstioParam.CreateResource createResource) {
-        return new HttpResult<>(istioFacade.createIstioDestinationRule(createResource));
+        return new HttpResult<>(istioFacade.createDestinationRule(createResource));
     }
 
     @Operation(summary = "查询Deployment")
@@ -127,6 +128,26 @@ public class KubernetesController {
     @PostMapping(value = "/service/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Service> createService(@RequestBody KubernetesServiceParam.CreateResource createResource) {
         return new HttpResult<>(serviceFacade.createService(createResource));
+    }
+
+    // EnvoyFilter
+
+    @Operation(summary = "查询EnvoyFilter")
+    @PostMapping(value = "/istio/envoyFilter/get", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<EnvoyFilter> getIstioEnvoyFilter(@RequestBody KubernetesIstioParam.GetResource getResource) {
+        return new HttpResult<>(istioFacade.getEnvoyFilter(getResource));
+    }
+
+    @Operation(summary = "更新EnvoyFilter")
+    @PutMapping(value = "/istio/envoyFilter/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<EnvoyFilter> updateIstioEnvoyFilter(@RequestBody KubernetesIstioParam.UpdateResource updateResource) {
+        return new HttpResult<>(istioFacade.updateEnvoyFilter(updateResource));
+    }
+
+    @Operation(summary = "创建EnvoyFilter")
+    @PostMapping(value = "/istio/envoyFilter/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<EnvoyFilter> createIstioEnvoyFilter(@RequestBody KubernetesIstioParam.CreateResource createResource) {
+        return new HttpResult<>(istioFacade.createEnvoyFilter(createResource));
     }
 
 }

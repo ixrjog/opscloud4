@@ -41,7 +41,7 @@ class IstioFacadeTest extends BaseUnit {
                 .instanceId(38)
                 .build();
         try {
-            istioFacade.updateIstioVirtualService(updateResource);
+            istioFacade.updateVirtualService(updateResource);
         } catch (KubernetesException e) {
             e.printStackTrace();
         }
@@ -74,7 +74,7 @@ spec:
                 .instanceId(24)
                 .build();
         try {
-            istioFacade.createIstioDestinationRule(createResource);
+            istioFacade.createDestinationRule(createResource);
         } catch (KubernetesException e) {
             e.printStackTrace();
         }

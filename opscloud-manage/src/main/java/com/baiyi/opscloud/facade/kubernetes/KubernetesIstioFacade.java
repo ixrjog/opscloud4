@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.kubernetes;
 
 import com.baiyi.opscloud.domain.param.kubernetes.KubernetesIstioParam;
 import io.fabric8.istio.api.networking.v1alpha3.DestinationRule;
+import io.fabric8.istio.api.networking.v1alpha3.EnvoyFilter;
 import io.fabric8.istio.api.networking.v1alpha3.VirtualService;
 
 /**
@@ -11,16 +12,22 @@ import io.fabric8.istio.api.networking.v1alpha3.VirtualService;
  */
 public interface KubernetesIstioFacade {
 
-    VirtualService getIstioVirtualService(KubernetesIstioParam.GetResource getResource);
+    VirtualService getVirtualService(KubernetesIstioParam.GetResource getResource);
 
-    VirtualService updateIstioVirtualService(KubernetesIstioParam.UpdateResource updateResource);
+    VirtualService updateVirtualService(KubernetesIstioParam.UpdateResource updateResource);
 
-    VirtualService createIstioVirtualService(KubernetesIstioParam.CreateResource createResource);
+    VirtualService createVirtualService(KubernetesIstioParam.CreateResource createResource);
 
-    DestinationRule getIstioDestinationRule(KubernetesIstioParam.GetResource getResource);
+    DestinationRule getDestinationRule(KubernetesIstioParam.GetResource getResource);
 
-    DestinationRule updateIstioDestinationRule(KubernetesIstioParam.UpdateResource updateResource);
+    DestinationRule updateDestinationRule(KubernetesIstioParam.UpdateResource updateResource);
 
-    DestinationRule createIstioDestinationRule(KubernetesIstioParam.CreateResource createResource);
+    DestinationRule createDestinationRule(KubernetesIstioParam.CreateResource createResource);
+
+    EnvoyFilter getEnvoyFilter(KubernetesIstioParam.GetResource getResource);
+
+    EnvoyFilter updateEnvoyFilter(KubernetesIstioParam.UpdateResource updateResource);
+
+    EnvoyFilter createEnvoyFilter(KubernetesIstioParam.CreateResource createResource);
 
 }
