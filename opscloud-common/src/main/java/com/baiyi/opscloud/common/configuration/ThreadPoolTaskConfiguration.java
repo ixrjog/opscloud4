@@ -8,7 +8,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import static com.baiyi.opscloud.common.configuration.ThreadPoolTaskConfiguration.TaskPools.*;
 
-
 /**
  * @Author baiyi
  * @Date 2020/3/30 1:21 下午
@@ -44,7 +43,7 @@ public class ThreadPoolTaskConfiguration {
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix(THREAD_NAME_PREFIX);
-        // 而在一些场景下，若需要在关闭线程池时等待当前调度任务完成后才开始关闭，可以通过简单的配置，进行优雅的停机策略配置。关键就是通过
+        // 而在一些场景下，若需要在关闭线程池时等待当前调度任务完成后才开始关闭，可以通过简单的配置，进行优雅停机策略配置。关键就是通过
         executor.setWaitForTasksToCompleteOnShutdown(true);
         // 线程池对拒绝任务的处理策略
         // CallerRunsPolicy：由调用线程（提交任务的线程）处理该任务
@@ -63,7 +62,7 @@ public class ThreadPoolTaskConfiguration {
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix("leo-exec-");
-        // 而在一些场景下，若需要在关闭线程池时等待当前调度任务完成后才开始关闭，可以通过简单的配置，进行优雅的停机策略配置。关键就是通过
+        // 而在一些场景下，若需要在关闭线程池时等待当前调度任务完成后才开始关闭，可以通过简单的配置，进行优雅停机策略配置。关键就是通过
         executor.setWaitForTasksToCompleteOnShutdown(true);
         // 线程池对拒绝任务的处理策略
         // CallerRunsPolicy：由调用线程（提交任务的线程）处理该任务
@@ -82,7 +81,7 @@ public class ThreadPoolTaskConfiguration {
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix("xt-exec-");
-        // 而在一些场景下，若需要在关闭线程池时等待当前调度任务完成后才开始关闭，可以通过简单的配置，进行优雅的停机策略配置。关键就是通过
+        // 而在一些场景下，若需要在关闭线程池时等待当前调度任务完成后才开始关闭，可以通过简单的配置，进行优雅停机策略配置。关键就是通过
         executor.setWaitForTasksToCompleteOnShutdown(true);
         // 线程池对拒绝任务的处理策略
         // CallerRunsPolicy：由调用线程（提交任务的线程）处理该任务

@@ -64,7 +64,6 @@ public class SshShellHelper {
     @Lazy
     private Terminal defaultTerminal;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     @Lazy
     private LineReader defaultLineReader;

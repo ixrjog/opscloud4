@@ -73,6 +73,7 @@ public class SshShellRunnable
     private final Completer completer;
     private final Environment environment;
     private ChannelSession session;
+    @Getter
     private final org.apache.sshd.server.Environment sshEnv;
     private final SshShellCommandFactory sshShellCommandFactory;
     private final InputStream is;
@@ -197,10 +198,6 @@ public class SshShellRunnable
 
     public ServerSession getSshSession() {
         return session.getSession();
-    }
-
-    public org.apache.sshd.server.Environment getSshEnv() {
-        return sshEnv;
     }
 
     @Override

@@ -51,4 +51,5 @@ public class SshShellPasswordAuthenticationProvider
 
         return username.equals(this.user) && pass.equals(this.password);
     }
+
 }

@@ -86,4 +86,5 @@ public class SshShellSessionManager {
         }
         return authentication.getName();
     }
+
 }

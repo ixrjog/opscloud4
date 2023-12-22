@@ -26,7 +26,6 @@ import org.springframework.shell.standard.ShellOption;
 )
 public class ServerListCommand extends BaseServerCommand {
 
-
     @SuppressWarnings("SpringShellCommandInspection")
     @ScreenClear
     @SettingContextSessionUser(invokeAdmin = true)
