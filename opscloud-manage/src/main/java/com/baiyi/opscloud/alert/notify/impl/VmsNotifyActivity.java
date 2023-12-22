@@ -24,9 +24,6 @@ import org.springframework.util.CollectionUtils;
 @Component
 public class VmsNotifyActivity extends AbstractNotifyActivity {
 
-//    @Autowired
-//    private ThreadPoolTaskExecutor coreExecutor;
-
     @Resource
     private AliyunVmsDriver aliyunVmsDriver;
 
@@ -51,21 +48,8 @@ public class VmsNotifyActivity extends AbstractNotifyActivity {
         AliyunConfig.Aliyun config = getConfig().getAliyun();
         AlertNotifyEvent event = alertNotifyEventService.getByUuid(context.getEventUuid());
 
-//        media.getUsers().forEach(
-//                user -> coreExecutor.submit(() -> {
-//                    AlertNotifyHistory alertNotifyHistory = buildAlertNotifyHistory();
-//                    alertNotifyHistory.setUsername(user.getUsername());
-//                    alertNotifyHistory.setAlertNotifyEventId(event.getId());
-//                    if (singleCall(config, user.getPhone(), media.getTtsCode())) {
-//                        alertNotifyHistory.setAlertNotifyStatus(NotifyStatusEnum.CALL_OK.getName());
-//                    } else {
-//                        alertNotifyHistory.setAlertNotifyStatus(NotifyStatusEnum.CALL_ERR.getName());
-//                    }
-//                    alertNotifyHistoryService.add(alertNotifyHistory);
-//                })
-//        );
         media.getUsers().forEach(
-                // JDK21 VirtualThread
+                // JDK21 VirtualThreads
                 user -> Thread.ofVirtual().start(
                         () -> {
                             AlertNotifyHistory alertNotifyHistory = buildAlertNotifyHistory();

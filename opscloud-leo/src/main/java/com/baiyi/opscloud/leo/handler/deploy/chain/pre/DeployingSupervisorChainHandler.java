@@ -27,9 +27,6 @@ public class DeployingSupervisorChainHandler extends BaseDeployChainHandler {
     @Resource
     private LeoHeartbeatHolder leoDeployHelper;
 
-//    @Autowired
-//    private ThreadPoolTaskExecutor coreExecutor;
-
     /**
      * 启动监视器
      *
@@ -50,8 +47,7 @@ public class DeployingSupervisorChainHandler extends BaseDeployChainHandler {
                 kubernetesConfig.getKubernetes(),
                 leoPostDeployHandler
         );
-        // coreExecutor.execute(deployingSupervisor);
-        // JDK21 VirtualThread
+        // JDK21 VirtualThreads
         Thread.ofVirtual().start(deployingSupervisor);
         LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                 .id(leoDeploy.getId())

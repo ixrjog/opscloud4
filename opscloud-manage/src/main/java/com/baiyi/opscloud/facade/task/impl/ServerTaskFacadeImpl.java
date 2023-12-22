@@ -69,9 +69,6 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     @Resource
     private ServerTaskPacker serverTaskPacker;
 
-//    @Autowired
-//    private ThreadPoolTaskExecutor coreExecutor;
-
     private static final int MAX_EXECUTING = 10;
 
     @Override
@@ -145,8 +142,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                         serverTaskMemberService,
                         taskLogStorehouse);
                 // 执行任务
-                // coreExecutor.execute(ansibleServerTask);
-                // JDK21 VirtualThread
+                // JDK21 VirtualThreads
                 Thread.ofVirtual().start(ansibleServerTask);
             }
             NewTimeUtil.sleep(5L);

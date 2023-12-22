@@ -18,9 +18,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class TerminalAuditPlayHandler extends AbstractTerminalAuditHandler<TerminalAuditPlayMessage> {
 
-//    @Autowired
-//    private ThreadPoolTaskExecutor serverTerminalExecutor;
-
     /**
      * 播放
      *
@@ -35,9 +32,7 @@ public class TerminalAuditPlayHandler extends AbstractTerminalAuditHandler<Termi
     public void handle(String message, Session session) {
         TerminalAuditPlayMessage playMessage = getMessage(message);
         SessionOutput sessionOutput = new SessionOutput(playMessage.getSessionId(), playMessage.getInstanceId());
-        // 启动线程处理会话
-        // serverTerminalExecutor.execute(new TerminalAuditOutputTask(session, sessionOutput));
-        // JDK21 VirtualThread
+        // JDK21 VirtualThreads
         Thread.ofVirtual().start(new TerminalAuditOutputTask(session, sessionOutput));
     }
 

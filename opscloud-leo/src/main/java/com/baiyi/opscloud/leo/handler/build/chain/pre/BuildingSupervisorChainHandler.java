@@ -27,9 +27,6 @@ public class BuildingSupervisorChainHandler extends BaseBuildChainHandler {
     @Resource
     private LeoHeartbeatHolder heartbeatHolder;
 
-//    @Autowired
-//    private ThreadPoolTaskExecutor coreExecutor;
-
     /**
      * 启动监视器
      *
@@ -49,8 +46,7 @@ public class BuildingSupervisorChainHandler extends BaseBuildChainHandler {
                 buildConfig,
                 leoPostBuildHandler
         );
-        // coreExecutor.execute(buildingSupervisor);
-        // JDK21 VirtualThread
+        // JDK21 VirtualThreads
         Thread.ofVirtual().start(buildingSupervisor);
 
         LeoBuild saveLeoBuild = LeoBuild.builder()

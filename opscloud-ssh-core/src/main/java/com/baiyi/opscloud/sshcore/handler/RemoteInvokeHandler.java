@@ -40,13 +40,6 @@ public class RemoteInvokeHandler {
 
     private static final String appId = UUID.randomUUID().toString();
 
-//    private static ThreadPoolTaskExecutor coreExecutor;
-//
-//    @Autowired
-//    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor coreExecutor) {
-//        RemoteInvokeHandler.coreExecutor = coreExecutor;
-//    }
-
     /**
      * 按类型注入凭据
      *
@@ -106,8 +99,7 @@ public class RemoteInvokeHandler {
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
             // 启动线程处理会话
             Runnable run = new WatchServerTerminalOutputTask(sessionOutput, channel.getInputStream());
-            //coreExecutor.execute(run);
-            // JDK21 VirtualThread
+            // JDK21 VirtualThreads
             Thread.ofVirtual().start(run);
 
             OutputStream inputToChannel = channel.getOutputStream();
@@ -165,8 +157,7 @@ public class RemoteInvokeHandler {
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
             // 启动线程处理会话
             Runnable run = new WatchSshServerOutputTask(sessionOutput, channel.getInputStream(), out);
-            //coreExecutor.execute(run);
-            // JDK21 VirtualThread
+            // JDK21 VirtualThreads
             Thread.ofVirtual().start(run);
 
             OutputStream inputToChannel = channel.getOutputStream();
@@ -209,8 +200,7 @@ public class RemoteInvokeHandler {
         SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
         // 启动线程处理会话
         WatchKubernetesTerminalOutputTask run = new WatchKubernetesTerminalOutputTask(sessionOutput, out);
-        //coreExecutor.execute(run);
-        // JDK21 VirtualThread
+        // JDK21 VirtualThreads
         Thread.ofVirtual().start(run);
 
         KubernetesSession kubernetesSession = KubernetesSession.builder()
@@ -237,8 +227,7 @@ public class RemoteInvokeHandler {
         SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
         // 启动线程处理会话
         WatchKubernetesTerminalOutputTask run = new WatchKubernetesTerminalOutputTask(sessionOutput, out);
-        // coreExecutor.execute(run);
-        // JDK21 VirtualThread
+        // JDK21 VirtualThreads
         Thread.ofVirtual().start(run);
         KubernetesSession kubernetesSession = KubernetesSession.builder()
                 .sessionId(sessionId)

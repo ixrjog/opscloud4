@@ -28,9 +28,6 @@ public class ServerTaskPlayProcessor extends AbstractTaskPlayProcessor<ServerTas
 
     private final ServerTaskMemberService serverTaskMemberService;
 
-//    @Autowired
-//    private ThreadPoolTaskExecutor coreExecutor;
-
     /**
      * 播放
      *
@@ -58,8 +55,7 @@ public class ServerTaskPlayProcessor extends AbstractTaskPlayProcessor<ServerTas
         } else {
             // 启动线程处理会话
             Runnable run = new ServerTaskPlayTask(session, serverTaskMember);
-            // coreExecutor.execute(run);
-            // JDK21 VirtualThread
+            // JDK21 VirtualThreads
             Thread.ofVirtual().start(run);
         }
     }
