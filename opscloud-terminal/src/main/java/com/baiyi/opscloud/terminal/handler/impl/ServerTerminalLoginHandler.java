@@ -39,9 +39,6 @@ public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<Se
     @Resource
     private ServerService serverService;
 
-//    @Autowired
-//    private ThreadPoolTaskExecutor serverTerminalExecutor;
-
     @Override
     public String getState() {
         return MessageState.LOGIN.getState();
@@ -49,7 +46,7 @@ public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<Se
 
     @Override
     public void handle(String message, Session session, TerminalSession terminalSession) {
-        // 使用虚拟线程处理
+        // JDK21 VirtualThreads
         try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()){
             ServerMessage.Login loginMessage = toMessage(message);
             heartbeat(terminalSession.getSessionId());

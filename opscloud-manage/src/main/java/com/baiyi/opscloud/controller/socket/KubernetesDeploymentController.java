@@ -38,11 +38,11 @@ public class KubernetesDeploymentController extends SimpleAuthentication {
      */
     public static final Long WEBSOCKET_TIMEOUT = NewTimeUtil.MINUTE_TIME * 5;
 
-    private static ThreadPoolTaskExecutor kubernetesTerminalExecutor;
+    private static ThreadPoolTaskExecutor xTerminalExecutor;
 
     @Resource
-    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor kubernetesTerminalExecutor) {
-        KubernetesDeploymentController.kubernetesTerminalExecutor = kubernetesTerminalExecutor;
+    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor xTerminalExecutor) {
+        KubernetesDeploymentController.xTerminalExecutor = xTerminalExecutor;
     }
 
     /**
@@ -52,7 +52,7 @@ public class KubernetesDeploymentController extends SimpleAuthentication {
     public void onOpen(Session session) {
         try {
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
-            kubernetesTerminalExecutor.execute(new KubernetesDeploymentEventLoop(sessionId, session));
+            xTerminalExecutor.execute(new KubernetesDeploymentEventLoop(sessionId, session));
         } catch (Exception e) {
             log.error("Kubernetes deployment connection error: {}", e.getMessage());
         }

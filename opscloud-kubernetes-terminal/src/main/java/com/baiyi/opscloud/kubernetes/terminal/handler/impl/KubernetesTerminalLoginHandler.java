@@ -33,9 +33,6 @@ public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMe
         String CONTAINER_TERMINAL = "CONTAINER_TERMINAL";
     }
 
-//    @Autowired
-//    private ThreadPoolTaskExecutor kubernetesTerminalExecutor;
-
     /**
      * 登录
      *
@@ -54,8 +51,7 @@ public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMe
             heartbeat(terminalSession.getSessionId());
             KubernetesResource kubernetesResource = loginMessage.getData();
             kubernetesResource.getPods().forEach(pod ->
-                    //       Thread.ofVirtual().start(deployingSupervisor);
-                    //   pod.getContainers().forEach(container -> kubernetesTerminalExecutor.submit(() -> {
+                    // JDK21 VirtualThreads
                     pod.getContainers().forEach(container -> Thread.ofVirtual().start(() -> {
                         SessionHolder.setUsername(username);
                         log.info("初始化容器终端: sessionType={}, container={}", loginMessage.getSessionType(), container.getName());
