@@ -2,18 +2,15 @@ package com.baiyi.opscloud.leo.handler.deploy.chain.pre;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
-import com.baiyi.opscloud.leo.handler.deploy.BaseDeployChainHandler;
-import com.baiyi.opscloud.leo.handler.deploy.LeoPostDeployHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
+import com.baiyi.opscloud.leo.handler.deploy.BaseDeployChainHandler;
+import com.baiyi.opscloud.leo.handler.deploy.LeoPostDeployHandler;
 import com.baiyi.opscloud.leo.holder.LeoHeartbeatHolder;
 import com.baiyi.opscloud.leo.supervisor.DeployingSupervisor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
-
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author baiyi
@@ -30,9 +27,8 @@ public class DeployingSupervisorChainHandler extends BaseDeployChainHandler {
     @Resource
     private LeoHeartbeatHolder leoDeployHelper;
 
-    @Autowired
-    private ThreadPoolTaskExecutor coreExecutor;
-
+//    @Autowired
+//    private ThreadPoolTaskExecutor coreExecutor;
 
     /**
      * 启动监视器
@@ -54,11 +50,14 @@ public class DeployingSupervisorChainHandler extends BaseDeployChainHandler {
                 kubernetesConfig.getKubernetes(),
                 leoPostDeployHandler
         );
-        coreExecutor.execute(deployingSupervisor);
+        // coreExecutor.execute(deployingSupervisor);
+        // JDK21 VirtualThread
+        Thread.ofVirtual().start(deployingSupervisor);
         LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                 .id(leoDeploy.getId())
                 .deployStatus("启动部署Supervisor阶段: 成功")
                 .build();
         save(saveLeoDeploy, "启动部署Supervisor成功: deployId={}, deployNumber={}", leoDeploy.getId(), leoDeploy.getDeployNumber());
     }
+
 }

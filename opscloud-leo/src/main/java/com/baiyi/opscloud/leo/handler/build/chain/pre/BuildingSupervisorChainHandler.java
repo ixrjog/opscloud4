@@ -2,18 +2,15 @@ package com.baiyi.opscloud.leo.handler.build.chain.pre;
 
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
-import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
-import com.baiyi.opscloud.leo.handler.build.LeoPostBuildHandler;
 import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
+import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
+import com.baiyi.opscloud.leo.handler.build.LeoPostBuildHandler;
 import com.baiyi.opscloud.leo.holder.LeoHeartbeatHolder;
 import com.baiyi.opscloud.leo.supervisor.BuildingSupervisor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
-
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author baiyi
@@ -30,8 +27,8 @@ public class BuildingSupervisorChainHandler extends BaseBuildChainHandler {
     @Resource
     private LeoHeartbeatHolder heartbeatHolder;
 
-    @Autowired
-    private ThreadPoolTaskExecutor coreExecutor;
+//    @Autowired
+//    private ThreadPoolTaskExecutor coreExecutor;
 
     /**
      * 启动监视器
@@ -52,7 +49,10 @@ public class BuildingSupervisorChainHandler extends BaseBuildChainHandler {
                 buildConfig,
                 leoPostBuildHandler
         );
-        coreExecutor.execute(buildingSupervisor);
+        // coreExecutor.execute(buildingSupervisor);
+        // JDK21 VirtualThread
+        Thread.ofVirtual().start(buildingSupervisor);
+
         LeoBuild saveLeoBuild = LeoBuild.builder()
                 .id(leoBuild.getId())
                 .buildStatus("启动构建Supervisor阶段: 成功")

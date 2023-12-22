@@ -40,7 +40,7 @@ public class ThreadPoolTaskConfiguration {
     @Bean(name = CORE)
     public ThreadPoolTaskExecutor coreExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(100);
+        executor.setCorePoolSize(10);
         executor.setMaxPoolSize(200);
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
@@ -59,7 +59,7 @@ public class ThreadPoolTaskConfiguration {
     @Bean(name = LEO)
     public ThreadPoolTaskExecutor leoExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(100);
+        executor.setCorePoolSize(10);
         executor.setMaxPoolSize(400);
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
@@ -78,7 +78,7 @@ public class ThreadPoolTaskConfiguration {
     @Bean(name = SERVER_TERMINAL)
     public ThreadPoolTaskExecutor serverTerminalExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(50);
+        executor.setCorePoolSize(10);
         executor.setMaxPoolSize(150);
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
@@ -97,7 +97,7 @@ public class ThreadPoolTaskConfiguration {
     @Bean(name = KUBERNETES_TERMINAL)
     public ThreadPoolTaskExecutor kubernetesTerminalExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(50);
+        executor.setCorePoolSize(10);
         executor.setMaxPoolSize(150);
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);

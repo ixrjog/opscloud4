@@ -5,12 +5,9 @@ import com.baiyi.opscloud.sshcore.message.audit.TerminalAuditPlayMessage;
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.task.audit.TerminalAuditOutputTask;
 import com.google.gson.GsonBuilder;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
-
 import jakarta.websocket.Session;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author baiyi
@@ -21,8 +18,8 @@ import jakarta.websocket.Session;
 @Component
 public class TerminalAuditPlayHandler extends AbstractTerminalAuditHandler<TerminalAuditPlayMessage> {
 
-    @Autowired
-    private ThreadPoolTaskExecutor serverTerminalExecutor;
+//    @Autowired
+//    private ThreadPoolTaskExecutor serverTerminalExecutor;
 
     /**
      * 播放
@@ -39,7 +36,9 @@ public class TerminalAuditPlayHandler extends AbstractTerminalAuditHandler<Termi
         TerminalAuditPlayMessage playMessage = getMessage(message);
         SessionOutput sessionOutput = new SessionOutput(playMessage.getSessionId(), playMessage.getInstanceId());
         // 启动线程处理会话
-        serverTerminalExecutor.execute(new TerminalAuditOutputTask(session, sessionOutput));
+        // serverTerminalExecutor.execute(new TerminalAuditOutputTask(session, sessionOutput));
+        // JDK21 VirtualThread
+        Thread.ofVirtual().start(new TerminalAuditOutputTask(session, sessionOutput));
     }
 
     @Override
@@ -48,4 +47,3 @@ public class TerminalAuditPlayHandler extends AbstractTerminalAuditHandler<Termi
     }
 
 }
-

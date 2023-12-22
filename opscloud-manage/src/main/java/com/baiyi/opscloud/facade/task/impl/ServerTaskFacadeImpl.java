@@ -33,9 +33,7 @@ import com.google.common.collect.Lists;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -71,8 +69,8 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     @Resource
     private ServerTaskPacker serverTaskPacker;
 
-    @Autowired
-    private ThreadPoolTaskExecutor coreExecutor;
+//    @Autowired
+//    private ThreadPoolTaskExecutor coreExecutor;
 
     private static final int MAX_EXECUTING = 10;
 
@@ -147,7 +145,9 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                         serverTaskMemberService,
                         taskLogStorehouse);
                 // 执行任务
-                coreExecutor.execute(ansibleServerTask);
+                // coreExecutor.execute(ansibleServerTask);
+                // JDK21 VirtualThread
+                Thread.ofVirtual().start(ansibleServerTask);
             }
             NewTimeUtil.sleep(5L);
         }

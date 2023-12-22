@@ -20,8 +20,6 @@ import io.fabric8.kubernetes.client.dsl.LogWatch;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.jline.terminal.Size;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.io.OutputStream;
@@ -42,12 +40,12 @@ public class RemoteInvokeHandler {
 
     private static final String appId = UUID.randomUUID().toString();
 
-    private static ThreadPoolTaskExecutor coreExecutor;
-
-    @Autowired
-    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor coreExecutor) {
-        RemoteInvokeHandler.coreExecutor = coreExecutor;
-    }
+//    private static ThreadPoolTaskExecutor coreExecutor;
+//
+//    @Autowired
+//    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor coreExecutor) {
+//        RemoteInvokeHandler.coreExecutor = coreExecutor;
+//    }
 
     /**
      * 按类型注入凭据
@@ -90,7 +88,6 @@ public class RemoteInvokeHandler {
 
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
         hostSystem.setInstanceId(instanceId);
-        // TODO
         try {
             if (hostSystem.getSshCredential() == null) {
                 return;
@@ -109,7 +106,9 @@ public class RemoteInvokeHandler {
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
             // 启动线程处理会话
             Runnable run = new WatchServerTerminalOutputTask(sessionOutput, channel.getInputStream());
-            coreExecutor.execute(run);
+            //coreExecutor.execute(run);
+            // JDK21 VirtualThread
+            Thread.ofVirtual().start(run);
 
             OutputStream inputToChannel = channel.getOutputStream();
 
@@ -126,7 +125,7 @@ public class RemoteInvokeHandler {
 
             channel.connect();
         } catch (Exception e) {
-            log.info(e.getMessage());
+            log.debug(e.getMessage());
             if (e.getMessage().toLowerCase().contains("userauth fail")) {
                 hostSystem.setStatusCd(HostSystem.PUBLIC_KEY_FAIL_STATUS);
             } else if (e.getMessage().toLowerCase().contains("auth fail") || e.getMessage().toLowerCase().contains("auth cancel")) {
@@ -166,8 +165,10 @@ public class RemoteInvokeHandler {
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
             // 启动线程处理会话
             Runnable run = new WatchSshServerOutputTask(sessionOutput, channel.getInputStream(), out);
-            coreExecutor.execute(run);
-            /////////////////////
+            //coreExecutor.execute(run);
+            // JDK21 VirtualThread
+            Thread.ofVirtual().start(run);
+
             OutputStream inputToChannel = channel.getOutputStream();
 
             JSchSession jSchSession = JSchSession.builder()
@@ -182,7 +183,7 @@ public class RemoteInvokeHandler {
             JSchSessionContainer.addSession(jSchSession);
             channel.connect();
         } catch (Exception e) {
-            log.info(e.getMessage());
+            log.debug(e.getMessage());
             if (e.getMessage().toLowerCase().contains("userauth fail")) {
                 hostSystem.setStatusCd(HostSystem.PUBLIC_KEY_FAIL_STATUS);
             } else if (e.getMessage().toLowerCase().contains("auth fail") || e.getMessage().toLowerCase().contains("auth cancel")) {
@@ -208,7 +209,9 @@ public class RemoteInvokeHandler {
         SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
         // 启动线程处理会话
         WatchKubernetesTerminalOutputTask run = new WatchKubernetesTerminalOutputTask(sessionOutput, out);
-        coreExecutor.execute(run);
+        //coreExecutor.execute(run);
+        // JDK21 VirtualThread
+        Thread.ofVirtual().start(run);
 
         KubernetesSession kubernetesSession = KubernetesSession.builder()
                 .sessionId(sessionId)
@@ -234,7 +237,9 @@ public class RemoteInvokeHandler {
         SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
         // 启动线程处理会话
         WatchKubernetesTerminalOutputTask run = new WatchKubernetesTerminalOutputTask(sessionOutput, out);
-        coreExecutor.execute(run);
+        // coreExecutor.execute(run);
+        // JDK21 VirtualThread
+        Thread.ofVirtual().start(run);
         KubernetesSession kubernetesSession = KubernetesSession.builder()
                 .sessionId(sessionId)
                 .instanceId(instanceId)

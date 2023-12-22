@@ -14,12 +14,9 @@ import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.KubernetesResource;
 import com.google.common.base.Joiner;
 import com.google.gson.GsonBuilder;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
-
 import jakarta.websocket.Session;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author baiyi
@@ -36,8 +33,8 @@ public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMe
         String CONTAINER_TERMINAL = "CONTAINER_TERMINAL";
     }
 
-    @Autowired
-    private ThreadPoolTaskExecutor kubernetesTerminalExecutor;
+//    @Autowired
+//    private ThreadPoolTaskExecutor kubernetesTerminalExecutor;
 
     /**
      * 登录
@@ -57,7 +54,9 @@ public class KubernetesTerminalLoginHandler extends AbstractKubernetesTerminalMe
             heartbeat(terminalSession.getSessionId());
             KubernetesResource kubernetesResource = loginMessage.getData();
             kubernetesResource.getPods().forEach(pod ->
-                    pod.getContainers().forEach(container -> kubernetesTerminalExecutor.submit(() -> {
+                    //       Thread.ofVirtual().start(deployingSupervisor);
+                    //   pod.getContainers().forEach(container -> kubernetesTerminalExecutor.submit(() -> {
+                    pod.getContainers().forEach(container -> Thread.ofVirtual().start(() -> {
                         SessionHolder.setUsername(username);
                         log.info("初始化容器终端: sessionType={}, container={}", loginMessage.getSessionType(), container.getName());
                         KubernetesConfig kubernetesDsInstanceConfig = buildConfig(kubernetesResource);

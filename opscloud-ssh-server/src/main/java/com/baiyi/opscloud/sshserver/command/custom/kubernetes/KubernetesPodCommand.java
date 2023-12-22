@@ -53,8 +53,6 @@ import org.apache.sshd.common.channel.ChannelOutputStream;
 import org.apache.sshd.server.session.ServerSession;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -92,8 +90,8 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
 
     private final PodCommandAudit podCommandAudit;
 
-    @Autowired
-    private ThreadPoolTaskExecutor coreExecutor;
+//    @Autowired
+//    private ThreadPoolTaskExecutor coreExecutor;
 
     /**
      * ^C
@@ -321,7 +319,10 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
             ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
             out.setNoDelay(true);
             WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, out);
-            coreExecutor.execute(run);
+            // coreExecutor.execute(run);
+            // JDK21 VirtualThread
+            Thread.ofVirtual().start(run);
+
             // 行模式
             TerminalUtil.enterRawMode(terminal);
             while (!listener.isClosed()) {
@@ -389,7 +390,9 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
 
             // 低性能输出日志，为了能实现日志换行
             // WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, terminal.writer());
-            coreExecutor.execute(run);
+            // coreExecutor.execute(run);
+            // JDK21 VirtualThread
+            Thread.ofVirtual().start(run);
 
             while (true) {
                 int ch = terminal.reader().read(25L);
