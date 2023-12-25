@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import jakarta.annotation.Resource;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class Ec2Test extends BaseAwsTest {
     @Test
     void urlTest() {
         try {
-            URL url = new URL(getConfig().getAws().getEc2().getInstances());
+            URL url = URI.create(getConfig().getAws().getEc2().getInstances()).toURL();
             print("url = " + getConfig().getAws().getEc2().getInstances());
             print("host = " + url.getHost());
             print("path = " + url.getPath());
@@ -92,4 +93,5 @@ public class Ec2Test extends BaseAwsTest {
         List<Tag> tagList = Lists.newArrayList(tag);
         amazonEc2Drive.createTags(getConfig().getAws(), regionId.Ireland, resources, tagList);
     }
+
 }

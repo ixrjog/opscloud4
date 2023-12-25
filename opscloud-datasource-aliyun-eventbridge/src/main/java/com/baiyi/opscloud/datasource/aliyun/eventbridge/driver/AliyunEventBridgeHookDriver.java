@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Optional;
 
@@ -46,7 +47,7 @@ public class AliyunEventBridgeHookDriver {
                 .map(AliyunEventBridgeConfig.EventBridge::getLeo)
                 .map(AliyunEventBridgeConfig.Leo::getToken)
                 .orElseThrow(() -> new OCException("Aliyun eventBridge token configuration does not exist"));
-        URL urlConfig = new URL(url);
+        URL urlConfig = URI.create(url).toURL();
         AliyunEventBridgeHookFeign aliyunEventBridgeHookFeign = buildFeign(Joiner.on("://").join(urlConfig.getProtocol(), urlConfig.getHost()));
         return aliyunEventBridgeHookFeign.publish(urlConfig.getPath(), token, event);
     }

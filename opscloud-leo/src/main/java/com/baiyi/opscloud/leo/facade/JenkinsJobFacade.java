@@ -39,7 +39,7 @@ public class JenkinsJobFacade {
                 // 重新拼装URL
                 // https://leo-jenkins-1.chuanyinet.com/job/templates/job/tpl_test/ =>
                 // https://leo-jenkins-1.chuanyinet.com/job/templates/
-                URL url = new URL(templateConfig.getTemplate().getUrl());
+                URL url = templateConfig.getTemplate().toURL();
                 final String folderUrl = Joiner.on("").skipNulls().join(url.getProtocol(), "://", url.getHost(), url.getPort() == -1 ? null : ":" + url.getPort(), "/job/", folder, "/");
                 FolderJob folderJob = new FolderJob(folder, folderUrl);
                 log.debug("查询JobXml: jenkinsUrl={}, folderJobUrl={}, templateName={}", jenkinsConfig.getJenkins().getUrl(), folderJob.getUrl(), templateConfig.getTemplate().getName());
@@ -59,7 +59,7 @@ public class JenkinsJobFacade {
                 // 重新拼装URL
                 // https://leo-jenkins-1.chuanyinet.com/job/templates/job/tpl_test/ =>
                 // https://leo-jenkins-1.chuanyinet.com/job/templates/
-                URL url = new URL(templateConfig.getTemplate().getUrl());
+                URL url = templateConfig.getTemplate().toURL();
                 final String folderUrl = Joiner.on("").skipNulls().join(url.getProtocol(), "://", url.getHost(), url.getPort() == -1 ? null : ":" + url.getPort(), "/job/", folder, "/");
                 FolderJob folderJob = new FolderJob(folder, folderUrl);
 

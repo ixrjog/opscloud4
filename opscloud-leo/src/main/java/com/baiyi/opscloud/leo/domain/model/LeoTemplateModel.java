@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -69,6 +72,11 @@ public class LeoTemplateModel {
         private String comment;
         private List<String> tags;
         private List<LeoBaseModel.Parameter> parameters;
+
+        public URL toURL() throws MalformedURLException {
+            return URI.create(this.url).toURL();
+        }
+
     }
 
     @Data

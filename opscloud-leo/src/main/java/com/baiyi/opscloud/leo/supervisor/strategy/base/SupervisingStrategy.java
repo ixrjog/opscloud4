@@ -100,7 +100,6 @@ public abstract class SupervisingStrategy implements IDeployStrategy, Initializi
         return false;
     }
 
-
     abstract protected LeoDeployingVO.Deploying getDeploying(LeoDeploy leoDeploy,
                                                              LeoDeployModel.DeployConfig deployConfig,
                                                              KubernetesConfig.Kubernetes kubernetes,

@@ -9,17 +9,17 @@ import com.baiyi.opscloud.datasource.aws.sqs.driver.AmazonSimpleQueueServiceDriv
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.collect.Maps;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.CollectionUtils;
 
-import jakarta.annotation.Resource;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -80,7 +80,7 @@ public class SqsTest extends BaseAwsTest {
     @Test
     void dddd() throws MalformedURLException {
         String queueUrl = "https://sqs.eu-west-1.amazonaws.com/502076313352/transsnet_virtualbank_autowithdraw_schedule_tigger_prod_sx_queue";
-        URL url = new URL(queueUrl);
+        URL url = URI.create(queueUrl).toURL();
         print(url);
     }
 
@@ -90,11 +90,11 @@ public class SqsTest extends BaseAwsTest {
         List<DatasourceInstanceAsset> sqsList = dsInstanceAssetService.listByInstanceAssetType(DEFAULT_DSINSTANCE_UUID, DsAssetTypeConstants.SQS.name());
         List<DatasourceInstanceAsset> prodSqs = sqsList.stream()
                 .filter(asset -> asset.getName().endsWith("_prod_queue"))
-                .collect(Collectors.toList());
+                .toList();
         prodSqs.forEach(asset -> {
             Map<String, String> attributes = amazonSQSDriver.getQueueAttributes(awsConfig, asset.getRegionId(), asset.getAssetKey());
             if (CollectionUtils.isEmpty(attributes)) {
-                log.error("创建异常", asset.getName());
+                log.error("创建异常 {}", asset.getName());
             } else {
                 try {
                     String newSqsUrl = asset.getAssetKey().replace("_prod_queue", "_pre_queue");
@@ -113,4 +113,5 @@ public class SqsTest extends BaseAwsTest {
             }
         });
     }
+
 }
