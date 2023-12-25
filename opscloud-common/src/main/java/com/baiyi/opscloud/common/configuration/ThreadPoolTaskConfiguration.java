@@ -19,7 +19,6 @@ public class ThreadPoolTaskConfiguration {
     public interface TaskPools {
         String CORE = "coreExecutor";
         String X_TERMINAL = "xTerminalExecutor";
-        String LEO = "leoExecutor";
     }
 
     /**
@@ -54,30 +53,11 @@ public class ThreadPoolTaskConfiguration {
         return executor;
     }
 
-    @Bean(name = LEO)
-    public ThreadPoolTaskExecutor leoExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(100);
-        executor.setQueueCapacity(QUEUE_CAPACITY);
-        executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
-        executor.setThreadNamePrefix("leo-exec-");
-        // 而在一些场景下，若需要在关闭线程池时等待当前调度任务完成后才开始关闭，可以通过简单的配置，进行优雅停机策略配置。关键就是通过
-        executor.setWaitForTasksToCompleteOnShutdown(true);
-        // 线程池对拒绝任务的处理策略
-        // CallerRunsPolicy：由调用线程（提交任务的线程）处理该任务
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        // 初始化
-        executor.setAwaitTerminationSeconds(60);
-        executor.initialize();
-        return executor;
-    }
-
     @Bean(name = X_TERMINAL)
     public ThreadPoolTaskExecutor xTerminalExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(100);
+        executor.setMaxPoolSize(50);
         executor.setQueueCapacity(QUEUE_CAPACITY);
         executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
         executor.setThreadNamePrefix("xt-exec-");

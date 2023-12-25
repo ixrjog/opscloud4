@@ -4,19 +4,19 @@ import com.baiyi.opscloud.datasource.jenkins.engine.JenkinsBuildExecutorHelper;
 import com.baiyi.opscloud.datasource.jenkins.message.SimpleMessage;
 import com.baiyi.opscloud.datasource.jenkins.task.WatchJenkinsBuildExecutorTask;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.leo.task.loop.LeoBuildEventLoop;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.google.gson.GsonBuilder;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
-
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
 import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.UUID;
 
 import static com.baiyi.opscloud.controller.socket.ServerTerminalController.WEBSOCKET_TIMEOUT;
@@ -37,12 +37,12 @@ public class JenkinsBuildExecutorController {
 
     private static DsInstanceService dsInstanceService;
 
-    private static ThreadPoolTaskExecutor leoExecutor;
-
-    @Autowired
-    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor leoExecutor) {
-        JenkinsBuildExecutorController.leoExecutor = leoExecutor;
-    }
+//    private static ThreadPoolTaskExecutor leoExecutor;
+//
+//    @Autowired
+//    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor leoExecutor) {
+//        JenkinsBuildExecutorController.leoExecutor = leoExecutor;
+//    }
 
     @Autowired
     public void setBeans(JenkinsBuildExecutorHelper jenkinsBuildExecutorHelper, DsInstanceService dsInstanceService) {
@@ -76,7 +76,9 @@ public class JenkinsBuildExecutorController {
             return;
         }
         Runnable run = new WatchJenkinsBuildExecutorTask(sessionId, session, instance, jenkinsBuildExecutorHelper);
-        leoExecutor.execute(run);
+        //leoExecutor.execute(run);
+        // JDK21 VirtualThreads
+        Thread.ofVirtual().start(new LeoBuildEventLoop(this.sessionId, session));
     }
 
     protected SimpleMessage toMessage(String message) {
