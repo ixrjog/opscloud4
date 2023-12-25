@@ -3,19 +3,19 @@ package com.baiyi.opscloud.datasource.ldap.provider;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.LdapConfig;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
+import com.baiyi.opscloud.core.comparer.AssetComparerBuilder;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
-import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.ldap.entity.LdapGroup;
 import com.baiyi.opscloud.datasource.ldap.entity.LdapPerson;
 import com.baiyi.opscloud.datasource.ldap.repo.PersonRepo;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_LDAP_USER;
@@ -71,14 +71,11 @@ public class LdapUserProvider extends AbstractAssetRelationProvider<LdapPerson.P
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
-            return false;
-        }
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
-            return false;
-        }
-        return true;
+    protected AssetComparer getAssetComparer() {
+        return AssetComparerBuilder.newBuilder()
+                .compareOfName()
+                .compareOfKey2()
+                .build();
     }
 
     @Override

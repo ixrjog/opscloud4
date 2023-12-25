@@ -3,11 +3,12 @@ package com.baiyi.opscloud.datasource.jenkins.provider;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
+import com.baiyi.opscloud.core.comparer.AssetComparerBuilder;
 import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
-import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.jenkins.JenkinsServer;
 import com.baiyi.opscloud.datasource.jenkins.converter.JenkinsAssetConverter;
 import com.baiyi.opscloud.datasource.jenkins.model.Computer;
@@ -17,7 +18,6 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.collect.Lists;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -77,14 +77,11 @@ public class JenkinsComputerProvider extends BaseAssetProvider<ComputerWithDetai
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
-            return false;
-        }
-        if (!preAsset.getIsActive().equals(asset.getIsActive())) {
-            return false;
-        }
-        return true;
+    protected AssetComparer getAssetComparer() {
+        return AssetComparerBuilder.newBuilder()
+                .compareOfName()
+                .compareOfActive()
+                .build();
     }
 
     @Override
@@ -96,4 +93,5 @@ public class JenkinsComputerProvider extends BaseAssetProvider<ComputerWithDetai
     public void afterPropertiesSet() {
         AssetProviderFactory.register(jenkinsComputerProvider);
     }
+
 }

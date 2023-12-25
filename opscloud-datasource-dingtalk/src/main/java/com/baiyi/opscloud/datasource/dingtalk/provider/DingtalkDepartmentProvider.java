@@ -3,21 +3,21 @@ package com.baiyi.opscloud.datasource.dingtalk.provider;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.SingleTaskConstants;
 import com.baiyi.opscloud.common.datasource.DingtalkConfig;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
+import com.baiyi.opscloud.core.comparer.AssetComparerBuilder;
 import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
-import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkDepartment;
 import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkDepartmentParam;
 import com.baiyi.opscloud.datasource.dingtalk.provider.base.AbstractDingtalkAssetProvider;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.google.common.collect.Lists;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Set;
 
@@ -71,14 +71,11 @@ public class DingtalkDepartmentProvider extends AbstractDingtalkAssetProvider<Di
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
-            return false;
-        }
-        if (!preAsset.getIsActive().equals(asset.getIsActive())) {
-            return false;
-        }
-        return true;
+    protected AssetComparer getAssetComparer() {
+        return AssetComparerBuilder.newBuilder()
+                .compareOfName()
+                .compareOfActive()
+                .build();
     }
 
     @Override

@@ -51,7 +51,7 @@ public class AliyunDmsUserPushHelper {
      * @return
      */
     public List<DmsUser.User> getPushAssets(DsInstanceContext dsInstanceContext) {
-        List<DatasourceInstanceAsset> ramUsers = queryVaildRamUsers(dsInstanceContext.getDsInstance().getUuid());
+        List<DatasourceInstanceAsset> ramUsers = queryValidRamUsers(dsInstanceContext.getDsInstance().getUuid());
         if (CollectionUtils.isEmpty(ramUsers)) {
             return Collections.emptyList();
         }
@@ -80,7 +80,7 @@ public class AliyunDmsUserPushHelper {
      * @param instanceUuid
      * @return
      */
-    private List<DatasourceInstanceAsset> queryVaildRamUsers(String instanceUuid) {
+    private List<DatasourceInstanceAsset> queryValidRamUsers(String instanceUuid) {
         DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
                 .instanceUuid(instanceUuid)
                 .assetType(DsAssetTypeConstants.RAM_USER.name())

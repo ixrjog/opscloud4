@@ -4,10 +4,11 @@ import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.SingleTaskConstants;
 import com.baiyi.opscloud.common.datasource.DingtalkConfig;
 import com.baiyi.opscloud.common.util.EmailUtil;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
+import com.baiyi.opscloud.core.comparer.AssetComparerBuilder;
 import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
-import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.dingtalk.driver.DingtalkUserDriver;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkUser;
 import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkUserParam;
@@ -23,15 +24,14 @@ import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -147,20 +147,13 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
-            return false;
-        }
-        if (!Objects.equals(preAsset.getIsActive(), asset.getIsActive())) {
-            return false;
-        }
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
-            return false;
-        }
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
-            return false;
-        }
-        return true;
+    protected AssetComparer getAssetComparer() {
+        return AssetComparerBuilder.newBuilder()
+                .compareOfName()
+                .compareOfKey2()
+                .compareOfActive()
+                .compareOfDescription()
+                .build();
     }
 
     @Override

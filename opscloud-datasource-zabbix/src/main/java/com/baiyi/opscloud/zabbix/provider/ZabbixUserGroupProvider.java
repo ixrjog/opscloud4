@@ -3,19 +3,18 @@ package com.baiyi.opscloud.zabbix.provider;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
-import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5UserGroupDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ZABBIX_USER_GROUP;
@@ -72,11 +71,8 @@ public class ZabbixUserGroupProvider extends AbstractAssetRelationProvider<Zabbi
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
-            return false;
-        }
-        return true;
+    protected AssetComparer getAssetComparer() {
+        return AssetComparer.COMPARE_NAME;
     }
 
     @Override

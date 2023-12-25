@@ -53,7 +53,7 @@ public class MeterSphereBuildHookProvider extends BaseAssetProvider<LeoBuildHook
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
+    protected boolean equals(DatasourceInstanceAsset a1, DatasourceInstanceAsset a2) {
       return false;
     }
 

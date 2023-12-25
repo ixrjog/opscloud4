@@ -3,11 +3,12 @@ package com.baiyi.opscloud.datasource.aliyun.provider;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
+import com.baiyi.opscloud.core.comparer.AssetComparerBuilder;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetChildProvider;
-import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsGroupV5Driver;
 import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsInstanceV5Driver;
 import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsGroupV5;
@@ -57,14 +58,11 @@ public class AliyunOnsGroupV5Provider extends AbstractAssetChildProvider<OnsGrou
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
-            return false;
-        }
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
-            return false;
-        }
-        return true;
+    protected AssetComparer getAssetComparer() {
+        return AssetComparerBuilder.newBuilder()
+                .compareOfName()
+                .compareOfDescription()
+                .build();
     }
 
     @Override

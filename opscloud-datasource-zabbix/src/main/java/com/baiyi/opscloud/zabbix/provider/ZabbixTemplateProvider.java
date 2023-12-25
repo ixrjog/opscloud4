@@ -3,19 +3,19 @@ package com.baiyi.opscloud.zabbix.provider;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
+import com.baiyi.opscloud.core.comparer.AssetComparerBuilder;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
-import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5TemplateDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ZABBIX_TEMPLATE;
@@ -72,18 +72,16 @@ public class ZabbixTemplateProvider extends AbstractAssetRelationProvider<Zabbix
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
-            return false;
-        }
-        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind())) {
-            return false;
-        }
-        return true;
+    protected AssetComparer getAssetComparer() {
+        return AssetComparerBuilder.newBuilder()
+                .compareOfName()
+                .compareOfKind()
+                .build();
     }
 
     @Override
     public void afterPropertiesSet() {
         AssetProviderFactory.register(zabbixTemplateProvider);
     }
+
 }

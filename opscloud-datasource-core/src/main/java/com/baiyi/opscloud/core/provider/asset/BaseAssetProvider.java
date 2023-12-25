@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.core.provider.asset;
 
 import com.baiyi.opscloud.core.asset.IToAsset;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
 import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
@@ -106,6 +107,7 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
 
     /**
      * 录入资产后处理逻辑
+     *
      * @param asset
      */
     protected void postEnterEntity(DatasourceInstanceAsset asset) {
@@ -148,11 +150,17 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     /**
      * 判断资产是否更新
      *
-     * @param asset
-     * @param preAsset
+     * @param a1
+     * @param a2
      * @return
      */
-    protected abstract boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset);
+    protected boolean equals(DatasourceInstanceAsset a1, DatasourceInstanceAsset a2) {
+        return getAssetComparer().compare(a1,a2);
+    }
+
+    protected AssetComparer getAssetComparer() {
+        return AssetComparer.NOT_COMPARED;
+    }
 
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, T entity) {
         if (entity instanceof IToAsset) {
@@ -188,4 +196,5 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     protected Credential getCredential(int credentialId) {
         return credentialService.getById(credentialId);
     }
+
 }

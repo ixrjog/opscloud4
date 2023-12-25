@@ -49,28 +49,6 @@ public class AliyunVpcDriver {
         return vpcs;
     }
 
-//    private List<DescribeVSwitchesResponse.VSwitch> listVSwitches(String regionId, AliyunConfig.Aliyun aliyun, DatasourceInstanceAsset asset) {
-//        List<DescribeVSwitchesResponse.VSwitch> vSwitches = Lists.newArrayList();
-//        try {
-//            DescribeVSwitchesRequest describe = new DescribeVSwitchesRequest();
-//            describe.setSysRegionId(regionId);
-//            describe.setPageSize(PAGE_SIZE);
-//            describe.setVpcId(asset.getAssetId());
-//            int size = PAGE_SIZE;
-//            int pageNumber = 1;
-//            while (PAGE_SIZE <= size) {
-//                describe.setPageNumber(pageNumber);
-//                DescribeVSwitchesResponse response = aliyunClient.getAcsResponse(regionId, aliyun, describe);
-//                vSwitches.addAll(response.getVSwitches());
-//                size = response.getVSwitches().size();
-//                pageNumber++;
-//            }
-//        } catch (ClientException e) {
-//            log.error(e.getMessage());
-//        }
-//        return vSwitches;
-//    }
-
     public List<DescribeVSwitchesResponse.VSwitch> listVSwitches(String regionId, AliyunConfig.Aliyun aliyun, String vpcId) {
         List<DescribeVSwitchesResponse.VSwitch> vSwitches = Lists.newArrayList();
         try {

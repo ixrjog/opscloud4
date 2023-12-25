@@ -13,7 +13,6 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
@@ -40,11 +39,6 @@ public class AliyunArmsTraceAppProvider extends BaseAssetProvider<ListTraceAppsR
 
     private AliyunArmsConfig.Arms buildConfig(DatasourceConfig dsConfig) {
         return dsConfigManager.build(dsConfig, AliyunArmsConfig.class).getArms();
-    }
-
-    @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        return true;
     }
 
     @Override

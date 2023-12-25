@@ -60,4 +60,5 @@ public class OnsGroupV5 {
         private Integer maxRetryTimes;
         private String retryPolicy;
     }
+
 }

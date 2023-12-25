@@ -4,23 +4,23 @@ import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
 import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetChildProvider;
-import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.aliyun.acr.delegate.AliyunAcrInstanceDelegate;
 import com.baiyi.opscloud.datasource.aliyun.acr.entity.AliyunAcr;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.collect.Lists;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import jakarta.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -54,11 +54,8 @@ public class AliyunAcrNamespaceProvider extends AbstractAssetChildProvider<Aliyu
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
-            return false;
-        }
-        return true;
+    protected AssetComparer getAssetComparer() {
+        return AssetComparer.COMPARE_DESCRIPTION;
     }
 
     @Override

@@ -79,11 +79,6 @@ public class AliyunDevopsWorkitemProvider extends BaseAssetProvider<ListWorkitem
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        return true;
-    }
-
-    @Override
     public String getInstanceType() {
         return DsTypeEnum.ALIYUN_DEVOPS.name();
     }

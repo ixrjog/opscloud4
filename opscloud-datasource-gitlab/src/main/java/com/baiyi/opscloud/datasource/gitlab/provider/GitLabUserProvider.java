@@ -3,26 +3,26 @@ package com.baiyi.opscloud.datasource.gitlab.provider;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.GitLabConfig;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
+import com.baiyi.opscloud.core.comparer.AssetComparerBuilder;
 import com.baiyi.opscloud.core.exception.DatasourceProviderException;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
-import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.gitlab.converter.GitLabAssetConverter;
 import com.baiyi.opscloud.datasource.gitlab.driver.GitLabUserDriver;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.collect.Lists;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.SshKey;
 import org.gitlab4j.api.models.User;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_GITLAB_USER;
@@ -86,17 +86,12 @@ public class GitLabUserProvider extends AbstractAssetRelationProvider<User, SshK
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
-            return false;
-        }
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
-            return false;
-        }
-        if (!preAsset.getIsActive().equals(asset.getIsActive())) {
-            return false;
-        }
-        return true;
+    protected AssetComparer getAssetComparer() {
+        return AssetComparerBuilder.newBuilder()
+                .compareOfName()
+                .compareOfKey2()
+                .compareOfActive()
+                .build();
     }
 
     @Override
@@ -108,4 +103,5 @@ public class GitLabUserProvider extends AbstractAssetRelationProvider<User, SshK
     public void afterPropertiesSet() {
         AssetProviderFactory.register(gitLabUserProvider);
     }
+
 }

@@ -13,8 +13,13 @@ import feign.RequestLine;
  */
 public interface AliyunEventBridgeHookFeign {
 
-    // https://eventbridge.console.aliyun.com/eu-central-1/event-bus/Event_Hub_Bridge/event-source/event.application.publish/detail
-
+    /**
+     * https://eventbridge.console.aliyun.com/eu-central-1/event-bus/Event_Hub_Bridge/event-source/event.application.publish/detail
+     * @param path
+     * @param token
+     * @param event
+     * @return
+     */
     @RequestLine("POST {path}?token={token}")
     @Headers({"Content-Type: application/json;charset=utf-8"})
     AliyunEventBridgeResult.Result publish(@Param("path") String path, @Param("token") String token, CloudEvents.Event event);
