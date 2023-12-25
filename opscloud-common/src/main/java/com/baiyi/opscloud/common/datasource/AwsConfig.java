@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.common.datasource;
 
+import com.baiyi.opscloud.common.base.IToURL;
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -44,13 +45,18 @@ public class AwsConfig extends BaseDsConfig {
 
     }
 
+    @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
     @Schema
-    public static class Ec2 {
+    public static class Ec2 extends IToURL {
 
         private String instances;
 
+        @Override
+        protected String acqURL() {
+            return instances;
+        }
     }
 
     @Data

@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -76,7 +77,7 @@ public class Job extends BaseModel {
         while ((length = is.read(buffer)) != -1) {
             result.write(buffer, 0, length);
         }
-        return result.toString("UTF-8");
+        return result.toString(StandardCharsets.UTF_8);
     }
 
     /**

@@ -12,7 +12,6 @@ import feign.jackson.JacksonEncoder;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
-import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 
@@ -34,14 +33,15 @@ public class AmazonEc2InstanceTypeHelper {
 
     /**
      * 查询EC2实例规格
+     *
      * @param config
      * @return
      * @throws Exception
      */
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1W, key = "'amazon_ec2_instances_details'")
     public Map<String, InstanceModel.EC2InstanceType> getAmazonEc2InstanceTypeMap(AwsConfig.Aws config) throws Exception {
-        URL url = URI.create(config.getEc2().getInstances()).toURL();
-        AmazonEc2InstanceFeign awsEc2API = buildFeign(Joiner.on("://").join(url.getProtocol(),url.getHost()));
+        URL url = config.getEc2().toURL();
+        AmazonEc2InstanceFeign awsEc2API = buildFeign(Joiner.on("://").join(url.getProtocol(), url.getHost()));
         return awsEc2API.getInstances(url.getPath());
     }
 
