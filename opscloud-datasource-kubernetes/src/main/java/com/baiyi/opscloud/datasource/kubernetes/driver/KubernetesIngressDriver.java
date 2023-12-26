@@ -2,6 +2,7 @@ package com.baiyi.opscloud.datasource.kubernetes.driver;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.MyKubernetesClientBuilder;
+import com.baiyi.opscloud.domain.param.kubernetes.BaseKubernetesParam;
 import io.fabric8.kubernetes.api.model.networking.v1.Ingress;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,10 @@ import java.util.List;
  */
 @Slf4j
 public class KubernetesIngressDriver {
+
+    public static Ingress get(KubernetesConfig.Kubernetes kubernetes, BaseKubernetesParam.IResource resource) {
+        return get(kubernetes, resource.getNamespace(), resource.getName());
+    }
 
     public static Ingress get(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
@@ -61,6 +66,10 @@ public class KubernetesIngressDriver {
         }
     }
 
+    public static Ingress create(KubernetesConfig.Kubernetes kubernetes, BaseKubernetesParam.IStreamResource streamResource) {
+        return create(kubernetes, streamResource.getResourceYaml());
+    }
+
     public static Ingress create(KubernetesConfig.Kubernetes kubernetes, String content) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             Ingress ingress = toIngress(kc, content);
@@ -74,6 +83,10 @@ public class KubernetesIngressDriver {
             log.warn(e.getMessage());
             throw e;
         }
+    }
+
+    public static Ingress update(KubernetesConfig.Kubernetes kubernetes, BaseKubernetesParam.IStreamResource streamResource) {
+        return update(kubernetes, streamResource.getResourceYaml());
     }
 
     public static Ingress update(KubernetesConfig.Kubernetes kubernetes, String content) {

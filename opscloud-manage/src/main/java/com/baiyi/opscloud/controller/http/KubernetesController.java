@@ -12,6 +12,7 @@ import io.fabric8.istio.api.networking.v1alpha3.DestinationRule;
 import io.fabric8.istio.api.networking.v1alpha3.EnvoyFilter;
 import io.fabric8.istio.api.networking.v1alpha3.VirtualService;
 import io.fabric8.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.StatusDetails;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.networking.v1.Ingress;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,6 +21,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -60,6 +63,12 @@ public class KubernetesController {
         return new HttpResult<>(istioFacade.updateVirtualService(updateResource));
     }
 
+    @Operation(summary = "删除VirtualService")
+    @DeleteMapping(value = "/istio/virtualService/del", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<StatusDetails>> deleteIstioVirtualService(@RequestBody KubernetesIstioParam.DeleteResource deleteResource) {
+        return new HttpResult<>(istioFacade.deleteVirtualService(deleteResource));
+    }
+
     @Operation(summary = "创建VirtualService")
     @PostMapping(value = "/istio/virtualService/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<VirtualService> createIstioVirtualService(@RequestBody KubernetesIstioParam.CreateResource createResource) {
@@ -76,6 +85,12 @@ public class KubernetesController {
     @PutMapping(value = "/istio/destinationRule/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DestinationRule> updateIstioDestinationRule(@RequestBody KubernetesIstioParam.UpdateResource updateResource) {
         return new HttpResult<>(istioFacade.updateDestinationRule(updateResource));
+    }
+
+    @Operation(summary = "删除DestinationRule")
+    @DeleteMapping(value = "/istio/destinationRule/del", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<StatusDetails>> deleteIstioDestinationRule(@RequestBody KubernetesIstioParam.DeleteResource deleteResource) {
+        return new HttpResult<>(istioFacade.deleteDestinationRule(deleteResource));
     }
 
     @Operation(summary = "创建DestinationRule")
@@ -95,19 +110,19 @@ public class KubernetesController {
     @Operation(summary = "查询Ingress")
     @PostMapping(value = "/ingress/get", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Ingress> getIngress(@RequestBody KubernetesIngressParam.GetResource getResource) {
-        return new HttpResult<>(ingressFacade.getIngress(getResource));
+        return new HttpResult<>(ingressFacade.get(getResource));
     }
 
     @Operation(summary = "更新Ingress")
     @PutMapping(value = "/ingress/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Ingress> updateIngress(@RequestBody KubernetesIngressParam.UpdateResource updateResource) {
-        return new HttpResult<>(ingressFacade.updateIngress(updateResource));
+        return new HttpResult<>(ingressFacade.update(updateResource));
     }
 
     @Operation(summary = "创建Ingress")
     @PostMapping(value = "/ingress/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Ingress> createIngress(@RequestBody KubernetesIngressParam.CreateResource createResource) {
-        return new HttpResult<>(ingressFacade.createIngress(createResource));
+        return new HttpResult<>(ingressFacade.create(createResource));
     }
 
     // Service
@@ -115,19 +130,25 @@ public class KubernetesController {
     @Operation(summary = "查询Service")
     @PostMapping(value = "/service/get", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Service> getService(@RequestBody KubernetesServiceParam.GetResource getResource) {
-        return new HttpResult<>(serviceFacade.getService(getResource));
+        return new HttpResult<>(serviceFacade.get(getResource));
     }
 
     @Operation(summary = "更新Service")
     @PutMapping(value = "/service/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Service> updateService(@RequestBody KubernetesServiceParam.UpdateResource updateResource) {
-        return new HttpResult<>(serviceFacade.updateService(updateResource));
+        return new HttpResult<>(serviceFacade.update(updateResource));
+    }
+
+    @Operation(summary = "删除Service")
+    @DeleteMapping(value = "/service/del", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<StatusDetails>> deleteService(@RequestBody KubernetesServiceParam.DeleteResource deleteResource) {
+        return new HttpResult<>(serviceFacade.delete(deleteResource));
     }
 
     @Operation(summary = "创建Service")
     @PostMapping(value = "/service/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Service> createService(@RequestBody KubernetesServiceParam.CreateResource createResource) {
-        return new HttpResult<>(serviceFacade.createService(createResource));
+        return new HttpResult<>(serviceFacade.create(createResource));
     }
 
     // EnvoyFilter
@@ -148,6 +169,12 @@ public class KubernetesController {
     @PostMapping(value = "/istio/envoyFilter/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<EnvoyFilter> createIstioEnvoyFilter(@RequestBody KubernetesIstioParam.CreateResource createResource) {
         return new HttpResult<>(istioFacade.createEnvoyFilter(createResource));
+    }
+
+    @Operation(summary = "删除EnvoyFilter")
+    @DeleteMapping(value = "/istio/envoyFilter/del", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<StatusDetails>> deleteIstioEnvoyFilter(@RequestBody KubernetesIstioParam.DeleteResource deleteResource) {
+        return new HttpResult<>(istioFacade.deleteEnvoyFilter(deleteResource));
     }
 
 }

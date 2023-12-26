@@ -19,7 +19,7 @@ public class KubernetesServiceParam {
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema
-    public static class GetResource {
+    public static class GetResource implements BaseKubernetesParam.IResource {
 
         @NotNull(message = "数据源实例ID不能为空")
         @Schema(description = "数据源实例ID")
@@ -38,7 +38,26 @@ public class KubernetesServiceParam {
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema
-    public static class CreateResource {
+    public static class DeleteResource implements BaseKubernetesParam.IResource {
+
+        @NotNull(message = "数据源实例ID不能为空")
+        @Schema(description = "数据源实例ID")
+        private Integer instanceId;
+
+        @Schema(description = "命名空间")
+        private String namespace;
+
+        @Schema(description = "资源名称")
+        private String name;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema
+    public static class CreateResource implements BaseKubernetesParam.IStreamResource {
 
         @NotNull(message = "数据源实例ID不能为空")
         @Schema(description = "数据源实例ID")
@@ -53,7 +72,7 @@ public class KubernetesServiceParam {
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema
-    public static class UpdateResource {
+    public static class UpdateResource implements BaseKubernetesParam.IStreamResource {
 
         @NotNull(message = "数据源实例ID不能为空")
         @Schema(description = "数据源实例ID")

@@ -2,6 +2,9 @@ package com.baiyi.opscloud.facade.kubernetes;
 
 import com.baiyi.opscloud.domain.param.kubernetes.KubernetesServiceParam;
 import io.fabric8.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.StatusDetails;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -10,10 +13,12 @@ import io.fabric8.kubernetes.api.model.Service;
  */
 public interface KubernetesServiceFacade {
 
-    Service getService(KubernetesServiceParam.GetResource getResource);
+    Service get(KubernetesServiceParam.GetResource getResource);
 
-    Service updateService(KubernetesServiceParam.UpdateResource updateResource);
+    Service update(KubernetesServiceParam.UpdateResource updateResource);
 
-    Service createService(KubernetesServiceParam.CreateResource createResource);
+    Service create(KubernetesServiceParam.CreateResource createResource);
+
+    List<StatusDetails> delete(KubernetesServiceParam.DeleteResource deleteResource);
 
 }

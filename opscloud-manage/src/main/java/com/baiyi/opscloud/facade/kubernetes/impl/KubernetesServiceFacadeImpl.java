@@ -5,9 +5,11 @@ import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesServiceDriver;
 import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesException;
 import com.baiyi.opscloud.domain.param.kubernetes.KubernetesServiceParam;
 import com.baiyi.opscloud.facade.kubernetes.KubernetesServiceFacade;
-import io.fabric8.istio.api.networking.v1alpha3.EnvoyFilter;
 import io.fabric8.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.StatusDetails;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -18,30 +20,40 @@ import org.springframework.stereotype.Component;
 public class KubernetesServiceFacadeImpl extends BaseKubernetesConfig implements KubernetesServiceFacade {
 
     @Override
-    public Service getService(KubernetesServiceParam.GetResource getResource) {
+    public Service get(KubernetesServiceParam.GetResource getResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(getResource.getInstanceId());
         try {
-            return KubernetesServiceDriver.get(kubernetesConfig.getKubernetes(), getResource.getNamespace(), getResource.getName());
+            return KubernetesServiceDriver.get(kubernetesConfig.getKubernetes(), getResource);
         } catch (Exception e) {
             throw new KubernetesException(e.getMessage());
         }
     }
 
     @Override
-    public Service updateService(KubernetesServiceParam.UpdateResource updateResource) {
+    public Service update(KubernetesServiceParam.UpdateResource updateResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(updateResource.getInstanceId());
         try {
-            return KubernetesServiceDriver.update(kubernetesConfig.getKubernetes(), updateResource.getResourceYaml());
+            return KubernetesServiceDriver.update(kubernetesConfig.getKubernetes(), updateResource);
         } catch (Exception e) {
             throw new KubernetesException(e.getMessage());
         }
     }
 
     @Override
-    public Service createService(KubernetesServiceParam.CreateResource createResource) {
+    public Service create(KubernetesServiceParam.CreateResource createResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(createResource.getInstanceId());
         try {
-            return KubernetesServiceDriver.create(kubernetesConfig.getKubernetes(), createResource.getResourceYaml());
+            return KubernetesServiceDriver.create(kubernetesConfig.getKubernetes(), createResource);
+        } catch (Exception e) {
+            throw new KubernetesException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<StatusDetails> delete(KubernetesServiceParam.DeleteResource deleteResource) {
+        KubernetesConfig kubernetesConfig = getKubernetesConfig(deleteResource.getInstanceId());
+        try {
+            return KubernetesServiceDriver.delete(kubernetesConfig.getKubernetes(), deleteResource);
         } catch (Exception e) {
             throw new KubernetesException(e.getMessage());
         }

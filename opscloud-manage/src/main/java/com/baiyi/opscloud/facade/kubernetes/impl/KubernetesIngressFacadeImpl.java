@@ -18,30 +18,30 @@ import org.springframework.stereotype.Component;
 public class KubernetesIngressFacadeImpl extends BaseKubernetesConfig implements KubernetesIngressFacade {
 
     @Override
-    public Ingress getIngress(KubernetesIngressParam.GetResource getResource) {
+    public Ingress get(KubernetesIngressParam.GetResource getResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(getResource.getInstanceId());
         try {
-            return KubernetesIngressDriver.get(kubernetesConfig.getKubernetes(), getResource.getNamespace(), getResource.getName());
+            return KubernetesIngressDriver.get(kubernetesConfig.getKubernetes(), getResource);
         } catch (Exception e) {
             throw new KubernetesException(e.getMessage());
         }
     }
 
     @Override
-    public Ingress updateIngress(KubernetesIngressParam.UpdateResource updateResource) {
+    public Ingress update(KubernetesIngressParam.UpdateResource updateResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(updateResource.getInstanceId());
         try {
-            return KubernetesIngressDriver.update(kubernetesConfig.getKubernetes(), updateResource.getResourceYaml());
+            return KubernetesIngressDriver.update(kubernetesConfig.getKubernetes(), updateResource);
         } catch (Exception e) {
             throw new KubernetesException(e.getMessage());
         }
     }
 
     @Override
-    public Ingress createIngress(KubernetesIngressParam.CreateResource createResource) {
+    public Ingress create(KubernetesIngressParam.CreateResource createResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(createResource.getInstanceId());
         try {
-            return KubernetesIngressDriver.create(kubernetesConfig.getKubernetes(), createResource.getResourceYaml());
+            return KubernetesIngressDriver.create(kubernetesConfig.getKubernetes(), createResource);
         } catch (Exception e) {
             throw new KubernetesException(e.getMessage());
         }

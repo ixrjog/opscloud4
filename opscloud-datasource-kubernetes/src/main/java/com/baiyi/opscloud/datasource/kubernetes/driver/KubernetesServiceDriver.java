@@ -3,8 +3,10 @@ package com.baiyi.opscloud.datasource.kubernetes.driver;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.MyKubernetesClientBuilder;
 import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesException;
+import com.baiyi.opscloud.domain.param.kubernetes.BaseKubernetesParam;
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.ServiceList;
+import io.fabric8.kubernetes.api.model.StatusDetails;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -37,6 +39,10 @@ public class KubernetesServiceDriver {
         }
     }
 
+    public static Service get(KubernetesConfig.Kubernetes kubernetes, BaseKubernetesParam.IResource resource) {
+        return get(kubernetes, resource.getNamespace(), resource.getName());
+    }
+
     /**
      * @param kubernetes
      * @param namespace
@@ -55,6 +61,22 @@ public class KubernetesServiceDriver {
         }
     }
 
+    public static List<StatusDetails> delete(KubernetesConfig.Kubernetes kubernetes, BaseKubernetesParam.IResource resource) {
+        return delete(kubernetes, resource.getNamespace(), resource.getName());
+    }
+
+    public static List<StatusDetails> delete(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
+            return kc.services()
+                    .inNamespace(namespace)
+                    .withName(name)
+                    .delete();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
+    }
+
     public static Service create(KubernetesConfig.Kubernetes kubernetes, Service service) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.services()
@@ -67,6 +89,10 @@ public class KubernetesServiceDriver {
         }
     }
 
+    public static Service create(KubernetesConfig.Kubernetes kubernetes, BaseKubernetesParam.IStreamResource streamResource) {
+        return create(kubernetes, streamResource.getResourceYaml());
+    }
+
     public static Service create(KubernetesConfig.Kubernetes kubernetes, String content) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             Service service = toService(kc, content);
@@ -75,6 +101,10 @@ public class KubernetesServiceDriver {
             log.warn(e.getMessage());
             throw e;
         }
+    }
+
+    public static Service update(KubernetesConfig.Kubernetes kubernetes, BaseKubernetesParam.IStreamResource streamResource) {
+        return update(kubernetes, streamResource.getResourceYaml());
     }
 
     public static Service update(KubernetesConfig.Kubernetes kubernetes, String content) {

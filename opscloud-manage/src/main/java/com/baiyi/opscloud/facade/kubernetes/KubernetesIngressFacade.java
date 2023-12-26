@@ -11,10 +11,10 @@ import io.fabric8.kubernetes.api.model.networking.v1.Ingress;
  */
 public interface KubernetesIngressFacade {
 
-    Ingress getIngress(KubernetesIngressParam.GetResource getResource);
+    Ingress get(KubernetesIngressParam.GetResource getResource);
 
-    Ingress updateIngress(KubernetesIngressParam.UpdateResource updateResource);
+    Ingress update(KubernetesIngressParam.UpdateResource updateResource);
 
-    Ingress createIngress(KubernetesIngressParam.CreateResource createResource);
+    Ingress create(KubernetesIngressParam.CreateResource createResource);
 
 }

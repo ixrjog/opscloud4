@@ -10,8 +10,11 @@ import com.baiyi.opscloud.facade.kubernetes.KubernetesIstioFacade;
 import io.fabric8.istio.api.networking.v1alpha3.DestinationRule;
 import io.fabric8.istio.api.networking.v1alpha3.EnvoyFilter;
 import io.fabric8.istio.api.networking.v1alpha3.VirtualService;
+import io.fabric8.kubernetes.api.model.StatusDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -26,7 +29,7 @@ public class KubernetesIstioFacadeImpl extends BaseKubernetesConfig implements K
     public VirtualService getVirtualService(KubernetesIstioParam.GetResource getResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(getResource.getInstanceId());
         try {
-            return IstioVirtualServiceDriver.get(kubernetesConfig.getKubernetes(), getResource.getNamespace(), getResource.getName());
+            return IstioVirtualServiceDriver.get(kubernetesConfig.getKubernetes(), getResource);
         } catch (Exception e) {
             throw new KubernetesException(e.getMessage());
         }
@@ -36,7 +39,7 @@ public class KubernetesIstioFacadeImpl extends BaseKubernetesConfig implements K
     public VirtualService updateVirtualService(KubernetesIstioParam.UpdateResource updateResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(updateResource.getInstanceId());
         try {
-            return IstioVirtualServiceDriver.update(kubernetesConfig.getKubernetes(), updateResource.getResourceYaml());
+            return IstioVirtualServiceDriver.update(kubernetesConfig.getKubernetes(), updateResource);
         } catch (Exception e) {
             throw new KubernetesException(e.getMessage());
         }
@@ -46,7 +49,17 @@ public class KubernetesIstioFacadeImpl extends BaseKubernetesConfig implements K
     public VirtualService createVirtualService(KubernetesIstioParam.CreateResource createResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(createResource.getInstanceId());
         try {
-            return IstioVirtualServiceDriver.create(kubernetesConfig.getKubernetes(), createResource.getResourceYaml());
+            return IstioVirtualServiceDriver.create(kubernetesConfig.getKubernetes(), createResource);
+        } catch (Exception e) {
+            throw new KubernetesException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<StatusDetails> deleteVirtualService(KubernetesIstioParam.DeleteResource deleteResource) {
+        KubernetesConfig kubernetesConfig = getKubernetesConfig(deleteResource.getInstanceId());
+        try {
+            return IstioVirtualServiceDriver.delete(kubernetesConfig.getKubernetes(), deleteResource);
         } catch (Exception e) {
             throw new KubernetesException(e.getMessage());
         }
@@ -56,7 +69,7 @@ public class KubernetesIstioFacadeImpl extends BaseKubernetesConfig implements K
     public DestinationRule getDestinationRule(KubernetesIstioParam.GetResource getResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(getResource.getInstanceId());
         try {
-            return IstioDestinationRuleDriver.get(kubernetesConfig.getKubernetes(), getResource.getNamespace(), getResource.getName());
+            return IstioDestinationRuleDriver.get(kubernetesConfig.getKubernetes(), getResource);
         } catch (Exception e) {
             throw new KubernetesException(e.getMessage());
         }
@@ -66,7 +79,17 @@ public class KubernetesIstioFacadeImpl extends BaseKubernetesConfig implements K
     public DestinationRule updateDestinationRule(KubernetesIstioParam.UpdateResource updateResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(updateResource.getInstanceId());
         try {
-            return IstioDestinationRuleDriver.update(kubernetesConfig.getKubernetes(), updateResource.getResourceYaml());
+            return IstioDestinationRuleDriver.update(kubernetesConfig.getKubernetes(), updateResource);
+        } catch (Exception e) {
+            throw new KubernetesException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<StatusDetails> deleteDestinationRule(KubernetesIstioParam.DeleteResource deleteResource) {
+        KubernetesConfig kubernetesConfig = getKubernetesConfig(deleteResource.getInstanceId());
+        try {
+            return IstioDestinationRuleDriver.delete(kubernetesConfig.getKubernetes(), deleteResource);
         } catch (Exception e) {
             throw new KubernetesException(e.getMessage());
         }
@@ -76,7 +99,7 @@ public class KubernetesIstioFacadeImpl extends BaseKubernetesConfig implements K
     public DestinationRule createDestinationRule(KubernetesIstioParam.CreateResource createResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(createResource.getInstanceId());
         try {
-            return IstioDestinationRuleDriver.create(kubernetesConfig.getKubernetes(), createResource.getResourceYaml());
+            return IstioDestinationRuleDriver.create(kubernetesConfig.getKubernetes(), createResource);
         } catch (Exception e) {
             throw new KubernetesException(e.getMessage());
         }
@@ -86,7 +109,7 @@ public class KubernetesIstioFacadeImpl extends BaseKubernetesConfig implements K
     public EnvoyFilter getEnvoyFilter(KubernetesIstioParam.GetResource getResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(getResource.getInstanceId());
         try {
-            return IstioEnvoyFilterDriver.get(kubernetesConfig.getKubernetes(), getResource.getNamespace(), getResource.getName());
+            return IstioEnvoyFilterDriver.get(kubernetesConfig.getKubernetes(), getResource);
         } catch (Exception e) {
             throw new KubernetesException(e.getMessage());
         }
@@ -96,7 +119,7 @@ public class KubernetesIstioFacadeImpl extends BaseKubernetesConfig implements K
     public EnvoyFilter updateEnvoyFilter(KubernetesIstioParam.UpdateResource updateResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(updateResource.getInstanceId());
         try {
-            return IstioEnvoyFilterDriver.update(kubernetesConfig.getKubernetes(), updateResource.getResourceYaml());
+            return IstioEnvoyFilterDriver.update(kubernetesConfig.getKubernetes(), updateResource);
         } catch (Exception e) {
             throw new KubernetesException(e.getMessage());
         }
@@ -106,7 +129,17 @@ public class KubernetesIstioFacadeImpl extends BaseKubernetesConfig implements K
     public EnvoyFilter createEnvoyFilter(KubernetesIstioParam.CreateResource createResource) {
         KubernetesConfig kubernetesConfig = getKubernetesConfig(createResource.getInstanceId());
         try {
-            return IstioEnvoyFilterDriver.create(kubernetesConfig.getKubernetes(), createResource.getResourceYaml());
+            return IstioEnvoyFilterDriver.create(kubernetesConfig.getKubernetes(), createResource);
+        } catch (Exception e) {
+            throw new KubernetesException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<StatusDetails> deleteEnvoyFilter(KubernetesIstioParam.DeleteResource deleteResource) {
+        KubernetesConfig kubernetesConfig = getKubernetesConfig(deleteResource.getInstanceId());
+        try {
+            return IstioEnvoyFilterDriver.delete(kubernetesConfig.getKubernetes(), deleteResource);
         } catch (Exception e) {
             throw new KubernetesException(e.getMessage());
         }
