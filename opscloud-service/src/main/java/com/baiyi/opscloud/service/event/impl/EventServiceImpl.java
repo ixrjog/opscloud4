@@ -59,14 +59,14 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public DataTable<Event> queryUserPermissionEventByParam(EventParam.UserPermissionEventPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<Event> data = eventMapper.queryUserPermissionEventPageByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
 
     @Override
     public DataTable<Event> queryUserPermissionServerEventByParam(EventParam.UserPermissionEventPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<Event> data = eventMapper.queryUserPermissionServerEventPageByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }

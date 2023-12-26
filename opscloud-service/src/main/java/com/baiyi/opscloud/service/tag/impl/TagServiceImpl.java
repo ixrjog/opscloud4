@@ -80,7 +80,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public DataTable<Tag> queryPageByParam(TagParam.TagPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(Tag.class);
         Example.Criteria criteria = example.createCriteria();
         if (IdUtil.isNotEmpty(pageQuery.getBusinessType())) {

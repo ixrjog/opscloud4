@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.jenkins.model;
 
 public class QueueReference extends BaseModel {
 
-    private String queueItem;
+    private final String queueItem;
 
     public QueueReference(String location) {
         queueItem = location;

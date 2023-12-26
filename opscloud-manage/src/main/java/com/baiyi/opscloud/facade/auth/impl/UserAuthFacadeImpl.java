@@ -79,7 +79,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
             throw new AuthenticationException(ErrorEnum.AUTHENTICATION_REQUEST_NO_TOKEN);
         }
 
-        UserToken userToken = userTokenService.getByVaildToken(token);
+        UserToken userToken = userTokenService.getByValidToken(token);
         if (userToken == null) {
             throw new AuthenticationException(ErrorEnum.AUTHENTICATION_TOKEN_INVALID);
         }

@@ -21,7 +21,6 @@ import java.util.Map;
  */
 public class LeoDeployParam {
 
-
     public interface IAutoDeploy {
 
         /**

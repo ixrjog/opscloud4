@@ -63,4 +63,5 @@ public class ServerTaskParam {
         private List<ServerVO.Server> servers;
 
     }
+
 }

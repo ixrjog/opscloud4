@@ -572,12 +572,3 @@ public abstract class GuacamoleHTTPTunnelServlet extends HttpServlet {
     }
 
 }
-
-/**
- * \example ExampleTunnelServlet.java
- *
- * A basic example demonstrating extending GuacamoleTunnelServlet and
- * implementing doConnect() to configure the Guacamole connection as
- * desired.
- */
-

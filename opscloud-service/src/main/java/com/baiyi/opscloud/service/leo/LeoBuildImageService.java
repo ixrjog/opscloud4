@@ -23,5 +23,4 @@ public interface LeoBuildImageService {
 
     List<LeoBuildImage> queryImageWithJobIdAndImage(int jobId, String image);
 
-
 }

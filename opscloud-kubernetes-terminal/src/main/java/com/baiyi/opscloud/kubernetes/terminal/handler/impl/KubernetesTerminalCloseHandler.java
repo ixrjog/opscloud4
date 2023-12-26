@@ -66,4 +66,5 @@ public class KubernetesTerminalCloseHandler extends AbstractKubernetesTerminalMe
     protected KubernetesMessage.BaseMessage toMessage(String message) {
         return KubernetesMessage.BaseMessage.CLOSE;
     }
+
 }

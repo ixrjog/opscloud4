@@ -57,5 +57,4 @@ public class LeoDeployPassCheck {
         return StringFormatter.format(KEY, buildId);
     }
 
-
 }

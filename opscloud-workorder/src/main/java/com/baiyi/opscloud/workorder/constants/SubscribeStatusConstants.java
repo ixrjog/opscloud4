@@ -7,6 +7,7 @@ import lombok.Getter;
  * @Date 2022/1/18 10:35 AM
  * @Version 1.0
  */
+@Getter
 public enum SubscribeStatusConstants {
 
     CREATE("创建人"),
@@ -17,6 +18,6 @@ public enum SubscribeStatusConstants {
         this.comment = comment;
     }
 
-    @Getter
     private final String comment;
+
 }

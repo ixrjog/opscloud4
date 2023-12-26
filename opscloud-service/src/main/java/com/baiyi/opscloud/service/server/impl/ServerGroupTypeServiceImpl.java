@@ -28,7 +28,7 @@ public class ServerGroupTypeServiceImpl implements ServerGroupTypeService {
 
     @Override
     public DataTable<ServerGroupType> queryPageByParam(ServerGroupTypeParam.ServerGroupTypePageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(ServerGroupType.class);
         if (StringUtils.isNotBlank(pageQuery.getName())) {
             Example.Criteria criteria = example.createCriteria();

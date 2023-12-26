@@ -128,4 +128,5 @@ public class ZabbixUser {
             return builder.build();
         }
     }
+
 }

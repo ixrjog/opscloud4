@@ -74,4 +74,5 @@ public class ExmailUser extends BaseExmailResult implements IToAsset {
                 .paramProperty("mobile", this.mobile)
                 .build();
     }
+
 }

@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
 import jakarta.xml.bind.annotation.*;
+import lombok.Getter;
 
+@Getter
 @XmlRootElement(name = "hudson.model.ParametersDefinitionProperty")
 @XmlAccessorOrder(XmlAccessOrder.ALPHABETICAL)
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -17,12 +19,9 @@ public class ParametersDefinitionProperty {
         this.pd = pd;
     }
 
-    public ParameterDefinitions getPd() {
-        return pd;
-    }
-
     public ParametersDefinitionProperty setPd(ParameterDefinitions pd) {
         this.pd = pd;
         return this;
     }
+
 }

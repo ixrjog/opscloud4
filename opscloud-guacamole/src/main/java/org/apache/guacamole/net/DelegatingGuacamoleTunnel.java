@@ -19,10 +19,11 @@
 
 package org.apache.guacamole.net;
 
-import java.util.UUID;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.io.GuacamoleReader;
 import org.apache.guacamole.io.GuacamoleWriter;
+
+import java.util.UUID;
 
 /**
  * GuacamoleTunnel implementation which simply delegates all function calls to

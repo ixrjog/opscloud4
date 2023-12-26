@@ -82,4 +82,5 @@ public class DingtalkDepartmentProvider extends AbstractDingtalkAssetProvider<Di
     public void afterPropertiesSet() {
         AssetProviderFactory.register(dingtalkDepartmentProvider);
     }
+
 }

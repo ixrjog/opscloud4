@@ -43,7 +43,7 @@ public interface GuacamoleSocket {
      *     The name of the protocol to be used, or null if this information is
      *     not available.
      */
-    public default String getProtocol() {
+    default String getProtocol() {
         return null;
     }
 
@@ -55,7 +55,7 @@ public interface GuacamoleSocket {
      * @return A GuacamoleReader which can be used to read from the
      *         Guacamole instruction stream.
      */
-    public GuacamoleReader getReader();
+    GuacamoleReader getReader();
 
     /**
      * Returns a GuacamoleWriter which can be used to write to the
@@ -65,7 +65,7 @@ public interface GuacamoleSocket {
      * @return A GuacamoleWriter which can be used to write to the
      *         Guacamole instruction stream.
      */
-    public GuacamoleWriter getWriter();
+    GuacamoleWriter getWriter();
 
     /**
      * Releases all resources in use by the connection represented by this
@@ -73,7 +73,7 @@ public interface GuacamoleSocket {
      *
      * @throws GuacamoleException If an error occurs while releasing resources.
      */
-    public void close() throws GuacamoleException;
+    void close() throws GuacamoleException;
 
     /**
      * Returns whether this GuacamoleSocket is open and can be used for reading
@@ -81,6 +81,6 @@ public interface GuacamoleSocket {
      *
      * @return true if this GuacamoleSocket is open, false otherwise.
      */
-    public boolean isOpen();
+    boolean isOpen();
 
 }

@@ -87,4 +87,5 @@ public class SecurityConfiguration {
 //                .roles("ADMIN", "ACTUATOR");
         return authenticationManagerBuilder.build();
     }
+
 }

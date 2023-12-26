@@ -18,4 +18,5 @@ public interface WorkEventPropertyService {
     List<WorkEventProperty> listByWorkEventId(Integer workEventId);
 
     void deleteByWorkEventId(Integer workEventId);
+
 }

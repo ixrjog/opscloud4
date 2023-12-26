@@ -19,10 +19,9 @@
 
 package org.apache.guacamole.servlet;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.net.GuacamoleTunnel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -34,12 +33,8 @@ import java.util.concurrent.*;
  * intended for use only within the GuacamoleHTTPTunnelServlet implementation,
  * and has no real utility outside that implementation.
  */
+@Slf4j
 class GuacamoleHTTPTunnelMap {
-
-    /**
-     * Logger for this class.
-     */
-    private static final Logger logger = LoggerFactory.getLogger(GuacamoleHTTPTunnelMap.class);
 
     /**
      * The number of seconds to wait between tunnel accesses before timing out
@@ -119,7 +114,7 @@ class GuacamoleHTTPTunnelMap {
                 if (age >= tunnelTimeout) {
 
                     // Remove old entry
-                    logger.debug("HTTP tunnel \"{}\" has timed out.", entry.getKey());
+                    log.debug("HTTP tunnel \"{}\" has timed out.", entry.getKey());
                     entries.remove();
 
                     // Attempt to close tunnel
@@ -127,7 +122,7 @@ class GuacamoleHTTPTunnelMap {
                         tunnel.close();
                     }
                     catch (GuacamoleException e) {
-                        logger.debug("Unable to close expired HTTP tunnel.", e);
+                        log.debug("Unable to close expired HTTP tunnel.", e);
                     }
 
                 }

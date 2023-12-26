@@ -6,18 +6,17 @@
 
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public class Queue extends BaseModel {
     private List<String> discoverableItems;
 
     private List<QueueItem> items;
 
     public Queue() {
-    }
-
-    public List<String> getDiscoverableItems() {
-        return discoverableItems;
     }
 
     public Queue setDiscoverableItems(List<String> discoverableItems) {
@@ -32,10 +31,6 @@ public class Queue extends BaseModel {
         result = prime * result + ((discoverableItems == null) ? 0 : discoverableItems.hashCode());
         result = prime * result + ((items == null) ? 0 : items.hashCode());
         return result;
-    }
-
-    public List<QueueItem> getItems() {
-        return items;
     }
 
     public Queue setItems(List<QueueItem> items) {
@@ -58,11 +53,8 @@ public class Queue extends BaseModel {
         } else if (!discoverableItems.equals(other.discoverableItems))
             return false;
         if (items == null) {
-            if (other.items != null)
-                return false;
-        } else if (!items.equals(other.items))
-            return false;
-        return true;
+            return other.items == null;
+        } else return items.equals(other.items);
     }
 
 }

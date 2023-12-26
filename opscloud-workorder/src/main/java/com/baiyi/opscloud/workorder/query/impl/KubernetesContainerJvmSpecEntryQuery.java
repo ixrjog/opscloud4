@@ -104,4 +104,3 @@ public class KubernetesContainerJvmSpecEntryQuery extends BaseTicketEntryQuery<K
     }
 
 }
-

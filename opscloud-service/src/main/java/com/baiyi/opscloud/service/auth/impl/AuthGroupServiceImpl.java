@@ -33,7 +33,7 @@ public class AuthGroupServiceImpl implements AuthGroupService {
 
     @Override
     public DataTable<AuthGroup> queryPageByParam(AuthGroupParam.AuthGroupPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(AuthGroup.class);
         if (StringUtils.isNotBlank(pageQuery.getGroupName())) {
             Example.Criteria criteria = example.createCriteria();

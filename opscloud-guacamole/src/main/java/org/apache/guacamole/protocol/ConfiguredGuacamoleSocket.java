@@ -20,6 +20,7 @@
 package org.apache.guacamole.protocol;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.guacamole.GuacamoleConnectionClosedException;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.GuacamoleServerException;
@@ -27,8 +28,6 @@ import org.apache.guacamole.io.GuacamoleReader;
 import org.apache.guacamole.io.GuacamoleWriter;
 import org.apache.guacamole.net.DelegatingGuacamoleSocket;
 import org.apache.guacamole.net.GuacamoleSocket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Objects;
@@ -43,13 +42,8 @@ import java.util.Objects;
  * this GuacamoleSocket from manually controlling the initial protocol
  * handshake.
  */
+@Slf4j
 public class ConfiguredGuacamoleSocket extends DelegatingGuacamoleSocket {
-
-    /**
-     * Logger for this class.
-     */
-    private static final Logger logger =
-            LoggerFactory.getLogger(ConfiguredGuacamoleSocket.class);
 
     /**
      * The configuration to use when performing the Guacamole protocol
@@ -111,7 +105,7 @@ public class ConfiguredGuacamoleSocket extends DelegatingGuacamoleSocket {
         if (!args.isEmpty())
             message = args.getFirst();
         else
-            logger.debug("Received \"error\" instruction with no corresponding message.");
+            log.debug("Received \"error\" instruction with no corresponding message.");
 
         // Parse the status code from the received error instruction, warning
         // if the status code is missing or invalid
@@ -124,15 +118,15 @@ public class ConfiguredGuacamoleSocket extends DelegatingGuacamoleSocket {
                 if (parsedStatus != null)
                     status = parsedStatus;
                 else
-                    logger.debug("Received \"error\" instruction with unknown/invalid status code: {}", statusCode);
+                    log.debug("Received \"error\" instruction with unknown/invalid status code: {}", statusCode);
 
             }
             catch (NumberFormatException e) {
-                logger.debug("Received \"error\" instruction with non-numeric status code.", e);
+                log.debug("Received \"error\" instruction with non-numeric status code.", e);
             }
         }
         else
-            logger.debug("Received \"error\" instruction without status code.");
+            log.debug("Received \"error\" instruction without status code.");
 
         // Convert parsed status code and message to a GuacamoleException
         throw status.toException(message);

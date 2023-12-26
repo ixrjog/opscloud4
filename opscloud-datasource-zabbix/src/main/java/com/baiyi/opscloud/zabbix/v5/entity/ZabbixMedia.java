@@ -77,4 +77,5 @@ public class ZabbixMedia {
         @Builder.Default
         private String period = "1-7,00:00-24:00";
     }
+
 }

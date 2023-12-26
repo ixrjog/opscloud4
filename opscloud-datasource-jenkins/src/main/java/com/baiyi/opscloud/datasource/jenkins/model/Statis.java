@@ -6,6 +6,8 @@
 
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
 import java.util.List;
 
 /**
@@ -13,22 +15,15 @@ import java.util.List;
  *
  *         TODO: Has someone a better name for the class?
  */
+@Getter
 public class Statis {
 
     private List<Double> history;
     private Double latest;
 
-    public List<Double> getHistory() {
-        return history;
-    }
-
     public Statis setHistory(List<Double> history) {
         this.history = history;
         return this;
-    }
-
-    public Double getLatest() {
-        return latest;
     }
 
     public Statis setLatest(Double latest) {
@@ -60,11 +55,8 @@ public class Statis {
         } else if (!history.equals(other.history))
             return false;
         if (latest == null) {
-            if (other.latest != null)
-                return false;
-        } else if (!latest.equals(other.latest))
-            return false;
-        return true;
+            return other.latest == null;
+        } else return latest.equals(other.latest);
     }
 
 }

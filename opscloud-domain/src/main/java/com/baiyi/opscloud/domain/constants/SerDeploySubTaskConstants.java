@@ -13,7 +13,7 @@ public enum SerDeploySubTaskConstants {
 
     CREATE("CREATE", "新建"),
     DEPLOYING("DEPLOYING", "发布中"),
-    FINISH("FINISH", "完成"),
+    FINISH("FINISH", "完成")
     ;
 
     private final String name;
@@ -23,4 +23,5 @@ public enum SerDeploySubTaskConstants {
         this.name = name;
         this.desc = desc;
     }
+
 }

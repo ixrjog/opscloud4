@@ -57,4 +57,5 @@ public class KubernetesPodWatch {
             Thread.currentThread().interrupt();
         }
     }
+
 }

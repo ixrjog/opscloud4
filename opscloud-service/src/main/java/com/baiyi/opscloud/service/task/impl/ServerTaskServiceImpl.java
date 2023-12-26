@@ -28,7 +28,7 @@ public class ServerTaskServiceImpl implements ServerTaskService {
 
     @Override
     public DataTable<ServerTask> queryServerTaskPage(ServerTaskParam.ServerTaskPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(ServerTask.class);
         Example.Criteria criteria = example.createCriteria();
         if (!StringUtils.isBlank(pageQuery.getQueryName())) {

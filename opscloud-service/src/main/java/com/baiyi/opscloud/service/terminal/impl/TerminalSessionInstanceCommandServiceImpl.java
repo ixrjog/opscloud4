@@ -57,7 +57,7 @@ public class TerminalSessionInstanceCommandServiceImpl implements TerminalSessio
 
     @Override
     public DataTable<TerminalSessionInstanceCommand> queryTerminalSessionInstanceCommandPage(TerminalSessionInstanceCommandParam.InstanceCommandPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(TerminalSessionInstanceCommand.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("terminalSessionInstanceId", pageQuery.getTerminalSessionInstanceId());

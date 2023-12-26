@@ -12,4 +12,5 @@ public interface IState {
      * @return
      */
     String getState();
+
 }

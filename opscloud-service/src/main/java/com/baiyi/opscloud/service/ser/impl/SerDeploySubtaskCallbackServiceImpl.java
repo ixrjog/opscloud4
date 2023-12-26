@@ -41,4 +41,5 @@ public class SerDeploySubtaskCallbackServiceImpl implements SerDeploySubtaskCall
         criteria.andEqualTo("serDeploySubtaskId", serDeploySubtaskId);
         serDeploySubtaskCallbackMapper.deleteByExample(example);
     }
+
 }

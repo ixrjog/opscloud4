@@ -27,7 +27,7 @@ public class WorkOrderTicketServiceImpl implements WorkOrderTicketService {
 
     @Override
     public DataTable<WorkOrderTicket> queryPageByParam(WorkOrderTicketParam.TicketPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<WorkOrderTicket> data = workOrderTicketMapper.queryPageByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }

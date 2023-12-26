@@ -28,4 +28,3 @@ public class VpnTicketProcessor extends AbstractUserGroupPermissionExtendedAbstr
     }
 
 }
-

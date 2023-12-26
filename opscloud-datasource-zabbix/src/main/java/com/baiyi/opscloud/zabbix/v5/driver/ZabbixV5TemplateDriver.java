@@ -63,7 +63,7 @@ public class ZabbixV5TemplateDriver {
 
     @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_template_hostid_' + #host.hostid")
     public void evictHostTemplate(ZabbixConfig.Zabbix config, ZabbixHost.Host host) {
-        log.info("Evict cache Zabbix Host Teplate: hostid={}", host.getHostid());
+        log.info("Evict cache Zabbix Host Template: hostid={}", host.getHostid());
     }
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_template_hostid_' + #host.hostid", unless = "#result == null")

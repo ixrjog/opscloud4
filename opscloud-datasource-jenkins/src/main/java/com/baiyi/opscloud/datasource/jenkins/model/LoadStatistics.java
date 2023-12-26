@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
 /**
  * This class will contain the information about the load statistics which can
  * be extracted by using the following url:
@@ -9,31 +11,20 @@ package com.baiyi.opscloud.datasource.jenkins.model;
  * @author Karl Heinz Marbaise
  *
  */
+@Getter
 public class LoadStatistics extends BaseModel {
     private HourMinSec10 busyExecutors;
     private HourMinSec10 queueLength;
     private HourMinSec10 totalExecutors;
-
-    public HourMinSec10 getBusyExecutors() {
-        return busyExecutors;
-    }
 
     public LoadStatistics setBusyExecutors(HourMinSec10 busyExecutors) {
         this.busyExecutors = busyExecutors;
         return this;
     }
 
-    public HourMinSec10 getQueueLength() {
-        return queueLength;
-    }
-
     public LoadStatistics setQueueLength(HourMinSec10 queueLength) {
         this.queueLength = queueLength;
         return this;
-    }
-
-    public HourMinSec10 getTotalExecutors() {
-        return totalExecutors;
     }
 
     public LoadStatistics setTotalExecutors(HourMinSec10 totalExecutors) {
@@ -71,10 +62,8 @@ public class LoadStatistics extends BaseModel {
         } else if (!queueLength.equals(other.queueLength))
             return false;
         if (totalExecutors == null) {
-            if (other.totalExecutors != null)
-                return false;
-        } else if (!totalExecutors.equals(other.totalExecutors))
-            return false;
-        return true;
+            return other.totalExecutors == null;
+        } else return totalExecutors.equals(other.totalExecutors);
     }
+
 }

@@ -56,14 +56,17 @@ public class AliyunSmsDriver {
             if (response.getHttpStatus() == 200) {
                 AliyunSmsResponse.SendBatchSms data =
                         JSONUtil.readValue(response.getData(), AliyunSmsResponse.SendBatchSms.class);
-                if (OK.equals(data.getCode())) {
+                if (data != null && OK.equals(data.getCode())) {
                     return data.getBizId();
                 }
-                log.error("sendBatchSms失败: {}", data.getMessage());
+                if (data != null) {
+                    log.error("sendBatchSms失败: {}", data.getMessage());
+                }
             }
         } catch (ClientException e) {
             log.error("sendBatchSms失败: {}", e.getMessage());
         }
         return StringUtils.EMPTY;
     }
+
 }

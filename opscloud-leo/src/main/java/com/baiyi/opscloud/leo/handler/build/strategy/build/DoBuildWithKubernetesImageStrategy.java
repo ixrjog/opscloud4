@@ -64,4 +64,5 @@ public class DoBuildWithKubernetesImageStrategy extends BaseDoBuildStrategy {
     public String getBuildType() {
         return BuildTypeConstants.KUBERNETES_IMAGE;
     }
+
 }

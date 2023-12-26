@@ -12,6 +12,7 @@ import java.util.List;
  *
  */
 public class BuildChangeSet {
+
     private List<BuildChangeSetItem> items;
 
     /**
@@ -75,11 +76,8 @@ public class BuildChangeSet {
         } else if (!items.equals(other.items))
             return false;
         if (kind == null) {
-            if (other.kind != null)
-                return false;
-        } else if (!kind.equals(other.kind))
-            return false;
-        return true;
+            return other.kind == null;
+        } else return kind.equals(other.kind);
     }
 
 }

@@ -1,25 +1,20 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
 /**
  * @author Karl Heinz Marbaise
  *
  */
+@Getter
 public class TestChildReport {
 
     private TestChild child;
     private TestResult result;
 
-    public TestChild getChild() {
-        return child;
-    }
-
     public TestChildReport setChild(TestChild child) {
         this.child = child;
         return this;
-    }
-
-    public TestResult getResult() {
-        return result;
     }
 
     public TestChildReport setResult(TestResult result) {
@@ -51,11 +46,8 @@ public class TestChildReport {
         } else if (!child.equals(other.child))
             return false;
         if (result == null) {
-            if (other.result != null)
-                return false;
-        } else if (!result.equals(other.result))
-            return false;
-        return true;
+            return other.result == null;
+        } else return result.equals(other.result);
     }
 
 }

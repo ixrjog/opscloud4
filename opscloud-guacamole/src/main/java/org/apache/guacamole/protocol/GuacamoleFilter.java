@@ -41,6 +41,6 @@ public interface GuacamoleFilter {
      *                            or if the instruction must be explicitly
      *                            denied.
      */
-    public GuacamoleInstruction filter(GuacamoleInstruction instruction) throws GuacamoleException;
+    GuacamoleInstruction filter(GuacamoleInstruction instruction) throws GuacamoleException;
     
 }

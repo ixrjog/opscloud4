@@ -39,4 +39,5 @@ public interface WorkEventService {
     List<ReportVO.CommonReport> getWorkEventSolveReport();
 
     List<ReportVO.CommonReport> getWorkEventFaultReport();
+
 }

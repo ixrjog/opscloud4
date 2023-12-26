@@ -37,7 +37,6 @@ public class NacosCluster {
 
     }
 
-
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

@@ -735,4 +735,5 @@ public class SshShellHelper {
     public void setDefaultLineReader(LineReader defaultLineReader) {
         this.defaultLineReader = defaultLineReader;
     }
+
 }

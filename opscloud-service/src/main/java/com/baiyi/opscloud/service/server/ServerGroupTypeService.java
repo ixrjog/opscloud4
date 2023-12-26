@@ -22,4 +22,5 @@ public interface ServerGroupTypeService {
     ServerGroupType getById(Integer id);
 
     ServerGroupType getByName(String name);
+
 }

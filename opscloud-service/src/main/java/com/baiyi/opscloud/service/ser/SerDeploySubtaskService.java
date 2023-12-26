@@ -22,4 +22,3 @@ public interface SerDeploySubtaskService {
     SerDeploySubtask getByTaskIdAndEnvType(Integer serDeployTaskId, Integer envType);
 
 }
-

@@ -64,7 +64,7 @@ public class SerDeployTaskServiceImpl implements SerDeployTaskService {
 
     @Override
     public DataTable<SerDeployTask> queryPageByParam(SerDeployParam.TaskPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(SerDeployTask.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("applicationId", pageQuery.getApplicationId());
@@ -82,4 +82,5 @@ public class SerDeployTaskServiceImpl implements SerDeployTaskService {
         List<SerDeployTask> data = serDeployTaskMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }
+
 }

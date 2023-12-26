@@ -19,6 +19,7 @@
 
 package com.baiyi.opscloud.datasource.jenkins.helper;
 
+import java.io.Serial;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -104,19 +105,14 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
                 return BIG_INTEGER_ZERO.equals(value) ? 0 : 1; // 1.0 == 1, 1.1 > 1
             }
 
-            switch (item.getType()) {
-                case INTEGER_ITEM:
-                    return value.compareTo(((IntegerItem) item).value);
+            return switch (item.getType()) {
+                case INTEGER_ITEM -> value.compareTo(((IntegerItem) item).value);
+                case STRING_ITEM -> 1; // 1.1 > 1-sp
 
-                case STRING_ITEM:
-                    return 1; // 1.1 > 1-sp
+                case LIST_ITEM -> 1; // 1.1 > 1-1
 
-                case LIST_ITEM:
-                    return 1; // 1.1 > 1-1
-
-                default:
-                    throw new RuntimeException("invalid item: " + item.getClass());
-            }
+                default -> throw new RuntimeException("invalid item: " + item.getClass());
+            };
         }
 
         public String toString() {
@@ -194,19 +190,15 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
                 // 1-rc < 1, 1-ga > 1
                 return comparableQualifier(value).compareTo(RELEASE_VERSION_INDEX);
             }
-            switch (item.getType()) {
-                case INTEGER_ITEM:
-                    return -1; // 1.any < 1.1 ?
+            return switch (item.getType()) {
+                case INTEGER_ITEM -> -1; // 1.any < 1.1 ?
 
-                case STRING_ITEM:
-                    return comparableQualifier(value).compareTo(comparableQualifier(((StringItem) item).value));
+                case STRING_ITEM ->
+                        comparableQualifier(value).compareTo(comparableQualifier(((StringItem) item).value));
+                case LIST_ITEM -> -1; // 1.any < 1-1
 
-                case LIST_ITEM:
-                    return -1; // 1.any < 1-1
-
-                default:
-                    throw new RuntimeException("invalid item: " + item.getClass());
-            }
+                default -> throw new RuntimeException("invalid item: " + item.getClass());
+            };
         }
 
         public String toString() {
@@ -219,6 +211,7 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
      * with '-(number)' in the version specification).
      */
     public static class ListItem extends ArrayList<Item> implements Item {
+        @Serial
         private static final long serialVersionUID = 813609987283555601L;
 
         public int getType() {
@@ -283,7 +276,7 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
         public String toString() {
             StringBuilder buffer = new StringBuilder();
             for (Item item : this) {
-                if (buffer.length() > 0) {
+                if (!buffer.isEmpty()) {
                     buffer.append((item instanceof ListItem) ? '-' : '.');
                 }
                 buffer.append(item);
@@ -422,4 +415,5 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
             prev = c;
         }
     }
+
 }

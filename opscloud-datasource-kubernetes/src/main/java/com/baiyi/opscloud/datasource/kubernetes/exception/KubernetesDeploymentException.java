@@ -39,4 +39,5 @@ public class KubernetesDeploymentException extends BaseException {
     public KubernetesDeploymentException(String message, Throwable cause) {
         super(message, cause);
     }
+
 }

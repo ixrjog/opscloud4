@@ -25,6 +25,7 @@ import javax.naming.directory.*;
 import java.util.Collections;
 import java.util.List;
 
+import static com.baiyi.opscloud.datasource.ldap.driver.LdapDriver.SEARCH_KEY.OBJECTCLASS;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
@@ -51,7 +52,7 @@ public class LdapDriver {
      */
     public List<LdapPerson.Person> queryPersonList(LdapConfig.Ldap ldapConfig) {
         return buildLdapTemplate(ldapConfig)
-                .search(query().where(SEARCH_KEY.OBJECTCLASS).is(ldapConfig.getUser().getObjectClass()), new PersonAttributesMapper());
+                .search(query().where(OBJECTCLASS).is(ldapConfig.getUser().getObjectClass()), new PersonAttributesMapper());
     }
 
     /**
@@ -61,7 +62,7 @@ public class LdapDriver {
      */
     public List<String> queryPersonNameList(LdapConfig.Ldap ldapConfig) {
         return buildLdapTemplate(ldapConfig).search(
-                query().where(SEARCH_KEY.OBJECTCLASS).is(ldapConfig.getUser().getObjectClass()), (AttributesMapper<String>) attrs
+                query().where(OBJECTCLASS).is(ldapConfig.getUser().getObjectClass()), (AttributesMapper<String>) attrs
                         -> (String) attrs.get(ldapConfig.getUser().getId()).get());
     }
 
@@ -99,7 +100,7 @@ public class LdapDriver {
         final String password = credential.getPassword();
         log.info("Verify login content username={}", username);
         AndFilter filter = new AndFilter();
-        filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter(ldapConfig.getUser().getId(), username));
+        filter.and(new EqualsFilter(OBJECTCLASS, "person")).and(new EqualsFilter(ldapConfig.getUser().getId(), username));
         try {
             return buildLdapTemplate(ldapConfig).authenticate(ldapConfig.getUser().getDn(), filter.toString(), password);
         } catch (Exception e) {
@@ -223,7 +224,7 @@ public class LdapDriver {
     public List<LdapGroup.Group> queryGroupList(LdapConfig.Ldap ldapConfig) {
         return buildLdapTemplate(ldapConfig)
                 .search(query()
-                        .where(SEARCH_KEY.OBJECTCLASS)
+                        .where(OBJECTCLASS)
                         .is(ldapConfig.getGroup().getObjectClass()), new GroupAttributesMapper());
     }
 

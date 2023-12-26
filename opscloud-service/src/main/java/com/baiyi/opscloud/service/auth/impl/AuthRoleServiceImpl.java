@@ -41,7 +41,7 @@ public class AuthRoleServiceImpl implements AuthRoleService {
 
     @Override
     public DataTable<AuthRole> queryPageByParam(AuthRoleParam.AuthRolePageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(AuthRole.class);
         if (StringUtils.isNotBlank(pageQuery.getRoleName())) {
             Example.Criteria criteria = example.createCriteria();

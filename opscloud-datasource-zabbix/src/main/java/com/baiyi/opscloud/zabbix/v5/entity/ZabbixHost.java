@@ -123,7 +123,6 @@ public class ZabbixHost {
         }
     }
 
-
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class HostTag implements Serializable {
@@ -157,7 +156,6 @@ public class ZabbixHost {
         private Integer main;
 
         private String port;
-
 
         /**
          * 接口类型。

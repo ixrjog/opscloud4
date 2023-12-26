@@ -30,7 +30,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
 
     @Override
     public DataTable<WorkOrder> queryPageByParam(WorkOrderParam.WorkOrderPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(WorkOrder.class);
         Example.Criteria criteria = example.createCriteria();
         if (IdUtil.isNotEmpty(pageQuery.getWorkOrderGroupId())) {
@@ -82,4 +82,5 @@ public class WorkOrderServiceImpl implements WorkOrderService {
     public List<WorkOrder> queryAll() {
         return workOrderMapper.selectAll();
     }
+
 }

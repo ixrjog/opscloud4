@@ -59,4 +59,5 @@ public interface ServerService {
     int countByServerGroupId(Integer serverGroupId);
 
     List<Server> queryByServerGroupId(Integer serverGroupId);
+
 }

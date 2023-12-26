@@ -8,6 +8,7 @@ import lombok.Getter;
  * @Date 2022/1/7 1:33 PM
  * @Version 1.0
  */
+@Getter
 public enum ProcessStatusConstants {
 
     /**
@@ -23,6 +24,6 @@ public enum ProcessStatusConstants {
         this.status = status;
     }
 
-    @Getter
     private final int status;
+
 }

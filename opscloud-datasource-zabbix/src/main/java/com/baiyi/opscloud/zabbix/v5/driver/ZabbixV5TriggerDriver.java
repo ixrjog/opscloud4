@@ -68,8 +68,7 @@ public class ZabbixV5TriggerDriver {
      * @param severityType
      */
     public List<ZabbixTrigger.Trigger> getBySeverityType(ZabbixConfig.Zabbix config, SeverityType severityType) {
-
-        /**
+        /*
          * filter
          * (readonly 只读) Whether the trigger is in OK or problem state. 触发器是否处于正常或故障状态。
          Possible values are: 许可值为：

@@ -112,4 +112,3 @@ public class KubernetesIstioConfigurationTicketProcessor extends AbstractDsAsset
     }
 
 }
-

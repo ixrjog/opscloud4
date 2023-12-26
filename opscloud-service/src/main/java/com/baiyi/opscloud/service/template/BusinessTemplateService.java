@@ -30,4 +30,5 @@ public interface BusinessTemplateService {
     void deleteById(int id);
 
     int countByTemplateId(int templateId);
+
 }

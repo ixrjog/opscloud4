@@ -68,4 +68,5 @@ public class SonarQubeVO {
         private String vulnerabilities;
 
     }
+
 }

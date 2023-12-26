@@ -27,4 +27,5 @@ public interface ZabbixActionFeign {
     @RequestLine(REQUEST_API)
     @Headers({CONTENT_TYPE})
     ZabbixAction.DeleteActionResponse delete(ZabbixRequest.DeleteRequest request);
+
 }

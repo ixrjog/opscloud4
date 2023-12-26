@@ -1,5 +1,8 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
+@Getter
 public class View extends MainView {
 
     //TODO: Think about the initialization of
@@ -9,10 +12,6 @@ public class View extends MainView {
     private String description = "";
     private String url = "";
 
-    public String getName() {
-        return name;
-    }
-
     public View setName(String name) {
         this.name = name;
         return this;
@@ -21,17 +20,9 @@ public class View extends MainView {
     public View() {
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public View setDescription(String description) {
         this.description = description;
         return this;
-    }
-
-    public String getUrl() {
-        return url;
     }
 
     public View setUrl(String url) {
@@ -59,11 +50,8 @@ public class View extends MainView {
         } else if (!name.equals(other.name))
             return false;
         if (url == null) {
-            if (other.url != null)
-                return false;
-        } else if (!url.equals(other.url))
-            return false;
-        return true;
+            return other.url == null;
+        } else return url.equals(other.url);
     }
 
     @Override
@@ -75,4 +63,5 @@ public class View extends MainView {
         result = prime * result + ((url == null) ? 0 : url.hashCode());
         return result;
     }
+
 }

@@ -68,11 +68,8 @@ public class HourMinSec10 {
         } else if (!min.equals(other.min))
             return false;
         if (sec10 == null) {
-            if (other.sec10 != null)
-                return false;
-        } else if (!sec10.equals(other.sec10))
-            return false;
-        return true;
+            return other.sec10 == null;
+        } else return sec10.equals(other.sec10);
     }
 
 }

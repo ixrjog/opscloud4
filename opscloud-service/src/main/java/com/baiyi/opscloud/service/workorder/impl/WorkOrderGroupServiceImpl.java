@@ -26,7 +26,7 @@ public class WorkOrderGroupServiceImpl implements WorkOrderGroupService {
 
     @Override
     public DataTable<WorkOrderGroup> queryPageByParam(WorkOrderGroupParam.WorkOrderGroupPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(WorkOrderGroup.class);
         example.setOrderByClause("seq");
         return new DataTable<>(workOrderGroupMapper.selectByExample(example), page.getTotal());
@@ -65,4 +65,5 @@ public class WorkOrderGroupServiceImpl implements WorkOrderGroupService {
         Example example = new Example(WorkOrderGroup.class);
         return workOrderGroupMapper.selectCountByExample(example);
     }
+
 }

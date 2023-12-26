@@ -22,4 +22,5 @@ public interface SerDeployTaskItemService {
     List<SerDeployTaskItem> listBySerDeployTaskId(Integer serDeployTaskId);
 
     SerDeployTaskItem getByTaskIdAndItemName(Integer serDeployTaskId, String itemName);
+
 }

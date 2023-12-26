@@ -7,6 +7,7 @@ import lombok.Getter;
  * @Date 2022/1/7 11:00 AM
  * @Version 1.0
  */
+@Getter
 public enum UserGroupConstants {
 
     /**
@@ -25,7 +26,6 @@ public enum UserGroupConstants {
         this.role = role;
     }
 
-    @Getter
     private final String role;
 
 }

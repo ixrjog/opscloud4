@@ -24,4 +24,5 @@ public interface WorkOrderTicketNodeService {
     WorkOrderTicketNode getByUniqueKey(int workOrderTicketId, int parentId);
 
     void deleteById(int id);
+
 }

@@ -18,4 +18,5 @@ public interface AuthRoleMenuService {
     List<AuthRoleMenu> queryByRoleId(Integer roleId);
 
     List<AuthRoleMenu> queryByRoleIds(List<Integer> roleIdList);
+
 }

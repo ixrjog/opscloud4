@@ -6,8 +6,11 @@
 
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public class QueueItem extends BaseModel {
 
     private List<QueueItemActions> actions;
@@ -34,17 +37,9 @@ public class QueueItem extends BaseModel {
 
     private Executable executable;
 
-    public List<QueueItemActions> getActions() {
-        return actions;
-    }
-
     public QueueItem setActions(List<QueueItemActions> actions) {
         this.actions = actions;
         return this;
-    }
-
-    public boolean isBlocked() {
-        return blocked;
     }
 
     public QueueItem setBlocked(boolean blocked) {
@@ -52,17 +47,9 @@ public class QueueItem extends BaseModel {
         return this;
     }
 
-    public boolean isBuildable() {
-        return buildable;
-    }
-
     public QueueItem setBuildable(boolean buildable) {
         this.buildable = buildable;
         return this;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public QueueItem setId(Long id) {
@@ -70,30 +57,14 @@ public class QueueItem extends BaseModel {
         return this;
     }
 
-    public Long getInQueueSince() {
-        return inQueueSince;
-    }
-
     public QueueItem setInQueueSince(Long inQueueSince) {
         this.inQueueSince = inQueueSince;
         return this;
     }
 
-    public String getParams() {
-        return params;
-    }
-
     public QueueItem setParams(String params) {
         this.params = params;
         return this;
-    }
-
-    public boolean isStuck() {
-        return stuck;
-    }
-
-    public QueueTask getTask() {
-        return task;
     }
 
     public QueueItem setTask(QueueTask task) {
@@ -106,17 +77,9 @@ public class QueueItem extends BaseModel {
         return this;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
     public QueueItem setUrl(String url) {
         this.url = url;
         return this;
-    }
-
-    public String getWhy() {
-        return why;
     }
 
     public QueueItem setWhy(String why) {
@@ -124,17 +87,9 @@ public class QueueItem extends BaseModel {
         return this;
     }
 
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
     public QueueItem setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
         return this;
-    }
-
-    public Executable getExecutable() {
-        return executable;
     }
 
     public QueueItem setExecutable(Executable executable) {
@@ -214,11 +169,8 @@ public class QueueItem extends BaseModel {
         } else if (!url.equals(other.url))
             return false;
         if (why == null) {
-            if (other.why != null)
-                return false;
-        } else if (!why.equals(other.why))
-            return false;
-        return true;
+            return other.why == null;
+        } else return why.equals(other.why);
     }
 
 }

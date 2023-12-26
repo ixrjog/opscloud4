@@ -7,6 +7,7 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class LabelWithDetails extends Job {
 
@@ -78,30 +79,27 @@ public class LabelWithDetails extends Job {
 
         LabelWithDetails that = (LabelWithDetails) o;
 
-        if (actions != null ? !actions.equals(that.actions) : that.actions != null)
+        if (!Objects.equals(actions, that.actions))
             return false;
-        if (clouds != null ? !clouds.equals(that.clouds) : that.clouds != null)
+        if (!Objects.equals(clouds, that.clouds))
             return false;
-        if (description != null ? !description.equals(that.description) : that.description != null)
+        if (!Objects.equals(description, that.description))
             return false;
-        if (idleExecutors != null ? !idleExecutors.equals(that.idleExecutors) : that.idleExecutors != null)
+        if (!Objects.equals(idleExecutors, that.idleExecutors))
             return false;
-        if (name != null ? !name.equals(that.name) : that.name != null)
+        if (!Objects.equals(name, that.name))
             return false;
-        if (nodeName != null ? !nodeName.equals(that.nodeName) : that.nodeName != null)
+        if (!Objects.equals(nodeName, that.nodeName))
             return false;
-        if (nodes != null ? !nodes.equals(that.nodes) : that.nodes != null)
+        if (!Objects.equals(nodes, that.nodes))
             return false;
-        if (offline != null ? !offline.equals(that.offline) : that.offline != null)
+        if (!Objects.equals(offline, that.offline))
             return false;
-        if (propertiesList != null ? !propertiesList.equals(that.propertiesList) : that.propertiesList != null)
+        if (!Objects.equals(propertiesList, that.propertiesList))
             return false;
-        if (tiedJobs != null ? !tiedJobs.equals(that.tiedJobs) : that.tiedJobs != null)
+        if (!Objects.equals(tiedJobs, that.tiedJobs))
             return false;
-        if (totalExecutors != null ? !totalExecutors.equals(that.totalExecutors) : that.totalExecutors != null)
-            return false;
-
-        return true;
+        return Objects.equals(totalExecutors, that.totalExecutors);
     }
 
     @Override
@@ -120,4 +118,5 @@ public class LabelWithDetails extends Job {
         result = 31 * result + (propertiesList != null ? propertiesList.hashCode() : 0);
         return result;
     }
+
 }

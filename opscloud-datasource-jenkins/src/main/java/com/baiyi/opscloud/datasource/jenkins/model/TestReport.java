@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import java.util.List;
  * @author Karl Heinz Marbaise
  *
  */
+@Getter
 public class TestReport extends BaseModel {
 
     public static final String EMPTY_STRING = "";
@@ -43,17 +46,9 @@ public class TestReport extends BaseModel {
 
     private List<TestChildReport> childReports;
 
-    public int getFailCount() {
-        return failCount;
-    }
-
     public TestReport setFailCount(int failCount) {
         this.failCount = failCount;
         return this;
-    }
-
-    public int getSkipCount() {
-        return skipCount;
     }
 
     public TestReport setSkipCount(int skipCount) {
@@ -61,26 +56,14 @@ public class TestReport extends BaseModel {
         return this;
     }
 
-    public int getTotalCount() {
-        return totalCount;
-    }
-
     public TestReport setTotalCount(int totalCount) {
         this.totalCount = totalCount;
         return this;
     }
 
-    public String getUrlName() {
-        return urlName;
-    }
-
     public TestReport setUrlName(String urlName) {
         this.urlName = urlName;
         return this;
-    }
-
-    public List<TestChildReport> getChildReports() {
-        return childReports;
     }
 
     public TestReport setChildReports(List<TestChildReport> childReports) {
@@ -121,11 +104,8 @@ public class TestReport extends BaseModel {
         if (totalCount != other.totalCount)
             return false;
         if (urlName == null) {
-            if (other.urlName != null)
-                return false;
-        } else if (!urlName.equals(other.urlName))
-            return false;
-        return true;
+            return other.urlName == null;
+        } else return urlName.equals(other.urlName);
     }
 
 }

@@ -7,6 +7,7 @@ import lombok.Getter;
  * @Date 2022/9/26 11:26
  * @Version 1.0
  */
+@Getter
 public enum FrontEndTypeConstants {
 
     SUCCESS("success"),
@@ -14,10 +15,10 @@ public enum FrontEndTypeConstants {
     WARNING("warning"),
     DANGER("danger");
 
-    @Getter
     private final String type;
 
     FrontEndTypeConstants(String type) {
         this.type = type;
     }
+
 }

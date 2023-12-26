@@ -29,4 +29,5 @@ public interface DsInstanceService {
     void update(DatasourceInstance datasourceInstance);
 
     int countByConfigId(Integer configId);
+
 }

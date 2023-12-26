@@ -57,4 +57,5 @@ public class SonarMeasuresDriver {
                 .build();
         return sonarAPI.queryMeasuresComponent(token.toBasic(), buildMeasuresComponentParam(component));
     }
+
 }

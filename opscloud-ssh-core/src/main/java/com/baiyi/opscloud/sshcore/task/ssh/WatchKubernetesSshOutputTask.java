@@ -31,4 +31,3 @@ public class WatchKubernetesSshOutputTask extends AbstractSshChannelOutputTask {
     }
 
 }
-

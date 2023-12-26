@@ -225,11 +225,8 @@ public class ComputerWithDetails extends Computer {
         } else if (!oneOffExecutors.equals(other.oneOffExecutors))
             return false;
         if (temporarilyOffline == null) {
-            if (other.temporarilyOffline != null)
-                return false;
-        } else if (!temporarilyOffline.equals(other.temporarilyOffline))
-            return false;
-        return true;
+            return other.temporarilyOffline == null;
+        } else return temporarilyOffline.equals(other.temporarilyOffline);
     }
 
     @Override

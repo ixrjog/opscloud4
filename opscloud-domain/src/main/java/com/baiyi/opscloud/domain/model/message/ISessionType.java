@@ -12,4 +12,5 @@ public interface ISessionType {
      * @return
      */
     String getSessionType();
+
 }

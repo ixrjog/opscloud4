@@ -37,4 +37,5 @@ public abstract class AbstractMessageConsumer<T> implements IMessageConsumer, In
     public void afterPropertiesSet() throws Exception {
         MessageConsumerFactory.register(this);
     }
+
 }

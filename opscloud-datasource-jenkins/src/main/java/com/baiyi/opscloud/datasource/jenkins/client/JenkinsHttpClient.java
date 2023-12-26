@@ -187,7 +187,7 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
             return value;
         } catch (IOException e) {
             log.debug("getQuietly({}, {})", path, cls.getName(), e);
-            // TODO: Is returing null a good idea?
+            // TODO: Is returning null a good idea?
             return null;
         }
     }
@@ -446,7 +446,6 @@ public class JenkinsHttpClient implements JenkinsHttpConnection {
             log.debug("I/O exception closing client", ex);
         }
     }
-
 
     /**
      * Add authentication to supplied builder.

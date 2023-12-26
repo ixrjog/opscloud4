@@ -40,7 +40,7 @@ public interface GuacamoleWriter {
      * @throws GuacamoleException If an error occurred while writing the
      *                            portion of the array specified.
      */
-    public void write(char[] chunk, int off, int len) throws GuacamoleException;
+    void write(char[] chunk, int off, int len) throws GuacamoleException;
 
     /**
      * Writes the entire given array of characters to the Guacamole instruction
@@ -51,7 +51,7 @@ public interface GuacamoleWriter {
      * @throws GuacamoleException If an error occurred while writing the
      *                            the specified array.
      */
-    public void write(char[] chunk) throws GuacamoleException;
+    void write(char[] chunk) throws GuacamoleException;
 
     /**
      * Writes the given fully parsed instruction to the Guacamole instruction
@@ -61,6 +61,6 @@ public interface GuacamoleWriter {
      * @throws GuacamoleException If an error occurred while writing the
      *                            instruction.
      */
-    public void writeInstruction(GuacamoleInstruction instruction) throws GuacamoleException;
+    void writeInstruction(GuacamoleInstruction instruction) throws GuacamoleException;
 
 }

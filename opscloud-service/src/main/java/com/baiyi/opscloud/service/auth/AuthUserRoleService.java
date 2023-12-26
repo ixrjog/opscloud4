@@ -18,4 +18,5 @@ public interface AuthUserRoleService {
     List<AuthUserRole> queryByUsername(String username);
 
     AuthUserRole queryByUniqueKey(AuthUserRole authUserRole);
+
 }

@@ -14,10 +14,7 @@ import java.util.List;
  * @Date 2022/8/1 10:06
  * @Version 1.0
  */
-public class JenkinsBuildExecutorStatusVO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -2642546999291350826L;
+public class JenkinsBuildExecutorStatusVO {
 
     @Data
     @Builder

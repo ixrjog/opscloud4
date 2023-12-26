@@ -37,4 +37,5 @@ public enum OrderTicketPhaseCodeConstants {
     public static OrderTicketPhaseCodeConstants getEnum(String phase) {
         return Arrays.stream(OrderTicketPhaseCodeConstants.values()).filter(phaseCodeConstants -> phaseCodeConstants.getPhase().equals(phase)).findFirst().orElse(null);
     }
+
 }

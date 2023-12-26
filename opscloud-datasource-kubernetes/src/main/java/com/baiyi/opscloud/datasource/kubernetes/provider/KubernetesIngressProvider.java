@@ -98,4 +98,3 @@ public class KubernetesIngressProvider extends AbstractAssetRelationProvider<Ing
     }
 
 }
-

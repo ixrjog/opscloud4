@@ -98,4 +98,5 @@ public class ProjectVO {
         private List<ProjectResourceVO.Resource> applicationList;
 
     }
+
 }

@@ -27,7 +27,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public DataTable<Application> queryPageByParam(ApplicationParam.ApplicationPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<Application> data = applicationMapper.queryApplicationByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
@@ -39,7 +39,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public DataTable<Application> queryPageByParam(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<Application> data = applicationMapper.queryUserPermissionApplicationByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }

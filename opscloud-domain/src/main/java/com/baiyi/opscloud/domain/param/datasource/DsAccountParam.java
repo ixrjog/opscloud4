@@ -37,4 +37,5 @@ public class DsAccountParam {
         private Boolean isActive;
 
     }
+
 }

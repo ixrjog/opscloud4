@@ -66,7 +66,7 @@ public class GuacamoleServerException extends GuacamoleException {
 
     @Override
     public GuacamoleStatus getStatus() {
-        return GuacamoleStatus.SERVER_ERROR;
+        return super.getStatus();
     }
 
 }

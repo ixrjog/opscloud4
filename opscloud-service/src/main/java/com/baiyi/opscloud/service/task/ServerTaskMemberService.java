@@ -22,4 +22,5 @@ public interface ServerTaskMemberService {
     int countByFinalized(Integer serverTaskId, boolean finalized);
 
     List<ServerTaskMember> queryByServerTaskId(Integer serverTaskId);
+
 }

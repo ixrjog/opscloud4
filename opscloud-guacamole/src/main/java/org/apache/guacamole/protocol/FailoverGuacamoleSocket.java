@@ -19,12 +19,11 @@
 
 package org.apache.guacamole.protocol;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.guacamole.*;
 import org.apache.guacamole.io.GuacamoleReader;
 import org.apache.guacamole.net.DelegatingGuacamoleSocket;
 import org.apache.guacamole.net.GuacamoleSocket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -37,13 +36,8 @@ import java.util.Queue;
  * constructor, allowing a different socket to be substituted prior to
  * fulfilling the connection.
  */
+@Slf4j
 public class FailoverGuacamoleSocket extends DelegatingGuacamoleSocket {
-
-    /**
-     * Logger for this class.
-     */
-    private static final Logger logger =
-            LoggerFactory.getLogger(FailoverGuacamoleSocket.class);
 
     /**
      * The default maximum number of characters of Guacamole instruction data
@@ -75,7 +69,7 @@ public class FailoverGuacamoleSocket extends DelegatingGuacamoleSocket {
         // Ignore error instructions which are missing the status code
         List<String> args = instruction.getArgs();
         if (args.size() < 2) {
-            logger.debug("Received \"error\" instruction without status code.");
+            log.debug("Received \"error\" instruction without status code.");
             return;
         }
 
@@ -85,14 +79,14 @@ public class FailoverGuacamoleSocket extends DelegatingGuacamoleSocket {
             statusCode = Integer.parseInt(args.get(1));
         }
         catch (NumberFormatException e) {
-            logger.debug("Received \"error\" instruction with non-numeric status code.", e);
+            log.debug("Received \"error\" instruction with non-numeric status code.", e);
             return;
         }
 
         // Translate numeric status code into a GuacamoleStatus
         GuacamoleStatus status = GuacamoleStatus.fromGuacamoleStatusCode(statusCode);
         if (status == null) {
-            logger.debug("Received \"error\" instruction with unknown/invalid status code: {}", statusCode);
+            log.debug("Received \"error\" instruction with unknown/invalid status code: {}", statusCode);
             return;
         }
 

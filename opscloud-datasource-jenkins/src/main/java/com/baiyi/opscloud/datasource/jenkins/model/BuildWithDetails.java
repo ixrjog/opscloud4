@@ -7,6 +7,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -21,6 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
+@Slf4j
 public class BuildWithDetails extends Build {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     public static final String TEXT_SIZE_HEADER = "x-text-size";
@@ -118,15 +120,15 @@ public class BuildWithDetails extends Build {
     }
 
     public List<BuildCause> getCauses() {
-        Collection causes = Collections2.filter(this.actions, new Predicate<Map<String, Object>>() {
+        Collection<?> causes = Collections2.filter(this.actions, new Predicate<Map<String, Object>>() {
             public boolean apply(Map<String, Object> action) {
                 return action.containsKey("causes");
             }
         });
         List<BuildCause> result = Lists.newArrayList();
-        if (causes != null && !causes.isEmpty()) {
+        if (!causes.isEmpty()) {
             List<Map<String, Object>> causes_blob = (List) ((Map) causes.toArray()[0]).get("causes");
-            Iterator var4 = causes_blob.iterator();
+            Iterator<?> var4 = causes_blob.iterator();
 
             while (var4.hasNext()) {
                 Map<String, Object> cause = (Map) var4.next();
@@ -295,7 +297,7 @@ public class BuildWithDetails extends Build {
                 if (var11 <= timeoutTime) {
                     continue;
                 }
-                this.LOGGER.warn("Pooling for build {0} for {2} timeout! Check if job stuck in jenkins", this.getDisplayName(), this.getNumber());
+                log.warn("Pooling for build {} for {} timeout! Check if job stuck in jenkins", this.getDisplayName(), this.getNumber());
                 break;
             }
 
@@ -318,12 +320,12 @@ public class BuildWithDetails extends Build {
             hasMoreData = Boolean.TRUE.toString().equals(moreDataHeader.getValue());
         }
 
-        Integer currentBufferSize = bufferOffset;
+        int currentBufferSize = bufferOffset;
         if (textSizeHeader != null) {
             try {
                 currentBufferSize = Integer.parseInt(textSizeHeader.getValue());
             } catch (NumberFormatException var11) {
-                this.LOGGER.warn("Cannot parse buffer size for job {0} build {1}. Using current offset!", this.getDisplayName(), this.getNumber());
+                log.warn("Cannot parse buffer size for job {} build {}. Using current offset!", this.getDisplayName(), this.getNumber());
             }
         }
 
@@ -528,4 +530,5 @@ public class BuildWithDetails extends Build {
         result = prime * result + (int) (timestamp ^ (timestamp >>> 32));
         return result;
     }
+
 }

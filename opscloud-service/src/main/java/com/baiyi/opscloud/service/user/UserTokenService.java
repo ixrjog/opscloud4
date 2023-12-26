@@ -15,9 +15,9 @@ public interface UserTokenService {
 
     int checkUserHasRole(String token, String roleName);
 
-    UserToken getByVaildToken(String token);
+    UserToken getByValidToken(String token);
 
-    List<UserToken> queryByVaildTokenByUsername(String username);
+    List<UserToken> queryByValidTokenByUsername(String username);
 
     void update(UserToken userToken);
 

@@ -56,7 +56,7 @@ public class InstanceServiceImpl implements InstanceService {
 
     @Override
     public DataTable<Instance> queryRegisteredInstancePage(RegisteredInstanceParam.RegisteredInstancePageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(Instance.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(pageQuery.getName())) {

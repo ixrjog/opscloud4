@@ -18,4 +18,5 @@ public interface AlertNotifyEventService {
     List<AlertNotifyEvent> listAll();
 
     List<AlertNotifyEvent> listByService(String service);
+
 }

@@ -102,4 +102,3 @@ public class JenkinsTemplateProvider extends BaseAssetProvider<Job> {
     }
 
 }
-

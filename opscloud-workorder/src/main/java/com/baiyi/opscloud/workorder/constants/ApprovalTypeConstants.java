@@ -11,6 +11,7 @@ import java.util.Arrays;
  * @Date 2021/11/11 11:23 上午
  * @Version 1.0
  */
+@Getter
 public enum ApprovalTypeConstants {
 
     /**
@@ -24,7 +25,6 @@ public enum ApprovalTypeConstants {
         this.desc = desc;
     }
 
-    @Getter
     private final String desc;
 
     public static String getDesc(String name) {

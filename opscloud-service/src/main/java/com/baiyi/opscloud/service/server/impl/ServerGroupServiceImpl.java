@@ -88,14 +88,14 @@ public class ServerGroupServiceImpl extends AbstractBusinessService<ServerGroup>
 
     @Override
     public DataTable<ServerGroup> queryPageByParam(ServerGroupParam.ServerGroupPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<ServerGroup> data = serverGroupMapper.queryServerGroupByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
 
     @Override
     public DataTable<ServerGroup> queryPageByParam(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<ServerGroup> data = serverGroupMapper.queryUserPermissionServerGroupByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
@@ -104,4 +104,5 @@ public class ServerGroupServiceImpl extends AbstractBusinessService<ServerGroup>
     public List<ServerGroup> queryUserServerGroupTreeByParam(ServerGroupParam.UserServerTreeQuery queryParam) {
         return serverGroupMapper.queryUserServerGroupTreeByParam(queryParam);
     }
+
 }

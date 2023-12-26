@@ -7,6 +7,7 @@ import lombok.Getter;
  * @Date 2023/4/25 13:31
  * @Version 1.0
  */
+@Getter
 public enum MavenPublishConstants {
 
     /**
@@ -16,7 +17,6 @@ public enum MavenPublishConstants {
     GROUP_ID("groupId"),
     VERSION("version");
 
-    @Getter
     private final String param;
 
     MavenPublishConstants(String param) {

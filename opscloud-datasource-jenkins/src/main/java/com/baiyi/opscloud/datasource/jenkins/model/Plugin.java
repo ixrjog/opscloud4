@@ -1,10 +1,13 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
 import java.util.List;
 
 /**
  * @author Karl Heinz Marbaise
  */
+@Getter
 public class Plugin extends BaseModel {
     private boolean active;
     private String backupVersion;
@@ -21,17 +24,9 @@ public class Plugin extends BaseModel {
 
     private List<PluginDependency> dependencies;
 
-    public boolean isActive() {
-        return active;
-    }
-
     public Plugin setActive(boolean active) {
         this.active = active;
         return this;
-    }
-
-    public String getBackupVersion() {
-        return backupVersion;
     }
 
     public Plugin setBackupVersion(String backupVersion) {
@@ -39,17 +34,9 @@ public class Plugin extends BaseModel {
         return this;
     }
 
-    public boolean isBundled() {
-        return bundled;
-    }
-
     public Plugin setBundled(boolean bundled) {
         this.bundled = bundled;
         return this;
-    }
-
-    public boolean isDowngradable() {
-        return downgradable;
     }
 
     public Plugin setDowngradable(boolean downgradable) {
@@ -57,17 +44,9 @@ public class Plugin extends BaseModel {
         return this;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
     public Plugin setEnabled(boolean enabled) {
         this.enabled = enabled;
         return this;
-    }
-
-    public boolean isHasUpdate() {
-        return hasUpdate;
     }
 
     public Plugin setHasUpdate(boolean hasUpdate) {
@@ -75,17 +54,9 @@ public class Plugin extends BaseModel {
         return this;
     }
 
-    public String getLongName() {
-        return longName;
-    }
-
     public Plugin setLongName(String longName) {
         this.longName = longName;
         return this;
-    }
-
-    public boolean isPinned() {
-        return pinned;
     }
 
     public Plugin setPinned(boolean pinned) {
@@ -93,17 +64,9 @@ public class Plugin extends BaseModel {
         return this;
     }
 
-    public String getShortName() {
-        return shortName;
-    }
-
     public Plugin setShortName(String shortName) {
         this.shortName = shortName;
         return this;
-    }
-
-    public String getSupportsDynamicLoad() {
-        return supportsDynamicLoad;
     }
 
     public Plugin setSupportsDynamicLoad(String supportsDynamicLoad) {
@@ -111,26 +74,14 @@ public class Plugin extends BaseModel {
         return this;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
     public Plugin setUrl(String url) {
         this.url = url;
         return this;
     }
 
-    public String getVersion() {
-        return version;
-    }
-
     public Plugin setVersion(String version) {
         this.version = version;
         return this;
-    }
-
-    public List<PluginDependency> getDependencies() {
-        return dependencies;
     }
 
     public Plugin setDependencies(List<PluginDependency> dependencies) {
@@ -210,11 +161,8 @@ public class Plugin extends BaseModel {
         } else if (!url.equals(other.url))
             return false;
         if (version == null) {
-            if (other.version != null)
-                return false;
-        } else if (!version.equals(other.version))
-            return false;
-        return true;
+            return other.version == null;
+        } else return version.equals(other.version);
     }
 
 }

@@ -45,4 +45,5 @@ public class WorkEventPropertyServiceImpl implements WorkEventPropertyService {
         criteria.andEqualTo("workEventId", workEventId);
         workEventPropertyMapper.deleteByExample(example);
     }
+
 }

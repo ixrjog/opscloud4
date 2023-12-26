@@ -111,10 +111,10 @@ public final class UrlUtils {
         if (path1.isEmpty() && path2.isEmpty()) {
             return "";
         }
-        if (path1.isEmpty() && !path2.isEmpty()) {
+        if (path1.isEmpty()) {
             return path2;
         }
-        if (path2.isEmpty() && !path1.isEmpty()) {
+        if (path2.isEmpty()) {
             return path1;
         }
         final StringBuilder sb = new StringBuilder(DEFAULT_BUFFER_SIZE);

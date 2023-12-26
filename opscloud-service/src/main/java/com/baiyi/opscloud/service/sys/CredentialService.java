@@ -22,4 +22,5 @@ public interface CredentialService {
     void deleteById(Integer id);
 
     DataTable<Credential> queryPageByParam(CredentialParam.CredentialPageQuery pageQuery);
+
 }

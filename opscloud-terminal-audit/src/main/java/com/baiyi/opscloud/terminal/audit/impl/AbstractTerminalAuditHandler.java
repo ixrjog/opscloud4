@@ -23,4 +23,5 @@ public abstract class AbstractTerminalAuditHandler<T extends BaseAuditMessage> i
     public void afterPropertiesSet() {
         TerminalAuditHandlerFactory.register(this);
     }
+
 }

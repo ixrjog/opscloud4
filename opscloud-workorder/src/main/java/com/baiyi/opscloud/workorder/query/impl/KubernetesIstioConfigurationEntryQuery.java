@@ -92,4 +92,3 @@ public class KubernetesIstioConfigurationEntryQuery extends BaseTicketEntryQuery
     }
 
 }
-

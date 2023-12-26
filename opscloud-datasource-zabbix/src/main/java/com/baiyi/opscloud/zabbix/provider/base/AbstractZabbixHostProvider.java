@@ -3,18 +3,18 @@ package com.baiyi.opscloud.zabbix.provider.base;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
+import com.baiyi.opscloud.core.comparer.AssetComparerBuilder;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
-import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.zabbix.provider.ZabbixHostProvider;
 import com.baiyi.opscloud.zabbix.v5.driver.ZabbixV5HostDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
-
 import jakarta.annotation.Resource;
+
 import java.util.List;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ZABBIX_HOST;
@@ -58,28 +58,19 @@ public abstract class AbstractZabbixHostProvider<T> extends AbstractAssetRelatio
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset a1, DatasourceInstanceAsset a2) {
-        if (!AssetUtil.equals(a2.getName(), a1.getName())) {
-            return false;
-        }
-        if (!AssetUtil.equals(a2.getAssetKey(), a1.getAssetKey())) {
-            return false;
-        }
-        if (!AssetUtil.equals(a2.getKind(), a1.getKind())) {
-            return false;
-        }
-        if (!a2.getIsActive().equals(a1.getIsActive())) {
-            return false;
-        }
-        if (!AssetUtil.equals(a2.getDescription(), a1.getDescription())) {
-            return false;
-        }
-        return true;
+    protected AssetComparer getAssetComparer() {
+        return AssetComparerBuilder.newBuilder()
+                .compareOfName()
+                .compareOfKey()
+                .compareOfKind()
+                .compareOfActive()
+                .compareOfDescription()
+                .build();
     }
 
     @Override
     public void afterPropertiesSet() {
         AssetProviderFactory.register(zabbixHostTargetGroupProvider);
     }
-}
 
+}

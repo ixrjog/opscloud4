@@ -7,6 +7,7 @@ import lombok.Getter;
  * @Date 2021/2/1 11:17 上午
  * @Version 1.0
  */
+@Getter
 public enum OperatorType {
 
     /**
@@ -30,7 +31,6 @@ public enum OperatorType {
     EQUALS(0),
     IS_GREATER_THAN_OR_EQUALS(5);
 
-    @Getter
     private final int type;
 
     OperatorType(int type) {

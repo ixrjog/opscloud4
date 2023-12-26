@@ -66,7 +66,7 @@ public class GuacamoleConnectionClosedException extends GuacamoleServerException
 
     @Override
     public GuacamoleStatus getStatus() {
-        return GuacamoleStatus.SERVER_ERROR;
+        return super.getStatus();
     }
 
 }

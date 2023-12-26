@@ -66,4 +66,5 @@ public class ServerTerminalCloseHandler extends AbstractServerTerminalHandler<Se
     protected ServerMessage.BaseMessage toMessage(String message) {
         return ServerMessage.BaseMessage.CLOSE;
     }
+
 }

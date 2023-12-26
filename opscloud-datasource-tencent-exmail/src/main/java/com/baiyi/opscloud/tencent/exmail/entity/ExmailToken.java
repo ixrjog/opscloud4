@@ -31,4 +31,5 @@ public class ExmailToken extends BaseExmailResult implements Serializable {
     public String toString() {
         return JSONUtil.writeValueAsString(this);
     }
+
 }

@@ -116,4 +116,5 @@ public class BuildCause {
         result = 31 * result + (userName != null ? userName.hashCode() : 0);
         return result;
     }
+
 }

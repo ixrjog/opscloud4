@@ -137,5 +137,3 @@ public class GitLabProjectTicketProcessor extends AbstractDsAssetExtendedBaseTic
     }
 
 }
-
-

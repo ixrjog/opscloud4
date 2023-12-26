@@ -34,4 +34,5 @@ public interface AccessTokenService {
     List<AccessToken> queryByUsername(String username);
 
     int checkUserHasResourceAuthorize(String accessToken, String resourceName);
+
 }

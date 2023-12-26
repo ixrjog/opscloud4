@@ -18,4 +18,3 @@ public class VpnEntryQuery extends BaseUserGroupExtendedTicketEntryQuery {
     }
 
 }
-

@@ -76,21 +76,21 @@ public class ServerServiceImpl extends AbstractBusinessService<Server> implement
 
     @Override
     public DataTable<Server> queryServerPage(ServerParam.ServerPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<Server> data = serverMapper.queryServerByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
 
     @Override
     public DataTable<Server> queryUserPermissionServerPage(ServerParam.UserPermissionServerPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<Server> data = serverMapper.queryUserPermissionServerByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
 
     @Override
     public DataTable<Server> queryUserRemoteServerPage(ServerParam.UserRemoteServerPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<Server> data = serverMapper.queryUserRemoteServerPage(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
@@ -160,6 +160,5 @@ public class ServerServiceImpl extends AbstractBusinessService<Server> implement
         criteria.andEqualTo("serverGroupId", serverGroupId);
         return serverMapper.selectByExample(example);
     }
-
 
 }

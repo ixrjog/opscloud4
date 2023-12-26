@@ -79,4 +79,5 @@ public class NacosClusterNodeProvider extends BaseAssetProvider<NacosCluster.Nod
     public void afterPropertiesSet() {
         AssetProviderFactory.register(nacosClusterNodeProvider);
     }
+
 }

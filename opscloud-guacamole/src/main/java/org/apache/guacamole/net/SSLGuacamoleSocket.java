@@ -20,14 +20,13 @@
 package org.apache.guacamole.net;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.GuacamoleServerException;
 import org.apache.guacamole.io.GuacamoleReader;
 import org.apache.guacamole.io.GuacamoleWriter;
 import org.apache.guacamole.io.ReaderGuacamoleReader;
 import org.apache.guacamole.io.WriterGuacamoleWriter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocketFactory;
@@ -44,12 +43,8 @@ import java.nio.charset.StandardCharsets;
  * Provides abstract socket-like access to a Guacamole connection over SSL to
  * a given hostname and port.
  */
+@Slf4j
 public class SSLGuacamoleSocket implements GuacamoleSocket {
-
-    /**
-     * Logger for this class.
-     */
-    private Logger logger = LoggerFactory.getLogger(SSLGuacamoleSocket.class);
 
     /**
      * The GuacamoleReader this socket should read from.
@@ -90,7 +85,7 @@ public class SSLGuacamoleSocket implements GuacamoleSocket {
         
         try {
 
-            logger.debug("Connecting to guacd at {}:{} via SSL/TLS.",
+            log.debug("Connecting to guacd at {}:{} via SSL/TLS.",
                     hostname, port);
 
             // Get address
@@ -120,7 +115,7 @@ public class SSLGuacamoleSocket implements GuacamoleSocket {
     @Override
     public void close() throws GuacamoleException {
         try {
-            logger.debug("Closing socket to guacd.");
+            log.debug("Closing socket to guacd.");
             sock.close();
         }
         catch (IOException e) {

@@ -7,6 +7,7 @@ import lombok.Getter;
  * @Date 2021/12/2 11:06 AM
  * @Version 1.0
  */
+@Getter
 public enum TagConstants {
 
     /**
@@ -26,7 +27,6 @@ public enum TagConstants {
     SMS("SMS"),
     LEO("Leo");
 
-    @Getter
     private final String tag;
 
     TagConstants(String tag) {

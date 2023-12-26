@@ -101,5 +101,3 @@ public class DeleteHistoricalBuildJobChainHandler extends BaseBuildChainHandler 
     }
 
 }
-
-

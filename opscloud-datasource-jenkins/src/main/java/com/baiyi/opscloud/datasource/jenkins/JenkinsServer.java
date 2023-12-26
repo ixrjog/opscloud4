@@ -183,7 +183,7 @@ public class JenkinsServer implements Closeable {
         List<View> views = client.get(UrlUtils.toBaseUrl(folder) + "?tree=views[name,url,jobs[name,url]]", MainView.class).getViews();
 
         //TODO: Think about this Lambda. It's too large? Make it smaller!
-        return views.stream().map(view -> {
+        return views.stream().peek(view -> {
                     SET_CLIENT(this.client);
 
                     // TODO: Think about the following? Does there exists a simpler/more
@@ -195,8 +195,7 @@ public class JenkinsServer implements Closeable {
                         SET_CLIENT(this.client);
                     }
 
-                    return view;
-                }).collect(Collectors.toMap(View::getName, v -> v));
+        }).collect(Collectors.toMap(View::getName, v -> v));
     }
 
     /**
@@ -305,7 +304,7 @@ public class JenkinsServer implements Closeable {
             folder.setClient(client);
             return Optional.of(folder);
         } catch (HttpResponseException e) {
-            log.debug("getForlderJob(job={}) status={}", job, e.getStatusCode());
+            log.debug("getFolderJob(job={}) status={}", job, e.getStatusCode());
             if (e.getStatusCode() == HttpStatus.SC_NOT_FOUND) {
                 // TODO: Check if this is a good idea ? What about
                 // Optional.absent() ?

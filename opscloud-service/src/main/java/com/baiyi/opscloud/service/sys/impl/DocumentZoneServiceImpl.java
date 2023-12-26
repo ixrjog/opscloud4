@@ -37,7 +37,7 @@ public class DocumentZoneServiceImpl implements DocumentZoneService {
 
     @Override
     public DataTable<DocumentZone> queryPageByParam(DocumentParam.DocumentZonePageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(DocumentZone.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(pageQuery.getQueryName())) {

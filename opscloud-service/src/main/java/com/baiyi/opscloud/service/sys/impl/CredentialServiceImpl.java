@@ -54,7 +54,7 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public DataTable<Credential> queryPageByParam(CredentialParam.CredentialPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(Credential.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
