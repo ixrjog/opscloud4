@@ -238,7 +238,7 @@ public class KubernetesProdTest extends BaseKubernetesTest {
                     // GROUP
                     if (envVars.stream().noneMatch(env -> env.getName().equals("GROUP"))) {
                         envVars.add(0, groupEnv);
-                    }else {
+                    } else {
                         EnvVar old = envVars.stream().filter(env -> env.getName().equals("GROUP")).findFirst().get();
                         envVars.remove(old);
                         envVars.add(0, groupEnv);
@@ -276,6 +276,19 @@ public class KubernetesProdTest extends BaseKubernetesTest {
 
         deploymentList.forEach(deployment -> {
             String name = deployment.getMetadata().getName();
+            String appName = deployment.getMetadata().getLabels().get("app");
+            if (Strings.isNotBlank(appName) && appName.endsWith("-prod")) {
+                String podName = appName.substring(0, appName.length() - 5);
+                Optional<Container> optionalContainer =
+                        deployment.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith(podName)).findFirst();
+                if (optionalContainer.isPresent()) {
+                    Container container = optionalContainer.get();
+                    print(name + "    limits = " + container.getResources().getLimits() + "    requests = " + container.getResources().getRequests());
+                } else {
+                    print(appName + "no group label");
+                }
+            }
+
 
 //            if (!name.endsWith("-canary") && !name.endsWith("-prod") && !name.endsWith("-1")) {
 //                print(name);
