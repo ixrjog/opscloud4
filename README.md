@@ -13,7 +13,7 @@ Welcome to the opscloud wiki!
 ## OpsCloud4 云上运维
 <img src="https://img.shields.io/badge/Version-4.6.0-brightgreen.svg"></img>
 <img src="https://img.shields.io/badge/OpenJDK-21-brightgreen.svg"></img> 
-<img src="https://img.shields.io/badge/SpringBoot-3.2.0-brightgreen.svg"></img> 
+<img src="https://img.shields.io/badge/SpringBoot-3.2.1-brightgreen.svg"></img> 
 <img src="https://img.shields.io/badge/MySQL-8-brightgreen.svg"></img>
 <br/>
 [![Security Status](https://www.murphysec.com/platform3/v31/badge/1683749365419687936.svg)](https://www.murphysec.com/console/report/1656107048332996608/1683749365419687936)

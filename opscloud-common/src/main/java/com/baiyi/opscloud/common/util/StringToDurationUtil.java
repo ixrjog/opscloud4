@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
  */
 public class StringToDurationUtil {
 
-    private static final Pattern ISO8601 = Pattern.compile("^[\\+\\-]?P.*$");
-    private static final Pattern SIMPLE = Pattern.compile("^([\\+\\-]?\\d+)([a-zA-Z]{0,2})$");
+    private static final Pattern ISO8601 = Pattern.compile("^[+\\-]?P.*$");
+    private static final Pattern SIMPLE = Pattern.compile("^([+\\-]?\\d+)([a-zA-Z]{0,2})$");
     private static final Map<String, ChronoUnit> UNITS;
 
     private StringToDurationUtil() {

@@ -9,6 +9,9 @@ import org.slf4j.helpers.MessageFormatter;
  */
 public class StringFormatter {
 
+    private StringFormatter() {
+    }
+
     public static String arrayFormat(String str, Object... args) {
         return MessageFormatter.arrayFormat(str, args).getMessage();
     }

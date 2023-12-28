@@ -16,5 +16,4 @@ public interface BranchFunction {
      */
     void withBoolean(Runnable withTrue, Runnable withFalse);
 
-
 }

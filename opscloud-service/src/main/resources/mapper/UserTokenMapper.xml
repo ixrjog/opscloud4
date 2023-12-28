@@ -24,8 +24,11 @@
 
     <!-- 判断用户Token是否为某个角色-->
     <select id="checkUserHasRole" parameterType="string" resultType="int">
-       select count(*) from auth_user_role where username =
-          ( select username from user_token where token = #{token} and valid = 1 )
-          and role_id = ( select id from auth_role where role_name = #{roleName} )
+        select count(*)
+        from auth_user_role
+        where username =
+              (select username from user_token where token = #{token} and valid = 1)
+          and role_id = (select id from auth_role where role_name = #{roleName})
     </select>
+
 </mapper>

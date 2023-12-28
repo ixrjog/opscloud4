@@ -12,4 +12,3 @@ import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 public interface IServerGroup extends IManagerProvider<ServerGroup>, IInstanceType {
 
 }
-

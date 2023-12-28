@@ -25,5 +25,4 @@ public class ServerHandlerFactory {
         CONTEXT.put(bean.getInstanceType(), bean);
     }
 
-
 }

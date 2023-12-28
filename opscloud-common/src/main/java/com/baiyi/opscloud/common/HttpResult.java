@@ -67,4 +67,5 @@ public class HttpResult<T> {
     public String toString() {
         return JSONUtil.writeValueAsString(this);
     }
+
 }
