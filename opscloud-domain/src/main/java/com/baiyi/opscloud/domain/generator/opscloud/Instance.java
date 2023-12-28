@@ -43,6 +43,8 @@ public class Instance {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    private String version;
+
     /**
      * 说明
      */

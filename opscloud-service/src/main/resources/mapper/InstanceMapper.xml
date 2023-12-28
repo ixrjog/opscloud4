@@ -11,6 +11,7 @@
     <result column="host_ip" jdbcType="VARCHAR" property="hostIp" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="is_active" jdbcType="BIT" property="isActive" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
     <result column="comment" jdbcType="VARCHAR" property="comment" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />

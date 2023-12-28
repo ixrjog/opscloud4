@@ -28,6 +28,12 @@ public class InstanceController {
 
     private final InstanceFacade instanceFacade;
 
+    @Operation(summary = "实例版本信息")
+    @GetMapping(value = "/version", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<String> getVersion() {
+        return new HttpResult<>(instanceFacade.getVersion());
+    }
+
     @Operation(summary = "分页查询注册实例列表")
     @PostMapping(value = "/registered/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<InstanceVO.RegisteredInstance>> queryRegisteredInstancePage(@RequestBody @Valid RegisteredInstanceParam.RegisteredInstancePageQuery pageQuery) {

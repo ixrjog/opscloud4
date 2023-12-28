@@ -45,5 +45,4 @@ public class RegisteredInstancePacker implements IWrapper<InstanceVO.RegisteredI
                 .collect(Collectors.toMap(Enum::name, value -> terminalSessionService.countActiveSessionByParam(serverHostname, value.name()), (a, b) -> b));
     }
 
-
 }

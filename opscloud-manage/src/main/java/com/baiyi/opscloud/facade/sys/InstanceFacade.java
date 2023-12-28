@@ -24,4 +24,6 @@ public interface InstanceFacade {
 
     void setRegisteredInstanceActive(int id);
 
+    String getVersion();
+
 }
