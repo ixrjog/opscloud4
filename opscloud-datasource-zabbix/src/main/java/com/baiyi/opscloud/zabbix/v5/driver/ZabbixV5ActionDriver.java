@@ -32,7 +32,7 @@ import java.util.Map;
 @Component
 public class ZabbixV5ActionDriver extends AbstractZabbixV5ActionDriver {
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_action_name_' + #actionName")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':ACTION:NAME:' + #actionName")
     public void evictActionByName(ZabbixConfig.Zabbix config, String actionName) {
         log.info("Evict cache with Zabbix Action: actionName={}", actionName);
     }
@@ -41,7 +41,7 @@ public class ZabbixV5ActionDriver extends AbstractZabbixV5ActionDriver {
      * @param actionName Report problems to users_{name}
      * @return
      */
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_action_name_' + #actionName", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':ACTION:NAME:' + #actionName", unless = "#result == null")
     public ZabbixAction.Action getActionByName(ZabbixConfig.Zabbix config, String actionName) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("output", "extend")

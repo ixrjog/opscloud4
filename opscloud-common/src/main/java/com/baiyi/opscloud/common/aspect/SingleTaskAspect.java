@@ -20,6 +20,8 @@ import org.springframework.util.StopWatch;
 
 import java.time.Duration;
 
+import static com.baiyi.opscloud.common.constants.CacheKeyConstants.SINGLE_TASK_ASPECT_KEY;
+
 /**
  * @Author baiyi
  * @Date 2021/6/10 3:50 下午
@@ -37,7 +39,7 @@ public class SingleTaskAspect {
     private final RedisUtil redisUtil;
 
     private String buildKey(String taskName) {
-        return StringFormatter.format("opscloud.v4.singleTask#taskName={}", taskName);
+        return StringFormatter.format(SINGLE_TASK_ASPECT_KEY, taskName);
     }
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.SingleTask)")

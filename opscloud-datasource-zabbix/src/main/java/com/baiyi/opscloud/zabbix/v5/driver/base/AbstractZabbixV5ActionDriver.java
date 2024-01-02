@@ -24,7 +24,7 @@ public abstract class AbstractZabbixV5ActionDriver {
     public static final String ACTION_NAME_PREFIX = "Report problems to";
 
     @Resource
-    protected SimpleZabbixAuth simpleZabbixAuth;
+    protected SimpleZabbixAuthHolder zabbixAuthHolder;
 
     @Resource
     protected ZabbixV5UserGroupDriver zabbixV5UserGroupDatasource;
@@ -49,21 +49,21 @@ public abstract class AbstractZabbixV5ActionDriver {
     protected ZabbixAction.QueryActionResponse queryHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixActionFeign zabbixAPI = buildFeign(config);
         request.setMethod(ActionAPIMethod.GET);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(zabbixAuthHolder.generateAuth(config));
         return zabbixAPI.query(request);
     }
 
     protected ZabbixAction.CreateActionResponse createHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixActionFeign zabbixAPI = buildFeign(config);
         request.setMethod(ActionAPIMethod.CREATE);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(zabbixAuthHolder.generateAuth(config));
         return zabbixAPI.create(request);
     }
 
     protected ZabbixAction.DeleteActionResponse deleteHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DeleteRequest request) {
         ZabbixActionFeign zabbixAPI = buildFeign(config);
         request.setMethod(ActionAPIMethod.DELETE);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(zabbixAuthHolder.generateAuth(config));
         return zabbixAPI.delete(request);
     }
 

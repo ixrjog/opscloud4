@@ -2,7 +2,7 @@ package com.baiyi.opscloud.zabbix.v5.driver;
 
 import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixAuth;
+import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixAuthHolder;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate;
@@ -33,7 +33,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ZabbixV5TemplateDriver {
 
-    protected final SimpleZabbixAuth simpleZabbixAuth;
+    protected final SimpleZabbixAuthHolder simpleZabbixAuth;
 
     public interface TemplateAPIMethod {
         String GET = "template.get";
@@ -50,7 +50,7 @@ public class ZabbixV5TemplateDriver {
     private ZabbixTemplate.QueryTemplateResponse queryHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixTemplateFeign zabbixAPI = buildFeign(config);
         request.setMethod(TemplateAPIMethod.GET);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(simpleZabbixAuth.generateAuth(config));
         return zabbixAPI.query(request);
     }
 
@@ -61,12 +61,12 @@ public class ZabbixV5TemplateDriver {
         return response.getResult();
     }
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_template_hostid_' + #host.hostid")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':TEMPLATE:HOSTID:' + #host.hostid")
     public void evictHostTemplate(ZabbixConfig.Zabbix config, ZabbixHost.Host host) {
         log.info("Evict cache Zabbix Host Template: hostid={}", host.getHostid());
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_template_hostid_' + #host.hostid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':TEMPLATE:HOSTID:' + #host.hostid", unless = "#result == null")
     public List<ZabbixTemplate.Template> getByHost(ZabbixConfig.Zabbix config, ZabbixHost.Host host) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("hostids", host.getHostid())
@@ -83,7 +83,7 @@ public class ZabbixV5TemplateDriver {
         return response.getResult();
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_template_id_' + #templateId", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':TEMPLATE:ID:' + #templateId", unless = "#result == null")
     public ZabbixTemplate.Template getById(ZabbixConfig.Zabbix config, String templateId) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("templateids", templateId)
@@ -105,7 +105,7 @@ public class ZabbixV5TemplateDriver {
         return response.getResult();
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_template_name_' + #templateName", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':TEMPLATE:NAME:' + #templateName", unless = "#result == null")
     public ZabbixTemplate.Template getByName(ZabbixConfig.Zabbix config, String templateName) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .filter(ZabbixFilterBuilder.builder()

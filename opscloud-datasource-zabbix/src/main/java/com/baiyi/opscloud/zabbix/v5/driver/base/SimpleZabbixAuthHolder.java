@@ -3,17 +3,19 @@ package com.baiyi.opscloud.zabbix.v5.driver.base;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixLogin;
 import com.baiyi.opscloud.zabbix.v5.feign.ZabbixLoginFeign;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
 import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixRequestBuilder;
-import com.google.common.base.Joiner;
 import feign.Feign;
 import feign.Retryer;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import static com.baiyi.opscloud.common.constants.CacheKeyConstants.ZABBIX_AUTH_KEY;
 
 /**
  * @Author baiyi
@@ -22,17 +24,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class SimpleZabbixAuth {
-
-    public static final String AUTH_CACHE_KAY_PREFIX = "opscloud_v5_zabbix_auth";
+public class SimpleZabbixAuthHolder {
 
     private final RedisUtil redisUtil;
 
     private String buildKey(ZabbixConfig.Zabbix config) {
-        return Joiner.on("_").join(AUTH_CACHE_KAY_PREFIX, config.getUrl());
+        return StringFormatter.format(ZABBIX_AUTH_KEY, config.getUrl());
     }
 
-    public String getAuth(ZabbixConfig.Zabbix config) {
+    public String generateAuth(ZabbixConfig.Zabbix config) {
         String key = buildKey(config);
         if (redisUtil.hasKey(key)) {
             return (String) redisUtil.get(key);

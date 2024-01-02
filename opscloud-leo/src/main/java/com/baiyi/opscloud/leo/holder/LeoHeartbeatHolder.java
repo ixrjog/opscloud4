@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.leo.holder;
 
+import com.baiyi.opscloud.common.constants.CacheKeyConstants;
 import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.StringFormatter;
@@ -24,10 +25,6 @@ public class LeoHeartbeatHolder {
 
     private final RedisUtil redisUtil;
 
-    private final static String HEARTBEAT_KEY = "OC4:V0:LEO:HEARTBEAT:{}:ID:{}";
-
-    private final static  String STOP_SIGNAL = "OC4:V0:LEO:{}:STOP:SIGNAL:ID:{}";
-
     public boolean isFinish(Integer leoDeployId) {
         LeoDeploy leoDeploy = leoDeployService.getById(leoDeployId);
         return leoDeploy.getIsFinish();
@@ -40,7 +37,7 @@ public class LeoHeartbeatHolder {
      * @param id
      */
     public void setHeartbeat(HeartbeatTypeConstants heartbeatType, Integer id) {
-        redisUtil.set(StringFormatter.arrayFormat(HEARTBEAT_KEY, heartbeatType.name(), id), true, 20L);
+        redisUtil.set(StringFormatter.arrayFormat(CacheKeyConstants.LEO_HEARTBEAT_KEY, heartbeatType.name(), id), true, 20L);
     }
 
     /**
@@ -51,7 +48,7 @@ public class LeoHeartbeatHolder {
      * @return
      */
     public boolean isLive(HeartbeatTypeConstants heartbeatType, Integer id) {
-        return redisUtil.hasKey(StringFormatter.arrayFormat(HEARTBEAT_KEY, heartbeatType.name(), id));
+        return redisUtil.hasKey(StringFormatter.arrayFormat(CacheKeyConstants.LEO_HEARTBEAT_KEY, heartbeatType.name(), id));
     }
 
     /**
@@ -61,7 +58,7 @@ public class LeoHeartbeatHolder {
      * @return
      */
     public StopDeployFlag getStopDeployFlag(int deployId) {
-        final String key = StringFormatter.arrayFormat(STOP_SIGNAL, HeartbeatTypeConstants.DEPLOY.name(), deployId);
+        final String key = StringFormatter.arrayFormat(CacheKeyConstants.LEO_STOP_SIGNAL, HeartbeatTypeConstants.DEPLOY.name(), deployId);
         if (redisUtil.hasKey(key)) {
             return StopDeployFlag.builder()
                     .isStop(true)
@@ -73,7 +70,7 @@ public class LeoHeartbeatHolder {
     }
 
     public StopBuildFlag getStopBuildFlag(int buildId) {
-        final String key = StringFormatter.arrayFormat(STOP_SIGNAL, HeartbeatTypeConstants.BUILD.name(), buildId);
+        final String key = StringFormatter.arrayFormat(CacheKeyConstants.LEO_STOP_SIGNAL, HeartbeatTypeConstants.BUILD.name(), buildId);
         if (redisUtil.hasKey(key)) {
             return StopBuildFlag.builder()
                     .isStop(true)
@@ -91,7 +88,7 @@ public class LeoHeartbeatHolder {
      * @param id
      */
     public void setStopSignal(HeartbeatTypeConstants heartbeatType, Integer id) {
-        final String key = StringFormatter.arrayFormat(STOP_SIGNAL, heartbeatType.name(), id);
+        final String key = StringFormatter.arrayFormat(CacheKeyConstants.LEO_STOP_SIGNAL, heartbeatType.name(), id);
         final String username = SessionHolder.getUsername();
         redisUtil.set(key, username, 600L);
     }

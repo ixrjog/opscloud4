@@ -19,7 +19,7 @@ import jakarta.annotation.Resource;
 public abstract class AbstractZabbixV5UserDriver {
 
     @Resource
-    protected SimpleZabbixAuth simpleZabbixAuth;
+    protected SimpleZabbixAuthHolder zabbixAuthHolder;
 
     private interface UserAPIMethod {
         String GET = "user.get";
@@ -39,28 +39,28 @@ public abstract class AbstractZabbixV5UserDriver {
     protected ZabbixUser.QueryUserResponse queryHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixUserFeign zabbixAPI = buildFeign(config);
         request.setMethod(UserAPIMethod.GET);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(zabbixAuthHolder.generateAuth(config));
         return zabbixAPI.query(request);
     }
 
     protected ZabbixUser.UpdateUserResponse updateHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixUserFeign zabbixAPI = buildFeign(config);
         request.setMethod(UserAPIMethod.UPDATE);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(zabbixAuthHolder.generateAuth(config));
         return zabbixAPI.update(request);
     }
 
     protected ZabbixUser.CreateUserResponse createHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixUserFeign zabbixAPI = buildFeign(config);
         request.setMethod(UserAPIMethod.CREATE);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(zabbixAuthHolder.generateAuth(config));
         return zabbixAPI.create(request);
     }
 
     protected ZabbixUser.DeleteUserResponse deleteHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DeleteRequest request) {
         ZabbixUserFeign zabbixAPI = buildFeign(config);
         request.setMethod(UserAPIMethod.DELETE);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(zabbixAuthHolder.generateAuth(config));
         return zabbixAPI.delete(request);
     }
 
