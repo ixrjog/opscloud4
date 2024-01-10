@@ -32,7 +32,7 @@ public class ZabbixV5ProxyDriver extends AbstractZabbixV5ProxyDriver {
      * @param hostname 代理的名称
      * @return
      */
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_2H, key = "#config.url + '_v5_proxy_name_' + #hostname", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_2H, key = "'V0:ZABBIX:5:URL:' + #config.url + ':PROXY:NAME:' + #hostname", unless = "#result == null")
     public ZabbixProxy.Proxy getProxy(ZabbixConfig.Zabbix config, String hostname) {
         ZabbixRequest.Filter filter = ZabbixFilterBuilder.builder()
                 .putEntry("host", hostname)

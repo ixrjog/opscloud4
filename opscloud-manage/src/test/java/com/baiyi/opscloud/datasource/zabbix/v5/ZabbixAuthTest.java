@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.zabbix.v5;
 
 import com.baiyi.opscloud.datasource.zabbix.base.BaseZabbixTest;
-import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixAuth;
+import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixAuthHolder;
 import org.junit.jupiter.api.Test;
 
 import jakarta.annotation.Resource;
@@ -14,11 +14,11 @@ import jakarta.annotation.Resource;
 public class ZabbixAuthTest extends BaseZabbixTest {
 
     @Resource
-    private SimpleZabbixAuth simpleZabbixAuth;
+    private SimpleZabbixAuthHolder simpleZabbixAuth;
 
     @Test
     void authTest() {
-        String auth = simpleZabbixAuth.getAuth(getConfig().getZabbix());
+        String auth = simpleZabbixAuth.generateAuth(getConfig().getZabbix());
         print(auth);
     }
 

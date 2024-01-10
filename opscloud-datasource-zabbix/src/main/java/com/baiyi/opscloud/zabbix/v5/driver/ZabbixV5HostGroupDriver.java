@@ -2,7 +2,7 @@ package com.baiyi.opscloud.zabbix.v5.driver;
 
 import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixAuth;
+import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixAuthHolder;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.v5.feign.ZabbixHostGroupFeign;
@@ -32,7 +32,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ZabbixV5HostGroupDriver {
 
-    private final SimpleZabbixAuth simpleZabbixAuth;
+    private final SimpleZabbixAuthHolder simpleZabbixAuth;
 
     private interface HostGroupAPIMethod {
         String GET = "hostgroup.get";
@@ -50,14 +50,14 @@ public class ZabbixV5HostGroupDriver {
     private ZabbixHostGroup.QueryHostGroupResponse queryHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixHostGroupFeign zabbixAPI = buildFeign(config);
         request.setMethod(HostGroupAPIMethod.GET);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(simpleZabbixAuth.generateAuth(config));
         return zabbixAPI.query(request);
     }
 
     private ZabbixHostGroup.CreateHostGroupResponse createHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixHostGroupFeign zabbixAPI = buildFeign(config);
         request.setMethod(HostGroupAPIMethod.CREATE);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(simpleZabbixAuth.generateAuth(config));
         return zabbixAPI.create(request);
     }
 
@@ -76,7 +76,7 @@ public class ZabbixV5HostGroupDriver {
         return response.getResult();
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_hostgroup_groupid_' + #groupid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':GROUPID:' + #groupid", unless = "#result == null")
     public ZabbixHostGroup.HostGroup getById(ZabbixConfig.Zabbix config, String groupid) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("groupids", groupid)
@@ -88,12 +88,12 @@ public class ZabbixV5HostGroupDriver {
         return response.getResult().getFirst();
     }
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_hostgroup_name_' + #hostGroup.name")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + 'HOSTGROUP:NAME' + #hostGroup.name")
     public void evictHostGroup(ZabbixConfig.Zabbix config, ZabbixHostGroup.HostGroup hostGroup) {
         log.info("Evict cache Zabbix HostGroup: name={}", hostGroup.getName());
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_hostgroup_name_' + #name", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + 'HOSTGROUP:NAME' + #name", unless = "#result == null")
     public ZabbixHostGroup.HostGroup getByName(ZabbixConfig.Zabbix config, String name) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .filter(ZabbixFilterBuilder.builder()

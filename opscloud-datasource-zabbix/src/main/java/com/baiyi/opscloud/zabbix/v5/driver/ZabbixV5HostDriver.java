@@ -61,12 +61,12 @@ public class ZabbixV5HostDriver extends SimpleZabbixV5HostDriver {
         return response.getResult();
     }
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_host_hostid_' + #hostid")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':HOSTID:' + #hostid")
     public void evictHostById(ZabbixConfig.Zabbix config, String hostid) {
         log.info("Evict cache Zabbix Host: hostid={}", hostid);
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_host_hostid_' + #hostid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':HOSTID:' + #hostid", unless = "#result == null")
     public ZabbixHost.Host getById(ZabbixConfig.Zabbix config, String hostid) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("selectInterfaces", "extend")
@@ -79,12 +79,12 @@ public class ZabbixV5HostDriver extends SimpleZabbixV5HostDriver {
         return response.getResult().getFirst();
     }
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_host_ip_' + #ip")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':IP:' + #ip")
     public void evictHostByIp(ZabbixConfig.Zabbix config, String ip) {
         log.info("清除ZabbixHost缓存: ip={}", ip);
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_host_ip_' + #ip", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':IP:' + #ip", unless = "#result == null")
     public ZabbixHost.Host getByIp(ZabbixConfig.Zabbix config, String ip) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .filter(ZabbixFilterBuilder.builder()
