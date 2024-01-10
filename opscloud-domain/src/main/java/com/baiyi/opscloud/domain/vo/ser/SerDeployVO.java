@@ -20,7 +20,6 @@ import java.util.Objects;
  */
 public class SerDeployVO {
 
-
     @EqualsAndHashCode(callSuper = true)
     @Builder
     @Data

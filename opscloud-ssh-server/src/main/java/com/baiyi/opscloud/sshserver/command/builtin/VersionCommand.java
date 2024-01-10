@@ -30,7 +30,7 @@ public class VersionCommand extends AbstractCommand implements Version.Command {
     public static final String GROUP = "version";
     public static final String COMMAND_VERSION = GROUP;
 
-    private static final String VERSION = "Spring Boot<{}>  Spring Shell<3.1.3>";
+    private static final String VERSION = "Spring Boot<{}>  Spring Shell<3.2.0>";
 
 //    @Value("${spring.application.spring-shell-starter.version}")
 //    private String shellVersion;

@@ -34,7 +34,7 @@ public class AuthPlatformLogServiceImpl implements AuthPlatformLogService {
 
     @Override
     public DataTable<AuthPlatformLog> queryPageByParam(AuthPlatformParam.AuthPlatformLogPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(AuthPlatformLog.class);
         Example.Criteria criteria = example.createCriteria();
         if (IdUtil.isNotEmpty(pageQuery.getPlatformId())) {

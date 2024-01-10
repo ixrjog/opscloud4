@@ -25,4 +25,5 @@ class AllMavenBuilds extends BaseModel {
     public List<MavenBuild> getAllBuilds() {
         return this.allBuilds;
     }
+
 }

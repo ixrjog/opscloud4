@@ -49,4 +49,5 @@ public class SonarComponentsDriver {
 
         return sonarAPI.searchComponents(config.getToken(), buildSearchComponentsParam(component));
     }
+
 }

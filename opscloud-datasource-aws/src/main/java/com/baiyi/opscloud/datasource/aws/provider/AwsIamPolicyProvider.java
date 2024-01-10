@@ -3,16 +3,16 @@ package com.baiyi.opscloud.datasource.aws.provider;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
+import com.baiyi.opscloud.core.comparer.AssetComparerBuilder;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
-import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.aws.iam.driver.AmazonIdentityManagementPolicyDriver;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamPolicy;
 import com.baiyi.opscloud.datasource.aws.iam.entity.IamUser;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
@@ -45,20 +45,13 @@ public class AwsIamPolicyProvider extends AbstractAssetRelationProvider<IamPolic
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getAssetId(), asset.getAssetId())) {
-            return false;
-        }
-        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey())) {
-            return false;
-        }
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
-            return false;
-        }
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
-            return false;
-        }
-        return true;
+    protected AssetComparer getAssetComparer() {
+        return AssetComparerBuilder.newBuilder()
+                .compareOfAssetId()
+                .compareOfKey()
+                .compareOfKey2()
+                .compareOfDescription()
+                .build();
     }
 
     @Override

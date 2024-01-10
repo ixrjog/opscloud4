@@ -53,7 +53,7 @@ public class WorkOrderController {
 
     @Operation(summary = "更新工单配置")
     @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateWorkOrderPage(@RequestBody @Valid WorkOrderVO.WorkOrder workOrder) {
+    public HttpResult<Boolean> updateWorkOrderPage(@RequestBody @Valid WorkOrderParam.WorkOrder workOrder) {
         workOrderFacade.updateWorkOrder(workOrder);
         return HttpResult.SUCCESS;
     }
@@ -66,7 +66,7 @@ public class WorkOrderController {
 
     @Operation(summary = "保存工单组配置")
     @PostMapping(value = "/group/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> saveWorkOrderGroup(@RequestBody @Valid WorkOrderVO.Group group) {
+    public HttpResult<Boolean> saveWorkOrderGroup(@RequestBody @Valid WorkOrderGroupParam.Group group) {
         workOrderFacade.saveWorkOrderGroup(group);
         return HttpResult.SUCCESS;
     }

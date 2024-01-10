@@ -40,7 +40,4 @@ public class LXHLMessageDriver {
         return Joiner.on("").join("【", signName, "】", content);
     }
 
-
 }
-
-

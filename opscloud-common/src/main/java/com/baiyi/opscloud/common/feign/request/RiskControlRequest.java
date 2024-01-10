@@ -53,4 +53,5 @@ public class RiskControlRequest {
         private String keyName;
 
     }
+
 }

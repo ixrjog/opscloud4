@@ -57,7 +57,7 @@ public class BaseGuacamoleTunnel  extends GuacamoleWebSocketTunnelEndpoint {
 
     protected String getGuacamoleParam(Map<String, List<String>> parameterMap, String key) {
         List<String> params = parameterMap.get(key);
-        return params.get(0);
+        return params.getFirst();
     }
 
 }

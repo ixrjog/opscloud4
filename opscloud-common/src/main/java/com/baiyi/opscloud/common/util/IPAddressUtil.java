@@ -2,6 +2,7 @@ package com.baiyi.opscloud.common.util;
 
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @Author baiyi
@@ -209,11 +210,8 @@ public class IPAddressUtil {
                     }
 
                     byte[] var18 = convertFromIPv4MappedAddress(var6);
-                    if (var18 != null) {
-                        return var18;
-                    }
+                    return Objects.requireNonNullElse(var18, var6);
 
-                    return var6;
                 }
             }
         }
@@ -381,4 +379,5 @@ public class IPAddressUtil {
             return var1 >= 0 ? "Illegal character found in host: " + describeChar(var0.charAt(var1)) : null;
         }
     }
+
 }

@@ -41,19 +41,19 @@ public class ServerController {
 
     @Operation(summary = "新增服务器")
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<ServerVO.Server> addServer(@RequestBody @Valid ServerVO.Server server) {
+    public HttpResult<ServerVO.Server> addServer(@RequestBody @Valid ServerParam.AddServer server) {
         return new HttpResult<>(serverFacade.addServer(server));
     }
 
     @Operation(summary = "更新服务器")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateServer(@RequestBody @Valid ServerVO.Server server) {
+    public HttpResult<Boolean> updateServer(@RequestBody @Valid ServerParam.UpdateServer server) {
         serverFacade.updateServer(server);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "扫描服务器监控状态")
-    @PutMapping(value = "/monitor/scan",  produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/monitor/scan", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> scanServerMonitorStatus() {
         serverFacade.scanServerMonitoringStatus();
         return HttpResult.SUCCESS;

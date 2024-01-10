@@ -30,4 +30,5 @@ public interface ZabbixUserFeign {
     @RequestLine(REQUEST_API)
     @Headers({CONTENT_TYPE})
     ZabbixUser.DeleteUserResponse delete(ZabbixRequest.DeleteRequest request);
+
 }

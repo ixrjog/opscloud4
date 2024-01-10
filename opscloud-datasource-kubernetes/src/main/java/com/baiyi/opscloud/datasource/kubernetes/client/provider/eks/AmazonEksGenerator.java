@@ -10,7 +10,7 @@ import com.amazonaws.internal.auth.SignerProvider;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClient;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
 import com.amazonaws.services.securitytoken.model.GetCallerIdentityRequest;
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;

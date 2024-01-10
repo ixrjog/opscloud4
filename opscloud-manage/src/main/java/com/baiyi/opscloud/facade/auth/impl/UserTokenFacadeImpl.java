@@ -35,7 +35,7 @@ public class UserTokenFacadeImpl implements UserTokenFacade {
 
     @Override
     public void revokeUserToken(String username) {
-        userTokenService.queryByVaildTokenByUsername(username).forEach(e -> {
+        userTokenService.queryByValidTokenByUsername(username).forEach(e -> {
             e.setValid(false);
             userTokenService.update(e);
         });

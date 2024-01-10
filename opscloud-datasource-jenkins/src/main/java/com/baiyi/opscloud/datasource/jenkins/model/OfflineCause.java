@@ -1,21 +1,16 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
 /**
  * @author Karl Heinz Marbaise
  */
+@Getter
 public class OfflineCause extends BaseModel {
 
     private Long timestamp;
 
     private String description;
-
-    public Long getTimestamp() {
-        return timestamp;
-    }
-
-    public String getDescription() {
-        return description;
-    }
 
     public OfflineCause setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
@@ -51,11 +46,8 @@ public class OfflineCause extends BaseModel {
         } else if (!description.equals(other.description))
             return false;
         if (timestamp == null) {
-            if (other.timestamp != null)
-                return false;
-        } else if (!timestamp.equals(other.timestamp))
-            return false;
-        return true;
+            return other.timestamp == null;
+        } else return timestamp.equals(other.timestamp);
     }
 
 }

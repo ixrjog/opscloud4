@@ -5,6 +5,7 @@ import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.EnvVar;
+import io.fabric8.kubernetes.api.model.LifecycleHandler;
 import io.fabric8.kubernetes.api.model.ResourceRequirements;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import lombok.extern.slf4j.Slf4j;
@@ -107,6 +108,34 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
                     print(deployment.getMetadata().getName());
                 }
 
+            } else {
+                print(deployment.getMetadata().getName());
+            }
+        });
+    }
+
+    @Test
+    void updateConsulPreStop() {
+        final String containerName = "consul-agent";
+        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_TEST);
+        Deployment demo = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), AWS_NAMESPACE, "taskmanage-consumer-aws");
+        Container demoContainer =
+                demo.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith(containerName)).findFirst().get();
+        LifecycleHandler preStop = demoContainer.getLifecycle().getPreStop();
+
+        List<Deployment> deploymentList = KubernetesDeploymentDriver.list(kubernetesConfig.getKubernetes(), AWS_NAMESPACE);
+
+        deploymentList.forEach(deployment -> {
+            Optional<Container> optionalContainer =
+                    deployment.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith(containerName)).findFirst();
+            if (optionalContainer.isPresent()) {
+                Container container = optionalContainer.get();
+                container.getLifecycle().setPreStop(preStop);
+                try {
+                    KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), AWS_NAMESPACE, deployment);
+                } catch (Exception e) {
+                    print(deployment.getMetadata().getName());
+                }
             } else {
                 print(deployment.getMetadata().getName());
             }

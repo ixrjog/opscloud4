@@ -185,7 +185,7 @@ public class TemplateFacadeImpl implements TemplateFacade {
                     .build();
             List<DatasourceInstanceAsset> assets = dsInstanceAssetService.queryAssetByAssetParam(queryParam);
             if (!CollectionUtils.isEmpty(assets) && assets.size() == 1) {
-                t.setBusinessId(assets.get(0).getId());
+                t.setBusinessId(assets.getFirst().getId());
                 businessTemplateService.update(t);
             }
         });

@@ -33,14 +33,14 @@ public class TaskController {
 
     @Operation(summary = "新增剧本配置")
     @PostMapping(value = "/ansible/playbook/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addAnsiblePlaybook(@RequestBody @Valid AnsiblePlaybookVO.Playbook playbook) {
+    public HttpResult<Boolean> addAnsiblePlaybook(@RequestBody @Valid AnsiblePlaybookParam.Playbook playbook) {
         ansiblePlaybookFacade.addAnsiblePlaybook(playbook);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "更新剧本配置")
     @PutMapping(value = "/ansible/playbook/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateAnsiblePlaybook(@RequestBody @Valid AnsiblePlaybookVO.Playbook playbook) {
+    public HttpResult<Boolean> updateAnsiblePlaybook(@RequestBody @Valid AnsiblePlaybookParam.Playbook playbook) {
         ansiblePlaybookFacade.updateAnsiblePlaybook(playbook);
         return HttpResult.SUCCESS;
     }

@@ -2,8 +2,9 @@ package com.baiyi.opscloud.domain.vo.user;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -30,24 +31,6 @@ public class UserPermissionVO {
         private Integer rate;
         private String permissionRole;
         private String content;
-
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Schema
-    public static class UserBusinessPermission {
-
-        @NotNull(message = "用户ID不能为空")
-        private Integer userId;
-
-        @NotNull(message = "业务类型不能为空")
-        private Integer businessType;
-
-        @NotNull(message = "业务id不能为空")
-        private Integer businessId;
 
     }
 

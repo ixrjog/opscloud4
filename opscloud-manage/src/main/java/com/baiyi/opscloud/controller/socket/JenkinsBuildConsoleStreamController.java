@@ -74,6 +74,7 @@ public class JenkinsBuildConsoleStreamController extends SimpleAuthentication {
             try {
                 handler.handleRequest(this.sessionId, session, message);
             } catch (IOException e) {
+                log.debug(e.getMessage());
             }
         }
     }

@@ -1,10 +1,13 @@
 package com.baiyi.opscloud.common.base;
 
+import lombok.Getter;
+
 /**
  * @Author baiyi
  * @Date 2020/4/8 3:44 下午
  * @Version 1.0
  */
+@Getter
 public enum ServerTaskStopType {
 
     /**
@@ -34,10 +37,6 @@ public enum ServerTaskStopType {
 
     ServerTaskStopType(int type) {
         this.type = type;
-    }
-
-    public int getType() {
-        return this.type;
     }
 
 }

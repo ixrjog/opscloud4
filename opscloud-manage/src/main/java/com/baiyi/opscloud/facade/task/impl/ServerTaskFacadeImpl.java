@@ -33,9 +33,7 @@ import com.google.common.collect.Lists;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -43,8 +41,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi
@@ -73,9 +69,6 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     @Resource
     private ServerTaskPacker serverTaskPacker;
 
-    @Autowired
-    private ThreadPoolTaskExecutor coreExecutor;
-
     private static final int MAX_EXECUTING = 10;
 
     @Override
@@ -88,8 +81,8 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
         return new DataTable<>(data, table.getTotalNum());
     }
 
-    @Async(value = CORE)
     @Override
+    @Async
     public void submitServerTask(ServerTaskParam.SubmitServerTask submitServerTask, String username) {
         ServerTask serverTask = ServerTaskBuilder.newBuilder(submitServerTask, username);
         serverTaskService.add(serverTask);
@@ -149,7 +142,8 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                         serverTaskMemberService,
                         taskLogStorehouse);
                 // 执行任务
-                coreExecutor.execute(ansibleServerTask);
+                // JDK21 VirtualThreads
+                Thread.ofVirtual().start(ansibleServerTask);
             }
             NewTimeUtil.sleep(5L);
         }

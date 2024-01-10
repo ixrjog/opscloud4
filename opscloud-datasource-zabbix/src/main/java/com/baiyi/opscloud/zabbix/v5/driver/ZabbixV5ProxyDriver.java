@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.v5.driver;
 
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.v5.driver.base.AbstractZabbixV5ProxyDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
@@ -32,7 +32,7 @@ public class ZabbixV5ProxyDriver extends AbstractZabbixV5ProxyDriver {
      * @param hostname 代理的名称
      * @return
      */
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_2H, key = "#config.url + '_v5_proxy_name_' + #hostname", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_2H, key = "'V0:ZABBIX:5:URL:' + #config.url + ':PROXY:NAME:' + #hostname", unless = "#result == null")
     public ZabbixProxy.Proxy getProxy(ZabbixConfig.Zabbix config, String hostname) {
         ZabbixRequest.Filter filter = ZabbixFilterBuilder.builder()
                 .putEntry("host", hostname)
@@ -44,7 +44,7 @@ public class ZabbixV5ProxyDriver extends AbstractZabbixV5ProxyDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     /**

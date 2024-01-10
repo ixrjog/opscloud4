@@ -3,10 +3,11 @@ package com.baiyi.opscloud.datasource.ansible.provider;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
+import com.baiyi.opscloud.core.comparer.AssetComparerBuilder;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
-import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.ansible.builder.AnsibleCommandArgsBuilder;
 import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgumentsBuilder;
 import com.baiyi.opscloud.datasource.ansible.builder.args.AnsibleCommandArgs;
@@ -16,7 +17,6 @@ import com.baiyi.opscloud.datasource.ansible.entity.AnsibleVersion;
 import com.baiyi.opscloud.datasource.ansible.executor.AnsibleExecutor;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.collect.Lists;
 import jakarta.annotation.Resource;
 import org.apache.commons.exec.CommandLine;
@@ -96,20 +96,14 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
-            return false;
-        }
-        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey())) {
-            return false;
-        }
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
-            return false;
-        }
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
-            return false;
-        }
-        return preAsset.getIsActive().equals(asset.getIsActive());
+    protected AssetComparer getAssetComparer() {
+        return AssetComparerBuilder.newBuilder()
+                .compareOfName()
+                .compareOfKey()
+                .compareOfKey2()
+                .compareOfDescription()
+                .compareOfActive()
+                .build();
     }
 
     @Override

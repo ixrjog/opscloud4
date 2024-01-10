@@ -57,4 +57,5 @@ public class AlertNotifyHistoryServiceImpl implements AlertNotifyHistoryService 
     public void delete(Integer id) {
         alertNotifyHistoryMapper.deleteByPrimaryKey(id);
     }
+
 }

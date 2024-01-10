@@ -14,4 +14,5 @@ public class ComputerNameUtil {
     public static String toName(String displayName) {
         return BUILT_IN_NODE_NAME.equalsIgnoreCase(displayName) ? "(built-in)" : EncodingUtils.encode(displayName);
     }
+
 }

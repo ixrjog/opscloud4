@@ -52,6 +52,7 @@ public class SimpleDsAssetFacadeImpl implements SimpleDsAssetFacade {
                 businessAssetRelationService.delete(e);
             }
         }
+
         List<DatasourceInstanceAssetRelation> datasourceInstanceAssetRelations = dsInstanceAssetRelationService.queryByAssetId(id);
         if (!CollectionUtils.isEmpty(datasourceInstanceAssetRelations)) {
             for (DatasourceInstanceAssetRelation e : datasourceInstanceAssetRelations) {
@@ -59,6 +60,7 @@ public class SimpleDsAssetFacadeImpl implements SimpleDsAssetFacade {
                 dsInstanceAssetRelationService.deleteById(e.getId());
             }
         }
+
         List<DatasourceInstanceAssetProperty> properties = dsInstanceAssetPropertyService.queryByAssetId(id);
         if (!CollectionUtils.isEmpty(properties)) {
             for (DatasourceInstanceAssetProperty e : properties) {

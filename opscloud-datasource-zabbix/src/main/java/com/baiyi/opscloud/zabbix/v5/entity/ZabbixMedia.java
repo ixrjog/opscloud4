@@ -33,7 +33,6 @@ public class ZabbixMedia {
         @Serial
         private static final long serialVersionUID = -2666172175949534479L;
 
-
         /**
          * 媒介类型的传输方式
          * 1-email
@@ -77,4 +76,5 @@ public class ZabbixMedia {
         @Builder.Default
         private String period = "1-7,00:00-24:00";
     }
+
 }

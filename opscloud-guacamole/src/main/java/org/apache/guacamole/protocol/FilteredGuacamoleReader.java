@@ -75,7 +75,6 @@ public class FilteredGuacamoleReader implements GuacamoleReader {
 
         // Read and filter instructions until no instructions are dropped
         do {
-
             // Read next instruction
             GuacamoleInstruction unfilteredInstruction = reader.readInstruction();
             if (unfilteredInstruction == null)

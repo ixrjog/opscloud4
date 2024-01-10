@@ -82,4 +82,5 @@ public abstract class AbstractAssetToBO implements IAssetConverter, Initializing
     public void afterPropertiesSet() {
         AssetConverterFactory.register(this);
     }
+
 }

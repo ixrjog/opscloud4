@@ -28,4 +28,5 @@ public enum AccountRelationTypeEnum {
     public static String of(int type) {
         return Arrays.stream(AccountRelationTypeEnum.values()).filter(typeEnum -> typeEnum.getType() == type).findFirst().map(AccountRelationTypeEnum::getName).orElse("undefined");
     }
+
 }

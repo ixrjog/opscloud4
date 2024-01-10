@@ -53,7 +53,7 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
 
     @Override
     public DataTable<MessageTemplate> queryPageByParam(MessageTemplateParam.MessageTemplatePageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(MessageTemplate.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(pageQuery.getQueryName())) {

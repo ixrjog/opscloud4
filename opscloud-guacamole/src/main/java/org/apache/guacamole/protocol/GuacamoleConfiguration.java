@@ -20,6 +20,9 @@
 package org.apache.guacamole.protocol;
 
 
+import lombok.Getter;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,26 +33,50 @@ import java.util.Set;
  * All information necessary to complete the initial protocol handshake of a
  * Guacamole session.
  */
+@Getter
 public class GuacamoleConfiguration implements Serializable {
 
     /**
      * Identifier unique to this version of GuacamoleConfiguration.
      */
-    private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 158609832321655344L;
 
     /**
      * The ID of the connection being joined. If this value is present,
      * the protocol need not be specified.
+     * -- GETTER --
+     *  Returns the ID of the connection being joined, if any. If no connection
+     *  is being joined, this returns null, and the protocol must be set.
+     *
+     * @return The ID of the connection being joined, or null if no connection
+     *         is being joined.
+
      */
     private String connectionID;
     
     /**
      * The name of the protocol associated with this configuration.
+     * -- GETTER --
+     *  Returns the name of the protocol to be used.
+     *
+     * @return
+     *     The name of the protocol to be used.
+
      */
     private String protocol;
 
     /**
      * Map of all associated parameter values, indexed by parameter name.
+     * -- GETTER --
+     *  Returns a map which contains parameter name/value pairs as key/value
+     *  pairs. Changes to this map will affect the parameters stored within
+     *  this configuration.
+     *
+     * @return
+     *     A map which contains all parameter name/value pairs as key/value
+     *     pairs.
+
      */
     private final Map<String, String> parameters = new HashMap<String, String>();
 
@@ -80,17 +107,6 @@ public class GuacamoleConfiguration implements Serializable {
     }
 
     /**
-     * Returns the ID of the connection being joined, if any. If no connection
-     * is being joined, this returns null, and the protocol must be set.
-     *
-     * @return The ID of the connection being joined, or null if no connection
-     *         is being joined.
-     */
-    public String getConnectionID() {
-        return connectionID;
-    }
-
-    /**
      * Sets the ID of the connection being joined, if any. If no connection
      * is being joined, this value must be omitted.
      *
@@ -98,16 +114,6 @@ public class GuacamoleConfiguration implements Serializable {
      */
     public void setConnectionID(String connectionID) {
         this.connectionID = connectionID;
-    }
-
-    /**
-     * Returns the name of the protocol to be used.
-     *
-     * @return
-     *     The name of the protocol to be used.
-     */
-    public String getProtocol() {
-        return protocol;
     }
 
     /**
@@ -173,19 +179,6 @@ public class GuacamoleConfiguration implements Serializable {
      */
     public Set<String> getParameterNames() {
         return Collections.unmodifiableSet(parameters.keySet());
-    }
-
-    /**
-     * Returns a map which contains parameter name/value pairs as key/value
-     * pairs. Changes to this map will affect the parameters stored within
-     * this configuration.
-     *
-     * @return
-     *     A map which contains all parameter name/value pairs as key/value
-     *     pairs.
-     */
-    public Map<String, String> getParameters() {
-        return parameters;
     }
 
     /**

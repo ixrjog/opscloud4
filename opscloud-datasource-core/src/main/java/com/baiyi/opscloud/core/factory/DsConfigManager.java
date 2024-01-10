@@ -2,9 +2,9 @@ package com.baiyi.opscloud.core.factory;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
-import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.DsUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
+import com.baiyi.opscloud.core.exception.DatasourceConfigException;
 import com.baiyi.opscloud.core.util.TemplateUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -47,9 +47,9 @@ public class DsConfigManager {
     public DatasourceConfig getConfigByDsType(int dsType) {
         List<DatasourceConfig> configs = dsConfigService.queryByDsType(dsType);
         if (CollectionUtils.isEmpty(configs)) {
-            throw new OCException("无可用的数据源配置文件！");
+            throw new DatasourceConfigException("无可用的数据源配置文件！");
         }
-        return configs.get(0);
+        return configs.getFirst();
     }
 
     public <T extends BaseDsConfig> T build(DatasourceConfig datasourceConfig, Class<T> targetClass) {

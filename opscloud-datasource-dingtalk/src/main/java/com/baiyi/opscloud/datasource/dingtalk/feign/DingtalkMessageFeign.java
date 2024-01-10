@@ -22,4 +22,5 @@ public interface DingtalkMessageFeign {
     @RequestLine("POST /topapi/message/corpconversation/asyncsend_v2?access_token={accessToken}")
     @Headers({"Content-Type: application/json;charset=utf-8"})
     DingtalkMessage.MessageResponse asyncSend(@Param("accessToken") String accessToken, DingtalkMessageParam.AsyncSendMessage asyncSendMessage);
+
 }

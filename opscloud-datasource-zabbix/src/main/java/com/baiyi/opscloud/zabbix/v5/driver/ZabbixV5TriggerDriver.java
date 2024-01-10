@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.zabbix.v5.driver;
 
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixAuth;
+import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixAuthHolder;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
 import com.baiyi.opscloud.zabbix.v5.feign.ZabbixTriggerFeign;
@@ -30,7 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ZabbixV5TriggerDriver {
 
-    protected final SimpleZabbixAuth simpleZabbixAuth;
+    protected final SimpleZabbixAuthHolder simpleZabbixAuth;
 
     private static final int PROBLEM = 1;
 
@@ -51,7 +51,7 @@ public class ZabbixV5TriggerDriver {
     private ZabbixTrigger.QueryTriggerResponse queryHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixTriggerFeign zabbixAPI = buildFeign(config);
         request.setMethod(TriggerAPIMethod.GET);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(simpleZabbixAuth.generateAuth(config));
         return zabbixAPI.query(request);
     }
 
@@ -68,8 +68,7 @@ public class ZabbixV5TriggerDriver {
      * @param severityType
      */
     public List<ZabbixTrigger.Trigger> getBySeverityType(ZabbixConfig.Zabbix config, SeverityType severityType) {
-
-        /**
+        /*
          * filter
          * (readonly 只读) Whether the trigger is in OK or problem state. 触发器是否处于正常或故障状态。
          Possible values are: 许可值为：
@@ -161,7 +160,7 @@ public class ZabbixV5TriggerDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
 }

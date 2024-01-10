@@ -3,6 +3,8 @@ package com.baiyi.opscloud.datasource.aliyun.provider;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
+import com.baiyi.opscloud.core.comparer.AssetComparerBuilder;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
@@ -48,8 +50,10 @@ public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<Acces
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        return preAsset.getIsActive().equals(asset.getIsActive());
+    protected AssetComparer getAssetComparer() {
+        return AssetComparerBuilder.newBuilder()
+                .compareOfActive()
+                .build();
     }
 
     @Override
@@ -77,4 +81,5 @@ public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<Acces
     public void afterPropertiesSet() {
         AssetProviderFactory.register(aliyunRamAccessKeyProvider);
     }
+
 }

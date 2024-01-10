@@ -33,7 +33,7 @@ public class JenkinsInstanceTask {
         if (CollectionUtils.isEmpty(instanceTasks)) {
             return 0;
         }
-        return instanceTasks.get(0).getIndex();
+        return instanceTasks.getFirst().getIndex();
     }
 
     @Data

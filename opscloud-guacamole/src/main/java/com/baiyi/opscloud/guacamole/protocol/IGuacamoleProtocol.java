@@ -14,4 +14,5 @@ public interface IGuacamoleProtocol {
     String getProtocol();
 
     GuacamoleSocket buildGuacamoleSocket(GuacamoleParam.Login guacamoleLogin) throws GuacamoleException;
+
 }

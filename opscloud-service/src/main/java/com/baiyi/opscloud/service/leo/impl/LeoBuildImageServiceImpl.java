@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.service.leo.impl;
 
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildImage;
 import com.baiyi.opscloud.mapper.LeoBuildImageMapper;
 import com.baiyi.opscloud.service.leo.LeoBuildImageService;
@@ -54,7 +54,7 @@ public class LeoBuildImageServiceImpl implements LeoBuildImageService {
 
     @Override
     public LeoBuildImage findBuildImage(int jobId, String image) {
-        Page page = PageHelper.startPage(1, 1);
+        Page<?> page = PageHelper.startPage(1, 1);
         Example example = new Example(LeoBuildImage.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("jobId", jobId)

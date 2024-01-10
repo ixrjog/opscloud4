@@ -45,7 +45,7 @@ public class UserTokenServiceImpl implements UserTokenService {
     }
 
     @Override
-    public UserToken getByVaildToken(String token) {
+    public UserToken getByValidToken(String token) {
         Example example = new Example(UserToken.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("valid", true)
@@ -54,11 +54,12 @@ public class UserTokenServiceImpl implements UserTokenService {
     }
 
     @Override
-    public List<UserToken> queryByVaildTokenByUsername(String username) {
+    public List<UserToken> queryByValidTokenByUsername(String username) {
         Example example = new Example(UserToken.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("valid", true)
                 .andEqualTo("username", username);
         return userTokenMapper.selectByExample(example);
     }
+
 }

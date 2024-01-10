@@ -46,7 +46,7 @@ public interface WorkOrderFacade {
      *
      * @param group
      */
-    void saveWorkOrderGroup(WorkOrderVO.Group group);
+    void saveWorkOrderGroup(WorkOrderGroupParam.Group group);
 
     /**
      * 删除工单组
@@ -61,6 +61,6 @@ public interface WorkOrderFacade {
      *
      * @param workOrder
      */
-    void updateWorkOrder(WorkOrderVO.WorkOrder workOrder);
+    void updateWorkOrder(WorkOrderParam.WorkOrder workOrder);
 
 }

@@ -52,7 +52,7 @@ public class EnvServiceImpl implements EnvService {
 
     @Override
     public DataTable<Env> queryPageByParam(EnvParam.EnvPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(Env.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(pageQuery.getEnvName())) {

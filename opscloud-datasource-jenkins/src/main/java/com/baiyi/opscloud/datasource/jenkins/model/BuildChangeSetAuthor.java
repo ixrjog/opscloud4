@@ -51,10 +51,8 @@ public class BuildChangeSetAuthor {
         } else if (!absoluteUrl.equals(other.absoluteUrl))
             return false;
         if (fullName == null) {
-            if (other.fullName != null)
-                return false;
-        } else if (!fullName.equals(other.fullName))
-            return false;
-        return true;
+            return other.fullName == null;
+        } else return fullName.equals(other.fullName);
     }
+
 }

@@ -21,11 +21,16 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 /**
  * An exception which indicates that a session within an upstream server (such
  * as the remote desktop) has ended because it appeared to be inactive.
  */
 public class GuacamoleSessionTimeoutException extends GuacamoleUpstreamException {
+
+    @Serial
+    private static final long serialVersionUID = -1946150165238195289L;
 
     /**
      * Creates a new GuacamoleSessionTimeoutException with the given message

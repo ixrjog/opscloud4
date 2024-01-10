@@ -153,7 +153,7 @@ public class ConsulAlertFacade extends AbstractAlertRule {
                 .build();
         List<UserPermission> userPermissions = userPermissionService.queryByBusiness(userPermission).stream()
                 .filter(x -> "admin".equals(x.getPermissionRole()))
-                .collect(Collectors.toList());
+                .toList();
         if (CollectionUtils.isEmpty(userPermissions)) {
             return;
         }
@@ -178,4 +178,5 @@ public class ConsulAlertFacade extends AbstractAlertRule {
     public String getInstanceType() {
         return DsTypeEnum.CONSUL.name();
     }
+
 }

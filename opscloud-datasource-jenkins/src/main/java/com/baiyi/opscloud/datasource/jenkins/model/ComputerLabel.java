@@ -28,4 +28,5 @@ public class ComputerLabel {
             return other.name == null;
         } else return name.equals(other.name);
     }
+
 }

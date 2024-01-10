@@ -2,8 +2,6 @@ package com.baiyi.opscloud.facade.server.impl;
 
 import com.baiyi.opscloud.common.annotation.EnvWrapper;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.IdUtil;
-import com.baiyi.opscloud.common.util.ValidationUtil;
 import com.baiyi.opscloud.datasource.manager.ZabbixInstanceManager;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.*;
@@ -14,6 +12,7 @@ import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
+import com.baiyi.opscloud.facade.server.converter.ServerConverter;
 import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.factory.resource.base.AbstractAppResQuery;
@@ -25,8 +24,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi
@@ -44,6 +41,8 @@ public class ServerFacadeImpl extends AbstractAppResQuery implements ServerFacad
     private final ServerPacker serverPacker;
 
     private final ZabbixInstanceManager zabbixInstanceManager;
+
+    private final ServerConverter serverConverter;
 
     @Override
     public DataTable<ServerVO.Server> queryServerPage(ServerParam.ServerPageQuery pageQuery) {
@@ -75,44 +74,27 @@ public class ServerFacadeImpl extends AbstractAppResQuery implements ServerFacad
     @Override
     @EnvWrapper(extend = true, wrapResult = true)
     @AssetBusinessRelation
-    public ServerVO.Server addServer(ServerVO.Server server) {
-        Server pre = toDO(server);
-        pre.setDisplayName(SimpleServerNameFacade.toServerName(pre));
-        serverService.add(pre);
+    public ServerVO.Server addServer(ServerParam.AddServer addServer) {
+        Server server = serverConverter.to(addServer);
+        server.setDisplayName(SimpleServerNameFacade.toServerName(server));
+        serverService.add(server);
         // 绑定资产
-        server.setId(pre.getId());
-        return BeanCopierUtil.copyProperties(pre, ServerVO.Server.class);
+        addServer.setId(server.getId());
+        return BeanCopierUtil.copyProperties(server, ServerVO.Server.class);
     }
 
     @Override
-    public void updateServer(ServerVO.Server server) {
-        Server pre = toDO(server);
-        pre.setDisplayName(SimpleServerNameFacade.toServerName(pre));
-        serverService.update(pre);
+    public void updateServer(ServerParam.UpdateServer updateServer) {
+        Server server = serverConverter.to(updateServer);
+        server.setDisplayName(SimpleServerNameFacade.toServerName(server));
+        serverService.update(server);
     }
 
-    @Async(CORE)
     @Override
+    @Async
     public void scanServerMonitoringStatus() {
         List<Server> servers = serverService.selectAll();
         zabbixInstanceManager.updateServerMonitorStatus(servers);
-    }
-
-    private Server toDO(ServerVO.Server server) {
-        Server pre = BeanCopierUtil.copyProperties(server, Server.class);
-        pre.setName(pre.getName().trim());
-        ValidationUtil.tryServerNameRule(pre.getName());
-        if (IdUtil.isEmpty(pre.getSerialNumber())) {
-            Server maxSerialNumberServer = serverService.getMaxSerialNumberServer(pre.getServerGroupId(), pre.getEnvType());
-            pre.setSerialNumber(null == maxSerialNumberServer ? 1 : maxSerialNumberServer.getSerialNumber() + 1);
-        }
-        if (pre.getMonitorStatus() == null) {
-            pre.setMonitorStatus(-1);
-        }
-        if (pre.getServerStatus() == null) {
-            pre.setServerStatus(1);
-        }
-        return pre;
     }
 
     @TagClear
@@ -120,10 +102,9 @@ public class ServerFacadeImpl extends AbstractAppResQuery implements ServerFacad
     @Override
     public void deleteServerById(Integer id) {
         Server server = serverService.getById(id);
-        if (server == null) {
-            return;
+        if (server != null) {
+            serverService.delete(server);
         }
-        serverService.delete(server);
     }
 
     @Override

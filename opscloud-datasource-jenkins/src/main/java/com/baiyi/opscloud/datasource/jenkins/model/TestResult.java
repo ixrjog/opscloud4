@@ -1,11 +1,14 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
 import java.util.List;
 
 /**
  * @author Karl Heinz Marbaise
  *
  */
+@Getter
 public class TestResult extends BaseModel {
 
     private double duration;
@@ -16,17 +19,9 @@ public class TestResult extends BaseModel {
 
     private List<TestSuites> suites;
 
-    public double getDuration() {
-        return duration;
-    }
-
     public TestResult setDuration(double duration) {
         this.duration = duration;
         return this;
-    }
-
-    public boolean isEmpty() {
-        return empty;
     }
 
     public TestResult setEmpty(boolean empty) {
@@ -34,17 +29,9 @@ public class TestResult extends BaseModel {
         return this;
     }
 
-    public int getFailCount() {
-        return failCount;
-    }
-
     public TestResult setFailCount(int failCount) {
         this.failCount = failCount;
         return this;
-    }
-
-    public int getPassCount() {
-        return passCount;
     }
 
     public TestResult setPassCount(int passCount) {
@@ -52,17 +39,9 @@ public class TestResult extends BaseModel {
         return this;
     }
 
-    public int getSkipCount() {
-        return skipCount;
-    }
-
     public TestResult setSkipCount(int skipCount) {
         this.skipCount = skipCount;
         return this;
-    }
-
-    public List<TestSuites> getSuites() {
-        return suites;
     }
 
     public TestResult setSuites(List<TestSuites> suites) {
@@ -105,10 +84,8 @@ public class TestResult extends BaseModel {
         if (skipCount != other.skipCount)
             return false;
         if (suites == null) {
-            if (other.suites != null)
-                return false;
-        } else if (!suites.equals(other.suites))
-            return false;
-        return true;
+            return other.suites == null;
+        } else return suites.equals(other.suites);
     }
+
 }

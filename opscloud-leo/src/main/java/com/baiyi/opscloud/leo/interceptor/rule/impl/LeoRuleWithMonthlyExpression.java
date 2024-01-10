@@ -37,8 +37,8 @@ public class LeoRuleWithMonthlyExpression extends BaseLeoRuleExpression {
         final int nowDayOfMonth = calendarValueGet(Calendar.DAY_OF_MONTH);
         List<String> beginArgs = getExpressionArgs(expression.getBegin());
         List<String> endArgs = getExpressionArgs(expression.getEnd());
-        int beginDayOfMonth = Integer.parseInt(beginArgs.get(0));
-        int endDayOfMonth = Integer.parseInt(endArgs.get(0));
+        int beginDayOfMonth = Integer.parseInt(beginArgs.getFirst());
+        int endDayOfMonth = Integer.parseInt(endArgs.getFirst());
 
         // 命中开始时间
         boolean hitBegin = false;

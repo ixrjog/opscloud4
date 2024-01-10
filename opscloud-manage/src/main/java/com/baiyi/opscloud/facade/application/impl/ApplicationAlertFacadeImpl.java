@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.facade.application.impl;
 
-import com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.facade.application.ApplicationAlertFacade;
 import com.google.common.collect.Maps;
@@ -58,8 +57,8 @@ public class ApplicationAlertFacadeImpl implements ApplicationAlertFacade {
      * 刷新应用授权用户
      * @param name
      */
-    @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
     @Override
+    @Async
     public void refreshCache(String name) {
         applicationAlertHelper.evictWithApplicationName(name);
         applicationAlertHelper.queryByApplicationName(name);

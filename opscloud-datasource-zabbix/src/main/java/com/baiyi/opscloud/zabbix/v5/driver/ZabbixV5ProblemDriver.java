@@ -2,7 +2,7 @@ package com.baiyi.opscloud.zabbix.v5.driver;
 
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.constant.SeverityType;
-import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixAuth;
+import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixAuthHolder;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixProblem;
 import com.baiyi.opscloud.zabbix.v5.feign.ZabbixProblemFeign;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ZabbixV5ProblemDriver {
 
-    protected final SimpleZabbixAuth simpleZabbixAuth;
+    protected final SimpleZabbixAuthHolder simpleZabbixAuth;
 
     private interface ProblemAPIMethod {
         String GET = "problem.get";
@@ -48,7 +48,7 @@ public class ZabbixV5ProblemDriver {
     protected ZabbixProblem.QueryProblemResponse queryHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixProblemFeign zabbixAPI = buildFeign(config);
         request.setMethod(ProblemAPIMethod.GET);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(simpleZabbixAuth.generateAuth(config));
         return zabbixAPI.query(request);
     }
 
@@ -84,7 +84,7 @@ public class ZabbixV5ProblemDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             throw new RuntimeException("ZabbixProblem不存在");
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     public ZabbixProblem.Problem getByTriggerId(ZabbixConfig.Zabbix config, String triggerId) {
@@ -99,7 +99,7 @@ public class ZabbixV5ProblemDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             throw new RuntimeException("ZabbixProblem不存在");
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
 }

@@ -23,7 +23,7 @@ public final class JsonParser implements Parser {
 
         if (root.isArray()) {
 
-            if (root.size() < 1) {
+            if (root.isEmpty()) {
                 return PrettyTable.fieldNames();
             }
 
@@ -56,11 +56,7 @@ public final class JsonParser implements Parser {
                 return value.asText();
             }
             case NUMBER -> {
-                if (value.toString().contains(".")) {
-                    return value.asDouble();
-                } else {
-                    return value.asInt();
-                }
+                return value.toString().contains(".") ? value.asDouble() : value.asInt();
             }
             default -> {
                 return value.toString();

@@ -38,5 +38,5 @@ public class TicketProcessException extends BaseException {
     public TicketProcessException(String message, Throwable cause) {
         super(message, cause);
     }
-}
 
+}

@@ -41,14 +41,14 @@ public class CredentialController {
 
     @Operation(summary = "新增系统凭据配置")
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addCredential(@RequestBody @Valid CredentialVO.Credential credential) {
+    public HttpResult<Boolean> addCredential(@RequestBody @Valid CredentialParam.Credential credential) {
         credentialFacade.addCredential(credential);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "更新系统凭据配置")
     @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateDsConfig(@RequestBody @Valid CredentialVO.Credential credential) {
+    public HttpResult<Boolean> updateDsConfig(@RequestBody @Valid CredentialParam.Credential credential) {
         credentialFacade.updateCredential(credential);
         return HttpResult.SUCCESS;
     }

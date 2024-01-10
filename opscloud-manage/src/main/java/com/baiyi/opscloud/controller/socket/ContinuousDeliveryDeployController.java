@@ -1,23 +1,20 @@
 package com.baiyi.opscloud.controller.socket;
 
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
 import com.baiyi.opscloud.common.leo.session.LeoDeployQuerySessionMap;
-import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.controller.socket.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.param.leo.request.LoginLeoRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.SimpleLeoRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
 import com.baiyi.opscloud.leo.task.loop.LeoDeployEventLoop;
 import com.google.gson.GsonBuilder;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
-
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -41,13 +38,12 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
 
     private String username;
 
-
-    private static ThreadPoolTaskExecutor leoExecutor;
-
-    @Autowired
-    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor leoExecutor) {
-        ContinuousDeliveryDeployController.leoExecutor = leoExecutor;
-    }
+//    private static ThreadPoolTaskExecutor leoExecutor;
+//
+//    @Autowired
+//    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor leoExecutor) {
+//        ContinuousDeliveryDeployController.leoExecutor = leoExecutor;
+//    }
 
     /**
      * 连接建立成功调用的方法
@@ -56,7 +52,9 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
     public void onOpen(Session session) {
         try {
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
-            leoExecutor.execute(new LeoDeployEventLoop(this.sessionId, session));
+            //leoExecutor.execute(new LeoDeployEventLoop(this.sessionId, session));
+            // JDK21 VirtualThreads
+            Thread.ofVirtual().start(new LeoDeployEventLoop(this.sessionId, session));
         } catch (Exception e) {
             log.error("Create connection error: {}", e.getMessage());
         }
@@ -68,7 +66,6 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
     @OnClose
     public void onClose() {
     }
-
 
     @OnMessage(maxMessageSize = 1024)
     public void onMessage(String message, Session session) {
@@ -121,4 +118,3 @@ public class ContinuousDeliveryDeployController extends SimpleAuthentication {
     }
 
 }
-

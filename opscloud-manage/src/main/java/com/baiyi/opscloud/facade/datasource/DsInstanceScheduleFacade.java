@@ -20,7 +20,7 @@ public interface DsInstanceScheduleFacade {
 
     void resumeJob(DsInstanceScheduleParam.UpdateJob param);
 
-    void deleteJob(DsInstanceScheduleParam.UpdateJob param);
+    void deleteJob(DsInstanceScheduleParam.DeleteJob deleteJob);
 
     List<String> checkCron(DsInstanceScheduleParam.CheckCron param);
 }

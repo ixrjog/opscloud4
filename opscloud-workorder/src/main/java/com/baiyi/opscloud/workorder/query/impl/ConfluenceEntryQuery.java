@@ -18,4 +18,3 @@ public class ConfluenceEntryQuery extends BaseUserGroupExtendedTicketEntryQuery 
     }
 
 }
-

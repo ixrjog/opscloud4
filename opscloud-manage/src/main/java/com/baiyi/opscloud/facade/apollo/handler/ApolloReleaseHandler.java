@@ -33,7 +33,7 @@ public class ApolloReleaseHandler implements InitializingBean {
     private final ReleaseApplicationWhiteListChainHandler releaseApplicationWhiteListChainHandler;
 
     // 工单发布
-    private final ReleaseWorkOrderReleaseChainHandler releaseWorkOrderReleaseChainHandler;
+    private final ReleaseForWorkOrderChainHandler releaseWorkOrderReleaseChainHandler;
 
     // 拦截发布动作
     private final InterceptByActionChainHandler interceptByActionChainHandler;

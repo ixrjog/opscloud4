@@ -21,6 +21,8 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 
 /**
  * A security-related exception thrown when parts of the Guacamole API is
@@ -28,6 +30,9 @@ import org.apache.guacamole.protocol.GuacamoleStatus;
  * authorized (logged in).
  */
 public class GuacamoleUnauthorizedException extends GuacamoleSecurityException {
+
+    @Serial
+    private static final long serialVersionUID = 6116134838911196722L;
 
     /**
      * Creates a new GuacamoleUnauthorizedException with the given message and cause.

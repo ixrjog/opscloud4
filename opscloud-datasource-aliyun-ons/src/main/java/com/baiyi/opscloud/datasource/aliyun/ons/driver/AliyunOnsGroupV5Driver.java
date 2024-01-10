@@ -67,4 +67,5 @@ public class AliyunOnsGroupV5Driver {
         Client client = AliyunOnsV5Client.buildClient(regionId, aliyun);
         client.createConsumerGroup(group.getInstanceId(), group.getConsumerGroupId(), request);
     }
+
 }

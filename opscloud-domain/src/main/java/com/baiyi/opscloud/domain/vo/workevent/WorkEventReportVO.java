@@ -34,7 +34,6 @@ public class WorkEventReportVO {
         @Schema(description = "周统计数据")
         private Map<String, WeeklyStatistics> valueMap;
 
-
     }
 
     @Data
@@ -52,7 +51,6 @@ public class WorkEventReportVO {
 
         @Schema(description = "类目颜色")
         private String color;
-
 
     }
 

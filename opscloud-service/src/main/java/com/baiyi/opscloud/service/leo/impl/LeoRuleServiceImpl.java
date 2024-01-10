@@ -44,7 +44,7 @@ public class LeoRuleServiceImpl implements LeoRuleService {
 
     @Override
     public DataTable<LeoRule> queryRulePage(LeoRuleParam.RulePageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(LeoRule.class);
         if (pageQuery.getIsActive() != null) {
             Example.Criteria criteria = example.createCriteria();

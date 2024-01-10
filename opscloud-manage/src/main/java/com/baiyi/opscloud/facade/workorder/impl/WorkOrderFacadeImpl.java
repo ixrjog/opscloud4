@@ -65,15 +65,15 @@ public class WorkOrderFacadeImpl implements WorkOrderFacade {
     }
 
     @Override
-    public void saveWorkOrderGroup(WorkOrderVO.Group group) {
-        WorkOrderGroup newWorkOrderGroup = BeanCopierUtil.copyProperties(group, WorkOrderGroup.class);
+    public void saveWorkOrderGroup(WorkOrderGroupParam.Group group) {
+        WorkOrderGroup workOrderGroup = BeanCopierUtil.copyProperties(group, WorkOrderGroup.class);
         if (group.getId() == null) {
             if (group.getSeq() == null) {
-                newWorkOrderGroup.setSeq(workOrderGroupService.count() + 1);
+                workOrderGroup.setSeq(workOrderGroupService.count() + 1);
             }
-            workOrderGroupService.add(newWorkOrderGroup);
+            workOrderGroupService.add(workOrderGroup);
         } else {
-            workOrderGroupService.update(newWorkOrderGroup);
+            workOrderGroupService.update(workOrderGroup);
         }
     }
 
@@ -86,9 +86,8 @@ public class WorkOrderFacadeImpl implements WorkOrderFacade {
     }
 
     @Override
-    public void updateWorkOrder(WorkOrderVO.WorkOrder workOrder) {
-        WorkOrder newWorkOrder = BeanCopierUtil.copyProperties(workOrder, WorkOrder.class);
-        workOrderService.update(newWorkOrder);
+    public void updateWorkOrder(WorkOrderParam.WorkOrder workOrder) {
+        workOrderService.update(BeanCopierUtil.copyProperties(workOrder, WorkOrder.class));
     }
 
 }

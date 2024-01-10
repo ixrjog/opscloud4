@@ -14,13 +14,13 @@ public interface DsInstanceAssetSubscriptionFacade {
 
     DataTable<DsAssetSubscriptionVO.AssetSubscription> queryAssetSubscriptionPage(DsAssetSubscriptionParam.AssetSubscriptionPageQuery pageQuery);
 
-    void updateAssetSubscription(DsAssetSubscriptionVO.AssetSubscription assetSubscription);
+    void updateAssetSubscription(DsAssetSubscriptionParam.AssetSubscription assetSubscription);
 
     void publishAssetSubscriptionById(int id);
 
     void publishAssetSubscription(DatasourceInstanceAssetSubscription datasourceInstanceAssetSubscription);
 
-    void addAssetSubscription(DsAssetSubscriptionVO.AssetSubscription assetSubscription);
+    void addAssetSubscription(DsAssetSubscriptionParam.AssetSubscription assetSubscription);
 
     void deleteAssetSubscriptionById(int id);
 

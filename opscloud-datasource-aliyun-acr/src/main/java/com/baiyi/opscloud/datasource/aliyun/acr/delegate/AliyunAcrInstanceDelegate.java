@@ -70,7 +70,7 @@ public class AliyunAcrInstanceDelegate {
         // 从API获取
         List<GetInstanceEndpointResponse.Endpoints> endpoints = aliyunAcrInstanceDriver.getInstanceEndpoint(regionId, aliyun, instance.getInstanceId());
         Optional<GetInstanceEndpointResponse.Endpoints> optionalEndpoint = endpoints.stream().filter(e -> "USER".equals(e.getType())).findFirst();
-        GetInstanceEndpointResponse.Endpoints ep = optionalEndpoint.orElseGet(() -> endpoints.get(0));
+        GetInstanceEndpointResponse.Endpoints ep = optionalEndpoint.orElseGet(endpoints::getFirst);
         AliyunAcr.Endpoint endpoint = AliyunAcr.Endpoint.builder()
                 .domain(ep.getDomain())
                 .build();

@@ -5,6 +5,9 @@
  */
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -17,26 +20,22 @@ import static java.util.stream.Collectors.toList;
  * 
  * @author Jakub Zacek
  */
+@Setter
 public class MavenModuleWithDetails extends BaseModel {
 
     private List<Build> builds = Collections.emptyList();
     private List actions = Collections.emptyList();
+    @Getter
     private String displayName;
+    @Getter
     private BuildResult result;
+    @Getter
     private String url;
     private long duration;
     private long timestamp;
 
     public List getActions() {
         return actions;
-    }
-
-    public void setActions(List actions) {
-        this.actions = actions;
-    }
-
-    public void setBuilds(List<Build> builds) {
-        this.builds = builds;
     }
 
     public List<Build> getBuilds() {
@@ -53,44 +52,12 @@ public class MavenModuleWithDetails extends BaseModel {
             .orElse(Build.BUILD_HAS_NEVER_RUN);
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public BuildResult getResult() {
-        return result;
-    }
-
-    public void setResult(BuildResult result) {
-        this.result = result;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public long getDuration() {
         return duration;
-    }
-
-    public void setDuration(long duration) {
-        this.duration = duration;
     }
 
     public String getConsoleOutputText() throws IOException {

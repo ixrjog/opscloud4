@@ -3,7 +3,7 @@ package com.baiyi.opscloud.schedule.task;
 import com.baiyi.opscloud.common.annotation.WatchTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.helper.topic.TopicHelper;
-import com.baiyi.opscloud.config.condition.EnvCondition;
+import com.baiyi.opscloud.configuration.condition.EnvCondition;
 import com.baiyi.opscloud.datasource.ansible.provider.AnsibleHostsProvider;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
@@ -55,12 +55,12 @@ public class AssetSubscriptionTask {
 
     @InstanceHealth
     @Scheduled(initialDelay = 5000, fixedRate = 60 * 1000)
-    /**
-     * By setting lockAtMostFor we make sure that the lock is released even if the node dies and by setting
-     * `lockAtLeastFor` we make sure it's not executed more than once in fifteen minutes. Please note that
-     * `lockAtMostFor` is just a safety net in case that the node executing the task dies, so set it to a time
-     * that is significantly larger than maximum estimated execution time. If the task takes longer than lockAtMostFor,
-     * it may be executed again and the results will be unpredictable (more processes will hold the lock).
+    /*
+      By setting lockAtMostFor we make sure that the lock is released even if the node dies and by setting
+      `lockAtLeastFor` we make sure it's not executed more than once in fifteen minutes. Please note that
+      `lockAtMostFor` is just a safety net in case that the node executing the task dies, so set it to a time
+      that is significantly larger than maximum estimated execution time. If the task takes longer than lockAtMostFor,
+      it may be executed again and the results will be unpredictable (more processes will hold the lock).
      */
     @SchedulerLock(name = "asset_subscription_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
     @WatchTask(name = "Asset subscription")
@@ -103,4 +103,5 @@ public class AssetSubscriptionTask {
                 }
         );
     }
+
 }

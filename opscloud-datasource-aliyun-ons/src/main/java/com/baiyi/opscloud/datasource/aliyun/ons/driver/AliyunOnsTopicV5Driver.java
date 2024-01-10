@@ -58,4 +58,5 @@ public class AliyunOnsTopicV5Driver {
         Client client = AliyunOnsV5Client.buildClient(regionId, aliyun);
         client.createTopic(topic.getInstanceId(), topic.getTopicName(), request);
     }
+
 }

@@ -20,4 +20,5 @@ public interface AnsiblePlaybookService {
     AnsiblePlaybook getById(int id);
 
     DataTable<AnsiblePlaybook> queryPageByParam(AnsiblePlaybookParam.AnsiblePlaybookPageQuery pageQuery);
+
 }

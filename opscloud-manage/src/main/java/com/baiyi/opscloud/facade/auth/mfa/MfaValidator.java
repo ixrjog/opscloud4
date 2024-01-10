@@ -49,7 +49,7 @@ public class MfaValidator {
             return;
         }
         try {
-            SecretKey key = OtpUtil.toKey(credentials.get(0).getCredential());
+            SecretKey key = OtpUtil.toKey(credentials.getFirst().getCredential());
             final String otp = OtpUtil.generateOtp(key);
             if (!otp.equals(loginParam.getOtp())) {
                 throw new AuthenticationException(ErrorEnum.AUTH_USER_LOGIN_OTP_FAILURE);

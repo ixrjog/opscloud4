@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.v5.driver;
 
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.v5.param.ZabbixHostParam;
 import com.baiyi.opscloud.zabbix.v5.driver.base.SimpleZabbixV5HostDriver;
@@ -24,12 +24,12 @@ import java.util.List;
 @Component
 public class ZabbixV5HostTagDriver extends SimpleZabbixV5HostDriver {
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_host_tag_hostid' + #host.hostid")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':HOST:TAG:HOSTID:' + #host.hostid")
     public void evictHostTag(ZabbixConfig.Zabbix config, ZabbixHost.Host host) {
         log.info("Evict cache Zabbix Host Tag: hostid={}", host.getHostid());
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_host_tag_hostid' + #host.hostid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':HOST:TAG:HOSTID:' + #host.hostid", unless = "#result == null")
     public ZabbixHost.Host getHostTag(ZabbixConfig.Zabbix config, ZabbixHost.Host host) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("output", new String[]{"name"})
@@ -40,7 +40,7 @@ public class ZabbixV5HostTagDriver extends SimpleZabbixV5HostDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     public void updateHostTags(ZabbixConfig.Zabbix config, ZabbixHost.Host host, List<ZabbixHostParam.Tag> tags) {

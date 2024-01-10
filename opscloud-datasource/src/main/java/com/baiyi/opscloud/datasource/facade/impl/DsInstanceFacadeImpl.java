@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.datasource.facade.impl;
 
-import com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.factory.SetDsInstanceConfigFactory;
@@ -38,7 +37,7 @@ public class DsInstanceFacadeImpl<T> implements DsInstanceFacade<T> {
     private final DsInstancePacker dsInstancePacker;
 
     @Override
-    @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
+    @Async
     public void pullAsset(DsAssetParam.PullAsset pullAsset) {
         List<SimpleAssetProvider<T>> providers = getProviders(pullAsset.getInstanceId(), pullAsset.getAssetType());
         assert providers != null;
@@ -46,7 +45,7 @@ public class DsInstanceFacadeImpl<T> implements DsInstanceFacade<T> {
     }
 
     @Override
-    @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
+    @Async
     public void pushAsset(DsAssetParam.PushAsset pushAsset) {
         List<SimpleAssetProvider<T>> providers = getProviders(pushAsset.getInstanceId(), pushAsset.getAssetType());
         assert providers != null;

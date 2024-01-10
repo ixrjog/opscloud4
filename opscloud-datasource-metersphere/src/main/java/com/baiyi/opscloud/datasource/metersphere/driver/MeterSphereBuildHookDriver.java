@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -44,7 +45,7 @@ public class MeterSphereBuildHookDriver {
      * @throws MalformedURLException
      */
     public LeoHookResult.Result sendHook(MeterSphereConfig.MeterSphere config, LeoHook.BuildHook hook) throws MalformedURLException {
-        URL urlConfig = new URL(config.getHook().getBuildUrl());
+        URL urlConfig = URI.create(config.getHook().getBuildUrl()).toURL();
         // TODO 不支持port
         final String url = Joiner.on("://").join(urlConfig.getProtocol(), urlConfig.getHost());
         MeterSphereHookV1Feign meterSphereHookAPI = buildFeign(url);

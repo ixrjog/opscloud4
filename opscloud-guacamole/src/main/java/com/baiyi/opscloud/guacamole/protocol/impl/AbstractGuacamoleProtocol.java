@@ -112,4 +112,5 @@ public abstract class AbstractGuacamoleProtocol implements IGuacamoleProtocol, I
     public void afterPropertiesSet() throws Exception {
         GuacamoleProtocolFactory.register(this);
     }
+
 }

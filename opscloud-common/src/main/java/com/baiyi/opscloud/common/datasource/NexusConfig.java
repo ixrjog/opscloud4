@@ -34,9 +34,10 @@ public class NexusConfig extends BaseDsConfig {
         private String user;
         private String password;
 
-        private List<Repository> repositories; // 需要同步的仓库列表
-
-        private List<String> filter; // 保留扩展名资产
+        @Schema(description = "需要同步的仓库列表")
+        private List<Repository> repositories;
+        @Schema(description = "保留扩展名资产")
+        private List<String> filter;
     }
 
     @Data

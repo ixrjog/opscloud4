@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.constants.enums.CredentialKindEnum;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.SSHUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
-import com.baiyi.opscloud.domain.vo.sys.CredentialVO;
+import com.baiyi.opscloud.domain.param.sys.CredentialParam;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
@@ -21,7 +21,7 @@ public class CredentialConverter {
 
     private final StringEncryptor stringEncryptor;
 
-    public Credential toDO(CredentialVO.Credential vo) {
+    public Credential to(CredentialParam.Credential vo) {
         com.baiyi.opscloud.domain.generator.opscloud.Credential credential = BeanCopierUtil.copyProperties(vo, com.baiyi.opscloud.domain.generator.opscloud.Credential.class);
         credential.setCredential(encrypt(vo.getCredential()));
         credential.setCredential2(encrypt(vo.getCredential2()));

@@ -21,6 +21,8 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 
 /**
  * An exception which is thrown when too many requests have been received
@@ -28,6 +30,9 @@ import org.apache.guacamole.protocol.GuacamoleStatus;
  * temporarily or permanently.
  */
 public class GuacamoleClientTooManyException extends GuacamoleClientException {
+
+    @Serial
+    private static final long serialVersionUID = -763091864306578656L;
 
     /**
      * Creates a new GuacamoleClientTooManyException with the given message and cause.

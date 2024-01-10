@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.leo.impl;
 
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.InstanceHelper;
 import com.baiyi.opscloud.domain.base.SimpleBusiness;
@@ -25,6 +25,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.baiyi.opscloud.common.constants.CacheKeyConstants.LEO_PROD_STAT_REPORT_KEY;
+import static com.baiyi.opscloud.common.constants.CacheKeyConstants.LEO_STAT_REPORT_KEY;
 
 /**
  * @Author baiyi
@@ -53,7 +56,7 @@ public class LeoReportFacadeImpl implements LeoReportFacade {
     private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.JENKINS};
 
     @Override
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1H, key = "'opscloud.v4.report#statLeoReport'")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1H, key = LEO_STAT_REPORT_KEY)
     public LeoReportVO.LeoReport statLeoReport() {
         ReportVO.MonthlyReport monthlyReport = ReportVO.MonthlyReport.builder()
                 .dateCat(buildService.queryMonth().stream().map(ReportVO.Report::getCName).collect(Collectors.toList()))
@@ -99,7 +102,7 @@ public class LeoReportFacadeImpl implements LeoReportFacade {
         ).collect(Collectors.toList());
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10M, key = "'opscloud.v4.report#statLeoProdReport'")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_10M, key = LEO_PROD_STAT_REPORT_KEY)
     @Override
     public LeoReportVO.LeoProdReport statLeoProdReport() {
         List<ReportVO.Report> reports = deployService.statLast30Days();

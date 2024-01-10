@@ -45,7 +45,6 @@ public class ZabbixAction {
         private List<String> actionids;
     }
 
-
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -58,4 +57,5 @@ public class ZabbixAction {
         private String eventsource;
         private String status;
     }
+
 }

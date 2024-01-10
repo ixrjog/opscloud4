@@ -8,8 +8,6 @@ import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.io.Serial;
@@ -80,29 +78,24 @@ public class ServerVO {
         private Integer id = 0;
 
         @Schema(description = "服务器名称")
-        @NotBlank(message = "服务器名称不能为空")
         private String name;
 
         @Schema(description = "显示名称")
         private String displayName;
 
         @Schema(description = "服务器组id", example = "1")
-        @NotNull(message = "服务器组不能为空")
         private Integer serverGroupId;
 
         @Schema(description = "环境类型", example = "1")
-        @NotNull(message = "环境类型不能为空")
         private Integer envType;
 
         @Schema(description = "公网IP")
         private String publicIp;
 
         @Schema(description = "私网IP")
-        @NotBlank(message = "私网ip不能为空")
         private String privateIp;
 
         @Schema(description = "服务器类型", example = "1")
-        @NotNull(message = "服务器类型不能为空")
         @Builder.Default
         private Integer serverType = 0;
 

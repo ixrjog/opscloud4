@@ -44,7 +44,7 @@ public class QuartzService {
      * @param jobTime  时间表达式 （如：0/5 * * * * ? ）
      * @param jobData  参数
      */
-    public void addJob(Class<? extends QuartzJobBean> jobClass, String group, String jobName, String jobTime, String jobDescription, Map jobData) {
+    public void addJob(Class<? extends QuartzJobBean> jobClass, String group, String jobName, String jobTime, String jobDescription, Map<? extends String, ?> jobData) {
         // 创建jobDetail实例，绑定Job实现类
         // 指明job的名称，所在组的名称，以及绑定job类
         // 任务名称和组构成任务key
@@ -100,9 +100,8 @@ public class QuartzService {
      * @param group   instanceUuid
      */
     public void deleteJob(String group, String jobName) {
-        TriggerKey triggerKey = TriggerKey.triggerKey(jobName, group);
-        JobKey jobKey = JobKey.jobKey(jobName, group);
         try {
+            TriggerKey triggerKey = TriggerKey.triggerKey(jobName, group);
             Trigger trigger = scheduler.getTrigger(triggerKey);
             if (trigger == null) {
                 return;
@@ -112,7 +111,7 @@ public class QuartzService {
             // 移除触发器
             scheduler.unscheduleJob(triggerKey);
             // 删除任务
-            scheduler.deleteJob(jobKey);
+            scheduler.deleteJob(JobKey.jobKey(jobName, group));
         } catch (SchedulerException e) {
             log.error("删除作业错误: {}", e.getMessage());
         }
@@ -207,8 +206,7 @@ public class QuartzService {
                     .description(jobDetail.getDescription())
                     .status(triggerState.name())
                     .build();
-            if (trigger instanceof CronTrigger) {
-                CronTrigger cronTrigger = (CronTrigger) trigger;
+            if (trigger instanceof CronTrigger cronTrigger) {
                 job.setCronExpression(cronTrigger.getCronExpression());
                 job.setExecutionTime(CronUtil.recentTime(cronTrigger.getCronExpression(), 5));
             }
@@ -256,8 +254,7 @@ public class QuartzService {
                     .description("触发器: " + trigger.getKey())
                     .status(triggerState.name())
                     .build();
-            if (trigger instanceof CronTrigger) {
-                CronTrigger cronTrigger = (CronTrigger) trigger;
+            if (trigger instanceof CronTrigger cronTrigger) {
                 job.setCronExpression(cronTrigger.getCronExpression());
             }
             jobList.add(job);

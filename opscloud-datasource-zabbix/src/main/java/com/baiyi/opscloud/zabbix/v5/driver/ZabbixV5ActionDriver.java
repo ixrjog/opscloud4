@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.v5.driver;
 
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.v5.driver.base.AbstractZabbixV5ActionDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixAction;
@@ -32,7 +32,7 @@ import java.util.Map;
 @Component
 public class ZabbixV5ActionDriver extends AbstractZabbixV5ActionDriver {
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_action_name_' + #actionName")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':ACTION:NAME:' + #actionName")
     public void evictActionByName(ZabbixConfig.Zabbix config, String actionName) {
         log.info("Evict cache with Zabbix Action: actionName={}", actionName);
     }
@@ -41,7 +41,7 @@ public class ZabbixV5ActionDriver extends AbstractZabbixV5ActionDriver {
      * @param actionName Report problems to users_{name}
      * @return
      */
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_action_name_' + #actionName", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':ACTION:NAME:' + #actionName", unless = "#result == null")
     public ZabbixAction.Action getActionByName(ZabbixConfig.Zabbix config, String actionName) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("output", "extend")
@@ -54,7 +54,7 @@ public class ZabbixV5ActionDriver extends AbstractZabbixV5ActionDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     public void create(ZabbixConfig.Zabbix config, String actionName, String usergrpName) {

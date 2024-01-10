@@ -19,10 +19,11 @@
 
 package org.apache.guacamole.protocol;
 
-import java.util.Arrays;
-import java.util.Iterator;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.GuacamoleServerException;
+
+import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Parser for the Guacamole protocol. Arbitrary instruction data is appended,
@@ -106,7 +107,7 @@ public class GuacamoleParser implements Iterator<GuacamoleInstruction> {
     /**
      * All currently parsed elements.
      */
-    private final String elements[] = new String[INSTRUCTION_MAX_ELEMENTS];
+    private final String[] elements = new String[INSTRUCTION_MAX_ELEMENTS];
 
     /**
      * Appends data from the given buffer to the current instruction.
@@ -128,7 +129,7 @@ public class GuacamoleParser implements Iterator<GuacamoleInstruction> {
      * @throws GuacamoleException
      *     If an error occurs while parsing the new data.
      */
-    public int append(char chunk[], int offset, int length) throws GuacamoleException {
+    public int append(char[] chunk, int offset, int length) throws GuacamoleException {
 
         int charsParsed = 0;
 

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.v5.driver;
 
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.v5.driver.base.AbstractZabbixV5UserGroupDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
@@ -42,7 +42,7 @@ public class ZabbixV5UserGroupDriver extends AbstractZabbixV5UserGroupDriver {
         return response.getResult();
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_usergroup_usrgrpid_' + #usrgrpid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':USERGROUP:USRGRPID:' + #usrgrpid", unless = "#result == null")
     public ZabbixUserGroup.UserGroup getById(ZabbixConfig.Zabbix config, String usrgrpid) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("usrgrpids", usrgrpid)
@@ -51,10 +51,10 @@ public class ZabbixV5UserGroupDriver extends AbstractZabbixV5UserGroupDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_usergroup_name_' + #usergroup", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':USERGROUP:NAME:' + #usergroup", unless = "#result == null")
     public ZabbixUserGroup.UserGroup getByName(ZabbixConfig.Zabbix config, String usergroup) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("status", 0)
@@ -66,7 +66,7 @@ public class ZabbixV5UserGroupDriver extends AbstractZabbixV5UserGroupDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     public ZabbixUserGroup.UserGroup create(ZabbixConfig.Zabbix config, String usergroup, ZabbixHostGroup.HostGroup hostGroup) {
@@ -88,7 +88,7 @@ public class ZabbixV5UserGroupDriver extends AbstractZabbixV5UserGroupDriver {
         if (CollectionUtils.isEmpty(response.getResult().getUsrgrpids())) {
             return null;
         }
-        return getById(config, response.getResult().getUsrgrpids().get(0));
+        return getById(config, response.getResult().getUsrgrpids().getFirst());
     }
 
 }

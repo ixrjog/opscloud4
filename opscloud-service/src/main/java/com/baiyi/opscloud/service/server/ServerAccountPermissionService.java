@@ -18,4 +18,5 @@ public interface ServerAccountPermissionService {
     List<ServerAccountPermission> queryByServerId(Integer serverId);
 
    int  countByServerAccountId(Integer serverAccountId);
+
 }

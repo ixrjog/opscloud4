@@ -20,10 +20,11 @@
 package org.apache.guacamole.net;
 
 
-import java.util.concurrent.locks.ReentrantLock;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.io.GuacamoleReader;
 import org.apache.guacamole.io.GuacamoleWriter;
+
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Base GuacamoleTunnel implementation which synchronizes access to the

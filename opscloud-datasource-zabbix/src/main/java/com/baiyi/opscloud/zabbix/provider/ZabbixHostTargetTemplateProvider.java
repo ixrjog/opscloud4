@@ -38,4 +38,5 @@ public class ZabbixHostTargetTemplateProvider extends AbstractZabbixHostProvider
     public void afterPropertiesSet() {
         AssetProviderFactory.register(zabbixHostTargetTemplateProvider);
     }
+
 }

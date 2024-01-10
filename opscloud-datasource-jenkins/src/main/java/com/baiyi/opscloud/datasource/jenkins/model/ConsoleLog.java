@@ -41,4 +41,5 @@ public class ConsoleLog {
         this.currentBufferSize = currentBufferSize;
         return this;
     }
+
 }

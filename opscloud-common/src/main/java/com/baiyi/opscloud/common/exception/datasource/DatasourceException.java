@@ -20,4 +20,3 @@ public class DatasourceException extends BaseException {
     }
 
 }
-

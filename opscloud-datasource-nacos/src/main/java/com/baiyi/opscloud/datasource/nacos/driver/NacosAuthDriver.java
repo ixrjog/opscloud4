@@ -23,6 +23,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
+import static com.baiyi.opscloud.common.constants.CacheKeyConstants.NACOS_AUTH_KEY;
+
 /**
  * @Author baiyi
  * @Date 2021/11/11 4:55 下午
@@ -36,7 +38,7 @@ public class NacosAuthDriver {
     private final RedisUtil redisUtil;
 
     private String buildKey(String url) {
-        return StringFormatter.format("Opscloud.V4.Nacos.AccessToken.{}", url);
+        return StringFormatter.format(NACOS_AUTH_KEY, url);
     }
 
     private NacosAuthV1Feign buildFeign(NacosConfig.Nacos config) {

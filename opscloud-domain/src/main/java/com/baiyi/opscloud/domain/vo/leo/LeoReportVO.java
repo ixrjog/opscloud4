@@ -87,6 +87,7 @@ public class LeoReportVO {
 
         @Schema(description = "授权用户总数")
         private Integer authorizedUserTotal;
+
     }
 
     @Data

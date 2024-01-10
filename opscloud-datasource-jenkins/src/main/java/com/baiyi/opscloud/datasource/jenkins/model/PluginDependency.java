@@ -1,8 +1,11 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
 /**
  * @author Karl Heinz Marbaise
  */
+@Getter
 public class PluginDependency extends BaseModel {
     private boolean optional;
 
@@ -10,26 +13,14 @@ public class PluginDependency extends BaseModel {
 
     private String version;
 
-    public boolean isOptional() {
-        return optional;
-    }
-
     public PluginDependency setOptional(boolean optional) {
         this.optional = optional;
         return this;
     }
 
-    public String getShortName() {
-        return shortName;
-    }
-
     public PluginDependency setShortName(String shortName) {
         this.shortName = shortName;
         return this;
-    }
-
-    public String getVersion() {
-        return version;
     }
 
     public PluginDependency setVersion(String version) {
@@ -64,11 +55,8 @@ public class PluginDependency extends BaseModel {
         } else if (!shortName.equals(other.shortName))
             return false;
         if (version == null) {
-            if (other.version != null)
-                return false;
-        } else if (!version.equals(other.version))
-            return false;
-        return true;
+            return other.version == null;
+        } else return version.equals(other.version);
     }
 
 }

@@ -54,10 +54,7 @@ public class Artifact extends BaseModel {
             return false;
         if (Optional.ofNullable(fileName).map(name -> !name.equals(artifact.fileName)).orElseGet(() -> artifact.fileName != null))
             return false;
-        if (Optional.ofNullable(relativePath).map(path -> !path.equals(artifact.relativePath)).orElseGet(() -> artifact.relativePath != null))
-            return false;
-
-        return true;
+        return !Optional.ofNullable(relativePath).map(path -> !path.equals(artifact.relativePath)).orElseGet(() -> artifact.relativePath != null);
     }
 
     @Override
@@ -67,4 +64,5 @@ public class Artifact extends BaseModel {
         result = 31 * result + (relativePath != null ? relativePath.hashCode() : 0);
         return result;
     }
+
 }

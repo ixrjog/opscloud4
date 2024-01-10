@@ -20,10 +20,11 @@
 package org.apache.guacamole.net;
 
 
-import java.util.UUID;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.io.GuacamoleReader;
 import org.apache.guacamole.io.GuacamoleWriter;
+
+import java.util.UUID;
 
 /**
  * Provides a unique identifier and synchronized access to the GuacamoleReader
@@ -39,7 +40,7 @@ public interface GuacamoleTunnel {
      * mark the end of the HTTP response, and by the WebSocket tunnel to
      * transmit the tunnel UUID.
      */
-    static final String INTERNAL_DATA_OPCODE = "";
+    String INTERNAL_DATA_OPCODE = "";
 
     /**
      * Acquires exclusive read access to the Guacamole instruction stream

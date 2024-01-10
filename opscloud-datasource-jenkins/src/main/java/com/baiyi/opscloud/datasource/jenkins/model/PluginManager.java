@@ -1,16 +1,15 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
 import java.util.List;
 
 /**
  * @author Karl Heinz Marbaise
  */
+@Getter
 public class PluginManager extends BaseModel {
     private List<Plugin> plugins;
-
-    public List<Plugin> getPlugins() {
-        return plugins;
-    }
 
     public PluginManager setPlugins(List<Plugin> plugins) {
         this.plugins = plugins;
@@ -35,11 +34,8 @@ public class PluginManager extends BaseModel {
             return false;
         PluginManager other = (PluginManager) obj;
         if (plugins == null) {
-            if (other.plugins != null)
-                return false;
-        } else if (!plugins.equals(other.plugins))
-            return false;
-        return true;
+            return other.plugins == null;
+        } else return plugins.equals(other.plugins);
     }
 
 }

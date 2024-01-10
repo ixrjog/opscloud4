@@ -11,8 +11,6 @@ import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.io.Serial;
@@ -87,15 +85,12 @@ public class ServerGroupVO {
         private Integer id;
 
         @Schema(description = "组名称")
-        @NotBlank(message = "组名称不能为空")
         private String name;
 
         @Schema(description = "组类型", example = "1")
-        @NotNull(message = "组类型不能为空")
         private Integer serverGroupTypeId;
 
         @Schema(description = "是否支持工单")
-        @NotNull(message = "是否支持工单不能为空")
         private Boolean allowOrder;
 
         @Schema(description = "资源描述")

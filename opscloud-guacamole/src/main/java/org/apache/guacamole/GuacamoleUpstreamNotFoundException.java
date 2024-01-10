@@ -21,11 +21,16 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 /**
  * An exception which indicates that an upstream server (such as the remote
  * desktop) does not appear to exist.
  */
 public class GuacamoleUpstreamNotFoundException extends GuacamoleUpstreamException {
+
+    @Serial
+    private static final long serialVersionUID = -1139613750090418618L;
 
     /**
      * Creates a new GuacamoleUpstreamNotFoundException with the given message

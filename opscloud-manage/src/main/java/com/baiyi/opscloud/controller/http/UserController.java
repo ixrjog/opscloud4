@@ -5,10 +5,7 @@ import com.baiyi.opscloud.datasource.facade.UserAmFacade;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
-import com.baiyi.opscloud.domain.param.user.UserAmParam;
-import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
-import com.baiyi.opscloud.domain.param.user.UserGroupParam;
-import com.baiyi.opscloud.domain.param.user.UserParam;
+import com.baiyi.opscloud.domain.param.user.*;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.*;
@@ -67,7 +64,7 @@ public class UserController {
 
     @Operation(summary = "保存用户凭据")
     @PostMapping(value = "/credential/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> saveUserCredential(@RequestBody @Valid UserCredentialVO.Credential credential) {
+    public HttpResult<Boolean> saveUserCredential(@RequestBody @Valid UserCredentialParam.Credential credential) {
         userCredentialFacade.saveCredential(credential);
         return HttpResult.SUCCESS;
     }
@@ -114,14 +111,14 @@ public class UserController {
 
     @Operation(summary = "新增用户组")
     @PostMapping(value = "/group/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addUserGroup(@RequestBody @Valid UserGroupVO.UserGroup userGroup) {
+    public HttpResult<Boolean> addUserGroup(@RequestBody @Valid UserGroupParam.UserGroup userGroup) {
         userGroupFacade.addUserGroup(userGroup);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "更新用户组")
     @PutMapping(value = "/group/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateUserGroup(@RequestBody @Valid UserGroupVO.UserGroup userGroup) {
+    public HttpResult<Boolean> updateUserGroup(@RequestBody @Valid UserGroupParam.UserGroup userGroup) {
         userGroupFacade.updateUserGroup(userGroup);
         return HttpResult.SUCCESS;
     }
@@ -135,14 +132,14 @@ public class UserController {
 
     @Operation(summary = "解除用户业务许可")
     @PutMapping(value = "/business/permission/revoke", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> revokeUserBusinessPermission(@RequestBody @Valid UserPermissionVO.UserBusinessPermission userBusinessPermission) {
+    public HttpResult<Boolean> revokeUserBusinessPermission(@RequestBody @Valid UserBusinessPermissionParam.UserBusinessPermission userBusinessPermission) {
         permissionFacade.revokeUserBusinessPermission(userBusinessPermission);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "授予用户业务许可")
     @PostMapping(value = "/business/permission/grant", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> grantUserBusinessPermission(@RequestBody @Valid UserPermissionVO.UserBusinessPermission userBusinessPermission) {
+    public HttpResult<Boolean> grantUserBusinessPermission(@RequestBody @Valid UserBusinessPermissionParam.UserBusinessPermission userBusinessPermission) {
         permissionFacade.grantUserBusinessPermission(userBusinessPermission);
         return HttpResult.SUCCESS;
     }
@@ -162,8 +159,8 @@ public class UserController {
 
     @Operation(summary = "查询用户授权的远程服务器")
     @PostMapping(value = "/server/remote/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<ServerVO.Server>> queryUserRemoteServerPage(@RequestBody @Valid ServerParam.UserRemoteServerPageQuery queryParam) {
-        return new HttpResult<>(userFacade.queryUserRemoteServerPage(queryParam));
+    public HttpResult<DataTable<ServerVO.Server>> queryUserRemoteServerPage(@RequestBody @Valid ServerParam.UserRemoteServerPageQuery pageQuery) {
+        return new HttpResult<>(userFacade.queryUserRemoteServerPage(pageQuery));
     }
 
     @Operation(summary = "分页查询用户组列表")
@@ -186,8 +183,8 @@ public class UserController {
 
     @Operation(summary = "授权用户AccessToken")
     @PostMapping(value = "/access/token/grant", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<AccessTokenVO.AccessToken> grantUserAccessToken(@RequestBody @Valid AccessTokenVO.AccessToken accessToken) {
-        return new HttpResult<>(userFacade.grantUserAccessToken(accessToken));
+    public HttpResult<AccessTokenVO.AccessToken> grantUserAccessToken(@RequestBody @Valid AccessTokenParam.ApplicationAccessToken applicationAccessToken) {
+        return new HttpResult<>(userFacade.grantUserAccessToken(applicationAccessToken));
     }
 
     @Operation(summary = "撤销用户AccessToken")

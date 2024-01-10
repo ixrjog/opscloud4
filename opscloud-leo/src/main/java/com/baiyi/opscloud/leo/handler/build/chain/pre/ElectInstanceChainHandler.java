@@ -119,7 +119,7 @@ public class ElectInstanceChainHandler extends BaseBuildChainHandler {
      */
     private DatasourceInstance getOneInstance(List<DatasourceInstance> activeInstances) {
         if (activeInstances.size() == 1) {
-            return activeInstances.get(0);
+            return activeInstances.getFirst();
         }
         List<LeoBuild> builds = leoBuildService.queryNotFinishBuild();
         // 所有引擎都空闲
@@ -156,14 +156,14 @@ public class ElectInstanceChainHandler extends BaseBuildChainHandler {
                 }
             });
 
-            List<JenkinsInstanceTask.Task> tasks = taskMap.keySet().stream().map(taskMap::get).toList();
+            List<JenkinsInstanceTask.Task> tasks = taskMap.keySet().stream().map(taskMap::get).collect(Collectors.toList());
             JenkinsInstanceTask jenkinsInstanceTask = JenkinsInstanceTask.builder()
                     .instanceTasks(tasks)
                     .build();
             jenkinsInstanceTask.sort();
             return activeInstances.get(jenkinsInstanceTask.getIndex());
         } catch (Exception e) {
-            log.error("选取实例错误: {}", e.getMessage());
+            log.error("Leo selected build engine instance error: {}", e.getMessage());
             return getRandomOneInstance(activeInstances);
         }
     }
@@ -176,7 +176,7 @@ public class ElectInstanceChainHandler extends BaseBuildChainHandler {
      */
     private DatasourceInstance getRandomOneInstance(List<DatasourceInstance> activeInstances) {
         Collections.shuffle(activeInstances);
-        return activeInstances.get(0);
+        return activeInstances.getFirst();
     }
 
 }

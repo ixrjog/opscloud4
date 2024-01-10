@@ -65,4 +65,5 @@ public class GradleParser {
         }
         throw new LeoBuildException("无法从gradle配置文件中获取版本信息！");
     }
+
 }

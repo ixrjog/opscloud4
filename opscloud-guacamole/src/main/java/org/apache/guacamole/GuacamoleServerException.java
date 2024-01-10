@@ -21,6 +21,8 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 
 /**
  * A generic exception thrown when part of the Guacamole API encounters
@@ -28,6 +30,9 @@ import org.apache.guacamole.protocol.GuacamoleStatus;
  * require correction on the server side, not the client.
  */
 public class GuacamoleServerException extends GuacamoleException {
+
+    @Serial
+    private static final long serialVersionUID = 165908587671675286L;
 
     /**
      * Creates a new GuacamoleServerException with the given message and cause.
@@ -61,7 +66,7 @@ public class GuacamoleServerException extends GuacamoleException {
 
     @Override
     public GuacamoleStatus getStatus() {
-        return GuacamoleStatus.SERVER_ERROR;
+        return super.getStatus();
     }
 
 }

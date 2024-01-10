@@ -15,5 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExmailDeptList {
+
     private List<ExmailDept> department;
+
 }

@@ -40,5 +40,3 @@ public class BusinessTemplateException extends BaseException {
     }
 
 }
-
-

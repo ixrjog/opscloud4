@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.kubernetes;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.datasource.kubernetes.exception.KubernetesException;
-import com.baiyi.opscloud.domain.param.kubernetes.IstioParam;
+import com.baiyi.opscloud.domain.param.kubernetes.KubernetesIstioParam;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 class IstioFacadeTest extends BaseUnit {
 
     @Resource
-    private IstioFacade istioFacade;
+    private KubernetesIstioFacade istioFacade;
 
     private static final String YAML = """
             ---
@@ -36,12 +36,12 @@ class IstioFacadeTest extends BaseUnit {
 
     @Test
     void test() {
-        IstioParam.UpdateResource updateResource = IstioParam.UpdateResource.builder()
+        KubernetesIstioParam.UpdateResource updateResource = KubernetesIstioParam.UpdateResource.builder()
                 .resourceYaml(YAML)
                 .instanceId(38)
                 .build();
         try {
-            istioFacade.updateIstioVirtualService(updateResource);
+            istioFacade.updateVirtualService(updateResource);
         } catch (KubernetesException e) {
             e.printStackTrace();
         }
@@ -69,12 +69,12 @@ spec:
 
     @Test
     void test2() {
-        IstioParam.CreateResource createResource = IstioParam.CreateResource.builder()
+        KubernetesIstioParam.CreateResource createResource = KubernetesIstioParam.CreateResource.builder()
                 .resourceYaml(YAML2)
                 .instanceId(24)
                 .build();
         try {
-            istioFacade.createIstioDestinationRule(createResource);
+            istioFacade.createDestinationRule(createResource);
         } catch (KubernetesException e) {
             e.printStackTrace();
         }

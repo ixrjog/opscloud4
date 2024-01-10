@@ -6,14 +6,12 @@ import com.baiyi.opscloud.datasource.jenkins.model.FolderJob;
 import com.baiyi.opscloud.datasource.jenkins.model.Job;
 import com.baiyi.opscloud.leo.domain.model.LeoTemplateModel;
 import com.baiyi.opscloud.leo.exception.LeoTemplateException;
-import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Map;
 
 /**
@@ -39,8 +37,7 @@ public class JenkinsJobFacade {
                 // 重新拼装URL
                 // https://leo-jenkins-1.chuanyinet.com/job/templates/job/tpl_test/ =>
                 // https://leo-jenkins-1.chuanyinet.com/job/templates/
-                URL url = new URL(templateConfig.getTemplate().getUrl());
-                final String folderUrl = Joiner.on("").skipNulls().join(url.getProtocol(), "://", url.getHost(), url.getPort() == -1 ? null : ":" + url.getPort(), "/job/", folder, "/");
+                final String folderUrl = templateConfig.getTemplate().toFolderURL();
                 FolderJob folderJob = new FolderJob(folder, folderUrl);
                 log.debug("查询JobXml: jenkinsUrl={}, folderJobUrl={}, templateName={}", jenkinsConfig.getJenkins().getUrl(), folderJob.getUrl(), templateConfig.getTemplate().getName());
                 return JenkinsServerDriver.getJobXml(jenkinsConfig.getJenkins(), folderJob, templateConfig.getTemplate().getName());
@@ -59,13 +56,10 @@ public class JenkinsJobFacade {
                 // 重新拼装URL
                 // https://leo-jenkins-1.chuanyinet.com/job/templates/job/tpl_test/ =>
                 // https://leo-jenkins-1.chuanyinet.com/job/templates/
-                URL url = new URL(templateConfig.getTemplate().getUrl());
-                final String folderUrl = Joiner.on("").skipNulls().join(url.getProtocol(), "://", url.getHost(), url.getPort() == -1 ? null : ":" + url.getPort(), "/job/", folder, "/");
+                final String folderUrl = templateConfig.getTemplate().toFolderURL();
                 FolderJob folderJob = new FolderJob(folder, folderUrl);
-
                 Map<String, Job> jobMap = JenkinsServerDriver.getJobs(jenkinsConfig.getJenkins(), folderJob);
                 if (!jobMap.containsKey(templateConfig.getTemplate().getName())) {
-
                     JenkinsServerDriver.createJob(jenkinsConfig.getJenkins(), folderJob, templateConfig.getTemplate().getName(), jobXml);
                 }
             } else {

@@ -49,4 +49,5 @@ public class AuthRoleMenuServiceImpl implements AuthRoleMenuService {
         criteria.andIn("roleId", roleIds);
         return authRoleMenuMapper.selectByExample(example);
     }
+
 }

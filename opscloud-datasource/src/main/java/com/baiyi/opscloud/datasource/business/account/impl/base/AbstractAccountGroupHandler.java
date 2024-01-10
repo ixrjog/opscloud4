@@ -79,5 +79,5 @@ public abstract class AbstractAccountGroupHandler extends SimpleDsInstanceProvid
     public void afterPropertiesSet() {
         AccountGroupHandlerFactory.register(this);
     }
-}
 
+}

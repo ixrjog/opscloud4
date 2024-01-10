@@ -12,6 +12,8 @@ import feign.jackson.JacksonEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import static com.baiyi.opscloud.common.constants.CacheKeyConstants.DINGTALK_TOKEN;
+
 /**
  * @Author baiyi
  * @Date 2021/11/29 3:22 下午
@@ -24,7 +26,7 @@ public class DingtalkTokenDriver {
     private final RedisUtil redisUtil;
 
     private String buildKey(String name) {
-        return StringFormatter.format("Opscloud.V4.Dingtalk.Token.{}", name);
+        return StringFormatter.format(DINGTALK_TOKEN, name);
     }
 
     private DingtalkTokenFeign buildFeign(DingtalkConfig.Dingtalk config) {

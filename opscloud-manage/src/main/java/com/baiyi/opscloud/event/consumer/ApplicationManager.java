@@ -55,4 +55,3 @@ public class ApplicationManager implements IManager<BaseBusiness.IBusiness> {
     }
 
 }
-

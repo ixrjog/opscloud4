@@ -15,11 +15,9 @@ public class ComputerSet extends BaseModel {
     private String displayName;
     private int totalExecutors;
 
-    public ComputerSet()
-    {
+    public ComputerSet() {
     }
 
-    
     public int getBusyExecutors() {
         return busyExecutors;
     }
@@ -48,10 +46,7 @@ public class ComputerSet extends BaseModel {
     }
 
     public List<ComputerWithDetails> getComputers() {
-        return computer.stream().map(s -> {
-            s.setClient(this.client);
-            return s;
-        }).collect(Collectors.toList());
+        return computer.stream().peek(s -> s.setClient(this.client)).collect(Collectors.toList());
     }
 
     public ComputerSet setComputer(List<ComputerWithDetails> computers) {
@@ -91,9 +86,7 @@ public class ComputerSet extends BaseModel {
                 return false;
         } else if (!displayName.equals(other.displayName))
             return false;
-        if (totalExecutors != other.totalExecutors)
-            return false;
-        return true;
+        return totalExecutors == other.totalExecutors;
     }
 
 }

@@ -1,5 +1,8 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
+@Getter
 public class MavenArtifact extends BaseModel {
 
     private String artifactId;
@@ -14,17 +17,9 @@ public class MavenArtifact extends BaseModel {
     public MavenArtifact() {
     }
 
-    public String getArtifactId() {
-        return artifactId;
-    }
-
     public MavenArtifact setArtifactId(String artifactId) {
         this.artifactId = artifactId;
         return this;
-    }
-
-    public String getCanonicalName() {
-        return canonicalName;
     }
 
     public MavenArtifact setCanonicalName(String canonicalName) {
@@ -32,17 +27,9 @@ public class MavenArtifact extends BaseModel {
         return this;
     }
 
-    public String getClassifier() {
-        return classifier;
-    }
-
     public MavenArtifact setClassifier(String classifier) {
         this.classifier = classifier;
         return this;
-    }
-
-    public String getFileName() {
-        return fileName;
     }
 
     public MavenArtifact setFileName(String fileName) {
@@ -50,17 +37,9 @@ public class MavenArtifact extends BaseModel {
         return this;
     }
 
-    public String getGroupId() {
-        return groupId;
-    }
-
     public MavenArtifact setGroupId(String groupId) {
         this.groupId = groupId;
         return this;
-    }
-
-    public String getMd5sum() {
-        return md5sum;
     }
 
     public MavenArtifact setMd5sum(String md5sum) {
@@ -68,21 +47,14 @@ public class MavenArtifact extends BaseModel {
         return this;
     }
 
-    public String getType() {
-        return type;
-    }
-
     public MavenArtifact setType(String type) {
         this.type = type;
         return this;
-    }
-
-    public String getVersion() {
-        return version;
     }
 
     public MavenArtifact setVersion(String version) {
         this.version = version;
         return this;
     }
+
 }

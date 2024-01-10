@@ -59,7 +59,7 @@ public class ApplicationArmsPacker {
                         .orElse("cn-hangzhou");
 
                 String homeUrl = optionalHomeUrl.get();
-                String pid = assets.get(0).getAssetKey();
+                String pid = assets.getFirst().getAssetKey();
 
                 ApplicationVO.ArmsTraceApp traceApp = ApplicationVO.ArmsTraceApp.builder()
                         .show(true)

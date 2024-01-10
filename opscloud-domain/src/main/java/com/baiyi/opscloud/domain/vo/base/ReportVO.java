@@ -28,6 +28,7 @@ public class ReportVO {
     public static class Report implements Serializable {
         @Serial
         private static final long serialVersionUID = -2683596358424500001L;
+        @Schema(name = "字段别名")
         private String cName;
         private Integer value;
         private String color;
@@ -37,6 +38,7 @@ public class ReportVO {
     @NoArgsConstructor
     @Schema
     public static class CommonReport {
+        @Schema(name = "字段别名")
         private String cName;
         private Integer value0;
         private Integer value1;

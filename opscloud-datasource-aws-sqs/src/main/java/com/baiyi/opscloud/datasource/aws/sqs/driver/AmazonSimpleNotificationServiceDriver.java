@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.aws.sqs.driver;
 
 import com.amazonaws.services.sns.model.*;
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.AwsConfig;
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.common.util.JacksonUtil;

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.terminal.impl;
 
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.domain.vo.base.ReportVO;
 import com.baiyi.opscloud.domain.vo.terminal.TerminalReportVO;
 import com.baiyi.opscloud.facade.terminal.TerminalReportFacade;
@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.baiyi.opscloud.common.constants.CacheKeyConstants.TERMINAL_REPORT_KEY;
 
 /**
  * @Author baiyi
@@ -32,7 +34,7 @@ public class TerminalReportFacadeImpl implements TerminalReportFacade {
     private final TerminalSessionInstanceCommandService terminalSessionInstanceCommandService;
 
     @Override
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1H, key = "'opscloud.v4.report#statTerminalReport'")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1H, key = TERMINAL_REPORT_KEY)
     public TerminalReportVO.TerminalReport statTerminalReport() {
         return TerminalReportVO.TerminalReport.builder()
                 .userTotal(terminalSessionService.statUserTotal())

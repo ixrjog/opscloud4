@@ -66,6 +66,8 @@ public class ApolloConfig extends BaseDsConfig {
     @Schema
     public static class Interceptor {
         private String token;
+        @Schema(name = "需要拦截的命名空间列表")
+        private List<String> namespaces;
         private List<String> envs;
         @Schema(name = "白名单")
         private List<String> whiteList;

@@ -1,20 +1,18 @@
 package com.baiyi.opscloud.leo.handler.deploy;
 
-import com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
+import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.handler.deploy.chain.BootDeployChainHandler;
 import com.baiyi.opscloud.leo.handler.deploy.chain.pre.DeployingSupervisorChainHandler;
 import com.baiyi.opscloud.leo.handler.deploy.chain.pre.DoDeployChainHandler;
 import com.baiyi.opscloud.leo.handler.deploy.chain.pre.PreInspectionChainHandler;
 import com.baiyi.opscloud.leo.handler.deploy.chain.pre.StartDeployNotificationChainHandler;
-import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-
-import jakarta.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -56,7 +54,7 @@ public class LeoDeployHandler implements InitializingBean {
     @Resource
     private DeployingSupervisorChainHandler deployingSupervisorChainHandler;
 
-    @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
+    @Async
     public void handleDeploy(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
         /*
          * 使用责任链设计模式解耦代码

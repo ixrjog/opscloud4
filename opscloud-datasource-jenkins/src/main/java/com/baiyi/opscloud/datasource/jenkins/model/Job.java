@@ -7,12 +7,14 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
 import com.baiyi.opscloud.datasource.jenkins.client.util.EncodingUtils;
+import lombok.Getter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 /**
  * @author liangjian
  */
+@Getter
 public class Job extends BaseModel {
 
     private String name;
@@ -44,18 +47,6 @@ public class Job extends BaseModel {
         this.fullName = fullName;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
     public JobWithDetails details() throws IOException {
         return client.get(url, JobWithDetails.class);
     }
@@ -76,7 +67,7 @@ public class Job extends BaseModel {
         while ((length = is.read(buffer)) != -1) {
             result.write(buffer, 0, length);
         }
-        return result.toString("UTF-8");
+        return result.toString(StandardCharsets.UTF_8);
     }
 
     /**
@@ -168,9 +159,7 @@ public class Job extends BaseModel {
             return false;
         if (Optional.ofNullable(url).map(s -> !s.equals(job.url)).orElseGet(() -> job.url != null))
             return false;
-        if (Optional.ofNullable(fullName).map(s -> !s.equals(job.fullName)).orElseGet(() -> job.fullName != null))
-            return false;
-        return true;
+        return !Optional.ofNullable(fullName).map(s -> !s.equals(job.fullName)).orElseGet(() -> job.fullName != null);
     }
 
     @Override
@@ -186,6 +175,5 @@ public class Job extends BaseModel {
             return EncodingUtils.formParameter(entry.getKey()) + "=" + EncodingUtils.formParameter(entry.getValue());
         }
     }
-
 
 }

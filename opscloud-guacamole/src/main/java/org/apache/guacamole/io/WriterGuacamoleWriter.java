@@ -20,15 +20,16 @@
 package org.apache.guacamole.io;
 
 
-import java.io.IOException;
-import java.io.Writer;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import org.apache.guacamole.GuacamoleConnectionClosedException;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.GuacamoleServerException;
 import org.apache.guacamole.GuacamoleUpstreamTimeoutException;
 import org.apache.guacamole.protocol.GuacamoleInstruction;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 /**
  * A GuacamoleWriter which wraps a standard Java Writer, using that Writer as
@@ -39,7 +40,7 @@ public class WriterGuacamoleWriter implements GuacamoleWriter {
     /**
      * Wrapped Writer to be used for all output.
      */
-    private Writer output;
+    private final Writer output;
 
     /**
      * Creates a new WriterGuacamoleWriter which will use the given Writer as

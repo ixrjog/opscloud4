@@ -206,11 +206,7 @@ public class JobWithDetails extends Job {
      *         otherwise.
      */
     public boolean hasFirstBuildRun() {
-        if (firstBuild == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return firstBuild != null;
     }
 
     /**
@@ -232,11 +228,7 @@ public class JobWithDetails extends Job {
      *         <code>false</code> otherwise.
      */
     public boolean hasLastBuildRun() {
-        if (lastBuild == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return lastBuild != null;
     }
 
     /**
@@ -258,11 +250,7 @@ public class JobWithDetails extends Job {
      *         <code>false</code> otherwise.
      */
     public boolean hasLastCompletedBuildRun() {
-        if (lastCompletedBuild == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return lastCompletedBuild != null;
     }
 
     /**
@@ -284,11 +272,7 @@ public class JobWithDetails extends Job {
      *         <code>false</code> otherwise.
      */
     public boolean hasLastFailedBuildRun() {
-        if (lastFailedBuild == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return lastFailedBuild != null;
     }
 
     /**
@@ -310,11 +294,7 @@ public class JobWithDetails extends Job {
      *         <code>false</code> otherwise.
      */
     public boolean hasLastStableBuildRun() {
-        if (lastStableBuild == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return lastStableBuild != null;
     }
 
     /**
@@ -337,11 +317,7 @@ public class JobWithDetails extends Job {
      *         <code>false</code> otherwise.
      */
     public boolean hasLastSuccessfulBuildRun() {
-        if (lastSuccessfulBuild == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return lastSuccessfulBuild != null;
     }
 
     /**
@@ -363,11 +339,7 @@ public class JobWithDetails extends Job {
      *         <code>false</code> otherwise.
      */
     public boolean hasLastUnstableBuildRun() {
-        if (lastUnstableBuild == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return lastUnstableBuild != null;
     }
 
     /**
@@ -390,11 +362,7 @@ public class JobWithDetails extends Job {
      *         <code>false</code> otherwise.
      */
     public boolean hasLastUnsuccessfulBuildRun() {
-        if (lastUnsuccessfulBuild == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return lastUnsuccessfulBuild != null;
     }
 
     public int getNextBuildNumber() {
@@ -517,7 +485,7 @@ public class JobWithDetails extends Job {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + (buildable ? 1231 : 1237);
-        result = prime * result + ((builds == null) ? 0 : builds.hashCode());
+        result = prime * result + builds.hashCode();
         result = prime * result + ((description == null) ? 0 : description.hashCode());
         result = prime * result + ((displayName == null) ? 0 : displayName.hashCode());
         result = prime * result + ((downstreamProjects == null) ? 0 : downstreamProjects.hashCode());
@@ -547,10 +515,7 @@ public class JobWithDetails extends Job {
         JobWithDetails other = (JobWithDetails) obj;
         if (buildable != other.buildable)
             return false;
-        if (builds == null) {
-            if (other.builds != null)
-                return false;
-        } else if (!builds.equals(other.builds))
+        if (!builds.equals(other.builds))
             return false;
         if (description == null) {
             if (other.description != null)
@@ -617,11 +582,8 @@ public class JobWithDetails extends Job {
         } else if (!queueItem.equals(other.queueItem))
             return false;
         if (upstreamProjects == null) {
-            if (other.upstreamProjects != null)
-                return false;
-        } else if (!upstreamProjects.equals(other.upstreamProjects))
-            return false;
-        return true;
+            return other.upstreamProjects == null;
+        } else return upstreamProjects.equals(other.upstreamProjects);
     }
 
 }

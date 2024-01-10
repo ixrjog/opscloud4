@@ -7,6 +7,7 @@ import lombok.Getter;
  * @Date 2020/4/11 1:58 上午
  * @Version 1.0
  */
+@Getter
 public enum AccessLevel {
 
     /**
@@ -18,7 +19,6 @@ public enum AccessLevel {
     BASE(10),
     DEF(0);
 
-    @Getter
     private final int level;
 
     AccessLevel(int level) {

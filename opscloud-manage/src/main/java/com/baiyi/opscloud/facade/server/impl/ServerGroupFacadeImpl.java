@@ -4,11 +4,12 @@ import com.baiyi.opscloud.algorithm.ServerPack;
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.ValidationUtil;
 import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.*;
+import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
+import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroupType;
@@ -17,13 +18,12 @@ import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
-import com.baiyi.opscloud.domain.constants.ApplicationResTypeEnum;
-import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
+import com.baiyi.opscloud.facade.server.converter.ServerGroupConverter;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
@@ -126,19 +126,19 @@ public class ServerGroupFacadeImpl extends AbstractAppResQuery implements Server
     }
 
     @Override
-    public void addServerGroup(ServerGroupVO.ServerGroup serverGroup) {
-        if (serverGroupService.getByName(serverGroup.getName()) != null) {
+    public void addServerGroup(ServerGroupParam.AddServerGroup addServerGroup) {
+        if (serverGroupService.getByName(addServerGroup.getName()) != null) {
             throw new OCException(ErrorEnum.SERVERGROUP_NAME_ALREADY_EXIST);
         }
-        serverGroupService.add(toDO(serverGroup));
+        serverGroupService.add(ServerGroupConverter.to(addServerGroup));
     }
 
     @Override
-    public void updateServerGroup(ServerGroupVO.ServerGroup serverGroup) {
-        ServerGroup group = serverGroupService.getById(serverGroup.getId());
+    public void updateServerGroup(ServerGroupParam.UpdateServerGroup updateServerGroup) {
+        ServerGroup group = serverGroupService.getById(updateServerGroup.getId());
         // 不允许修改名称
-        serverGroup.setName(group.getName());
-        serverGroupService.update(toDO(serverGroup));
+        updateServerGroup.setName(group.getName());
+        serverGroupService.update(ServerGroupConverter.to(updateServerGroup));
     }
 
     @TagClear
@@ -156,13 +156,6 @@ public class ServerGroupFacadeImpl extends AbstractAppResQuery implements Server
         serverGroupService.delete(serverGroup);
     }
 
-    private ServerGroup toDO(ServerGroupVO.ServerGroup serverGroup) {
-        ServerGroup pre = BeanCopierUtil.copyProperties(serverGroup, ServerGroup.class);
-        pre.setName(pre.getName().trim());
-        ValidationUtil.tryServerGroupNameRule(pre.getName());
-        return pre;
-    }
-
     @Override
     public DataTable<ServerGroupTypeVO.ServerGroupType> queryServerGroupTypePage(ServerGroupTypeParam.ServerGroupTypePageQuery pageQuery) {
         DataTable<ServerGroupType> table = serverGroupTypeService.queryPageByParam(pageQuery);
@@ -174,13 +167,13 @@ public class ServerGroupFacadeImpl extends AbstractAppResQuery implements Server
     }
 
     @Override
-    public void addServerGroupType(ServerGroupTypeVO.ServerGroupType serverGroupType) {
-        serverGroupTypeService.add(BeanCopierUtil.copyProperties(serverGroupType, ServerGroupType.class));
+    public void addServerGroupType(ServerGroupTypeParam.AddServerGroupType addServerGroupType) {
+        serverGroupTypeService.add(BeanCopierUtil.copyProperties(addServerGroupType, ServerGroupType.class));
     }
 
     @Override
-    public void updateServerGroupType(ServerGroupTypeVO.ServerGroupType serverGroupType) {
-        serverGroupTypeService.update(BeanCopierUtil.copyProperties(serverGroupType, ServerGroupType.class));
+    public void updateServerGroupType(ServerGroupTypeParam.UpdateServerGroupType updateServerGroupType) {
+        serverGroupTypeService.update(BeanCopierUtil.copyProperties(updateServerGroupType, ServerGroupType.class));
     }
 
     @Override

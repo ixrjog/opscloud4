@@ -27,9 +27,7 @@ public class RdpProtocol extends AbstractGuacamoleProtocol {
     @Override
     protected Map<String, String> buildParameters(Server server, ServerAccount serverAccount, GuacamoleParam.Login guacamoleLogin) {
         Credential credential = getCredential(serverAccount);
-
         ServerProperty.Server serverProperty = getBusinessProperty(server);
-
         return GuacamoleConfigurationBuilder.newBuilder()
                 .putParam("hostname", server.getPrivateIp())
                 .putParam("username", serverAccount.getUsername())

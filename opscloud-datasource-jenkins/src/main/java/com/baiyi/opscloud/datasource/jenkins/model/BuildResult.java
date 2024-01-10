@@ -33,4 +33,5 @@ public enum BuildResult {
      * during the time in the queue.
      */
     CANCELLED
+
 }

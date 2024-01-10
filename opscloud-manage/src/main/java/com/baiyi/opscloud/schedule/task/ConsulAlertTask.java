@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.schedule.task;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.config.condition.EnvCondition;
+import com.baiyi.opscloud.configuration.condition.EnvCondition;
 import com.baiyi.opscloud.facade.task.ConsulAlertFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

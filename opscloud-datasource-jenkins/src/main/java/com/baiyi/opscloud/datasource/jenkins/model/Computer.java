@@ -69,11 +69,8 @@ public class Computer extends BaseModel {
         } else if (!computers.equals(other.computers))
             return false;
         if (displayName == null) {
-            if (other.displayName != null)
-                return false;
-        } else if (!displayName.equals(other.displayName))
-            return false;
-        return true;
+            return other.displayName == null;
+        } else return displayName.equals(other.displayName);
     }
 
     @Override

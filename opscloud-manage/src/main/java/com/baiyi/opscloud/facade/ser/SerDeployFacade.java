@@ -33,4 +33,5 @@ public interface SerDeployFacade {
     void deploySubTaskCallback(SerDeployParam.DeploySubTaskCallback callback);
 
     List<SerDeployVO.SerDetail> queryCurrentSer(SerDeployParam.QueryCurrentSer queryCurrentSer);
+
 }

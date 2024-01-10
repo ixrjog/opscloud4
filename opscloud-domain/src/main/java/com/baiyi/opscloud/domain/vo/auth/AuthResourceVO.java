@@ -2,8 +2,6 @@ package com.baiyi.opscloud.domain.vo.auth;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -27,12 +25,10 @@ public class AuthResourceVO {
         @Schema(description = "主键", example = "1")
         private Integer id;
 
-        @Schema(description = "资源组id", example = "1")
-        @Valid
+        @Schema(description = "资源组ID", example = "1")
         private Integer groupId;
 
         @Schema(description = "资源路径")
-        @NotNull(message = "必须指定资源名称")
         private String resourceName;
 
         @Schema(description = "资源描述")

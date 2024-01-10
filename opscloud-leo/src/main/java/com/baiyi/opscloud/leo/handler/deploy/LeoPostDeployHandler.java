@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.leo.handler.deploy;
 
-import com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.handler.deploy.chain.post.DeployFinalProcessingChainHandler;
@@ -34,7 +33,7 @@ public class LeoPostDeployHandler implements InitializingBean {
      */
     private final DeployFinalProcessingChainHandler deployFinalProcessingChainHandler;
 
-    @Async(value = ThreadPoolTaskConfiguration.TaskPools.CORE)
+    @Async
     public void handleDeploy(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
         /*
          * 使用责任链设计模式解耦代码

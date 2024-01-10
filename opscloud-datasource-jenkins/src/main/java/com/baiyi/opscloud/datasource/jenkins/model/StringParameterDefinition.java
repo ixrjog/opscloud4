@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
 import jakarta.xml.bind.annotation.*;
+import lombok.Getter;
 
+@Getter
 @XmlRootElement(name = "hudson.model.StringParameterDefinition")
 @XmlAccessorOrder(XmlAccessOrder.ALPHABETICAL)
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -24,17 +26,9 @@ public class StringParameterDefinition {
         this.defaultValue = defaultValue;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public StringParameterDefinition setName(String name) {
         this.name = name;
         return this;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public StringParameterDefinition setDescription(String description) {
@@ -42,12 +36,9 @@ public class StringParameterDefinition {
         return this;
     }
 
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
     public StringParameterDefinition setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
         return this;
     }
+
 }

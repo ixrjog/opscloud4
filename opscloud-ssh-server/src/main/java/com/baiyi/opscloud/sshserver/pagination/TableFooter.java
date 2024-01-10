@@ -61,7 +61,6 @@ public class TableFooter {
 
         public void print(SshShellHelper helper, PromptColor color) {
             int tp = length == -1 ? 0 : (int) (totalNum - 1) / length + 1;
-
             // String f = Joiner.on(" ,").join("页码: " + page, "分页长度: " + length, "总页数: " + tp, "总数量: " + totalNum);
             helper.print(StringFormatter.arrayFormat(FOOTER_STR, page, length, tp, totalNum), color);
         }

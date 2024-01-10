@@ -48,6 +48,18 @@ public class DsInstanceScheduleParam {
     @Data
     @NoArgsConstructor
     @Schema
+    public static class DeleteJob {
+
+        @NotNull(message = "任务组不能为空")
+        private String group;
+
+        @NotNull(message = "任务名不能为空")
+        private String name;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @Schema
     public static class CheckCron {
 
         @NotNull(message = "Cron不能为空")

@@ -39,15 +39,15 @@ public class ServerGroupController {
 
     @Operation(summary = "新增服务器组")
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addServerGroup(@RequestBody @Valid ServerGroupVO.ServerGroup serverGroup) {
-        serverGroupFacade.addServerGroup(serverGroup);
+    public HttpResult<Boolean> addServerGroup(@RequestBody @Valid ServerGroupParam.AddServerGroup addServerGroup) {
+        serverGroupFacade.addServerGroup(addServerGroup);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "更新服务器组")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateServerGroup(@RequestBody @Valid ServerGroupVO.ServerGroup serverGroup) {
-        serverGroupFacade.updateServerGroup(serverGroup);
+    public HttpResult<Boolean> updateServerGroup(@RequestBody @Valid ServerGroupParam.UpdateServerGroup updateServerGroup) {
+        serverGroupFacade.updateServerGroup(updateServerGroup);
         return HttpResult.SUCCESS;
     }
 
@@ -66,15 +66,15 @@ public class ServerGroupController {
 
     @Operation(summary = "新增服务器组类型")
     @PostMapping(value = "/type/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addServerGroupType(@RequestBody @Valid ServerGroupTypeVO.ServerGroupType serverGroupType) {
-        serverGroupFacade.addServerGroupType(serverGroupType);
+    public HttpResult<Boolean> addServerGroupType(@RequestBody @Valid ServerGroupTypeParam.AddServerGroupType addServerGroupType) {
+        serverGroupFacade.addServerGroupType(addServerGroupType);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "更新服务器组类型")
     @PutMapping(value = "/type/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateServerGroupType(@RequestBody @Valid ServerGroupTypeVO.ServerGroupType serverGroupType) {
-        serverGroupFacade.updateServerGroupType(serverGroupType);
+    public HttpResult<Boolean> updateServerGroupType(@RequestBody @Valid ServerGroupTypeParam.UpdateServerGroupType updateServerGroupType) {
+        serverGroupFacade.updateServerGroupType(updateServerGroupType);
         return HttpResult.SUCCESS;
     }
 

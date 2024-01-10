@@ -30,7 +30,6 @@ public class ZabbixMapper {
         try {
             return mapper.readValue(jsonNode.toString(), tClass);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
             return null;
         }
     }

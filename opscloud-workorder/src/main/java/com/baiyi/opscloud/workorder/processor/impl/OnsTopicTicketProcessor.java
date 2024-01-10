@@ -72,7 +72,7 @@ public class OnsTopicTicketProcessor extends AbstractDsAssetExtendedBaseTicketPr
         List<DatasourceInstanceAsset> list = dsInstanceAssetService.queryAssetByAssetParam(asset);
         if (!CollectionUtils.isEmpty(list)) {
             if (list.stream().anyMatch(e -> !e.getKind().equals(OnsMessageTypeConstants.getDesc(entry.getMessageType())))) {
-                throw new TicketVerifyException("校验工单条目失败: Topic类型与其他环境不一致，请选择 {}", list.get(0).getKind());
+                throw new TicketVerifyException("校验工单条目失败: Topic类型与其他环境不一致，请选择 {}", list.getFirst().getKind());
             }
             if (list.stream().anyMatch(e -> e.getAssetId().equals(entry.getInstanceId()))) {
                 throw new TicketVerifyException("校验工单条目失败: Topic已存在改ONS实例中！");

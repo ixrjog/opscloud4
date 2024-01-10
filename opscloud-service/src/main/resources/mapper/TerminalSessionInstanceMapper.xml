@@ -28,7 +28,8 @@
   <select id="statMonthlyByInstanceSessionType" resultMap="ReportResultMap">
     select date_format(create_time, '%Y-%m') as `c_name`, sum(1) as `value`
     from terminal_session_instance
-    where instance_closed = 1 and instance_session_type = #{instanceSessionType}
+    where instance_closed = 1
+      and instance_session_type = #{instanceSessionType}
     group by `c_name`
     order by `c_name`;
   </select>

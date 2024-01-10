@@ -21,4 +21,5 @@ public interface AuthGroupService {
     void update(AuthGroup authGroup);
 
     void deleteById(int id);
+
 }

@@ -11,9 +11,9 @@ import com.baiyi.opscloud.domain.param.notify.gitlab.GitLabNotifyParam;
 import com.baiyi.opscloud.facade.datasource.SimpleDsAssetFacade;
 import com.baiyi.opscloud.facade.event.EventFacade;
 import com.baiyi.opscloud.factory.gitlab.GitLabEventConsumerFactory;
-import com.baiyi.opscloud.factory.gitlab.enums.GitLabEventNameEnum;
 import com.baiyi.opscloud.factory.gitlab.IGitLabEventConsumer;
 import com.baiyi.opscloud.factory.gitlab.converter.SystemHookConverter;
+import com.baiyi.opscloud.factory.gitlab.enums.GitLabEventNameEnum;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.user.UserService;
 import jakarta.annotation.Resource;
@@ -25,8 +25,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi
@@ -63,7 +61,7 @@ public abstract class AbstractGitLabEventConsumer implements IGitLabEventConsume
     }
 
     @Override
-    @Async(value = CORE)
+    @Async
     public void consumeEventV4(DatasourceInstance instance, GitLabNotifyParam.SystemHook systemHook) {
         Event event = SystemHookConverter.toEvent(instance, systemHook);
         eventFacade.recordEvent(event);
@@ -100,7 +98,7 @@ public abstract class AbstractGitLabEventConsumer implements IGitLabEventConsume
 
         List<DatasourceInstanceAsset> assets = dsInstanceAssetService.queryAssetByAssetParam(asset);
         if (assets.size() == 1) {
-            String username = assets.get(0).getAssetKey();
+            String username = assets.getFirst().getAssetKey();
             return Optional.ofNullable(userService.getByUsername(username));
         }
         return Optional.empty();

@@ -26,4 +26,5 @@ public interface WorkOrderService {
     void update(WorkOrder workOrder);
 
     List<WorkOrder> queryAll();
+
 }

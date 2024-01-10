@@ -20,6 +20,8 @@
 package org.apache.guacamole.protocol;
 
 
+import lombok.Getter;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -32,12 +34,27 @@ public class GuacamoleInstruction {
 
     /**
      * The opcode of this instruction.
+     * -- GETTER --
+     *  Returns the opcode associated with this GuacamoleInstruction.
+     *
+     * @return The opcode associated with this GuacamoleInstruction.
+
      */
+    @Getter
     private final String opcode;
 
     /**
      * All arguments of this instruction, in order.
+     * -- GETTER --
+     *  Returns a List of all argument values specified for this
+     *  GuacamoleInstruction. Note that the List returned is immutable.
+     *  Attempts to modify the list will result in exceptions.
+     *
+     * @return A List of all argument values specified for this
+     *         GuacamoleInstruction.
+
      */
+    @Getter
     private final List<String> args;
 
     /**
@@ -71,26 +88,6 @@ public class GuacamoleInstruction {
     public GuacamoleInstruction(String opcode, List<String> args) {
         this.opcode = opcode;
         this.args = Collections.unmodifiableList(args);
-    }
-
-    /**
-     * Returns the opcode associated with this GuacamoleInstruction.
-     * @return The opcode associated with this GuacamoleInstruction.
-     */
-    public String getOpcode() {
-        return opcode;
-    }
-
-    /**
-     * Returns a List of all argument values specified for this
-     * GuacamoleInstruction. Note that the List returned is immutable.
-     * Attempts to modify the list will result in exceptions.
-     *
-     * @return A List of all argument values specified for this
-     *         GuacamoleInstruction.
-     */
-    public List<String> getArgs() {
-        return args;
     }
 
     /**

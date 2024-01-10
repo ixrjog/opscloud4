@@ -50,7 +50,7 @@ public class ServerTerminalController extends SimpleAuthentication {
 
     private TerminalSession terminalSession;
 
-    private static ThreadPoolTaskExecutor serverTerminalExecutor;
+    private static ThreadPoolTaskExecutor xTerminalExecutor;
 
     @Autowired
     public void setTerminalSessionService(TerminalSessionService terminalSessionService) {
@@ -58,8 +58,8 @@ public class ServerTerminalController extends SimpleAuthentication {
     }
 
     @Resource
-    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor serverTerminalExecutor) {
-        ServerTerminalController.serverTerminalExecutor = serverTerminalExecutor;
+    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor xTerminalExecutor) {
+        ServerTerminalController.xTerminalExecutor = xTerminalExecutor;
     }
 
     /**
@@ -74,7 +74,7 @@ public class ServerTerminalController extends SimpleAuthentication {
             this.terminalSession = terminalSession;
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
             // 线程启动
-            serverTerminalExecutor.execute(new SentOutputTask(sessionId, session));
+            xTerminalExecutor.execute(new SentOutputTask(sessionId, session));
         } catch (Exception e) {
             log.error("Server terminal create connection error: {}", e.getMessage());
         }

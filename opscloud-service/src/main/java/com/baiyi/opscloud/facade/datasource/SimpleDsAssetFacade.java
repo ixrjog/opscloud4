@@ -12,4 +12,5 @@ public interface SimpleDsAssetFacade {
      * @param id
      */
     void deleteAssetById(Integer id);
+
 }

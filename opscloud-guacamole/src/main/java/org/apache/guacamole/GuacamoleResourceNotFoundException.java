@@ -21,12 +21,17 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 
 /**
  * A generic exception thrown when part of the Guacamole API fails to find
  * a requested resource, such as a configuration or tunnel.
  */
 public class GuacamoleResourceNotFoundException extends GuacamoleClientException {
+
+    @Serial
+    private static final long serialVersionUID = 7091096016891162195L;
 
     /**
      * Creates a new GuacamoleResourceNotFoundException with the given message

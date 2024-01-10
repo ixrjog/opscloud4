@@ -28,7 +28,7 @@ public class AliyunLogMemberServiceImpl implements AliyunLogMemberService {
 
     @Override
     public DataTable<AliyunLogMember> queryAliyunLogMemberByParam(AliyunLogMemberParam.LogMemberPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(AliyunLogMember.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("aliyunLogId", pageQuery.getAliyunLogId());
@@ -88,4 +88,5 @@ public class AliyunLogMemberServiceImpl implements AliyunLogMemberService {
     public void add(AliyunLogMember aliyunLogMember) {
         aliyunLogMemberMapper.insert(aliyunLogMember);
     }
+
 }

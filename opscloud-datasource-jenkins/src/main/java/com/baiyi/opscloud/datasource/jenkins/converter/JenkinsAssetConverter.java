@@ -30,7 +30,7 @@ public class JenkinsAssetConverter {
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
                 // 并发
-                .paramProperty("numExecutos", entity.getNumExecutors())
+                .paramProperty("numExecutors", entity.getNumExecutors())
                 .paramProperty("totalPhysicalMemory",
                         entity.getMonitorData().get("hudson.node_monitors.SwapSpaceMonitor").get("totalPhysicalMemory"))
                 .paramProperty("availablePhysicalMemory",

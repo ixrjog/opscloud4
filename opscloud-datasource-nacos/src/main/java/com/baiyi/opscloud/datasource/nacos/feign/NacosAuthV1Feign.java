@@ -66,4 +66,5 @@ public interface NacosAuthV1Feign {
     NacosRole.RolesResponse listRoles(@Param("pageNo") Integer pageNo,
                                       @Param("pageSize") Integer pageSize,
                                       @Param("accessToken") String accessToken);
+
 }

@@ -15,7 +15,6 @@ import java.io.Serializable;
  */
 public class BasePage {
 
-
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

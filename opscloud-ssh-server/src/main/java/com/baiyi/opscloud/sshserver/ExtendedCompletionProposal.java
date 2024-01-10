@@ -23,13 +23,13 @@ import org.springframework.shell.CompletionProposal;
 /**
  * Extended completion proposal to be able to set complete attribute of proposal
  */
+@Setter
 @Getter
 public class ExtendedCompletionProposal extends CompletionProposal {
 
     /**
      * If should add space after proposed proposal
      */
-    @Setter
     private boolean complete;
 
     /**

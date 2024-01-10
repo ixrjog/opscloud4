@@ -45,4 +45,5 @@ public class ServerAccountPermissionServiceImpl implements ServerAccountPermissi
         criteria.andEqualTo("serverAccountId", serverAccountId);
         return accountPermissionMapper.selectCountByExample(example);
     }
+
 }

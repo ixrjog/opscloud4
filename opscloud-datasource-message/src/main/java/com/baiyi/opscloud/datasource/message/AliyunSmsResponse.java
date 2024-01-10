@@ -10,7 +10,6 @@ import lombok.Data;
  */
 public class AliyunSmsResponse {
 
-
     @Data
     public static class SendBatchSms {
 
@@ -24,4 +23,5 @@ public class AliyunSmsResponse {
         private String code;
 
     }
+
 }

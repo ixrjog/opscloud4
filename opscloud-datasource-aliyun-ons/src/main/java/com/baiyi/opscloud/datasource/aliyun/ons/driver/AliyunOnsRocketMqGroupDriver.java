@@ -56,7 +56,7 @@ public class AliyunOnsRocketMqGroupDriver {
 
     public OnsRocketMqGroup.Group getGroup(String regionId, AliyunConfig.Aliyun aliyun, String instanceId, String groupId, String groupType) throws ClientException {
         List<OnsRocketMqGroup.Group> list = listGroup(regionId, aliyun, instanceId, groupId, groupType);
-        return CollectionUtils.isEmpty(list) ? null : list.get(0);
+        return CollectionUtils.isEmpty(list) ? null : list.getFirst();
     }
 
     /**

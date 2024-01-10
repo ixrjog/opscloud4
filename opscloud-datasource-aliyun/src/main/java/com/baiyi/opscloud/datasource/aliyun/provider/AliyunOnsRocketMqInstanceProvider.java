@@ -4,21 +4,20 @@ import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
-import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.aliyun.ons.driver.AliyunOnsRocketMqInstanceDriver;
-import com.baiyi.opscloud.datasource.aliyun.util.AliyunRegionIdUtil;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
-import com.google.common.collect.Lists;
 import com.baiyi.opscloud.datasource.aliyun.ons.entity.OnsInstance;
+import com.baiyi.opscloud.datasource.aliyun.util.AliyunRegionIdUtil;
+import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import com.google.common.collect.Lists;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Set;
 
@@ -50,11 +49,8 @@ public class AliyunOnsRocketMqInstanceProvider extends BaseAssetProvider<OnsInst
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription())) {
-            return false;
-        }
-        return true;
+    protected AssetComparer getAssetComparer() {
+        return AssetComparer.COMPARE_DESCRIPTION;
     }
 
     @Override

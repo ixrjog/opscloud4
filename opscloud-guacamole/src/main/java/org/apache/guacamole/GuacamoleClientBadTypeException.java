@@ -21,12 +21,17 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 
 /**
  * An exception which is thrown when data has been submitted with an unsupported
  * mimetype.
  */
 public class GuacamoleClientBadTypeException extends GuacamoleClientException {
+
+    @Serial
+    private static final long serialVersionUID = 2204496410080399413L;
 
     /**
      * Creates a new GuacamoleClientBadTypeException with the given message and cause.

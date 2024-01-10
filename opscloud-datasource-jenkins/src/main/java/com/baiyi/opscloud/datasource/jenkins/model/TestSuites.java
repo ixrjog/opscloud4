@@ -1,11 +1,14 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
 import java.util.List;
 
 /**
  * @author Karl Heinz Marbaise
  *
  */
+@Getter
 public class TestSuites {
 
     private double duration;
@@ -15,17 +18,9 @@ public class TestSuites {
 
     private List<TestCase> cases;
 
-    public double getDuration() {
-        return duration;
-    }
-
     public TestSuites setDuration(double duration) {
         this.duration = duration;
         return this;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public TestSuites setId(String id) {
@@ -33,26 +28,14 @@ public class TestSuites {
         return this;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public TestSuites setName(String name) {
         this.name = name;
         return this;
     }
 
-    public String getTimestamp() {
-        return timestamp;
-    }
-
     public TestSuites setTimestamp(String timestamp) {
         this.timestamp = timestamp;
         return this;
-    }
-
-    public List<TestCase> getCases() {
-        return cases;
     }
 
     public TestSuites setCases(List<TestCase> cases) {
@@ -101,11 +84,8 @@ public class TestSuites {
         } else if (!name.equals(other.name))
             return false;
         if (timestamp == null) {
-            if (other.timestamp != null)
-                return false;
-        } else if (!timestamp.equals(other.timestamp))
-            return false;
-        return true;
+            return other.timestamp == null;
+        } else return timestamp.equals(other.timestamp);
     }
 
 }

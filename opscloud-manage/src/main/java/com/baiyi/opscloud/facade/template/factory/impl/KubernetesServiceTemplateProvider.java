@@ -46,4 +46,5 @@ public class KubernetesServiceTemplateProvider extends AbstractTemplateProvider<
     public String getTemplateKey() {
         return SERVICE.name();
     }
+
 }

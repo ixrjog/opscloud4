@@ -52,4 +52,5 @@ public class SerDeploySubtaskServiceImpl implements SerDeploySubtaskService {
                 .andEqualTo("envType", envType);
         return serDeploySubtaskMapper.selectOneByExample(example);
     }
+
 }

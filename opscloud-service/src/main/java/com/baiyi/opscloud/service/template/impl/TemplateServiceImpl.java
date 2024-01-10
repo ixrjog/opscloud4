@@ -30,7 +30,7 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     public DataTable<Template> queryPageByParam(TemplateParam.TemplatePageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(Template.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(pageQuery.getQueryName())) {

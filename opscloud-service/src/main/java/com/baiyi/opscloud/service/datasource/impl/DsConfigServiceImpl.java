@@ -50,7 +50,7 @@ public class DsConfigServiceImpl extends AbstractCredentialCustomer implements D
 
     @Override
     public DataTable<DatasourceConfig> queryPageByParam(DsConfigParam.DsConfigPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<DatasourceConfig> data = dsConfigMapper.queryPageByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }

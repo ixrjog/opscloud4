@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.manager;
 
-import com.baiyi.opscloud.common.constants.ServerMonitorStatusEnum;
+import com.baiyi.opscloud.common.constants.enums.ServerMonitorStatusEnum;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.util.IPUtil;

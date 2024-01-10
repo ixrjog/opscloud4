@@ -6,9 +6,11 @@ package com.baiyi.opscloud.datasource.sonar.enums;
  * @Version 1.0
  */
 public enum QualifierEnum {
+
     // project
     TRK,
     VW,
     APP
     // project
+
 }

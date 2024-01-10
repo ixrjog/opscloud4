@@ -11,4 +11,5 @@ import lombok.Data;
 public class SimpleState implements IState {
 
     private String state;
+
 }

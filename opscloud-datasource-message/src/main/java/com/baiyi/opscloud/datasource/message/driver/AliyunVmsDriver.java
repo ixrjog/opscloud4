@@ -58,10 +58,12 @@ public class AliyunVmsDriver {
             if (response.getHttpStatus() == 200) {
                 AliyunVmsResponse.SingleCallByTts data =
                         JSONUtil.readValue(response.getData(), AliyunVmsResponse.SingleCallByTts.class);
-                if (OK.equals(data.getCode())) {
+                if (data != null && OK.equals(data.getCode())) {
                     return data.getCallId();
                 }
-                log.error("singleCallByTts失败: {}", data.getMessage());
+                if (data != null) {
+                    log.error("singleCallByTts失败: {}", data.getMessage());
+                }
             }
         } catch (ClientException e) {
             log.error("singleCallByTts失败: {}", e.getMessage());
@@ -84,12 +86,14 @@ public class AliyunVmsDriver {
             if (response.getHttpStatus() == 200) {
                 AliyunVmsResponse.QueryCallDetailByCallId data =
                         JSONUtil.readValue(response.getData(), AliyunVmsResponse.QueryCallDetailByCallId.class);
-                if (OK.equals(data.getCode())) {
+                if (data != null && OK.equals(data.getCode())) {
                     ObjectMapper mapper = new ObjectMapper();
                     JsonNode jsonNode = mapper.readTree(data.getData());
                     return CALL_OK.equals(jsonNode.get("stateDesc").asText());
                 }
-                log.error("queryCallDetailByCallId失败: {}", data.getMessage());
+                if (data != null) {
+                    log.error("queryCallDetailByCallId失败: {}", data.getMessage());
+                }
                 return false;
             }
         } catch (ClientException e) {
@@ -99,6 +103,5 @@ public class AliyunVmsDriver {
         }
         return false;
     }
-
 
 }

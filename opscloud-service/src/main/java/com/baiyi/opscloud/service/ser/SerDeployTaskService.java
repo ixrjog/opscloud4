@@ -24,4 +24,5 @@ public interface SerDeployTaskService {
     SerDeployTask getByUuid(String taskUuid);
 
     DataTable<SerDeployTask> queryPageByParam(SerDeployParam.TaskPageQuery pageQuery);
+
 }

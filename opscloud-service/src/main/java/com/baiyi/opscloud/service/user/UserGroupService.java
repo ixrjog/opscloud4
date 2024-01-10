@@ -25,4 +25,5 @@ public interface UserGroupService {
     DataTable<UserGroup> queryPageByParam(UserGroupParam.UserGroupPageQuery pageQuery);
 
     DataTable<UserGroup> queryPageByParam(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery);
+
 }

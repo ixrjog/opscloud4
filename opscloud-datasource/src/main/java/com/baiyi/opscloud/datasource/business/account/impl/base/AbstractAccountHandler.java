@@ -94,4 +94,5 @@ public abstract class AbstractAccountHandler extends SimpleDsInstanceProvider im
     public void afterPropertiesSet() {
         AccountHandlerFactory.register(this);
     }
+
 }

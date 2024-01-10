@@ -9,13 +9,11 @@ import com.baiyi.opscloud.datasource.ansible.play.task.ServerTaskPlayTask;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerTaskMember;
 import com.baiyi.opscloud.service.task.ServerTaskMemberService;
 import com.google.gson.GsonBuilder;
+import jakarta.websocket.Session;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
-import jakarta.websocket.Session;
 import java.io.IOException;
 
 /**
@@ -29,9 +27,6 @@ import java.io.IOException;
 public class ServerTaskPlayProcessor extends AbstractTaskPlayProcessor<ServerTaskPlayMessage> {
 
     private final ServerTaskMemberService serverTaskMemberService;
-
-    @Autowired
-    private ThreadPoolTaskExecutor coreExecutor;
 
     /**
      * 播放
@@ -60,7 +55,8 @@ public class ServerTaskPlayProcessor extends AbstractTaskPlayProcessor<ServerTas
         } else {
             // 启动线程处理会话
             Runnable run = new ServerTaskPlayTask(session, serverTaskMember);
-            coreExecutor.execute(run);
+            // JDK21 VirtualThreads
+            Thread.ofVirtual().start(run);
         }
     }
 

@@ -22,13 +22,13 @@ public interface ApplicationFacade {
 
     ApplicationVO.Application getApplicationById(Integer id);
 
-    void addApplication(ApplicationVO.Application application);
+    void addApplication(ApplicationParam.AddApplication addApplication);
 
-    void updateApplication(ApplicationVO.Application application);
+    void updateApplication(ApplicationParam.UpdateApplication updateApplication);
 
     void deleteApplication(Integer id);
 
-    void bindApplicationResource(ApplicationResourceVO.Resource resource);
+    void bindApplicationResource(ApplicationResourceParam.Resource resource);
 
     void unbindApplicationResource(Integer id);
 

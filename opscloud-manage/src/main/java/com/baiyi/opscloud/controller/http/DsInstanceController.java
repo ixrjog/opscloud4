@@ -49,8 +49,8 @@ public class DsInstanceController {
 
     @Operation(summary = "拉取数据源资产信息")
     @PutMapping(value = "/asset/pull", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> pullAsset(@RequestBody DsAssetParam.PullAsset pullAssetParam) {
-        instanceFacade.pullAsset(pullAssetParam);
+    public HttpResult<Boolean> pullAsset(@RequestBody DsAssetParam.PullAsset pullAsset) {
+        instanceFacade.pullAsset(pullAsset);
         return HttpResult.SUCCESS;
     }
 
@@ -90,14 +90,14 @@ public class DsInstanceController {
 
     @Operation(summary = "新增数据源资产订阅")
     @PostMapping(value = "/asset/subscription/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addAssetSubscription(@RequestBody @Valid DsAssetSubscriptionVO.AssetSubscription assetSubscription) {
+    public HttpResult<Boolean> addAssetSubscription(@RequestBody @Valid DsAssetSubscriptionParam.AssetSubscription assetSubscription) {
         assetSubscriptionFacade.addAssetSubscription(assetSubscription);
         return HttpResult.SUCCESS;
     }
 
     @Operation(summary = "更新数据源资产订阅")
     @PutMapping(value = "/asset/subscription/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateAssetSubscription(@RequestBody @Valid DsAssetSubscriptionVO.AssetSubscription assetSubscription) {
+    public HttpResult<Boolean> updateAssetSubscription(@RequestBody @Valid DsAssetSubscriptionParam.AssetSubscription assetSubscription) {
         assetSubscriptionFacade.updateAssetSubscription(assetSubscription);
         return HttpResult.SUCCESS;
     }
@@ -118,8 +118,8 @@ public class DsInstanceController {
 
     @Operation(summary = "推送数据源资产信息")
     @PutMapping(value = "/asset/push", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> pushAsset(@RequestBody DsAssetParam.PushAsset pushAssetParam) {
-        instanceFacade.pushAsset(pushAssetParam);
+    public HttpResult<Boolean> pushAsset(@RequestBody DsAssetParam.PushAsset pushAsset) {
+        instanceFacade.pushAsset(pushAsset);
         return HttpResult.SUCCESS;
     }
 

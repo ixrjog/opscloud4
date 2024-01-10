@@ -19,7 +19,7 @@ public class KubernetesParam {
     @NoArgsConstructor
     @AllArgsConstructor
     @Schema
-    public static class GetResource {
+    public static class GetResource implements BaseKubernetesParam.IResource {
 
         @NotNull(message = "数据源实例ID不能为空")
         @Schema(description = "数据源实例ID")

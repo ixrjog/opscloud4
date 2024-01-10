@@ -41,7 +41,7 @@ public class SimpleAuthentication {
         if (StringUtils.isBlank(loginMessage.getToken())) {
             throw new AuthenticationException("鉴权失败: Token为Null!");
         }
-        UserToken userToken = userTokenService.getByVaildToken(loginMessage.getToken());
+        UserToken userToken = userTokenService.getByValidToken(loginMessage.getToken());
         if (userToken == null) {
             throw new AuthenticationException("鉴权失败: 无效的Token!");
         }

@@ -29,7 +29,7 @@ public class AssetProviderFactory {
 
     public static <T extends SimpleAssetProvider> T getProvider(String instanceType, String assetType) {
         if (CONTEXT.containsKey(instanceType)) {
-            return CastUtils.cast(CONTEXT.get(instanceType).get(assetType).get(0));
+            return CastUtils.cast(CONTEXT.get(instanceType).get(assetType).getFirst());
         }
         return null;
     }

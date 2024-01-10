@@ -45,14 +45,14 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
 
     @Override
     public DataTable<User> queryPageByParam(UserParam.UserPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<User> data = userMapper.queryPageByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
 
     @Override
     public DataTable<User> queryPageByParam(UserBusinessPermissionParam.BusinessPermissionUserPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<User> data = userMapper.queryBusinessPermissionUserPageByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
@@ -77,7 +77,7 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
                     List<User> users = listByPhone(asset.getProperties().get("mobile"));
                     if (!CollectionUtils.isEmpty(users) && users.size() == 1) {
                         log.info("同步钉钉查询本地用户: name={}, mobile={}", asset.getName(), asset.getProperties().get("mobile"));
-                        return toUserVO(users.get(0));
+                        return toUserVO(users.getFirst());
                     }
                 }
             }
@@ -187,7 +187,7 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
 
     @Override
     public DataTable<User> queryPageByParam(UserParam.EmployeeResignPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<User> data = userMapper.queryEmployeeResignPageByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }

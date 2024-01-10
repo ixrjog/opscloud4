@@ -323,7 +323,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
                         .map(LeoJobModel.JobConfig::getJob)
                         .map(LeoJobModel.Job::getGitLab)
                         .map(LeoBaseModel.GitLab::getProject);
-                optionalProject.ifPresent(gitLabProject -> gitLabProject.setSshUrl(resources.get(0).getName()));
+                optionalProject.ifPresent(gitLabProject -> gitLabProject.setSshUrl(resources.getFirst().getName()));
 
                 LeoJob cloneLeoJob = LeoJob.builder()
                         .parentId(0)

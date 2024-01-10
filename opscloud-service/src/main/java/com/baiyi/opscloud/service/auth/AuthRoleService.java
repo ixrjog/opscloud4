@@ -25,4 +25,5 @@ public interface AuthRoleService {
     void deleteById(int id);
 
     int getRoleAccessLevelByUsername(String username);
+
 }

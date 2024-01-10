@@ -86,7 +86,8 @@ public class MessageFacadeImpl implements MessageFacade {
      */
     private LXHLConfig.Account getInstanceConfig(List<DatasourceInstance> instances) {
         Collections.shuffle(instances);
-        DatasourceInstance instance = instances.get(0);
+        DatasourceInstance instance = instances.getFirst();
         return dsConfigManager.build(dsConfigManager.getConfigById(instance.getConfigId()), LXHLConfig.class).getAccount();
     }
+
 }

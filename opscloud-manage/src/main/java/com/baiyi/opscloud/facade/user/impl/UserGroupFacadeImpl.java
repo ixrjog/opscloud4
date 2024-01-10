@@ -63,12 +63,12 @@ public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermis
 
     @Override
     @AssetBusinessRelation
-    public void addUserGroup(UserGroupVO.UserGroup userGroup) {
+    public void addUserGroup(UserGroupParam.UserGroup userGroup) {
         userGroupService.add(BeanCopierUtil.copyProperties(userGroup, UserGroup.class));
     }
 
     @Override
-    public void updateUserGroup(UserGroupVO.UserGroup userGroup) {
+    public void updateUserGroup(UserGroupParam.UserGroup userGroup) {
         UserGroup pre = userGroupService.getById(userGroup.getId());
         if (pre == null) {
             return;

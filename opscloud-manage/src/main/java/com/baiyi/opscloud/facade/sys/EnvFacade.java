@@ -13,9 +13,10 @@ public interface EnvFacade {
 
     DataTable<EnvVO.Env> queryEnvPage(EnvParam.EnvPageQuery pageQuery);
 
-    void addEnv(EnvVO.Env env);
+    void addEnv(EnvParam.Env env);
 
-    void updateEnv(EnvVO.Env env);
+    void updateEnv(EnvParam.Env env);
 
     void deleteEnvById(Integer id);
+
 }

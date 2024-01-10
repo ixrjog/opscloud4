@@ -93,7 +93,7 @@ public class PodAssetConverter {
                         .filter(s -> tryIgnoreName(kubernetes, s.getName()))
                         .toList();
                 if (!CollectionUtils.isEmpty(containerStatusList)) {
-                    return containerStatusList.get(0);
+                    return containerStatusList.getFirst();
                 }
             }
         } catch (Exception e) {

@@ -117,9 +117,7 @@ public class Executor {
             return false;
         if (number != other.number)
             return false;
-        if (progress != other.progress)
-            return false;
-        return true;
+        return progress == other.progress;
     }
 
 }

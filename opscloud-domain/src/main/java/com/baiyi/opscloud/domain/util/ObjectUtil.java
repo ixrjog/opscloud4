@@ -47,10 +47,10 @@ public class ObjectUtil {
             return true;
         }
         if ((obj instanceof List)) {
-            return ((List<?>) obj).size() == 0;
+            return ((List<?>) obj).isEmpty();
         }
         if ((obj instanceof String)) {
-            return ((String) obj).trim().equals("");
+            return ((String) obj).trim().isEmpty();
         }
         return false;
     }

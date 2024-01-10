@@ -63,7 +63,7 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
     }
 
     @Override
-    public void updateAssetSubscription(DsAssetSubscriptionVO.AssetSubscription assetSubscription) {
+    public void updateAssetSubscription(DsAssetSubscriptionParam.AssetSubscription assetSubscription) {
         DatasourceInstanceAssetSubscription pre = BeanCopierUtil.copyProperties(assetSubscription, DatasourceInstanceAssetSubscription.class);
         DatasourceInstanceAssetSubscription datasourceInstanceAssetSubscription = dsInstanceAssetSubscriptionService.getById(assetSubscription.getId());
         datasourceInstanceAssetSubscription.setPlaybook(pre.getPlaybook());
@@ -109,7 +109,7 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
     }
 
     @Override
-    public void addAssetSubscription(DsAssetSubscriptionVO.AssetSubscription assetSubscription) {
+    public void addAssetSubscription(DsAssetSubscriptionParam.AssetSubscription assetSubscription) {
         DatasourceInstanceAssetSubscription pre = BeanCopierUtil.copyProperties(assetSubscription, DatasourceInstanceAssetSubscription.class);
         dsInstanceAssetSubscriptionService.add(pre);
         saveSubscriptionPlaybookFile(pre);

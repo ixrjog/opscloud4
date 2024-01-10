@@ -13,9 +13,9 @@ public interface ServerFacade {
 
     DataTable<ServerVO.Server> queryServerPage(ServerParam.ServerPageQuery pageQuery);
 
-    ServerVO.Server addServer(ServerVO.Server server);
+    ServerVO.Server addServer(ServerParam.AddServer server);
 
-    void updateServer(ServerVO.Server server);
+    void updateServer(ServerParam.UpdateServer server);
 
     void scanServerMonitoringStatus();
 

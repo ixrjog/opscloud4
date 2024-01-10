@@ -20,7 +20,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.notice.message.CreateIamUserMessage;
 import com.baiyi.opscloud.domain.notice.message.UpdateIamLoginProfileMessage;
 import com.baiyi.opscloud.domain.param.user.UserAmParam;
-import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
+import com.baiyi.opscloud.domain.param.user.UserCredentialParam;
 import com.baiyi.opscloud.facade.user.UserCredentialFacade;
 import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
@@ -144,7 +144,7 @@ public class IdentityAndAccessManagementProcessor extends AbstractAccessManageme
             VirtualMFADevice vMFADevice = amazonIMMFADriver.createVirtualMFADevice(config, user);
             mfaDelegate.enableMFADevice(config, user, vMFADevice);
             // 录入MFA密钥
-            UserCredentialVO.Credential credential = UserCredentialVO.Credential.builder()
+            UserCredentialParam.Credential credential = UserCredentialParam.Credential.builder()
                     .instanceUuid(instanceUuid)
                     .title(vMFADevice.getSerialNumber())
                     .userId(user.getId())

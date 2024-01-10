@@ -3,18 +3,16 @@ package com.baiyi.opscloud.facade.server.impl;
 import com.baiyi.opscloud.common.exception.common.OCException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccountPermission;
 import com.baiyi.opscloud.domain.param.server.ServerAccountParam;
 import com.baiyi.opscloud.domain.vo.server.ServerAccountVO;
 import com.baiyi.opscloud.facade.server.ServerAccountFacade;
+import com.baiyi.opscloud.facade.server.converter.ServerAccountConverter;
 import com.baiyi.opscloud.packer.server.ServerAccountPacker;
 import com.baiyi.opscloud.service.server.ServerAccountPermissionService;
 import com.baiyi.opscloud.service.server.ServerAccountService;
-import com.baiyi.opscloud.service.sys.CredentialService;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +35,7 @@ public class ServerAccountFacadeImpl implements ServerAccountFacade {
 
     private final ServerAccountPacker accountPacker;
 
-    private final CredentialService credentialService;
+    private final ServerAccountConverter serverAccountConverter;
 
     @Override
     public DataTable<ServerAccountVO.Account> queryServerAccountPage(ServerAccountParam.ServerAccountPageQuery pageQuery) {
@@ -48,8 +46,8 @@ public class ServerAccountFacadeImpl implements ServerAccountFacade {
     }
 
     @Override
-    public void addServerAccount(ServerAccountVO.Account account) {
-        ServerAccount serverAccount = toServerAccount(account);
+    public void addServerAccount(ServerAccountParam.ServerAccount account) {
+        ServerAccount serverAccount = serverAccountConverter.to(account);
         try {
             accountService.add(serverAccount);
         } catch (Exception e) {
@@ -58,18 +56,9 @@ public class ServerAccountFacadeImpl implements ServerAccountFacade {
     }
 
     @Override
-    public void updateServerAccount(ServerAccountVO.Account account) {
-        ServerAccount serverAccount = toServerAccount(account);
+    public void updateServerAccount(ServerAccountParam.ServerAccount account) {
+        ServerAccount serverAccount = serverAccountConverter.to(account);
         accountService.update(serverAccount);
-    }
-
-    private ServerAccount toServerAccount(ServerAccountVO.Account account) {
-        ServerAccount serverAccount = BeanCopierUtil.copyProperties(account, ServerAccount.class);
-        if (StringUtils.isEmpty(serverAccount.getUsername())) {
-            Credential credential = credentialService.getById(serverAccount.getCredentialId());
-            serverAccount.setUsername(credential.getUsername());
-        }
-        return serverAccount;
     }
 
     /**

@@ -57,13 +57,13 @@ public class WorkEventServiceImpl implements WorkEventService {
 
     @Override
     public DataTable<WorkEvent> queryPageByParam(WorkEventParam.WorkEventPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         return new DataTable<>(workEventMapper.queryPageByParam(pageQuery),page.getTotal());
     }
 
     @Deprecated
     public DataTable<WorkEvent> queryPageByParam2(WorkEventParam.WorkEventPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(WorkEvent.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
@@ -120,4 +120,5 @@ public class WorkEventServiceImpl implements WorkEventService {
     public List<ReportVO.CommonReport> getWorkEventFaultReport() {
         return workEventMapper.getWorkEventFaultReport();
     }
+
 }

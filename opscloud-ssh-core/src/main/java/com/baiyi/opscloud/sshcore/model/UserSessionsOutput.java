@@ -27,22 +27,17 @@
  */
 package com.baiyi.opscloud.sshcore.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Setter
+@Getter
 public class UserSessionsOutput {
 
     //instance id, host output
     Map<String, SessionOutput> sessionOutputMap = new ConcurrentHashMap<>();
 
-    public Map<String, SessionOutput> getSessionOutputMap() {
-        return sessionOutputMap;
-    }
-
-    public void setSessionOutputMap(Map<String, SessionOutput> sessionOutputMap) {
-        this.sessionOutputMap = sessionOutputMap;
-    }
 }
-
-
-

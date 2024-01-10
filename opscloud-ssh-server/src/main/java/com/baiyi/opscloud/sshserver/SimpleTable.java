@@ -71,4 +71,5 @@ public class SimpleTable {
          */
         void onBuilt(TableBuilder tableBuilder);
     }
+
 }

@@ -21,11 +21,16 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 /**
  * An exception which indicates that a session within an upstream server (such
  * as the remote desktop) has been forcibly terminated.
  */
 public class GuacamoleSessionClosedException extends GuacamoleUpstreamException {
+
+    @Serial
+    private static final long serialVersionUID = -3076997780345845707L;
 
     /**
      * Creates a new GuacamoleSessionClosedException with the given message and

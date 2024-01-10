@@ -48,4 +48,3 @@ public class ServerTerminalResizeHandler extends AbstractServerTerminalHandler<S
     }
 
 }
-

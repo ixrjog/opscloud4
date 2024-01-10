@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
-
 /**
  * @Author baiyi
  * @Date 2021/10/9 2:58 下午
@@ -21,7 +19,7 @@ public class EventFacadeImpl implements EventFacade {
     private final EventService eventService;
 
     @Override
-    @Async(value = CORE)
+    @Async
     public void recordEvent(Event event){
         eventService.add(event);
     }

@@ -1,5 +1,8 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
+@Getter
 public class ExtractHeader extends BaseModel {
 
     private String location;
@@ -7,10 +10,6 @@ public class ExtractHeader extends BaseModel {
     public ExtractHeader setLocation(String value) {
         location = value;
         return this;
-    }
-
-    public String getLocation() {
-        return location;
     }
 
 }

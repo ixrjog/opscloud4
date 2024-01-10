@@ -6,10 +6,13 @@
 
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Getter
 public class MainView extends BaseModel {
 
     private List<Job> jobs;
@@ -29,21 +32,14 @@ public class MainView extends BaseModel {
         this(Arrays.asList(jobs), new ArrayList<>());
     }
 
-    public List<Job> getJobs() {
-        return jobs;
-    }
-
     public MainView setJobs(List<Job> jobs) {
         this.jobs = jobs;
         return this;
-    }
-
-    public List<View> getViews() {
-        return views;
     }
 
     public MainView setViews(List<View> views) {
         this.views = views;
         return this;
     }
+
 }

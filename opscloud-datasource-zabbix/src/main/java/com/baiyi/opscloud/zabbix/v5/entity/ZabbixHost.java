@@ -110,7 +110,7 @@ public class ZabbixHost {
                     .instanceUuid(dsInstance.getUuid())
                     .assetId(this.hostid)
                     .name(this.name)
-                    .assetKey(this.interfaces.get(0).getIp())
+                    .assetKey(this.interfaces.getFirst().getIp())
                     //.assetKey2()
                     .kind(String.valueOf(this.flags))
                     .isActive(0 == this.status)
@@ -122,7 +122,6 @@ public class ZabbixHost {
                     .build();
         }
     }
-
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -157,7 +156,6 @@ public class ZabbixHost {
         private Integer main;
 
         private String port;
-
 
         /**
          * 接口类型。

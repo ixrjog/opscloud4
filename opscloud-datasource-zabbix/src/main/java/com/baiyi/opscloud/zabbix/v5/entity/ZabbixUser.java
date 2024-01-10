@@ -114,7 +114,7 @@ public class ZabbixUser {
                     if ("1".equals(media.getMediatypeid())) {
                         //  String email = ZabbixMapper.mapperList(media.getSendto(), String.class).get(0);
                         try {
-                            String email = ((List<String>) media.getSendto()).get(0);
+                            String email = ((List<String>) media.getSendto()).getFirst();
                             builder.paramProperty("email", email);
                         } catch (Exception ignored) {
                         }
@@ -128,4 +128,5 @@ public class ZabbixUser {
             return builder.build();
         }
     }
+
 }

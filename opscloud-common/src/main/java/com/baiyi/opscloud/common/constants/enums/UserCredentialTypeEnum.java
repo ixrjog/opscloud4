@@ -12,9 +12,6 @@ import java.util.Arrays;
 @Getter
 public enum UserCredentialTypeEnum {
 
-    /**
-     *
-     */
     PUB_KEY(0, "PUB_KEY"),
     API_TOKEN(1, "API_TOKEN"),
     OTP_SK(2, "OTP_SK"),
@@ -34,4 +31,5 @@ public enum UserCredentialTypeEnum {
                 .findFirst().map(UserCredentialTypeEnum::getName)
                 .orElse("undefined");
     }
+
 }

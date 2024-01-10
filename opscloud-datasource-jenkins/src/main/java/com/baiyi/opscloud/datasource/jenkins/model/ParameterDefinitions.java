@@ -3,8 +3,11 @@ package com.baiyi.opscloud.datasource.jenkins.model;
 import com.google.common.collect.Lists;
 
 import jakarta.xml.bind.annotation.*;
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 @XmlRootElement(name = "parameterDefinitions")
 @XmlAccessorOrder(XmlAccessOrder.ALPHABETICAL)
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -21,10 +24,6 @@ public class ParameterDefinitions {
         this.stringParams = stringParams;
     }
 
-    public List<StringParameterDefinition> getStringParams() {
-        return stringParams;
-    }
-
     public ParameterDefinitions setStringParams(List<StringParameterDefinition> stringParams) {
         this.stringParams = stringParams;
         return this;
@@ -34,4 +33,5 @@ public class ParameterDefinitions {
         stringParams.add(spd);
         return this;
     }
+
 }

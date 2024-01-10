@@ -25,8 +25,6 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
-
 /**
  * @Author baiyi
  * @Date 2021/7/5 11:01 上午
@@ -85,7 +83,7 @@ public class DsInstanceAssetFacadeImpl implements DsInstanceAssetFacade {
     }
 
     @Override
-    @Async(value = CORE)
+    @Async
     public void deleteAssetByType(int instanceId, String assetType) {
         DatasourceInstance dsInstance = dsInstanceService.getById(instanceId);
         if (dsInstance == null) {

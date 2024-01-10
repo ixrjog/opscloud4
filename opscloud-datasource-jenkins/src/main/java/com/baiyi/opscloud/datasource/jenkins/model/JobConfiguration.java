@@ -32,7 +32,7 @@ public class JobConfiguration {
         List<Node> nodes = doc.selectNodes("//hudson.model.ParametersDefinitionProperty");
         StringWriter sw = new StringWriter();
         StringParameterDefinition spd = new StringParameterDefinition(name, desc, defaultValue);
-        if (null == nodes || 0 == nodes.size()) {
+        if (null == nodes || nodes.isEmpty()) {
             ParameterDefinitions pd = new ParameterDefinitions();
             pd.addParam(spd);
             ParametersDefinitionProperty pdp = new ParametersDefinitionProperty(pd);

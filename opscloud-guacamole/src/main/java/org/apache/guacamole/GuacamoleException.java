@@ -21,13 +21,18 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 
 /**
  * A generic exception thrown when parts of the Guacamole API encounter
  * errors.
  */
 public class GuacamoleException extends Exception {
-    
+
+    @Serial
+    private static final long serialVersionUID = 2951715914728077569L;
+
     /**
      * Creates a new GuacamoleException with the given message and cause.
      *

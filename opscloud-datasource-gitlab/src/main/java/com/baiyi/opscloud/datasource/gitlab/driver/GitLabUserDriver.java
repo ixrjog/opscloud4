@@ -23,7 +23,6 @@ import java.util.List;
 @Component
 public class GitLabUserDriver {
 
-
     // private static final int ITEMS_PER_PAGE = 50;
 
     /**

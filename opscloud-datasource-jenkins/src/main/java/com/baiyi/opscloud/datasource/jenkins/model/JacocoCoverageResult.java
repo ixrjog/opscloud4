@@ -1,5 +1,8 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
+@Getter
 public class JacocoCoverageResult {
 
     private int covered;
@@ -8,17 +11,9 @@ public class JacocoCoverageResult {
     private int percentageFloat;
     private int total;
 
-    public int getCovered() {
-        return covered;
-    }
-
     public JacocoCoverageResult setCovered(int covered) {
         this.covered = covered;
         return this;
-    }
-
-    public int getMissed() {
-        return missed;
     }
 
     public JacocoCoverageResult setMissed(int missed) {
@@ -26,26 +21,14 @@ public class JacocoCoverageResult {
         return this;
     }
 
-    public int getPercentage() {
-        return percentage;
-    }
-
     public JacocoCoverageResult setPercentage(int percentage) {
         this.percentage = percentage;
         return this;
     }
 
-    public int getPercentageFloat() {
-        return percentageFloat;
-    }
-
     public JacocoCoverageResult setPercentageFloat(int percentageFloat) {
         this.percentageFloat = percentageFloat;
         return this;
-    }
-
-    public int getTotal() {
-        return total;
     }
 
     public JacocoCoverageResult setTotal(int total) {

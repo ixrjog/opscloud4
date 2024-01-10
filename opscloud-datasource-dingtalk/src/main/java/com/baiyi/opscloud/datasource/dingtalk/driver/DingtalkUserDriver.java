@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 
@@ -48,7 +49,7 @@ public class DingtalkUserDriver {
     }
 
     public File getUserAvatar(String userAvatarUrl) throws IOException {
-        URL url = new URL(userAvatarUrl);
+        URL url = URI.create(userAvatarUrl).toURL();
         DingtalkUserFeign dingtalkUserFeign = Feign.builder()
                 .retryer(new Retryer.Default(3000, 3000, 3))
                 .encoder(new JacksonEncoder())

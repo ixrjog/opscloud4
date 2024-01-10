@@ -45,7 +45,7 @@ public class OnsInstanceV5 {
                     .assetId(this.instanceId) // 资产id = 实例id
                     .name(this.instanceName)
                     .assetKey(this.instanceId)
-                    /**
+                    /*
                      * standard：标准版
                      * ultimate：铂金版
                      * professional：专业版
@@ -62,4 +62,5 @@ public class OnsInstanceV5 {
                     .build();
         }
     }
+
 }

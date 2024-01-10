@@ -37,4 +37,3 @@ public class LdapAuthProvider extends BaseAuthProvider {
     }
 
 }
-

@@ -33,7 +33,7 @@ public class DeploymentAssetConverter {
 
     private static final String JAVA_OPTS = "JAVA_OPTS";
 
-    private static final String SIDECAR_ISTIO_IO_INJECT = "sidecar.istio.io/inject";
+    public static final String SIDECAR_ISTIO_IO_INJECT = "sidecar.istio.io/inject";
 
     private static final String ENV_JAVA_OPTS = "env.java.opts";
 

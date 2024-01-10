@@ -30,4 +30,5 @@ public class AlertRuleMatchExpression {
      * 沉默时间（秒）
      */
     private Integer silenceSeconds;
+
 }

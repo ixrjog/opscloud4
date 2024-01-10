@@ -30,7 +30,7 @@ public class LeoJobServiceImpl implements LeoJobService {
 
     @Override
     public DataTable<LeoJob> queryJobPage(LeoJobParam.JobPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<LeoJob> data = leoJobMapper.queryPageByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }

@@ -34,4 +34,3 @@ public class ListEntitiesException extends BaseException {
     }
 
 }
-

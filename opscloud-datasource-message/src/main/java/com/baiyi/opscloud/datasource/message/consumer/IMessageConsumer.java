@@ -21,4 +21,5 @@ public interface IMessageConsumer {
      * @param text
      */
     void send(DatasourceInstance instance, User user, MessageTemplate mt, String text);
+
 }

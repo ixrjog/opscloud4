@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.datasource.ApolloConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.param.apollo.ApolloParam;
-import com.baiyi.opscloud.facade.apollo.chain.ReleaseWorkOrderReleaseChainHandler;
+import com.baiyi.opscloud.facade.apollo.chain.ReleaseForWorkOrderChainHandler;
 import com.baiyi.opscloud.facade.apollo.consumer.ApolloEventAssetConsumer;
 import com.baiyi.opscloud.facade.apollo.messenger.ApolloReleaseMessenger;
 import com.baiyi.opscloud.service.application.ApplicationService;
@@ -37,7 +37,7 @@ public abstract class BaseApolloReleaseChainHandler {
     protected ApplicationService applicationService;
 
     @Resource
-    private ReleaseWorkOrderReleaseChainHandler releaseWorkOrderReleaseChainHandler;
+    private ReleaseForWorkOrderChainHandler releaseForWorkOrderChainHandler;
 
     protected static final HttpResult<Boolean> PASS_AND_DO_NEXT = null;
 
@@ -52,7 +52,7 @@ public abstract class BaseApolloReleaseChainHandler {
         HttpResult<Boolean> httpResult = this.handle(releaseEvent, apolloConfig);
         // 当前链执行结束
         if (httpResult != null) {
-            int ticketId = releaseWorkOrderReleaseChainHandler.getWorkOrderTicketId(releaseEvent);
+            int ticketId = releaseForWorkOrderChainHandler.getWorkOrderTicketId(releaseEvent);
             this.consume(apolloConfig, releaseEvent, httpResult, ticketId);
             return httpResult;
         }

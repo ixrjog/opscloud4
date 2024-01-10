@@ -28,4 +28,5 @@ public class SonarQubeParamMap {
     public String toString() {
         return JSONUtil.writeValueAsString(this);
     }
+
 }

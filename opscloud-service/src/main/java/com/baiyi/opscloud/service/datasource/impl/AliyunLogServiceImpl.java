@@ -28,7 +28,7 @@ public class AliyunLogServiceImpl implements AliyunLogService {
 
     @Override
     public DataTable<AliyunLog> queryAliyunLogByParam(AliyunLogParam.AliyunLogPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(AliyunLog.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("datasourceInstanceId", pageQuery.getInstanceId());

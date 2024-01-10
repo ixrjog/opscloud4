@@ -22,7 +22,7 @@ import jakarta.annotation.Resource;
 public class SimpleZabbixV5HostDriver {
 
     @Resource
-    private SimpleZabbixAuth simpleZabbixAuth;
+    private SimpleZabbixAuthHolder zabbixAuthHolder;
 
     public interface HostAPIMethod {
         String GET = "host.get";
@@ -43,28 +43,28 @@ public class SimpleZabbixV5HostDriver {
     public ZabbixHost.CreateHostResponse createHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixHostFeign zabbixAPI = buildFeign(config);
         request.setMethod(HostAPIMethod.CREATE);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(zabbixAuthHolder.generateAuth(config));
         return zabbixAPI.create(request);
     }
 
     protected ZabbixHost.QueryHostResponse queryHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixHostFeign zabbixAPI = buildFeign(config);
         request.setMethod(HostAPIMethod.GET);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(zabbixAuthHolder.generateAuth(config));
         return zabbixAPI.query(request);
     }
 
     protected ZabbixHost.UpdateHostResponse updateHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixHostFeign zabbixAPI = buildFeign(config);
         request.setMethod(HostAPIMethod.UPDATE);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(zabbixAuthHolder.generateAuth(config));
         return zabbixAPI.update(request);
     }
 
     protected ZabbixHost.DeleteHostResponse deleteHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DeleteRequest request) {
         ZabbixHostFeign zabbixAPI = buildFeign(config);
         request.setMethod(HostAPIMethod.DELETE);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(zabbixAuthHolder.generateAuth(config));
         return zabbixAPI.delete(request);
     }
 

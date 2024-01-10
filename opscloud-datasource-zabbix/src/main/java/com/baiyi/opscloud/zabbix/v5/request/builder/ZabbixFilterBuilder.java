@@ -26,4 +26,5 @@ public class ZabbixFilterBuilder {
     public ZabbixRequest.Filter build() {
         return filter;
     }
+
 }

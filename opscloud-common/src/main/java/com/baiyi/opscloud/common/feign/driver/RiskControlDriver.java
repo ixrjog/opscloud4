@@ -27,4 +27,5 @@ public class RiskControlDriver {
         RiskControlFeign feign = riskControlFeignBuild(url);
         return feign.riskControlSerReload(applicationName, request);
     }
+
 }

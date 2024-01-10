@@ -65,11 +65,8 @@ public class BuildChangeSetPath {
         } else if (!editType.equals(other.editType))
             return false;
         if (file == null) {
-            if (other.file != null)
-                return false;
-        } else if (!file.equals(other.file))
-            return false;
-        return true;
+            return other.file == null;
+        } else return file.equals(other.file);
     }
 
 }

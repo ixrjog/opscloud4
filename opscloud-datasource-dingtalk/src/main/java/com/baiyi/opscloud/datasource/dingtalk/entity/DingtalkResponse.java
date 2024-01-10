@@ -28,7 +28,7 @@ public class DingtalkResponse {
     public static class Result {
         @JsonProperty("next_cursor")
         private Integer nextCursor;
-        @JsonProperty(" has_more")
+        @JsonProperty("has_more")
         private Boolean hasMore;
     }
 

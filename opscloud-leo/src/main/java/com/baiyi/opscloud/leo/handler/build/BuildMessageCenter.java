@@ -63,4 +63,5 @@ public class BuildMessageCenter {
             throw new LeoBuildException("Error in rendering message template: {}", e.getMessage());
         }
     }
+
 }

@@ -8,4 +8,5 @@ import com.baiyi.opscloud.domain.base.IInstanceType;
  * @Version 1.0
  */
 public interface SimpleAuthenticationProvider extends IAuthenticationProvider, IInstanceType {
+
 }

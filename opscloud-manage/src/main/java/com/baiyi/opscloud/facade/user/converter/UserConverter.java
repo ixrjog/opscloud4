@@ -18,7 +18,7 @@ public class UserConverter {
     private UserConverter() {
     }
 
-    public static User toDO(UserParam.CreateUser createUser) {
+    public static User to(UserParam.CreateUser createUser) {
         ValidationUtil.isUsernameRule(createUser.getUsername());
         User user = BeanCopierUtil.copyProperties(createUser, User.class);
         if (StringUtils.isNotEmpty(user.getPassword())) {
@@ -37,7 +37,7 @@ public class UserConverter {
         return user;
     }
 
-    public static User toDO(UserParam.UpdateUser updateUser) {
+    public static User to(UserParam.UpdateUser updateUser) {
         User pre = BeanCopierUtil.copyProperties(updateUser, User.class);
         if (!StringUtils.isEmpty(pre.getPassword())) {
             ValidationUtil.checkPasswordRule(pre.getPassword());

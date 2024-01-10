@@ -21,12 +21,17 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 
 /**
  * An exception which is thrown when an operation cannot be performed because
  * its corresponding connection is closed.
  */
 public class GuacamoleConnectionClosedException extends GuacamoleServerException {
+
+    @Serial
+    private static final long serialVersionUID = 6490314709268171602L;
 
     /**
      * Creates a new GuacamoleConnectionClosedException with the given message
@@ -61,7 +66,7 @@ public class GuacamoleConnectionClosedException extends GuacamoleServerException
 
     @Override
     public GuacamoleStatus getStatus() {
-        return GuacamoleStatus.SERVER_ERROR;
+        return super.getStatus();
     }
 
 }

@@ -24,7 +24,7 @@ public abstract class AbstractZabbixV5ProxyDriver {
     }
 
     @Resource
-    private SimpleZabbixAuth simpleZabbixAuth;
+    private SimpleZabbixAuthHolder zabbixAuthHolder;
 
     private ZabbixProxyFeign buildFeign(ZabbixConfig.Zabbix config) {
         return Feign.builder()
@@ -37,14 +37,14 @@ public abstract class AbstractZabbixV5ProxyDriver {
     protected ZabbixProxy.QueryProxyResponse queryHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixProxyFeign zabbixAPI = buildFeign(config);
         request.setMethod(ProxyAPIMethod.GET);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(zabbixAuthHolder.generateAuth(config));
         return zabbixAPI.query(request);
     }
 
     protected ZabbixProxy.UpdateProxyResponse updateHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixProxyFeign zabbixAPI = buildFeign(config);
         request.setMethod(ProxyAPIMethod.UPDATE);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(zabbixAuthHolder.generateAuth(config));
         return zabbixAPI.update(request);
     }
 

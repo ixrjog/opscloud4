@@ -31,7 +31,7 @@ public class BusinessTemplateServiceImpl implements BusinessTemplateService {
 
     @Override
     public DataTable<BusinessTemplate> queryPageByParam(BusinessTemplateParam.BusinessTemplatePageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(BusinessTemplate.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("instanceUuid", pageQuery.getInstanceUuid());

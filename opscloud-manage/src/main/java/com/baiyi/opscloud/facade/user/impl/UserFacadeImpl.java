@@ -19,6 +19,7 @@ import com.baiyi.opscloud.domain.param.SimpleRelation;
 import com.baiyi.opscloud.domain.param.auth.LoginParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
+import com.baiyi.opscloud.domain.param.user.AccessTokenParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
@@ -50,15 +51,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi
@@ -123,7 +121,6 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    @Async(value = CORE)
     public void syncUserPermissionGroupForAsset() {
         List<User> users = userService.queryAll();
         if (CollectionUtils.isEmpty(users)) {
@@ -172,7 +169,7 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     @AssetBusinessRelation
     public UserVO.User addUser(UserParam.CreateUser createUser) {
-        User preCreateUser = UserConverter.toDO(createUser);
+        User preCreateUser = UserConverter.to(createUser);
         userService.add(preCreateUser);
         if (BooleanUtils.isTrue(createUser.getNeedInitializeDefaultConfiguration())) {
             userHandler.postCreateUserHandle(preCreateUser);
@@ -197,7 +194,7 @@ public class UserFacadeImpl implements UserFacade {
             FunctionUtil.isTure(accessLevel < AccessLevel.OPS.getLevel())
                     .throwBaseException(new OCException("权限不足: 需要管理员才能修改其他用户信息!"));
         }
-        User preUpdateUser = UserConverter.toDO(updateUser);
+        User preUpdateUser = UserConverter.to(updateUser);
         updateUser.setUsername(checkUser.getUsername());
         userService.updateBySelective(preUpdateUser);
     }
@@ -252,16 +249,16 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public AccessTokenVO.AccessToken grantUserAccessToken(AccessTokenVO.AccessToken accessToken) {
-        AccessToken pre = AccessToken.builder()
+    public AccessTokenVO.AccessToken grantUserAccessToken(AccessTokenParam.ApplicationAccessToken applicationAccessToken) {
+        AccessToken accessToken = AccessToken.builder()
                 .username(SessionHolder.getUsername())
                 .tokenId(IdUtil.buildUUID())
                 .token(PasswordUtil.generatorPassword(32, false))
-                .expiredTime(accessToken.getExpiredTime())
-                .comment(accessToken.getComment())
+                .expiredTime(applicationAccessToken.getExpiredTime())
+                .comment(applicationAccessToken.getComment())
                 .build();
-        accessTokenService.add(pre);
-        return BeanCopierUtil.copyProperties(pre, AccessTokenVO.AccessToken.class);
+        accessTokenService.add(accessToken);
+        return BeanCopierUtil.copyProperties(accessToken, AccessTokenVO.AccessToken.class);
     }
 
     @Override
@@ -367,7 +364,7 @@ public class UserFacadeImpl implements UserFacade {
             // 创建用户MFA凭据（不会重复申请）
             userCredentialFacade.createMFACredential(user);
             List<UserCredential> credentials = userCredentialService.queryByUserIdAndType(user.getId(), UserCredentialTypeEnum.OTP_SK.getType());
-            String otpSk = credentials.get(0).getCredential();
+            String otpSk = credentials.getFirst().getCredential();
             mfa = MfaVO.MFA.builder()
                     .username(user.getUsername())
                     .qrcode(OtpUtil.toQRCode(Joiner.on("@").join(user.getUsername(), "opscloud"), otpSk))

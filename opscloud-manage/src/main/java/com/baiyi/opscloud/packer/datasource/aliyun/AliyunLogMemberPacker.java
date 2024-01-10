@@ -58,4 +58,3 @@ public class AliyunLogMemberPacker implements IWrapper<AliyunLogMemberVO.LogMemb
     }
 
 }
-

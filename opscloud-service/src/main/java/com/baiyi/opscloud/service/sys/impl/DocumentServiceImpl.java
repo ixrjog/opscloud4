@@ -46,7 +46,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public DataTable<Document> queryPageByParam(DocumentParam.DocumentPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(Document.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(pageQuery.getQueryName())) {

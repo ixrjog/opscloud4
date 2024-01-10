@@ -9,7 +9,6 @@ import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
@@ -115,11 +114,9 @@ public class ApplicationVO {
         @Schema(description = "主键", example = "1")
         private Integer id;
 
-        @NotNull(message = "应用名称不能为空")
         @Schema(description = "应用名称")
         private String name;
 
-        @NotNull(message = "应用关键字不能为空")
         @Schema(description = "应用关键字")
         private String applicationKey;
 

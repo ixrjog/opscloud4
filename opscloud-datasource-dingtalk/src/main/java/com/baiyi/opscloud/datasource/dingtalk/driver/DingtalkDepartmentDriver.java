@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.dingtalk.driver;
 
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.DingtalkConfig;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkDepartment;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkToken;

@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.google.gson.JsonSyntaxException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import com.baiyi.opscloud.common.util.IPAddressUtil;
@@ -19,6 +20,7 @@ import java.util.Optional;
  * @Date 2021/8/24 1:48 下午
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class BizPropertyHelper {
 
@@ -84,7 +86,7 @@ public class BizPropertyHelper {
                 try {
                     return BusinessPropertyUtil.toProperty(businessProperty.getProperty(), ServerProperty.Server.class);
                 } catch (JsonSyntaxException e) {
-                    e.printStackTrace();
+                    log.debug(e.getMessage());
                 }
             }
         }
@@ -98,10 +100,11 @@ public class BizPropertyHelper {
                 try {
                     return BusinessPropertyUtil.toProperty(businessProperty.getProperty(), ServerProperty.Server.class);
                 } catch (JsonSyntaxException e) {
-                    e.printStackTrace();
+                    log.debug(e.getMessage());
                 }
             }
         }
         return null;
     }
+
 }

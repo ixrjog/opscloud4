@@ -22,4 +22,5 @@ public interface MenuService {
     List<Menu> queryAllBySeq();
 
     List<Menu> listAll();
+
 }

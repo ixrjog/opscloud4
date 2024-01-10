@@ -21,11 +21,16 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 
 /**
  * An exception which is thrown when the client is taking too long to respond.
  */
 public class GuacamoleClientTimeoutException extends GuacamoleClientException {
+
+    @Serial
+    private static final long serialVersionUID = 9123590911083580041L;
 
     /**
      * Creates a new GuacamoleClientTimeoutException with the given message and cause.

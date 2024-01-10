@@ -50,6 +50,10 @@ public class SessionHolder {
         return name.equals(username.get());
     }
 
+    public static boolean isEmpty() {
+        return StringUtils.isEmpty(username.get());
+    }
+
     public static void setUsername(String param) {
         username.set(param);
     }

@@ -3,7 +3,6 @@ package com.baiyi.opscloud.service.leo.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuildLog;
 import com.baiyi.opscloud.mapper.LeoBuildLogMapper;
 import com.baiyi.opscloud.service.leo.LeoBuildLogService;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,7 +36,7 @@ public class LeoBuildLogServiceImpl implements LeoBuildLogService {
 
     @Override
     public List<LeoBuildLog> queryLatestLogByBuildId(Integer buildId, int size) {
-        Page page = PageHelper.startPage(1, size);
+        PageHelper.startPage(1, size);
         Example example = new Example(LeoBuildLog.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("buildId", buildId);

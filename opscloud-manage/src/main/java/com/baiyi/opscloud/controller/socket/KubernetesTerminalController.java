@@ -50,7 +50,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
 
     private static TerminalSessionService terminalSessionService;
 
-    private static ThreadPoolTaskExecutor kubernetesTerminalExecutor;
+    private static ThreadPoolTaskExecutor xTerminalExecutor;
 
     @Autowired
     public void setTerminalSessionService(TerminalSessionService terminalSessionService) {
@@ -58,8 +58,8 @@ public class KubernetesTerminalController extends SimpleAuthentication {
     }
 
     @Resource
-    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor kubernetesTerminalExecutor) {
-        KubernetesTerminalController.kubernetesTerminalExecutor = kubernetesTerminalExecutor;
+    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor xTerminalExecutor) {
+        KubernetesTerminalController.xTerminalExecutor = xTerminalExecutor;
     }
 
     /**
@@ -73,7 +73,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
             this.terminalSession = terminalSession;
             terminalSessionService.add(terminalSession);
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
-            kubernetesTerminalExecutor.execute(new SentOutputTask(sessionId, session));
+            xTerminalExecutor.execute(new SentOutputTask(sessionId, session));
         } catch (Exception e) {
             log.error("Kubernetes terminal create connection error: {}", e.getMessage());
         }

@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.algorithm;
 
 import com.baiyi.opscloud.common.base.Global;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
@@ -82,14 +83,14 @@ public abstract class BaseAlgorithm {
                 .build();
     }
 
-
     protected String toSubgroupName(ServerGroup serverGroup, Env env) {
         return Joiner.on("-").join(serverGroup.getName().replace("group_", ""), env.getEnvName());
     }
 
     public String getHeadInfo() {
         FastDateFormat fastDateFormat = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
-        return Joiner.on(" ").join("#", Global.CREATED_BY, "on", fastDateFormat.format(new Date()), "\n\n");
+        String headInfoTpl = "# {} on {}\n\n";
+        return StringFormatter.arrayFormat(headInfoTpl, Global.CREATED_BY, fastDateFormat.format(new Date()));
     }
 
 }

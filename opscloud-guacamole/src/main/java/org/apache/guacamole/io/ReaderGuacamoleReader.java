@@ -20,17 +20,18 @@
 package org.apache.guacamole.io;
 
 
+import org.apache.guacamole.GuacamoleConnectionClosedException;
+import org.apache.guacamole.GuacamoleException;
+import org.apache.guacamole.GuacamoleServerException;
+import org.apache.guacamole.GuacamoleUpstreamTimeoutException;
+import org.apache.guacamole.protocol.GuacamoleInstruction;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Deque;
 import java.util.LinkedList;
-import org.apache.guacamole.GuacamoleConnectionClosedException;
-import org.apache.guacamole.GuacamoleException;
-import org.apache.guacamole.GuacamoleServerException;
-import org.apache.guacamole.GuacamoleUpstreamTimeoutException;
-import org.apache.guacamole.protocol.GuacamoleInstruction;
 
 /**
  * A GuacamoleReader which wraps a standard Java Reader, using that Reader as
@@ -41,7 +42,7 @@ public class ReaderGuacamoleReader implements GuacamoleReader {
     /**
      * Wrapped Reader to be used for all input.
      */
-    private Reader input;
+    private final Reader input;
 
     /**
      * Creates a new ReaderGuacamoleReader which will use the given Reader as
@@ -254,13 +255,12 @@ public class ReaderGuacamoleReader implements GuacamoleReader {
         String opcode = elements.removeFirst();
 
         // Create instruction
-        GuacamoleInstruction instruction = new GuacamoleInstruction(
+
+        // Return parsed instruction
+        return new GuacamoleInstruction(
                 opcode,
                 elements.toArray(new String[elements.size()])
         );
-
-        // Return parsed instruction
-        return instruction;
 
     }
 

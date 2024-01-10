@@ -16,4 +16,5 @@ public interface ServerTaskService {
     void add(ServerTask serverTask);
 
     void update(ServerTask serverTask);
+
 }

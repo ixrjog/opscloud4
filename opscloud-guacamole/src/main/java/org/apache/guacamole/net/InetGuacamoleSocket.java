@@ -20,46 +20,37 @@
 package org.apache.guacamole.net;
 
 
-import org.apache.guacamole.io.GuacamoleReader;
-import org.apache.guacamole.io.ReaderGuacamoleReader;
-import org.apache.guacamole.io.WriterGuacamoleWriter;
-import org.apache.guacamole.io.GuacamoleWriter;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-
-import java.io.InputStreamReader;
-
-import java.io.OutputStreamWriter;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.net.SocketTimeoutException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.GuacamoleServerException;
 import org.apache.guacamole.GuacamoleUpstreamTimeoutException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.guacamole.io.GuacamoleReader;
+import org.apache.guacamole.io.GuacamoleWriter;
+import org.apache.guacamole.io.ReaderGuacamoleReader;
+import org.apache.guacamole.io.WriterGuacamoleWriter;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Provides abstract socket-like access to a Guacamole connection over a given
  * hostname and port.
  */
+@Slf4j
 public class InetGuacamoleSocket implements GuacamoleSocket {
-
-    /**
-     * Logger for this class.
-     */
-    private Logger logger = LoggerFactory.getLogger(InetGuacamoleSocket.class);
 
     /**
      * The GuacamoleReader this socket should read from.
      */
-    private GuacamoleReader reader;
+    private final GuacamoleReader reader;
 
     /**
      * The GuacamoleWriter this socket should write to.
      */
-    private GuacamoleWriter writer;
+    private final GuacamoleWriter writer;
 
     /**
      * The number of milliseconds to wait for data on the TCP socket before
@@ -71,7 +62,7 @@ public class InetGuacamoleSocket implements GuacamoleSocket {
      * The TCP socket that the GuacamoleReader and GuacamoleWriter exposed
      * by this class should affect.
      */
-    private Socket sock;
+    private final Socket sock;
 
     /**
      * Creates a new InetGuacamoleSocket which reads and writes instructions
@@ -86,8 +77,7 @@ public class InetGuacamoleSocket implements GuacamoleSocket {
     public InetGuacamoleSocket(String hostname, int port) throws GuacamoleException {
 
         try {
-
-            logger.debug("Connecting to guacd at {}:{}.", hostname, port);
+            log.debug("Connecting to guacd at {}:{}.", hostname, port);
 
             // Get address
             SocketAddress address = new InetSocketAddress(
@@ -103,8 +93,8 @@ public class InetGuacamoleSocket implements GuacamoleSocket {
             sock.setSoTimeout(SOCKET_TIMEOUT);
 
             // On successful connect, retrieve I/O streams
-            reader = new ReaderGuacamoleReader(new InputStreamReader(sock.getInputStream(),   "UTF-8"));
-            writer = new WriterGuacamoleWriter(new OutputStreamWriter(sock.getOutputStream(), "UTF-8"));
+            reader = new ReaderGuacamoleReader(new InputStreamReader(sock.getInputStream(), StandardCharsets.UTF_8));
+            writer = new WriterGuacamoleWriter(new OutputStreamWriter(sock.getOutputStream(), StandardCharsets.UTF_8));
 
         }
         catch (SocketTimeoutException e) {
@@ -119,7 +109,7 @@ public class InetGuacamoleSocket implements GuacamoleSocket {
     @Override
     public void close() throws GuacamoleException {
         try {
-            logger.debug("Closing socket to guacd.");
+            log.debug("Closing socket to guacd.");
             sock.close();
         }
         catch (IOException e) {

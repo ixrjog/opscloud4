@@ -200,11 +200,8 @@ public class Build extends BaseModel {
         if (queueId != other.queueId)
             return false;
         if (url == null) {
-            if (other.url != null)
-                return false;
-        } else if (!url.equals(other.url))
-            return false;
-        return true;
+            return other.url == null;
+        } else return url.equals(other.url);
     }
 
     @Override
@@ -216,4 +213,5 @@ public class Build extends BaseModel {
         result = prime * result + ((url == null) ? 0 : url.hashCode());
         return result;
     }
+
 }

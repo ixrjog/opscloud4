@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.workorder.helper.strategy.impl;
 
-import com.baiyi.opscloud.common.config.properties.OpscloudConfigurationProperties;
+import com.baiyi.opscloud.common.configuration.properties.OpscloudConfigurationProperties;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.common.util.StringFormatter;
@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.baiyi.opscloud.common.constants.CacheKeyConstants.SEND_AUDIT_NOTICE_KEY;
 import static com.baiyi.opscloud.datasource.manager.base.NoticeManager.MsgKeys.TICKET_APPROVE;
 
 /**
@@ -47,10 +48,8 @@ public class SendAuditNotice extends AbstractSendNotice {
     @Resource
     private OpscloudConfigurationProperties opscloudConfigurationProperties;
 
-    public final static String KEY_PREFIX = "Opscloud.V4.workOrder#ticketId.{}.username.{}";
-
     public static String buildKey(Integer ticketId, String username) {
-        return StringFormatter.arrayFormat(KEY_PREFIX, ticketId, username);
+        return StringFormatter.arrayFormat(SEND_AUDIT_NOTICE_KEY, ticketId, username);
     }
 
     @Override

@@ -3,21 +3,20 @@ package com.baiyi.opscloud.datasource.aliyun.provider;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
-import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.aliyun.dms.driver.AliyunDmsTenantDriver;
 import com.baiyi.opscloud.datasource.aliyun.dms.driver.AliyunDmsUserDriver;
 import com.baiyi.opscloud.datasource.aliyun.dms.entity.DmsUser;
 import com.baiyi.opscloud.datasource.aliyun.provider.push.AliyunDmsUserPushHelper;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -79,11 +78,8 @@ public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
-            return false;
-        }
-        return true;
+    protected AssetComparer getAssetComparer() {
+        return AssetComparer.COMPARE_NAME;
     }
 
     @Override
@@ -117,4 +113,3 @@ public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
     }
 
 }
-

@@ -2,7 +2,8 @@ package com.baiyi.opscloud.filter;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
-import com.baiyi.opscloud.config.properties.WhiteConfigurationProperties;
+import com.baiyi.opscloud.configuration.properties.WhiteConfigurationProperties;
+import com.baiyi.opscloud.facade.audit.OperationalAuditFacade;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -37,6 +38,8 @@ public class AuthFilter extends OncePerRequestFilter {
      */
     public static final String ACCESS_TOKEN = "AccessToken";
 
+    private final OperationalAuditFacade operationalAuditFacade;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         response.setContentType(APPLICATION_JSON_VALUE);
@@ -61,9 +64,11 @@ public class AuthFilter extends OncePerRequestFilter {
                 final String token = request.getHeader(AUTHORIZATION);
                 if (!StringUtils.isEmpty(token)) {
                     userAuthFacade.verifyUserHasResourcePermissionWithToken(token, resourceName);
+                    operationalAuditFacade.save(resourceName, false);
                 } else {
                     final String accessToken = request.getHeader(ACCESS_TOKEN);
                     userAuthFacade.verifyUserHasResourcePermissionWithAccessToken(accessToken, resourceName);
+                    operationalAuditFacade.save(resourceName, true);
                 }
                 filterChain.doFilter(request, response);
             } catch (AuthenticationException ex) {

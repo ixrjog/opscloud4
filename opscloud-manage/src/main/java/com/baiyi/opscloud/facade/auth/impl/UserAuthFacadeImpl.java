@@ -6,8 +6,8 @@ import com.baiyi.opscloud.datasource.manager.DsAuthManager;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.PermitEmptyPasswords;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
+import com.baiyi.opscloud.domain.param.auth.AuthRoleResourceParam;
 import com.baiyi.opscloud.domain.param.auth.LoginParam;
-import com.baiyi.opscloud.domain.vo.auth.AuthRoleResourceVO;
 import com.baiyi.opscloud.domain.vo.auth.LogVO;
 import com.baiyi.opscloud.facade.auth.AuthFacade;
 import com.baiyi.opscloud.facade.auth.PlatformAuthValidator;
@@ -79,7 +79,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
             throw new AuthenticationException(ErrorEnum.AUTHENTICATION_REQUEST_NO_TOKEN);
         }
 
-        UserToken userToken = userTokenService.getByVaildToken(token);
+        UserToken userToken = userTokenService.getByValidToken(token);
         if (userToken == null) {
             throw new AuthenticationException(ErrorEnum.AUTHENTICATION_TOKEN_INVALID);
         }
@@ -126,7 +126,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
             return;
         }
 
-        AuthRoleResourceVO.RoleResource roleResource = AuthRoleResourceVO.RoleResource.builder()
+        AuthRoleResourceParam.RoleResource roleResource = AuthRoleResourceParam.RoleResource.builder()
                 .resourceId(authResource.getId())
                 .roleId(authRole.getId())
                 .build();

@@ -7,6 +7,8 @@ import com.baiyi.opscloud.common.util.StringFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import static com.baiyi.opscloud.common.constants.CacheKeyConstants.WORK_ORDER_LEO_DEPLOY_HOLDER_KEY;
+
 /**
  * 部署通行证
  *
@@ -30,8 +32,7 @@ public class LeoDeployPassCheck {
     /**
      * 历史部署信息
      */
-    private static final String KEY = "OC4:V0:LEO:DEPLOY:BID:{}";
-
+    // private static final String KEY = "OC4:V0:LEO:DEPLOY:BID:{}";
     public boolean checkPass(Integer buildId) {
         if (buildId == 0) {
             return false;
@@ -54,8 +55,7 @@ public class LeoDeployPassCheck {
     }
 
     private String getKey(Integer buildId) {
-        return StringFormatter.format(KEY, buildId);
+        return StringFormatter.format(WORK_ORDER_LEO_DEPLOY_HOLDER_KEY, buildId);
     }
-
 
 }

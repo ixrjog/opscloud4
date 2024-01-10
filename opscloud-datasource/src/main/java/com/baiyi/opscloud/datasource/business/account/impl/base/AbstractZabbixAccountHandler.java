@@ -72,4 +72,5 @@ public abstract class AbstractZabbixAccountHandler extends AbstractAccountHandle
     public String getInstanceType() {
         return DsTypeEnum.ZABBIX.getName();
     }
+
 }

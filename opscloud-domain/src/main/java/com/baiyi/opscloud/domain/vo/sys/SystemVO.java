@@ -32,7 +32,6 @@ public class SystemVO {
         private Mem mem;
     }
 
-
     /**
      * CPU信息
      */
@@ -42,6 +41,7 @@ public class SystemVO {
     @AllArgsConstructor
     @Schema
     public static class Cpu implements Serializable {
+
         @Serial
         private static final long serialVersionUID = 916243397197915613L;
         /**

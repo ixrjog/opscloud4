@@ -16,8 +16,13 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -121,17 +126,21 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
         }
         InetAddress inetAddress = HostUtil.getInetAddress();
         // 已存在
-        if (instanceService.getByHostIp(inetAddress.getHostAddress()) != null) {
-            return;
+        Instance instance =  instanceService.getByHostIp(inetAddress.getHostAddress());
+        if (instance != null) {
+            instance.setVersion(getVersion());
+            instanceService.update(instance);
+        }else{
+          instance = Instance.builder()
+                    .hostIp(inetAddress.getHostAddress())
+                    .hostname(inetAddress.getHostName())
+                    .name(inetAddress.getCanonicalHostName())
+                    .status(0)
+                    .isActive(true)
+                    .version(getVersion())
+                    .build();
+            instanceService.add(instance);
         }
-        Instance instance = Instance.builder()
-                .hostIp(inetAddress.getHostAddress())
-                .hostname(inetAddress.getHostName())
-                .name(inetAddress.getCanonicalHostName())
-                .status(0)
-                .isActive(true)
-                .build();
-        instanceService.add(instance);
     }
 
     /**
@@ -144,6 +153,31 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
     public Instance getInstance() throws UnknownHostException {
         InetAddress inetAddress = HostUtil.getInetAddress();
         return instanceService.getByHostIp(inetAddress.getHostAddress());
+    }
+
+    @Override
+    public String getVersion() {
+       return readGitProperties();
+    }
+
+    private String readGitProperties() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        try (InputStream inputStream = classLoader.getResourceAsStream("git.properties")) {
+            return readFromInputStream(inputStream);
+        } catch (Exception e) {
+            return "Unknown version.";
+        }
+    }
+
+    private String readFromInputStream(InputStream inputStream) throws IOException {
+        StringBuilder result = new StringBuilder();
+        try (BufferedReader br = new BufferedReader((new InputStreamReader(inputStream, StandardCharsets.UTF_8)))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                result.append(line).append(System.lineSeparator());
+            }
+        }
+        return result.toString();
     }
 
     @Override

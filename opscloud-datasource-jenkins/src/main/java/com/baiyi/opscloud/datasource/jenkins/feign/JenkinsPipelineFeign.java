@@ -17,4 +17,5 @@ public interface JenkinsPipelineFeign {
     @RequestLine("GET /blue/rest/organizations/jenkins/pipelines/")
     @Headers({"Content-Type: application/json;charset=UTF-8", "Authorization: Basic {authBasic}"})
     List<JenkinsUser.User> listPipelines(@Param("authBasic") String authBasic);
+
 }

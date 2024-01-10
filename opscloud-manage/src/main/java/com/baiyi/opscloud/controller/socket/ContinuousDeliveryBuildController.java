@@ -1,23 +1,21 @@
 package com.baiyi.opscloud.controller.socket;
 
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
+import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
 import com.baiyi.opscloud.common.leo.session.LeoBuildQuerySessionMap;
-import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.controller.socket.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.param.leo.request.LoginLeoRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.SimpleLeoRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
 import com.baiyi.opscloud.leo.task.loop.LeoBuildEventLoop;
 import com.google.gson.GsonBuilder;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
-
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.util.UUID;
 
@@ -40,12 +38,12 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
 
     private String username;
 
-    private static ThreadPoolTaskExecutor leoExecutor;
-
-    @Autowired
-    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor leoExecutor) {
-        ContinuousDeliveryBuildController.leoExecutor = leoExecutor;
-    }
+//    private static ThreadPoolTaskExecutor leoExecutor;
+//
+//    @Autowired
+//    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor leoExecutor) {
+//        ContinuousDeliveryBuildController.leoExecutor = leoExecutor;
+//    }
 
     /**
      * 连接建立成功调用的方法
@@ -55,7 +53,9 @@ public class ContinuousDeliveryBuildController extends SimpleAuthentication {
         try {
             session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
             // 线程池执行
-            leoExecutor.execute(new LeoBuildEventLoop(this.sessionId, session));
+            //leoExecutor.execute(new LeoBuildEventLoop(this.sessionId, session));
+            // JDK21 VirtualThreads
+            Thread.ofVirtual().start(new LeoBuildEventLoop(this.sessionId, session));
         } catch (Exception e) {
             log.error("Create connection error: {}", e.getMessage());
         }

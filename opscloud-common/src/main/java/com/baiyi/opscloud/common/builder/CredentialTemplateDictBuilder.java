@@ -27,4 +27,5 @@ public class CredentialTemplateDictBuilder {
     public SimpleDict build() {
         return credentialTemplateDict;
     }
+
 }

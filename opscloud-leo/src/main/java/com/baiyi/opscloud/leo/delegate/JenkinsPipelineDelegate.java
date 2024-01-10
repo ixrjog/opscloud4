@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.leo.delegate;
 
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -63,4 +63,5 @@ public class JenkinsPipelineDelegate {
             }
         }
     }
+
 }

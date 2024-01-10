@@ -39,4 +39,5 @@ public class ZabbixHostProvider extends AbstractZabbixHostProvider<ZabbixHostGro
     public void afterPropertiesSet() {
         AssetProviderFactory.register(zabbixHostProvider);
     }
+
 }

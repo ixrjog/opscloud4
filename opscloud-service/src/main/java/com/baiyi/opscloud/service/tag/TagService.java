@@ -30,4 +30,5 @@ public interface TagService {
     Tag getByTagKey(String tagKey);
 
     DataTable<Tag> queryPageByParam(TagParam.TagPageQuery pageQuery);
+
 }

@@ -89,4 +89,5 @@ public class LdapAccountHandler extends AbstractAccountHandler {
     public String getInstanceType() {
         return DsTypeEnum.LDAP.getName();
     }
+
 }

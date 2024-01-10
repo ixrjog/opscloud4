@@ -10,4 +10,5 @@ import com.baiyi.opscloud.domain.generator.opscloud.PlatformNotifyHistory;
 public interface PlatformNotifyHistoryService {
 
     void add(PlatformNotifyHistory platformNotifyHistory);
+
 }

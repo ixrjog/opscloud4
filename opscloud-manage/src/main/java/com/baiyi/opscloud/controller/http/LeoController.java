@@ -263,6 +263,7 @@ public class LeoController {
     @Operation(summary = "删除指定的构建信息")
     @DeleteMapping(value = "/build/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteLeoBuildById(@RequestParam @Valid int buildId) {
+        // TODO
         return HttpResult.SUCCESS;
     }
 

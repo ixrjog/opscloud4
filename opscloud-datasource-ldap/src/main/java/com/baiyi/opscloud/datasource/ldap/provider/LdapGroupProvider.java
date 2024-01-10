@@ -9,12 +9,11 @@ import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.datasource.ldap.entity.LdapGroup;
 import com.baiyi.opscloud.datasource.ldap.entity.LdapPerson;
 import com.baiyi.opscloud.datasource.ldap.repo.GroupRepo;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_LDAP_GROUP;
@@ -70,14 +69,8 @@ public class LdapGroupProvider extends AbstractAssetRelationProvider<LdapGroup.G
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        return true;
-    }
-
-    @Override
     public void afterPropertiesSet() {
         AssetProviderFactory.register(ldapGroupProvider);
     }
 
 }
-

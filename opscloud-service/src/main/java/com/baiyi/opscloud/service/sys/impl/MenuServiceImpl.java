@@ -51,4 +51,5 @@ public class MenuServiceImpl implements MenuService {
     public List<Menu> listAll() {
         return menuMapper.selectAll();
     }
+
 }

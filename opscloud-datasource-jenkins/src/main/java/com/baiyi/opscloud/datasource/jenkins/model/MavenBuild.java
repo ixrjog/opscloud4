@@ -34,4 +34,5 @@ public class MavenBuild extends Build {
     public JacocoCoverageReport getJacocoCodeCoverageReport() throws IOException {
         return client.get(this.getUrl() + "/jacoco/", JacocoCoverageReport.class);
     }
+
 }

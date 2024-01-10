@@ -40,7 +40,7 @@ public interface GuacamoleReader {
      * @throws GuacamoleException If an error occurs while checking for
      *                            available data.
      */
-    public boolean available() throws GuacamoleException;
+    boolean available() throws GuacamoleException;
 
     /**
      * Reads at least one complete Guacamole instruction, returning a buffer
@@ -53,7 +53,7 @@ public interface GuacamoleReader {
      * @throws GuacamoleException If an error occurs while reading from the
      *                            stream.
      */
-    public char[] read() throws GuacamoleException;
+    char[] read() throws GuacamoleException;
 
     /**
      * Reads exactly one complete Guacamole instruction and returns the fully
@@ -65,6 +65,6 @@ public interface GuacamoleReader {
      *                            stream, or if the instruction cannot be
      *                            parsed.
      */
-    public GuacamoleInstruction readInstruction() throws GuacamoleException;
+    GuacamoleInstruction readInstruction() throws GuacamoleException;
 
 }

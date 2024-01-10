@@ -19,6 +19,54 @@ import lombok.experimental.SuperBuilder;
 public class ServerGroupParam {
 
     @Data
+    @Schema
+    public static class AddServerGroup {
+
+        @Schema(description = "主键", example = "1")
+        private Integer id;
+
+        @Schema(description = "组名称")
+        @NotBlank(message = "组名称不能为空")
+        private String name;
+
+        @Schema(description = "组类型", example = "1")
+        @NotNull(message = "组类型不能为空")
+        private Integer serverGroupTypeId;
+
+        @Schema(description = "是否支持工单")
+        @NotNull(message = "是否支持工单不能为空")
+        private Boolean allowOrder;
+
+        @Schema(description = "资源描述")
+        private String comment;
+
+    }
+
+    @Data
+    @Schema
+    public static class UpdateServerGroup {
+
+        @Schema(description = "主键", example = "1")
+        private Integer id;
+
+        @Schema(description = "组名称")
+        @NotBlank(message = "组名称不能为空")
+        private String name;
+
+        @Schema(description = "组类型", example = "1")
+        @NotNull(message = "组类型不能为空")
+        private Integer serverGroupTypeId;
+
+        @Schema(description = "是否支持工单")
+        @NotNull(message = "是否支持工单不能为空")
+        private Boolean allowOrder;
+
+        @Schema(description = "资源描述")
+        private String comment;
+
+    }
+
+    @Data
     @SuperBuilder(toBuilder = true)
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor

@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade.user.impl;
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
-import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
+import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
 import com.baiyi.opscloud.service.user.UserPermissionService;
@@ -38,7 +38,7 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
     }
 
     @Override
-    public void revokeUserBusinessPermission(UserPermissionVO.UserBusinessPermission userBusinessPermission) {
+    public void revokeUserBusinessPermission(UserBusinessPermissionParam.UserBusinessPermission userBusinessPermission) {
         permissionService.delete(BeanCopierUtil.copyProperties(userBusinessPermission, UserPermission.class));
     }
 
@@ -56,7 +56,7 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
     }
 
     @Override
-    public void grantUserBusinessPermission(UserPermissionVO.UserBusinessPermission userBusinessPermission) {
+    public void grantUserBusinessPermission(UserBusinessPermissionParam.UserBusinessPermission userBusinessPermission) {
         permissionService.add(BeanCopierUtil.copyProperties(userBusinessPermission, UserPermission.class));
     }
 

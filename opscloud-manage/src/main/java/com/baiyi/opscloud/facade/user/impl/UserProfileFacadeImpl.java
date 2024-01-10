@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.user.impl;
 
-import com.baiyi.opscloud.common.constants.UserProfileKeyEnum;
+import com.baiyi.opscloud.common.constants.enums.UserProfileKeyEnum;
 import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.generator.opscloud.UserProfile;
 import com.baiyi.opscloud.domain.vo.user.UserProfileVO;

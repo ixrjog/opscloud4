@@ -3,10 +3,11 @@ package com.baiyi.opscloud.datasource.kubernetes.provider;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
+import com.baiyi.opscloud.core.comparer.AssetComparer;
+import com.baiyi.opscloud.core.comparer.AssetComparerBuilder;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
-import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.kubernetes.converter.IngressAssetConverter;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesIngressDriver;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesNamespaceDriver;
@@ -14,7 +15,6 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.collect.Lists;
 import io.fabric8.kubernetes.api.model.Namespace;
 import io.fabric8.kubernetes.api.model.networking.v1.Ingress;
@@ -47,17 +47,12 @@ public class KubernetesIngressProvider extends AbstractAssetRelationProvider<Ing
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey())) {
-            return false;
-        }
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2())) {
-            return false;
-        }
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName())) {
-            return false;
-        }
-        return true;
+    protected AssetComparer getAssetComparer() {
+        return AssetComparerBuilder.newBuilder()
+                .compareOfName()
+                .compareOfKey()
+                .compareOfKey2()
+                .build();
     }
 
     @Override
@@ -103,4 +98,3 @@ public class KubernetesIngressProvider extends AbstractAssetRelationProvider<Ing
     }
 
 }
-

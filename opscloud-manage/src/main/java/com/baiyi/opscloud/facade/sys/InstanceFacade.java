@@ -20,8 +20,10 @@ public interface InstanceFacade {
 
     Instance getInstance() throws UnknownHostException;
 
-    DataTable<InstanceVO.RegisteredInstance> queryRegisteredInstancePage( RegisteredInstanceParam.RegisteredInstancePageQuery pageQuery);
+    DataTable<InstanceVO.RegisteredInstance> queryRegisteredInstancePage(RegisteredInstanceParam.RegisteredInstancePageQuery pageQuery);
 
     void setRegisteredInstanceActive(int id);
+
+    String getVersion();
 
 }

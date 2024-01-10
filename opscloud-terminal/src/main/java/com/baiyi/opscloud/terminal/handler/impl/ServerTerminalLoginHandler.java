@@ -17,9 +17,10 @@ import com.google.gson.GsonBuilder;
 import jakarta.annotation.Resource;
 import jakarta.websocket.Session;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 登录
@@ -38,9 +39,6 @@ public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<Se
     @Resource
     private ServerService serverService;
 
-    @Autowired
-    private ThreadPoolTaskExecutor serverTerminalExecutor;
-
     @Override
     public String getState() {
         return MessageState.LOGIN.getState();
@@ -48,12 +46,13 @@ public class ServerTerminalLoginHandler extends AbstractServerTerminalHandler<Se
 
     @Override
     public void handle(String message, Session session, TerminalSession terminalSession) {
-        try {
+        // JDK21 VirtualThreads
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()){
             ServerMessage.Login loginMessage = toMessage(message);
             heartbeat(terminalSession.getSessionId());
             String username = SessionHolder.getUsername();
             for (ServerNode serverNode : loginMessage.getServerNodes()) {
-                serverTerminalExecutor.submit(() -> {
+                executor.submit(() -> {
                     SessionHolder.setUsername(username);
                     log.info("Login server: instanceId={}", serverNode.getInstanceId());
                     superAdminInterceptor.interceptLoginServer(serverNode.getId());

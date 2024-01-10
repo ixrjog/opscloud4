@@ -4,7 +4,6 @@ import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Date;
@@ -40,6 +39,7 @@ public class UserCredentialVO {
     @NoArgsConstructor
     @Schema
     public static class Credential extends BaseVO {
+
         @Schema(description = "主键")
         private Integer id;
 
@@ -56,7 +56,6 @@ public class UserCredentialVO {
         private Integer credentialType;
 
         @Schema(description = "凭据内容")
-        @NotNull(message = "凭据不能为空")
         private String credential;
 
         @Schema(description = "凭据指纹")

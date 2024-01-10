@@ -1,7 +1,10 @@
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public class MavenModuleRecord extends BaseModel {
 
     private List<MavenArtifact> attachedArtifacts;
@@ -13,17 +16,9 @@ public class MavenModuleRecord extends BaseModel {
     public MavenModuleRecord() {
     }
 
-    public List<MavenArtifact> getAttachedArtifacts() {
-        return attachedArtifacts;
-    }
-
     public MavenModuleRecord setAttachedArtifacts(List<MavenArtifact> attachedArtifacts) {
         this.attachedArtifacts = attachedArtifacts;
         return this;
-    }
-
-    public Build getParent() {
-        return parent;
     }
 
     public MavenModuleRecord setParent(Build parent) {
@@ -31,17 +26,9 @@ public class MavenModuleRecord extends BaseModel {
         return this;
     }
 
-    public MavenArtifact getMainArtifact() {
-        return mainArtifact;
-    }
-
     public MavenModuleRecord setMainArtifact(MavenArtifact mainArtifact) {
         this.mainArtifact = mainArtifact;
         return this;
-    }
-
-    public MavenArtifact getPomArtifact() {
-        return pomArtifact;
     }
 
     public MavenModuleRecord setPomArtifact(MavenArtifact pomArtifact) {
@@ -49,12 +36,9 @@ public class MavenModuleRecord extends BaseModel {
         return this;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
     public MavenModuleRecord setUrl(String url) {
         this.url = url;
         return this;
     }
+
 }

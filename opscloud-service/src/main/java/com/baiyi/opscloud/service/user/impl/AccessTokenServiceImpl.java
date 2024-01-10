@@ -62,4 +62,5 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     public int checkUserHasResourceAuthorize(String accessToken, String resourceName) {
         return accessTokenMapper.checkUserHasResourceAuthorize(accessToken, resourceName);
     }
+
 }

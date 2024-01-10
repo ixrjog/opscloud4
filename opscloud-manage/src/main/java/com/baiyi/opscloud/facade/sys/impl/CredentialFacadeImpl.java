@@ -45,15 +45,13 @@ public class CredentialFacadeImpl implements CredentialFacade {
     }
 
     @Override
-    public void addCredential(CredentialVO.Credential credential) {
-        com.baiyi.opscloud.domain.generator.opscloud.Credential pre = credentialConverter.toDO(credential);
-        credentialService.add(pre);
+    public void addCredential(CredentialParam.Credential credential) {
+        credentialService.add(credentialConverter.to(credential));
     }
 
     @Override
-    public void updateCredential(CredentialVO.Credential credential) {
-        com.baiyi.opscloud.domain.generator.opscloud.Credential pre = credentialConverter.toDO(credential);
-        credentialService.updateBySelective(pre);
+    public void updateCredential(CredentialParam.Credential credential) {
+        credentialService.updateBySelective(credentialConverter.to(credential));
     }
 
     @Override

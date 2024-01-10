@@ -8,8 +8,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import static com.baiyi.opscloud.common.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
-
 /**
  * @Author baiyi
  * @Date 2021/8/17 4:29 下午
@@ -21,7 +19,7 @@ public class EventListener<T> implements ApplicationListener<NoticeEvent<T>> {
 
     @SuppressWarnings("unchecked")
     @Override
-    @Async(value = CORE)
+    @Async
     public void onApplicationEvent(NoticeEvent<T> noticeEvent) {
         log.debug("监听事件: eventType={}, action={}", noticeEvent.getMessage().getEventType(), noticeEvent.getMessage().getAction());
         IEventConsumer<T> consumer = EventConsumerFactory.getConsumer(noticeEvent.getMessage().getEventType());

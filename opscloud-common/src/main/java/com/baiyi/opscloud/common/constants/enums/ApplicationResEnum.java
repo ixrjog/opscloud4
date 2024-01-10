@@ -7,6 +7,7 @@ import lombok.Getter;
  * @Date 2021/5/6 1:22 下午
  * @Version 1.0
  */
+@Getter
 public enum ApplicationResEnum {
 
     /**
@@ -16,7 +17,6 @@ public enum ApplicationResEnum {
     GITLAB_PROJECT("GITLAB_PROJECT"),
     GITLAB_GROUP("GITLAB_GROUP");
 
-    @Getter
     private final String type;
 
     ApplicationResEnum(String type) {

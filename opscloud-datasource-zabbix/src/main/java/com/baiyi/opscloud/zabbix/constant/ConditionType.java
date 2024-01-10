@@ -7,6 +7,7 @@ import lombok.Getter;
  * @Date 2021/2/1 11:22 上午
  * @Version 1.0
  */
+@Getter
 public enum ConditionType {
     /**
      * Type of condition.
@@ -54,7 +55,6 @@ public enum ConditionType {
     // event tag value
     EVENT_TAG_VALUE(26);
 
-    @Getter
     private final int type;
 
     ConditionType(int type) {

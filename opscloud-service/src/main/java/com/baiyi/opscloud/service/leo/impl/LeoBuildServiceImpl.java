@@ -72,7 +72,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
 
     @Override
     public DataTable<LeoBuild> queryBuildPage(SubscribeLeoBuildRequestParam pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(LeoBuild.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andIn("jobId", pageQuery.getJobIds());
@@ -83,7 +83,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
 
     @Override
     public DataTable<LeoBuild> queryBuildPage(LeoJobParam.JobBuildPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
 //        Example example = new Example(LeoBuild.class);
 //        Example.Criteria criteria = example.createCriteria();
 //        if (IdUtil.isNotEmpty(pageQuery.getJobId())) {
@@ -114,7 +114,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
 
     @Override
     public List<LeoBuild> queryBuildVersion(LeoDeployParam.QueryDeployVersion queryBuildVersion) {
-        Page page = PageHelper.startPage(1, 10);
+        Page<?> page = PageHelper.startPage(1, 10);
         Example example = new Example(LeoBuild.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("jobId", queryBuildVersion.getJobId())
@@ -146,7 +146,7 @@ public class LeoBuildServiceImpl implements LeoBuildService {
 
     @Override
     public List<LeoBuild> queryLatestBuildWithJobId(Integer jobId, int size) {
-        Page page = PageHelper.startPage(1, size);
+        Page<?> page = PageHelper.startPage(1, size);
         Example example = new Example(LeoBuild.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("jobId", jobId);

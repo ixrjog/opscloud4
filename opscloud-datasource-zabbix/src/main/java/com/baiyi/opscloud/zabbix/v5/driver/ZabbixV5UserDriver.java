@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.v5.driver;
 
-import com.baiyi.opscloud.common.config.CachingConfiguration;
+import com.baiyi.opscloud.common.configuration.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.v5.driver.base.AbstractZabbixV5UserDriver;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixMedia;
@@ -29,12 +29,12 @@ import java.util.UUID;
 @Component
 public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_user_name_' + #username")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':USER:NAME:' + #username")
     public void evictByUsername(ZabbixConfig.Zabbix config, String username) {
         log.info("Evict cache Zabbix User: alias={}", username);
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_user_name_' + #username", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':USER:NAME:' + #username", unless = "#result == null")
     public ZabbixUser.User getByUsername(ZabbixConfig.Zabbix config, String username) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 // 在medias 属性返回用户使用的媒体。
@@ -47,7 +47,7 @@ public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
     public List<ZabbixUser.User> list(ZabbixConfig.Zabbix config) {
@@ -128,12 +128,12 @@ public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
         }
     }
 
-    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_user_userid_' + #userid")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':USERID:' + #userid")
     public void evictById(ZabbixConfig.Zabbix config, String userid) {
         log.info("Evict cache Zabbix User: userid={}", userid);
     }
 
-    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "#config.url + '_v5_user_userid_' + #userid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.CACHE_FOR_1D, key = "'V0:ZABBIX:5:URL:' + #config.url + ':USERID:' + #userid", unless = "#result == null")
     public ZabbixUser.User getById(ZabbixConfig.Zabbix config, String userid) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("selectMedias", "extend")
@@ -143,7 +143,7 @@ public class ZabbixV5UserDriver extends AbstractZabbixV5UserDriver {
         if (CollectionUtils.isEmpty(response.getResult())) {
             return null;
         }
-        return response.getResult().get(0);
+        return response.getResult().getFirst();
     }
 
 }

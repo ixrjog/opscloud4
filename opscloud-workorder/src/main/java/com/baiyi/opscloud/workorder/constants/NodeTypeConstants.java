@@ -7,6 +7,7 @@ import lombok.Getter;
  * @Date 2021/10/21 2:36 下午
  * @Version 1.0
  */
+@Getter
 public enum NodeTypeConstants {
 
     /**
@@ -20,7 +21,6 @@ public enum NodeTypeConstants {
         this.code = code;
     }
 
-    @Getter
     private final int code;
 
 }

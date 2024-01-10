@@ -22,4 +22,5 @@ public interface ZabbixProxyFeign {
     @RequestLine(REQUEST_API)
     @Headers({CONTENT_TYPE})
     ZabbixProxy.UpdateProxyResponse update(ZabbixRequest.DefaultRequest request);
+
 }

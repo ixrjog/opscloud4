@@ -2,7 +2,6 @@ package com.baiyi.opscloud.domain.vo.server;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -32,7 +31,6 @@ public class ServerGroupTypeVO {
         private static final long serialVersionUID = -6926530768540517199L;
         private Integer id;
 
-        @NotNull(message = "组类型名称不能为空")
         private String name;
 
         private String color;

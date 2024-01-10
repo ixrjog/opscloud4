@@ -21,12 +21,17 @@ package org.apache.guacamole;
 
 import org.apache.guacamole.protocol.GuacamoleStatus;
 
+import java.io.Serial;
+
 
 /**
  * An exception which indicates than an upstream server (such as the remote
  * desktop) is taking too long to respond.
  */
 public class GuacamoleUpstreamTimeoutException extends GuacamoleUpstreamException {
+
+    @Serial
+    private static final long serialVersionUID = 1057341909607292525L;
 
     /**
      * Creates a new GuacamoleUpstreamException with the given message and

@@ -2,7 +2,6 @@ package com.baiyi.opscloud.domain.vo.datasource.aliyun;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -25,16 +24,12 @@ public class AliyunLogVO {
 
         private Integer id;
 
-        @NotNull
         private Integer datasourceInstanceId;
 
-        @NotNull
         private String project;
 
-        @NotNull
         private String logstore;
 
-        @NotNull
         private String config;
 
         private String comment;

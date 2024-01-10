@@ -6,14 +6,13 @@
 
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public class QueueItemActions extends BaseModel {
     private List<CauseAction> causes;
-
-    public List<CauseAction> getCauses() {
-        return causes;
-    }
 
     public QueueItemActions setCauses(List<CauseAction> causes) {
         this.causes = causes;

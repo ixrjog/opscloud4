@@ -46,4 +46,5 @@ public class SonarProjectsDriver {
                 .build();
         return sonarAPI.searchProjects(token.toBasic(), buildSearchProjectsParam(pagingParam));
     }
+
 }

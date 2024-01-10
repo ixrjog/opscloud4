@@ -45,11 +45,6 @@ public class AliyunDevopsSprintProvider extends BaseAssetProvider<ListSprintsRes
     }
 
     @Override
-    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        return true;
-    }
-
-    @Override
     protected List<ListSprintsResponseBody.Sprints> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunDevopsConfig.Devops devops = buildConfig(dsInstanceContext.getDsConfig());
         List<ListSprintsResponseBody.Sprints> entities = Lists.newArrayList();

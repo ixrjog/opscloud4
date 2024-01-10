@@ -1,9 +1,10 @@
 package com.baiyi.opscloud.util;
 
+import com.baiyi.opscloud.common.constants.CacheKeyConstants;
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.domain.generator.opscloud.Instance;
 import com.baiyi.opscloud.domain.vo.sys.InstanceVO;
 import com.baiyi.opscloud.domain.vo.sys.SystemVO;
-import com.google.common.base.Joiner;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.GlobalMemory;
@@ -31,7 +32,7 @@ public class SystemInfoUtil {
     }
 
     public static String toKey(String instanceIp) {
-        return Joiner.on("_").join("system_info_instance_ip", instanceIp);
+        return StringFormatter.format(CacheKeyConstants.SYSTEM_INFO_INSTANCE_IP, instanceIp);
     }
 
     public static SystemVO.Info buildInfo() {

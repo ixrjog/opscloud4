@@ -1,16 +1,17 @@
 package com.baiyi.opscloud.leo.domain.model;
 
+import com.baiyi.opscloud.common.base.IToURL;
 import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoTemplate;
+import com.google.common.base.Joiner;
 import com.google.gson.JsonSyntaxException;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -52,11 +53,12 @@ public class LeoTemplateModel {
         private Template template;
     }
 
+    @EqualsAndHashCode(callSuper = true)
     @Builder
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class Template {
+    public static class Template extends IToURL {
         private Jenkins jenkins;
         private String name;
         @Schema(description = "任务目录")
@@ -69,6 +71,17 @@ public class LeoTemplateModel {
         private String comment;
         private List<String> tags;
         private List<LeoBaseModel.Parameter> parameters;
+
+        public String toFolderURL() throws MalformedURLException {
+            URL url = toURL();
+            return Joiner.on("").skipNulls().join(url.getProtocol(), "://", url.getHost(), url.getPort() == -1 ? null : ":" + url.getPort(), "/job/", folder, "/");
+        }
+
+        @Override
+        protected String acqURL() {
+            return this.url;
+        }
+
     }
 
     @Data

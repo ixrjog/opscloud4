@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.common.datasource;
 
+import com.baiyi.opscloud.common.builder.SimpleDictBuilder;
 import com.baiyi.opscloud.common.datasource.base.BaseDsConfig;
-import com.google.common.collect.Maps;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,10 +32,10 @@ public class NacosConfig extends BaseDsConfig {
         private List<String> roles;
 
         public Map<String, String> getLoginParam() {
-            Map<String, String> loginParam = Maps.newHashMap();
-            loginParam.put("username", this.account.getUsername());
-            loginParam.put("password", this.account.getPassword());
-            return loginParam;
+            return SimpleDictBuilder.newBuilder()
+                    .put("username", this.account.getUsername())
+                    .put("password", this.account.getPassword())
+                    .build().getDict();
         }
 
     }

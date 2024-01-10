@@ -155,7 +155,7 @@ public class IOUtil {
             String tmp;
             while ((tmp = bufferedReader.readLine()) != null) {
                 buffer.append(tmp);
-                buffer.append(System.getProperty("line.separator"));
+                buffer.append(System.lineSeparator());
             }
             return buffer.toString();
         } catch (Exception e) {

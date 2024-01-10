@@ -19,6 +19,7 @@
 
 package org.apache.guacamole.servlet;
 
+import lombok.Getter;
 import org.apache.guacamole.net.DelegatingGuacamoleTunnel;
 import org.apache.guacamole.net.GuacamoleTunnel;
 
@@ -32,10 +33,19 @@ import org.apache.guacamole.net.GuacamoleTunnel;
  * multiple requests, tracking of activity on the tunnel must be performed
  * independently of the HTTP requests.
  */
+@Getter
 class GuacamoleHTTPTunnel extends DelegatingGuacamoleTunnel {
 
     /**
      * The last time this tunnel was accessed.
+     * -- GETTER --
+     *  Returns the time this tunnel was last accessed, as the number of
+     *  milliseconds since midnight January 1, 1970 GMT. Tunnel access must
+     *  be explicitly marked through calls to the access() function.
+     *
+     * @return
+     *     The time this tunnel was last accessed.
+
      */
     private long lastAccessedTime;
 
@@ -56,18 +66,6 @@ class GuacamoleHTTPTunnel extends DelegatingGuacamoleTunnel {
      */
     public void access() {
         lastAccessedTime = System.currentTimeMillis();
-    }
-
-    /**
-     * Returns the time this tunnel was last accessed, as the number of
-     * milliseconds since midnight January 1, 1970 GMT. Tunnel access must
-     * be explicitly marked through calls to the access() function.
-     *
-     * @return
-     *     The time this tunnel was last accessed.
-     */
-    public long getLastAccessedTime() {
-        return lastAccessedTime;
     }
 
 }

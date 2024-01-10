@@ -13,7 +13,6 @@ import java.util.Set;
  */
 public class BusinessTagVO {
 
-
     @Data
     @Builder
     @Schema

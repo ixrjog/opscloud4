@@ -83,7 +83,7 @@ public class UserGroupServiceImpl extends AbstractBusinessService<UserGroup> imp
 
     @Override
     public DataTable<UserGroup> queryPageByParam(UserGroupParam.UserGroupPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(UserGroup.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
@@ -98,7 +98,7 @@ public class UserGroupServiceImpl extends AbstractBusinessService<UserGroup> imp
 
     @Override
     public DataTable<UserGroup> queryPageByParam(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Page<?> page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<UserGroup> data = userGroupMapper.queryUserPermissionGroupByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }

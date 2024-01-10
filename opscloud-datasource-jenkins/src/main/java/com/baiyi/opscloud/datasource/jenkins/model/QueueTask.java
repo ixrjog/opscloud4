@@ -6,6 +6,9 @@
 
 package com.baiyi.opscloud.datasource.jenkins.model;
 
+import lombok.Getter;
+
+@Getter
 public class QueueTask extends BaseModel {
 
     private String name;
@@ -13,18 +16,6 @@ public class QueueTask extends BaseModel {
     private String url;
 
     private String color;
-
-    public String getName() {
-        return name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getColor() {
-        return color;
-    }
 
     @Override
     public int hashCode() {
@@ -56,11 +47,8 @@ public class QueueTask extends BaseModel {
         } else if (!name.equals(other.name))
             return false;
         if (url == null) {
-            if (other.url != null)
-                return false;
-        } else if (!url.equals(other.url))
-            return false;
-        return true;
+            return other.url == null;
+        } else return url.equals(other.url);
     }
 
 }

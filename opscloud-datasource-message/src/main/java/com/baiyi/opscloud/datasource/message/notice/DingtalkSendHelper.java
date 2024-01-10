@@ -40,7 +40,7 @@ public class DingtalkSendHelper {
         Gson gson = new GsonBuilder().create();
         DingtalkMsg.Msg msg = gson.fromJson(message, DingtalkMsg.Msg.class);
         Object result = feign.send(config.getNotice().getToken(), msg);
-        log.info(JSONUtil.writeValueAsString(result));
+        log.debug(JSONUtil.writeValueAsString(result));
     }
 
     public void send(String token, String message) {
@@ -48,7 +48,7 @@ public class DingtalkSendHelper {
         Gson gson = new GsonBuilder().create();
         DingtalkMsg.Msg msg = gson.fromJson(message, DingtalkMsg.Msg.class);
         Object result = feign.send(token, msg);
-        log.info(JSONUtil.writeValueAsString(result));
+        log.debug(JSONUtil.writeValueAsString(result));
     }
 
 }

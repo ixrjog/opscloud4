@@ -25,4 +25,5 @@ class AllBuilds extends BaseModel {
     public List<Build> getAllBuilds() {
         return this.allBuilds;
     }
+
 }

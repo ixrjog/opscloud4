@@ -19,7 +19,7 @@ import jakarta.annotation.Resource;
 public abstract class AbstractZabbixV5UserGroupDriver {
 
     @Resource
-    protected SimpleZabbixAuth simpleZabbixAuth;
+    protected SimpleZabbixAuthHolder zabbixAuthHolder;
 
     private interface UserGroupAPIMethod {
         String GET = "usergroup.get";
@@ -37,14 +37,14 @@ public abstract class AbstractZabbixV5UserGroupDriver {
     protected ZabbixUserGroup.QueryUserGroupResponse queryHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixUserGroupFeign zabbixAPI = buildFeign(config);
         request.setMethod(UserGroupAPIMethod.GET);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(zabbixAuthHolder.generateAuth(config));
         return zabbixAPI.query(request);
     }
 
     protected ZabbixUserGroup.CreateUserGroupResponse createHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DefaultRequest request) {
         ZabbixUserGroupFeign zabbixAPI = buildFeign(config);
         request.setMethod(UserGroupAPIMethod.CREATE);
-        request.setAuth(simpleZabbixAuth.getAuth(config));
+        request.setAuth(zabbixAuthHolder.generateAuth(config));
         return zabbixAPI.create(request);
     }
 

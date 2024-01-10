@@ -37,8 +37,8 @@ public class LeoRuleWithWeeklyExpression extends BaseLeoRuleExpression {
         final int nowDayOfWeek = calendarValueGet(Calendar.DAY_OF_WEEK) - 1;
         List<String> beginArgs = getExpressionArgs(expression.getBegin());
         List<String> endArgs = getExpressionArgs(expression.getEnd());
-        int beginDayOfWeek = Integer.parseInt(beginArgs.get(0));
-        int endDayOfWeek = Integer.parseInt(endArgs.get(0));
+        int beginDayOfWeek = Integer.parseInt(beginArgs.getFirst());
+        int endDayOfWeek = Integer.parseInt(endArgs.getFirst());
 
         // 命中开始时间
         boolean hitBegin = false;

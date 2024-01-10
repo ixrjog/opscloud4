@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.user;
 
-import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
+import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 
 /**
  * @Author baiyi
@@ -11,13 +11,14 @@ public interface UserPermissionFacade {
 
     void revokeByUserId(int userId);
 
-    void revokeUserBusinessPermission(UserPermissionVO.UserBusinessPermission userBusinessPermission);
+    void revokeUserBusinessPermission(UserBusinessPermissionParam.UserBusinessPermission userBusinessPermission);
 
-    void grantUserBusinessPermission(UserPermissionVO.UserBusinessPermission userBusinessPermission);
+    void grantUserBusinessPermission(UserBusinessPermissionParam.UserBusinessPermission userBusinessPermission);
 
     void setUserBusinessPermission(int id);
 
     int getUserAccessLevel(String username);
 
     void revokeUserPermissionByBusiness(int businessType, int businessId);
+
 }

@@ -18,4 +18,3 @@ public class NexusEntryQuery extends BaseUserGroupExtendedTicketEntryQuery {
     }
 
 }
-
