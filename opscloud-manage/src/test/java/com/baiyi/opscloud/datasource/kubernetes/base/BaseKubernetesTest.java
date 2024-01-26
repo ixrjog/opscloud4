@@ -22,12 +22,6 @@ public class BaseKubernetesTest extends BaseUnit {
         int EKS_PRE = 41;
         int EKS_PROD = 30;
 
-        int ACK_DEV = 6;
-        int ACK_DAILY = 10;
-        int ACK_GRAY = 13;
-        int ACK_PRE = 13;
-        int ACK_PROD = 14;
-
         int ACK_FRANKFURT_DEV = 39;
         int ACK_FRANKFURT_DAILY = 40;
         int ACK_FRANKFURT_SIT = 86;

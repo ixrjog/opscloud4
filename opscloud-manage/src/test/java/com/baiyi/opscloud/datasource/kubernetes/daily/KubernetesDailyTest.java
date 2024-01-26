@@ -117,13 +117,14 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
     @Test
     void updateConsulPreStop() {
         final String containerName = "consul-agent";
-        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_TEST);
-        Deployment demo = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), AWS_NAMESPACE, "taskmanage-consumer-aws");
+        final String nameSpace = NAMESPACE;
+        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.ACK_FRANKFURT_DAILY);
+        Deployment demo = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), NAMESPACE, "basic-data-daily");
         Container demoContainer =
                 demo.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith(containerName)).findFirst().get();
         LifecycleHandler preStop = demoContainer.getLifecycle().getPreStop();
 
-        List<Deployment> deploymentList = KubernetesDeploymentDriver.list(kubernetesConfig.getKubernetes(), AWS_NAMESPACE);
+        List<Deployment> deploymentList = KubernetesDeploymentDriver.list(kubernetesConfig.getKubernetes(), nameSpace);
 
         deploymentList.forEach(deployment -> {
             Optional<Container> optionalContainer =
@@ -132,7 +133,7 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
                 Container container = optionalContainer.get();
                 container.getLifecycle().setPreStop(preStop);
                 try {
-                    KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), AWS_NAMESPACE, deployment);
+                    KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), nameSpace, deployment);
                 } catch (Exception e) {
                     print(deployment.getMetadata().getName());
                 }

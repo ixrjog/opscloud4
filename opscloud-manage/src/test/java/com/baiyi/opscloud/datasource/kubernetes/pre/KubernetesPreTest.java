@@ -260,7 +260,7 @@ public class KubernetesPreTest extends BaseKubernetesTest {
 
     @Test
     void updateAckPreDept() {
-        KubernetesConfig grayConfig = getConfigById(KubernetesClusterConfigs.ACK_GRAY);
+        KubernetesConfig grayConfig = getConfigById(KubernetesClusterConfigs.ACK_FRANKFURT_SIT);
         Deployment srcDeployment = KubernetesDeploymentDriver.get(grayConfig.getKubernetes(), "gray", "mgw-core-aliyun-gray");
         ResourceRequirements resourceRequirements = srcDeployment.getSpec().getTemplate().getSpec().getContainers().getFirst().getResources();
 

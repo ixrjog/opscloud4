@@ -41,7 +41,7 @@ public class KubernetesPodTest extends BaseKubernetesTest {
     @Test
     void getLogTest3() {
         try {
-            KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.ACK_DEV);
+            KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.ACK_FRANKFURT_DEV);
 
             KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetesConfig.getKubernetes());
             kc.pods()
@@ -60,7 +60,7 @@ public class KubernetesPodTest extends BaseKubernetesTest {
     @Test
     void getLogTest4() {
         try {
-            KubernetesClient kubernetesClient = MyKubernetesClientBuilder.build(getConfigById(KubernetesClusterConfigs.ACK_DEV).getKubernetes());
+            KubernetesClient kubernetesClient = MyKubernetesClientBuilder.build(getConfigById(KubernetesClusterConfigs.ACK_FRANKFURT_DEV).getKubernetes());
 
             LogWatch logWatch = kubernetesClient.pods().inNamespace("dev").withName("merchant-rss-dev-645c8964db-l4vk7").inContainer("merchant-rss-dev").withPrettyOutput().watchLog(System.out);
             InputStream is = logWatch.getOutput();

@@ -64,7 +64,7 @@ public class AppCostTest extends BaseKubernetesTest {
 
     @Test
     void ackCostTest() {
-        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.ACK_PROD);
+        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.ACK_FRANKFURT_PROD);
         List<Application> applications = applicationService.queryAll();
         for (Application application : applications) {
             String appName = application.getName();

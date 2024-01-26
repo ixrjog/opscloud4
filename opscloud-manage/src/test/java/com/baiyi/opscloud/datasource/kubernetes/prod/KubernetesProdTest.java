@@ -27,7 +27,7 @@ public class KubernetesProdTest extends BaseKubernetesTest {
     private final static String NAMESPACE = "prod";
     private final static String ENV_NAME = "prod";
 
-    private final static List<String> apps = Lists.newArrayList("marketing-service-2");
+    private final static List<String> apps = Lists.newArrayList("c-bff-product-1", "finance-account-core-prod", "finance-bff-product", "finance-saving-product-prod", "loan-1", "loan-2", "loan-canary", "member-center-1", "okcard-risk-control-1", "okcard-risk-control-2", "okcard-risk-control-canary", "postpay-channel-1", "postpay-channel-2", "postpay-channel-canary", "postpay-marketing-1", "postpay-marketing-2", "postpay-marketing-canary", "sms-1", "sms-2", "trade-1", "trade-2", "trade-3", "trade-canary");
 
     @Test
     void changeName() {
@@ -211,7 +211,9 @@ public class KubernetesProdTest extends BaseKubernetesTest {
                 demoDeployment.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith("offline-pay-product")).findFirst().get();
         List<EnvVar> demoEnvVars = demoContainer.getEnv();
         EnvVar groupEnv = demoEnvVars.stream().filter(env -> env.getName().equals("GROUP")).findFirst().get();
-        String config = demoDeployment.getSpec().getTemplate().getMetadata().getAnnotations().get("proxy.istio.io/config");
+//        String config = demoDeployment.getSpec().getTemplate().getMetadata().getAnnotations().get("proxy.istio.io/config");
+        String config = "terminationDrainDuration: 40s";
+
 
         apps.forEach(name -> {
             Deployment deployment = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), NAMESPACE, name);
@@ -234,28 +236,28 @@ public class KubernetesProdTest extends BaseKubernetesTest {
                     deployment.getSpec().getTemplate().getMetadata().setAnnotations(annotations);
 
                     // env
-                    List<EnvVar> envVars = container.getEnv();
-                    // GROUP
-                    if (envVars.stream().noneMatch(env -> env.getName().equals("GROUP"))) {
-                        envVars.add(0, groupEnv);
-                    } else {
-                        EnvVar old = envVars.stream().filter(env -> env.getName().equals("GROUP")).findFirst().get();
-                        envVars.remove(old);
-                        envVars.add(0, groupEnv);
-                    }
-                    // SPRING_CUSTOM_OPTS
-                    Optional<EnvVar> agentEnv = envVars.stream().filter(env -> env.getName().equals("SPRING_CUSTOM_OPTS")).findFirst();
-                    agentEnv.ifPresent(envVar -> {
-                        if (Strings.isBlank(envVar.getValue())) {
-                            envVar.setValue("-Dapollo.label=$(GROUP)");
-                        } else if (envVar.getValue().equals("-Dspring.cloud.consul.discovery.hostname=$(HOSTIP) -Dspring.cloud.consul.host=$(HOSTIP)")) {
-                            envVar.setValue("-Dspring.cloud.consul.discovery.hostname=$(HOSTIP) -Dspring.cloud.consul.host=$(HOSTIP) -Dapollo.label=$(GROUP)");
-                        } else {
-                            if (!envVar.getValue().endsWith("-Dapollo.label=$(GROUP)")) {
-                                print(deployment.getMetadata().getName() + "SPRING_CUSTOM_OPTS: " + envVar.getValue());
-                            }
-                        }
-                    });
+//                    List<EnvVar> envVars = container.getEnv();
+//                    // GROUP
+//                    if (envVars.stream().noneMatch(env -> env.getName().equals("GROUP"))) {
+//                        envVars.add(0, groupEnv);
+//                    } else {
+//                        EnvVar old = envVars.stream().filter(env -> env.getName().equals("GROUP")).findFirst().get();
+//                        envVars.remove(old);
+//                        envVars.add(0, groupEnv);
+//                    }
+//                    // SPRING_CUSTOM_OPTS
+//                    Optional<EnvVar> agentEnv = envVars.stream().filter(env -> env.getName().equals("SPRING_CUSTOM_OPTS")).findFirst();
+//                    agentEnv.ifPresent(envVar -> {
+//                        if (Strings.isBlank(envVar.getValue())) {
+//                            envVar.setValue("-Dapollo.label=$(GROUP)");
+//                        } else if (envVar.getValue().equals("-Dspring.cloud.consul.discovery.hostname=$(HOSTIP) -Dspring.cloud.consul.host=$(HOSTIP)")) {
+//                            envVar.setValue("-Dspring.cloud.consul.discovery.hostname=$(HOSTIP) -Dspring.cloud.consul.host=$(HOSTIP) -Dapollo.label=$(GROUP)");
+//                        } else {
+//                            if (!envVar.getValue().endsWith("-Dapollo.label=$(GROUP)")) {
+//                                print(deployment.getMetadata().getName() + "SPRING_CUSTOM_OPTS: " + envVar.getValue());
+//                            }
+//                        }
+//                    });
                     try {
                         KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), NAMESPACE, deployment);
                     } catch (Exception e) {
@@ -322,4 +324,21 @@ public class KubernetesProdTest extends BaseKubernetesTest {
 //            }
 //        });
     }
+
+    @Test
+    void printIstioProxyConfig() {
+        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.ACK_FRANKFURT_PROD);
+        List<Deployment> deploymentList = KubernetesDeploymentDriver.list(kubernetesConfig.getKubernetes(), NAMESPACE);
+        deploymentList.forEach(deployment -> {
+            Map<String, String> labels = deployment.getSpec().getTemplate().getMetadata().getLabels();
+
+            if ("true".equals(labels.get("sidecar.istio.io/inject"))) {
+                Map<String, String> annotations = deployment.getSpec().getTemplate().getMetadata().getAnnotations();
+                if (!annotations.containsKey("proxy.istio.io/config")) {
+                    print(deployment.getMetadata().getName());
+                }
+            }
+        });
+    }
+
 }
