@@ -33,4 +33,19 @@ public class KubernetesParam {
 
     }
 
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema
+    public static class UpdateResource implements BaseKubernetesParam.IStreamResource {
+
+        @NotNull(message = "数据源实例ID不能为空")
+        @Schema(description = "数据源实例ID")
+        private Integer instanceId;
+
+        private String resourceYaml;
+
+    }
+
 }

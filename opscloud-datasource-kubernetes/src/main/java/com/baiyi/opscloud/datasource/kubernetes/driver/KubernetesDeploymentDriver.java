@@ -161,6 +161,20 @@ public class KubernetesDeploymentDriver {
         }
     }
 
+    public static Deployment update(KubernetesConfig.Kubernetes kubernetes, String content) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
+            Deployment deployment = toDeployment(kc, content);
+            return kc.apps()
+                    .deployments()
+                    .inNamespace(deployment.getMetadata().getNamespace())
+                    .resource(deployment)
+                    .update();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
+    }
+
     public static Deployment update(KubernetesConfig.Kubernetes kubernetes, Deployment deployment) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
             return kc.apps()

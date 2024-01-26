@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.hook.leo.LeoHook;
 import com.baiyi.opscloud.leo.constants.BuildDictConstants;
 import com.baiyi.opscloud.leo.constants.DeployDictConstants;
+import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.handler.deploy.BaseDeployChainHandler;
 import com.baiyi.opscloud.leo.handler.deploy.chain.post.event.AliyunEventBridgeDeployEventPublisher;
@@ -91,8 +92,15 @@ public class DeployFinalProcessingChainHandler extends BaseDeployChainHandler {
                     .pods(null)
                     .gmtModified(leoDeploy.getEndTime())
                     .imageTag(dict.getOrDefault(BuildDictConstants.IMAGE_TAG.getKey(), ""))
+                    .group(Optional.ofNullable(deployConfig)
+                            .map(LeoDeployModel.DeployConfig::getDeploy)
+                            .map(LeoDeployModel.Deploy::getKubernetes)
+                            .map(LeoBaseModel.Kubernetes::getDeployment)
+                            .map(LeoBaseModel.Deployment::getName)
+                            .orElse("")
+                    )
+                    .result(leoDeploy.getDeployResult())
                     .build();
-
             meterSphereDeployEventPublisher.publish(hook);
             aliyunEventBridgeDeployEventPublisher.publish(hook);
         } catch (Exception ignored) {

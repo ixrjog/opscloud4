@@ -105,6 +105,12 @@ public class KubernetesController {
         return new HttpResult<>(kubernetesFacade.getKubernetesDeployment(getResource));
     }
 
+    @Operation(summary = "更新Deployment")
+    @PutMapping(value = "/deployment/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Deployment> updateDeployment(@RequestBody @Valid KubernetesParam.UpdateResource updateResource) {
+        return new HttpResult<>(kubernetesFacade.updateKubernetesDeployment(updateResource));
+    }
+
     // Ingress
 
     @Operation(summary = "查询Ingress")

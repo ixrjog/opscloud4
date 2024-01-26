@@ -12,7 +12,7 @@ public class PageParam {
     private Integer page;
 
     @Max(value = 1024, message = "分页查询最大限制1024条记录")
-    @Schema(description = "分页页长",example = "10")
+    @Schema(description = "分页页长", example = "10")
     private Integer length;
 
 }

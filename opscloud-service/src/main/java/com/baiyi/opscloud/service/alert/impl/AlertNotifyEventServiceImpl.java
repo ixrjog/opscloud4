@@ -14,7 +14,6 @@ import java.util.List;
  * @Date 2022/9/14 10:33 AM
  * @Since 1.0
  */
-
 @Service
 @RequiredArgsConstructor
 public class AlertNotifyEventServiceImpl implements AlertNotifyEventService {

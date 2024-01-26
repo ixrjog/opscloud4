@@ -18,7 +18,7 @@ import javax.sql.DataSource;
  * @author baiyi
  */
 @Configuration
-@MapperScan(basePackages = {"com.baiyi.opscloud.mapper"},sqlSessionTemplateRef = "sqlSessionTemplate")
+@MapperScan(basePackages = {"com.baiyi.opscloud.mapper"}, sqlSessionTemplateRef = "sqlSessionTemplate")
 public class DatasourceConfiguration {
 
     @Bean

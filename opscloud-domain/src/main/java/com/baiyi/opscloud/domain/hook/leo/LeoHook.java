@@ -60,6 +60,10 @@ public class LeoHook {
         @Schema(description = "镜像标签")
         private String imageTag;
 
+        private String group;
+
+        private String result;
+
     }
 
     @Data
