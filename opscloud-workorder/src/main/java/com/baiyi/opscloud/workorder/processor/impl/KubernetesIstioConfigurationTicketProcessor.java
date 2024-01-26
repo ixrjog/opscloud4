@@ -13,6 +13,7 @@ import com.baiyi.opscloud.workorder.entry.KubernetesDeploymentIstioEntry;
 import com.baiyi.opscloud.workorder.exception.TicketProcessException;
 import com.baiyi.opscloud.workorder.exception.TicketVerifyException;
 import com.baiyi.opscloud.workorder.processor.impl.extended.AbstractDsAssetExtendedBaseTicketProcessor;
+import com.google.common.collect.Maps;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.PodTemplateSpec;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
@@ -91,6 +92,7 @@ public class KubernetesIstioConfigurationTicketProcessor extends AbstractDsAsset
         KubernetesConfig.Kubernetes config = getDsConfig(ticketEntry, KubernetesConfig.class).getKubernetes();
         try {
             Deployment deployment = KubernetesDeploymentDriver.get(config, entry.getNamespace(), entry.getDeploymentName());
+            // 设置labels
             Map<String, String> labels = Optional.ofNullable(deployment)
                     .map(Deployment::getSpec)
                     .map(DeploymentSpec::getTemplate)
@@ -99,6 +101,18 @@ public class KubernetesIstioConfigurationTicketProcessor extends AbstractDsAsset
                     .orElseThrow(() -> new TicketVerifyException("Not found: deployment->spec->template->metadata->labels"));
             final String istioInject = Boolean.toString(!BooleanUtils.toBoolean(entry.getIstioInject()));
             labels.put(SIDECAR_ISTIO_IO_INJECT, istioInject);
+            // 设置注解
+            Map<String, String> annotations = Optional.of(deployment)
+                    .map(Deployment::getSpec)
+                    .map(DeploymentSpec::getTemplate)
+                    .map(PodTemplateSpec::getMetadata)
+                    .map(ObjectMeta::getAnnotations)
+                    .orElse(Maps.newHashMap());
+            if (BooleanUtils.toBoolean(entry.getIstioInject())) {
+                annotations.put("proxy.istio.io/config", "terminationDrainDuration: 40s");
+            } else {
+                annotations.remove("proxy.istio.io/config");
+            }
             KubernetesDeploymentDriver.update(config, entry.getNamespace(), deployment);
             log.info("应用服务网格配置: instanceUuid={}, inject={}", ticketEntry.getInstanceUuid(), istioInject);
         } catch (KubernetesDeploymentException e) {

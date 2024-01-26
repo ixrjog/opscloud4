@@ -12,4 +12,6 @@ public interface KubernetesFacade {
 
     Deployment getKubernetesDeployment(KubernetesParam.GetResource getResource);
 
+    Deployment updateKubernetesDeployment(KubernetesParam.UpdateResource updateResource);
+
 }

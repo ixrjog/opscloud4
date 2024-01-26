@@ -16,16 +16,16 @@ public enum MessageState {
      * 消息状态
      */
     LOGIN("LOGIN", "会话初始建立"),
-    HEARTBEAT("HEARTBEAT","心跳，保持会话"),
+    HEARTBEAT("HEARTBEAT", "心跳，保持会话"),
     COMMAND("COMMAND", "交互命令"),
-    DUPLICATE_SESSION("DUPLICATE_SESSION","复制会话"),
-    DUPLICATE_SESSION_IP("DUPLICATE_SESSION_IP","复制会话"),
+    DUPLICATE_SESSION("DUPLICATE_SESSION", "复制会话"),
+    DUPLICATE_SESSION_IP("DUPLICATE_SESSION_IP", "复制会话"),
     RESIZE("RESIZE", "改变形体"),
     CLOSE("CLOSE", "关闭所有Term会话"),
     LOGOUT("LOGOUT", "关闭Term会话"),
-    BATCH_COMMAND("BATCH_COMMAND","批量命令"),
+    BATCH_COMMAND("BATCH_COMMAND", "批量命令"),
 
-    PLAY("PLAY","播放"),
+    PLAY("PLAY", "播放"),
     ;
     private final String state;
     private final String desc;

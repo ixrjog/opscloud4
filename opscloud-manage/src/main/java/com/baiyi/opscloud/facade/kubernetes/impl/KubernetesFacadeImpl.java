@@ -21,4 +21,10 @@ public class KubernetesFacadeImpl extends BaseKubernetesConfig implements Kubern
         return KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), getResource.getNamespace(), getResource.getName());
     }
 
+    @Override
+    public Deployment updateKubernetesDeployment(KubernetesParam.UpdateResource updateResource) {
+        KubernetesConfig kubernetesConfig = getKubernetesConfig(updateResource.getInstanceId());
+        return KubernetesDeploymentDriver.update(kubernetesConfig.getKubernetes(), updateResource.getResourceYaml());
+    }
+
 }

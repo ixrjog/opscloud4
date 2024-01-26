@@ -30,7 +30,7 @@ public class KubernetesIngressDriver {
                     .ingresses()
                     .inNamespace(namespace)
                     .withName(name)
-                    .item();
+                    .get();
         } catch (Exception e) {
             log.warn(e.getMessage());
             throw e;

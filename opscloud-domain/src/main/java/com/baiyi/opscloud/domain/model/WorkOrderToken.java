@@ -36,6 +36,9 @@ public class WorkOrderToken {
         @Schema(description = "applicationId")
         private Integer key;
 
+        @Builder.Default
+        private Boolean faultEmergency = false;
+
     }
 
     @Data
@@ -51,6 +54,9 @@ public class WorkOrderToken {
         private Integer key;
 
         private Integer applicationId;
+
+        @Builder.Default
+        private Boolean faultEmergency = false;
 
     }
 
