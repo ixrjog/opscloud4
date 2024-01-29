@@ -29,7 +29,7 @@ public class KubernetesVerificationGroupTest extends BaseKubernetesTest {
 
     @Test
     void changeName() {
-        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.ACK_DAILY );
+        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.ACK_FRANKFURT_DAILY);
         List<Deployment> deploymentList = KubernetesDeploymentDriver.list(kubernetesConfig.getKubernetes(), NAMESPACE);
 
         deploymentList.forEach(deployment -> {
