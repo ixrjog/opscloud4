@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,31 +43,37 @@ public class WorkOrderWorkflowPacker {
             return;
         }
         WorkflowVO.Workflow workflowVO = WorkflowUtil.load(workOrder.getWorkflow());
-        List<WorkflowVO.NodeView> nodes = workflowVO.getNodes().stream().map(e -> {
-            WorkflowVO.NodeView nodeView = BeanCopierUtil.copyProperties(e, WorkflowVO.NodeView.class);
-            try {
-                if (!CollectionUtils.isEmpty(nodeView.getTags())) {
-                    List<User> users = userService.queryByTagKeys(nodeView.getTags());
-                    nodeView.setAuditUsers(BeanCopierUtil.copyListProperties(users, UserVO.User.class).stream()
-                            .peek(u -> userAvatarPacker.wrap(u, SimpleExtend.EXTEND))
-                            .collect(Collectors.toList())
-                    );
-                }
-                // 设置用户选择审批人
-                if (NodeTypeConstants.USER_LIST.getCode() == nodeView.getType()) {
-                    WorkOrderTicketNode workOrderTicketNode = workOrderTicketNodeService.getByUniqueKey(ticketView.getTicketId(), nodeView.getName());
-                    if (!StringUtils.isEmpty(workOrderTicketNode.getUsername())) {
-                        nodeView.setAuditUser(nodeView.getAuditUsers()
-                                .stream()
-                                .filter(n -> n.getUsername().equals(workOrderTicketNode.getUsername()))
-                                .findFirst()
-                                .get());
+        List<WorkflowVO.NodeView> nodes;
+        if (CollectionUtils.isEmpty(workflowVO.getNodes())) {
+            nodes = Collections.emptyList();
+        } else {
+            nodes = workflowVO.getNodes().stream().map(e -> {
+                WorkflowVO.NodeView nodeView = BeanCopierUtil.copyProperties(e, WorkflowVO.NodeView.class);
+                try {
+                    if (!CollectionUtils.isEmpty(nodeView.getTags())) {
+                        List<User> users = userService.queryByTagKeys(nodeView.getTags());
+                        nodeView.setAuditUsers(BeanCopierUtil.copyListProperties(users, UserVO.User.class).stream()
+                                .peek(u -> userAvatarPacker.wrap(u, SimpleExtend.EXTEND))
+                                .collect(Collectors.toList())
+                        );
                     }
+                    // 设置用户选择审批人
+                    if (NodeTypeConstants.USER_LIST.getCode() == nodeView.getType()) {
+                        WorkOrderTicketNode workOrderTicketNode = workOrderTicketNodeService.getByUniqueKey(ticketView.getTicketId(), nodeView.getName());
+                        if (!StringUtils.isEmpty(workOrderTicketNode.getUsername())) {
+                            nodeView.setAuditUser(nodeView.getAuditUsers()
+                                    .stream()
+                                    .filter(n -> n.getUsername().equals(workOrderTicketNode.getUsername()))
+                                    .findFirst()
+                                    .get());
+                        }
+                    }
+                } catch (Exception ignore) {
                 }
-            } catch (Exception ignore) {
-            }
-            return nodeView;
-        }).collect(Collectors.toList());
+                return nodeView;
+            }).collect(Collectors.toList());
+
+        }
         WorkflowVO.WorkflowView workflowView = WorkflowVO.WorkflowView.builder()
                 .nodes(nodes)
                 .build();
