@@ -4,10 +4,7 @@ import com.baiyi.opscloud.common.datasource.ApolloConfig;
 import com.baiyi.opscloud.common.util.BeetlUtil;
 import com.baiyi.opscloud.common.util.NewTimeUtil;
 import com.baiyi.opscloud.common.util.StringFormatter;
-import com.baiyi.opscloud.domain.generator.opscloud.Application;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.domain.generator.opscloud.MessageTemplate;
-import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.apollo.ApolloParam;
 import com.baiyi.opscloud.leo.exception.LeoInterceptorException;
 import com.baiyi.opscloud.leo.handler.build.helper.ApplicationTagsHelper;
@@ -15,6 +12,8 @@ import com.baiyi.opscloud.leo.handler.build.helper.LeoRobotHelper;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.template.MessageTemplateService;
 import com.baiyi.opscloud.service.user.UserService;
+import com.baiyi.opscloud.service.workorder.WorkOrderService;
+import com.baiyi.opscloud.service.workorder.WorkOrderTicketService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
@@ -44,14 +43,24 @@ public class ApolloReleaseMessenger {
 
     private final LeoRobotHelper leoRobotHelper;
 
+    private final WorkOrderTicketService workOrderTicketService;
+
+    private final WorkOrderService workOrderService;
+
     public void notify(ApolloConfig apolloConfig, ApolloParam.ReleaseEvent releaseEvent, Integer ticketId, Application application) {
         if (!releaseEvent.getEnv().equalsIgnoreCase("PROD")) {
             return;
         }
         DatasourceInstance datasourceInstance = dsInstanceService.getByConfigId(apolloConfig.getConfigId());
         // 发送通知
+        String msgKey = "APOLLO_RELEASE";
+        if (ticketId != 0) {
+            WorkOrderTicket workOrderTicket = workOrderTicketService.getById(ticketId);
+            WorkOrder workOrder = workOrderService.getById(workOrderTicket.getWorkOrderId());
+            msgKey = workOrder.getWorkOrderKey();
+        }
         try {
-            MessageTemplate messageTemplate = msgTemplateService.getByUniqueKey("APOLLO_RELEASE", "DINGTALK_ROBOT", "markdown");
+            MessageTemplate messageTemplate = msgTemplateService.getByUniqueKey(msgKey, "DINGTALK_ROBOT", "markdown");
             Map<String, Object> contentMap = Maps.newHashMap();
             User user = userService.getByUsername(releaseEvent.getUsername());
             applicationTagsHelper.getTagsStr(application.getId());
