@@ -39,6 +39,8 @@ public interface LeoDeployFacade {
      */
     void doAutoDeploy(LeoDeployParam.DoAutoDeploy doDeploy);
 
+    void doForkDeploy(LeoDeployParam.DoForkDeploy doDeploy);
+
     List<ApplicationResourceVO.BaseResource> queryLeoBuildDeployment(LeoDeployParam.QueryDeployDeployment queryDeployDeployment);
 
     List<LeoBuildVO.Build> queryLeoDeployVersion(LeoDeployParam.QueryDeployVersion queryBuildVersion);

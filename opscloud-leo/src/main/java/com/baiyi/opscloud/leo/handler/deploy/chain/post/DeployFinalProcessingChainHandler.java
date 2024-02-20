@@ -10,6 +10,7 @@ import com.baiyi.opscloud.leo.domain.model.LeoDeployModel;
 import com.baiyi.opscloud.leo.handler.deploy.BaseDeployChainHandler;
 import com.baiyi.opscloud.leo.handler.deploy.chain.post.event.AliyunEventBridgeDeployEventPublisher;
 import com.baiyi.opscloud.leo.handler.deploy.chain.post.event.MeterSphereDeployEventPublisher;
+import com.baiyi.opscloud.leo.handler.deploy.chain.post.fork.ForkToStable;
 import com.baiyi.opscloud.leo.helper.LeoDeployPassCheck;
 import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.collect.Maps;
@@ -41,6 +42,9 @@ public class DeployFinalProcessingChainHandler extends BaseDeployChainHandler {
     @Resource
     private LeoDeployPassCheck leoDeployPassCheck;
 
+    @Resource
+    private ForkToStable forkToStable;
+
     /**
      * 部署结束通知
      *
@@ -55,6 +59,8 @@ public class DeployFinalProcessingChainHandler extends BaseDeployChainHandler {
         if (leoDeploy.getIsActive()) {
             leoDeployPassCheck.issuePass(leoDeploy.getBuildId());
         }
+        // Fork to stable
+        forkToStable.doFork(leoDeploy, deployConfig);
     }
 
     private void sendMeterSphereEvent(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
