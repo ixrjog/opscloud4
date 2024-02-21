@@ -67,4 +67,6 @@ public interface LeoDeployService {
 
     Integer countByEnvProjectId(Integer projectId, Integer envType);
 
+    LeoDeploy getLastDeployByAssetId(int assetId);
+
 }

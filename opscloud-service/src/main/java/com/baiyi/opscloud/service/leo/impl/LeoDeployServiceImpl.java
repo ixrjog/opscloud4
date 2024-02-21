@@ -187,4 +187,13 @@ public class LeoDeployServiceImpl implements LeoDeployService {
         return deployMapper.countByEnvProjectId(projectId, envType);
     }
 
+    @Override
+    public LeoDeploy getLastDeployByAssetId(int assetId) {
+        Example example = new Example(LeoDeploy.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("assetId", assetId);
+        example.setOrderByClause("id desc limit 1");
+        return deployMapper.selectOneByExample(example);
+    }
+
 }

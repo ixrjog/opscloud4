@@ -28,7 +28,7 @@ public class ForkDeployEventConsumer extends AbstractEventConsumer<LeoDeployPara
     @Override
     protected void onCreatedMessage(NoticeEvent<LeoDeployParam.DoForkDeploy> noticeEvent) {
         LeoDeployParam.DoForkDeploy doForkDeploy = toEventData(noticeEvent.getMessage());
-        log.info("Fork deploy : jobId={}, assetId={}, buildId={}", doForkDeploy.getJobId(), doForkDeploy.getAssetId(), doForkDeploy.getBuildId());
+        log.info("Fork deploy: jobId={}, assetId={}, buildId={}", doForkDeploy.getJobId(), doForkDeploy.getAssetId(), doForkDeploy.getBuildId());
         leoDeployFacade.doForkDeploy(doForkDeploy);
     }
 
