@@ -54,17 +54,17 @@ class IstioFacadeTest extends BaseUnit {
 apiVersion: "networking.istio.io/v1alpha3"
 kind: "DestinationRule"
 metadata:
-  name: "pay-route-daily"
-  namespace: "daily"
+  name: "qa-basic-service-test"
+  namespace: "test"
 spec:
-  host: "pay-route"
+  host: "qa-basic-service"
   subsets:
   - labels:
       xdc: "stable"
     name: "stable"
   - labels:
-      xdc: "dc198"
-    name: "dc198"
+      xdc: "dc186"
+    name: "dc186"
 """;
 
     @Test

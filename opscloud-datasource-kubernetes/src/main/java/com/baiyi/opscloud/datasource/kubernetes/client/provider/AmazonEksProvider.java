@@ -66,6 +66,16 @@ public class AmazonEksProvider {
         return new KubernetesClientBuilder().withConfig(config).build();
     }
 
+    public static io.fabric8.kubernetes.client.Config buildConfig(KubernetesConfig.Kubernetes kubernetes) throws URISyntaxException {
+        String token = amazonEksGenerator.generateEksToken(kubernetes.getAmazonEks());
+        return new ConfigBuilder()
+                .withMasterUrl(kubernetes.getAmazonEks().getUrl())
+                .withOauthToken(token)
+                .withTrustCerts(true)
+                .withWatchReconnectInterval(60000)
+                .build();
+    }
+
     /**
      * 注入配置
      *

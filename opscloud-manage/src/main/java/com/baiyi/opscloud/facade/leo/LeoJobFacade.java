@@ -50,6 +50,6 @@ public interface LeoJobFacade {
 
     void cloneJob(LeoJobParam.CloneJob cloneJob);
 
-    void cloneOneJob(LeoJobParam.CloneOneJob cloneOneJob);
+    LeoJob cloneOneJob(LeoJobParam.CloneOneJob cloneOneJob);
 
 }

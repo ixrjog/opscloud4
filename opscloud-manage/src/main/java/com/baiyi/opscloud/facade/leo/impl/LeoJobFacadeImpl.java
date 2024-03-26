@@ -351,7 +351,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
     }
 
     @Override
-    public void cloneOneJob(LeoJobParam.CloneOneJob cloneOneJob) {
+    public LeoJob cloneOneJob(LeoJobParam.CloneOneJob cloneOneJob) {
         LeoJob newLeoJob = jobService.getById(cloneOneJob.getJobId());
         newLeoJob.setId(null);
         Application application = applicationService.getById(newLeoJob.getApplicationId());
@@ -413,6 +413,7 @@ public class LeoJobFacadeImpl implements LeoJobFacade {
         jobService.add(newLeoJob);
         // 更新任务Tags
         updateTagsWithLeoJob(newLeoJob, jobConfig);
+        return newLeoJob;
     }
 
 }

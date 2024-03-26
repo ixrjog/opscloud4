@@ -282,6 +282,7 @@ public class LeoJobParam {
 
     }
 
+    @Builder
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

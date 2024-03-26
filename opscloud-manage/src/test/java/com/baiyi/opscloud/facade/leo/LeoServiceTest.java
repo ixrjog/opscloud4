@@ -1,62 +1,28 @@
 package com.baiyi.opscloud.facade.leo;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.domain.generator.opscloud.Application;
-import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
-import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
-import com.baiyi.opscloud.service.application.ApplicationService;
-import com.baiyi.opscloud.service.leo.LeoJobService;
+import com.baiyi.opscloud.common.util.StringFormatter;
+import com.baiyi.opscloud.domain.param.template.BusinessTemplateParam;
+import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
+import com.baiyi.opscloud.facade.template.TemplateFacade;
 import com.google.common.base.Splitter;
 import jakarta.annotation.Resource;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.util.CollectionUtils;
-
-import java.util.List;
 
 /**
  * @Author baiyi
- * @Date 2023/2/1 16:01
+ * @Date 2024/3/6 15:08
  * @Version 1.0
  */
-@Slf4j
-public class LeoJobTest extends BaseUnit {
+public class LeoServiceTest extends BaseUnit {
 
     @Resource
-    private LeoJobService leoJobService;
-
-    @Resource
-    private LeoJobFacade jobFacade;
-
-    @Resource
-    private ApplicationService applicationService;
-
-    @Test
-    public void test() {
-        List<LeoJob> leoJobs = leoJobService.queryAll();
-
-        leoJobs.forEach(job -> {
-            String destStr = job.getEnvType() == 4 ? "robot-leo-prod" : "robot-leo-non-prod";
-            String config = job.getJobConfig().replace("robot-leo-test", destStr);
-            LeoJob saveLeoJob = LeoJob.builder()
-                    .id(job.getId())
-                    .jobConfig(config)
-                    .build();
-            leoJobService.updateByPrimaryKeySelective(saveLeoJob);
-        });
-
-    }
-
-    /**
-     * @Operation(summary = "从任务复制任务")
-     * @PostMapping(value = "/job/one/clone", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-     * public HttpResult<Boolean> cloneOneJob(@RequestBody @Valid LeoJobParam.CloneOneJob cloneOneJob) {
-     * jobFacade.cloneOneJob(cloneOneJob);
-     * return HttpResult.SUCCESS;
-     * }
-     */
+    private TemplateFacade templateFacade;
 
     private static final String x = """
+            ng-nomi-channel
+            ng-onexbet-channel
+            ng-parimatch-channel
             ng-pos-access-channel
             ng-pos-polaris-channel
             ng-pos-upsl-channel
@@ -83,13 +49,11 @@ public class LeoJobTest extends BaseUnit {
             qa-basic-service-init
             taskmanage-consumer-aws
             trade-mng
-            tz-airtel-channel
             tz-creditinfo-channel
             tz-fasthub-channel
             tz-halotel-channel
             tz-pos-uba-itex-channel
             tz-selcom-channel
-            tz-selcom-electricity-channel
             tz-tigopesa-channel
             agent-bff-product
             airtime-product
@@ -99,7 +63,6 @@ public class LeoJobTest extends BaseUnit {
             channel-sms-center
             crm-customer-mng
             finance-switch-distribution
-            gh-appsmobile-channel
             gh-ecg-channel
             gh-ghipss-channel
             gh-gtb-channel
@@ -108,7 +71,6 @@ public class LeoJobTest extends BaseUnit {
             gh-uba-itex-channel
             ke-cellulantt-channel
             ke-creditinfo-channel
-            merchant-test
             ng-access-channel
             ng-accessbet-channel
             ng-aedc-channel
@@ -144,7 +106,6 @@ public class LeoJobTest extends BaseUnit {
             ng-irecharge-channel
             ng-issuer-isw-channel
             ng-jedc-channel
-            ng-kedco-channel
             ng-kuda-channel
             ng-kuda-inward-channel
             ng-mfs-channel
@@ -161,10 +122,11 @@ public class LeoJobTest extends BaseUnit {
             ng-nibss-channel
             ng-nibssqr-channel
             ng-ninemobile-channel
-            nibss
+            ng-axa-channel
+            ng-pos-gtb-channel
+            tz-mpesa-channel
+            ke-ipay-channel
             out-transfer
-            pay-route
-            pay-route-dc252
             paystack
             posp-channel
             posp-channel-companion
@@ -184,7 +146,6 @@ public class LeoJobTest extends BaseUnit {
             tecno-marketing
             tecno-member
             tecno-message
-            tecno-order
             tecno-push
             tecno-query
             tecno-sms
@@ -206,79 +167,45 @@ public class LeoJobTest extends BaseUnit {
             m-front
             m-workflow
             ng-channel
-            ng-axa-channel
-            ng-pos-gtb-channel
-            tz-mpesa-channel
-            ke-ipay-channel
+            """;
+
+    private static final String VARS_TPL = """
+            vars:
+              appName: {}
             """;
 
     @Test
-    void spTest(){
-        Iterable<String>  xxxx=  Splitter.on("\n").split(x);
-        //System.out.println(xxxx);
-
-        xxxx.forEach(x->{ cloneJobTest(x);
+    void startTest() {
+        Iterable<String> xxxx = Splitter.on("\n").split(x);
+        xxxx.forEach(a -> {
+            test(a);
         });
-
     }
 
+    void test(String appName) {
 
-    void cloneJobTest(String appName) {
-       // String appName = "ng-parimatch-channel";
+        // aliyun ack dev
+        String uuid = "ed919d9364fb47089a297f5ccf670c2c";
 
-        Application application = applicationService.getByName(appName);
-        if (application == null) {
-            log.warn("appName: {} 不存在！", appName);
-            return;
-        }
-        // dev envType = 1
-        List<LeoJob> jobs = leoJobService.queryJobWithSubscribe(application.getId(), 1, "kubernetes-image");
-        if (CollectionUtils.isEmpty(jobs)) {
-            log.warn("appName: {} 任务为空！", appName);
-            return;
-        }
-
-        if (jobs.size() > 1) {
-            log.warn("appName: {} 任务数 > 1 .", appName);
-            return;
-        }
-
-        String jC = """
-                job:
-                  cr:
-                    cloud:
-                      name: 阿里云-PalmPay主账户
-                      uuid: 75cde081a08646e6b8568b3d34f203a3
-                    instance:
-                      id: cri-koab4h4dfgxosahl
-                      name: acr-frankfurt
-                      regionId: eu-central-1
-                      url: acr-frankfurt.chuanyinet.com
-                    type: ACR
-                  parameters:
-                  - description: null
-                    name: registryUrl
-                    value: acr-frankfurt.chuanyinet.com
-                  tags:
-                  - '@Frankfurt'
-                """;
-
-
-        LeoJobParam.CloneOneJob cloneOneJob = LeoJobParam.CloneOneJob.builder()
-                .jobId(jobs.getFirst().getId())
-                .jobName("${applicationName}-frankfurt-${env}")
-                .jobConfig(jC)
-                .cloneTag(true)
+        String vars = StringFormatter.format(VARS_TPL, appName);
+        BusinessTemplateParam.BusinessTemplate businessTemplate = BusinessTemplateParam.BusinessTemplate.builder()
+                .businessId(0)
+                .businessType(5)
+                .envType(1)
+                .instanceUuid(uuid)
+                // 2代
+                .templateId(86)
+                .vars(vars)
                 .build();
+        System.out.println(appName);
         try {
-           LeoJob leoJob = jobFacade.cloneOneJob(cloneOneJob);
-
-           leoJob.setTemplateId(9);
-           leoJobService.update(leoJob);
-
+            BusinessTemplateVO.BusinessTemplate bizTemplate = templateFacade.addBusinessTemplate(businessTemplate);
+            templateFacade.createAssetByBusinessTemplate(bizTemplate.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
 }
+

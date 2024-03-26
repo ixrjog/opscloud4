@@ -123,9 +123,13 @@ public class ForkToStable {
             throw new LeoDeployException("There is no associated deployment for the job.");
         } else {
             return resources.stream().filter(e ->
-                    e.getName().endsWith("-daily") || e.getName().contains(":test:") || e.getName().contains(":daily:")
+                    (e.getName().contains(":test:") || e.getName().contains(":daily:")) && (e.getName().endsWith("-daily") || matchesDC(e.getName()))
             ).toList();
         }
+    }
+
+    private boolean matchesDC(String name) {
+        return name.matches(".*-dc\\d+");
     }
 
     private LeoJob getStableJob(LeoJobModel.Fork fork, LeoJob leoJob) {
@@ -134,7 +138,7 @@ public class ForkToStable {
                 .map(LeoJobModel.Stable::getJob)
                 .orElse(null);
         // 2 = daily
-        List<LeoJob> leoJobs = leoJobService.queryJob(leoJob.getApplicationId(), 2);
+        List<LeoJob> leoJobs = leoJobService.queryJob(leoJob.getApplicationId(), 2).stream().filter(LeoJob::getIsActive).toList();
         if (StringUtils.hasText(jobName)) {
             return leoJobs.stream().filter(e -> jobName.equalsIgnoreCase(e.getName())).findFirst().orElseThrow(() -> new LeoDeployException("Fork configuration error, {} does not exist.", jobName));
         }

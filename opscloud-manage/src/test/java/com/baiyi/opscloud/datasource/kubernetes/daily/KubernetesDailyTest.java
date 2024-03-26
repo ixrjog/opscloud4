@@ -29,6 +29,29 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
     private final static String AWS_NAMESPACE = "test";
 
     @Test
+    void test() {
+        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.ACK_FRANKFURT_DAILY);
+        List<Deployment> deploymentList = KubernetesDeploymentDriver.list(kubernetesConfig.getKubernetes(), NAMESPACE);
+        for (Deployment deployment : deploymentList) {
+            String deploymentName = deployment.getMetadata().getName();
+            Integer replicas = deployment.getSpec().getReplicas();
+            if (replicas == 0) {
+                log.error("deploymentName: {}, replicas: 0", deploymentName);
+            } else {
+                Optional<Container> optionalContainer =
+                        deployment.getSpec().getTemplate().getSpec().getContainers().stream().filter(
+                                e -> deploymentName.startsWith(e.getName()
+                                )).findFirst();
+                if (optionalContainer.isPresent()) {
+                    log.info("deploymentName: {}, appName: {}, replicas: {}", deploymentName, optionalContainer.get().getName(), replicas);
+                } else {
+                    log.error("deploymentName: {}, appName: {}, replicas: {}", deploymentName, "Null", replicas);
+                }
+            }
+        }
+    }
+
+    @Test
     void updateArmsAckOne() {
         KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_TEST);
         List<Deployment> deploymentList = KubernetesDeploymentDriver.list(kubernetesConfig.getKubernetes(), AWS_NAMESPACE);
@@ -171,8 +194,6 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
             }
         });
     }
-
-
 
 
 }
