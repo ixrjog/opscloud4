@@ -76,6 +76,7 @@ public class PodAssetConverter {
                 .paramProperty("containersReady", podStatusMap.get("ContainersReady"))
                 .paramProperty("initialized", podStatusMap.get("Initialized"))
                 .paramProperty("ready", podStatusMap.get("Ready"))
+                .paramProperty("disruptionTarget", podStatusMap.get("DisruptionTarget"))
                 .paramProperty("status", statusOptional.isEmpty())
                 .paramProperty("reason", entity.getStatus().getReason())
                 .paramProperty("terminating", optionalContainerStateTerminated.isPresent())

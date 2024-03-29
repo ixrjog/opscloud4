@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.constants.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
+import com.baiyi.opscloud.facade.kubernetes.KubernetesTerminalFacade;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.baiyi.opscloud.service.user.UserService;
@@ -33,6 +34,9 @@ public class ApplicationTest extends BaseUnit {
 
     @Resource
     private UserPermissionService userPermissionService;
+
+    @Resource
+    private KubernetesTerminalFacade kubernetesTerminalFacade;
 
     // A1=46 A2=47 A3=48 B1=49 B2=50 B3=51
     private final static int TAG_ID = 51;
@@ -65,6 +69,11 @@ public class ApplicationTest extends BaseUnit {
             return "-";
         }
         return Joiner.on(",").join(userPermissions.stream().map(e -> userService.getById(e.getUserId()).getDisplayName()).collect(Collectors.toList()));
+    }
+
+    @Test
+    void tes111() {
+        kubernetesTerminalFacade.getKubernetesDeployment(150, 4);
     }
 
 }
