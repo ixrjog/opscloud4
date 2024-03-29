@@ -140,9 +140,9 @@ public class KubernetesDailyTest extends BaseKubernetesTest {
     @Test
     void updateConsulPreStop() {
         final String containerName = "consul-agent";
-        final String nameSpace = NAMESPACE;
-        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.ACK_FRANKFURT_DAILY);
-        Deployment demo = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), NAMESPACE, "basic-data-daily");
+        final String nameSpace = AWS_NAMESPACE;
+        KubernetesConfig kubernetesConfig = getConfigById(KubernetesClusterConfigs.EKS_TEST);
+        Deployment demo = KubernetesDeploymentDriver.get(kubernetesConfig.getKubernetes(), nameSpace, "airtime-product");
         Container demoContainer =
                 demo.getSpec().getTemplate().getSpec().getContainers().stream().filter(c -> c.getName().startsWith(containerName)).findFirst().get();
         LifecycleHandler preStop = demoContainer.getLifecycle().getPreStop();
