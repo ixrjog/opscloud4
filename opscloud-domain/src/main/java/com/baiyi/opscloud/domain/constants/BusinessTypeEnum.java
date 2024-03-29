@@ -35,7 +35,8 @@ public enum BusinessTypeEnum {
     METER_SPHERE_BUILD_HOOK(106, "MeterSphere构建通知"),
     METER_SPHERE_DEPLOY_HOOK(107, "MeterSphere部署通知"),
     PROJECT(108, "项目"),
-    EVENT_BRIDGE_DEPLOY_EVENT(109, "AliyunEventBridge部署事件")
+    EVENT_BRIDGE_DEPLOY_EVENT(109, "AliyunEventBridge部署事件"),
+    LEO_FORK_DEPLOY(110, "Stable自动部署"),
     ;
 
     private final String name;

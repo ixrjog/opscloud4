@@ -105,6 +105,46 @@ public class LeoDeployParam {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    @Schema(description = "Fork deploy")
+    public static class DoForkDeploy {
+
+        @Schema(description = "执行用户")
+        private String username;
+
+        @Min(value = 0, message = "关联任务ID不能为空")
+        @Schema(description = "关联任务ID")
+        private Integer jobId;
+
+        @Schema(description = "构建ID")
+        private Integer buildId;
+
+        @Min(value = 0, message = "Deployment资产ID不能为空")
+        @Schema(description = "Deployment资产ID")
+        private Integer assetId;
+
+        @Schema(description = "部署类型")
+        private String deployType;
+
+        @Schema(description = "项目ID")
+        private Integer projectId;
+
+        public DoDeploy toDoDeploy() {
+            return DoDeploy.builder()
+                    .assetId(assetId)
+                    .buildId(buildId)
+                    .jobId(jobId)
+                    .deployType(deployType)
+                    .autoDeploy(true)
+                    .projectId(projectId)
+                    .build();
+        }
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Schema
     public static class QueryDeployDeployment {
 

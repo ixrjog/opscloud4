@@ -180,6 +180,13 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         this.doDeploy(doDeploy.toDoDeploy());
     }
 
+    @Override
+    // Fork deploy 不走拦截器
+    @SetSessionUsername(usernameSpEL = "#doDeploy.username")
+    public void doForkDeploy(LeoDeployParam.DoForkDeploy doDeploy) {
+        this.doDeploy(doDeploy.toDoDeploy());
+    }
+
     /**
      * 使用责任链设计模式解耦代码
      *

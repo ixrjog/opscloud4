@@ -2,9 +2,11 @@ package com.baiyi.opscloud.workorder.util;
 
 import com.baiyi.opscloud.common.util.YamlUtil;
 import com.baiyi.opscloud.domain.vo.workorder.WorkflowVO;
+import com.google.common.collect.Maps;
 import com.google.gson.JsonSyntaxException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,7 +36,11 @@ public class WorkflowUtil {
 
     public static Map<String, WorkflowVO.Node> toNodeMap(String workflow) {
         WorkflowVO.Workflow wf = load(workflow);
-        return wf.getNodes().stream().collect(Collectors.toMap(WorkflowVO.Node::getName, a -> a, (k1, k2) -> k1));
+        if (CollectionUtils.isEmpty(wf.getNodes())) {
+            return Maps.newHashMap();
+        } else {
+            return wf.getNodes().stream().collect(Collectors.toMap(WorkflowVO.Node::getName, a -> a, (k1, k2) -> k1));
+        }
     }
 
 }

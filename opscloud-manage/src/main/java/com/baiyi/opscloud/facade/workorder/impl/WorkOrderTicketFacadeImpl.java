@@ -260,7 +260,7 @@ public class WorkOrderTicketFacadeImpl implements WorkOrderTicketFacade {
         ticketSubscriberFacade.publish(workOrderTicket, user);
         // 更新节点ID
         WorkOrderTicketNode workOrderTicketNode = ticketNodeService.getByUniqueKey(workOrderTicket.getId(), 0);
-        workOrderTicket.setNodeId(workOrderTicketNode.getId());
+        workOrderTicket.setNodeId(workOrderTicketNode != null ? workOrderTicketNode.getId() : 0);
         ticketService.update(workOrderTicket);
         return workOrderTicket;
     }

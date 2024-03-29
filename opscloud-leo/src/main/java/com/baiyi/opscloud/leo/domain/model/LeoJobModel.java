@@ -66,18 +66,14 @@ public class LeoJobModel {
         private Deploy deploy;
         @Schema(description = "容器注册表配置")
         private CR cr;
-
         @Schema(description = "代码扫描 <不支持>")
         private Sonar sonar;
-
         @Schema(description = "通知配置: 多个 <不支持>")
         private List<LeoBaseModel.Notify> notifies;
         private String comment;
         private List<String> tags;
-
         @Schema(description = "任务参数")
         private List<LeoBaseModel.Parameter> parameters;
-
     }
 
     @Builder
@@ -99,9 +95,9 @@ public class LeoJobModel {
     @Schema(description = "构建项目配置")
     public static class BuildProject {
         @Schema(description = "组")
-        private String   groupId;
+        private String groupId;
         @Schema(description = "组件")
-        private String  artifactId;
+        private String artifactId;
     }
 
     @Builder
@@ -130,6 +126,25 @@ public class LeoJobModel {
     @NoArgsConstructor
     public static class Deploy {
         private LeoBaseModel.Notify notify;
+        private Fork fork;
+    }
+
+    @Builder
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Fork {
+        private Boolean enabled;
+        private Stable stable;
+    }
+
+    @Builder
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Stable {
+        private String job;
+        private List<String> deployments;
     }
 
     @Builder
