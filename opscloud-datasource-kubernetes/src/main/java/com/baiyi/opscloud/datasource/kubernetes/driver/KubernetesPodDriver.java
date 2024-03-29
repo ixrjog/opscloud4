@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.MyKubernetesClientBuilder;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
+import io.fabric8.kubernetes.api.model.StatusDetails;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.ExecListener;
 import io.fabric8.kubernetes.client.dsl.ExecWatch;
@@ -105,6 +106,18 @@ public class KubernetesPodDriver {
                     .inNamespace(namespace)
                     .withName(name)
                     .get();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            throw e;
+        }
+    }
+
+    public static List<StatusDetails> delete(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
+        try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
+            return kc.pods()
+                    .inNamespace(namespace)
+                    .withName(name)
+                    .delete();
         } catch (Exception e) {
             log.warn(e.getMessage());
             throw e;
