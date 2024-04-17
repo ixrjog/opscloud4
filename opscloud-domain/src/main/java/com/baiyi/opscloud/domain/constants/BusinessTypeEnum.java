@@ -37,6 +37,7 @@ public enum BusinessTypeEnum {
     PROJECT(108, "项目"),
     EVENT_BRIDGE_DEPLOY_EVENT(109, "AliyunEventBridge部署事件"),
     LEO_FORK_DEPLOY(110, "Stable自动部署"),
+    EVENT_BRIDGE_APOLLO_RELEASE_EVENT(111, "AliyunEventBridge配置发布事件"),
     ;
 
     private final String name;

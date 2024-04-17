@@ -22,14 +22,16 @@ public class AliyunEventBridgeConfig extends BaseDsConfig {
     @Schema
     public static class EventBridge {
 
-        private Leo leo;
+        private Config leo;
+
+        private Config apollo;
 
     }
 
     @Data
     @NoArgsConstructor
     @Schema
-    public static class Leo {
+    public static class Config {
 
         @Schema(description = "https://XXXXXXX.eventbridge.eu-central-1.aliyuncs.com/webhook/putEvents")
         private String url;

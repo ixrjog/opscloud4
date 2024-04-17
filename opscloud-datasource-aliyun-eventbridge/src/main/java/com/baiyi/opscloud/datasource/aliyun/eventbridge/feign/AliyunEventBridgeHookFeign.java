@@ -22,6 +22,10 @@ public interface AliyunEventBridgeHookFeign {
      */
     @RequestLine("POST {path}?token={token}")
     @Headers({"Content-Type: application/json;charset=utf-8"})
-    AliyunEventBridgeResult.Result publish(@Param("path") String path, @Param("token") String token, CloudEvents.Event event);
+    AliyunEventBridgeResult.Result publish(@Param("path") String path, @Param("token") String token, CloudEvents.LeoEvent event);
+
+    @RequestLine("POST {path}?token={token}")
+    @Headers({"Content-Type: application/json;charset=utf-8"})
+    AliyunEventBridgeResult.Result publish(@Param("path") String path, @Param("token") String token, CloudEvents.ApolloEvent event);
 
 }

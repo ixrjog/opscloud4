@@ -41,10 +41,10 @@ public class InstanceModel {
         private String storage;//EBS only",
 
         public Integer acqMemory() {
-            try{
+            try {
                 double number = (Double.parseDouble(memory.split(" ")[0]) * 1024);
                 return (int) number;
-            }catch (Exception e){
+            } catch (Exception e) {
                 return 0;
             }
         }

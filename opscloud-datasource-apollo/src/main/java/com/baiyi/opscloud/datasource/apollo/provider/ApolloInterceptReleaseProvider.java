@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.datasource.MeterSphereConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
-import com.baiyi.opscloud.datasource.apollo.entity.InterceptRelease;
+import com.baiyi.opscloud.core.entity.InterceptRelease;
 import com.baiyi.opscloud.domain.constants.DsAssetTypeConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;

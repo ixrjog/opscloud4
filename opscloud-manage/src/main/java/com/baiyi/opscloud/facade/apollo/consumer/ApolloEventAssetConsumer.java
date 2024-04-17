@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.apollo.consumer;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.datasource.ApolloConfig;
-import com.baiyi.opscloud.datasource.apollo.entity.InterceptRelease;
+import com.baiyi.opscloud.core.entity.InterceptRelease;
 import com.baiyi.opscloud.datasource.apollo.provider.ApolloInterceptReleaseProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.apollo.ApolloParam;
@@ -11,6 +11,8 @@ import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * @Author baiyi
@@ -28,6 +30,9 @@ public class ApolloEventAssetConsumer {
     @Resource
     private ApolloInterceptReleaseProvider apolloInterceptReleaseProvider;
 
+    @Resource
+    private ApolloReleaseEventPublisher apolloReleaseEventPublisher;
+
     /**
      * 记录
      *
@@ -42,6 +47,7 @@ public class ApolloEventAssetConsumer {
             return;
         }
         InterceptRelease.Event event = InterceptRelease.Event.builder()
+                .url(Optional.of(apolloConfig).map(ApolloConfig::getApollo).map(ApolloConfig.Apollo::getPortal).map(ApolloConfig.Portal::getUrl).orElse(""))
                 .appId(releaseEvent.getAppId())
                 .env(releaseEvent.getEnv())
                 .clusterName(releaseEvent.getClusterName())
@@ -58,6 +64,7 @@ public class ApolloEventAssetConsumer {
                 .build();
         // 写入资产
         apolloInterceptReleaseProvider.pullAsset(datasourceInstance.getId(), event);
+        apolloReleaseEventPublisher.publish(event);
     }
 
 }

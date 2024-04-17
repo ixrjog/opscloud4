@@ -37,15 +37,31 @@ public class AliyunEventBridgeHookDriver {
                 .target(AliyunEventBridgeHookFeign.class, url);
     }
 
-    public AliyunEventBridgeResult.Result publish(AliyunEventBridgeConfig.EventBridge config, CloudEvents.Event event) throws MalformedURLException, OCException {
+    public AliyunEventBridgeResult.Result publish(AliyunEventBridgeConfig.EventBridge config, CloudEvents.LeoEvent event) throws MalformedURLException, OCException {
         final String url = Optional.ofNullable(config)
                 .map(AliyunEventBridgeConfig.EventBridge::getLeo)
-                .map(AliyunEventBridgeConfig.Leo::getUrl)
+                .map(AliyunEventBridgeConfig.Config::getUrl)
                 .orElseThrow(() -> new OCException("Aliyun eventBridge url configuration does not exist！"));
 
         final String token = Optional.of(config)
                 .map(AliyunEventBridgeConfig.EventBridge::getLeo)
-                .map(AliyunEventBridgeConfig.Leo::getToken)
+                .map(AliyunEventBridgeConfig.Config::getToken)
+                .orElseThrow(() -> new OCException("Aliyun eventBridge token configuration does not exist"));
+        URL urlConfig = URI.create(url).toURL();
+        AliyunEventBridgeHookFeign aliyunEventBridgeHookFeign = buildFeign(Joiner.on("://").join(urlConfig.getProtocol(), urlConfig.getHost()));
+        return aliyunEventBridgeHookFeign.publish(urlConfig.getPath(), token, event);
+    }
+
+
+    public AliyunEventBridgeResult.Result publish(AliyunEventBridgeConfig.EventBridge config, CloudEvents.ApolloEvent event) throws MalformedURLException, OCException {
+        final String url = Optional.ofNullable(config)
+                .map(AliyunEventBridgeConfig.EventBridge::getApollo)
+                .map(AliyunEventBridgeConfig.Config::getUrl)
+                .orElseThrow(() -> new OCException("Aliyun eventBridge url configuration does not exist！"));
+
+        final String token = Optional.of(config)
+                .map(AliyunEventBridgeConfig.EventBridge::getApollo)
+                .map(AliyunEventBridgeConfig.Config::getToken)
                 .orElseThrow(() -> new OCException("Aliyun eventBridge token configuration does not exist"));
         URL urlConfig = URI.create(url).toURL();
         AliyunEventBridgeHookFeign aliyunEventBridgeHookFeign = buildFeign(Joiner.on("://").join(urlConfig.getProtocol(), urlConfig.getHost()));

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.apollo.entity;
+package com.baiyi.opscloud.core.entity;
 
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.core.asset.IToAsset;
@@ -33,6 +33,8 @@ public class InterceptRelease {
 
         @Serial
         private static final long serialVersionUID = -6025712687441034294L;
+
+        private String url;
 
         private String appId;
 

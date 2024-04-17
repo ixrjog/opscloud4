@@ -122,8 +122,19 @@ public class ForkToStable {
         if (CollectionUtils.isEmpty(resources)) {
             throw new LeoDeployException("There is no associated deployment for the job.");
         } else {
-            return resources.stream().filter(e ->
-                    (e.getName().contains(":test:") || e.getName().contains(":daily:")) && (e.getName().endsWith("-daily") || matchesDC(e.getName()))
+            return resources.stream().filter(e -> {
+                        // 判断命名空间 test 或 daily
+                        if (e.getName().contains(":test:") || e.getName().contains(":daily:")) {
+                            // -daily结尾
+                            if (e.getName().endsWith("-daily")) {
+                                return true;
+                            }
+                            // 不为多环境结尾
+                            return !matchesDC(e.getName());
+                        } else {
+                            return false;
+                        }
+                    }
             ).toList();
         }
     }

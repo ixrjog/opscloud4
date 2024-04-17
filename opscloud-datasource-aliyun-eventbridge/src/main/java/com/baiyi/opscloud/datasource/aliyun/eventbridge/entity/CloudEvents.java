@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.aliyun.eventbridge.entity;
 
+import com.baiyi.opscloud.core.entity.InterceptRelease;
 import com.baiyi.opscloud.domain.hook.leo.LeoHook;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ public class CloudEvents {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Event implements Serializable {
+    public static class LeoEvent implements Serializable {
 
         @Serial
         private static final long serialVersionUID = 1647971767416400328L;
@@ -36,6 +37,28 @@ public class CloudEvents {
         private String specversion;
 
         private LeoHook.DeployHook data;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ApolloEvent implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = 1647971767416400328L;
+
+        private String id;
+
+        private String type;
+
+        private String source;
+
+        @Schema(description = "CloudEvents协议版本")
+        private String specversion;
+
+        private InterceptRelease.Event data;
 
     }
 
