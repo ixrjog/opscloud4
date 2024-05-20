@@ -2,6 +2,8 @@ package com.baiyi.opscloud.service.auth;
 
 import com.baiyi.opscloud.domain.generator.opscloud.AuthRoleResource;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2021/5/12 4:13 下午
@@ -18,5 +20,9 @@ public interface AuthRoleResourceService {
     Integer countByResourceId(Integer resourceId);
 
     void deleteByResourceId(Integer resourceId);
+
+    List<AuthRoleResource> queryByRoleId(Integer roleId);
+
+    AuthRoleResource getByUniqueKey(AuthRoleResource authRoleResource);
 
 }

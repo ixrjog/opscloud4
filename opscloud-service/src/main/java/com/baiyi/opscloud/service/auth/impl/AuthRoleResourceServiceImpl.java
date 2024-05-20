@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2021/5/12 4:13 下午
@@ -32,6 +34,23 @@ public class AuthRoleResourceServiceImpl implements AuthRoleResourceService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("resourceId", resourceId);
         return authRoleResourceMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public List<AuthRoleResource> queryByRoleId(Integer roleId) {
+        Example example = new Example(AuthRoleResource.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("roleId", roleId);
+        return authRoleResourceMapper.selectByExample(example);
+    }
+
+    @Override
+    public AuthRoleResource getByUniqueKey(AuthRoleResource authRoleResource) {
+        Example example = new Example(AuthRoleResource.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("roleId", authRoleResource.getRoleId())
+                .andEqualTo("resourceId", authRoleResource.getResourceId());
+        return authRoleResourceMapper.selectOneByExample(example);
     }
 
     @Override
