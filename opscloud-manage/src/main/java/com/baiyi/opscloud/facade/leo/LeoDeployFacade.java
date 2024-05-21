@@ -81,4 +81,6 @@ public interface LeoDeployFacade {
 
     List<LeoDeployVO.Deploy> getLeoDeploys(int buildId);
 
+    void interceptLeoDeploy(LeoDeployParam.InterceptDeploy interceptDeploy);
+
 }

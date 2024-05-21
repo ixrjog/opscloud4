@@ -537,4 +537,9 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
                 .peek(deployResponsePacker::wrap).collect(Collectors.toList());
     }
 
+    @Override
+    public void interceptLeoDeploy(LeoDeployParam.InterceptDeploy interceptDeploy) {
+        executeJobInterceptorHandler.verifyRule(interceptDeploy.getJobId());
+    }
+
 }

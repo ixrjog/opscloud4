@@ -33,6 +33,17 @@ public class LeoDeployParam {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema
+    public static class InterceptDeploy {
+
+        @NotNull
+        private Integer jobId;
+
+    }
+
+    @Data
     @SuperBuilder(toBuilder = true)
     @NoArgsConstructor
     @AllArgsConstructor

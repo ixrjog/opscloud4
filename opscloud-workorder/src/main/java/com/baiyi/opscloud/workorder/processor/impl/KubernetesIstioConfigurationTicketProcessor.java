@@ -83,7 +83,7 @@ public class KubernetesIstioConfigurationTicketProcessor extends AbstractDsAsset
             Deployment deployment = KubernetesDeploymentDriver.get(config, entry.getNamespace(), entry.getDeploymentName());
             dsInstanceFacade.pullAsset(ticketEntry.getInstanceUuid(), getAssetType(), deployment);
         } catch (Exception e) {
-            throw new TicketProcessException("Failed to change container JVM specification: {}", e.getMessage());
+            throw new TicketProcessException("Failed to change deployment istio configuration: {}", e.getMessage());
         }
     }
 

@@ -273,6 +273,13 @@ public class LeoController {
         return new HttpResult<>(deployFacade.getLeoDeploys(buildId));
     }
 
+    @Operation(summary = "部署拦截")
+    @PostMapping(value = "/deploy/intercept", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> interceptLeoDeploy(@RequestBody @Valid LeoDeployParam.InterceptDeploy interceptDeploy) {
+        deployFacade.interceptLeoDeploy(interceptDeploy);
+        return HttpResult.SUCCESS;
+    }
+
     @Operation(summary = "执行部署")
     @PostMapping(value = "/deploy/do", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<LeoDeploy> doLeoDeploy(@RequestBody @Valid LeoDeployParam.DoDeploy doDeploy) {

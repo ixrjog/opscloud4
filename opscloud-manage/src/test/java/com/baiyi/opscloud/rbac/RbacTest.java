@@ -18,7 +18,6 @@ public class RbacTest extends BaseUnit {
     @Resource
     private AuthRoleResourceService authRoleResourceService;
 
-
     @Test
     void test() {
         // dev=4/ base=5
