@@ -3,7 +3,7 @@ package com.baiyi.opscloud.terminal.handler.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
-import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
+import com.baiyi.opscloud.sshcore.model.JSchSessionHolder;
 import com.baiyi.opscloud.terminal.handler.AbstractServerTerminalHandler;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
@@ -31,7 +31,7 @@ public class ServerTerminalLogoutHandler extends AbstractServerTerminalHandler<S
         // 设置关闭会话
         simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, baseMessage.getInstanceId());
         serverCommandAudit.asyncRecordCommand(terminalSession.getSessionId(), baseMessage.getInstanceId());
-        JSchSessionContainer.closeSession(terminalSession.getSessionId(), baseMessage.getInstanceId());
+        JSchSessionHolder.closeSession(terminalSession.getSessionId(), baseMessage.getInstanceId());
     }
 
     @Override

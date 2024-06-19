@@ -22,7 +22,7 @@ import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import com.baiyi.opscloud.sshcore.model.SessionIdMapper;
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.table.PrettyTable;
-import com.baiyi.opscloud.sshcore.task.ssh.WatchKubernetesSshOutputTask;
+import com.baiyi.opscloud.sshcore.task.ssh.WatchKubernetesExecShellOutputTask;
 import com.baiyi.opscloud.sshcore.util.TerminalSessionUtil;
 import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshContext;
@@ -309,13 +309,13 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                      .withTTY()
                      .usingListener(listener)
                      // .exec("env", "TERM=xterm", "COLUMNS=" + columns, "LINES=" + lines, "sh", "-c", "ls -la");
-                     .exec("env", "TERM=xterm", "LANG=" + DEF_UNICODE, "COLUMNS=" + size.getColumns(), "LINES=" + size.getRows(), "sh");
+                     .exec("env", "TERM=xterm", "LANG=" + DEF_UNICODE, "COLUMNS=" + size.getColumns(), "LINES=" + size.getRows(), "sh")
         ) {
             //execWatch.resize(size.getColumns(), size.getRows());
             SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
             ChannelOutputStream out = (ChannelOutputStream) sshContext.getSshShellRunnable().getOs();
             out.setNoDelay(true);
-            WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, out);
+            WatchKubernetesExecShellOutputTask run = new WatchKubernetesExecShellOutputTask(sessionOutput, baos, out);
             // JDK21 VirtualThreads
             Thread.ofVirtual().start(run);
 
@@ -382,10 +382,10 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
             String instanceId = TerminalSessionUtil.toInstanceId(podContext.getPodName(), name);
             SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
             // 高速输出日志流
-            WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, byteArrayOutputStream, sshContext.getSshShellRunnable().getOs());
+            WatchKubernetesExecShellOutputTask run = new WatchKubernetesExecShellOutputTask(sessionOutput, byteArrayOutputStream, sshContext.getSshShellRunnable().getOs());
 
             // 低性能输出日志，为了能实现日志换行
-            // WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, terminal.writer());
+           // WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, terminal.writer());
             // JDK21 VirtualThreads
             Thread.ofVirtual().start(run);
 

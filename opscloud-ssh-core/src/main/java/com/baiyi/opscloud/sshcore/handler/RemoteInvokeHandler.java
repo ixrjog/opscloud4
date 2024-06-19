@@ -49,6 +49,7 @@ public class RemoteInvokeHandler {
      * @throws JSchException
      */
     private static void invokeSshCredential(HostSystem hostSystem, JSch jsch, Session session) throws JSchException {
+        // FIXME 密钥方法使用不当
         Credential credential = hostSystem.getSshCredential().getCredential();
         // 按凭证类型
         switch (hostSystem.getSshCredential().getCredential().getKind()) {
@@ -113,7 +114,7 @@ public class RemoteInvokeHandler {
                     .hostSystem(hostSystem)
                     .build();
             jSchSession.setSessionOutput(sessionOutput);
-            JSchSessionContainer.addSession(jSchSession);
+            JSchSessionHolder.addSession(jSchSession);
 
             channel.connect();
         } catch (Exception e) {
@@ -171,7 +172,7 @@ public class RemoteInvokeHandler {
                     .hostSystem(hostSystem)
                     .build();
             jSchSession.setSessionOutput(sessionOutput);
-            JSchSessionContainer.addSession(jSchSession);
+            JSchSessionHolder.addSession(jSchSession);
             channel.connect();
         } catch (Exception e) {
             log.debug(e.getMessage());

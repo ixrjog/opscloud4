@@ -18,7 +18,7 @@ import com.baiyi.opscloud.sshcore.handler.HostSystemHandler;
 import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
 import com.baiyi.opscloud.sshcore.model.HostSystem;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
-import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
+import com.baiyi.opscloud.sshcore.model.JSchSessionHolder;
 import com.baiyi.opscloud.sshcore.model.SessionIdMapper;
 import com.baiyi.opscloud.sshserver.*;
 import com.baiyi.opscloud.sshserver.aop.annotation.ScreenClear;
@@ -105,7 +105,8 @@ public class ServerLoginCommand extends BaseServerCommand {
             Size size = terminal.getSize();
             try {
                 while (true) {
-                    if (isClosed(sessionId, instanceId)) {
+                    // fix bug 2024/5/27
+                    if (isClosed(sessionId, instanceId) || serverSession.isClosed()) {
                         NewTimeUtil.millisecondsSleep(150L);
                         break;
                     }
@@ -124,7 +125,7 @@ public class ServerLoginCommand extends BaseServerCommand {
             sshShellHelper.print(msg, PromptColor.RED);
         } finally {
             serverCommandAudit.asyncRecordCommand(sessionId, instanceId);
-            JSchSessionContainer.closeSession(sessionId, instanceId);
+            JSchSessionHolder.closeSession(sessionId, instanceId);
         }
     }
 
@@ -146,7 +147,7 @@ public class ServerLoginCommand extends BaseServerCommand {
     }
 
     private boolean isClosed(String sessionId, String instanceId) {
-        JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
+        JSchSession jSchSession = JSchSessionHolder.getBySessionId(sessionId, instanceId);
         assert jSchSession != null;
         return jSchSession.getChannel().isClosed();
     }
@@ -155,7 +156,7 @@ public class ServerLoginCommand extends BaseServerCommand {
         if (input < 0) {
             return;
         }
-        JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
+        JSchSession jSchSession = JSchSessionHolder.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) {
             throw new Exception();
         }

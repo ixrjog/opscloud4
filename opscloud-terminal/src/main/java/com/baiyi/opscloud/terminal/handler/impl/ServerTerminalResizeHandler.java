@@ -5,7 +5,7 @@ import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
-import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
+import com.baiyi.opscloud.sshcore.model.JSchSessionHolder;
 import com.baiyi.opscloud.terminal.handler.AbstractServerTerminalHandler;
 import com.google.gson.GsonBuilder;
 import com.jcraft.jsch.ChannelShell;
@@ -34,7 +34,7 @@ public class ServerTerminalResizeHandler extends AbstractServerTerminalHandler<S
     public void handle(String message, Session session, TerminalSession terminalSession) {
         ServerMessage.Resize resizeMessage = toMessage(message);
         try {
-            JSchSession jSchSession = JSchSessionContainer.getBySessionId(terminalSession.getSessionId(), resizeMessage.getInstanceId());
+            JSchSession jSchSession = JSchSessionHolder.getBySessionId(terminalSession.getSessionId(), resizeMessage.getInstanceId());
             assert jSchSession != null;
             RemoteInvokeHandler.setChannelPtySize((ChannelShell) jSchSession.getChannel(), resizeMessage);
         } catch (Exception e) {

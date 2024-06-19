@@ -32,7 +32,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Aspect
 @Component
-
 public class SettingContextSessionUserAspect {
 
     @Resource

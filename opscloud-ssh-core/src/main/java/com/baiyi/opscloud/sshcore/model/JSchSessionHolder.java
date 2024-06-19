@@ -1,16 +1,16 @@
 package com.baiyi.opscloud.sshcore.model;
 
 import lombok.Data;
-import org.apache.commons.collections4.map.HashedMap;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Data
-public class JSchSessionContainer {
+public class JSchSessionHolder {
 
-    private static Map<String, Map<String, JSchSession>> jSchSessionMap = new HashedMap<>();
+    private static Map<String, ConcurrentHashMap<String, JSchSession>> jSchSessionMap = new ConcurrentHashMap<>();
 
-    private static Map<String, Boolean> batchMap = new HashedMap<>();
+    private static Map<String, Boolean> batchMap = new ConcurrentHashMap<>();
 
     public static void setBatch(String sessionId, Boolean isBatch) {
         batchMap.put(sessionId, isBatch);
@@ -21,11 +21,7 @@ public class JSchSessionContainer {
     }
 
     public static void addSession(JSchSession jSchSession) {
-        Map<String, JSchSession> sessionMap = jSchSessionMap.get(jSchSession.getSessionId());
-        if (sessionMap == null) {
-            sessionMap = new HashedMap<>();
-            jSchSessionMap.put(jSchSession.getSessionId(), sessionMap);
-        }
+        ConcurrentHashMap<String, JSchSession> sessionMap = jSchSessionMap.computeIfAbsent(jSchSession.getSessionId(), k -> new ConcurrentHashMap<>());
         sessionMap.put(jSchSession.getInstanceId(), jSchSession);
     }
 
@@ -54,7 +50,7 @@ public class JSchSessionContainer {
      * @param instanceId
      */
     public static void closeSession(String sessionId, String instanceId) {
-        JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
+        JSchSession jSchSession = JSchSessionHolder.getBySessionId(sessionId, instanceId);
         if (jSchSession != null) {
             if (jSchSession.getChannel() != null) {
                 jSchSession.getChannel().disconnect();

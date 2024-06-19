@@ -8,7 +8,7 @@ import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.HostSystem;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
-import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
+import com.baiyi.opscloud.sshcore.model.JSchSessionHolder;
 import com.baiyi.opscloud.terminal.handler.AbstractServerTerminalHandler;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
@@ -33,7 +33,7 @@ public class ServerTerminalDuplicateSessionHandler extends AbstractServerTermina
     @Override
     public void handle(String message, Session session, TerminalSession terminalSession) {
         ServerMessage.DuplicateSession baseMessage = toMessage(message);
-        JSchSession jSchSession = JSchSessionContainer.getBySessionId(terminalSession.getSessionId(), baseMessage.getDuplicateServerNode().getInstanceId());
+        JSchSession jSchSession = JSchSessionHolder.getBySessionId(terminalSession.getSessionId(), baseMessage.getDuplicateServerNode().getInstanceId());
         assert jSchSession != null;
         HostSystem hostSystem = hostSystemHandler.buildHostSystem(baseMessage.getServerNode(), baseMessage);
         RemoteInvokeHandler.openWebTerminal(terminalSession.getSessionId(), baseMessage.getServerNode().getInstanceId(), hostSystem);

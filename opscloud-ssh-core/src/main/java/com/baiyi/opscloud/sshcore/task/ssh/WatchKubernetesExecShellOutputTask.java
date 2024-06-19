@@ -14,11 +14,11 @@ import java.io.OutputStream;
  * @Version 1.0
  */
 @Slf4j
-public class WatchKubernetesSshOutputTask extends AbstractSshChannelOutputTask {
+public class WatchKubernetesExecShellOutputTask extends AbstractSshChannelOutputTask {
 
     private final OutputStream channelOutput;
 
-    public WatchKubernetesSshOutputTask(SessionOutput sessionOutput, ByteArrayOutputStream byteArrayOutputStream, OutputStream channelOutput) {
+    public WatchKubernetesExecShellOutputTask(SessionOutput sessionOutput, ByteArrayOutputStream byteArrayOutputStream, OutputStream channelOutput) {
         setSessionOutput(sessionOutput);
         setOutputStream(byteArrayOutputStream);
         this.channelOutput = channelOutput;

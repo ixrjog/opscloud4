@@ -4,6 +4,7 @@ import lombok.Data;
 import org.apache.commons.collections4.map.HashedMap;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Author baiyi
@@ -13,9 +14,9 @@ import java.util.Map;
 @Data
 public class KubernetesSessionContainer {
 
-    private static Map<String, Map<String, KubernetesSession>> kubernetesSessionMap = new HashedMap<>();
+    private static Map<String, Map<String, KubernetesSession>> kubernetesSessionMap = new ConcurrentHashMap<>();
 
-    private static Map<String, Boolean> batchMap = new HashedMap<>();
+    private static Map<String, Boolean> batchMap = new ConcurrentHashMap<>();
 
     public static void setBatchFlag(String sessionId, Boolean isBatch) {
         batchMap.put(sessionId, isBatch);

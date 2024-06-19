@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
-import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
+import com.baiyi.opscloud.sshcore.model.JSchSessionHolder;
 import com.baiyi.opscloud.terminal.handler.AbstractServerTerminalHandler;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -41,18 +41,18 @@ public class ServerTerminalCommandHandler extends AbstractServerTerminalHandler<
         if (!hasBatchFlag(terminalSession)) {
             sendCommand(terminalSession.getSessionId(), commandMessage.getInstanceId(), commandMessage.getData());
         } else {
-            Map<String, JSchSession> sessionMap = JSchSessionContainer.getBySessionId(terminalSession.getSessionId());
+            Map<String, JSchSession> sessionMap = JSchSessionHolder.getBySessionId(terminalSession.getSessionId());
             sessionMap.keySet().parallelStream().forEach(e -> sendCommand(terminalSession.getSessionId(), e, commandMessage.getData()));
         }
     }
 
     protected Boolean hasBatchFlag(TerminalSession terminalSession) {
-        Boolean needBatch = JSchSessionContainer.getBatchFlagBySessionId(terminalSession.getSessionId());
+        Boolean needBatch = JSchSessionHolder.getBatchFlagBySessionId(terminalSession.getSessionId());
         return needBatch != null && needBatch;
     }
 
     private void sendCommand(String sessionId, String instanceId, String cmd) {
-        JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
+        JSchSession jSchSession = JSchSessionHolder.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) {
             return;
         }

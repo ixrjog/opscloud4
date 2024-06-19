@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
-import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
+import com.baiyi.opscloud.sshcore.model.JSchSessionHolder;
 import com.baiyi.opscloud.terminal.handler.AbstractServerTerminalHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -31,7 +31,7 @@ public class ServerTerminalCloseHandler extends AbstractServerTerminalHandler<Se
 
     @Override
     public void handle(String message, Session session, TerminalSession terminalSession) {
-        Map<String, JSchSession> sessionMap = JSchSessionContainer.getBySessionId(terminalSession.getSessionId());
+        Map<String, JSchSession> sessionMap = JSchSessionHolder.getBySessionId(terminalSession.getSessionId());
         if (sessionMap == null) {
             return;
         }

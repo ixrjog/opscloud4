@@ -2,7 +2,7 @@ package com.baiyi.opscloud.sshserver.util;
 
 import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
-import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
+import com.baiyi.opscloud.sshcore.model.JSchSessionHolder;
 import com.jcraft.jsch.ChannelShell;
 import org.jline.terminal.Attributes;
 import org.jline.terminal.Size;
@@ -59,7 +59,7 @@ public class TerminalUtil {
     }
     
     public static void resize(String sessionId, String instanceId, Size size) {
-        JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
+        JSchSession jSchSession = JSchSessionHolder.getBySessionId(sessionId, instanceId);
         assert jSchSession != null;
         RemoteInvokeHandler.setChannelPtySize((ChannelShell) jSchSession.getChannel(), size);
     }
