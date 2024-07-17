@@ -64,6 +64,16 @@ public class BusinessTagServiceImpl implements BusinessTagService {
     }
 
     @Override
+    public BusinessTag getByUniqueKey(BusinessTag businessTag) {
+        Example example = new Example(BusinessTag.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo(BaseBusiness.BUSINESS_TYPE, businessTag.getBusinessType())
+                .andEqualTo(BaseBusiness.BUSINESS_ID, businessTag.getBusinessId())
+                .andEqualTo("tagId", businessTag.getTagId());
+        return businessTagMapper.selectOneByExample(example);
+    }
+
+    @Override
     public int countByTagId(Integer tagId) {
         Example example = new Example(BusinessTag.class);
         Example.Criteria criteria = example.createCriteria();
