@@ -30,10 +30,10 @@ public class InterceptByActionChainHandler extends BaseApolloReleaseChainHandler
                     .msg("当前应用禁止全量发布配置，请使用灰度发布！")
                     .build();
         }
-        // 灰度发布，全部放行
-        if (StringUtils.isNotBlank(releaseEvent.getAction()) && ApolloReleaseActionEnum.GRAY_RELEASE.name().equalsIgnoreCase(releaseEvent.getAction())) {
-            return notify(apolloConfig, releaseEvent);
-        }
+        // 灰度发布需判断封网规则再确定是否可以发布
+//        if (StringUtils.isNotBlank(releaseEvent.getAction()) && ApolloReleaseActionEnum.GRAY_RELEASE.name().equalsIgnoreCase(releaseEvent.getAction())) {
+//            return notify(apolloConfig, releaseEvent);
+//        }
 
         return PASS_AND_DO_NEXT;
     }
