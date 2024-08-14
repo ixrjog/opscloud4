@@ -28,46 +28,9 @@ public class LeoFeX86ToArm64PreviewTest extends BaseKubernetesTest {
     private LeoJobService leoJobService;
 
     final String previewAppNames = """
-            active-agent-points-h5
-            active-agent-xmas-h5
-            agent-agent-help-h5
-            customer-im-h5
-            lego-lego-h5
-            lego-ssr-h5
-            merchant-dispute-h5
-            nginx-palmpay-h5
-            nginx-palmpay-h5
-            open-api-h5
-            palm-business-business-app-h5
-            palmpay-activities-h5
-            palmpay-big-sale-h5
-            palmpay-c-h5
-            palmpay-card-h5
-            palmpay-cash-spree-h5
-            palmpay-cashbox-h5
-            palmpay-claim-coupons-h5
-            palmpay-close-account-h5
-            palmpay-crazy-cash-h5
-            palmpay-customer-service-h5
-            palmpay-early-refund-h5
-            palmpay-echat-h5
-            palmpay-exchange-rate-h5
-            palmpay-flexi-h5
-            palmpay-football-h5
-            palmpay-grab-deals-h5
-            palmpay-h5
-            palmpay-instalment-h5
-            palmpay-my-trip-h5
-            palmpay-palm-safe-h5
-            palmpay-palm-zone-h5
-            palmpay-plus-h5
-            palmpay-qr-card-h5
-            palmpay-settings-h5
-            pay-with-transfer-ssr-h5
-            web-marketing-activities-h5
-            web-pay-shop-gh-h5
-            web-pay-with-transfer-h5
-            web-payment-claim-h5
+            qa-data-center-h5
+            tecno-h5
+            leo-h5-demo
             """;
 
     @Test

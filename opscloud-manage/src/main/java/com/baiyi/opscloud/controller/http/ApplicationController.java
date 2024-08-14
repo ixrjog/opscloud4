@@ -42,6 +42,12 @@ public class ApplicationController {
         return new HttpResult<>(applicationFacade.queryApplicationPage(pageQuery));
     }
 
+    @Operation(summary = "分页查询应用列表")
+    @PostMapping(value = "/simple/page/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<ApplicationVO.Application>> querySimpleApplicationPage(@RequestBody @Valid ApplicationParam.ApplicationPageQuery pageQuery) {
+        return new HttpResult<>(applicationFacade.querySimpleApplicationPage(pageQuery));
+    }
+
     @Operation(summary = "分页查询我的应用列表")
     @PostMapping(value = "/my/page/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<ApplicationVO.Application>> queryMyApplicationPage(@RequestBody @Valid UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
@@ -50,7 +56,7 @@ public class ApplicationController {
 
     @Operation(summary = "查询应用详情")
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<ApplicationVO.Application> getApplicationById(@Valid Integer id) {
+    public HttpResult<ApplicationVO.Application> getApplicationById(@RequestParam Integer id) {
         return new HttpResult<>(applicationFacade.getApplicationById(id));
     }
 

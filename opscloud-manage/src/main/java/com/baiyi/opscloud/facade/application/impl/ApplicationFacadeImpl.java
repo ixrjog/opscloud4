@@ -83,6 +83,19 @@ public class ApplicationFacadeImpl implements ApplicationFacade, IUserBusinessPe
     }
 
     @Override
+    public DataTable<ApplicationVO.Application> querySimpleApplicationPage(ApplicationParam.ApplicationPageQuery pageQuery) {
+        if (pageQuery.getTagId() == null && StringUtils.isNotBlank(pageQuery.getTagKey())) {
+            Tag tag = tagService.getByTagKey(pageQuery.getTagKey());
+            FunctionUtil.isNull(tag)
+                    .throwBaseException(new OCException("Tag 标签不存在"));
+            pageQuery.setTagId(tag.getId());
+        }
+        DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
+        List<ApplicationVO.Application> data = BeanCopierUtil.copyListProperties(table.getData(), ApplicationVO.Application.class);
+        return new DataTable<>(data, table.getTotalNum());
+    }
+
+    @Override
     public DataTable<ApplicationVO.Application> queryMyApplicationPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
         pageQuery.setBusinessType(getBusinessType());
         if (isAdmin(SessionHolder.getUsername())) {

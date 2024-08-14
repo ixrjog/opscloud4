@@ -16,6 +16,8 @@ public interface ApplicationFacade {
 
     DataTable<ApplicationVO.Application> queryApplicationPage(ApplicationParam.ApplicationPageQuery pageQuery);
 
+    DataTable<ApplicationVO.Application> querySimpleApplicationPage(ApplicationParam.ApplicationPageQuery pageQuery);
+
     DataTable<ApplicationVO.Application> queryMyApplicationPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery);
 
     DataTable<ApplicationResourceVO.Resource> previewApplicationResourcePage(ApplicationResourceParam.ResourcePageQuery pageQuery);
