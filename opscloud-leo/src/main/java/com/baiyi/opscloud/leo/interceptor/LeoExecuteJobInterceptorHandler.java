@@ -75,7 +75,7 @@ public class LeoExecuteJobInterceptorHandler {
      */
     public void tryLockWithDeploy(int jobId, int assetId) {
         if (leoDeployService.countRunningWithJobIdAndAssetId(jobId, assetId) > 0) {
-            throw new LeoDeployException("部署任务执行中，请勿并发操作！");
+            throw new LeoDeployException("部署任务执行中，请勿并发操作！jobId={}, assetId={}", jobId, assetId);
         }
     }
 

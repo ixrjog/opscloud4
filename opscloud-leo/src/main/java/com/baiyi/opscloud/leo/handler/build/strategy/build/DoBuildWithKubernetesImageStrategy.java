@@ -49,6 +49,7 @@ public class DoBuildWithKubernetesImageStrategy extends BaseDoBuildStrategy {
         final String buildNumber = dict.get(BuildDictConstants.BUILD_NUMBER.getKey());
         final String envName = dict.get(BuildDictConstants.ENV.getKey());
         final String project = dict.get(BuildDictConstants.PROJECT.getKey());
+        final String leoJobName = dict.get(BuildDictConstants.JOB_NAME.getKey());
         /*
          * example: 460e7585-19
          */
@@ -58,6 +59,7 @@ public class DoBuildWithKubernetesImageStrategy extends BaseDoBuildStrategy {
          */
         dict.put(BuildDictConstants.IMAGE.getKey(), StringFormatter.arrayFormat("{}/{}/{}:{}", registryUrl, envName, project, imageTag));
         dict.put(BuildDictConstants.IMAGE_TAG.getKey(), imageTag);
+        dict.put(BuildDictConstants.LEO_JOB_NAME.getKey(), leoJobName);
     }
 
     @Override

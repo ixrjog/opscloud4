@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class LeoBaseModel {
 
     @Data
+    @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Parameter {

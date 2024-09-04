@@ -26,4 +26,6 @@ public interface BusinessTagService {
 
     int countByTagId(Integer tagId);
 
+    List<BusinessTag> queryByBusinessTag(Integer businessType, Integer tagId);
+
 }

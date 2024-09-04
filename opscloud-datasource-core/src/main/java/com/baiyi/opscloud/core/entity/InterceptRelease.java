@@ -30,41 +30,27 @@ public class InterceptRelease {
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Event implements IToAsset, Serializable {
-
         @Serial
         private static final long serialVersionUID = -6025712687441034294L;
-
         private String url;
-
         private String appId;
-
         private String env;
-
         private String username;
-
         private String clusterName;
-
         private String namespaceName;
-
         private String branchName;
-
         private Boolean isGray;
-
         // NamespaceRelease
         private String releaseTitle;
         private String releaseComment;
         private String releasedBy;
         private boolean isEmergencyPublish;
-
         private boolean success;
-
         private int code;
-
         private String msg;
-
         private Integer ticketId;
-
         private String action;
+        private String email;
 
         @Override
         public AssetContainer toAssetContainer(DatasourceInstance dsInstance) {

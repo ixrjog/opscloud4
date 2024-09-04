@@ -81,4 +81,13 @@ public class BusinessTagServiceImpl implements BusinessTagService {
         return businessTagMapper.selectCountByExample(example);
     }
 
+    @Override
+    public List<BusinessTag> queryByBusinessTag(Integer businessType, Integer tagId) {
+        Example example = new Example(BusinessTag.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo(BaseBusiness.BUSINESS_TYPE, businessType)
+                .andEqualTo("tagId", tagId);
+        return businessTagMapper.selectByExample(example);
+    }
+
 }

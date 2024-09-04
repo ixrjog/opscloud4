@@ -12,7 +12,7 @@ import com.baiyi.opscloud.leo.exception.LeoDeployException;
 import com.baiyi.opscloud.leo.handler.deploy.chain.post.event.ForkDeployEventPublisher;
 import com.baiyi.opscloud.service.leo.LeoDeployService;
 import com.baiyi.opscloud.service.leo.LeoJobService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -29,7 +29,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ForkToStable {
 
     private final LeoJobService leoJobService;
@@ -40,7 +40,12 @@ public class ForkToStable {
 
     private final ForkDeployEventPublisher forkDeployEventPublisher;
 
+    private static final boolean SWITCH = true;
+
     public void doFork(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
+        if (!SWITCH) {
+            return;
+        }
         // 异常处理
         try {
             handle(leoDeploy, deployConfig);

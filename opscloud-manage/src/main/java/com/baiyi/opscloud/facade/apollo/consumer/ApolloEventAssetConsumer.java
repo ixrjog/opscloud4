@@ -5,9 +5,10 @@ import com.baiyi.opscloud.common.datasource.ApolloConfig;
 import com.baiyi.opscloud.core.entity.InterceptRelease;
 import com.baiyi.opscloud.datasource.apollo.provider.ApolloInterceptReleaseProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.apollo.ApolloParam;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
-import jakarta.annotation.Resource;
+import com.baiyi.opscloud.service.user.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,14 +25,13 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ApolloEventAssetConsumer {
 
-    @Resource
-    private DsInstanceService dsInstanceService;
+    private final DsInstanceService dsInstanceService;
 
-    @Resource
-    private ApolloInterceptReleaseProvider apolloInterceptReleaseProvider;
+    private final ApolloInterceptReleaseProvider apolloInterceptReleaseProvider;
 
-    @Resource
-    private ApolloReleaseEventPublisher apolloReleaseEventPublisher;
+    private final ApolloReleaseEventPublisher apolloReleaseEventPublisher;
+
+    private final UserService userService;
 
     /**
      * 记录
@@ -46,6 +46,8 @@ public class ApolloEventAssetConsumer {
         if (datasourceInstance == null) {
             return;
         }
+        User user = userService.getByUsername(releaseEvent.getUsername());
+        String email = user != null? user.getEmail() : "";
         InterceptRelease.Event event = InterceptRelease.Event.builder()
                 .url(Optional.of(apolloConfig).map(ApolloConfig::getApollo).map(ApolloConfig.Apollo::getPortal).map(ApolloConfig.Portal::getUrl).orElse(""))
                 .appId(releaseEvent.getAppId())
@@ -54,6 +56,7 @@ public class ApolloEventAssetConsumer {
                 .namespaceName(releaseEvent.getNamespaceName())
                 .isGray(releaseEvent.getIsGray())
                 .username(releaseEvent.getUsername())
+                .email(email)
                 .branchName(releaseEvent.getBranchName())
                 .releaseTitle(releaseEvent.getReleaseTitle())
                 .success(httpResult.isSuccess())

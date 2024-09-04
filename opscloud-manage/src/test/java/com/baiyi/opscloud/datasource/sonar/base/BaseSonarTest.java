@@ -22,7 +22,7 @@ public class BaseSonarTest extends BaseUnit {
         private DsConfigManager dsFactory;
 
         protected SonarConfig getConfig() {
-            DatasourceConfig datasourceConfig = dsConfigService.getById(15);
+            DatasourceConfig datasourceConfig = dsConfigService.getById(12);
             return dsFactory.build(datasourceConfig, SonarConfig.class);
         }
 }

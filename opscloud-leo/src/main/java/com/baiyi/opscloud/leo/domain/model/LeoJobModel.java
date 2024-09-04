@@ -162,6 +162,17 @@ public class LeoJobModel {
     @NoArgsConstructor
     public static class Sonar {
         private Boolean enabled;
+        private SonarInstance instance;
+    }
+
+    @Builder
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class SonarInstance {
+        private String name;
+        // https://sonar.server.com/
+        private String url;
     }
 
     @Builder

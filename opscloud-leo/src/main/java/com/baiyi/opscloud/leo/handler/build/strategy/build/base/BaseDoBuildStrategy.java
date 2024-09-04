@@ -132,6 +132,7 @@ public abstract class BaseDoBuildStrategy extends BaseBuildStrategy {
         paramMap.put(BuildDictConstants.ENV.getKey(), dict.get(BuildDictConstants.ENV.getKey()));
         paramMap.put(BuildDictConstants.JOB_BUILD_NUMBER.getKey(), String.valueOf(leoBuild.getBuildNumber()));
         paramMap.put(BuildDictConstants.APPLICATION_NAME.getKey(), dict.get(BuildDictConstants.APPLICATION_NAME.getKey()));
+        paramMap.put(BuildDictConstants.LEO_JOB_NAME.getKey(), dict.get(BuildDictConstants.LEO_JOB_NAME.getKey()));
 
         return paramMap;
     }

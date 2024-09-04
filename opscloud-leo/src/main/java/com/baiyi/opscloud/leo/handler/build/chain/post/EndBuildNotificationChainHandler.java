@@ -1,6 +1,9 @@
 package com.baiyi.opscloud.leo.handler.build.chain.post;
 
+import com.baiyi.opscloud.common.util.StringFormatter;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
+import com.baiyi.opscloud.leo.constants.BuildDictConstants;
+import com.baiyi.opscloud.leo.domain.model.LeoBaseModel;
 import com.baiyi.opscloud.leo.domain.model.LeoBuildModel;
 import com.baiyi.opscloud.leo.exception.LeoBuildException;
 import com.baiyi.opscloud.leo.handler.build.BaseBuildChainHandler;
@@ -11,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @Author baiyi
@@ -57,6 +61,21 @@ public class EndBuildNotificationChainHandler extends BaseBuildChainHandler {
         Map<String, Object> contentMap = Maps.newHashMap();
         contentMap.put("buildPhase", "构建结束");
         contentMap.put("buildResult", leoBuild.getBuildResult());
+        // sonarUrl
+        try {
+            Optional<LeoBaseModel.Parameter> optionalParameter = buildConfig.getBuild().getParameters().stream().filter(e -> "isSonar".equals(e.getName())).findFirst();
+            boolean isSonar = optionalParameter.filter(parameter -> "true".equals(parameter.getValue())).isPresent();
+            if (isSonar) {
+                String leoJobName = buildConfig.getBuild().getDict().get(BuildDictConstants.JOB_NAME.getKey());
+                String sonarUrl = "https://sonar.palmpay-inc.com/dashboard?id={}";
+                contentMap.put("sonarUrl", StringFormatter.format(sonarUrl, leoJobName));
+            } else {
+                contentMap.put("sonarUrl", "Disable");
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            contentMap.put("sonarUrl", "Error");
+        }
         buildMessageCenter.sendMessage(leoBuild, buildConfig, LEO_BUILD_END, contentMap);
     }
 
