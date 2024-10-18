@@ -255,9 +255,10 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         if (leoDeploy.getIsFinish() != null && leoDeploy.getIsFinish()) {
             throw new LeoDeployException("部署任务已完成: buildId={}", deployId);
         }
-        if (leoHeartbeatHolder.isLive(HeartbeatTypeConstants.DEPLOY, deployId)) {
-            throw new LeoDeployException("部署任务有心跳: deployId={}", deployId);
-        }
+        // 允许强制关闭
+//        if (leoHeartbeatHolder.isLive(HeartbeatTypeConstants.DEPLOY, deployId)) {
+//            throw new LeoDeployException("部署任务有心跳: deployId={}", deployId);
+//        }
         LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                 .id(deployId)
                 .deployResult("ERROR")

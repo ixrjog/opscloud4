@@ -46,6 +46,8 @@ public class ApolloParam {
         private String releasedBy;
         private boolean isEmergencyPublish;
 
+        private String url;
+
     }
 
 }
