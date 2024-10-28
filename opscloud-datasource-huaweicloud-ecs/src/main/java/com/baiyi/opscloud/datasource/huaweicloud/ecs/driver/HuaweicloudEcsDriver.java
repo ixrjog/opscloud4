@@ -2,6 +2,7 @@ package com.baiyi.opscloud.datasource.huaweicloud.ecs.driver;
 
 import com.baiyi.opscloud.common.datasource.HuaweicloudConfig;
 import com.baiyi.opscloud.datasource.huaweicloud.ecs.entity.HuaweicloudEcs;
+import com.baiyi.opscloud.datasource.huaweicloud.ecs.util.HuaweicloudProjectUtil;
 import com.google.common.collect.Lists;
 import com.huaweicloud.sdk.core.auth.BasicCredentials;
 import com.huaweicloud.sdk.core.exception.ServiceResponseException;
@@ -91,7 +92,8 @@ public class HuaweicloudEcsDriver {
         // 创建认证
         BasicCredentials auth = new BasicCredentials()
                 .withAk(huaweicloud.getAccount().getAccessKeyId())
-                .withSk(huaweicloud.getAccount().getSecretAccessKey());
+                .withSk(huaweicloud.getAccount().getSecretAccessKey())
+                .withProjectId(HuaweicloudProjectUtil.findProjectId(regionId,huaweicloud));
         Region region = EcsRegion.valueOf(regionId);
         return EcsClient.newBuilder()
                 .withHttpConfig(config)

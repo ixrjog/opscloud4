@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -23,24 +24,29 @@ public class HuaweicloudConfig extends BaseDsConfig {
     @NoArgsConstructor
     @Schema
     public static class Huaweicloud {
-
         private String version;
         private Account account;
         private String regionId;
         private Set<String> regionIds; // 可用区
-
+        private List<Project> projects;
     }
 
     @Data
     @NoArgsConstructor
     @Schema
     public static class Account {
-
         private String uid;
         private String username;
         private String accessKeyId;
         private String secretAccessKey;
+    }
 
+    @Data
+    @NoArgsConstructor
+    @Schema
+    public static class Project {
+        private String name;
+        private String id;
     }
 
 }
