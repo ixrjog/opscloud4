@@ -287,6 +287,13 @@ public class LeoController {
         return new HttpResult<>(deployFacade.doDeploy(doDeploy));
     }
 
+    @Operation(summary = "颁发部署通行证（外部）")
+    @PostMapping(value = "/deploy/pass/issue", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> issueDeployPass(@RequestBody @Valid LeoDeployParam.IssueDeployPass issueDeployPass) {
+        deployFacade.issueDeployPass(issueDeployPass);
+        return HttpResult.SUCCESS;
+    }
+
     @Operation(summary = "查询部署版本")
     @PostMapping(value = "/deploy/version/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<List<LeoBuildVO.Build>> queryLeoDeployVersion(@RequestBody @Valid LeoDeployParam.QueryDeployVersion queryBuildVersion) {

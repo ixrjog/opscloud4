@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.leo.response.LeoContinuousDeliveryResponse;
 import com.baiyi.opscloud.core.factory.DsConfigManager;
 import com.baiyi.opscloud.datasource.kubernetes.driver.KubernetesDeploymentDriver;
+import com.baiyi.opscloud.datasource.kubernetes.util.KubeUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoDeploymentVersionDetailsRequestParam;
 import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
@@ -131,10 +132,12 @@ public class SubscribeLeoDeploymentVersionDetailsRequestHandler
                         if (deployment == null) {
                             return LeoJobVersionVO.DeploymentVersion.EMPTY;
                         }
-                        Optional<Container> optionalContainer = deployment.getSpec().getTemplate().getSpec().getContainers()
-                                .stream()
-                                .filter(c -> c.getName().startsWith(application.getName()) || c.getName().contains(application.getName()))
-                                .findFirst();
+
+                        Optional<Container> optionalContainer = KubeUtil.findAppContainerOf(deployment);
+//                        Optional<Container> optionalContainer = deployment.getSpec().getTemplate().getSpec().getContainers()
+//                                .stream()
+//                                .filter(c -> c.getName().startsWith(application.getName()) || c.getName().contains(application.getName()))
+//                                .findFirst();
 
                         if (optionalContainer.isPresent()) {
                             final String image = optionalContainer.get().getImage();

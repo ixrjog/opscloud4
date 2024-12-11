@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.param.leo;
 
 import com.baiyi.opscloud.domain.param.IExtend;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -291,6 +292,21 @@ public class LeoDeployParam {
         private String name;
         private String value;
 
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema
+    public static class IssueDeployPass {
+        @NotNull
+        @Max(-1)
+        private Integer ticketId;
+        @NotNull
+        private Integer buildId;
+        @NotNull
+        private Integer applicationId;
     }
 
 }
