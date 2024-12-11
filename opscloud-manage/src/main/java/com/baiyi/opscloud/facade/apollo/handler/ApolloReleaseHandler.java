@@ -23,6 +23,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ApolloReleaseHandler implements InitializingBean {
 
+    // 管理员发布
+    private final AdminReleasesChainHandler adminReleasesChainHandler;
+
     // 拦截环境
     private final InterceptByEnvChainHandler interceptByEnvChainHandler;
 
