@@ -1,10 +1,7 @@
 package com.baiyi.opscloud.datasource.aliyun.ons.driver;
 
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.ons.model.v20190214.OnsGroupCreateRequest;
-import com.aliyuncs.ons.model.v20190214.OnsGroupCreateResponse;
-import com.aliyuncs.ons.model.v20190214.OnsGroupListRequest;
-import com.aliyuncs.ons.model.v20190214.OnsGroupListResponse;
+import com.aliyuncs.ons.model.v20190214.*;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
@@ -47,14 +44,16 @@ public class AliyunOnsRocketMqGroupDriver {
      * @param instanceId 必选参数
      * @return
      */
-    public List<OnsRocketMqGroup.Group> listGroup(String regionId, AliyunConfig.Aliyun aliyun, String instanceId) throws ClientException {
+    public List<OnsRocketMqGroup.Group> listGroup(String regionId, AliyunConfig.Aliyun aliyun,
+                                                  String instanceId) throws ClientException {
         List<OnsRocketMqGroup.Group> groupList = Lists.newArrayList();
         groupList.addAll(listGroup(regionId, aliyun, instanceId, QUERY_ALL, GroupType.TCP));
         groupList.addAll(listGroup(regionId, aliyun, instanceId, QUERY_ALL, GroupType.HTTP));
         return groupList;
     }
 
-    public OnsRocketMqGroup.Group getGroup(String regionId, AliyunConfig.Aliyun aliyun, String instanceId, String groupId, String groupType) throws ClientException {
+    public OnsRocketMqGroup.Group getGroup(String regionId, AliyunConfig.Aliyun aliyun, String instanceId,
+                                           String groupId, String groupType) throws ClientException {
         List<OnsRocketMqGroup.Group> list = listGroup(regionId, aliyun, instanceId, groupId, groupType);
         return CollectionUtils.isEmpty(list) ? null : list.getFirst();
     }
@@ -69,7 +68,8 @@ public class AliyunOnsRocketMqGroupDriver {
      * @param groupType
      * @return
      */
-    public List<OnsRocketMqGroup.Group> listGroup(String regionId, AliyunConfig.Aliyun aliyun, String instanceId, String groupId, String groupType) throws ClientException {
+    public List<OnsRocketMqGroup.Group> listGroup(String regionId, AliyunConfig.Aliyun aliyun, String instanceId,
+                                                  String groupId, String groupType) throws ClientException {
         OnsGroupListRequest request = new OnsGroupListRequest();
         request.setGroupType(groupType);
         request.setInstanceId(instanceId);
@@ -95,14 +95,24 @@ public class AliyunOnsRocketMqGroupDriver {
      * @param group
      * @throws ClientException
      */
-    public void createGroup(String regionId, AliyunConfig.Aliyun aliyun, OnsRocketMqGroup.Group group) throws ClientException {
+    public void createGroup(String regionId, AliyunConfig.Aliyun aliyun,
+                            OnsRocketMqGroup.Group group) throws ClientException {
         OnsGroupCreateRequest request = new OnsGroupCreateRequest();
         request.setInstanceId(group.getInstanceId());
         request.setGroupId(group.getGroupId());
         request.setRemark(group.getRemark());
         request.setGroupType(group.getGroupType());
         OnsGroupCreateResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
-        log.info("创建阿里云ONS-Topic: requestId={}, group={}", response.getRequestId(), group);
+        log.info("创建阿里云ONS-Group: requestId={}, group={}", response.getRequestId(), group);
+    }
+
+    public void deleteGroup(String regionId, AliyunConfig.Aliyun aliyun, String instanceId,
+                            String groupId) throws ClientException {
+        OnsGroupDeleteRequest request = new OnsGroupDeleteRequest();
+        request.setInstanceId(instanceId);
+        request.setGroupId(groupId);
+        OnsGroupDeleteResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
+        log.info("删除阿里云ONS-Group: requestId={}, groupId={}", regionId, groupId);
     }
 
 }

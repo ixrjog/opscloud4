@@ -111,8 +111,6 @@ public class ApplicationTest2 extends BaseUnit {
                 log.info("appName: {}, owner: {}", app.getName(), owner);
             }
         });
-
-
     }
 
 }
