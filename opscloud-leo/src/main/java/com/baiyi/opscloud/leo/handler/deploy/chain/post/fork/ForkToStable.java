@@ -40,12 +40,7 @@ public class ForkToStable {
 
     private final ForkDeployEventPublisher forkDeployEventPublisher;
 
-    private static final boolean SWITCH = true;
-
     public void doFork(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
-        if (!SWITCH) {
-            return;
-        }
         // 异常处理
         try {
             handle(leoDeploy, deployConfig);
@@ -54,7 +49,8 @@ public class ForkToStable {
         }
     }
 
-    private boolean preValidation(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
+    // test
+    public boolean preValidation(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
         // 校验部署类型
         if (!DeployTypeConstants.ROLLING.name().equals(Optional.of(deployConfig)
                 .map(LeoDeployModel.DeployConfig::getDeploy)
@@ -74,13 +70,12 @@ public class ForkToStable {
     }
 
     public void handle(LeoDeploy leoDeploy, LeoDeployModel.DeployConfig deployConfig) {
-        LeoJob leoJob = leoJobService.getById(leoDeploy.getJobId());
-        LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob);
-
         if (!preValidation(leoDeploy, deployConfig)) {
             return;
         }
 
+        LeoJob leoJob = leoJobService.getById(leoDeploy.getJobId());
+        LeoJobModel.JobConfig jobConfig = LeoJobModel.load(leoJob);
         Optional<LeoJobModel.Fork> optionalFork = Optional.of(jobConfig)
                 .map(LeoJobModel.JobConfig::getJob)
                 .map(LeoJobModel.Job::getDeploy)

@@ -83,4 +83,6 @@ public interface LeoDeployFacade {
 
     void interceptLeoDeploy(LeoDeployParam.InterceptDeploy interceptDeploy);
 
+    void issueDeployPass(LeoDeployParam.IssueDeployPass issueDeployPass);
+
 }

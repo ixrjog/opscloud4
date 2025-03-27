@@ -55,7 +55,7 @@
                 )
             </if>
         </where>
-        order by create_time
+        order by create_time desc
     </select>
 
     <select id="queryBusinessPermissionUserPageByParam"

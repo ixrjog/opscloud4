@@ -49,10 +49,10 @@ public abstract class AbstractAssetChildProvider<C> extends BaseAssetProvider<C>
     public void doPull(int dsInstanceId) {
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
         List<DatasourceInstanceAsset> parents = listParents(dsInstanceContext);
-        parents.forEach(p -> {
+        for (DatasourceInstanceAsset p : parents) {
             List<C> entities = listEntities(dsInstanceContext, p);
             enterAssets(dsInstanceContext, entities, p);
-        });
+        }
     }
 
     private void enterAssets(DsInstanceContext dsInstanceContext, List<C> entities, DatasourceInstanceAsset parent) {

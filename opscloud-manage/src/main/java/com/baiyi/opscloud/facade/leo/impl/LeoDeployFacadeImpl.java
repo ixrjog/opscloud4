@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.leo.impl;
 import com.baiyi.opscloud.common.annotation.SetSessionUsername;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.holder.SessionHolder;
+import com.baiyi.opscloud.common.holder.WorkOrderLeoDeployHolder;
 import com.baiyi.opscloud.common.instance.OcInstance;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.StringFormatter;
@@ -17,6 +18,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoBuild;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoDeploy;
 import com.baiyi.opscloud.domain.generator.opscloud.LeoJob;
+import com.baiyi.opscloud.domain.model.WorkOrderToken;
 import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
 import com.baiyi.opscloud.domain.param.leo.LeoDeployParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
@@ -116,6 +118,10 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     private final LeoHeartbeatHolder leoHeartbeatHolder;
 
     private final DsInstanceAssetFacade assetFacade;
+
+    private final WorkOrderLeoDeployHolder workOrderLeoDeployHolder;
+
+    private final LeoBuildService leoBuildService;
 
     @Override
     @LeoDeployInterceptor(jobIdSpEL = "#doDeploy.jobId", deploymentAssetIdSpEL = "#doDeploy.assetId", deployTypeSpEL = "#doDeploy.deployType", buildIdSpEL = "#doDeploy.buildId")
@@ -255,9 +261,10 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
         if (leoDeploy.getIsFinish() != null && leoDeploy.getIsFinish()) {
             throw new LeoDeployException("部署任务已完成: buildId={}", deployId);
         }
-        if (leoHeartbeatHolder.isLive(HeartbeatTypeConstants.DEPLOY, deployId)) {
-            throw new LeoDeployException("部署任务有心跳: deployId={}", deployId);
-        }
+        // 允许强制关闭
+//        if (leoHeartbeatHolder.isLive(HeartbeatTypeConstants.DEPLOY, deployId)) {
+//            throw new LeoDeployException("部署任务有心跳: deployId={}", deployId);
+//        }
         LeoDeploy saveLeoDeploy = LeoDeploy.builder()
                 .id(deployId)
                 .deployResult("ERROR")
@@ -540,6 +547,23 @@ public class LeoDeployFacadeImpl implements LeoDeployFacade {
     @Override
     public void interceptLeoDeploy(LeoDeployParam.InterceptDeploy interceptDeploy) {
         executeJobInterceptorHandler.verifyRule(interceptDeploy.getJobId());
+    }
+
+    @Override
+    public void issueDeployPass(LeoDeployParam.IssueDeployPass issueDeployPass) {
+        int buildId = issueDeployPass.getBuildId();
+        WorkOrderToken.LeoDeployToken token = WorkOrderToken.LeoDeployToken.builder()
+                .key(buildId)
+                .applicationId(issueDeployPass.getApplicationId())
+                .build();
+        // 设置令牌，@LeoDeployInterceptor 拦截器注解中使用
+        workOrderLeoDeployHolder.setToken(token);
+        // 多次工单申请也只记录最后一次工单ID
+        LeoBuild saveLeoBuild = LeoBuild.builder()
+                .id(buildId)
+                .ticketId(issueDeployPass.getTicketId())
+                .build();
+        leoBuildService.updateByPrimaryKeySelective(saveLeoBuild);
     }
 
 }

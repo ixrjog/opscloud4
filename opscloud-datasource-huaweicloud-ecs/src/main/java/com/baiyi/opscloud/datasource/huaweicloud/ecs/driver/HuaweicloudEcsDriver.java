@@ -2,10 +2,12 @@ package com.baiyi.opscloud.datasource.huaweicloud.ecs.driver;
 
 import com.baiyi.opscloud.common.datasource.HuaweicloudConfig;
 import com.baiyi.opscloud.datasource.huaweicloud.ecs.entity.HuaweicloudEcs;
+import com.baiyi.opscloud.datasource.huaweicloud.ecs.util.HuaweicloudProjectUtil;
 import com.google.common.collect.Lists;
 import com.huaweicloud.sdk.core.auth.BasicCredentials;
 import com.huaweicloud.sdk.core.exception.ServiceResponseException;
 import com.huaweicloud.sdk.core.http.HttpConfig;
+import com.huaweicloud.sdk.core.region.Region;
 import com.huaweicloud.sdk.ecs.v2.EcsClient;
 import com.huaweicloud.sdk.ecs.v2.model.ListServersDetailsRequest;
 import com.huaweicloud.sdk.ecs.v2.model.ListServersDetailsResponse;
@@ -47,20 +49,20 @@ public class HuaweicloudEcsDriver {
         } catch (ServiceResponseException e) {
             log.error("查询错误: httpStatusCode={}, requestId={}, errorCode={}, errorMsg={}", e.getHttpStatusCode(), e.getRequestId(), e.getErrorCode(), e.getErrorMsg());
         }
-        return serverDetails.stream().map(e-> toEcs(regionId,e)).collect(Collectors.toList());
+        return serverDetails.stream().map(e -> toEcs(regionId, e)).collect(Collectors.toList());
     }
 
-    public static HuaweicloudEcs.Ecs toEcs(String regionId,ServerDetail serverDetail) {
+    public static HuaweicloudEcs.Ecs toEcs(String regionId, ServerDetail serverDetail) {
         Map<String, List<ServerAddress>> addMap = serverDetail.getAddresses();
         String privateIp = "";
         String publicIp = "";
         for (String key : addMap.keySet()) {
             for (ServerAddress serverAdd : addMap.get(key)) {
-                if(ServerAddress.OsEXTIPSTypeEnum.FIXED == serverAdd.getOsEXTIPSType()){
+                if (ServerAddress.OsEXTIPSTypeEnum.FIXED == serverAdd.getOsEXTIPSType()) {
                     privateIp = serverAdd.getAddr();
                     continue;
                 }
-                if(ServerAddress.OsEXTIPSTypeEnum.FLOATING ==serverAdd.getOsEXTIPSType()){
+                if (ServerAddress.OsEXTIPSTypeEnum.FLOATING == serverAdd.getOsEXTIPSType()) {
                     publicIp = serverAdd.getAddr();
                 }
             }
@@ -90,11 +92,13 @@ public class HuaweicloudEcsDriver {
         // 创建认证
         BasicCredentials auth = new BasicCredentials()
                 .withAk(huaweicloud.getAccount().getAccessKeyId())
-                .withSk(huaweicloud.getAccount().getSecretAccessKey());
+                .withSk(huaweicloud.getAccount().getSecretAccessKey())
+                .withProjectId(HuaweicloudProjectUtil.findProjectId(regionId,huaweicloud));
+        Region region = EcsRegion.valueOf(regionId);
         return EcsClient.newBuilder()
                 .withHttpConfig(config)
                 .withCredential(auth)
-                .withRegion(EcsRegion.valueOf(regionId))
+                .withRegion(region)
                 .build();
     }
 

@@ -2,8 +2,7 @@ package com.baiyi.opscloud.domain.param.leo.request;
 
 import com.baiyi.opscloud.domain.param.SuperPageParam;
 import com.baiyi.opscloud.domain.param.leo.request.type.LeoRequestType;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 /**
  * @Author baiyi
