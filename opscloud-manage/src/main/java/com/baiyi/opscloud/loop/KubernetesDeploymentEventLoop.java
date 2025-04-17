@@ -7,9 +7,8 @@ import com.baiyi.opscloud.domain.model.message.KubernetesDeploymentMessage;
 import com.baiyi.opscloud.loop.kubernetes.IKubernetesDeploymentRequestHandler;
 import com.baiyi.opscloud.loop.kubernetes.factory.KubernetesDeploymentMessageHandlerFactory;
 import com.google.gson.GsonBuilder;
-import lombok.extern.slf4j.Slf4j;
-
 import jakarta.websocket.Session;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @Author baiyi
@@ -38,11 +37,17 @@ public class KubernetesDeploymentEventLoop implements Runnable {
             try {
                 if (KubernetesDeploymentQuerySessionMap.sessionQueryMapContainsKey(this.sessionId)) {
                     String message = KubernetesDeploymentQuerySessionMap.getSessionQueryMap(this.sessionId);
-                    KubernetesDeploymentMessage kubernetesDeploymentMessage = new GsonBuilder().create().fromJson(message, KubernetesDeploymentMessage.class);
-                    IKubernetesDeploymentRequestHandler handler = KubernetesDeploymentMessageHandlerFactory.getHandlerByMessageType(kubernetesDeploymentMessage.getMessageType());
-                    if (handler != null) {
-                        handler.handleRequest(this.sessionId, session, message);
-                        NewTimeUtil.sleep(10L);
+                    if ("ping".equalsIgnoreCase(message)) {
+                        return;
+                    }
+                    try {
+                        KubernetesDeploymentMessage kubernetesDeploymentMessage = new GsonBuilder().create().fromJson(message, KubernetesDeploymentMessage.class);
+                        IKubernetesDeploymentRequestHandler handler = KubernetesDeploymentMessageHandlerFactory.getHandlerByMessageType(kubernetesDeploymentMessage.getMessageType());
+                        if (handler != null) {
+                            handler.handleRequest(this.sessionId, session, message);
+                            NewTimeUtil.sleep(10L);
+                        }
+                    } catch (IllegalStateException ignored) {
                     }
                 }
             } catch (Exception e) {

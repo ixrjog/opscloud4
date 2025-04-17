@@ -2,6 +2,7 @@ package com.baiyi.opscloud.datasource.kubernetes.driver;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.MyKubernetesClientBuilder;
+import com.google.common.collect.Maps;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.api.model.StatusDetails;
@@ -56,7 +57,7 @@ public class KubernetesPodDriver {
 
     public static List<Pod> list(KubernetesConfig.Kubernetes kubernetes, String namespace, String deploymentName) {
         try (KubernetesClient kc = MyKubernetesClientBuilder.build(kubernetes)) {
-            Map<String, String> matchLabels = kc.apps()
+            Map<String, String> labels = kc.apps()
                     .deployments()
                     .inNamespace(namespace)
                     .withName(deploymentName)
@@ -65,9 +66,17 @@ public class KubernetesPodDriver {
                     .getTemplate()
                     .getMetadata()
                     .getLabels();
-            if (matchLabels.isEmpty()) {
+            if (labels.isEmpty()) {
                 return Collections.emptyList();
             }
+            Map<String, String> matchLabels = Maps.newHashMap();
+            labels.forEach((k, v) -> {
+                switch (k) {
+                    case "app", "group" -> matchLabels.put(k, v);
+                    case null, default -> {
+                    }
+                }
+            });
             return Optional.of(kc.pods().inNamespace(namespace).withLabels(matchLabels))
                     .map(Listable::list)
                     .map(PodList::getItems)

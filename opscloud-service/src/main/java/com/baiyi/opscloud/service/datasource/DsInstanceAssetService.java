@@ -52,6 +52,8 @@ public interface DsInstanceAssetService {
 
     List<DatasourceInstanceAsset> listByParentId(Integer parentId);
 
+    List<DatasourceInstanceAsset> queryByParam(String assetType,String assetKey2, String prefixName);
+
     List<ReportVO.Report> statApolloReleaseLast30Days(ApolloReportParam.ApolloReleaseReport apolloReleaseReport);
 
 }

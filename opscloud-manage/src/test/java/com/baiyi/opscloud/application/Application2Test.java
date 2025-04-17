@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Slf4j
-public class ApplicationTest2 extends BaseUnit {
+public class Application2Test extends BaseUnit {
 
     @Resource
     private ApplicationService applicationService;

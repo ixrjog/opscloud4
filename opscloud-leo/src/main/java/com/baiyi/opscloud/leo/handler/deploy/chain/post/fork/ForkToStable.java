@@ -156,7 +156,7 @@ public class ForkToStable {
         if (leoJobs.size() == 1) {
             return leoJobs.getFirst();
         } else {
-            throw new LeoDeployException("Fork configuration error, missing job configuration and multiple job.");
+            throw new LeoDeployException("`Fork configuration error, missing job configuration and multiple job.");
         }
     }
 

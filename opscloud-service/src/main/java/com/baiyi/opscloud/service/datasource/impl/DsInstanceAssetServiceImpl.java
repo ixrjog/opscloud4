@@ -205,6 +205,16 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
     }
 
     @Override
+    public List<DatasourceInstanceAsset> queryByParam(String assetType,String assetKey2, String prefixName) {
+        Example example = new Example(DatasourceInstanceAsset.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("assetType", assetType)
+                .andEqualTo("assetKey2", assetKey2)
+                .andLike("name", prefixName + "%");
+        return dsInstanceAssetMapper.selectByExample(example);
+    }
+
+    @Override
     public List<ReportVO.Report> statApolloReleaseLast30Days(ApolloReportParam.ApolloReleaseReport apolloReleaseReport) {
         return dsInstanceAssetMapper.statApolloReleaseLast30Days(apolloReleaseReport);
     }
