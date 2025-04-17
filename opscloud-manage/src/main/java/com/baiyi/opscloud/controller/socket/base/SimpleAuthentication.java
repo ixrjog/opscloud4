@@ -1,11 +1,13 @@
 package com.baiyi.opscloud.controller.socket.base;
 
+import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.auth.AuthenticationException;
 import com.baiyi.opscloud.common.holder.SessionHolder;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserToken;
 import com.baiyi.opscloud.domain.model.message.ILoginMessage;
 import com.baiyi.opscloud.domain.model.message.SimpleState;
+import com.baiyi.opscloud.service.auth.AuthRoleService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.user.UserTokenService;
 import com.google.gson.GsonBuilder;
@@ -27,6 +29,8 @@ public class SimpleAuthentication {
 
     private static UserService userService;
 
+    private static AuthRoleService authRoleService;
+
     @Autowired
     public void setUserTokenService(UserTokenService userTokenService) {
         SimpleAuthentication.userTokenService = userTokenService;
@@ -35,6 +39,11 @@ public class SimpleAuthentication {
     @Autowired
     public void setUserService(UserService userService) {
         SimpleAuthentication.userService = userService;
+    }
+
+    @Autowired
+    public void setAuthRoleService(AuthRoleService authRoleService) {
+        SimpleAuthentication.authRoleService = authRoleService;
     }
 
     public String hasLogin(ILoginMessage loginMessage) {
@@ -58,6 +67,11 @@ public class SimpleAuthentication {
     protected String getState(String message) {
         SimpleState ss = new GsonBuilder().create().fromJson(message, SimpleState.class);
         return ss.getState();
+    }
+
+    protected boolean isAdmin(String username) {
+        int accessLevel = authRoleService.getRoleAccessLevelByUsername(username);
+        return accessLevel >= AccessLevel.OPS.getLevel();
     }
 
 }

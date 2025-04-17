@@ -53,8 +53,8 @@ white:
     - /doc.html
     - /api/ws/guacamole/tunnel
     - /api/ws/terminal
-    - /api/ws/kubernetes/terminal
-    - /api/ws/kubernetes/deployment
+    #- /api/ws/kubernetes/terminal
+    #- /api/ws/kubernetes/deployment
     - /api/ws/terminal/session/audit
     - /api/ws/server/task/play
     - /api/ws/jenkins/build/executor/status
