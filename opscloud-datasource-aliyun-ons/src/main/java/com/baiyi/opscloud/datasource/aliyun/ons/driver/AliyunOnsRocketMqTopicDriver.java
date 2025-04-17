@@ -1,10 +1,7 @@
 package com.baiyi.opscloud.datasource.aliyun.ons.driver;
 
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.ons.model.v20190214.OnsTopicCreateRequest;
-import com.aliyuncs.ons.model.v20190214.OnsTopicCreateResponse;
-import com.aliyuncs.ons.model.v20190214.OnsTopicListRequest;
-import com.aliyuncs.ons.model.v20190214.OnsTopicListResponse;
+import com.aliyuncs.ons.model.v20190214.*;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
@@ -33,11 +30,13 @@ public class AliyunOnsRocketMqTopicDriver {
 
     public static final String QUERY_ALL_TOPIC = StringUtils.EMPTY;
 
-    public List<OnsRocketMqTopic.Topic> listTopic(String regionId, AliyunConfig.Aliyun aliyun, String instanceId) throws ClientException {
+    public List<OnsRocketMqTopic.Topic> listTopic(String regionId, AliyunConfig.Aliyun aliyun,
+                                                  String instanceId) throws ClientException {
         return listTopic(regionId, aliyun, instanceId, QUERY_ALL_TOPIC);
     }
 
-    public OnsRocketMqTopic.Topic getTopic(String regionId, AliyunConfig.Aliyun aliyun, String instanceId, String topic) throws ClientException {
+    public OnsRocketMqTopic.Topic getTopic(String regionId, AliyunConfig.Aliyun aliyun, String instanceId,
+                                           String topic) throws ClientException {
         List<OnsRocketMqTopic.Topic> list = listTopic(regionId, aliyun, instanceId, topic);
         return CollectionUtils.isEmpty(list) ? null : list.getFirst();
     }
@@ -54,7 +53,8 @@ public class AliyunOnsRocketMqTopicDriver {
      * @param topic
      * @return
      */
-    public List<OnsRocketMqTopic.Topic> listTopic(String regionId, AliyunConfig.Aliyun aliyun, String instanceId, String topic) throws ClientException {
+    public List<OnsRocketMqTopic.Topic> listTopic(String regionId, AliyunConfig.Aliyun aliyun, String instanceId,
+                                                  String topic) throws ClientException {
         OnsTopicListRequest request = new OnsTopicListRequest();
         request.setInstanceId(instanceId);
         if (StringUtils.isNotBlank(topic)) {
@@ -80,7 +80,8 @@ public class AliyunOnsRocketMqTopicDriver {
      * @param topic
      * @throws ClientException
      */
-    public void createTopic(String regionId, AliyunConfig.Aliyun aliyun, OnsRocketMqTopic.Topic topic) throws ClientException {
+    public void createTopic(String regionId, AliyunConfig.Aliyun aliyun,
+                            OnsRocketMqTopic.Topic topic) throws ClientException {
         OnsTopicCreateRequest request = new OnsTopicCreateRequest();
         request.setInstanceId(topic.getInstanceId());
         request.setTopic(topic.getTopic());
@@ -88,6 +89,15 @@ public class AliyunOnsRocketMqTopicDriver {
         request.setMessageType(topic.getMessageType());
         OnsTopicCreateResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
         log.info("创建阿里云ONS-Topic: requestId={}, topic={}", response.getRequestId(), topic);
+    }
+
+    public void deleteTopic(String regionId, AliyunConfig.Aliyun aliyun, String instanceId,
+                            String topic) throws ClientException {
+        OnsTopicDeleteRequest request = new OnsTopicDeleteRequest();
+        request.setInstanceId(instanceId);
+        request.setTopic(topic);
+        OnsTopicDeleteResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
+        log.info("删除阿里云ONS-Topic: requestId={}, topic={}", regionId, topic);
     }
 
 }
