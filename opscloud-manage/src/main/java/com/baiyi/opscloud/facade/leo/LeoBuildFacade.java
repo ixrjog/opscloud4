@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.param.leo.LeoBuildParam;
 import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.LeoMonitorParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
+import com.baiyi.opscloud.domain.vo.leo.LeoBuildImageVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 
 import java.util.List;
@@ -69,5 +70,7 @@ public interface LeoBuildFacade {
      * @return
      */
     List<LeoBuildVO.Build> getLatestLeoBuild(LeoMonitorParam.QueryLatestBuild queryLatestBuild);
+
+    LeoBuildImageVO.BuildImage queryBuildImageVersion(LeoBuildParam.QueryBuildImageVersion queryBuildImageVersion);
 
 }

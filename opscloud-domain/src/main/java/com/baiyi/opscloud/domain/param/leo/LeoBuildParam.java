@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.param.leo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -254,6 +255,17 @@ public class LeoBuildParam {
 
         @Schema(description = "有效")
         private Boolean isActive;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class QueryBuildImageVersion {
+
+        @NotBlank
+        private String image;
 
     }
 

@@ -49,14 +49,15 @@ public class ApolloReleaseHandler implements InitializingBean {
     public HttpResult<Boolean> handleReleases(ApolloParam.ReleaseEvent releaseEvent) {
         log.debug(JSONUtil.writeValueAsString(releaseEvent));
         Optional<ApolloConfig> optionalConfig = apolloConfigHolder.getConfigByToken(releaseEvent.getToken());
-        return optionalConfig.map(apolloConfig -> interceptByEnvChainHandler.handleRequest(releaseEvent, apolloConfig))
+        return optionalConfig.map(apolloConfig -> adminReleasesChainHandler.handleRequest(releaseEvent, apolloConfig))
                 .orElse(HttpResult.SUCCESS);
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         // 组装责任链
-        interceptByEnvChainHandler.setNextHandler(interceptByApplicationChainHandler)
+        adminReleasesChainHandler.setNextHandler(interceptByEnvChainHandler)
+                .setNextHandler(interceptByApplicationChainHandler)
                 .setNextHandler(releaseApplicationWhiteListChainHandler)
                 .setNextHandler(releaseWorkOrderReleaseChainHandler)
                 .setNextHandler(interceptByActionChainHandler)

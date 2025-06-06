@@ -35,12 +35,12 @@ class ApolloFacadeImplTest extends BaseUnit {
     @Test
     void test() {
         ApolloParam.ReleaseEvent releaseEvent = ApolloParam.ReleaseEvent.builder()
-                .appId(CLASS_A)
+                .appId("qa-basic-service")
                 .env("PROD")
                 .clusterName("default")
-                .username("baiyi")
+                .username("platform-devops")
                 .namespaceName("application")
-                .branchName("by1000002")
+                .branchName("by10000021")
                 .token("13f731d2-822b-e554-3a19-ba96f9189908")
                 .isGray(false)
                 .action(ApolloReleaseActionEnum.GRAY_RELEASE.name())

@@ -20,6 +20,7 @@ import com.baiyi.opscloud.domain.param.leo.LeoJobParam;
 import com.baiyi.opscloud.domain.param.leo.LeoMonitorParam;
 import com.baiyi.opscloud.domain.param.leo.request.SubscribeLeoBuildRequestParam;
 import com.baiyi.opscloud.domain.util.GitFlowUtil;
+import com.baiyi.opscloud.domain.vo.leo.LeoBuildImageVO;
 import com.baiyi.opscloud.domain.vo.leo.LeoBuildVO;
 import com.baiyi.opscloud.facade.leo.LeoBuildFacade;
 import com.baiyi.opscloud.leo.aop.annotation.LeoBuildInterceptor;
@@ -594,6 +595,23 @@ public class LeoBuildFacadeImpl implements LeoBuildFacade {
                     e.setIsLive(leoHeartbeatHolder.isLive(HeartbeatTypeConstants.BUILD, e.getId()));
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public LeoBuildImageVO.BuildImage queryBuildImageVersion(LeoBuildParam.QueryBuildImageVersion queryBuildImageVersion) {
+        LeoBuildImage leoBuildImage = buildImageService.getByImage(queryBuildImageVersion.getImage());
+        if (Objects.isNull(leoBuildImage)) {
+            return LeoBuildImageVO.BuildImage
+                    .builder()
+                    .image(queryBuildImageVersion.getImage())
+                    .build();
+        }
+        return LeoBuildImageVO.BuildImage
+                .builder()
+                .image(queryBuildImageVersion.getImage())
+                .versionName(leoBuildImage.getVersionName())
+                .versionDesc(leoBuildImage.getVersionDesc())
+                .build();
     }
 
 }

@@ -267,6 +267,12 @@ public class LeoController {
         return HttpResult.SUCCESS;
     }
 
+    @Operation(summary = "查询构建版本")
+    @PostMapping(value = "/build/image/version/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<LeoBuildImageVO.BuildImage> queryLeoBuildImageVersion(@RequestBody @Valid LeoBuildParam.QueryBuildImageVersion queryBuildImageVersion) {
+        return new HttpResult<>(buildFacade.queryBuildImageVersion(queryBuildImageVersion));
+    }
+
     @Operation(summary = "Query all deploys associated with build")
     @GetMapping(value = "/deploys/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<List<LeoDeployVO.Deploy>> getLeoDeploys(@RequestParam int buildId) {

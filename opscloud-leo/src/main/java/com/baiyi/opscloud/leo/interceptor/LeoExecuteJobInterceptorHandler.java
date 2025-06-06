@@ -96,7 +96,6 @@ public class LeoExecuteJobInterceptorHandler {
      * @param jobId
      */
     public void verifyAuthorization(int jobId) {
-        LeoJob leoJob = leoJobService.getById(jobId);
         String username = SessionHolder.getUsername();
 
         /*
@@ -105,7 +104,6 @@ public class LeoExecuteJobInterceptorHandler {
         if (isAdmin(username)) {
             return;
         }
-
         User user = userService.getByUsername(username);
         if (user == null || !user.getIsActive()) {
             throw new AuthenticationException(42100, "用户不存在或无效！");
@@ -121,10 +119,13 @@ public class LeoExecuteJobInterceptorHandler {
         }
 
         // 应用级授权，判断用户是否授权
-        verifyApplicationPermission(user, leoJob);
+        //  verifyApplicationPermission(user, leoJob, type);
     }
 
-    private void verifyApplicationPermission(User user, LeoJob leoJob) {
+    public void verifyApplicationPermission(int jobId) {
+        LeoJob leoJob = leoJobService.getById(jobId);
+        String username = SessionHolder.getUsername();
+        User user = userService.getByUsername(username);
         UserPermission queryParam = UserPermission.builder()
                 .userId(user.getId())
                 .businessType(BusinessTypeEnum.APPLICATION.getType())
@@ -134,6 +135,7 @@ public class LeoExecuteJobInterceptorHandler {
         if (userPermission == null) {
             throw new AuthorizationException(42100, "非授权用户禁止操作！");
         }
+
         Env env = envService.getByEnvType(leoJob.getEnvType());
         if (ENV_PROD.equalsIgnoreCase(env.getEnvName())) {
             if (!Global.ADMIN.equalsIgnoreCase(userPermission.getPermissionRole())) {
@@ -145,6 +147,7 @@ public class LeoExecuteJobInterceptorHandler {
                 throw new AuthorizationException(42100, "非应用管理员禁止操作预发环境！");
             }
         }
+
     }
 
     private boolean hasJobPermission(User user, int jobId) {

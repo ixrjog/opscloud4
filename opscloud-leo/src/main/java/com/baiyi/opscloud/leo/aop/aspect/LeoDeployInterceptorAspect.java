@@ -78,6 +78,7 @@ public class LeoDeployInterceptorAspect {
             executeJobInterceptorHandler.verifyAuthorization(jobId);
             // 工单校验
             if (!leoDeployPassCheck.checkPass(buildId)) {
+                executeJobInterceptorHandler.verifyApplicationPermission(jobId);
                 String deployType = parseDeployType(leoDeployInterceptor, context);
                 if (DeployTypeConstants.ROLLING.name().equalsIgnoreCase(deployType)) {
                     // 规则校验
